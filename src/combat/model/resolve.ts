@@ -64,9 +64,7 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
       setCounts: [...modifierSources.setCounts].map(([id, n]) => [id, n] as const),
       slayer: { ...modifierSources.slayer },
       target: { ...modifierSources.target },
-      slayerHelmet: modifierSources.slayerHelmet
-        ? { ...modifierSources.slayerHelmet }
-        : null,
+      slayerHelmet: modifierSources.slayerHelmet ? { ...modifierSources.slayerHelmet } : null,
       salve: modifierSources.salve ? { ...modifierSources.salve } : null,
     },
     adrenaline: input.adrenaline ? { ...input.adrenaline } : {},
@@ -75,14 +73,11 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
     strengthCape99: input.strengthCape99 === true,
     preciseRank: input.preciseRank ?? 0,
     ammo: resolveStyleAmmo(input.ammo, input.equipmentIds),
-    caromingRank: Math.max(
-      0,
-      Math.min(4, Math.floor(input.caromingRank ?? input.caroming ?? 0)),
-    ),
+    caromingRank: Math.max(0, Math.min(4, Math.floor(input.caromingRank ?? input.caroming ?? 0))),
     conjureBasicDamageMult: input.conjureBasicDamageMult ?? 1,
     conjureDurationMult: input.conjureDurationMult ?? 1,
     tumekensPieces: input.tumekensPieces ?? 0,
-    // Explicit boolean only — undefined means off (adapter always passes host value).
+    // Explicit boolean only; undefined means off (adapter always passes host value).
     tumekensCritEnabled: input.tumekensCritEnabled === true,
     target: {
       hpPercent: input.targetHpPercent,
@@ -102,7 +97,11 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
     },
     context: input.context
       ? { ...input.context }
-      : { style: input.style, ruleset: input.league.ruleset, targetTiles: input.league.targetTiles },
+      : {
+          style: input.style,
+          ruleset: input.league.ruleset,
+          targetTiles: input.league.targetTiles,
+        },
     cap: input.cap
       ? { cap: input.cap.cap, bypass: input.cap.bypass === true }
       : { cap: STANDARD_HIT_CAP, bypass: false },

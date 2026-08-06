@@ -166,7 +166,7 @@ function runArm(
         : null,
     failureReason: evaluation.ok
       ? undefined
-      : evaluation.failureReason ?? evaluation.reasons?.[0]?.message,
+      : (evaluation.failureReason ?? evaluation.reasons?.[0]?.message),
     branchProfile: isBranchProfilingEnabled() ? { ...getBranchProfile() } : undefined,
   };
 }

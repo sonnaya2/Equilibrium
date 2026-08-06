@@ -31,10 +31,7 @@ import { useBuild } from "@/league/useBuild";
 import { GameIcon } from "../GameIcon";
 import { NumberField } from "./NumberField";
 import { ICYENIC_FAITH_RELIC, TOME_OF_THE_ICYENE_ID } from "@/combat/league/icyenicFaith";
-import {
-  NARAGI_EDICT_RELIC,
-  SLIVER_OF_EDICTS_ID,
-} from "@/combat/league/naragiEdict";
+import { NARAGI_EDICT_RELIC, SLIVER_OF_EDICTS_ID } from "@/combat/league/naragiEdict";
 import { relicIconPath } from "@/lib/gameArt";
 import {
   BONFIRE_LOGS,
@@ -297,7 +294,8 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
   const tomeEquipped = loadout.equipmentSlots.pocket === TOME_OF_THE_ICYENE_ID;
   const sliverEquipped = loadout.equipmentSlots.pocket === SLIVER_OF_EDICTS_ID;
   const activeRelicNames = useMemo(
-    () => Object.values(build.relics).filter((n): n is string => typeof n === "string" && n.length > 0),
+    () =>
+      Object.values(build.relics).filter((n): n is string => typeof n === "string" && n.length > 0),
     [build.relics],
   );
 
@@ -588,10 +586,7 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
               />
             </div>
             {vigourSources.length > 0 ? (
-              <p
-                className="mt-1.5 text-[11px] text-parch-300"
-                data-testid="vigour-sources"
-              >
+              <p className="mt-1.5 text-[11px] text-parch-300" data-testid="vigour-sources">
                 {formatRingOfVigourSources(vigourSources)}
                 {vigourSources.length > 1 ? " · Does not stack." : null}
               </p>
@@ -731,11 +726,7 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
               From Build. Unmodeled stays out of totals.
             </p>
             {selectedBlessings.some((c) => c.id === "teragards-aegis") ? (
-              <div
-                className="mt-2"
-                role="group"
-                aria-label="Teragard's Aegis armour basis"
-              >
+              <div className="mt-2" role="group" aria-label="Teragard's Aegis armour basis">
                 <h3 className="buff-group__title">Teragard&apos;s Aegis armour</h3>
                 <p className="mb-1.5 text-[11px] text-parch-300">
                   Wiki says total armour; live may be equipment-only. Toggle until verified.

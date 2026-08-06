@@ -410,7 +410,9 @@ describe("research catalog", () => {
     expect(dataEntityIconPath({ name: queenBlackDragon?.name, kind: queenBlackDragon?.kind })).toBe(
       "/game/bosses/queen-black-dragon.webp",
     );
-    expect(contentRewardsFull(queenBlackDragon!, asg!.upgrades)).toMatch(/Dragon kiteshield|Royal/i);
+    expect(contentRewardsFull(queenBlackDragon!, asg!.upgrades)).toMatch(
+      /Dragon kiteshield|Royal/i,
+    );
 
     const dwarfMulticannon = asg?.content.find((row) => row.name === "Dwarf multicannon");
     expect(dwarfMulticannon).toBeTruthy();
@@ -583,9 +585,10 @@ describe("research catalog", () => {
 
     const enhancedExcalibur = kandarin?.content.find((row) => row.name === "Enhanced Excalibur");
     expect(
-      presentContentRewards(contentRewardsFull(enhancedExcalibur!, kandarin!.upgrades), 8).icons.map(
-        (icon) => icon.label,
-      ),
+      presentContentRewards(
+        contentRewardsFull(enhancedExcalibur!, kandarin!.upgrades),
+        8,
+      ).icons.map((icon) => icon.label),
     ).toEqual(["Enhanced Excalibur"]);
     expect(
       dataEntityIconPath({ name: enhancedExcalibur?.name, kind: enhancedExcalibur?.kind }),
@@ -599,16 +602,17 @@ describe("research catalog", () => {
       /Enhanced nightmare gauntlets/i,
     );
     expect(
-      presentContentRewards(contentRewardsFull(enhancedNightmare!, kandarin!.upgrades), 8).icons.map(
-        (icon) => icon.label,
-      ),
+      presentContentRewards(
+        contentRewardsFull(enhancedNightmare!, kandarin!.upgrades),
+        8,
+      ).icons.map((icon) => icon.label),
     ).toEqual(["Enhanced nightmare gauntlets"]);
     expect(
       dataEntityIconPath({ name: enhancedNightmare?.name, kind: enhancedNightmare?.kind }),
     ).toBe("/game/combat/equipment/enhanced-nightmare-gauntlets.webp");
-    expect(
-      kandarin?.upgrades.some((row) => row.name === "Enhanced nightmare gauntlets"),
-    ).toBe(true);
+    expect(kandarin?.upgrades.some((row) => row.name === "Enhanced nightmare gauntlets")).toBe(
+      true,
+    );
 
     const eternalMagic = kandarin?.content.find((row) => row.name === "Eternal magic trees");
     expect(contentRewardsFull(eternalMagic!, kandarin!.upgrades)).toMatch(
@@ -627,10 +631,7 @@ describe("research catalog", () => {
     expect(contentRewardsFull(nihils!, kandarin!.upgrades)).toBe(
       "Blood nihil, Ice nihil, Shadow nihil, Smoke nihil",
     );
-    const nihilRewards = presentContentRewards(
-      contentRewardsFull(nihils!, kandarin!.upgrades),
-      8,
-    );
+    const nihilRewards = presentContentRewards(contentRewardsFull(nihils!, kandarin!.upgrades), 8);
     expect(nihilRewards.tokens).toEqual([
       "Blood nihil",
       "Ice nihil",

@@ -9,10 +9,7 @@ import {
   noteFidelityRetry,
   resolveBranchBudget,
 } from "../engine/simulation/branch";
-import {
-  simulateRevolution,
-  type RevolutionInput,
-} from "../engine/simulation/revolution";
+import { simulateRevolution, type RevolutionInput } from "../engine/simulation/revolution";
 import type { RotationSummary, SimulateOptions } from "../engine/simulation/simulate";
 import type { ScoreableSummary } from "./contracts";
 import { exactnessEligibleForExactProof, RESIDUAL_FREE_TOLERANCE } from "./objective";
@@ -34,10 +31,7 @@ export interface BranchFidelityLadder {
 }
 
 /** Starting policy; profile-adjustable via overrides. */
-export const DEFAULT_BRANCH_FIDELITY_LADDERS: Record<
-  BranchFidelityMode,
-  BranchFidelityLadder
-> = {
+export const DEFAULT_BRANCH_FIDELITY_LADDERS: Record<BranchFidelityMode, BranchFidelityLadder> = {
   exploratory: {
     mode: "exploratory",
     liveCaps: [64, 128, 256, 512],
@@ -127,21 +121,17 @@ export function meetsBranchCompleteness(
   ladder: BranchFidelityLadder,
 ): boolean {
   if (!summary.ok) return false;
-  const residual =
-    typeof summary.rng?.residualWeight === "number" ? summary.rng.residualWeight : 0;
+  const residual = typeof summary.rng?.residualWeight === "number" ? summary.rng.residualWeight : 0;
   if (residual > ladder.maximumResidualWeight) return false;
   if (ladder.exactness === "exact-or-merged") {
-    const ex =
-      typeof summary.rng?.exactness === "string" ? summary.rng.exactness : undefined;
+    const ex = typeof summary.rng?.exactness === "string" ? summary.rng.exactness : undefined;
     // Missing exactness treated as exact (legacy). Non-exact lattice fails.
     if (!exactnessEligibleForExactProof(ex)) return false;
   }
   return true;
 }
 
-function residualWeightOf(
-  summary: Pick<ScoreableSummary, "rng"> | RotationSummary,
-): number {
+function residualWeightOf(summary: Pick<ScoreableSummary, "rng"> | RotationSummary): number {
   return typeof summary.rng?.residualWeight === "number" ? summary.rng.residualWeight : 0;
 }
 
@@ -200,8 +190,7 @@ export function simulateWithAdaptiveBranchFidelity(
           finalBudget: budget,
           complete,
           residualWeight: residualWeightOf(summary),
-          exactness:
-            typeof summary.rng?.exactness === "string" ? summary.rng.exactness : undefined,
+          exactness: typeof summary.rng?.exactness === "string" ? summary.rng.exactness : undefined,
         },
       };
     }
@@ -219,9 +208,7 @@ export function simulateWithAdaptiveBranchFidelity(
       complete: meetsBranchCompleteness(lastSummary, ladder),
       residualWeight: residualWeightOf(lastSummary),
       exactness:
-        typeof lastSummary.rng?.exactness === "string"
-          ? lastSummary.rng.exactness
-          : undefined,
+        typeof lastSummary.rng?.exactness === "string" ? lastSummary.rng.exactness : undefined,
     },
   };
 }
@@ -256,15 +243,14 @@ export function branchFidelityLadderMemoToken(ladder: BranchFidelityLadder): str
  */
 export const UI_RUN_BRANCH_FIDELITY_LADDER: BranchFidelityLadder = {
   mode: "medium",
-  // Climb through 4096; if residual remains, escalate to 8192 for analysis.
-  liveCaps: [128, 256, 512, 1024, 2048, 4096, 8192],
+  liveCaps: [128, 256, 512, 1024],
   maximumResidualWeight: 1e-12,
   exactness: "any",
 };
 
 /**
- * Revolution panel Run (sync fallback): score-only ladder climb + one full-analysis.
- * Prefer worker multi-probe host when available (uiRunHost).
+ * Explicit synchronous UI Run: score-only ladder climb + one full-analysis.
+ * Product UI uses the worker multi-probe host.
  */
 export function simulateRevolutionForUi(
   input: RevolutionInput,

@@ -42,13 +42,17 @@ describe("barKey", () => {
   it("fingerprintEvaluationKey reuses precomputed barKey without a second join shape", () => {
     const bar = ["a", "b"] as const;
     const key = barKey(bar);
-    const withPre = fingerprintEvaluationKey({ bar, barKey: key, mode: "search", profileId: "balanced" });
+    const withPre = fingerprintEvaluationKey({
+      bar,
+      barKey: key,
+      mode: "search",
+      profileId: "balanced",
+    });
     const without = fingerprintEvaluationKey({ bar, mode: "search", profileId: "balanced" });
     expect(withPre).toBe(without);
     expect(withPre).toContain(key);
   });
 });
-
 
 describe("stableStringify", () => {
   it("sorts object keys", () => {

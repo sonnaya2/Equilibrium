@@ -1,9 +1,5 @@
 import type { ItemPassiveId } from "../data/records";
-import type {
-  PassivePresentation,
-  PassivePresentationContext,
-  PassiveSupport,
-} from "./contracts";
+import type { PassivePresentation, PassivePresentationContext, PassiveSupport } from "./contracts";
 import { definitionById } from "./registry";
 
 function toGearSupport(

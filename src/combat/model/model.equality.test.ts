@@ -120,7 +120,11 @@ describe("ResolvedCombatModel equality", () => {
     ["necromancy", "necromancy"] as const,
   ])("freezes style=%s weaponConfiguration=%s", (style, weaponConfiguration) => {
     const model = buildResolvedCombatModel(
-      baseInput({ style, weaponConfiguration, context: { style, ruleset: "base", targetTiles: 1 } }),
+      baseInput({
+        style,
+        weaponConfiguration,
+        context: { style, ruleset: "base", targetTiles: 1 },
+      }),
     );
     expect(model.style).toBe(style);
     expect(model.weaponConfiguration).toBe(weaponConfiguration);

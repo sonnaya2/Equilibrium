@@ -95,9 +95,7 @@ describe("uiRunFingerprint", () => {
       durationSeconds: 60,
       style: "melee",
     };
-    expect(uiRunFingerprint(revo)).toBe(
-      uiRunFingerprint({ ...revo, barIds: ["attack", "rend"] }),
-    );
+    expect(uiRunFingerprint(revo)).toBe(uiRunFingerprint({ ...revo, barIds: ["attack", "rend"] }));
     expect(uiRunFingerprint({ ...revo, barIds: ["attack", "assault"] })).not.toBe(
       uiRunFingerprint(revo),
     );

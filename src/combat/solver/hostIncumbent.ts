@@ -148,9 +148,7 @@ export function applyHostIncumbentBaseline(
       residualMass: dto.honesty?.residualMass ?? dto.rng?.residualWeight ?? 0,
       branchExactness: dto.honesty?.branchExactness ?? dto.rng?.exactness ?? null,
     });
-    const notes = [...(dto.proof?.notes ?? [])].filter(
-      (n) => n !== CURRENT_BAR_REMAINS_BEST_NOTE,
-    );
+    const notes = [...(dto.proof?.notes ?? [])].filter((n) => n !== CURRENT_BAR_REMAINS_BEST_NOTE);
     notes.push(CURRENT_BAR_REMAINS_BEST_NOTE);
     notes.push("host incumbent baseline (outside worker length pins)");
     return {
@@ -186,9 +184,7 @@ export function applyHostIncumbentBaseline(
     residualMass: dto.honesty?.residualMass ?? dto.rng?.residualWeight ?? 0,
     branchExactness: dto.honesty?.branchExactness ?? dto.rng?.exactness ?? null,
   });
-  const notes = [...(dto.proof?.notes ?? [])].filter(
-    (n) => n !== CURRENT_BAR_REMAINS_BEST_NOTE,
-  );
+  const notes = [...(dto.proof?.notes ?? [])].filter((n) => n !== CURRENT_BAR_REMAINS_BEST_NOTE);
   notes.push("host incumbent baseline (outside worker length pins)");
   return {
     ...dto,

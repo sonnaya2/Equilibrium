@@ -39,15 +39,11 @@ function applyProcModifiers(
     kind: "invention_proc" as const,
     detail: event.abilityId,
   };
-  return runPipeline(
-    { damage },
-    modifiers,
-    {
-      ...(rt.input.context ?? { style: ability?.style ?? "melee" }),
-      damageSource: "proc",
-      provenance,
-    },
-  ).damage;
+  return runPipeline({ damage }, modifiers, {
+    ...(rt.input.context ?? { style: ability?.style ?? "melee" }),
+    damageSource: "proc",
+    provenance,
+  }).damage;
 }
 
 function cracklingDamage(

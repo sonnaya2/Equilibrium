@@ -110,9 +110,7 @@ export function punctureHitDamage(storedDamage: number, percent: number): number
 
 /** Land ticks for a sequence starting at firstTick (finish+1). */
 export function punctureSequenceTicks(firstTick: number): readonly number[] {
-  return PUNCTURE_HIT_PERCENTS.map(
-    (_, i) => firstTick + i * PUNCTURE_HIT_INTERVAL_TICKS,
-  );
+  return PUNCTURE_HIT_PERCENTS.map((_, i) => firstTick + i * PUNCTURE_HIT_INTERVAL_TICKS);
 }
 
 export const PUNCTURE_SOURCE: SourceReference = MODERNISATION_WIKI;

@@ -43,7 +43,7 @@ function sourceArrays<T>(file: string): Record<string, T[]> {
     const sections: Record<string, T[]> = {};
     for (const { record_path, raw_json } of database
       .prepare(
-        "SELECT record_path, raw_json FROM source_records WHERE source_file = ? ORDER BY record_path",
+        "SELECT sr.record_path, sr.raw_json FROM source_records sr LEFT JOIN entities e ON e.id = sr.entity_id WHERE sr.source_file = ? AND COALESCE(e.status, 'active') <> 'removed' ORDER BY sr.record_path",
       )
       .all(file) as unknown as Array<{ record_path: string; raw_json: string }>) {
       const match = record_path.match(/^\$\.([^.[\]]+)\[(\d+)\]$/);

@@ -8,7 +8,11 @@ import { modifiersForResolvedModel } from "../../model";
 import { BERSERKERS_FURY_ID } from "../../shared/berserkersFury";
 import { FULL_SLAYER_HELMET_ITEM_ID } from "../../shared/slayerHelmet";
 import { SALVE_AMULET_E_ITEM_ID } from "../../shared/salveAmulet";
-import { DEFAULT_LOADOUT, normalizeLoadout, type Loadout } from "../../../components/combat/loadout/model";
+import {
+  DEFAULT_LOADOUT,
+  normalizeLoadout,
+  type Loadout,
+} from "../../../components/combat/loadout/model";
 import { loadoutStats } from "../../../components/combat/loadoutStats";
 import { toResolvedCombatModel } from "../../../components/combat/toResolvedCombatModel";
 

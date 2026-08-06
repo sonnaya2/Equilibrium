@@ -25,10 +25,7 @@ import {
   rotationHasConjureCast,
 } from "./conjurePresentation";
 import { strikingLightAssumptionRows } from "./blessingPresentation";
-import {
-  stochasticAssumptionRows,
-  type BranchCapDiagnosticsOpts,
-} from "./revoStochasticLabels";
+import { stochasticAssumptionRows, type BranchCapDiagnosticsOpts } from "./revoStochasticLabels";
 
 const PERCENT_FORMAT = new Intl.NumberFormat("en-US", {
   style: "percent",
@@ -210,12 +207,9 @@ export function CalculationAssumptions({
         ] as Array<[string, string | number]>)
       : []),
     ...(rotationHasConjureCast(result?.casts)
-      ? ([
-          [
-            "Spirit Pact III",
-            conjurePactAssumptionNote(stats.conjureDurationMult ?? 1),
-          ],
-        ] as Array<[string, string | number]>)
+      ? ([["Spirit Pact III", conjurePactAssumptionNote(stats.conjureDurationMult ?? 1)]] as Array<
+          [string, string | number]
+        >)
       : []),
     ...conjureStAreaAssumptionRows(result?.casts),
   ];

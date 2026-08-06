@@ -260,9 +260,7 @@ export function analyzeSingleCast(
       rotation: rotationOf(resolvedAbility.id),
       autoWeave: false,
     }),
-    ...(options.residualSouls != null
-      ? { startingResidualSouls: options.residualSouls }
-      : {}),
+    ...(options.residualSouls != null ? { startingResidualSouls: options.residualSouls } : {}),
   };
 
   let summary;
@@ -323,7 +321,7 @@ export function analyzeSingleCast(
     statefulLimitations: limitations,
     parity,
     ok,
-    error: summary.error ?? (ok ? undefined : summary.error ?? "cast failed"),
+    error: summary.error ?? (ok ? undefined : (summary.error ?? "cast failed")),
     hits,
     damagePotential,
   };

@@ -6,9 +6,7 @@ import { BERSERKERS_FURY_ID } from "@/combat/shared/berserkersFury";
 import { FULL_SLAYER_HELMET_ITEM_ID } from "@/combat/shared/slayerHelmet";
 import { SALVE_AMULET_E_ITEM_ID } from "@/combat/shared/salveAmulet";
 import { RING_OF_VIGOUR_ITEM_ID } from "@/combat/shared/ringOfVigour";
-import {
-  FURY_OF_THE_SMALL_ID,
-} from "@/combat/shared/furyOfTheSmall";
+import { FURY_OF_THE_SMALL_ID } from "@/combat/shared/furyOfTheSmall";
 import { projectSerializableSimBase, toHybridManualCombatModel } from "@/combat/model";
 import { packSimBase, packSimBaseFromModel } from "@/combat/solver/packRequest";
 import { buildCandidatePool } from "@/combat/solver/candidatePool";
@@ -118,9 +116,7 @@ describe("toResolvedCombatModel", () => {
     expect(model.diagnostics.archaeologySelectedIds).toContain(BERSERKERS_FURY_ID);
     expect(model.diagnostics.berserkersFury.active).toBe(true);
     expect(model.modifierSources.berserkersFuryBonus).toBeGreaterThan(0);
-    expect(model.modifierSources.berserkersFuryBonus).toBe(
-      model.diagnostics.berserkersFury.bonus,
-    );
+    expect(model.modifierSources.berserkersFuryBonus).toBe(model.diagnostics.berserkersFury.bonus);
   });
 
   it("collapses Ring of Vigour sources and sets adrenaline flag", () => {
@@ -285,6 +281,7 @@ describe("toResolvedCombatModel", () => {
         level: dualPacked.level,
         accuracy: dualPacked.accuracy,
         crit: dualPacked.crit,
+        abilities: NECROMANCY_ABILITIES,
         weaponConfiguration: dualPacked.weaponConfiguration,
         equipmentIds: dualPacked.equipmentIds,
         startingAdrenaline: dualPacked.startingAdrenaline,
@@ -315,6 +312,7 @@ describe("toResolvedCombatModel", () => {
         level: tankPacked.level,
         accuracy: tankPacked.accuracy,
         crit: tankPacked.crit,
+        abilities: NECROMANCY_ABILITIES,
         weaponConfiguration: tankPacked.weaponConfiguration,
         equipmentIds: tankPacked.equipmentIds,
       },

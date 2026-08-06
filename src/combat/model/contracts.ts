@@ -21,7 +21,7 @@ export interface ResolvedCritInput {
 }
 
 /**
- * Explicit modifier truth — same wire shape as SerializableModifierSources.
+ * Explicit modifier truth with the same wire shape as SerializableModifierSources.
  * setCounts are tuple pairs (no Map).
  */
 export type ResolvedModifierSources = SerializableModifierSources;
@@ -34,8 +34,7 @@ export interface ResolvedTargetScenario {
   readonly undead?: boolean;
 }
 
-export type ResolvedWeaponConfiguration =
-  SerializableRevolutionSimBase["weaponConfiguration"];
+export type ResolvedWeaponConfiguration = SerializableRevolutionSimBase["weaponConfiguration"];
 
 /**
  * One immutable combat representation beneath the UI presentation layer.

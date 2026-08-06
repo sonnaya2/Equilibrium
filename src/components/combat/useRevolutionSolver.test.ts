@@ -198,8 +198,7 @@ describe("useRevolutionSolver session settlement policy", () => {
     const setStopped = vi.fn();
     const setError = vi.fn();
     const setResult = vi.fn();
-    const message =
-      "solver failed: no validated full-horizon upgrade; status=failed; proof=failed";
+    const message = "solver failed: no validated full-horizon upgrade; status=failed; proof=failed";
     const action = settlementActionForCatch({
       sessionGen: 1,
       currentGen: 1,
@@ -238,9 +237,7 @@ describe("useRevolutionSolver session settlement policy", () => {
       durationTicks: 500,
       solveIdentity: "ctx",
     };
-    expect(
-      mayApplySolverResultBar({ ...base, proofLabel: "heuristic-best-found" }),
-    ).toBe(true);
+    expect(mayApplySolverResultBar({ ...base, proofLabel: "heuristic-best-found" })).toBe(true);
     expect(
       mayApplySolverResultBar({
         ...base,
@@ -414,9 +411,7 @@ describe("useRevolutionSolver session settlement policy", () => {
     expect(setFinal).not.toHaveBeenCalled();
     expect(setStopped).not.toHaveBeenCalled();
     expect(setError).toHaveBeenCalledWith(APPLY_FINAL_STAMP_REJECT_MESSAGE);
-    expect(mayApplyFinalDtoStamp({ dtoSolveIdentity: "", liveIdentity: "live-ctx" })).toBe(
-      false,
-    );
+    expect(mayApplyFinalDtoStamp({ dtoSolveIdentity: "", liveIdentity: "live-ctx" })).toBe(false);
 
     remember.mockClear();
     setFinal.mockClear();
@@ -444,11 +439,13 @@ describe("useRevolutionSolver session settlement policy", () => {
 });
 
 describe("live identity (pack+payload; progress is string compare)", () => {
-  const material = (overrides: {
-    limitToRegions?: boolean;
-    barSizePreset?: "fixed4" | "range4_11" | "range4_6";
-    style?: "melee" | "ranged" | "magic" | "necromancy";
-  } = {}) => {
+  const material = (
+    overrides: {
+      limitToRegions?: boolean;
+      barSizePreset?: "fixed4" | "range4_11" | "range4_6";
+      style?: "melee" | "ranged" | "magic" | "necromancy";
+    } = {},
+  ) => {
     const loadout = { ...DEFAULT_LOADOUT, style: overrides.style ?? DEFAULT_LOADOUT.style };
     return {
       combatModel: toResolvedCombatModel(loadout),

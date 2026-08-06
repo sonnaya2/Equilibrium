@@ -49,6 +49,24 @@ afterEach(() => {
 });
 
 describe("duplicate-work profiling counters", () => {
+  it("does not reevaluate the same failed bar and mode", () => {
+    let calls = 0;
+    const state = createSearchState({
+      pool,
+      sizeBounds: { min: 1, max: 2 },
+      evaluate: () => {
+        calls += 1;
+        return { score: Number.NEGATIVE_INFINITY, finite: false };
+      },
+      config: baseConfig,
+    });
+
+    expect(state.tryEval(["a"], "search")).toBeNull();
+    expect(state.tryEval(["a"], "search")).toBeNull();
+    expect(calls).toBe(1);
+    expect(state.budget.used).toBe(1);
+  });
+
   it("stays zero when profiling is off", () => {
     enableSolverProfiling(false);
     resetSolverProfileCounters();

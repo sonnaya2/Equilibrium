@@ -15,15 +15,7 @@ import type { Loadout, SetLoadout } from "./useLoadout";
 import { unlockedRegions } from "@/league";
 import { useBuild } from "@/league/useBuild";
 
-const SUB_TABS = [
-  "Gear",
-  "Stats",
-  "Buffs",
-  "Arch",
-  "Invention",
-  "Abilities",
-  "Target",
-] as const;
+const SUB_TABS = ["Gear", "Stats", "Buffs", "Arch", "Invention", "Abilities", "Target"] as const;
 type SubTab = (typeof SUB_TABS)[number];
 
 const SUB_TAB_ICONS: Record<SubTab, string> = {
@@ -121,13 +113,7 @@ function SummarySection({ title, children }: { title: string; children: ReactNod
   );
 }
 
-export function SetupTab({
-  loadout,
-  setLoadout,
-}: {
-  loadout: Loadout;
-  setLoadout: SetLoadout;
-}) {
+export function SetupTab({ loadout, setLoadout }: { loadout: Loadout; setLoadout: SetLoadout }) {
   const [subTab, setSubTab] = useState<SubTab>("Gear");
   const { build } = useBuild();
   const stats = useMemo(

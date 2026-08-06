@@ -14,7 +14,12 @@ export type AbilityCastAvailability =
   | {
       available: false;
       reason:
-        "missing-passive" | "superseded" | "weapon-requirement" | "missing-equipment" | "missing-special-access" | "other";
+        | "missing-passive"
+        | "superseded"
+        | "weapon-requirement"
+        | "missing-equipment"
+        | "missing-special-access"
+        | "other";
       message: string;
     };
 
@@ -169,7 +174,6 @@ export function meetsPassiveRequirement(
   );
 }
 
-
 /** Catalogue id for Essence of Finality amulet (stores weapon specials). */
 export const ESSENCE_OF_FINALITY_ITEM_ID = "item:essence-of-finality";
 
@@ -317,10 +321,12 @@ export function resolveAbilityCastAvailability(
     };
   }
 
-  if (!meetsSpecialAccess(ability, {
-    equipmentIds: options.equipmentIds,
-    eofStoredSpecialId: options.eofStoredSpecialId,
-  })) {
+  if (
+    !meetsSpecialAccess(ability, {
+      equipmentIds: options.equipmentIds,
+      eofStoredSpecialId: options.eofStoredSpecialId,
+    })
+  ) {
     return {
       available: false,
       reason: "missing-special-access",

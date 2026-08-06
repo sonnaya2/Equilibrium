@@ -80,7 +80,7 @@ describe("loadoutStats wires slayer and salve", () => {
     ).toBe(mulFloor(mulFloor(1000, 1.075), 1.2));
 
     // Accuracy rating mult product (uncapped hit-chance ratio needs a tough target).
-    const bareRating = playerAccuracy(99, 90);
+    const bareRating = playerAccuracy(loadout.attackLevel, 90);
     const boostedRating = bareRating * 1.125 * 1.2;
     const hard = { defenceLevel: 99, armour: 2500, affinity: "strong" as const };
     const bareHc = hitChance(bareRating, hard);

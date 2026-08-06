@@ -366,7 +366,6 @@ describe("mergeResults host solveIdentity", () => {
   });
 });
 
-
 describe("Phase-0 pool metrics", () => {
   it("reports per-agent budget vs global sum and known-wrong unique sum", () => {
     const parts = [
@@ -391,8 +390,20 @@ describe("Phase-0 pool metrics", () => {
 
   it("records first/last finished and straggler wait from live timing", () => {
     const parts = [
-      progress({ bestScore: 10, evaluations: 50, uniqueCandidates: 10, progressRatio: 1, phase: "idle" }),
-      progress({ bestScore: 8, evaluations: 80, uniqueCandidates: 20, progressRatio: 1, phase: "idle" }),
+      progress({
+        bestScore: 10,
+        evaluations: 50,
+        uniqueCandidates: 10,
+        progressRatio: 1,
+        phase: "idle",
+      }),
+      progress({
+        bestScore: 8,
+        evaluations: 80,
+        uniqueCandidates: 20,
+        progressRatio: 1,
+        phase: "idle",
+      }),
     ];
     const live = {
       startedAtMs: 1_000,
@@ -427,20 +438,26 @@ describe("Phase-0 pool metrics", () => {
 
   it("attaches poolMetrics on mergeResults without changing winner pick", () => {
     const hostRequest = hostSessionRequest({ seed: 1 });
-    const a = agentDto({ ...hostRequest, seed: 7 }, {
-      bar: ["a", "b", "c", "d"],
-      score: 8_000,
-      seed: 7,
-      evaluations: 40,
-      uniqueCandidates: 15,
-    });
-    const b = agentDto({ ...hostRequest, seed: 99 }, {
-      bar: ["w", "x", "y", "z"],
-      score: 15_000,
-      seed: 99,
-      evaluations: 60,
-      uniqueCandidates: 25,
-    });
+    const a = agentDto(
+      { ...hostRequest, seed: 7 },
+      {
+        bar: ["a", "b", "c", "d"],
+        score: 8_000,
+        seed: 7,
+        evaluations: 40,
+        uniqueCandidates: 15,
+      },
+    );
+    const b = agentDto(
+      { ...hostRequest, seed: 99 },
+      {
+        bar: ["w", "x", "y", "z"],
+        score: 15_000,
+        seed: 99,
+        evaluations: 60,
+        uniqueCandidates: 25,
+      },
+    );
     const metrics = buildPoolMetrics(
       [
         progress({ bestScore: 1, evaluations: 40, uniqueCandidates: 15 }),

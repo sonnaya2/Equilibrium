@@ -32,17 +32,15 @@ describe("Leng integration gate", () => {
     const tempest = MELEE_ABILITIES.find((ability) => ability.id === "icy_tempest")!;
     const ctx = createCastContext(sim);
     expect(ctx.performCast(attack, 0, false).ok).toBe(true);
-    const spine = castOutcomes({ weight: 1, rt: createRuntime(sim) }, attack, 0, false).branches[0]!;
+    const spine = castOutcomes({ weight: 1, rt: createRuntime(sim) }, attack, 0, false)
+      .branches[0]!;
     const plans = planCastOutcomes(spine, tempest, spine.rt.state.tick, false);
-    expect([...new Set(plans.plans.map((plan) => plan.prepared.spend))].sort((a, b) => b - a)).toEqual([
-      30,
-      18,
-      6,
-    ]);
-    expect(resolveIcyTempest(spine.rt.state.melee.primordialIce, 0, false).expectedSpend).toBeCloseTo(
-      28.56,
-      12,
-    );
+    expect(
+      [...new Set(plans.plans.map((plan) => plan.prepared.spend))].sort((a, b) => b - a),
+    ).toEqual([30, 18, 6]);
+    expect(
+      resolveIcyTempest(spine.rt.state.melee.primordialIce, 0, false).expectedSpend,
+    ).toBeCloseTo(28.56, 12);
     expect(ctx.performCast(tempest, ctx.getState().tick, false).ok).toBe(true);
     expect(ctx.finish().rng?.residualWeight ?? 0).toBeLessThanOrEqual(1e-12);
 

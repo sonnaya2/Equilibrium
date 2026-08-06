@@ -139,9 +139,7 @@ export function packSimBase(snapshot: SolverPackSnapshot): SerializableRevolutio
     level: snapshot.level,
     ...(snapshot.overrideBase != null ? { overrideBase: snapshot.overrideBase } : {}),
     ...(snapshot.overrideLevel != null ? { overrideLevel: snapshot.overrideLevel } : {}),
-    ...(snapshot.activateNaragiAtStart === true
-      ? { activateNaragiAtStart: true }
-      : {}),
+    ...(snapshot.activateNaragiAtStart === true ? { activateNaragiAtStart: true } : {}),
     accuracy: snapshot.accuracy,
     crit: {
       chance: snapshot.crit.chance,

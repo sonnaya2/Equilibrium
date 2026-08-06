@@ -64,11 +64,7 @@ describe("Death's Swiftness casting with energy relics", () => {
       ["conservation_of_energy"],
       ["fury_of_the_small", "conservation_of_energy"],
     ]) {
-      const { summary } = run(selected, [
-        "deaths_swiftness",
-        "piercing_shot",
-        "piercing_shot",
-      ]);
+      const { summary } = run(selected, ["deaths_swiftness", "piercing_shot", "piercing_shot"]);
       expect(summary.ok, `failed selected=${selected.join(",")}: ${summary.error}`).toBe(true);
       expect(
         summary.casts.some((c) => c.abilityId === "deaths_swiftness"),
@@ -119,7 +115,14 @@ describe("Death's Swiftness casting with energy relics", () => {
     const on = run(["fury_of_the_small"], rot, { starting: 0, weave: true });
     expect(on.summary.ok, on.summary.error).toBe(true);
     expect(on.summary.casts.some((c) => c.abilityId === "deaths_swiftness")).toBe(true);
-    const basics = on.summary.casts.filter((c) => c.auto || c.abilityId === "piercing_shot" || c.abilityId === "attack" || c.abilityId === "needle_strike" || c.abilityId === "corruption_shot");
+    const basics = on.summary.casts.filter(
+      (c) =>
+        c.auto ||
+        c.abilityId === "piercing_shot" ||
+        c.abilityId === "attack" ||
+        c.abilityId === "needle_strike" ||
+        c.abilityId === "corruption_shot",
+    );
     // Should have woven generating basics before DS.
     expect(on.summary.casts.length).toBeGreaterThan(1);
     void basics;

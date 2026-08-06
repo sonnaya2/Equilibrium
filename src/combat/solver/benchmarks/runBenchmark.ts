@@ -331,10 +331,7 @@ type ProfileExtras = {
   branchProfile?: BranchProfile;
 };
 
-function attachProfiles<T extends object>(
-  row: T,
-  extras: ProfileExtras = {},
-): T & ProfileExtras {
+function attachProfiles<T extends object>(row: T, extras: ProfileExtras = {}): T & ProfileExtras {
   let out: T & ProfileExtras = { ...row, ...extras };
   if (isHitPipelineProfilingEnabled()) {
     out = { ...out, hitPipeline: snapshotHitPipelineCounters() };

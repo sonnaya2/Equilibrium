@@ -24,10 +24,7 @@ export function hauntedActive(state: HauntedState, tick: number): boolean {
 }
 
 /** Apply or refresh Haunted from an empowered ghost auto at landTick. */
-export function applyHaunted(
-  landTick: number,
-  capAbilityDamage: number,
-): HauntedState {
+export function applyHaunted(landTick: number, capAbilityDamage: number): HauntedState {
   return {
     untilTick: landTick + HAUNTED_DURATION_TICKS,
     capAbilityDamage: Math.max(0, capAbilityDamage),
@@ -49,10 +46,7 @@ export function hauntedParentDamage(postDpDamage: number, damagePotential: numbe
  * floor(parent * 10%) then min with floor(capAD * 20%).
  * Parent is full-accuracy (pre-DP) post-resolve damage for that component.
  */
-export function hauntedBonusDamage(
-  parentDamage: number,
-  capAbilityDamage: number,
-): number {
+export function hauntedBonusDamage(parentDamage: number, capAbilityDamage: number): number {
   if (parentDamage <= 0 || capAbilityDamage <= 0) return 0;
   const pct = Math.floor((parentDamage * HAUNTED_BONUS_PCT) / 100);
   const cap = Math.floor((capAbilityDamage * HAUNTED_CAP_PCT_OF_AD) / 100);

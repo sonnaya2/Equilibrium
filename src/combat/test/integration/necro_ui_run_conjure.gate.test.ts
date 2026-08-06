@@ -6,11 +6,7 @@ import { describe, expect, it } from "vitest";
 import { SPIRIT_AUTO_ABILITY_ID } from "../../styles/necromancy/conjures";
 import { packSimBaseFromModel } from "../../solver/packRequest";
 import { runUiRevolution } from "../../solver/worker/uiRunHost";
-import {
-  DEFAULT_LOADOUT,
-  equipInSlot,
-  type Loadout,
-} from "@/components/combat/loadout/model";
+import { DEFAULT_LOADOUT, equipInSlot, type Loadout } from "@/components/combat/loadout/model";
 import { loadoutStats } from "@/components/combat/loadoutStats";
 import { toResolvedCombatModel } from "@/components/combat/toResolvedCombatModel";
 import {
@@ -55,9 +51,9 @@ function assertCommandMorphIfPresent(summary: {
   const commandCasts = summary.casts.filter((c) => c.abilityId.startsWith("command_"));
   if (commandCasts.length === 0) return;
   expect(summary.events.some((e) => e.family === "command")).toBe(true);
-  expect(
-    commandCasts.every((c) => (COMMAND_IDS as readonly string[]).includes(c.abilityId)),
-  ).toBe(true);
+  expect(commandCasts.every((c) => (COMMAND_IDS as readonly string[]).includes(c.abilityId))).toBe(
+    true,
+  );
 }
 
 async function uiRunConjurePath(loadout: Loadout) {
@@ -69,9 +65,7 @@ async function uiRunConjurePath(loadout: Loadout) {
   expect(model.weaponConfiguration).toBe("necromancy");
   expect(packed.weaponConfiguration).toBe("necromancy");
 
-  const necroBars = SUPPORTED_BARS.filter(
-    (b) => b.style === "necromancy" && b.mode === "revo++",
-  );
+  const necroBars = SUPPORTED_BARS.filter((b) => b.style === "necromancy" && b.mode === "revo++");
   expect(necroBars.length).toBeGreaterThan(0);
 
   const bar =
@@ -86,9 +80,7 @@ async function uiRunConjurePath(loadout: Loadout) {
     equipmentIds: stats.equipmentIds,
   });
   const modelledIds = modelled.map((a) => a.id);
-  const conjureOnBar = modelledIds.filter((id) =>
-    (CONJURE_IDS as readonly string[]).includes(id),
-  );
+  const conjureOnBar = modelledIds.filter((id) => (CONJURE_IDS as readonly string[]).includes(id));
   expect(conjureOnBar.length, `modelled: ${modelledIds.join(",")}`).toBeGreaterThan(0);
 
   const { summary } = await runUiRevolution(

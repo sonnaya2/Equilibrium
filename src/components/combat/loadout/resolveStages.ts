@@ -82,7 +82,6 @@ import {
 import {
   formatRingOfVigourSources,
   hasRingOfVigourEffect,
-
   ringOfVigourActiveSources,
 } from "@/combat/shared/ringOfVigour";
 import {

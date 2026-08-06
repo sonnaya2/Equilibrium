@@ -91,7 +91,10 @@ describe("Icy Tempest solver and availability", () => {
 
   it("failed requirement does not consume the atom state", () => {
     const rt = createRuntime({ ...lengInput(), startingAdrenaline: 20 });
-    rt.state = { ...rt.state, melee: { ...rt.state.melee, primordialIce: unitPrimordialIce(5, 999) } };
+    rt.state = {
+      ...rt.state,
+      melee: { ...rt.state.melee, primordialIce: unitPrimordialIce(5, 999) },
+    };
     const tempest = rt.byId.get("icy_tempest")!;
     expect(performCast(rt, tempest, 0, false).ok).toBe(false);
     expect(rt.state.melee.primordialIce.atoms).toEqual([
@@ -108,23 +111,18 @@ describe("Icy Tempest solver and availability", () => {
     const rt = createRuntime(input);
     rt.state = structuredClone(ctx.getState());
     const plans = planCastOutcomes({ weight: 1, rt }, tempest, rt.state.tick, false);
-    expect([...new Set(plans.plans.map((plan) => plan.prepared.spend))].sort((a, b) => b - a)).toEqual([
-      30,
-      18,
-      6,
-    ]);
+    expect(
+      [...new Set(plans.plans.map((plan) => plan.prepared.spend))].sort((a, b) => b - a),
+    ).toEqual([30, 18, 6]);
     expect(plans.plans.every((plan) => Number.isInteger(plan.prepared.spend))).toBe(true);
     const bySpend = new Map(plans.plans.map((plan) => [plan.prepared.spend, plan.prepared]));
     expect(bySpend.get(30)!.working.hits[0]!.band).toEqual({ minPct: 115, maxPct: 135 });
     expect(bySpend.get(18)!.working.hits[0]!.band).toEqual({ minPct: 133, maxPct: 157 });
     expect(bySpend.get(6)!.working.hits[0]!.band).toEqual({ minPct: 151, maxPct: 179 });
+    expect(plans.plans.reduce((sum, plan) => sum + plan.weight, 0)).toBeCloseTo(1, 12);
     expect(
-      plans.plans.reduce((sum, plan) => sum + plan.weight, 0),
-    ).toBeCloseTo(1, 12);
-    expect(plans.plans.reduce((sum, plan) => sum + plan.weight * plan.prepared.spend, 0)).toBeCloseTo(
-      28.56,
-      12,
-    );
+      plans.plans.reduce((sum, plan) => sum + plan.weight * plan.prepared.spend, 0),
+    ).toBeCloseTo(28.56, 12);
     expect(ctx.performCast(tempest, ctx.getState().tick, false).ok).toBe(true);
     expect(ctx.finish().rng?.residualWeight ?? 0).toBeLessThanOrEqual(1e-12);
   });
@@ -163,14 +161,18 @@ describe("Icy Tempest solver and availability", () => {
 
   it("native and EoF special access remain separate from passive ownership", () => {
     const tempest = MELEE_ABILITIES.find((ability) => ability.id === "icy_tempest")!;
-    expect(resolveAbilityCastAvailability(tempest, {
-      weaponConfiguration: "dualwield",
-      equipmentIds: [],
-      passiveIds: ["leng-endless-frost"],
-    }).available).toBe(false);
-    expect(resolveAbilityCastAvailability(tempest, {
-      weaponConfiguration: "twohand",
-      equipmentIds: ["item:essence-of-finality"],
-    }).available).toBe(true);
+    expect(
+      resolveAbilityCastAvailability(tempest, {
+        weaponConfiguration: "dualwield",
+        equipmentIds: [],
+        passiveIds: ["leng-endless-frost"],
+      }).available,
+    ).toBe(false);
+    expect(
+      resolveAbilityCastAvailability(tempest, {
+        weaponConfiguration: "twohand",
+        equipmentIds: ["item:essence-of-finality"],
+      }).available,
+    ).toBe(true);
   });
 });

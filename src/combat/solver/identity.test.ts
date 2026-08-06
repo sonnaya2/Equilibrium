@@ -242,13 +242,15 @@ describe("fingerprint changes one field at a time", () => {
   });
 
   it("hit cap", async () => {
-    await expectDiff("hitCap", (r) =>
-      withSim(r, (s) => ({ ...s, cap: { cap: 15_000 } })),
-    );
+    await expectDiff("hitCap", (r) => withSim(r, (s) => ({ ...s, cap: { cap: 15_000 } })));
   });
 
   it("target HP", async () => {
     await expectDiff("targetHp", (r) => withSim(r, (s) => ({ ...s, targetHpPercent: 25 })));
+  });
+
+  it("absent target HP differs from explicit 100%", async () => {
+    await expectDiff("targetHpAbsent", (r) => withSim(r, (s) => ({ ...s, targetHpPercent: 100 })));
   });
 
   it("target classification", async () => {
@@ -272,6 +274,25 @@ describe("fingerprint changes one field at a time", () => {
           blessingIds: ["big-boned"],
         },
       })),
+    );
+  });
+
+  it("league relics", async () => {
+    await expectDiff("relics", (r) =>
+      withSim(r, (s) => ({
+        ...s,
+        league: { ...s.league, relics: ["Naragi Edict"] },
+      })),
+    );
+  });
+
+  it("ordered user bar", async () => {
+    await expectDiff("userBar", (r) => ({ ...r, userBar: ["fury", "assault"] }));
+    const a = sampleRequest({ userBar: ["fury", "assault"] });
+    const b = sampleRequest({ userBar: ["assault", "fury"] });
+    expect(await fingerprintSolveContext(a)).not.toBe(await fingerprintSolveContext(b));
+    expect(stableStringify(canonicalEvaluationContext(a))).toBe(
+      stableStringify(canonicalEvaluationContext(b)),
     );
   });
 
@@ -341,9 +362,7 @@ describe("fingerprint changes one field at a time", () => {
   });
 
   it("strength cape", async () => {
-    await expectDiff("strengthCape", (r) =>
-      withSim(r, (s) => ({ ...s, strengthCape99: true })),
-    );
+    await expectDiff("strengthCape", (r) => withSim(r, (s) => ({ ...s, strengthCape99: true })));
   });
 
   it("equipment effects beyond vestments pieces", async () => {
@@ -403,10 +422,7 @@ describe("rememberSolvedBar validation", () => {
       await rememberSolvedBar(request, verifiedDto(request, { score: Number.NaN })),
     ).toBeNull();
     expect(
-      await rememberSolvedBar(
-        request,
-        verifiedDto(request, { score: Number.POSITIVE_INFINITY }),
-      ),
+      await rememberSolvedBar(request, verifiedDto(request, { score: Number.POSITIVE_INFINITY })),
     ).toBeNull();
   });
 
@@ -414,10 +430,7 @@ describe("rememberSolvedBar validation", () => {
     const request = sampleRequest({ minBarSize: 6, maxBarSize: 8 });
     // Too short for request min (even if >= product floor).
     expect(
-      await rememberSolvedBar(
-        request,
-        verifiedDto(request, { bar: ["a", "b", "c", "d", "e"] }),
-      ),
+      await rememberSolvedBar(request, verifiedDto(request, { bar: ["a", "b", "c", "d", "e"] })),
     ).toBeNull();
     // Too long for request max.
     expect(
@@ -452,9 +465,9 @@ describe("rememberSolvedBar validation", () => {
         }),
       ),
     ).toBe(false);
-    expect(
-      isVerifiedCacheableResult(request, verifiedDto(request, { bar: ["a", "b"] })),
-    ).toBe(false);
+    expect(isVerifiedCacheableResult(request, verifiedDto(request, { bar: ["a", "b"] }))).toBe(
+      false,
+    );
   });
 
   it("empty solveIdentity is not cacheable", async () => {
@@ -470,10 +483,7 @@ describe("rememberSolvedBar validation", () => {
     expect(solveContextPayload(request)).toBe(identity);
     expect(isVerifiedCacheableResult(request, verifiedDto(request))).toBe(true);
     expect(
-      isVerifiedCacheableResult(
-        request,
-        verifiedDto(request, { solveIdentity: identity + "x" }),
-      ),
+      isVerifiedCacheableResult(request, verifiedDto(request, { solveIdentity: identity + "x" })),
     ).toBe(false);
     expect(
       resultMatchesRequestIdentity(
@@ -482,10 +492,7 @@ describe("rememberSolvedBar validation", () => {
       ),
     ).toBe(false);
     expect(
-      await rememberSolvedBar(
-        request,
-        verifiedDto(request, { solveIdentity: identity + "x" }),
-      ),
+      await rememberSolvedBar(request, verifiedDto(request, { solveIdentity: identity + "x" })),
     ).toBeNull();
     expect(await rememberSolvedBar(request, verifiedDto(request))).not.toBeNull();
   });

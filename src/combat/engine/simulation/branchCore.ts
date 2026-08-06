@@ -1,10 +1,6 @@
 import { cloneAnalysisState, mixAnalysisStates } from "../analysis";
 import type { BranchBudget, CastRecord } from "./contracts";
-import {
-  keepsAnalysisLedgers,
-  keepsPerAbilityMap,
-  keepsPresentationHistory,
-} from "./contracts";
+import { keepsAnalysisLedgers, keepsPerAbilityMap, keepsPresentationHistory } from "./contracts";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { mergeSupportOffsets } from "./stats";
 import { buildBranchKey } from "./branchKey";
@@ -25,11 +21,7 @@ export interface Branch {
  * discarded / residual mass is never reassigned to a non-equivalent survivor.
  */
 export type BranchExactness =
-  | "exact"
-  | "merged-exactly"
-  | "bounded-approximation"
-  | "truncated"
-  | "resampled";
+  "exact" | "merged-exactly" | "bounded-approximation" | "truncated" | "resampled";
 
 /** Live branches plus mass removed without fabricating a concrete state. */
 export interface BranchSet {
@@ -59,10 +51,8 @@ export function emptyBranchSet(
   return { branches: [...branches], residualWeight, exactness };
 }
 
-// ---------------------------------------------------------------------------
 // Phase-0 branching cost profile (measure only; no semantic effect).
 // Gate: RS3_BRANCH_PROF=1|true, or enableBranchProfiling().
-// ---------------------------------------------------------------------------
 
 export interface BranchProfile {
   /** snapshotRuntime invocations. */
@@ -233,7 +223,7 @@ function estimateSnapshotCost(rt: SimulationRuntime): { fields: number; bytes: n
  * Clone cast/record shell. HitResult entries in result.hits are immutable number
  * bags and already shared by ref across branches (same as hitDetails values).
  *
- * Score-only never grows result.hits — share the hits array by ref (usually empty)
+ * Score-only never grows result.hits; share the hits array by ref (usually empty)
  * and only clone the mutable expected/min/max result bag.
  */
 function cloneCastRecord(
@@ -267,7 +257,7 @@ export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
   const scoreOnly = rt.detailLevel === "score-only";
   const recordClones = new Map<CastRecord, CastRecord>();
 
-  // Cast records stay mutable (expected/min/max, adren after) even on score-only —
+  // Cast records stay mutable (expected/min/max, adren after) even on score-only;
   // independent shells required. Presentation hit arrays stripped on score-only.
   const casts =
     rt.casts.length === 0
@@ -290,10 +280,9 @@ export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
   const hitDetails = rt.hitDetails.size === 0 ? new Map() : new Map(rt.hitDetails);
 
   // SpiritEventMeta is {id, untilTick, kind}; only keys are deleted/replaced.
-  const spiritEventMeta =
-    rt.spiritEventMeta.size === 0 ? new Map() : new Map(rt.spiritEventMeta);
+  const spiritEventMeta = rt.spiritEventMeta.size === 0 ? new Map() : new Map(rt.spiritEventMeta);
 
-  // Score-only never appends presentation history — skip large events walk/copy.
+  // Score-only never appends presentation history; skip the events walk/copy.
   // full-analysis: resolved history entries are immutable; array shell independent.
   const events = scoreOnly
     ? ([] as SimulationRuntime["events"])
@@ -313,7 +302,7 @@ export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
   return {
     ...rt,
     queue: rt.queue.clone(),
-    // NEVER share rt.state by ref — structuredClone required for branch isolation.
+    // Runtime state is mutable; structuredClone preserves branch isolation.
     state: structuredClone(rt.state),
     casts,
     perAbility,
@@ -403,6 +392,7 @@ function mergePair(a: Branch, b: Branch): Branch {
  */
 export function mergeBranches(branches: readonly Branch[]): Branch[] {
   if (branchProfEnabled) noteBranchLiveCount(branches.length);
+  if (branches.length <= 1) return [...branches];
   const byKey = new Map<string, Branch>();
   for (const branch of branches) {
     const key =

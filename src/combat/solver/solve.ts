@@ -11,11 +11,7 @@ import { runAnnealing, runAnnealingAsync } from "./search/annealing";
 import { runLocalSearch, runLocalSearchAsync } from "./search/localSearch";
 import { finalizeSearch, finalizeSearchAsync } from "./search/finalize";
 import { runMediumScreen, runMediumScreenAsync } from "./search/mediumScreen";
-import {
-  beginMediumStage,
-  beginShortStage,
-  planFidelityStages,
-} from "./search/fidelityBudget";
+import { beginMediumStage, beginShortStage, planFidelityStages } from "./search/fidelityBudget";
 import { createYieldCtx, maybeYield, yieldEveryForTier } from "./search/yield";
 import { planRecipe } from "./workerPlan";
 import { beginSolverProfileWindow } from "./profiling";

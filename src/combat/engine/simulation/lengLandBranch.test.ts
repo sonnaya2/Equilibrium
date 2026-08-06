@@ -32,10 +32,9 @@ describe("Leng land expansion", () => {
     expect(set.branches).toHaveLength(1);
     expect(set.residualWeight).toBe(0);
     expect(set.exactness).toBe("exact");
-    expect(expectedStacksFromAtoms(set.branches[0]!.rt.state.melee.primordialIce.atoms)).toBeCloseTo(
-      0.12,
-      12,
-    );
+    expect(
+      expectedStacksFromAtoms(set.branches[0]!.rt.state.melee.primordialIce.atoms),
+    ).toBeCloseTo(0.12, 12);
     expect(set.branches[0]!.rt.state.melee.primordialIce.atoms).toHaveLength(4);
   });
 
@@ -74,12 +73,16 @@ describe("Leng land expansion", () => {
     const branch: Branch = { weight: 0.25, rt };
     const set = expandLengOnLand(branch, 7);
     expect(set.branches[0]!.weight).toBe(0.25);
-    expect(set.branches[0]!.rt.state.melee.primordialIce.atoms.every((atom) =>
-      Number.isInteger(atom.stacks),
-    )).toBe(true);
-    expect(set.branches[0]!.rt.state.melee.primordialIce.atoms.reduce((sum, atom) => sum + atom.weight, 0)).toBeCloseTo(
-      1,
-      12,
-    );
+    expect(
+      set.branches[0]!.rt.state.melee.primordialIce.atoms.every((atom) =>
+        Number.isInteger(atom.stacks),
+      ),
+    ).toBe(true);
+    expect(
+      set.branches[0]!.rt.state.melee.primordialIce.atoms.reduce(
+        (sum, atom) => sum + atom.weight,
+        0,
+      ),
+    ).toBeCloseTo(1, 12);
   });
 });

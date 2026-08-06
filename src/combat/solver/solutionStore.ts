@@ -8,10 +8,7 @@
  */
 
 import { loadState, saveState } from "@/lib/storage";
-import {
-  isVerifiedCacheableResult,
-  solveIdentityFromRequest,
-} from "./identity";
+import { isVerifiedCacheableResult, solveIdentityFromRequest } from "./identity";
 import type { SerializableSolverRequest, SolverResultDTO } from "./worker/serializable";
 import {
   ABSOLUTE_MAX_BAR_SIZE,

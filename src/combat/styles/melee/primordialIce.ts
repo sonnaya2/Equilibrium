@@ -30,7 +30,9 @@ function clampStacks(stacks: number): number {
   return Math.max(0, Math.min(PRIMORDIAL_ICE_CAP, Math.floor(stacks)));
 }
 
-function atomKey(atom: Pick<LengAtom, "stacks" | "stacksExpireAtTick" | "frostbladesExpireAtTick">): string {
+function atomKey(
+  atom: Pick<LengAtom, "stacks" | "stacksExpireAtTick" | "frostbladesExpireAtTick">,
+): string {
   return `${atom.stacks}|${atom.stacksExpireAtTick}|${atom.frostbladesExpireAtTick}`;
 }
 
@@ -126,8 +128,9 @@ export function applyLengLandToDistribution(
         stacks: Math.min(PRIMORDIAL_ICE_CAP, atom.stacks + arm.stackAdd),
         stacksExpireAtTick:
           arm.stackAdd > 0 ? tick + PRIMORDIAL_ICE_DURATION_TICKS : atom.stacksExpireAtTick,
-        frostbladesExpireAtTick:
-          arm.opensFrostblades ? tick + FROSTBLADES_DURATION_TICKS : atom.frostbladesExpireAtTick,
+        frostbladesExpireAtTick: arm.opensFrostblades
+          ? tick + FROSTBLADES_DURATION_TICKS
+          : atom.frostbladesExpireAtTick,
       });
     }
   }

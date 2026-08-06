@@ -39,9 +39,7 @@ function finiteOrNeg(n: number | null | undefined): number {
   return n != null && Number.isFinite(n) ? n : Number.NEGATIVE_INFINITY;
 }
 
-function exactnessString(
-  v: string | { toString(): string } | null | undefined,
-): string | null {
+function exactnessString(v: string | { toString(): string } | null | undefined): string | null {
   if (v == null) return null;
   return typeof v === "string" ? v : String(v);
 }
@@ -57,9 +55,7 @@ export function snapshotFromEvaluation(
   if (!summary && !evaluation.ok) return null;
 
   const objectiveOk =
-    evaluation.objective && evaluation.objective.ok === true
-      ? evaluation.objective
-      : null;
+    evaluation.objective && evaluation.objective.ok === true ? evaluation.objective : null;
   const metrics = evaluation.metrics;
 
   const rng = summary?.rng;
@@ -230,9 +226,7 @@ export function compareScoreAnalysisParity(
   return { pass: mismatches.length === 0, mismatches };
 }
 
-export function parityFailureMessage(
-  mismatches: readonly ScoreAnalysisParityMismatch[],
-): string {
+export function parityFailureMessage(mismatches: readonly ScoreAnalysisParityMismatch[]): string {
   if (mismatches.length === 0) return "score-analysis parity failed";
   const parts = mismatches.map((m) => {
     if (m.delta !== undefined && Number.isFinite(m.delta)) {

@@ -17,10 +17,7 @@ export type PassiveLifecycle =
 
 /** Full modeling status on registry definitions. */
 export type PassiveModelingSupport =
-  | "modeled"
-  | "partially-modeled"
-  | "not-modeled"
-  | "mechanics-unverified";
+  "modeled" | "partially-modeled" | "not-modeled" | "mechanics-unverified";
 
 /** Gear / UI support badge (subset of modeling status). */
 export type PassiveSupport = "modeled" | "partially-modeled" | "not-modeled";

@@ -130,10 +130,7 @@ export const newMagicRotationState = (): MagicRotationState => ({
 });
 
 /** Half-open: active while tick < untilTick. */
-export function tsunamiCritAdrenActive(
-  state: MagicRotationState,
-  tick: number,
-): boolean {
+export function tsunamiCritAdrenActive(state: MagicRotationState, tick: number): boolean {
   return state.tsunamiCritAdrenUntilTick > 0 && tick < state.tsunamiCritAdrenUntilTick;
 }
 

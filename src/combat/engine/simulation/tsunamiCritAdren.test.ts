@@ -16,10 +16,7 @@ import {
 import { rotationOf } from "./contracts";
 import { createCastContext } from "./context";
 import { simulate, type SimulateInput } from "./simulate";
-import {
-  expandTsunamiCritAdrenOnLand,
-  tsunamiCritChanceFromDamage,
-} from "./tsunamiCritBranch";
+import { expandTsunamiCritAdrenOnLand, tsunamiCritChanceFromDamage } from "./tsunamiCritBranch";
 import { createRuntime } from "../runtime/runtime";
 import { gainAdrenaline, patchMagic } from "../runtime/state";
 import { packageCritical } from "../resolution/types";
@@ -255,8 +252,7 @@ describe("Tsunami crit-adren window", () => {
     expect(scoreOnly.events).toEqual([]);
     expect(scoreOnly.casts).toEqual([]);
     if (scoreOnly.rng) {
-      const mass =
-        (scoreOnly.rng.probabilityMass ?? 0) + (scoreOnly.rng.residualWeight ?? 0);
+      const mass = (scoreOnly.rng.probabilityMass ?? 0) + (scoreOnly.rng.residualWeight ?? 0);
       expect(mass).toBeCloseTo(1, 8);
       expect(scoreOnly.rng.exactness).toBe(full.rng?.exactness);
     }

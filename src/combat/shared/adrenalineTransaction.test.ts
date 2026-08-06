@@ -4,9 +4,7 @@ import {
   previewAdrenalineTransaction,
   resolveAdrenalineTransaction,
 } from "./adrenalineTransaction";
-import {
-  CONSERVATION_OF_ENERGY_REFUND,
-} from "./conservationOfEnergy";
+import { CONSERVATION_OF_ENERGY_REFUND } from "./conservationOfEnergy";
 import { RING_OF_VIGOUR_REFUND } from "./ringOfVigour";
 
 const baseGain = {

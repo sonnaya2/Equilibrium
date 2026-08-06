@@ -3,7 +3,7 @@ import type { CastRecord, RotationSummary } from "./contracts";
 
 /**
  * Engine-owned, UI-neutral classification of why a Revolution ultimate never
- * (or rarely) cast. Reconstructs from the cast log only — no hidden adren
+ * (or rarely) cast. Reconstructs from the cast log only; no hidden adren
  * reservation and no mutation of Revolution policy.
  */
 
@@ -93,12 +93,14 @@ export function diagnoseUltimateStarvation(
   const minGapTicks =
     firstCastTick !== null && secondCastTick !== null ? secondCastTick - firstCastTick : null;
   const outsideManagedBar = ultimateBarIndex < 0;
-  const drainedBelowCost =
-    higherPrioritySpends > 0 && maxAdrenalineBefore < ultimateCost;
+  const drainedBelowCost = higherPrioritySpends > 0 && maxAdrenalineBefore < ultimateCost;
   const priorityStarved =
     castCount === 0 && !outsideManagedBar && (prioritySteals.length > 0 || drainedBelowCost);
   const unexplainedMiss =
-    castCount === 0 && !outsideManagedBar && higherPrioritySpends === 0 && prioritySteals.length === 0;
+    castCount === 0 &&
+    !outsideManagedBar &&
+    higherPrioritySpends === 0 &&
+    prioritySteals.length === 0;
 
   return {
     ultimateId,

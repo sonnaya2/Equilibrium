@@ -82,8 +82,7 @@ export const ARCHAEOLOGY_RELICS: readonly ArchaeologyRelicDefinition[] = [
     category: "combat",
     requiredRegions: ["morytania"],
     icon: PERM("berserkers-fury"),
-    effect:
-      "Up to +5.5% damage as current LP falls below max. Not bleeds.",
+    effect: "Up to +5.5% damage as current LP falls below max. Not bleeds.",
     implementation: "full",
   },
   {
@@ -518,10 +517,7 @@ export function sanitizeArchaeologyState(
 
 /** Why a select attempt fails. Null when already selected or free to select. */
 export type ArchaeologySelectRejectReason =
-  | "unknown_relic"
-  | "region_locked"
-  | "active_slot_limit"
-  | "energy_limit";
+  "unknown_relic" | "region_locked" | "active_slot_limit" | "energy_limit";
 
 export type ArchaeologyToggleResult =
   | { ok: true; action: "selected" | "deselected"; selectedIds: string[] }
@@ -540,10 +536,7 @@ export function archaeologySelectBlockReason(input: {
   if (input.selectedIds.includes(input.relicId)) return null;
   const relic = BY_ID.get(input.relicId);
   if (!relic) return "unknown_relic";
-  if (
-    input.unlockedRegions != null &&
-    !relicRegionsMet(relic, input.unlockedRegions)
-  ) {
+  if (input.unlockedRegions != null && !relicRegionsMet(relic, input.unlockedRegions)) {
     return "region_locked";
   }
   const activeCount = knownSelectedRelics(input.selectedIds).length;

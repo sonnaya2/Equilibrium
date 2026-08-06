@@ -58,6 +58,8 @@ describe.skipIf(!enabled)("leng microbench (score-only single bar)", () => {
       // Score-only Leng atom path: no multi-arm snapshotRuntime.
       expect(leng.branchProfile?.branchSnapshots ?? -1).toBe(0);
       expect(leng.branchProfile?.maxLiveBranches ?? 99).toBeLessThanOrEqual(1);
+      expect(leng.branchProfile?.branchKeySerializations ?? -1).toBe(0);
+      expect(peer.branchProfile?.branchKeySerializations ?? -1).toBe(0);
       expect((peer.branchProfile?.branchSnapshots ?? 0) === 0).toBe(true);
     }
   }, 15_000);

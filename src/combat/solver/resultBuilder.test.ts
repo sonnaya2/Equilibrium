@@ -278,9 +278,7 @@ describe("buildSolverResultDto", () => {
       parityRejectCount: 2,
     });
     expect(dto.proof?.notes?.some((n) => n === "score-analysis parity ok")).toBe(true);
-    expect(dto.proof?.notes?.some((n) => n === "score-analysis parity rejected 2")).toBe(
-      true,
-    );
+    expect(dto.proof?.notes?.some((n) => n === "score-analysis parity rejected 2")).toBe(true);
   });
 
   it("rejects failed solve with no full winners (Phase 4)", () => {

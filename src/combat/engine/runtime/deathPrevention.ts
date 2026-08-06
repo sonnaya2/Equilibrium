@@ -1,7 +1,4 @@
-import {
-  applyIncomingPlayerDamage,
-  type PlayerVitality,
-} from "../../core/playerVitality";
+import { applyIncomingPlayerDamage, type PlayerVitality } from "../../core/playerVitality";
 
 /**
  * Reusable death-prevention / revive charges for sim runtime.

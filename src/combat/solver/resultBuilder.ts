@@ -101,9 +101,7 @@ export function buildSolverResultDto(args: {
 
   if (presentation) {
     if (!Number.isFinite(presentation.recheckScore)) {
-      throw new Error(
-        "solver failed: score-analysis parity; presentation recheckScore not finite",
-      );
+      throw new Error("solver failed: score-analysis parity; presentation recheckScore not finite");
     }
     const delta = presentation.recheckScore - score;
     if (Math.abs(delta) > SCORE_ANALYSIS_PARITY_TOLERANCE) {
@@ -142,7 +140,7 @@ export function buildSolverResultDto(args: {
   const baselineBar =
     result.incumbentBar != null && result.incumbentBar.length > 0
       ? [...result.incumbentBar]
-      : result.incumbentBar ?? null;
+      : (result.incumbentBar ?? null);
 
   const residualMass =
     typeof presentation?.rng?.residualWeight === "number"

@@ -78,7 +78,7 @@ const PURE_TYPE: Record<string, string> = {
   "city/skilling hub": "Hub",
   "high-level hub": "Hub",
   "construction / slayer hub": "Hub",
-  // Old taxonomy string — never show raw in Type column
+  // Old taxonomy string; never show raw in the Type column.
   "starting-region fishing infrastructure": "Fishing",
   "starting-region Fishing infrastructure": "Fishing",
   fishing: "Fishing",

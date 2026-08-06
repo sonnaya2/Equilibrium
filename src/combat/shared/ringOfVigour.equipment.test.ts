@@ -56,6 +56,9 @@ describe("Ring of vigour equipment", () => {
       style: "melee",
       equipmentSlots: { ring: RING_OF_VIGOUR_ITEM_ID },
     });
-    expect(withRing.equipmentStyleDamageBonus - bare.equipmentStyleDamageBonus).toBeCloseTo(16.8, 5);
+    expect(withRing.equipmentStyleDamageBonus - bare.equipmentStyleDamageBonus).toBeCloseTo(
+      16.8,
+      5,
+    );
   });
 });

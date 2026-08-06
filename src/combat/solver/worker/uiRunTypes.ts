@@ -5,6 +5,13 @@ import type { BranchFidelityAttemptMeta } from "../branchFidelity";
 import type { UiRunProbeResult } from "../uiRunCore";
 import type { RotationSummary } from "../../engine/simulation/simulate";
 
+export function toSerializableUiRunSummary(summary: RotationSummary): RotationSummary {
+  return {
+    ...summary,
+    events: summary.events.map(({ castSnap: _castSnap, ...event }) => event),
+  };
+}
+
 export interface SerializableUiRunRequest {
   loadout: SerializableRevolutionSimBase;
   barIds: readonly string[];

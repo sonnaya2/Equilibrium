@@ -173,17 +173,9 @@ describe("vigourForensic", () => {
       expect(report.diagnostic.off).toBe(0);
       expect(report.diagnostic.on).toBe(10);
     }
-    expect(report.off.sequence).toEqual([
-      "berserk",
-      "attack",
-      "attack",
-      "attack",
-      "assault",
-    ]);
+    expect(report.off.sequence).toEqual(["berserk", "attack", "attack", "attack", "assault"]);
     expect(report.on.sequence).toEqual(report.off.sequence);
-    expect(report.on.rows[4]!.adrenalineBefore).toBe(
-      report.off.rows[4]!.adrenalineBefore + 10,
-    );
+    expect(report.on.rows[4]!.adrenalineBefore).toBe(report.off.rows[4]!.adrenalineBefore + 10);
   });
 
   it("rows carry branchWeight and cumulative expected damage monotonically", () => {

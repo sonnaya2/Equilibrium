@@ -71,9 +71,7 @@ export function abilityIconPath(
   abilityId: string,
   style: keyof typeof STYLE_ICON | string,
 ): string {
-  const bare = abilityId.includes(":")
-    ? abilityId.slice(abilityId.indexOf(":") + 1)
-    : abilityId;
+  const bare = abilityId.includes(":") ? abilityId.slice(abilityId.indexOf(":") + 1) : abilityId;
   const withoutVariant = bare.replace(ABILITY_ICON_VARIANT_SUFFIX, "").toLowerCase();
   const lookupId = withoutVariant.replace(/-/g, "_");
   let slug = withoutVariant.replace(/_/g, "-");
@@ -1131,7 +1129,7 @@ const DATA_ICON_ALIASES: Record<string, string> = {
   // Hollow Hill meat shop plate (not raw crayfish / random meat sprite).
   "old meats (hollow hill meat shop)": "old-meats",
   "old meats": "old-meats",
-  // Amberfell mushroom shop (not Meilyr recipe shop — that was a wrong alias).
+  // Amberfell mushroom shop, not the Meilyr recipe shop.
   "fern's finds": "ferns-finds",
   "ferns finds": "ferns-finds",
   "heather's crafting supplies": "ruby",
@@ -2011,7 +2009,7 @@ function skillHubIconFromBag(bag: string): string | null {
   const hit = (skill: string) => skillIconPath(skill);
 
   // Farming first - "crystal tree Farming" must not fall through to woodcutting.
-  // Named "Manor Farm" hub keeps its own plate via DATA_ICON_ALIASES — do not steal to skill glyph.
+  // Named "Manor Farm" hub keeps its own plate via DATA_ICON_ALIASES.
   if (
     !/\bmanor farm\b/i.test(bag) &&
     /\bfarming patch\b|\bfarming patches\b|\bfarm(?:ing)?\b.*\bpatch|\bpatch cluster\b|\ballotment\b|\bherb patch\b|\btree patch\b|\bhops patch\b|\bbush patch\b|\bmushroom patch\b|\bcactus patch\b|\bcalquat\b|\bflower patch\b|\bharmony pillar|\bcrystal tree\b|\bmarigold farm\b|\beastfold farm\b/i.test(
@@ -2130,7 +2128,7 @@ const ENTITY_ICON_OVERRIDES: Record<string, string> = {
   "mazcab emergency merchants": "/game/upgrades/permanent-unlocks/super-restore.webp",
   "meilyr recipe shop": "/game/activities/meilyr-recipe-shop.webp",
   "meilyr recipe shop and combination potions": "/game/activities/meilyr-recipe-shop.webp",
-  // QBD uses /game/bosses/queen-black-dragon.webp via primaryBossIconPath — do not
+  // QBD uses /game/bosses/queen-black-dragon.webp via primaryBossIconPath; do not
   // override the row with dragon kiteshield (that stays a reward chip only).
   "ports armour": "/game/upgrades/progression/tetsu-body.webp",
   scrimshaws: "/game/combat/equipment/scrimshaw-of-cruelty.webp",

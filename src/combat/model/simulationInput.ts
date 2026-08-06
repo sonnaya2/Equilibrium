@@ -85,9 +85,7 @@ export function projectSerializableSimBase(
     weaponConfiguration: model.weaponConfiguration,
     modifierSources: {
       ...model.modifierSources,
-      setCounts: [...model.modifierSources.setCounts].map(
-        ([id, n]) => [id, n] as const,
-      ),
+      setCounts: [...model.modifierSources.setCounts].map(([id, n]) => [id, n] as const),
       slayer: { ...model.modifierSources.slayer },
       target: { ...model.modifierSources.target },
       slayerHelmet: model.modifierSources.slayerHelmet

@@ -124,13 +124,7 @@ function RelicRow({
   );
 }
 
-export function ArchPanel({
-  loadout,
-  setLoadout,
-}: {
-  loadout: Loadout;
-  setLoadout: SetLoadout;
-}) {
+export function ArchPanel({ loadout, setLoadout }: { loadout: Loadout; setLoadout: SetLoadout }) {
   const { build } = useBuild();
   const [rejectHint, setRejectHint] = useState<string | null>(null);
   const unlockedRegions = useMemo(
@@ -229,8 +223,7 @@ export function ArchPanel({
 
   // CoE / FotS / HS from selectedIds (and direct adrenaline fields), not ultRefund - RoV.
   const adren = stats.adrenaline as
-    | (typeof stats.adrenaline & { conservationOfEnergyRefund?: number })
-    | undefined;
+    (typeof stats.adrenaline & { conservationOfEnergyRefund?: number }) | undefined;
   const fotsBonus = fotsSelected
     ? (adren?.basicAdrenalineFlatBonus ?? FURY_OF_THE_SMALL_EXTRA_ADRENALINE)
     : 0;
@@ -251,12 +244,7 @@ export function ArchPanel({
         unlockedRegions,
         requestedCap: prev.archaeology?.energyCap ?? null,
       });
-      const { loadout: next, result } = applyArchaeologyToggle(
-        prev,
-        relicId,
-        cap,
-        unlockedRegions,
-      );
+      const { loadout: next, result } = applyArchaeologyToggle(prev, relicId, cap, unlockedRegions);
       if (!result.ok) {
         setRejectHint(archaeologyRejectLabel(result.reason));
         return prev;
@@ -307,7 +295,10 @@ export function ArchPanel({
           </p>
         ) : null}
         {adrenLive.length > 0 ? (
-          <ul className="arch-energy__live mt-1.5 space-y-0.5 text-[11px] text-gem-300" data-testid="arch-adren-live">
+          <ul
+            className="arch-energy__live mt-1.5 space-y-0.5 text-[11px] text-gem-300"
+            data-testid="arch-adren-live"
+          >
             {adrenLive.map((line) => (
               <li key={line}>{line}</li>
             ))}
@@ -372,9 +363,7 @@ export function ArchPanel({
             />
             <div className="arch-relic-bonus" aria-live="polite">
               <span className="arch-relic-bonus__label">Damage bonus</span>
-              <strong className="arch-relic-bonus__value">
-                +{BONUS_FORMAT.format(liveBonus)}
-              </strong>
+              <strong className="arch-relic-bonus__value">+{BONUS_FORMAT.format(liveBonus)}</strong>
               {maximumLife > 0 ? (
                 <span className="arch-relic-bonus__basis">
                   {currentLifePoints.toLocaleString()} / {maximumLife.toLocaleString()} LP

@@ -563,7 +563,7 @@ describe("loadoutStats", () => {
     expect(loadoutStats(defender).accuracyRating).toBeCloseTo(
       loadoutStats(dual).accuracyRating * 1.03,
     );
-    // Manual accuracy is a final Damage Potential override when no target is set - 
+    // Manual accuracy is a final Damage Potential override when no target is set -
     // defender ×1.03 does not re-scale the slider (it still multiplies accuracyRating).
     expect(loadoutStats(shield).dp).toBe(0.5);
     expect(loadoutStats(defender).dp).toBe(0.5);
@@ -1004,6 +1004,7 @@ describe("loadoutStats", () => {
     it("derives blessing inputs from Build picks without replacing the existing stats model", () => {
       const aegisLoadout: Loadout = {
         ...base,
+        buffs: { ...base.buffs, aegisArmourBasis: "equipment" },
         equipmentSlots: { body: "mock:defence-body" },
       };
       const aegis = loadoutStats(aegisLoadout, {
@@ -1272,7 +1273,9 @@ describe("loadoutStats", () => {
         { unlockedRegions: ["misthalin", "kandarin", "morytania"] },
       );
       expect(on.adrenaline?.maxAdrenalineBonus).toBe(10);
-      expect((on.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund).toBeUndefined();
+      expect(
+        (on.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund,
+      ).toBeUndefined();
       expect(
         (on.adrenaline as { conservationOfEnergyRefund?: number } | undefined)
           ?.conservationOfEnergyRefund,
@@ -1308,7 +1311,9 @@ describe("loadoutStats", () => {
         archaeology: { selectedIds: ["conservation_of_energy"], energyCap: 500 },
         buffs: { ...base.buffs, conservationOfEnergy: false },
       });
-      expect((on.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund).toBeUndefined();
+      expect(
+        (on.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund,
+      ).toBeUndefined();
       expect(
         (on.adrenaline as { conservationOfEnergyRefund?: number }).conservationOfEnergyRefund,
       ).toBe(10);
@@ -1319,7 +1324,9 @@ describe("loadoutStats", () => {
         ...base,
         equipmentSlots: { ...base.equipmentSlots, ring: "item:ring-of-vigour" },
       });
-      expect((on.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund).toBeUndefined();
+      expect(
+        (on.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund,
+      ).toBeUndefined();
       expect(on.adrenaline?.ringOfVigour).toBe(true);
       expect(on.activePassives.some((p) => p.startsWith("Ring of Vigour"))).toBe(true);
     });
@@ -1332,7 +1339,9 @@ describe("loadoutStats", () => {
         },
         { unlockedRegions: ["anachronia"] },
       );
-      expect((on.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund).toBeUndefined();
+      expect(
+        (on.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund,
+      ).toBeUndefined();
       expect(on.adrenaline?.ringOfVigour).toBe(true);
     });
 
@@ -1345,7 +1354,9 @@ describe("loadoutStats", () => {
         },
         { unlockedRegions: ["anachronia"] },
       );
-      expect((on.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund).toBeUndefined();
+      expect(
+        (on.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund,
+      ).toBeUndefined();
       expect(on.adrenaline?.ringOfVigour).toBe(true);
       const vigourLines = on.activePassives.filter((p) => p.startsWith("Ring of Vigour"));
       expect(vigourLines).toHaveLength(1);
@@ -1363,7 +1374,9 @@ describe("loadoutStats", () => {
         },
         { unlockedRegions: ["anachronia", "kandarin"] },
       );
-      expect((on.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund).toBeUndefined();
+      expect(
+        (on.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund,
+      ).toBeUndefined();
       expect(on.adrenaline?.conservationOfEnergyRefund).toBe(10);
       expect(on.adrenaline?.ringOfVigour).toBe(true);
     });
@@ -1376,7 +1389,9 @@ describe("loadoutStats", () => {
         },
         { unlockedRegions: ["misthalin", "karamja"] },
       );
-      expect((passiveOnly.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund).toBeUndefined();
+      expect(
+        (passiveOnly.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund,
+      ).toBeUndefined();
       expect(passiveOnly.adrenaline?.ringOfVigour).toBeUndefined();
 
       const ringOnly = loadoutStats(
@@ -1387,7 +1402,9 @@ describe("loadoutStats", () => {
         },
         { unlockedRegions: ["misthalin"] },
       );
-      expect((ringOnly.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund).toBeUndefined();
+      expect(
+        (ringOnly.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund,
+      ).toBeUndefined();
       expect(ringOnly.adrenaline?.ringOfVigour).toBe(true);
     });
 
@@ -1426,11 +1443,7 @@ describe("loadoutStats", () => {
       const over = loadoutStats({
         ...base,
         archaeology: {
-          selectedIds: [
-            "fury_of_the_small",
-            "heightened_senses",
-            "conservation_of_energy",
-          ],
+          selectedIds: ["fury_of_the_small", "heightened_senses", "conservation_of_energy"],
           energyCap: 650,
         },
         buffs: {
@@ -1444,7 +1457,9 @@ describe("loadoutStats", () => {
       expect(over.adrenaline?.basicAdrenalineFlatBonus).toBe(1);
       expect(over.adrenaline?.maxAdrenalineBonus).toBe(10);
       expect(over.adrenaline?.conservationOfEnergyRefund).toBeUndefined();
-      expect((over.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund).toBeUndefined();
+      expect(
+        (over.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund,
+      ).toBeUndefined();
 
       // FotS (150) + CoE (350) = 500 fits under both 500 and 650.
       const fit = loadoutStats({
@@ -1461,7 +1476,9 @@ describe("loadoutStats", () => {
       });
       expect(fit.adrenaline?.basicAdrenalineFlatBonus).toBe(1);
       expect(fit.adrenaline?.conservationOfEnergyRefund).toBe(10);
-      expect((fit.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund).toBeUndefined();
+      expect(
+        (fit.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund,
+      ).toBeUndefined();
       expect(fit.adrenaline?.maxAdrenalineBonus).toBeUndefined();
     });
     it("with unlockedRegions without Anachronia, drops over-500 energy from the end", () => {
@@ -1471,11 +1488,7 @@ describe("loadoutStats", () => {
         {
           ...base,
           archaeology: {
-            selectedIds: [
-              "heightened_senses",
-              "conservation_of_energy",
-              "fury_of_the_small",
-            ],
+            selectedIds: ["heightened_senses", "conservation_of_energy", "fury_of_the_small"],
             energyCap: 650,
           },
           buffs: {
@@ -1491,9 +1504,10 @@ describe("loadoutStats", () => {
       expect(stats.maxAdrenaline).toBe(110);
       expect(stats.adrenaline?.maxAdrenalineBonus).toBe(10);
       expect(stats.adrenaline?.conservationOfEnergyRefund).toBeUndefined();
-      expect((stats.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund).toBeUndefined();
+      expect(
+        (stats.adrenaline as { ultimateAdrenalineRefund?: number }).ultimateAdrenalineRefund,
+      ).toBeUndefined();
       expect(stats.adrenaline?.basicAdrenalineFlatBonus).toBeUndefined();
     });
-
   });
 });

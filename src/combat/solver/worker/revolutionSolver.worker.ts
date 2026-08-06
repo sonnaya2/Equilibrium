@@ -56,14 +56,9 @@ async function runUiJob(
     }
 
     const { requireSimBase, buildRevolutionInput } = await import("./revive");
-    const {
-      resolveAbilityCatalogue,
-      resolveAbilitySpecsFromCatalogue,
-    } = await import("../../abilities/catalogue");
-    const {
-      simulateUiRunProbe,
-      simulateUiRunFullAnalysis,
-    } = await import("../uiRunCore");
+    const { resolveAbilityCatalogue, resolveAbilitySpecsFromCatalogue } =
+      await import("../../abilities/catalogue");
+    const { simulateUiRunProbe, simulateUiRunFullAnalysis } = await import("../uiRunCore");
     const { UI_RUN_BRANCH_FIDELITY_LADDER } = await import("../branchFidelity");
 
     if (cancelled.has(requestId) || runningId !== requestId) {
@@ -107,10 +102,11 @@ async function runUiJob(
         post({ type: "cancelled", requestId });
         return;
       }
+      const { toSerializableUiRunSummary } = await import("./uiRunTypes");
       post({
         type: "ui_run_result",
         requestId,
-        result: { kind: "full", summary, meta },
+        result: { kind: "full", summary: toSerializableUiRunSummary(summary), meta },
       });
       return;
     }

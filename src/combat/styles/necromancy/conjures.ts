@@ -341,9 +341,7 @@ export function applyGhostCommand(state: ConjureState): ConjureState {
   const ghost = findConjure(state, "vengeful_ghost");
   if (!ghost) return state;
   return {
-    spirits: state.spirits.map((s) =>
-      s.id === "vengeful_ghost" ? { ...s, commanding: true } : s,
-    ),
+    spirits: state.spirits.map((s) => (s.id === "vengeful_ghost" ? { ...s, commanding: true } : s)),
   };
 }
 

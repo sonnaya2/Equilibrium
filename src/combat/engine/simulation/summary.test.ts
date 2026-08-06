@@ -63,6 +63,8 @@ describe("summary — Crackling / Aftershock proc state", () => {
     expect(s.perAbility.aftershock).toBeCloseTo(636, 5);
     expect(s.totalExpected).toBeCloseTo(abilityExpected + 636, 5);
     expect(s.events.filter((event) => event.abilityId === "aftershock")).toHaveLength(2);
+    expect(s.rng?.exactness).toBe("approximated");
+    expect(s.damage.eligibleForRanking).toBe(false);
   });
 
   it("Crackling damage contributes to Aftershock without creating a free proc", () => {

@@ -118,7 +118,9 @@ describe("scoreAnalysisParity", () => {
 
   it("passes when score-only and full-analysis match within tol", () => {
     const a = snapshotFromEvaluation(baseEval())!;
-    const b = snapshotFromEvaluation(baseEval({ score: 12_000 + SCORE_ANALYSIS_PARITY_TOLERANCE / 2 }))!;
+    const b = snapshotFromEvaluation(
+      baseEval({ score: 12_000 + SCORE_ANALYSIS_PARITY_TOLERANCE / 2 }),
+    )!;
     const cmp = compareScoreAnalysisParity(a, b);
     expect(cmp.pass).toBe(true);
     expect(cmp.mismatches).toHaveLength(0);

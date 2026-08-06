@@ -124,10 +124,14 @@ describe("packSolverRequest region modes", () => {
     const stats = loadoutStats(loadout, { unlockedRegions: [...locked] });
     expect(stats.slayerHelmet).toBeNull();
 
-    const combatModel = toResolvedCombatModel(loadout, {
-      unlockedRegions: [...locked],
-      now: NOW,
-    }, stats);
+    const combatModel = toResolvedCombatModel(
+      loadout,
+      {
+        unlockedRegions: [...locked],
+        now: NOW,
+      },
+      stats,
+    );
     expect(combatModel.modifierSources.slayerHelmet).toBeNull();
 
     const req = packSolverRequestFromUi({

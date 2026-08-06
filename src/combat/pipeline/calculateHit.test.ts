@@ -6,7 +6,12 @@ import { applyHitCap, normalizeHitCapRule, standardHitCap } from "../core/hitCap
 import { mulFloor } from "../core/rounding";
 import { MODERNISATION_WIKI } from "../data/sources";
 import { contextWithProvenance } from "../shared/damageProvenance";
-import { calculateHit, calculateRawHitBand, type HitInput, type RawHitBandInput } from "./calculateHit";
+import {
+  calculateHit,
+  calculateRawHitBand,
+  type HitInput,
+  type RawHitBandInput,
+} from "./calculateHit";
 import { runPipeline } from "./modifierPipeline";
 
 const baseInput: HitInput = {
@@ -94,7 +99,10 @@ function oracleHitResult(input: RawHitBandInput) {
   };
 }
 
-function expectExactHitMatch(optimized: ReturnType<typeof calculateRawHitBand>, oracle: ReturnType<typeof oracleHitResult>) {
+function expectExactHitMatch(
+  optimized: ReturnType<typeof calculateRawHitBand>,
+  oracle: ReturnType<typeof oracleHitResult>,
+) {
   expect(optimized.min).toBe(oracle.min);
   expect(optimized.max).toBe(oracle.max);
   expect(optimized.critMin).toBe(oracle.critMin);

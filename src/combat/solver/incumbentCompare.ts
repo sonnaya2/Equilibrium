@@ -48,7 +48,10 @@ export function scoreImprovementPercent(
   return (100 * abs) / Math.abs(i);
 }
 
-export function barsEqual(a: readonly string[] | null | undefined, b: readonly string[] | null | undefined): boolean {
+export function barsEqual(
+  a: readonly string[] | null | undefined,
+  b: readonly string[] | null | undefined,
+): boolean {
   if (!a?.length || !b?.length) return false;
   if (a.length !== b.length) return false;
   for (let i = 0; i < a.length; i++) {

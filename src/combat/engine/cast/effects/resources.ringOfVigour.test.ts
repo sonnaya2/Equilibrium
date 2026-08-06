@@ -3,15 +3,9 @@ import type { RegionId } from "@/league";
 import { createCastContext } from "../../simulation/simulate";
 import { baseInput } from "../../../test/fixtures/inputs";
 import { CONSERVATION_OF_ENERGY_REFUND } from "../../../shared/conservationOfEnergy";
-import {
-  RING_OF_VIGOUR_ITEM_ID,
-  RING_OF_VIGOUR_REFUND,
-} from "../../../shared/ringOfVigour";
+import { RING_OF_VIGOUR_ITEM_ID, RING_OF_VIGOUR_REFUND } from "../../../shared/ringOfVigour";
 import type { AbilitySpec } from "../../../pipeline/calculateAbility";
-import {
-  DEFAULT_LOADOUT,
-  normalizeLoadout,
-} from "../../../../components/combat/loadout/model";
+import { DEFAULT_LOADOUT, normalizeLoadout } from "../../../../components/combat/loadout/model";
 import { loadoutStats } from "../../../../components/combat/loadoutStats";
 
 const assault = baseInput.abilities.find((a) => a.id === "assault")!;

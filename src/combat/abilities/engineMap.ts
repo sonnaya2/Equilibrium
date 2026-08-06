@@ -6,12 +6,7 @@
  */
 
 export type AbilityLinkKind =
-  | "canonical"
-  | "record-alias"
-  | "setup-variant"
-  | "equipment-variant"
-  | "cast-stage"
-  | "factory";
+  "canonical" | "record-alias" | "setup-variant" | "equipment-variant" | "cast-stage" | "factory";
 
 export interface EngineLinkOverride {
   linkKind: AbilityLinkKind;

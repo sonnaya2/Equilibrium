@@ -10,6 +10,7 @@ import {
   isNearOne,
   mergeSupportOffsets,
   PROB_TOLERANCE,
+  RESIDUAL_FREE_TOLERANCE,
   supportMaxFrom,
   supportMinFrom,
 } from "./stats";
@@ -546,6 +547,23 @@ describe("stochastic summary - failed-mass totals policy", () => {
     expect(s.failure).toBeUndefined();
     // DPS diagnostic from known-mass contribution (not conditional mean as unit-mass).
     expect(s.dps).toBeCloseTo(350 / (5 * TICK_SECONDS), 10);
+  });
+
+  it("uses the ranking tolerance for tiny residual mass", () => {
+    const residual = RESIDUAL_FREE_TOLERANCE * 10;
+    const rt = seedRuntime({ expected: 500, min: 500, max: 500, endTick: 5 });
+    const s = combineBranchSummaries(
+      [{ weight: 1 - residual, rt }],
+      undefined,
+      undefined,
+      true,
+      residual,
+      "exact",
+    );
+
+    expect(s.damage.scope).toBe("known-mass-contribution");
+    expect(s.damage.eligibleForRanking).toBe(false);
+    expect(s.rng?.exactness).toBe("approximated");
   });
 
   it("residual + partial failure: primary is known-mass contribution (not E[D|concrete], not success-renorm)", () => {

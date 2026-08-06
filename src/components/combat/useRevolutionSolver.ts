@@ -59,10 +59,7 @@ import {
 import type { Loadout } from "./useLoadout";
 
 /** Build initial SolverProgress agent strip from a worker plan. */
-export function seedProgressFromPlan(
-  plan: WorkerPlan,
-  tier: SolverSearchTier,
-): SolverProgress {
+export function seedProgressFromPlan(plan: WorkerPlan, tier: SolverSearchTier): SolverProgress {
   return {
     phase: "seed",
     evaluations: 0,
@@ -229,6 +226,7 @@ export function useRevolutionSolver({
   const solveGenRef = useRef(0);
   const latestProgressRef = useRef<SolverProgress | null>(null);
   const sessionIdentityRef = useRef<string | null>(null);
+  const sessionEnvironmentIdentityRef = useRef<string | null>(null);
   const materialRef = useRef<MaterialSolveInputs>({
     combatModel,
     loadout,
@@ -239,7 +237,6 @@ export function useRevolutionSolver({
     limitToRegions,
     barSizePreset,
   });
-  const solverResultRef = useRef<SolverResultDTO | null>(null);
 
   materialRef.current = {
     combatModel,
@@ -251,32 +248,61 @@ export function useRevolutionSolver({
     limitToRegions,
     barSizePreset,
   };
-  solverResultRef.current = solverResult;
-
-  // Single live identity: pack + solveContextPayload on material deps only.
+  // Single live request: full identity includes the incumbent user bar.
   // Progress path is string compare against liveIdentityRef - no pack per event.
-  const liveIdentity = useMemo(
+  const liveRequest = useMemo(
     () =>
-      solveContextPayload(
-        packFromMaterial(
-          {
-            combatModel,
-            loadout,
-            build,
-            modelled,
-            solverTier,
-            solverProfile,
-            limitToRegions,
-            barSizePreset,
-          },
-          { seed: 1 },
-        ),
+      packFromMaterial(
+        {
+          combatModel,
+          loadout,
+          build,
+          modelled,
+          solverTier,
+          solverProfile,
+          limitToRegions,
+          barSizePreset,
+        },
+        { seed: 1 },
       ),
-    [combatModel, loadout, build, modelled, solverTier, solverProfile, limitToRegions, barSizePreset],
+    [
+      combatModel,
+      loadout,
+      build,
+      modelled,
+      solverTier,
+      solverProfile,
+      limitToRegions,
+      barSizePreset,
+    ],
+  );
+  const liveIdentity = useMemo(() => solveContextPayload(liveRequest), [liveRequest]);
+  const liveEnvironmentIdentity = useMemo(
+    () => solveContextPayload({ ...liveRequest, userBar: [] }),
+    [liveRequest],
   );
 
   const liveIdentityRef = useRef(liveIdentity);
   liveIdentityRef.current = liveIdentity;
+
+  const currentBar = modelled.map((ability) => ability.id);
+  const resultBar = solverResult?.bar?.length
+    ? ensureNecroConjuresOnBarIds(solverResult.bar, loadout.style, combatModel.weaponConfiguration)
+    : null;
+  const completedResultStale = solverResult
+    ? isCompletedResultStale({
+        liveIdentity,
+        resultSolveIdentity: solverResult.solveIdentity,
+        sessionEnvironmentIdentity: sessionEnvironmentIdentityRef.current,
+        liveEnvironmentIdentity,
+        resultBar,
+        currentBar,
+      })
+    : false;
+  const publishedLiveIdentity =
+    solverResult && !completedResultStale && solverResult.solveIdentity
+      ? solverResult.solveIdentity
+      : liveIdentity;
 
   const progressRafRef = useRef<ReturnType<typeof createProgressRafGate> | null>(null);
   if (progressRafRef.current == null) {
@@ -312,20 +338,11 @@ export function useRevolutionSolver({
   // Completed result goes stale when live identity diverges; keep bar ids as seed.
   useEffect(() => {
     if (solving) return;
-    const dto = solverResultRef.current;
-    if (!dto) return;
-    if (
-      !isCompletedResultStale({
-        liveIdentity,
-        resultSolveIdentity: dto.solveIdentity,
-      })
-    ) {
-      return;
-    }
+    if (!solverResult || !completedResultStale) return;
     setSolverResult(null);
     setStoppedPreview(null);
     setSolverError(null);
-  }, [liveIdentity, solving]);
+  }, [completedResultStale, solverResult, solving]);
 
   const sessionIsLive = useCallback((gen: number): boolean => {
     const identity = sessionIdentityRef.current;
@@ -363,9 +380,7 @@ export function useRevolutionSolver({
       const runBar = ensureNecroConjuresOnBarIds(
         bar,
         request.style,
-        isSerializableSimBase(request.loadout)
-          ? request.loadout.weaponConfiguration
-          : undefined,
+        isSerializableSimBase(request.loadout) ? request.loadout.weaponConfiguration : undefined,
       );
       if (shouldAdoptSolverResultBar(dto)) {
         onActiveBar(runBar);
@@ -405,7 +420,7 @@ export function useRevolutionSolver({
         windowDpms: 0,
         topBarPreview: runBar,
         noImprovementCount: 0,
-        evaluationBudget: TIER_BUDGETS[solverTier],
+        evaluationBudget: dto.poolMetrics?.globalBudget ?? TIER_BUDGETS[solverTier],
         progressRatio: 1,
         evaluationMode: "finalize",
       });
@@ -417,12 +432,7 @@ export function useRevolutionSolver({
     (partial: SolverProgress | null, reason: SolverStoppedPreview["reason"]) => {
       progressRafRef.current?.cancel();
       if (!partial?.topBarPreview?.length) return;
-      const preview = stoppedPreviewFromProgress(
-        partial,
-        solverProfile,
-        solverTier,
-        reason,
-      );
+      const preview = stoppedPreviewFromProgress(partial, solverProfile, solverTier, reason);
       if (!preview) return;
       const runBar = ensureNecroConjuresOnBarIds(
         preview.bar,
@@ -431,8 +441,7 @@ export function useRevolutionSolver({
       );
       // Preview only - never auto-replace active bar with unverified estimate.
       setStoppedPreview(
-        runBar.length === preview.bar.length &&
-          runBar.every((id, i) => id === preview.bar[i])
+        runBar.length === preview.bar.length && runBar.every((id, i) => id === preview.bar[i])
           ? preview
           : { ...preview, bar: runBar },
       );
@@ -450,6 +459,7 @@ export function useRevolutionSolver({
     lastBestRef.current = 0;
     latestProgressRef.current = null;
     sessionIdentityRef.current = null;
+    sessionEnvironmentIdentityRef.current = null;
     progressRafRef.current?.cancel();
     setSolving(true);
     setStopping(false);
@@ -464,6 +474,10 @@ export function useRevolutionSolver({
       // Same pack+payload family as liveIdentity (now is not in solve identity).
       const sessionIdentity = solveContextPayload(baseRequest);
       sessionIdentityRef.current = sessionIdentity;
+      sessionEnvironmentIdentityRef.current = solveContextPayload({
+        ...baseRequest,
+        userBar: [],
+      });
 
       const plan = planWorkers({
         minBarSize: baseRequest.minBarSize,
@@ -695,7 +709,7 @@ export function useRevolutionSolver({
     setSolverAgents,
     barLibrary,
     /** Live solve identity from material inputs (useMemo pack+payload). */
-    liveIdentity,
+    liveIdentity: publishedLiveIdentity,
     optimize,
     cancelSolve,
     clearSolverUi,

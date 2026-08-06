@@ -50,7 +50,6 @@ export function resolveUltimateAdrenalineRefunds(
   }
   return {
     conservationOfEnergyRefund: Math.max(0, adrenaline?.conservationOfEnergyRefund ?? 0),
-    ringOfVigourRefund:
-      adrenaline?.ringOfVigour === true ? Math.max(0, vigourRefundAmount) : 0,
+    ringOfVigourRefund: adrenaline?.ringOfVigour === true ? Math.max(0, vigourRefundAmount) : 0,
   };
 }

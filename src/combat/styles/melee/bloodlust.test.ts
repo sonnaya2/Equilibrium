@@ -154,7 +154,6 @@ describe("bloodlust — spend lifecycle through the simulator", () => {
     );
   });
 
-
   it("a second ultimate during Vestments regeneration gains 20 instantly and ends it", () => {
     const ctx = createCastContext({
       ...baseInput,

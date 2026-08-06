@@ -77,8 +77,9 @@ function oracleLand(
           stacks: Math.min(PRIMORDIAL_ICE_CAP, atom.stacks + add),
           stacksExpireAtTick:
             add > 0 ? tick + PRIMORDIAL_ICE_DURATION_TICKS : atom.stacksExpireAtTick,
-          frostbladesExpireAtTick:
-            b.frost ? tick + FROSTBLADES_DURATION_TICKS : atom.frostbladesExpireAtTick,
+          frostbladesExpireAtTick: b.frost
+            ? tick + FROSTBLADES_DURATION_TICKS
+            : atom.frostbladesExpireAtTick,
         });
       }
     }
@@ -90,7 +91,10 @@ function atomKey(atom: LengAtom): string {
   return `${atom.weight.toPrecision(14)}:${atom.stacks}:${atom.stacksExpireAtTick}:${atom.frostbladesExpireAtTick}`;
 }
 
-function expectAtomsEqual(actual: PrimordialIceDistribution, expected: readonly OracleAtom[]): void {
+function expectAtomsEqual(
+  actual: PrimordialIceDistribution,
+  expected: readonly OracleAtom[],
+): void {
   expect(actual.atoms.map(atomKey)).toEqual(expected.map(atomKey));
 }
 
@@ -107,7 +111,10 @@ function legacySharedStackTimer(
     out[Math.min(PRIMORDIAL_ICE_CAP, stacks + 1)] += weight * LENG_ENDLESS_FROST_CHANCE;
     if (weight > 0 && stacks < PRIMORDIAL_ICE_CAP) canGain = true;
   }
-  return { stackMass: out, expiresAtTick: canGain ? tick + PRIMORDIAL_ICE_DURATION_TICKS : expiresAtTick };
+  return {
+    stackMass: out,
+    expiresAtTick: canGain ? tick + PRIMORDIAL_ICE_DURATION_TICKS : expiresAtTick,
+  };
 }
 
 describe("sparse Leng atom oracle", () => {
@@ -173,9 +180,7 @@ describe("sparse Leng atom oracle", () => {
 
   it("uses half-open expiry boundaries independently", () => {
     const dist = {
-      atoms: [
-        { weight: 1, stacks: 4, stacksExpireAtTick: 10, frostbladesExpireAtTick: 11 },
-      ],
+      atoms: [{ weight: 1, stacks: 4, stacksExpireAtTick: 10, frostbladesExpireAtTick: 11 }],
     };
     expect(expirePrimordialIce(dist, 9).atoms[0]).toEqual(dist.atoms[0]);
     expect(expirePrimordialIce(dist, 10).atoms[0]).toEqual({
@@ -225,14 +230,9 @@ describe("sparse Leng atom oracle", () => {
         stacksConsumed: 1,
         requirement: 30,
         spend: 18,
-        hits: [
-          { band: { minPct: 133, maxPct: 157 } },
-          { band: { minPct: 193, maxPct: 227 } },
-        ],
+        hits: [{ band: { minPct: 133, maxPct: 157 } }, { band: { minPct: 193, maxPct: 227 } }],
         postCastPrimordialIce: {
-          atoms: [
-            { weight: 1, stacks: 0, stacksExpireAtTick: 0, frostbladesExpireAtTick: 0 },
-          ],
+          atoms: [{ weight: 1, stacks: 0, stacksExpireAtTick: 0, frostbladesExpireAtTick: 0 }],
         },
       },
       {
@@ -240,14 +240,9 @@ describe("sparse Leng atom oracle", () => {
         stacksConsumed: 3,
         requirement: 30,
         spend: 0,
-        hits: [
-          { band: { minPct: 169, maxPct: 201 } },
-          { band: { minPct: 229, maxPct: 271 } },
-        ],
+        hits: [{ band: { minPct: 169, maxPct: 201 } }, { band: { minPct: 229, maxPct: 271 } }],
         postCastPrimordialIce: {
-          atoms: [
-            { weight: 1, stacks: 0, stacksExpireAtTick: 0, frostbladesExpireAtTick: 140 },
-          ],
+          atoms: [{ weight: 1, stacks: 0, stacksExpireAtTick: 0, frostbladesExpireAtTick: 140 }],
         },
       },
     ]);

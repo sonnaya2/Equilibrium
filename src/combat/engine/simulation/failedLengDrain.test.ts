@@ -112,16 +112,14 @@ describe("failed terminal Leng drain", () => {
       ...(error !== undefined ? { error } : {}),
     });
     // Three heavy success arms + one light failed; max=3 would drop failed without guard.
-    const capped = capBranches(
-      [mk(0.4), mk(0.3), mk(0.2), mk(0.1, "no adren")],
-      3,
-    );
+    const capped = capBranches([mk(0.4), mk(0.3), mk(0.2), mk(0.1, "no adren")], 3);
     expect(capped.branches.some((b) => b.error === "no adren")).toBe(true);
     expect(capped.branches.every((b) => b.error === undefined)).toBe(false);
     expect(capped.residualWeight).toBeCloseTo(0.2, 10);
-    expect(
-      capped.branches.reduce((s, b) => s + b.weight, 0) + capped.residualWeight,
-    ).toBeCloseTo(1, 10);
+    expect(capped.branches.reduce((s, b) => s + b.weight, 0) + capped.residualWeight).toBeCloseTo(
+      1,
+      10,
+    );
   });
 
   it("Leng + Relentless: ok false; failed mass not reclassified as success", () => {

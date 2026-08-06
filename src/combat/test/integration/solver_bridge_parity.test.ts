@@ -18,10 +18,7 @@ import { evaluateRevolutionBar } from "../../solver/evaluate";
 import { buildCandidatePool } from "../../solver/candidatePool";
 import { reviveRevolutionBase } from "../../solver/worker/revive";
 import { engineSpecs } from "../../abilities/registry";
-import {
-  buildMemoContext,
-  createEvaluateFn,
-} from "../../solver/evaluationSession";
+import { buildMemoContext, createEvaluateFn } from "../../solver/evaluationSession";
 import type { ProgressState } from "../../solver/progressReporter";
 import { DEFAULT_LOADOUT, type Loadout } from "../../../components/combat/loadout/model";
 import {
@@ -324,10 +321,9 @@ describe("hybrid manual model: Run === Optimize pack", () => {
   });
 
   it("direct revo from hybrid model matches packSimBaseFromModel identity", () => {
-    const { model: scaffold } = resolveLoadoutCombat(
-      withLoadout({ startingAdrenaline: 100 }),
-      { now: NOW },
-    );
+    const { model: scaffold } = resolveLoadoutCombat(withLoadout({ startingAdrenaline: 100 }), {
+      now: NOW,
+    });
     const hybrid = toHybridManualCombatModel(scaffold, {
       base: 1200,
       level: 99,

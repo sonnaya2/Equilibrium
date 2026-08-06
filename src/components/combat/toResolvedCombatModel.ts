@@ -1,6 +1,6 @@
 /**
- * Thin UI adapter: Loadout + Build options → ResolvedCombatModel.
- * Reuses loadoutStats() only — no second calculation path.
+ * Thin UI adapter: Loadout + Build options to ResolvedCombatModel.
+ * Reuses loadoutStats() without a second calculation path.
  */
 import {
   buildResolvedCombatModel,
@@ -14,20 +14,13 @@ import {
   NARAGI_LEVEL_OVERRIDE,
   SLIVER_OF_EDICTS_ID,
 } from "@/combat/league/naragiEdict";
-import {
-  formatRingOfVigourSources,
-  ringOfVigourActiveSources,
-} from "@/combat/shared/ringOfVigour";
+import { formatRingOfVigourSources, ringOfVigourActiveSources } from "@/combat/shared/ringOfVigour";
 import {
   sanitizeArchaeologyState,
   sanitizeSelectedRelics,
 } from "@/combat/shared/archaeologyRelics";
 import { type Loadout } from "./useLoadout";
-import {
-  loadoutStats,
-  type CalcStats,
-  type LoadoutStatsOptions,
-} from "./loadoutStats";
+import { loadoutStats, type CalcStats, type LoadoutStatsOptions } from "./loadoutStats";
 import { computedLoadoutBase, loadoutWeaponConfig } from "./loadout/weaponConfiguration";
 
 function sanitizedArchaeologyIds(
@@ -53,14 +46,9 @@ export function naragiBaseDamageCompare(
   statsBase: number,
 ): { off: number; on: number } {
   const formulaNormal = computedLoadoutBase(loadout);
-  const formulaOverride = baseAbilityDamage(
-    NARAGI_LEVEL_OVERRIDE,
-    loadoutWeaponConfig(loadout),
-  );
+  const formulaOverride = baseAbilityDamage(NARAGI_LEVEL_OVERRIDE, loadoutWeaponConfig(loadout));
   const on =
-    formulaNormal > 0
-      ? Math.floor((statsBase * formulaOverride) / formulaNormal)
-      : statsBase;
+    formulaNormal > 0 ? Math.floor((statsBase * formulaOverride) / formulaNormal) : statsBase;
   return { off: statsBase, on };
 }
 
@@ -146,10 +134,7 @@ export function hostInputFromLoadoutStats(
         maximumLifePoints: stats.berserkersFury.maximumLifePoints,
         currentHealthPercent: stats.berserkersFury.currentHealthPercent,
       },
-      powerburstRemainingTicks: Math.max(
-        0,
-        Math.floor(stats.league.powerburstUntilTick ?? 0),
-      ),
+      powerburstRemainingTicks: Math.max(0, Math.floor(stats.league.powerburstUntilTick ?? 0)),
       ringOfVigourActive: stats.adrenaline?.ringOfVigour === true,
       ringOfVigourSources:
         vigourSources.length > 0 ? [formatRingOfVigourSources(vigourSources)] : [],

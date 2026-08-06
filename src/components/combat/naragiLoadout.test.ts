@@ -60,10 +60,7 @@ describe("naragiBaseDamageCompare", () => {
     const { off, on } = naragiBaseDamageCompare(loadout, stats.base);
     expect(off).toBe(stats.base);
     const formulaNormal = computedLoadoutBase(loadout);
-    const formulaOverride = baseAbilityDamage(
-      NARAGI_LEVEL_OVERRIDE,
-      loadoutWeaponConfig(loadout),
-    );
+    const formulaOverride = baseAbilityDamage(NARAGI_LEVEL_OVERRIDE, loadoutWeaponConfig(loadout));
     expect(on).toBe(Math.floor((stats.base * formulaOverride) / formulaNormal));
     expect(on).toBeGreaterThan(off);
   });
@@ -82,10 +79,7 @@ describe("Naragi loadout passives", () => {
 
   it("applies exact passive deltas when Sliver is equipped with Naragi", () => {
     const bare = of({}, RELICS);
-    const withSliver = of(
-      { equipmentSlots: { pocket: SLIVER_OF_EDICTS_ID } },
-      RELICS,
-    );
+    const withSliver = of({ equipmentSlots: { pocket: SLIVER_OF_EDICTS_ID } }, RELICS);
     expect(withSliver.equipment.armour - bare.equipment.armour).toBe(SLIVER_PASSIVE.armour);
     expect(withSliver.equipment.damage - bare.equipment.damage).toBe(SLIVER_PASSIVE.styleDamage);
     expect(withSliver.equipment.life - bare.equipment.life).toBe(SLIVER_PASSIVE.life);

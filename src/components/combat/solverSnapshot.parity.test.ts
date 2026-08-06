@@ -34,10 +34,7 @@ function withGear(patch: Partial<Loadout>): Loadout {
   };
 }
 
-function modelSnap(
-  loadout: Loadout,
-  unlockedRegions?: LoadoutStatsOptions["unlockedRegions"],
-) {
+function modelSnap(loadout: Loadout, unlockedRegions?: LoadoutStatsOptions["unlockedRegions"]) {
   const opts: LoadoutStatsOptions = unlockedRegions ? { unlockedRegions } : {};
   const stats = loadoutStats(loadout, opts);
   const model = toResolvedCombatModel(loadout, opts, stats);
@@ -57,9 +54,7 @@ describe("solverSnapshotFromResolvedModel slayer / salve descriptors", () => {
     expect(stats.slayerHelmet).toBeNull();
     expect(model.modifierSources.slayerHelmet).toBeNull();
     expect(snap.slayerHelmet).toBeNull();
-    expect(stats.globalModifiers.some((m) => m.id.startsWith("item:slayer-helmet:"))).toBe(
-      false,
-    );
+    expect(stats.globalModifiers.some((m) => m.id.startsWith("item:slayer-helmet:"))).toBe(false);
 
     const direct = resolveSlayerHelmet({
       equipmentSlots: loadout.equipmentSlots,

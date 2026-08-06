@@ -203,7 +203,6 @@ assert(
   "isBannedEngineInternalImport: relative into cast",
 );
 
-// --- Pass 7 helpers ---
 assert(
   isStyleCatalogueImport(fakeUiFile, "@/combat/styles/melee/abilities", ROOT),
   "isStyleCatalogueImport: @/combat melee",
@@ -449,8 +448,6 @@ function violationsFor(repoRel, source, opts = {}) {
     "checkFile skips ui-no-engine-internals for *.test.ts",
   );
 }
-
-// --- Pass 7 rule fixtures ---
 
 // ui-no-style-catalogues (array imports banned; factories from same module ok)
 {
@@ -713,7 +710,7 @@ function violationsFor(repoRel, source, opts = {}) {
   );
 }
 {
-  // research uses sqlite intentionally — outside app/, rule does not apply
+  // Research uses sqlite outside app/, where the rule does not apply.
   const v = violationsFor(
     "src/research/panels.ts",
     `import { DatabaseSync } from "node:sqlite";\n`,

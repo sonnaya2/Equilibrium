@@ -57,17 +57,13 @@ export function residualWeightOf(source: StochasticLabelSource): number {
 
 export function failedWeightOf(source: StochasticLabelSource): number {
   const w = finiteMass(
-    source.failure?.failedWeight ??
-      source.rng?.failure?.failedWeight ??
-      source.rng?.failedWeight,
+    source.failure?.failedWeight ?? source.rng?.failure?.failedWeight ?? source.rng?.failedWeight,
   );
   return w > MASS_EPS ? w : 0;
 }
 
 export function successfulWeightOf(source: StochasticLabelSource): number {
-  return finiteMass(
-    source.failure?.successfulWeight ?? source.rng?.failure?.successfulWeight,
-  );
+  return finiteMass(source.failure?.successfulWeight ?? source.rng?.failure?.successfulWeight);
 }
 
 export function branchExactnessOf(source: StochasticLabelSource): string | undefined {
@@ -106,10 +102,7 @@ export function concreteMassOf(source: StochasticLabelSource): number {
   return w > MASS_EPS ? w : 0;
 }
 
-export type TotalsBasisLabel =
-  | "concrete-terminals"
-  | "unit-mass"
-  | "known-mass-contribution";
+export type TotalsBasisLabel = "concrete-terminals" | "unit-mass" | "known-mass-contribution";
 
 /**
  * Machine-readable primary totals basis.
@@ -118,11 +111,7 @@ export type TotalsBasisLabel =
  */
 export function totalsBasisOf(source: StochasticLabelSource): TotalsBasisLabel | undefined {
   const raw = source.rng?.totalsBasis ?? source.damage?.scope;
-  if (
-    raw === "concrete-terminals" ||
-    raw === "unit-mass" ||
-    raw === "known-mass-contribution"
-  ) {
+  if (raw === "concrete-terminals" || raw === "unit-mass" || raw === "known-mass-contribution") {
     return raw;
   }
   // Phase 2 primary under residual is known-mass contribution, not conditional mean.
@@ -230,8 +219,7 @@ export function failureNote(source: StochasticLabelSource): string | null {
   if (failed <= 0) return null;
   if (totalsAreSuccessConditional(source)) {
     const success = successfulWeightOf(source);
-    const successBit =
-      success > 0 ? ` (${formatPercentMass(success)} success mass)` : "";
+    const successBit = success > 0 ? ` (${formatPercentMass(success)} success mass)` : "";
     return `${formatPercentMass(failed)} of paths failed${successBit}; damage and DPS are renormalized over successful paths only.`;
   }
   const success = successfulWeightOf(source);
@@ -262,7 +250,7 @@ export function runDiagnosticsNote(
   const residual = residualNote(source);
   const cap = branchCapDiagnosticsNote(source, opts);
   const residualBlock =
-    residual && cap ? `${residual} ${cap}.` : residual ?? (cap ? `${cap}.` : null);
+    residual && cap ? `${residual} ${cap}.` : (residual ?? (cap ? `${cap}.` : null));
   const parts = [residualBlock, failureNote(source)].filter(
     (part): part is string => part != null && part.length > 0,
   );
@@ -352,12 +340,7 @@ export function stochasticAssumptionRows(
   }
 
   const maxLive = opts?.maxLiveBranches;
-  if (
-    residual > 0 &&
-    typeof maxLive === "number" &&
-    Number.isFinite(maxLive) &&
-    maxLive > 0
-  ) {
+  if (residual > 0 && typeof maxLive === "number" && Number.isFinite(maxLive) && maxLive > 0) {
     rows.push(["Live branch cap", String(Math.floor(maxLive))]);
   }
 

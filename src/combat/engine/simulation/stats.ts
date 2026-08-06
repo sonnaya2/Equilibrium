@@ -2,6 +2,7 @@
 
 export const PROB_TOLERANCE = 1e-9;
 export const WEIGHT_TOLERANCE = 1e-12;
+export const RESIDUAL_FREE_TOLERANCE = 1e-12;
 
 export function isNearOne(mass: number, tolerance = PROB_TOLERANCE): boolean {
   return Math.abs(mass - 1) <= tolerance;

@@ -46,6 +46,7 @@ export interface BenchCaseDef {
   quick: boolean;
   /** Stable seed for determinism. */
   seed: number;
+  expectedFullError?: string;
   build: () => SerializableSolverRequest;
 }
 
@@ -352,8 +353,6 @@ export const BENCH_CASES: readonly BenchCaseDef[] = [
       }),
   },
 
-  // --- Phase 0 representative fixtures ------------------------------------
-
   /**
    * 1. Simple no-RNG melee (quick): crit disabled, no adren RNG perks, fixed 4.
    * Deterministic baseline for score fingerprints.
@@ -500,6 +499,7 @@ export const BENCH_CASES: readonly BenchCaseDef[] = [
     id: "equipment-procs",
     quick: true,
     seed: 206,
+    expectedFullError: "Aftershock is not available for verified solving",
     build: () =>
       makeRequest({
         style: "melee",

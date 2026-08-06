@@ -39,11 +39,7 @@ describe("relicGrantedItems", () => {
   });
 
   it("filters record lists for pickers", () => {
-    const rows = [
-      { id: TOME_OF_THE_ICYENE_ID },
-      { id: SLIVER_OF_EDICTS_ID },
-      { id: "item:other" },
-    ];
+    const rows = [{ id: TOME_OF_THE_ICYENE_ID }, { id: SLIVER_OF_EDICTS_ID }, { id: "item:other" }];
     expect(filterRelicGrantedRecords(rows, []).map((r) => r.id)).toEqual(["item:other"]);
     expect(filterRelicGrantedRecords(rows, [ICYENIC_FAITH_RELIC]).map((r) => r.id)).toEqual([
       TOME_OF_THE_ICYENE_ID,

@@ -106,9 +106,7 @@ function normalizeEntry(raw: unknown, kind: RevoBarEntryKind): RevoBarEntry | nu
   if (typeof e.style !== "string" || !e.style) return null;
   if (!isStringArray(e.bar) || e.bar.length === 0) return null;
   const score = typeof e.score === "number" && Number.isFinite(e.score) ? e.score : null;
-  const scoreContext = barScoreContext(
-    typeof e.scoreContext === "string" ? e.scoreContext : null,
-  );
+  const scoreContext = barScoreContext(typeof e.scoreContext === "string" ? e.scoreContext : null);
   // verified requires a bound scoreContext; strip otherwise.
   const verified = e.verified === true && scoreContext != null;
   return {

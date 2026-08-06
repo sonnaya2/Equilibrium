@@ -2857,7 +2857,11 @@ body:has(.combat-screen) {
 
 .revo-run-busy.is-full .revo-run-busy__cursor {
   animation-duration: 0.95s;
-  border-color: color-mix(in srgb, var(--combat-gem-bright, #5ee0b0) 50%, var(--combat-gold-bright, #e8d49a));
+  border-color: color-mix(
+    in srgb,
+    var(--combat-gem-bright, #5ee0b0) 50%,
+    var(--combat-gold-bright, #e8d49a)
+  );
   background: linear-gradient(
     180deg,
     rgb(46 203 143 / 22%),
@@ -2867,7 +2871,11 @@ body:has(.combat-screen) {
 }
 
 .revo-run-busy.is-full .revo-run-busy__phase {
-  color: color-mix(in srgb, var(--combat-gem-bright, #5ee0b0) 55%, var(--combat-gold-bright, #e8d49a));
+  color: color-mix(
+    in srgb,
+    var(--combat-gem-bright, #5ee0b0) 55%,
+    var(--combat-gold-bright, #e8d49a)
+  );
 }
 
 /* Slot wake as cursor passes (staggered sheen) */
@@ -2903,7 +2911,11 @@ body:has(.combat-screen) {
   }
   40%,
   55% {
-    border-color: color-mix(in srgb, var(--combat-gold-bright, #e8d49a) 45%, var(--combat-gold-dim, #6a5a32));
+    border-color: color-mix(
+      in srgb,
+      var(--combat-gold-bright, #e8d49a) 45%,
+      var(--combat-gold-dim, #6a5a32)
+    );
   }
 }
 
@@ -2919,7 +2931,11 @@ body:has(.combat-screen) {
   }
 
   .revo-run-busy__slot:nth-child(-n + 3) {
-    border-color: color-mix(in srgb, var(--combat-gold-bright, #e8d49a) 40%, var(--combat-gold-dim, #6a5a32));
+    border-color: color-mix(
+      in srgb,
+      var(--combat-gold-bright, #e8d49a) 40%,
+      var(--combat-gold-dim, #6a5a32)
+    );
   }
 }
 

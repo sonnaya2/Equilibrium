@@ -26,7 +26,9 @@ const necroRevoBase = {
   style: "necromancy" as const,
 };
 
-function conjureAutoEvents(summary: { events: readonly { family: string; abilityId: string }[] }) {
+function conjureAutoEvents(summary: {
+  events: readonly { family: string; abilityId: string; tick: number }[];
+}) {
   return summary.events.filter((e) => e.family === "conjureAuto");
 }
 

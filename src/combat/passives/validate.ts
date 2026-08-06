@@ -91,9 +91,7 @@ export function validatePassiveRegistry(): string[] {
  * Fail when equipment records name passives outside the registry.
  * defender-accuracy is synthetic (not stored on records) - still allowed if present.
  */
-export function validateEquipmentPassiveRefs(
-  records: readonly EquipmentRecord[],
-): string[] {
+export function validateEquipmentPassiveRefs(records: readonly EquipmentRecord[]): string[] {
   const errors: string[] = [];
   for (const item of records) {
     const ids = equipmentRecordPassiveIds(item);

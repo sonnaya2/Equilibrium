@@ -9,11 +9,7 @@ import { engineSpecsForStyle } from "@/combat/abilities/registry";
 import { isMeleeAbility } from "@/combat/styles/melee/abilities";
 import { resolveIcyTempest } from "@/combat/styles/melee/icyTempest";
 import { resplendentAsphyxiate } from "@/combat/styles/magic/abilities";
-import {
-  MAX_SOULS,
-  VOLLEY_MIN_SOULS,
-  volleyOfSouls,
-} from "@/combat/styles/necromancy/abilities";
+import { MAX_SOULS, VOLLEY_MIN_SOULS, volleyOfSouls } from "@/combat/styles/necromancy/abilities";
 import { resolveAbilityWithEquipment } from "@/combat/shared/bleedDurationExtension";
 import type { ItemPassiveId } from "@/combat/data/records";
 import { abilityIconPath, styleIconPath } from "@/lib/gameArt";
@@ -63,9 +59,7 @@ function necroPalette(souls: number): AbilitySpec[] {
   const clamped = Math.min(Math.max(VOLLEY_MIN_SOULS, Math.floor(souls)), MAX_SOULS);
   // Registry includes factory volley_of_souls(3); rebuild with residual-souls control.
   const fromKit = engineSpecsForStyle("necromancy").filter(
-    (a) =>
-      a.id !== "volley_of_souls" &&
-      (a.hits.length > 0 || a.id.startsWith("conjure_")),
+    (a) => a.id !== "volley_of_souls" && (a.hits.length > 0 || a.id.startsWith("conjure_")),
   );
   return [...fromKit, volleyOfSouls(clamped)];
 }
@@ -176,7 +170,9 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
     calculatedAbility?.id === "icy_tempest"
       ? (() => {
           const outcome = resolveIcyTempest(
-            { atoms: [{ weight: 1, stacks: 0, stacksExpireAtTick: 0, frostbladesExpireAtTick: 0 }] },
+            {
+              atoms: [{ weight: 1, stacks: 0, stacksExpireAtTick: 0, frostbladesExpireAtTick: 0 }],
+            },
             0,
             useBuild && setup.adrenaline?.ringOfVigour === true,
           ).outcomes[0]!;
@@ -374,7 +370,9 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
               </span>
             </div>
             <div className="panel-body space-y-3">
-              <p className="text-xs leading-5 text-parch-300">{abilityMeta(quickAbility ?? ability)}</p>
+              <p className="text-xs leading-5 text-parch-300">
+                {abilityMeta(quickAbility ?? ability)}
+              </p>
               {ability.id === "icy_tempest" ? (
                 <p className="text-xs leading-5 text-parch-300">
                   Quick uses the zero-stack baseline. Rotation and solver retain branch-specific

@@ -78,7 +78,9 @@ describe("Abyssal Cinders eligibility policy", () => {
   it("cannot recurse onto generic blessing damage or attached riders", () => {
     expect(blessingHitEligibility("blessing", false)).toEqual(closed);
     expect(blessingHitEligibility("blessing", true)).toEqual(closed);
-    expect(blessingHitEligibility({ kind: "blessing", detail: "big-boned" }, false)).toEqual(closed);
+    expect(blessingHitEligibility({ kind: "blessing", detail: "big-boned" }, false)).toEqual(
+      closed,
+    );
     expect(blessingHitEligibility({ kind: "blessing", detail: "abyssal-cinders" }, false)).toEqual(
       closed,
     );

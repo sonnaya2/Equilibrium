@@ -210,7 +210,9 @@ describe("gameArt", () => {
 
   it("Manor Farm name well uses farm plate, not farming skill glyph", () => {
     const path = dataEntityIconPath({ name: "Manor Farm", kind: "Farming" });
-    expect(path).toMatch(/\/(activities|upgrades\/permanent-unlocks)\/(manor-farm|player-owned-farm)\.webp$/);
+    expect(path).toMatch(
+      /\/(activities|upgrades\/permanent-unlocks)\/(manor-farm|player-owned-farm)\.webp$/,
+    );
     expect(existsSync(join(PUBLIC, path!.replace(/^\//, "")))).toBe(true);
     expect(path).not.toMatch(/skills\/farming/);
     expect(isSceneryActivityPath("/game/activities/manor-farm.webp")).toBe(false);
@@ -604,9 +606,9 @@ describe("gameArt", () => {
     expect(dataEntityIconPath({ name: "Golden mining suit" })).toBe(
       "/game/upgrades/skilling-outfits/golden-mining-suit.webp",
     );
-    expect(
-      dataEntityIconPath({ name: "Liquid Gold Nymph golden mining suit path" }),
-    ).toBe("/game/upgrades/skilling-outfits/golden-mining-suit.webp");
+    expect(dataEntityIconPath({ name: "Liquid Gold Nymph golden mining suit path" })).toBe(
+      "/game/upgrades/skilling-outfits/golden-mining-suit.webp",
+    );
     expect(dataEntityIconPath({ name: "Liquid Gold Nymph" })).toMatch(
       /liquid-gold-nymph\.(webp|png)$/,
     );

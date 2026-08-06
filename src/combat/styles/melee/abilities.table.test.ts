@@ -308,25 +308,22 @@ describe("MELEE_ABILITIES source table", () => {
     expect(live).toEqual(expected);
   });
 
-  it.each(EXPECTED)(
-    "$id bands / hits / adren / CD / charges / weapon / group / support",
-    (row) => {
-      const ability = MELEE_ABILITIES.find((a) => a.id === row.id);
-      expect(ability, row.id).toBeDefined();
-      const a = ability!;
+  it.each(EXPECTED)("$id bands / hits / adren / CD / charges / weapon / group / support", (row) => {
+    const ability = MELEE_ABILITIES.find((a) => a.id === row.id);
+    expect(ability, row.id).toBeDefined();
+    const a = ability!;
 
-      expect(a.hits).toHaveLength(row.hitCount);
-      expect(a.hits.map(hitRow)).toEqual(row.bands);
+    expect(a.hits).toHaveLength(row.hitCount);
+    expect(a.hits.map(hitRow)).toEqual(row.bands);
 
-      expect(a.channelTicks).toBe(row.channelTicks);
-      expect(a.adrenaline?.gain).toBe(row.adrenGain);
-      expect(a.adrenaline?.cost).toBe(row.adrenCost);
-      expect(a.cooldownSeconds).toBe(row.cooldownSeconds);
-      expect(a.charges).toEqual(row.charges);
-      expect(a.weaponRequirement).toBe(row.weaponRequirement);
-      expect(a.replacementGroup).toBe(row.replacementGroup);
-      expect(a.supportStatus).toBe(row.supportStatus);
-      expect(a.bloodlustGain).toBe(row.bloodlustGain);
-    },
-  );
+    expect(a.channelTicks).toBe(row.channelTicks);
+    expect(a.adrenaline?.gain).toBe(row.adrenGain);
+    expect(a.adrenaline?.cost).toBe(row.adrenCost);
+    expect(a.cooldownSeconds).toBe(row.cooldownSeconds);
+    expect(a.charges).toEqual(row.charges);
+    expect(a.weaponRequirement).toBe(row.weaponRequirement);
+    expect(a.replacementGroup).toBe(row.replacementGroup);
+    expect(a.supportStatus).toBe(row.supportStatus);
+    expect(a.bloodlustGain).toBe(row.bloodlustGain);
+  });
 });

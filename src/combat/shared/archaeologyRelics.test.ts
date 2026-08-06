@@ -35,9 +35,7 @@ describe("ARCHAEOLOGY_RELICS registry", () => {
       expect(relic.name.length).toBeGreaterThan(0);
       expect(relic.energyCost).toBeGreaterThan(0);
       expect(Array.isArray(relic.requiredRegions)).toBe(true);
-      expect(relic.implementation === "full" || relic.implementation === "energy-only").toBe(
-        true,
-      );
+      expect(relic.implementation === "full" || relic.implementation === "energy-only").toBe(true);
     }
   });
 
@@ -86,28 +84,25 @@ describe("monolith energy cap", () => {
   it("defaults to 500 without Anachronia", () => {
     expect(MONOLITH_ENERGY_DEFAULT).toBe(500);
     expect(hasAnachronia(["misthalin", "kandarin"])).toBe(false);
-    expect(
-      resolveMonolithEnergyCap({ unlockedRegions: ["misthalin"], requestedCap: 650 }),
-    ).toBe(MONOLITH_ENERGY_DEFAULT);
+    expect(resolveMonolithEnergyCap({ unlockedRegions: ["misthalin"], requestedCap: 650 })).toBe(
+      MONOLITH_ENERGY_DEFAULT,
+    );
   });
 
   it("auto-enables 650 when Anachronia is unlocked", () => {
     expect(MONOLITH_EXTENDED_REGION).toBe("anachronia");
     expect(hasAnachronia(["anachronia"])).toBe(true);
-    expect(
-      resolveMonolithEnergyCap({ unlockedRegions: ["anachronia"], requestedCap: null }),
-    ).toBe(MONOLITH_ENERGY_EXTENDED);
-    expect(
-      resolveMonolithEnergyCap({ unlockedRegions: ["anachronia"], requestedCap: 500 }),
-    ).toBe(MONOLITH_ENERGY_EXTENDED);
+    expect(resolveMonolithEnergyCap({ unlockedRegions: ["anachronia"], requestedCap: null })).toBe(
+      MONOLITH_ENERGY_EXTENDED,
+    );
+    expect(resolveMonolithEnergyCap({ unlockedRegions: ["anachronia"], requestedCap: 500 })).toBe(
+      MONOLITH_ENERGY_EXTENDED,
+    );
   });
 
   it("forces 500 and trims when Anachronia is removed", () => {
     const heavy = ["heightened_senses", "conservation_of_energy"]; // 700
-    const state = sanitizeArchaeologyState(
-      { selectedIds: heavy, energyCap: 650 },
-      ["misthalin"],
-    );
+    const state = sanitizeArchaeologyState({ selectedIds: heavy, energyCap: 650 }, ["misthalin"]);
     expect(state.energyCap).toBe(500);
     expect(totalEnergyUsed(state.selectedIds)).toBeLessThanOrEqual(500);
   });
@@ -139,9 +134,7 @@ describe("energy selection helpers", () => {
       action: "selected",
       selectedIds: ["conservation_of_energy", "fury_of_the_small"],
     });
-    expect(
-      sanitizeSelectedRelics({ selectedIds: pair, energyCap: 500 }),
-    ).toEqual(pair);
+    expect(sanitizeSelectedRelics({ selectedIds: pair, energyCap: 500 })).toEqual(pair);
   });
 
   it("repair sanitize trims over-budget selections from the end", () => {
@@ -262,12 +255,7 @@ describe("monolith active slot limit", () => {
   });
 
   it("repair sanitize trims to 3 from the end", () => {
-    const four = [
-      "font_of_life",
-      "shadows_grace",
-      "unexpected_diplomacy",
-      "ring_of_luck",
-    ];
+    const four = ["font_of_life", "shadows_grace", "unexpected_diplomacy", "ring_of_luck"];
     expect(
       sanitizeSelectedRelics({
         selectedIds: four,
@@ -307,12 +295,7 @@ describe("monolith active slot limit", () => {
         energyCap: 500,
       }),
     ).toBeNull();
-    const threeKnownPlusJunk = [
-      "font_of_life",
-      "shadows_grace",
-      "unexpected_diplomacy",
-      "ghost",
-    ];
+    const threeKnownPlusJunk = ["font_of_life", "shadows_grace", "unexpected_diplomacy", "ghost"];
     expect(
       archaeologySelectBlockReason({
         relicId: "ring_of_luck",
@@ -344,22 +327,13 @@ describe("monolith active slot limit", () => {
 
     const state = sanitizeArchaeologyState(
       {
-        selectedIds: [
-          "font_of_life",
-          "shadows_grace",
-          "unexpected_diplomacy",
-          "ring_of_luck",
-        ],
+        selectedIds: ["font_of_life", "shadows_grace", "unexpected_diplomacy", "ring_of_luck"],
         energyCap: 500,
       },
       ["misthalin", "desert", "morytania"],
     );
     expect(state.selectedIds).toHaveLength(3);
-    expect(state.selectedIds).toEqual([
-      "font_of_life",
-      "shadows_grace",
-      "unexpected_diplomacy",
-    ]);
+    expect(state.selectedIds).toEqual(["font_of_life", "shadows_grace", "unexpected_diplomacy"]);
   });
 });
 
@@ -578,19 +552,13 @@ describe("loadout archaeology persistence", () => {
   });
 
   it("buff cannot enable CoE without kandarin", () => {
-    const blocked = withLoadoutBuffs(
-      DEFAULT_LOADOUT,
-      { conservationOfEnergy: true },
-      ["misthalin"],
-    );
+    const blocked = withLoadoutBuffs(DEFAULT_LOADOUT, { conservationOfEnergy: true }, [
+      "misthalin",
+    ]);
     expect(blocked.archaeology.selectedIds).not.toContain("conservation_of_energy");
     expect(blocked.buffs.conservationOfEnergy).toBe(false);
 
-    const allowed = withLoadoutBuffs(
-      DEFAULT_LOADOUT,
-      { conservationOfEnergy: true },
-      ["kandarin"],
-    );
+    const allowed = withLoadoutBuffs(DEFAULT_LOADOUT, { conservationOfEnergy: true }, ["kandarin"]);
     expect(allowed.archaeology.selectedIds).toContain("conservation_of_energy");
     expect(allowed.buffs.conservationOfEnergy).toBe(true);
   });
@@ -622,11 +590,7 @@ describe("loadout archaeology persistence", () => {
     expect(withMoryBoth.buffs.berserkersFury).toBe(true);
     expect(withMoryBoth.buffs.heightenedSenses).toBe(false);
 
-    const withMoryHs = withLoadoutBuffs(
-      DEFAULT_LOADOUT,
-      { heightenedSenses: true },
-      ["morytania"],
-    );
+    const withMoryHs = withLoadoutBuffs(DEFAULT_LOADOUT, { heightenedSenses: true }, ["morytania"]);
     expect(withMoryHs.archaeology.selectedIds).toEqual(["heightened_senses"]);
     expect(withMoryHs.buffs.heightenedSenses).toBe(true);
   });
@@ -734,10 +698,7 @@ describe("loadout archaeology persistence", () => {
         500,
       ),
     );
-    expect(next.archaeology.selectedIds).toEqual([
-      "conservation_of_energy",
-      "fury_of_the_small",
-    ]);
+    expect(next.archaeology.selectedIds).toEqual(["conservation_of_energy", "fury_of_the_small"]);
     expect(next.buffs.conservationOfEnergy).toBe(true);
     expect(next.buffs.furyOfTheSmall).toBe(true);
   });
@@ -754,12 +715,7 @@ describe("loadout archaeology persistence", () => {
   });
 
   it("trims 4 selectedIds to MONOLITH_ACTIVE_LIMIT on normalizeLoadout (repair)", () => {
-    const four = [
-      "font_of_life",
-      "shadows_grace",
-      "unexpected_diplomacy",
-      "ring_of_luck",
-    ];
+    const four = ["font_of_life", "shadows_grace", "unexpected_diplomacy", "ring_of_luck"];
     expect(totalEnergyUsed(four)).toBeLessThanOrEqual(500);
     const next = normalizeLoadout({
       archaeology: { energyCap: 500, selectedIds: four },
@@ -784,12 +740,7 @@ describe("loadout archaeology persistence", () => {
 describe("loadoutStats archaeology active limit", () => {
   it("with unlockedRegions trims 4 relics from the end (selection order)", () => {
     // 3 cheap + berserkers_fury last; sanitize pops last so BF is inactive.
-    const four = [
-      "font_of_life",
-      "shadows_grace",
-      "unexpected_diplomacy",
-      "berserkers_fury",
-    ];
+    const four = ["font_of_life", "shadows_grace", "unexpected_diplomacy", "berserkers_fury"];
     const loadout = normalizeLoadout({
       archaeology: { energyCap: 500, selectedIds: four },
     });

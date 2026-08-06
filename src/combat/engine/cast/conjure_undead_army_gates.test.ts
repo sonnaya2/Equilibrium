@@ -155,9 +155,7 @@ describe("conjure_undead_army castRejection gate matrix", () => {
       const expectAvailable = expectPermNull && row.spirits === "none";
       expect(row.available, `${label} castRejection available`).toBe(expectAvailable);
       if (!expectPermNull) {
-        expect(row.rejection, `${label} rejection`).toBe(
-          "conjure_undead_army requires a conduit",
-        );
+        expect(row.rejection, `${label} rejection`).toBe("conjure_undead_army requires a conduit");
       } else if (row.spirits === "army") {
         expect(row.rejection, `${label} rejection`).toMatch(
           /needs residual souls or an active conjure/,
@@ -178,20 +176,28 @@ describe("conjure_undead_army castRejection gate matrix", () => {
         `avail=${r.available ? "yes" : "no"}`,
     );
     expect(lines.length).toBe(WEAPON_CONFIGS.length * EQUIP_SETS.length * 2);
-    expect(lines.some((l) => l.includes("dualwield") && l.includes("lantern") && l.includes("spirits=none") && l.includes("avail=yes"))).toBe(
-      true,
-    );
+    expect(
+      lines.some(
+        (l) =>
+          l.includes("dualwield") &&
+          l.includes("lantern") &&
+          l.includes("spirits=none") &&
+          l.includes("avail=yes"),
+      ),
+    ).toBe(true);
     // Snapshot the full gate matrix (asserted as structured rows above).
-    expect(rows.map((r) => ({
-      wc: r.wc,
-      equip: r.equip,
-      spirits: r.spirits,
-      permanent: r.permanentBlock === null ? "ok" : "block",
-      necro: r.necroCan ? "ok" : "no",
-      conjure: r.conjureCan ? "ok" : "no",
-      cost: r.cost,
-      available: r.available,
-    }))).toEqual(
+    expect(
+      rows.map((r) => ({
+        wc: r.wc,
+        equip: r.equip,
+        spirits: r.spirits,
+        permanent: r.permanentBlock === null ? "ok" : "block",
+        necro: r.necroCan ? "ok" : "no",
+        conjure: r.conjureCan ? "ok" : "no",
+        cost: r.cost,
+        available: r.available,
+      })),
+    ).toEqual(
       WEAPON_CONFIGS.flatMap((wc) =>
         EQUIP_SETS.flatMap((equip) =>
           (["none", "army"] as const).map((spirits) => {

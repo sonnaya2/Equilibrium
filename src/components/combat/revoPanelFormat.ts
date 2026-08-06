@@ -55,10 +55,7 @@ function fixedPreset(n: number): BarSizeBounds & { label: string } {
   return { minBarSize: n, maxBarSize: n, label: String(n) };
 }
 
-export const BAR_SIZE_PRESETS: Record<
-  BarSizePresetId,
-  BarSizeBounds & { label: string }
-> = {
+export const BAR_SIZE_PRESETS: Record<BarSizePresetId, BarSizeBounds & { label: string }> = {
   fixed4: fixedPreset(4),
   fixed5: fixedPreset(5),
   fixed6: fixedPreset(6),
@@ -94,9 +91,7 @@ export function stoppedPreviewFromProgress(
   tier: SolverSearchTier,
   reason: SolverStoppedPreview["reason"],
 ): SolverStoppedPreview | null {
-  const bar = (partial.topBarPreview ?? []).filter(
-    (id) => typeof id === "string" && id.length > 0,
-  );
+  const bar = (partial.topBarPreview ?? []).filter((id) => typeof id === "string" && id.length > 0);
   if (bar.length === 0) return null;
 
   const exp = partial.bestExploratoryScore ?? partial.bestScore;
@@ -171,8 +166,7 @@ export const APPLY_FINAL_STAMP_REJECT_MESSAGE =
  */
 export function isNoValidatedUpgradeError(message: string): boolean {
   return (
-    message.includes("no validated full-horizon upgrade") ||
-    message.includes("no valid candidate")
+    message.includes("no validated full-horizon upgrade") || message.includes("no valid candidate")
   );
 }
 
@@ -183,9 +177,7 @@ export const CURRENT_BAR_REMAINS_BEST = "current bar remains best";
  * Phase 4/5 Apply gate for completed result DTOs.
  * Delegates to dtoAllowsApply so UI and solver stay on one fail-closed policy.
  */
-export function mayApplySolverResultBar(
-  dto: SolverResultDTO | null | undefined,
-): boolean {
+export function mayApplySolverResultBar(dto: SolverResultDTO | null | undefined): boolean {
   return dtoAllowsApply(dto);
 }
 
@@ -193,9 +185,7 @@ export function mayApplySolverResultBar(
  * Phase 5: whether applyFinalDto should replace the bar / remember as upgrade.
  * Same fail-closed policy as Apply (including residual / fullyValidated / proof).
  */
-export function shouldAdoptSolverResultBar(
-  dto: SolverResultDTO | null | undefined,
-): boolean {
+export function shouldAdoptSolverResultBar(dto: SolverResultDTO | null | undefined): boolean {
   return dtoAllowsApply(dto);
 }
 
@@ -325,11 +315,20 @@ export function recentLibraryVerifiedFields(
 export function isCompletedResultStale(opts: {
   liveIdentity: string;
   resultSolveIdentity: string | null | undefined;
+  sessionEnvironmentIdentity?: string | null;
+  liveEnvironmentIdentity?: string;
+  resultBar?: readonly string[] | null;
+  currentBar?: readonly string[] | null;
 }): boolean {
   const stamped = opts.resultSolveIdentity;
   // Fail-closed: product results without a stamp are not verified presentation.
   if (typeof stamped !== "string" || stamped.length === 0) return true;
-  return stamped !== opts.liveIdentity;
+  if (stamped === opts.liveIdentity) return false;
+  return !(
+    opts.sessionEnvironmentIdentity != null &&
+    opts.sessionEnvironmentIdentity === opts.liveEnvironmentIdentity &&
+    barsMatch(opts.resultBar, opts.currentBar)
+  );
 }
 
 export function productBarSizeFloor(): number {

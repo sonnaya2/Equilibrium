@@ -4,7 +4,7 @@
  * process-local caches cannot reuse scores across materially different requests.
  */
 import type { AbilitySpec } from "../pipeline/calculateAbility";
-import type { EvaluateFn, EvalMode, ScoreableSummary } from "./contracts";
+import type { EvaluateFn, EvalMode, RevolutionBarEvaluation, ScoreableSummary } from "./contracts";
 import { evaluateRevolutionBar } from "./evaluate";
 import { createEligibilityMemo } from "./eligibility";
 import { readEvalMemo, writeEvalMemo } from "./evalMemo";
@@ -17,11 +17,8 @@ import type { SolveRuntimeOptions } from "./worker/solveTypes";
 import type { ProgressState } from "./progressReporter";
 import { emitProgress } from "./progressReporter";
 import { noteEval, noteUniqueBar } from "./profiling/counters";
-import { compileEvaluationContext } from "./compiledContext";
-import {
-  summaryEligibleForObjectiveScore,
-  summaryObjectiveIneligibilityReason,
-} from "./objective";
+import { compileEvaluationContext, type CompiledEvaluationContext } from "./compiledContext";
+import { summaryEligibleForObjectiveScore, summaryObjectiveIneligibilityReason } from "./objective";
 import {
   branchFidelityLadderMemoToken,
   branchFidelityModeForEval,
@@ -37,10 +34,7 @@ export type SessionSimCommon = Parameters<typeof evaluateRevolutionBar>[0]["sim"
  * Uses the canonical evaluation identity (simulation + objective + pool filters).
  * Second arg kept for call-site compatibility; identity is taken from `request`.
  */
-export function buildMemoContext(
-  request: SerializableSolverRequest,
-  _simBase?: unknown,
-): string {
+export function buildMemoContext(request: SerializableSolverRequest, _simBase?: unknown): string {
   return stableStringify(canonicalEvaluationContext(request));
 }
 
@@ -54,6 +48,8 @@ export function createEvaluateFn(args: {
   memoContext: string;
   state: ProgressState;
   seenBars: Set<string>;
+  compiled?: CompiledEvaluationContext;
+  fullEvaluations?: Map<string, RevolutionBarEvaluation>;
   options?: SolveRuntimeOptions;
 }): EvaluateFn {
   const {
@@ -66,16 +62,19 @@ export function createEvaluateFn(args: {
     memoContext,
     state,
     seenBars,
+    fullEvaluations,
     options,
   } = args;
 
   // Once per solve session: catalogue merge + Strength Cape + byId maps.
-  const compiled = compileEvaluationContext({
-    style: request.style,
-    pool,
-    catalogue: simCommon.abilities as AbilitySpec[],
-    strengthCape99: (simCommon as { strengthCape99?: boolean }).strengthCape99 === true,
-  });
+  const compiled =
+    args.compiled ??
+    compileEvaluationContext({
+      style: request.style,
+      pool,
+      catalogue: simCommon.abilities as AbilitySpec[],
+      strengthCape99: (simCommon as { strengthCape99?: boolean }).strengthCape99 === true,
+    });
   const simWithCatalogue = {
     ...simCommon,
     abilities: compiled.catalogue,
@@ -83,9 +82,8 @@ export function createEvaluateFn(args: {
 
   const weaponConfiguration = simCommon.weaponConfiguration;
   const equipmentIds = simCommon.equipmentIds;
-  const passiveIds = (
-    simCommon as { equipmentEffects?: { passiveIds?: readonly string[] } }
-  ).equipmentEffects?.passiveIds;
+  const passiveIds = (simCommon as { equipmentEffects?: { passiveIds?: readonly string[] } })
+    .equipmentEffects?.passiveIds;
   const eligibilityOpts = {
     includePartial: request.includePartial,
     size: { min: request.minBarSize, max: request.maxBarSize },
@@ -136,7 +134,11 @@ export function createEvaluateFn(args: {
         : exploreTicks;
     const scoreMode = useFull ? "full" : useMedium ? "medium" : "search";
     const kind = useFull ? ("full" as const) : ("search" as const);
-    const fidelity = useFull ? ("full" as const) : useMedium ? ("medium" as const) : ("short" as const);
+    const fidelity = useFull
+      ? ("full" as const)
+      : useMedium
+        ? ("medium" as const)
+        : ("short" as const);
     const branchFidelityMode = branchFidelityModeForEval(scoreMode);
     // Ladder token includes live caps so a 64-branch policy never reuses a 4096 result.
     const branchFidelityLadder = resolveBranchFidelityLadder(branchFidelityMode);
@@ -246,12 +248,12 @@ export function createEvaluateFn(args: {
       detailLevel: "score-only",
       branchFidelityMode,
     });
+    if (useFull) fullEvaluations?.set(key, evaluation);
 
     // Residual / known-mass / non-exact short evals must not promote (finite:false).
     // evaluate returns ok:false for those; re-check summary so search archive stays honest.
     const summary = evaluation.summary as ScoreableSummary | undefined;
-    const nonRankableSummary =
-      summary !== undefined && !summaryEligibleForObjectiveScore(summary);
+    const nonRankableSummary = summary !== undefined && !summaryEligibleForObjectiveScore(summary);
     if (!evaluation.ok || nonRankableSummary) {
       state.noImprovement += 1;
       emitProgress(options, state, false, activeChanged);

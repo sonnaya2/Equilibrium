@@ -42,9 +42,7 @@ export function formatAdrenPct(value: number, signed = true): string {
 export type AdrenBreakdownRow = { label: string; value: string };
 
 /** Compact ledger rows for Analysis (skip zero lines). */
-export function analysisAdrenalineBreakdownRows(
-  tx: AdrenalineTransaction,
-): AdrenBreakdownRow[] {
+export function analysisAdrenalineBreakdownRows(tx: AdrenalineTransaction): AdrenBreakdownRow[] {
   const rows: AdrenBreakdownRow[] = [];
 
   if (tx.totalAbilityGain > 0 || tx.listedGain > 0) {
@@ -102,9 +100,7 @@ export function analysisAdrenalineBreakdownRows(
 }
 
 /** FotS / Invig / CoE / RoV / Impatient / Relentless / Herald - loadout assumptions only. */
-export function adrenEconomyAssumptionRows(
-  stats: CalcStats,
-): Array<[string, string | number]> {
+export function adrenEconomyAssumptionRows(stats: CalcStats): Array<[string, string | number]> {
   const a = stats.adrenaline;
   if (!a && !stats.equipmentEffects?.vestments.heraldOfChaos) return [];
   const rows: Array<[string, string | number]> = [];
@@ -124,7 +120,10 @@ export function adrenEconomyAssumptionRows(
     rows.push(["Conservation of Energy", `+${coe}% after ultimate`]);
   }
   if (a?.ringOfVigour) {
-    rows.push(["Ring of Vigour", `+${RING_OF_VIGOUR_REFUND}% after ultimate · specials 90% listed cost`]);
+    rows.push([
+      "Ring of Vigour",
+      `+${RING_OF_VIGOUR_REFUND}% after ultimate · specials 90% listed cost`,
+    ]);
   }
 
   if (stats.equipmentEffects?.vestments.heraldOfChaos) {

@@ -233,10 +233,6 @@ function policyFromSpecsSource(specsSource) {
   };
 }
 
-// ---------------------------------------------------------------------------
-// Main
-// ---------------------------------------------------------------------------
-
 const combatFilesAbs = await walk(COMBAT);
 const combatFiles = combatFilesAbs.map(repoRel).sort();
 
@@ -537,10 +533,6 @@ const notOnAllowlist = barrelModules.filter((m) => !PUBLIC_BARREL_MODULES.includ
 const allowlistMissingFromBarrel = PUBLIC_BARREL_MODULES.filter(
   (m) => !barrelModules.includes(m),
 );
-
-// ---------------------------------------------------------------------------
-// Write reports
-// ---------------------------------------------------------------------------
 
 await mkdir(REPORTS, { recursive: true });
 

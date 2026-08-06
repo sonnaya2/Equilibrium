@@ -1,9 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import {
-  packSolverRequest,
-  solveContextPayload,
-  type SolverResultDTO,
-} from "@/combat/solver";
+import { packSolverRequest, solveContextPayload, type SolverResultDTO } from "@/combat/solver";
 import { DEFAULT_LOADOUT } from "@/components/combat/useLoadout";
 import { emptyBuild } from "@/league";
 import {
@@ -80,20 +76,20 @@ describe("revoPanelFormat", () => {
   });
 
   it("never shows Global optimum when residualWeight or non-exact exactness is present", () => {
-    expect(
-      formatProofLabel("full-objective-global-optimum", { residualWeight: 0.05 }),
-    ).toBe("Approximated");
+    expect(formatProofLabel("full-objective-global-optimum", { residualWeight: 0.05 })).toBe(
+      "Approximated",
+    );
     expect(
       formatProofLabel("full-objective-global-optimum", {
         exactness: "bounded-approximation",
       }),
     ).toBe("Approximated");
-    expect(
-      formatProofLabel("search-objective-exhaustive", { exactness: "truncated" }),
-    ).toBe("Approximated");
-    expect(
-      formatProofLabel("full-objective-global-optimum", { residualWeight: 0 }),
-    ).toBe("Global optimum");
+    expect(formatProofLabel("search-objective-exhaustive", { exactness: "truncated" })).toBe(
+      "Approximated",
+    );
+    expect(formatProofLabel("full-objective-global-optimum", { residualWeight: 0 })).toBe(
+      "Global optimum",
+    );
     expect(formatProofLabel("heuristic-best-found", { residualWeight: 0.2 })).toBe("Best found");
   });
 
@@ -228,19 +224,13 @@ describe("revoPanelFormat", () => {
   });
 
   it("mayApplyFinalDtoStamp fails closed on empty or mismatched stamp", () => {
-    expect(
-      mayApplyFinalDtoStamp({ dtoSolveIdentity: "live", liveIdentity: "live" }),
-    ).toBe(true);
+    expect(mayApplyFinalDtoStamp({ dtoSolveIdentity: "live", liveIdentity: "live" })).toBe(true);
     expect(mayApplyFinalDtoStamp({ dtoSolveIdentity: "", liveIdentity: "live" })).toBe(false);
-    expect(mayApplyFinalDtoStamp({ dtoSolveIdentity: null, liveIdentity: "live" })).toBe(
+    expect(mayApplyFinalDtoStamp({ dtoSolveIdentity: null, liveIdentity: "live" })).toBe(false);
+    expect(mayApplyFinalDtoStamp({ dtoSolveIdentity: undefined, liveIdentity: "live" })).toBe(
       false,
     );
-    expect(
-      mayApplyFinalDtoStamp({ dtoSolveIdentity: undefined, liveIdentity: "live" }),
-    ).toBe(false);
-    expect(
-      mayApplyFinalDtoStamp({ dtoSolveIdentity: "other", liveIdentity: "live" }),
-    ).toBe(false);
+    expect(mayApplyFinalDtoStamp({ dtoSolveIdentity: "other", liveIdentity: "live" })).toBe(false);
     expect(APPLY_FINAL_STAMP_REJECT_MESSAGE.length).toBeGreaterThan(0);
   });
 
@@ -289,9 +279,7 @@ describe("settlementActionForCatch identity gate", () => {
 describe("Phase 4 apply / validation failure gates", () => {
   it("isNoValidatedUpgradeError matches resultBuilder throw text", () => {
     expect(
-      isNoValidatedUpgradeError(
-        "solver failed: no validated full-horizon upgrade; status=failed",
-      ),
+      isNoValidatedUpgradeError("solver failed: no validated full-horizon upgrade; status=failed"),
     ).toBe(true);
     expect(isNoValidatedUpgradeError("no valid candidate")).toBe(true);
     expect(isNoValidatedUpgradeError("worker crashed")).toBe(false);
@@ -362,12 +350,12 @@ describe("Phase 4 apply / validation failure gates", () => {
     expect(mayApplySolverResultBar(base)).toBe(true);
     expect(shouldAdoptSolverResultBar(base)).toBe(true);
 
-    expect(
-      mayApplySolverResultBar({ ...base, isUpgrade: false, validForApply: false }),
-    ).toBe(false);
-    expect(
-      shouldAdoptSolverResultBar({ ...base, isUpgrade: false, validForApply: false }),
-    ).toBe(false);
+    expect(mayApplySolverResultBar({ ...base, isUpgrade: false, validForApply: false })).toBe(
+      false,
+    );
+    expect(shouldAdoptSolverResultBar({ ...base, isUpgrade: false, validForApply: false })).toBe(
+      false,
+    );
 
     expect(mayApplySolverResultBar({ ...base, isUpgrade: false })).toBe(false);
     expect(mayApplySolverResultBar({ ...base, validForApply: false })).toBe(false);
@@ -560,7 +548,42 @@ describe("verified save + identity helpers", () => {
     expect(isCompletedResultStale({ liveIdentity: "a", resultSolveIdentity: "a" })).toBe(false);
     expect(isCompletedResultStale({ liveIdentity: "a", resultSolveIdentity: "" })).toBe(true);
     expect(isCompletedResultStale({ liveIdentity: "a", resultSolveIdentity: null })).toBe(true);
-    expect(isCompletedResultStale({ liveIdentity: "a", resultSolveIdentity: undefined })).toBe(true);
+    expect(isCompletedResultStale({ liveIdentity: "a", resultSolveIdentity: undefined })).toBe(
+      true,
+    );
+  });
+
+  it("keeps a completed result after its verified winner becomes the live bar", () => {
+    expect(
+      isCompletedResultStale({
+        liveIdentity: "winner-bar-identity",
+        resultSolveIdentity: "incumbent-bar-identity",
+        sessionEnvironmentIdentity: "same-environment",
+        liveEnvironmentIdentity: "same-environment",
+        resultBar: ["a", "b"],
+        currentBar: ["a", "b"],
+      }),
+    ).toBe(false);
+    expect(
+      isCompletedResultStale({
+        liveIdentity: "winner-bar-identity",
+        resultSolveIdentity: "incumbent-bar-identity",
+        sessionEnvironmentIdentity: "before-loadout-change",
+        liveEnvironmentIdentity: "after-loadout-change",
+        resultBar: ["a", "b"],
+        currentBar: ["a", "b"],
+      }),
+    ).toBe(true);
+    expect(
+      isCompletedResultStale({
+        liveIdentity: "other-bar-identity",
+        resultSolveIdentity: "incumbent-bar-identity",
+        sessionEnvironmentIdentity: "same-environment",
+        liveEnvironmentIdentity: "same-environment",
+        resultBar: ["a", "b"],
+        currentBar: ["b", "a"],
+      }),
+    ).toBe(true);
   });
 });
 
@@ -583,9 +606,7 @@ describe("bar size presets → packer", () => {
       maxBarSize: raw.maxBarSize,
       now: 1_700_000_000_000,
     });
-    expect(spy).toHaveBeenCalledWith(
-      expect.objectContaining({ minBarSize: 4, maxBarSize: 4 }),
-    );
+    expect(spy).toHaveBeenCalledWith(expect.objectContaining({ minBarSize: 4, maxBarSize: 4 }));
     expect(req.minBarSize).toBe(4);
     expect(req.maxBarSize).toBe(4);
     expect(clampedBarBoundsFromPreset("fixed4").minBarSize).toBe(4);

@@ -16,19 +16,10 @@ import {
 } from "../../styles/necromancy/effects";
 import type { ConjureState } from "../../styles/necromancy/conjures";
 import { newHaunted, type HauntedState } from "../../styles/necromancy/haunted";
-import {
-  NO_LEVEL_OVERRIDE,
-  type EffectiveLevelOverride,
-} from "../../core/effectiveLevel";
+import { NO_LEVEL_OVERRIDE, type EffectiveLevelOverride } from "../../core/effectiveLevel";
 import type { PlayerVitality } from "../../core/playerVitality";
-import {
-  NO_DEATH_PREVENTION,
-  type DeathPreventionState,
-} from "./deathPrevention";
-import {
-  newNaragiRuntime,
-  type NaragiRuntimeState,
-} from "../../league/naragiEdict";
+import { NO_DEATH_PREVENTION, type DeathPreventionState } from "./deathPrevention";
+import { newNaragiRuntime, type NaragiRuntimeState } from "../../league/naragiEdict";
 import { firstChargeReadyTick, maxChargesFor } from "./charges";
 
 export type { MeleeRotationState, RangedRotationState, MagicRotationState };

@@ -147,7 +147,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "advanced smithing autoheater": perm("advanced-smithing-autoheater"),
   herbicide: perm("herbicide"),
   "gem bag": "/game/upgrades/skilling-utility/gem-bag.webp",
-  // Fern's Finds (Havenhythe Amberfell) — never Meilyr recipe shop art.
+  // Fern's Finds is the Havenhythe Amberfell shop, not the Meilyr recipe shop.
   "fern's finds": perm("ferns-finds"),
   "ferns finds": perm("ferns-finds"),
   "mushroom shop": perm("ferns-finds"),
@@ -170,7 +170,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "shark pool": skProd("raw-shark"),
   "giant crayfish pool": skProd("raw-giant-crayfish"),
 
-  // Old Meats (Hollow Hill) — shop plate + stock chips
+  // Old Meats (Hollow Hill): shop plate and stock chips.
   "old meats": perm("old-meats"),
   "old meats (hollow hill meat shop)": perm("old-meats"),
   "raw rabbit": skProd("raw-rabbit"),
@@ -569,7 +569,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "veracs flail": equip("veracs-flail"),
   "guthan's warspear": equip("guthans-warspear"),
   "guthans warspear": equip("guthans-warspear"),
-  // Linza the Disgraced (own major — no gloves/boots pieces)
+  // Linza the Disgraced has its own major without gloves or boots.
   "linza's helm": equip("linzas-helm"),
   "linzas helm": equip("linzas-helm"),
   "linza's cuirass": equip("linzas-cuirass"),
@@ -596,7 +596,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "durable ritual components": perm("ungael-ritual"),
   "ungael combat activity": perm("ungael"),
 
-  // Blisterwood weapons (early-game vyre set — inventory icons under combat/equipment)
+  // Blisterwood weapon inventory icons live under combat/equipment.
   "blisterwood polearm": equip("blisterwood-polearm"),
   "blisterwood sickle": equip("blisterwood-sickle"),
   "off-hand blisterwood sickle": equip("off-hand-blisterwood-sickle"),
@@ -750,7 +750,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
   "channellers ring": util("channelers-ring"),
   "stalker's ring": util("stalkers-ring"),
   "stalkers ring": util("stalkers-ring"),
-  // Scale materials: no dedicated inventory art shipped — use related craft faces.
+  // Scale materials lack dedicated inventory art; use related craft faces.
   "ancient scales": prog("elite-sirenic-hauberk"),
   "ancient scale": prog("elite-sirenic-hauberk"),
   "sirenic scales": prog("sirenic-hauberk"),
@@ -834,7 +834,7 @@ export const REWARD_ICON_BY_LABEL: Record<string, string> = {
 
   "hexhunter bow": equip("hexhunter-bow"),
   "bloodwood logs": perm("bloodwood-logs"),
-  // Eternal magic grove — official log inventory art; planks still use generic plank.
+  // Eternal magic grove uses official log art; planks still use the generic plank.
   "eternal magic trees": skProd("eternal-magic-logs"),
   "eternal magic logs": skProd("eternal-magic-logs"),
   "eternal magic log": skProd("eternal-magic-logs"),

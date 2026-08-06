@@ -631,9 +631,7 @@ describe("revolution — conjure post-summon management", () => {
     ]);
     expect(s.casts.some((c) => c.abilityId === "command_putrid_zombie")).toBe(false);
     // Fall through to soul_sap after morph targets are spent/on CD.
-    expect(s.casts.some((c) => c.abilityId === "soul_sap" && c.tick > 9 && c.tick < 33)).toBe(
-      true,
-    );
+    expect(s.casts.some((c) => c.abilityId === "soul_sap" && c.tick > 9 && c.tick < 33)).toBe(true);
     // Single army summon for the full SP3 life (no mid-life re-summon loop).
     expect(s.casts.filter((c) => c.abilityId === "conjure_undead_army")).toHaveLength(1);
   });

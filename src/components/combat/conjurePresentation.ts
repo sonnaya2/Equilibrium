@@ -38,10 +38,7 @@ export const NECRO_BAR_CONJURE_FALLBACK = "conjure_undead_army";
  * Run needs conjure_* to summon spirits. Solver bars may omit them.
  * Army fallback for pure unit tests; UI path uses ensureNecroConjuresOnBarIds (full wiki).
  */
-export function ensureNecromancyConjureOnBar(
-  barIds: readonly string[],
-  style: string,
-): string[] {
+export function ensureNecromancyConjureOnBar(barIds: readonly string[], style: string): string[] {
   if (style !== "necromancy") return [...barIds];
   if (barIds.some((id) => isConjureSummonAbilityId(id))) return [...barIds];
   return [NECRO_BAR_CONJURE_FALLBACK, ...barIds];
@@ -72,9 +69,7 @@ export function spiritEffectDisplayName(abilityId: string): string | null {
 /** True when a byEffect / cast row is conjure-family (summon, command, or spirit ledger). */
 export function isConjureEffectRow(id: string, kind?: string): boolean {
   if (kind === "conjure-or-familiar") return true;
-  return (
-    isSpiritLedgerId(id) || isConjureSummonAbilityId(id) || isConjureCommandAbilityId(id)
-  );
+  return isSpiritLedgerId(id) || isConjureSummonAbilityId(id) || isConjureCommandAbilityId(id);
 }
 
 /** Timeline / damage event is conjure damage or summon-related. */
@@ -129,10 +124,7 @@ export function formatConjureCastDurationNote(castTick: number, durationMult = 1
 }
 
 /** Event-row note when remainingTicks is present (spirit life, bleed tail, etc.). */
-export function formatRemainingDurationNote(
-  eventTick: number,
-  remainingTicks: number,
-): string {
+export function formatRemainingDurationNote(eventTick: number, remainingTicks: number): string {
   const endsAt = eventTick + remainingTicks;
   const seconds = ticksToSeconds(remainingTicks).toFixed(1);
   return `${remainingTicks}t left (~${seconds}s) · ends t${endsAt}`;

@@ -183,10 +183,7 @@ export function emitProgress(
           : state.currentFidelity === "full"
             ? "full"
             : "search",
-    fidelity:
-      state.currentPhase === "finalize"
-        ? "full"
-        : (state.currentFidelity ?? "short"),
+    fidelity: state.currentPhase === "finalize" ? "full" : (state.currentFidelity ?? "short"),
     // Never stuff robust score into windowDpms - real windows live on the result DTO.
     windowDpms: 0,
     topBarPreview: state.topPreview,

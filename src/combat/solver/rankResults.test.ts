@@ -8,7 +8,9 @@ import {
 import { mergeResults } from "./worker/pool";
 import type { SolverResultDTO } from "./worker/serializable";
 
-function dto(partial: Partial<SolverResultDTO> & Pick<SolverResultDTO, "bar" | "score">): SolverResultDTO {
+function dto(
+  partial: Partial<SolverResultDTO> & Pick<SolverResultDTO, "bar" | "score">,
+): SolverResultDTO {
   return {
     windowDpms: 0,
     evaluations: 1,
@@ -61,9 +63,7 @@ describe("rankResults", () => {
     // Same length -> lexicographic bar fingerprint.
     const best = pickBestSolverResult([d, c]);
     expect(best.bar.join(",")).toBe(
-      ["a", "b", "c", "d"].join(",") < ["e", "f", "g", "h"].join(",")
-        ? "a,b,c,d"
-        : "e,f,g,h",
+      ["a", "b", "c", "d"].join(",") < ["e", "f", "g", "h"].join(",") ? "a,b,c,d" : "e,f,g,h",
     );
   });
 

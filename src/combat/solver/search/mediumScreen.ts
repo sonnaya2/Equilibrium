@@ -91,7 +91,11 @@ export async function runMediumScreenAsync(
     if (!state.canEval()) break;
     const scored = state.tryEval(nb, "medium", "medium-local");
     if (yieldCtx) await maybeYield(state, yieldCtx);
-    if (isMediumOk(scored) && state.bestMedium && scored!.robustScore > state.bestMedium.robustScore) {
+    if (
+      isMediumOk(scored) &&
+      state.bestMedium &&
+      scored!.robustScore > state.bestMedium.robustScore
+    ) {
       // bestMedium already updated via touchMediumBest
     }
   }

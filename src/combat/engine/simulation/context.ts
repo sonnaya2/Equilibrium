@@ -149,8 +149,7 @@ export function createCastContext(
           continue;
         }
 
-        const plans =
-          rng !== undefined ? applyForcedRng(planned.plans, rng) : [...planned.plans];
+        const plans = rng !== undefined ? applyForcedRng(planned.plans, rng) : [...planned.plans];
         const material = materializeCastPlans(plans, maxLive, intermediateMax);
         residual += material.residualWeight;
         exact = combineExactness(exact, material.exactness);
@@ -190,9 +189,7 @@ export function createCastContext(
     },
     finish: (error?: string, horizonTicks?: number, options?: SimulateOptions) => {
       const terminal =
-        error !== undefined
-          ? branches.map((b) => ({ ...b, error: b.error ?? error }))
-          : branches;
+        error !== undefined ? branches.map((b) => ({ ...b, error: b.error ?? error })) : branches;
       const finishOpts: SimulateOptions | undefined =
         branchBudget != null || options != null
           ? {

@@ -1,18 +1,10 @@
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
-import {
-  tsunamiCritAdrenActive,
-  tsunamiCritAdrenGrant,
-} from "../../styles/magic/effects";
+import { tsunamiCritAdrenActive, tsunamiCritAdrenGrant } from "../../styles/magic/effects";
 import type { ScheduledEvent } from "../runtime/events";
 import { gainAdrenaline } from "../runtime/state";
 import type { SimulationRuntime } from "../runtime/runtime";
 import type { ResolvedDamage } from "../resolution/types";
-import {
-  emptyBranchSet,
-  snapshotRuntime,
-  type Branch,
-  type BranchSet,
-} from "./branchCore";
+import { emptyBranchSet, snapshotRuntime, type Branch, type BranchSet } from "./branchCore";
 
 /**
  * Crit chance for Tsunami adren branching. Prefer resolution.critical (always on

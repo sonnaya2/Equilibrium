@@ -6,10 +6,19 @@ import {
   type BlessingDamageSource,
 } from "../../../league/damage";
 import { outgoingSourceOf, type DamageProvenance } from "../../../shared/damageProvenance";
-import { blessingRule } from "../../../league/ruleset";
+import { blessingRule, resolveMaximumLife } from "../../../league/ruleset";
 import { patchLeague } from "../../runtime/state";
 import type { ResolvedDamage } from "../types";
 import { isBasicAttack } from "../../../shared/adrenalineGain";
+
+const componentCache = new WeakMap<
+  object,
+  Map<string, ReturnType<typeof leagueDamageComponents>>
+>();
+
+function sourceKey(source: BlessingDamageSource | DamageProvenance): string {
+  return typeof source === "string" ? source : `${source.kind}:${source.detail ?? ""}`;
+}
 
 /**
  * Prefer scheduled DamageProvenance (keeps blessing detail for rider carve-out);
@@ -88,29 +97,47 @@ export function scheduleBlessingDamage(
       ? rt.input.modifiers(resolvedAbility)
       : (rt.input.modifiers ?? []);
   const lightReady = event.tick >= (rt.state.league?.strikingLightReadyTick ?? Infinity);
-  const components = leagueDamageComponents({
-    rules: rt.input.league,
-    ability: resolvedAbility,
-    hitIndex: event.hitIndex,
-    source,
-    attached: event.attached,
-    landTick: event.tick,
-    base: rt.input.base,
-    level: rt.input.level,
-    accuracy: rt.input.accuracy,
-    crit: rt.input.crit,
-    modifiers,
-    context: {
-      ...rt.input.context,
-      style,
-      abilityCategory: resolvedAbility.category,
-      basicAttack: isBasicAttack(resolvedAbility),
-      area: resolvedAbility.area,
-    },
-    cap: rt.input.cap,
-    // Light needs a real bar Basic ability; stubs never open the gate.
-    strikingLightReady: ability != null && lightReady,
-  });
+  // Input identity is shared by every branch; land-time fields remain in the key.
+  let cache = componentCache.get(rt.input);
+  if (!cache) {
+    cache = new Map();
+    componentCache.set(rt.input, cache);
+  }
+  const key = [
+    resolvedAbility.id,
+    event.hitIndex,
+    resolveMaximumLife(rt.input.league, event.tick),
+    event.attached ? 1 : 0,
+    sourceKey(source),
+    ability != null && lightReady ? 1 : 0,
+  ].join("\x1f");
+  let components = cache.get(key);
+  if (!components) {
+    components = leagueDamageComponents({
+      rules: rt.input.league,
+      ability: resolvedAbility,
+      hitIndex: event.hitIndex,
+      source,
+      attached: event.attached,
+      landTick: event.tick,
+      base: rt.input.base,
+      level: rt.input.level,
+      accuracy: rt.input.accuracy,
+      crit: rt.input.crit,
+      modifiers,
+      context: {
+        ...rt.input.context,
+        style,
+        abilityCategory: resolvedAbility.category,
+        basicAttack: isBasicAttack(resolvedAbility),
+        area: resolvedAbility.area,
+      },
+      cap: rt.input.cap,
+      // Light needs a real bar Basic ability; stubs never open the gate.
+      strikingLightReady: ability != null && lightReady,
+    });
+    cache.set(key, components);
+  }
   if (components.some((component) => component.effectId === "light-of-saradomin")) {
     const cooldown = blessingRule(rt.input.league, "striking-light")?.light?.cooldownTicks;
     if (cooldown !== undefined) {

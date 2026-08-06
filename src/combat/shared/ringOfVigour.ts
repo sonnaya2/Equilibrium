@@ -47,9 +47,7 @@ export const MODELLED_WEAPON_SPECIAL_IDS = [
 export type ModelledWeaponSpecialId = (typeof MODELLED_WEAPON_SPECIAL_IDS)[number];
 
 /** True when the ring is among currently worn equipment ids. */
-export function isRingOfVigourWorn(
-  equipmentIds: readonly string[] | undefined,
-): boolean {
+export function isRingOfVigourWorn(equipmentIds: readonly string[] | undefined): boolean {
   return equipmentIds?.includes(RING_OF_VIGOUR_ITEM_ID) === true;
 }
 
@@ -102,9 +100,7 @@ export function ringOfVigourActiveSources(input: {
 }
 
 export function formatRingOfVigourSources(sources: readonly RingOfVigourSource[]): string {
-  const labels = sources.map((s) =>
-    s === "equipped" ? "Equipped ring" : "Permanent unlock",
-  );
+  const labels = sources.map((s) => (s === "equipped" ? "Equipped ring" : "Permanent unlock"));
   if (labels.length === 0) return "Ring of Vigour";
   return `Ring of Vigour · Active via: ${labels.join(", ")}`;
 }
@@ -127,9 +123,7 @@ export function resolveSpecialAttackAdrenalineCost(
  * Sole runtime gate: AbilitySpec.weaponSpecial === true.
  * Do not fork special classification in cast/UI paths - call this.
  */
-export function isWeaponSpecialAbility(ability: {
-  weaponSpecial?: boolean;
-}): boolean {
+export function isWeaponSpecialAbility(ability: { weaponSpecial?: boolean }): boolean {
   return ability.weaponSpecial === true;
 }
 

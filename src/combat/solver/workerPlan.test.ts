@@ -82,11 +82,7 @@ describe("workerPlan", () => {
   it("thorough only uses default recipe; extreme adds evo; unhinged adds anneal", () => {
     expect([...recipesForTier("thorough")]).toEqual(["default"]);
     expect([...recipesForTier("extreme")]).toEqual(["default", "evolutionary"]);
-    expect([...recipesForTier("unhinged")]).toEqual([
-      "default",
-      "evolutionary",
-      "anneal_local",
-    ]);
+    expect([...recipesForTier("unhinged")]).toEqual(["default", "evolutionary", "anneal_local"]);
 
     const thorough = planWorkers({
       minBarSize: 4,

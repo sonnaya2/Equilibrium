@@ -13,7 +13,10 @@ import {
 } from "../../shared/ringOfVigour";
 import { costOf, spendOf } from "./rules";
 import { prepareCast } from "./prepare";
-import { unitPrimordialIce, type PrimordialIceDistribution } from "../../styles/melee/primordialIce";
+import {
+  unitPrimordialIce,
+  type PrimordialIceDistribution,
+} from "../../styles/melee/primordialIce";
 import { PRIMORDIAL_ICE_DURATION_TICKS } from "../../styles/melee/primordialIce";
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 
@@ -67,22 +70,25 @@ describe("special cost: requirement = spend under Vigour", () => {
     ["claws_of_guthix", 25, 23],
     ["death_grasp", 25, 23],
     ["icy_tempest", 30, 27],
-  ] as const)("%s listed %i -> effective %i for both costOf and spendOf", (id, listed, effective) => {
-    const ability = byId(id);
-    expect(isWeaponSpecialAbility(ability)).toBe(true);
-    expect(ability.adrenaline?.cost).toBe(listed);
+  ] as const)(
+    "%s listed %i -> effective %i for both costOf and spendOf",
+    (id, listed, effective) => {
+      const ability = byId(id);
+      expect(isWeaponSpecialAbility(ability)).toBe(true);
+      expect(ability.adrenaline?.cost).toBe(listed);
 
-    const off = runtime({ ringOfVigour: false });
-    expect(costOf(off.state, ability, 0)).toBe(listed);
-    expect(spendOf(off.state, ability, 0)).toBe(listed);
+      const off = runtime({ ringOfVigour: false });
+      expect(costOf(off.state, ability, 0)).toBe(listed);
+      expect(spendOf(off.state, ability, 0)).toBe(listed);
 
-    const on = runtime({ ringOfVigour: true });
-    expect(costOf(on.state, ability, 0)).toBe(effective);
-    expect(spendOf(on.state, ability, 0)).toBe(effective);
-    expect(costOf(on.state, ability, 0)).toBe(spendOf(on.state, ability, 0));
-    // Same pure discount both paths use.
-    expect(resolveSpecialAttackAdrenalineCost(listed, true)).toBe(effective);
-  });
+      const on = runtime({ ringOfVigour: true });
+      expect(costOf(on.state, ability, 0)).toBe(effective);
+      expect(spendOf(on.state, ability, 0)).toBe(effective);
+      expect(costOf(on.state, ability, 0)).toBe(spendOf(on.state, ability, 0));
+      // Same pure discount both paths use.
+      expect(resolveSpecialAttackAdrenalineCost(listed, true)).toBe(effective);
+    },
+  );
 
   it("prepareCast cost and spend match for normal specials under Vigour", () => {
     const ability = byId("instability");

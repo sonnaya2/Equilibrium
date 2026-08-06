@@ -28,10 +28,7 @@ export function recordResolved(
   // Endless Assault damage is not proc-eligible, but it is still the original
   // channel hit for ability-owned landed effects such as Greater Flurry's
   // Berserk extension.
-  if (
-    (event.procEligible || event.convertedChannel || event.bleedId != null) &&
-    !event.attached
-  ) {
+  if ((event.procEligible || event.convertedChannel || event.bleedId != null) && !event.attached) {
     applyLandedHitEffects(rt, event, damage);
   }
 

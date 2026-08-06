@@ -39,7 +39,12 @@ describe("damage prayers", () => {
   });
 
   it("covers one Turmoil-line curse per style at +10% damage", () => {
-    expect(TURMOIL).toMatchObject({ style: "melee", damageBonus: 0.1, accuracyLevels: 10, book: "ancient" });
+    expect(TURMOIL).toMatchObject({
+      style: "melee",
+      damageBonus: 0.1,
+      accuracyLevels: 10,
+      book: "ancient",
+    });
     expect(ANGUISH).toMatchObject({ style: "ranged", damageBonus: 0.1, accuracyLevels: 10 });
     expect(TORMENT).toMatchObject({ style: "magic", damageBonus: 0.1, accuracyLevels: 10 });
     expect(SORROW).toMatchObject({ style: "necromancy", damageBonus: 0.1, accuracyLevels: 10 });
@@ -67,9 +72,9 @@ describe("damage prayers", () => {
   });
 
   it("Piety floors 8% of 1000 -> 1080; Malevolence 12% -> 1120", () => {
-    expect(runPipeline({ damage: 1000 }, [prayerDamageModifier(PIETY)], { style: "melee" }).damage).toBe(
-      1080,
-    );
+    expect(
+      runPipeline({ damage: 1000 }, [prayerDamageModifier(PIETY)], { style: "melee" }).damage,
+    ).toBe(1080);
     expect(
       runPipeline({ damage: 1000 }, [prayerDamageModifier(MALEVOLENCE)], { style: "melee" }).damage,
     ).toBe(1120);

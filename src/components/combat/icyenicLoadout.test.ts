@@ -25,7 +25,10 @@ describe("Icyenic Faith equipment catalogue integrity", () => {
 
     expect(tome, "Tome missing; run npm run data:rebuild").toBeDefined();
     expect(javelin, "Morrigan javelin missing; Tome may have clobbered records[552]").toBeDefined();
-    expect(axe, "Morrigan throwing axe missing; Tome may have clobbered records[553]").toBeDefined();
+    expect(
+      axe,
+      "Morrigan throwing axe missing; Tome may have clobbered records[553]",
+    ).toBeDefined();
 
     expect(tome!.slot).toBe("pocket");
     expect(tome!.bonuses.prayer).toBe(TOME_OF_THE_ICYENE_PRAYER);
@@ -34,16 +37,20 @@ describe("Icyenic Faith equipment catalogue integrity", () => {
     expect(javelin!.slot).toBe("mainhand");
     expect(javelin!.bonuses.accuracy).toBe(1829);
     expect(javelin!.bonuses.damage).toBe(1162.2);
-    expect(javelin!.sources?.some((s) => s.url?.includes("Morrigan%27s_javelin") || s.url?.includes("Morrigan's_javelin"))).toBe(
-      true,
-    );
+    expect(
+      javelin!.sources?.some(
+        (s) => s.url?.includes("Morrigan%27s_javelin") || s.url?.includes("Morrigan's_javelin"),
+      ),
+    ).toBe(true);
 
     expect(axe!.slot).toBe("mainhand");
     expect(axe!.bonuses.accuracy).toBe(1829);
     expect(axe!.bonuses.damage).toBe(955.5);
     expect(
       axe!.sources?.some(
-        (s) => s.url?.includes("Morrigan%27s_throwing_axe") || s.url?.includes("Morrigan's_throwing_axe"),
+        (s) =>
+          s.url?.includes("Morrigan%27s_throwing_axe") ||
+          s.url?.includes("Morrigan's_throwing_axe"),
       ),
     ).toBe(true);
   });
@@ -84,10 +91,7 @@ describe("Icyenic Faith through a Setup loadout", () => {
     expect(tome!.bonuses.prayer).toBe(TOME_OF_THE_ICYENE_PRAYER);
 
     const withoutScaling = statsOf({}, RELICS);
-    const withTome = statsOf(
-      { equipmentSlots: { pocket: TOME_OF_THE_ICYENE_ID } },
-      RELICS,
-    );
+    const withTome = statsOf({ equipmentSlots: { pocket: TOME_OF_THE_ICYENE_ID } }, RELICS);
 
     expect(withTome.tomeOfTheIcyeneWorn).toBe(true);
     expect(withTome.equipment.prayer).toBeGreaterThanOrEqual(TOME_OF_THE_ICYENE_PRAYER);
@@ -112,20 +116,14 @@ describe("Icyenic Faith through a Setup loadout", () => {
   });
 
   it("sets 100% protect block when protection prayer is on with the relic", () => {
-    const stats = statsOf(
-      { buffs: { ...DEFAULT_LOADOUT.buffs, protectionPrayer: true } },
-      RELICS,
-    );
+    const stats = statsOf({ buffs: { ...DEFAULT_LOADOUT.buffs, protectionPrayer: true } }, RELICS);
     expect(stats.icyenicProtection.blockFraction).toBe(1);
     expect(stats.icyenicProtection.unavailability).not.toBe("protection-off");
     expect(stats.icyenicProtection.unavailability).not.toBe("relic-inactive");
   });
 
   it("reports protection-off when the relic is on but protect is off", () => {
-    const stats = statsOf(
-      { buffs: { ...DEFAULT_LOADOUT.buffs, protectionPrayer: false } },
-      RELICS,
-    );
+    const stats = statsOf({ buffs: { ...DEFAULT_LOADOUT.buffs, protectionPrayer: false } }, RELICS);
     expect(stats.icyenicProtection.unavailability).toBe("protection-off");
   });
 });

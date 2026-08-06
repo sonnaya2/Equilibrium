@@ -23,7 +23,11 @@ import { applyCaromingToRicochetHits } from "./caroming";
 import { darkfangBasicHits, hasDarkfangWeapon } from "./darkfang";
 import { styleAmmoFromEquipmentIds } from "./ammoModel";
 import { caromingRicochetBonus } from "../../shared/perks";
-import { buildSimulationInputBase, toManualSimulateInput, toRevolutionInput } from "../../model/simulationBase";
+import {
+  buildSimulationInputBase,
+  toManualSimulateInput,
+  toRevolutionInput,
+} from "../../model/simulationBase";
 import { buildResolvedCombatModel } from "../../model/resolve";
 import { projectSerializableSimBase } from "../../model/simulationInput";
 import { canonicalSimulationIdentity } from "../../solver/identity";
@@ -35,9 +39,7 @@ import { EQUIPMENT_SET_ACTIVATION } from "../../shared/equipment";
 
 const BASE = 1000;
 
-function hostScaffold(
-  overrides: Partial<HostCombatResolveInput> = {},
-): HostCombatResolveInput {
+function hostScaffold(overrides: Partial<HostCombatResolveInput> = {}): HostCombatResolveInput {
   return {
     style: "ranged",
     base: BASE,
@@ -454,9 +456,7 @@ describe("deathspore / searing winds / shadow imbued regressions", () => {
       startingAdrenaline: 100,
       rotation,
     });
-    expect(s.casts.some((c) => c.abilityId === "imbue_shadows" && c.actualSpend === 0)).toBe(
-      true,
-    );
+    expect(s.casts.some((c) => c.abilityId === "imbue_shadows" && c.actualSpend === 0)).toBe(true);
   });
 
   it("searing winds boosts a follow-up attack", () => {
@@ -472,7 +472,7 @@ describe("deathspore / searing winds / shadow imbued regressions", () => {
     });
     const bareHit = bare.events.find((e) => e.abilityId === "ranged_attack" && e.family === "hit");
     const buffed = withSw.events.find((e) => e.abilityId === "ranged_attack" && e.family === "hit");
-    expect((buffed?.damage.expected ?? 0)).toBeGreaterThan(bareHit?.damage.expected ?? 0);
+    expect(buffed?.damage.expected ?? 0).toBeGreaterThan(bareHit?.damage.expected ?? 0);
   });
 
   it("shadow imbued grants adrenaline on a follow-up hit", () => {

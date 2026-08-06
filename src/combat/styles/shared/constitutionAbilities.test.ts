@@ -27,10 +27,7 @@ const STYLES = ["melee", "ranged", "magic", "necromancy"] as const;
 
 describe("shared constitution abilities", () => {
   it("registers sacrifice and tuskas_wrath once each", () => {
-    expect(SHARED_CONSTITUTION_ABILITIES.map((a) => a.id)).toEqual([
-      "sacrifice",
-      "tuskas_wrath",
-    ]);
+    expect(SHARED_CONSTITUTION_ABILITIES.map((a) => a.id)).toEqual(["sacrifice", "tuskas_wrath"]);
     expect(isSharedConstitutionAbilityId("sacrifice")).toBe(true);
     expect(isSharedConstitutionAbilityId("tuskas_wrath")).toBe(true);
     expect(isSharedConstitutionAbilityId("rend")).toBe(false);

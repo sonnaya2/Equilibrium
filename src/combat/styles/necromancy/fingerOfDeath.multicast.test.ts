@@ -15,7 +15,10 @@ import { NECROMANCY_ABILITIES } from "./abilities";
 
 const byId = (id: string) => abilityById(NECROMANCY_ABILITIES, id);
 
-function fodCount(casts: readonly { abilityId: string; tick: number }[], maxTickExclusive?: number) {
+function fodCount(
+  casts: readonly { abilityId: string; tick: number }[],
+  maxTickExclusive?: number,
+) {
   return casts.filter(
     (c) =>
       c.abilityId === "finger_of_death" &&

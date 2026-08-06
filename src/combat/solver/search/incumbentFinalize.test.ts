@@ -78,7 +78,10 @@ function makeState(opts: {
 }
 
 /** Pre-fill explore archive with high-score bars that crowd out the incumbent. */
-function seedExploreArchive(state: ReturnType<typeof createSearchState>, bars: readonly (readonly string[])[]) {
+function seedExploreArchive(
+  state: ReturnType<typeof createSearchState>,
+  bars: readonly (readonly string[])[],
+) {
   for (const bar of bars) {
     state.tryEval(bar, "search", "explore-fill");
   }
@@ -113,14 +116,7 @@ describe("incumbent finalize (Phase 5)", () => {
     };
 
     const state = makeState({ evaluate, incumbentBar: incumbent, fullShortlistSize: 2 });
-    seedExploreArchive(state, [
-      ["c", "d"],
-      ["c", "e"],
-      ["d", "e"],
-      ["c"],
-      ["d"],
-      incumbent,
-    ]);
+    seedExploreArchive(state, [["c", "d"], ["c", "e"], ["d", "e"], ["c"], ["d"], incumbent]);
 
     // Capacity-capped shortlist from explore should not need the low-explore incumbent.
     const { seedBestScore: _s, seedBestBar } = (() => {
@@ -162,11 +158,7 @@ describe("incumbent finalize (Phase 5)", () => {
     const evaluate: EvaluateFn = ({ bar, mode }) => {
       if (mode === "full" || mode === "finalize") {
         const score =
-          barKey(bar) === barKey(upgrade)
-            ? 2_000
-            : barKey(bar) === barKey(incumbent)
-              ? 1_000
-              : 50;
+          barKey(bar) === barKey(upgrade) ? 2_000 : barKey(bar) === barKey(incumbent) ? 1_000 : 50;
         return {
           score,
           finite: true,
@@ -206,11 +198,7 @@ describe("incumbent finalize (Phase 5)", () => {
     const evaluate: EvaluateFn = ({ bar, mode }) => {
       if (mode === "full" || mode === "finalize") {
         const score =
-          barKey(bar) === barKey(incumbent)
-            ? 5_000
-            : barKey(bar) === barKey(trap)
-              ? 10
-              : 20;
+          barKey(bar) === barKey(incumbent) ? 5_000 : barKey(bar) === barKey(trap) ? 10 : 20;
         return {
           score,
           finite: true,
@@ -345,7 +333,11 @@ describe("incumbent finalize (Phase 5)", () => {
     };
 
     const state = makeState({ evaluate, incumbentBar: incumbent, fullShortlistSize: 2 });
-    seedExploreArchive(state, [["c", "d"], ["c", "e"], ["d", "e"]]);
+    seedExploreArchive(state, [
+      ["c", "d"],
+      ["c", "e"],
+      ["d", "e"],
+    ]);
 
     const origForceInc = state.forceEvalIncumbent.bind(state);
     const sources: string[] = [];

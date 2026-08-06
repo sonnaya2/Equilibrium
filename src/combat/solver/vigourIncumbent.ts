@@ -139,9 +139,7 @@ export function compareVigourSearch(input: CompareVigourSearchInput): CompareVig
     Number.isFinite(winner.robustScore);
   const winnerScore = winnerRankable ? winner!.robustScore : Number.NEGATIVE_INFINITY;
   const winnerIsIncumbentBar =
-    winner != null &&
-    seededIncumbentBar != null &&
-    barsEqual(winner.bar, seededIncumbentBar);
+    winner != null && seededIncumbentBar != null && barsEqual(winner.bar, seededIncumbentBar);
   const bothRankable =
     Number.isFinite(winnerScore) &&
     winnerScore > Number.NEGATIVE_INFINITY &&

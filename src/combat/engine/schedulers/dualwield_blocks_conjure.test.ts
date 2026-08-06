@@ -3,7 +3,10 @@ import { NECROMANCY_ABILITIES } from "../../styles/necromancy/abilities";
 import { necroInput } from "../../test/fixtures/inputs";
 import { abilityById } from "../../test/helpers/summary";
 import { simulateRevolution } from "../simulation/revolution";
-import { resolveAbilityCatalogue, resolveAbilitySpecsFromCatalogue } from "../../abilities/catalogue";
+import {
+  resolveAbilityCatalogue,
+  resolveAbilitySpecsFromCatalogue,
+} from "../../abilities/catalogue";
 import { simulateRevolutionForUiHybrid } from "../../solver/uiRunCore";
 
 const army = abilityById(NECROMANCY_ABILITIES, "conjure_undead_army");
@@ -24,9 +27,7 @@ describe("weaponConfiguration gate for necro conjures", () => {
       durationTicks: 100,
     });
     expect(s.ok).toBe(true);
-    expect(s.casts.some((c) => c.abilityId === "conjure_undead_army" && c.tick === 0)).toBe(
-      true,
-    );
+    expect(s.casts.some((c) => c.abilityId === "conjure_undead_army" && c.tick === 0)).toBe(true);
   });
 
   it("shield never casts conjure", () => {
@@ -50,9 +51,7 @@ describe("weaponConfiguration gate for necro conjures", () => {
       durationTicks: 100,
     });
     expect(s.ok).toBe(true);
-    expect(s.casts.some((c) => c.abilityId === "conjure_undead_army" && c.tick === 0)).toBe(
-      true,
-    );
+    expect(s.casts.some((c) => c.abilityId === "conjure_undead_army" && c.tick === 0)).toBe(true);
   });
 
   it("UI hybrid full-analysis path summons with wiki-like barIds", () => {

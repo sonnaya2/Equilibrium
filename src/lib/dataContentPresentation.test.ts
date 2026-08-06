@@ -709,9 +709,9 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
     // Stall loot inventory art lives under skilling-production (not scenery stalls plate).
     expect(
-      presented.icons.filter((i) => i.label !== "Ring of Vitur").every((i) =>
-        /\/skilling-production\//.test(i.src),
-      ),
+      presented.icons
+        .filter((i) => i.label !== "Ring of Vitur")
+        .every((i) => /\/skilling-production\//.test(i.src)),
     ).toBe(true);
     expect(resolveRewardIcon("Extreme attack (1)")).toMatch(/extreme-attack\.(webp|png)$/);
     expect(resolveRewardIcon("Weapon poison+++ (1)")).toMatch(
@@ -1164,9 +1164,9 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(frenP.icons.some((i) => /rune-dragon/i.test(i.src))).toBe(true);
 
     const muspahRow = contentRow("kandarin", /^Muspah$/);
-    expect(
-      dataEntityIconPath({ name: muspahRow.row.name, kind: muspahRow.row.kind }),
-    ).toBe("/game/bosses/muspah.webp");
+    expect(dataEntityIconPath({ name: muspahRow.row.name, kind: muspahRow.row.kind })).toBe(
+      "/game/bosses/muspah.webp",
+    );
     const muspahFull = contentRewardsFull(muspahRow.row, muspahRow.upgrades);
     expect(muspahFull).toMatch(/Muspah spine/i);
     expect(muspahFull).toMatch(/Dragon ward/i);
@@ -1174,15 +1174,15 @@ describe("contentRewardsFull — catalog boss packages", () => {
     const muspahP = presentContentRewards(muspahFull);
     expect(muspahP.icons.length).toBeGreaterThanOrEqual(3);
     expect(muspahP.icons.every((i) => publicOk(i.src))).toBe(true);
-    expect(muspahP.icons.some((i) => i.label === "Muspah spine" && /muspah-spine/i.test(i.src))).toBe(
-      true,
-    );
+    expect(
+      muspahP.icons.some((i) => i.label === "Muspah spine" && /muspah-spine/i.test(i.src)),
+    ).toBe(true);
     expect(muspahP.icons.some((i) => i.label === "Dragon ward" && /dragon-ward/i.test(i.src))).toBe(
       true,
     );
-    expect(muspahP.icons.some((i) => i.label === "Dragon knives" && /dragon-knife/i.test(i.src))).toBe(
-      true,
-    );
+    expect(
+      muspahP.icons.some((i) => i.label === "Dragon knives" && /dragon-knife/i.test(i.src)),
+    ).toBe(true);
 
     const kd = contentRow("kandarin", "Kuradal");
     const kdP = presentContentRewards(contentRewardsFull(kd.row, kd.upgrades));
@@ -1225,9 +1225,9 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(portP.icons.length).toBeGreaterThanOrEqual(1);
     expect(portP.icons.every((i) => publicOk(i.src))).toBe(true);
     // the-arc.webp is Archaeology skill art; reward chip uses Arc map inventory.
-    expect(portP.icons.some((i) => i.label === "The Arc" && /uncharted-island-map/i.test(i.src))).toBe(
-      true,
-    );
+    expect(
+      portP.icons.some((i) => i.label === "The Arc" && /uncharted-island-map/i.test(i.src)),
+    ).toBe(true);
     expect(portP.icons.every((i) => !/the-arc\.webp$/i.test(i.src))).toBe(true);
 
     const arc = contentRow("asgarnia", "The Arc");
@@ -1300,9 +1300,9 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
     const srcs = presented.icons.map((i) => i.src);
     expect(srcs.some((s) => /supreme-overload/i.test(s))).toBe(true);
-    expect(srcs.some((s) => /elder-overload(?!-salve)/i.test(s) || /\/elder-overload\.webp$/i.test(s))).toBe(
-      true,
-    );
+    expect(
+      srcs.some((s) => /elder-overload(?!-salve)/i.test(s) || /\/elder-overload\.webp$/i.test(s)),
+    ).toBe(true);
     expect(srcs.some((s) => /elder-overload-salve/i.test(s))).toBe(true);
     expect(srcs.some((s) => /holy-overload/i.test(s))).toBe(true);
     expect(srcs.some((s) => /spiritual-prayer/i.test(s))).toBe(true);
@@ -1323,7 +1323,12 @@ describe("contentRewardsFull — catalog boss packages", () => {
       { region: "forinthry", name: /Shadow Reef/, min: 2, re: /Eldritch|Black stone/i },
       { region: "desert", name: "Beastmaster Durzag", min: 3, re: /Achto/i },
       { region: "desert", name: "Yakamaru", min: 3, re: /Achto/i },
-      { region: "morytania", name: "Barrows", min: 5, re: /Ahrim|Dharok|Karil|Guthan|Torag|Verac/i },
+      {
+        region: "morytania",
+        name: "Barrows",
+        min: 5,
+        re: /Ahrim|Dharok|Karil|Guthan|Torag|Verac/i,
+      },
       { region: "kandarin", name: "Kuradal", min: 1, re: /Ferocious ring/i },
       { region: "misthalin", name: /Polypore Dungeon/, min: 2, re: /Polypore staff|Ganodermic/i },
       {
@@ -1546,10 +1551,7 @@ describe("contentRewardsFull — catalog boss packages", () => {
     });
     expect(path).toMatch(/old-meats\.(webp|png)$/);
     expect(path).not.toMatch(/crayfish/i);
-    const full = contentRewardsFull(
-      { name: "Old Meats", detail: "" },
-      [],
-    );
+    const full = contentRewardsFull({ name: "Old Meats", detail: "" }, []);
     expect(full).toMatch(/Raw beef/i);
     expect(full).toMatch(/Raw chicken/i);
     const presented = presentContentRewards(full);
@@ -1571,9 +1573,9 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(presented.icons.length).toBeGreaterThanOrEqual(4);
     expect(presented.icons.every((i) => publicOk(i.src))).toBe(true);
     expect(presented.icons.some((i) => /ring-of-kayazu/i.test(i.src))).toBe(true);
-    expect(presented.icons.some((i) => /tear-of-inanna|hungry-like-the-wolf|anzagar/i.test(i.src))).toBe(
-      true,
-    );
+    expect(
+      presented.icons.some((i) => /tear-of-inanna|hungry-like-the-wolf|anzagar/i.test(i.src)),
+    ).toBe(true);
   });
 
   it("Havenhythe Fern's Finds uses shop plate not Meilyr recipe shop", () => {
@@ -1628,9 +1630,9 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(presented.icons.some((i) => /araxxis-fang|araxxis-eye|spider-leg/i.test(i.src))).toBe(
       true,
     );
-    expect(presented.icons.some((i) => /noxious-scythe|noxious-staff|noxious-longbow/i.test(i.src))).toBe(
-      true,
-    );
+    expect(
+      presented.icons.some((i) => /noxious-scythe|noxious-staff|noxious-longbow/i.test(i.src)),
+    ).toBe(true);
   });
 
   it("Morytania Linza is separate from Barrows rewards", () => {
@@ -1674,7 +1676,7 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(mory.content.some((c) => c.name === "Shiny columbarium key")).toBe(true);
     expect(mory.content.some((c) => c.name === "Columbarium key")).toBe(true);
 
-    // Hub: Prayer/FM + path pointers only — no bronze–gold / shiny metal spam.
+    // Hub: Prayer/FM + path pointers only; metal key chips live on key majors.
     const cremation = contentRow("morytania", "Shades of Mort'ton cremation");
     const cremationFull = contentRewardsFull(cremation.row, cremation.upgrades);
     expect(cremationFull).toMatch(/Prayer XP/i);
@@ -1726,9 +1728,7 @@ describe("contentRewardsFull — catalog boss packages", () => {
     expect(dataEntityIconPath({ name: "Shiny columbarium key" })).toMatch(
       /shiny-columbarium-key\.(webp|png)$/,
     );
-    expect(dataEntityIconPath({ name: "Columbarium key" })).toMatch(
-      /columbarium-key\.(webp|png)$/,
-    );
+    expect(dataEntityIconPath({ name: "Columbarium key" })).toMatch(/columbarium-key\.(webp|png)$/);
   });
 
   it("Tirannwn majors keep Solak (not collapsed under Lost Grove)", () => {
@@ -1746,9 +1746,10 @@ describe("contentRewardsFull — catalog boss packages", () => {
     const asg = regionById("asgarnia");
     const asgMajors = majorContentRows(asg.content, asg.upgrades);
     const asgNames = asgMajors.map((c) => c.name);
-    expect(asgNames.some((n) => /Angel of Death/i.test(n)), "asgarnia majorContentRows lacks Angel of Death").toBe(
-      true,
-    );
+    expect(
+      asgNames.some((n) => /Angel of Death/i.test(n)),
+      "asgarnia majorContentRows lacks Angel of Death",
+    ).toBe(true);
     expect(asgNames).toContain("Nex: Angel of Death");
     const nexIdx = asg.content.findIndex((c) => c.name === "Nex");
     const aodIdx = asg.content.findIndex((c) => c.name === "Nex: Angel of Death");
@@ -1777,7 +1778,10 @@ describe("contentRewardsFull — catalog boss packages", () => {
       "kandarin majorContentRows lacks Book of Char / Char firemaking",
     ).toBe(true);
 
-    const { row: advBarb, upgrades: kanUp } = contentRow("kandarin", "Advanced Barbarian Outpost Agility");
+    const { row: advBarb, upgrades: kanUp } = contentRow(
+      "kandarin",
+      "Advanced Barbarian Outpost Agility",
+    );
     const advFull = contentRewardsFull(advBarb, kanUp);
     expect(advFull).toMatch(/Agile top/i);
     expect(advFull).toMatch(/Agile legs/i);
@@ -1792,9 +1796,10 @@ describe("contentRewardsFull — catalog boss packages", () => {
       kanNames.some((n) => /Phoenix Lair/i.test(n)),
       "kandarin majorContentRows lacks Phoenix Lair",
     ).toBe(true);
-    expect(kanNames.some((n) => /^Airuts?$/i.test(n)), "kandarin majorContentRows lacks Airuts").toBe(
-      true,
-    );
+    expect(
+      kanNames.some((n) => /^Airuts?$/i.test(n)),
+      "kandarin majorContentRows lacks Airuts",
+    ).toBe(true);
     expect(
       kanNames.some((n) => /Fishing Frenzy/i.test(n)),
       "kandarin majorContentRows lacks Fishing Frenzy",
@@ -1863,9 +1868,7 @@ describe("contentRewardsFull — catalog boss packages", () => {
   it("Tirannwn keeps Crystallise as an upgrade, not the Seren package content major", () => {
     const region = regionById("tirannwn");
     expect(region.content.some((c) => /Seren spells/i.test(c.name))).toBe(false);
-    expect(
-      region.upgrades.some((u) => /Crystallise/i.test(u.name)),
-    ).toBe(true);
+    expect(region.upgrades.some((u) => /Crystallise/i.test(u.name))).toBe(true);
   });
 });
 

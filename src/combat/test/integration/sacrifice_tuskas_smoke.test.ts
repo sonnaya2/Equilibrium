@@ -34,7 +34,10 @@ describe("sacrifice / tuskas_wrath engine smoke", () => {
           rotation: rotationOf(id),
         });
         expect(s.ok, `${id}@${style}: ${s.error ?? "simulate failed"}`).toBe(true);
-        expect(s.casts.some((c) => c.abilityId === id), `${id}@${style}`).toBe(true);
+        expect(
+          s.casts.some((c) => c.abilityId === id),
+          `${id}@${style}`,
+        ).toBe(true);
       }
     });
   }

@@ -61,8 +61,7 @@ describe("Teragard's Aegis armour conversion", () => {
     ).toBe(1_875);
     expect(
       Math.floor(
-        (1_000 +
-          aegisArmourBonus(AEGIS, armour(1_000), "defender", eq).baseAbilityDamageBonus) *
+        (1_000 + aegisArmourBonus(AEGIS, armour(1_000), "defender", eq).baseAbilityDamageBonus) *
           1.5,
       ),
     ).toBe(2_250);
@@ -75,9 +74,12 @@ describe("Teragard's Aegis armour conversion", () => {
     for (const offhand of [null, "defender", "shield"] as const) {
       expect(
         aegisArmourBonus(AEGIS, fortified, offhand, { basis: "equipment" }).baseAbilityDamageBonus,
-      ).toBe(aegisArmourBonus(AEGIS, plain, offhand, { basis: "equipment" }).baseAbilityDamageBonus);
+      ).toBe(
+        aegisArmourBonus(AEGIS, plain, offhand, { basis: "equipment" }).baseAbilityDamageBonus,
+      );
       expect(
-        aegisArmourBonus(AEGIS, fortified, offhand, { basis: "total-rating" }).baseAbilityDamageBonus,
+        aegisArmourBonus(AEGIS, fortified, offhand, { basis: "total-rating" })
+          .baseAbilityDamageBonus,
       ).toBeGreaterThan(
         aegisArmourBonus(AEGIS, plain, offhand, { basis: "total-rating" }).baseAbilityDamageBonus,
       );

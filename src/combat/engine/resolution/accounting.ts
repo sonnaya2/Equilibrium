@@ -8,10 +8,7 @@ import {
   keepsPerAbilityMap,
   keepsPresentationHistory,
 } from "../simulation/contracts";
-import {
-  COMMAND_REQUIRES_CONJURE,
-  findConjure,
-} from "../../styles/necromancy/conjures";
+import { COMMAND_REQUIRES_CONJURE, findConjure } from "../../styles/necromancy/conjures";
 import { sacrificeExpectedHeal } from "../../styles/shared/constitutionAbilities";
 import { shouldRetainHitDetail } from "./hitDetailsRetention";
 

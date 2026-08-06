@@ -12,7 +12,10 @@ export interface EffectiveLevelOverride {
 
 export const NO_LEVEL_OVERRIDE: EffectiveLevelOverride = { untilTick: 0, level: 0 };
 
-export function levelOverrideActive(override: EffectiveLevelOverride | null | undefined, tick: number): boolean {
+export function levelOverrideActive(
+  override: EffectiveLevelOverride | null | undefined,
+  tick: number,
+): boolean {
   if (!override || override.untilTick <= 0) return false;
   return tick < override.untilTick && override.level > 0;
 }

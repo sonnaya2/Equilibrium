@@ -91,15 +91,15 @@ describe("passives registry", () => {
   });
 
   it("applies enchantment / agony presentation overlays", () => {
-    expect(presentPassive("enduring-ruin", { ...EMPTY_CTX, passageAgonyActive: true })).toMatchObject(
-      {
-        label: "Enduring Ruin + Agony",
-        effects: [
-          "Rend grants +16% damage to the next attack for 6 seconds.",
-          "Bleeds take +25% damage for 10 seconds.",
-        ],
-      },
-    );
+    expect(
+      presentPassive("enduring-ruin", { ...EMPTY_CTX, passageAgonyActive: true }),
+    ).toMatchObject({
+      label: "Enduring Ruin + Agony",
+      effects: [
+        "Rend grants +16% damage to the next attack for 6 seconds.",
+        "Bleeds take +25% damage for 10 seconds.",
+      ],
+    });
     expect(presentPassive("champion-ring", { ...EMPTY_CTX, hasHeroism: true }).label).toBe(
       "Champion's ring + Heroism",
     );

@@ -87,10 +87,7 @@ describe("Adrenaline Junkie generation", () => {
       impatientProc: true,
     });
     // (listed + Impatient) * Invig * AJ
-    expect(both).toBeCloseTo(
-      (listedGain + IMPATIENT_EXTRA_ADRENALINE) * 1.2 * 1.5,
-      10,
-    );
+    expect(both).toBeCloseTo((listedGain + IMPATIENT_EXTRA_ADRENALINE) * 1.2 * 1.5, 10);
   });
 
   it("does not multiply a Relentless refund", () => {

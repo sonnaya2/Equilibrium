@@ -6,7 +6,6 @@ import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from "vite
 import {
   cancelOptimize,
   getRevolutionSolverClient,
-  isSolverPreferringMainThread,
   resetSolverHostForTests,
   runOptimize,
   runSolverOnMainThread,
@@ -14,6 +13,7 @@ import {
   setWorkerHostTimeoutsForTests,
 } from "./host";
 import { isWorkerToHostMessage, type HostToWorkerMessage, type SolverProgress } from "./protocol";
+import { resetUiRunHostForTests, runUiRevolution } from "./uiRunHost";
 import {
   defaultSerializableRequest,
   emptyModifierSources,
@@ -185,6 +185,7 @@ describe("solver host lifecycle", () => {
     FakeWorker.autoStarted = true;
     FakeWorker.failConstruct = false;
     resetSolverHostForTests();
+    resetUiRunHostForTests();
     setWorkerHostTimeoutsForTests({ firstAckMs: 1000 });
     setWorkerFactoryForTests(() => new FakeWorker() as unknown as Worker);
     solveMock.mockReset();
@@ -240,7 +241,6 @@ describe("solver host lifecycle", () => {
     const requestId = (w.lastStart as { requestId: number }).requestId;
     w.emit({ type: "started", requestId });
     await vi.advanceTimersByTimeAsync(5_000);
-    expect(isSolverPreferringMainThread()).toBe(false);
     w.emit({ type: "result", requestId, result: sampleResult({ score: 42 }) });
     await expect(p).resolves.toMatchObject({ score: 42 });
   });
@@ -258,14 +258,13 @@ describe("solver host lifecycle", () => {
     expect(String(await settled)).toMatch(/did not acknowledge start/);
   });
 
-  it("4. intentional cancellation never triggers sticky main fallback", async () => {
+  it("4. intentional cancellation does not start a main-thread run", async () => {
     const p = runOptimize(sampleRequest(), undefined, { agents: 1 });
     const settled = expect(p).rejects.toSatisfy(isAbort);
     await vi.advanceTimersByTimeAsync(0);
     cancelOptimize();
     await vi.advanceTimersByTimeAsync(0);
     await settled;
-    expect(isSolverPreferringMainThread()).toBe(false);
   });
 
   it("5. direct main-thread solve is cancelled by cancelOptimize", async () => {
@@ -390,7 +389,7 @@ describe("solver host lifecycle", () => {
     await expect(p).resolves.toMatchObject({ score: 2 });
   });
 
-  it("11. worker error falls back exactly once via sticky main", async () => {
+  it("11. worker error fails closed after one single-worker retry", async () => {
     FakeWorker.autoStarted = false;
     let mainCalls = 0;
     solveMock.mockImplementation(async () => {
@@ -399,6 +398,7 @@ describe("solver host lifecycle", () => {
     });
 
     const p = runOptimize(sampleRequest(), undefined, { agents: 1 });
+    void p.catch(() => undefined);
     await vi.advanceTimersByTimeAsync(0);
     for (const w of [...FakeWorker.instances]) {
       const id = (w.lastStart as { requestId: number } | null)?.requestId;
@@ -417,12 +417,11 @@ describe("solver host lifecycle", () => {
       }
     }
     await vi.advanceTimersByTimeAsync(50);
-    await expect(p).resolves.toMatchObject({ score: 77 });
-    expect(mainCalls).toBe(1);
-    expect(isSolverPreferringMainThread()).toBe(true);
+    await expect(p).rejects.toThrow(/worker failed: boom2/);
+    expect(mainCalls).toBe(0);
   });
 
-  it("12. messageerror falls back exactly once", async () => {
+  it("12. messageerror fails closed without running on main", async () => {
     FakeWorker.autoStarted = false;
     let mainCalls = 0;
     solveMock.mockImplementation(async () => {
@@ -431,6 +430,7 @@ describe("solver host lifecycle", () => {
     });
 
     const p = runOptimize(sampleRequest(), undefined, { agents: 1 });
+    void p.catch(() => undefined);
     await vi.advanceTimersByTimeAsync(0);
     for (const w of [...FakeWorker.instances]) w.emitMessageError();
     await vi.advanceTimersByTimeAsync(0);
@@ -438,8 +438,8 @@ describe("solver host lifecycle", () => {
       if (!w.terminated) w.emitMessageError();
     }
     await vi.advanceTimersByTimeAsync(50);
-    await expect(p).resolves.toMatchObject({ score: 88 });
-    expect(mainCalls).toBe(1);
+    await expect(p).rejects.toThrow(/worker failed/);
+    expect(mainCalls).toBe(0);
   });
 
   it("13. malformed messages do not kill a healthy solve", async () => {
@@ -589,7 +589,20 @@ describe("solver host lifecycle", () => {
     );
   });
 
-  it("plain loadout does not sticky-prefer main for later sim-base runs", async () => {
+  it("UI Run fails closed when its workers cannot start", async () => {
+    setWorkerFactoryForTests(() => null);
+    await expect(
+      runUiRevolution({
+        loadout: sampleSimBase(),
+        barIds: ["slice"],
+        style: "melee",
+        durationTicks: 100,
+      }),
+    ).rejects.toThrow(/worker could not be started/);
+    expect(solveMock).not.toHaveBeenCalled();
+  });
+
+  it("plain loadout fails closed without disabling later worker runs", async () => {
     const plain = defaultSerializableRequest({
       loadout: { kind: "loadout", style: "melee" } as never,
       style: "melee",
@@ -598,8 +611,7 @@ describe("solver host lifecycle", () => {
       seed: 1,
     });
     solveMock.mockImplementation(async () => sampleResult({ score: 1 }));
-    await expect(runOptimize(plain)).resolves.toMatchObject({ score: 1 });
-    expect(isSolverPreferringMainThread()).toBe(false);
+    await expect(runOptimize(plain)).rejects.toThrow(/worker-safe combat model/);
 
     FakeWorker.instances = [];
     FakeWorker.autoStarted = false;
@@ -619,6 +631,7 @@ describe("solver host lifecycle", () => {
       return sampleResult({ score: 55 });
     });
     const p = runOptimize(sampleRequest(), undefined, { agents: 1 });
+    void p.catch(() => undefined);
     await vi.advanceTimersByTimeAsync(0);
     const poolWorkers = [...FakeWorker.instances];
     expect(poolWorkers.length).toBeGreaterThan(0);
@@ -644,8 +657,8 @@ describe("solver host lifecycle", () => {
       }
     }
     await vi.advanceTimersByTimeAsync(50);
-    await expect(p).resolves.toMatchObject({ score: 55 });
-    expect(mainCalls).toBe(1);
+    await expect(p).rejects.toThrow(/worker failed: single-boom/);
+    expect(mainCalls).toBe(0);
   });
 
   it("runSolverOnMainThread is cooperative with isCancelled", async () => {

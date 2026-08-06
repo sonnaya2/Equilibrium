@@ -6,11 +6,7 @@ import {
   conjureActive,
   findConjure,
 } from "../../styles/necromancy/conjures";
-import {
-  castRejection,
-  resolveCastAbility,
-  type WeaponConfiguration,
-} from "../cast/rules";
+import { castRejection, resolveCastAbility, type WeaponConfiguration } from "../cast/rules";
 import {
   branchCapsFromBudget,
   combineExactness,

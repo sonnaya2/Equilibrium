@@ -63,11 +63,7 @@ describe("Revolution casts Death's Swiftness with energy relics", () => {
   });
 
   it("from 100 adren, first cast can be DS", () => {
-    const s = revo(
-      ["conservation_of_energy"],
-      ["deaths_swiftness", "piercing_shot"],
-      100,
-    );
+    const s = revo(["conservation_of_energy"], ["deaths_swiftness", "piercing_shot"], 100);
     expect(s.ok, s.error).toBe(true);
     expect(s.casts[0]?.abilityId).toBe("deaths_swiftness");
     expect(s.casts[0]?.adrenalineAfter).toBe(10);

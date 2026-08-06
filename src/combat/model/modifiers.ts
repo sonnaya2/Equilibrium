@@ -1,17 +1,13 @@
 /**
  * Authoritative reconstruction of cast modifiers from explicit sources.
  * Host parity path: modifiersForResolvedModel(model, ability).
- * Worker path: modifiersFromSources(sources, league) — same factories.
+ * Worker path: modifiersFromSources(sources, league) uses the same factories.
  */
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 import type { CombatModifier } from "../types";
 import type { ResolvedLeagueRules } from "../league/ruleset";
 import { leagueModifiers } from "../league/ruleset";
-import {
-  additiveMeleeDamageModifier,
-  amZiModifier,
-  setDamageModifiers,
-} from "../shared/equipment";
+import { additiveMeleeDamageModifier, amZiModifier, setDamageModifiers } from "../shared/equipment";
 import {
   lungingPerkModifier,
   raceSlayerPerkModifier,
@@ -105,7 +101,7 @@ export function buildGlobalModifiersFromSources(
 
 /**
  * Rebuild the cast-modifier factory used by simulate / simulateRevolution / worker.
- * Same factories as historical reviveModifiers — no React.
+ * Uses the historical reviveModifiers factories without React.
  */
 export function modifiersFromSources(
   sources: ResolvedModifierSources,

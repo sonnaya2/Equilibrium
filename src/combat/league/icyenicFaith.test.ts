@@ -110,24 +110,18 @@ describe("icyenicFaithBonuses", () => {
 
 describe("resolveIcyenicFaithBonuses", () => {
   it("composes scaling prayer then the bonus formula", () => {
-    expect(
-      resolveIcyenicFaithBonuses(50, { relicActive: true, tomeWorn: true }),
-    ).toMatchObject({
+    expect(resolveIcyenicFaithBonuses(50, { relicActive: true, tomeWorn: true })).toMatchObject({
       totalPrayerBonus: 50,
       critChanceBonus: 0.1,
       baseAbilityDamageBonus: 0.1,
       baseAbilityDamageMultiplier: 1.1,
     });
-    expect(
-      resolveIcyenicFaithBonuses(50, { relicActive: true, tomeWorn: false }),
-    ).toMatchObject({
+    expect(resolveIcyenicFaithBonuses(50, { relicActive: true, tomeWorn: false })).toMatchObject({
       totalPrayerBonus: 0,
       critChanceBonus: 0,
       baseAbilityDamageMultiplier: 1,
     });
-    expect(
-      resolveIcyenicFaithBonuses(50, { relicActive: false, tomeWorn: true }),
-    ).toMatchObject({
+    expect(resolveIcyenicFaithBonuses(50, { relicActive: false, tomeWorn: true })).toMatchObject({
       totalPrayerBonus: 0,
       critChanceBonus: 0,
       baseAbilityDamageMultiplier: 1,
@@ -287,9 +281,7 @@ describe("icyenicProtectionOutcome", () => {
 describe("icyenicProtectionNote", () => {
   it("returns a non-empty note for every unavailability path", () => {
     const notes = [
-      icyenicProtectionNote(
-        icyenicProtectionOutcome({ relicActive: false, windowSeconds: 60 }),
-      ),
+      icyenicProtectionNote(icyenicProtectionOutcome({ relicActive: false, windowSeconds: 60 })),
       icyenicProtectionNote(
         icyenicProtectionOutcome({
           relicActive: true,
@@ -363,36 +355,22 @@ describe("icyenicProtectionNote", () => {
 
 describe("icyenicSoulSplitHeal", () => {
   it("heals floor(damage * 0.1) only when relic and protect are both on", () => {
-    expect(
-      icyenicSoulSplitHeal(1_234, { relicActive: true, protectionActive: true }),
-    ).toBe(123);
-    expect(
-      icyenicSoulSplitHeal(10, { relicActive: true, protectionActive: true }),
-    ).toBe(1);
-    expect(
-      icyenicSoulSplitHeal(9, { relicActive: true, protectionActive: true }),
-    ).toBe(0);
+    expect(icyenicSoulSplitHeal(1_234, { relicActive: true, protectionActive: true })).toBe(123);
+    expect(icyenicSoulSplitHeal(10, { relicActive: true, protectionActive: true })).toBe(1);
+    expect(icyenicSoulSplitHeal(9, { relicActive: true, protectionActive: true })).toBe(0);
   });
 
   it("returns null when the relic or protect is off", () => {
-    expect(
-      icyenicSoulSplitHeal(1_000, { relicActive: false, protectionActive: true }),
-    ).toBeNull();
-    expect(
-      icyenicSoulSplitHeal(1_000, { relicActive: true, protectionActive: false }),
-    ).toBeNull();
-    expect(
-      icyenicSoulSplitHeal(1_000, { relicActive: false, protectionActive: false }),
-    ).toBeNull();
+    expect(icyenicSoulSplitHeal(1_000, { relicActive: false, protectionActive: true })).toBeNull();
+    expect(icyenicSoulSplitHeal(1_000, { relicActive: true, protectionActive: false })).toBeNull();
+    expect(icyenicSoulSplitHeal(1_000, { relicActive: false, protectionActive: false })).toBeNull();
   });
 
   it("returns null for non-finite or negative expected damage", () => {
     expect(
       icyenicSoulSplitHeal(Number.NaN, { relicActive: true, protectionActive: true }),
     ).toBeNull();
-    expect(
-      icyenicSoulSplitHeal(-1, { relicActive: true, protectionActive: true }),
-    ).toBeNull();
+    expect(icyenicSoulSplitHeal(-1, { relicActive: true, protectionActive: true })).toBeNull();
   });
 });
 
@@ -411,8 +389,6 @@ describe("icyenicSoulSplitNote", () => {
   });
 
   it("includes the heal figure when available", () => {
-    expect(
-      icyenicSoulSplitNote(123, { relicActive: true, protectionActive: true }),
-    ).toMatch(/123/);
+    expect(icyenicSoulSplitNote(123, { relicActive: true, protectionActive: true })).toMatch(/123/);
   });
 });

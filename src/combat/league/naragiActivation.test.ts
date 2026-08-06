@@ -16,7 +16,7 @@ import {
   SLIVER_OF_EDICTS_ACTIVATE_ID,
 } from "./naragiEdict";
 
-function bareRt(maxLp = 15_000) {
+function bareRt() {
   return createRuntime({
     base: 1000,
     level: 99,
@@ -30,16 +30,16 @@ function bareRt(maxLp = 15_000) {
 describe("activateNaragiSliver", () => {
   it("fails without relic or sliver", () => {
     const rt = bareRt();
-    expect(
-      activateNaragiSliver(rt, { relicActive: false, sliverWorn: true }).reason,
-    ).toBe("relic-inactive");
-    expect(
-      activateNaragiSliver(rt, { relicActive: true, sliverWorn: false }).reason,
-    ).toBe("sliver-unequipped");
+    expect(activateNaragiSliver(rt, { relicActive: false, sliverWorn: true }).reason).toBe(
+      "relic-inactive",
+    );
+    expect(activateNaragiSliver(rt, { relicActive: true, sliverWorn: false }).reason).toBe(
+      "sliver-unequipped",
+    );
   });
 
   it("schedules four heals at 7/14/21/28 and expires after boundary heal", () => {
-    const rt = bareRt(40_000);
+    const rt = bareRt();
     rt.state = {
       ...rt.state,
       player: {
@@ -99,7 +99,7 @@ describe("activateNaragiSliver", () => {
   });
 
   it("revives once during the window then kills on second lethal", () => {
-    const rt = bareRt(5_000);
+    const rt = bareRt();
     activateNaragiSliver(rt, {
       relicActive: true,
       sliverWorn: true,
@@ -116,7 +116,7 @@ describe("activateNaragiSliver", () => {
   });
 
   it("lethal before activation kills normally", () => {
-    const rt = bareRt(1_000);
+    const rt = bareRt();
     rt.state = {
       ...rt.state,
       player: {

@@ -46,7 +46,7 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Artisan's outfit": "Artisan's outfit, Modified artisan's bandana",
   "Ritualist's outfit": "Ritualist's outfit, Modified ritualist's mask",
   "H.A.M. Hideout pickpocketing and store rooms": "Clue scroll",
-  // AoD content major — uniques only (not the circular "progression" key).
+  // AoD content major: uniques only, not the circular "progression" key.
   "Nex: Angel of Death": "Wand of the praesul, Imperium core, Praesul codex",
   "Angel of Death": "Wand of the praesul, Imperium core, Praesul codex",
   "Thalmund's Forge":
@@ -119,7 +119,7 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Beastmaster Durzag": "Achto Teralith cuirass, Achto Primeval robe top, Achto Tempest body",
   Yakamaru: "Achto Teralith cuirass, Achto Primeval robe top, Achto Tempest body",
   "Liberation of Mazcab": "Achto Teralith cuirass, Achto Primeval robe top, Achto Tempest body",
-  // Linza is its own major (content[17]) — do not nest set chips under Barrows.
+  // Linza is its own major (content[17]); do not nest set chips under Barrows.
   Barrows:
     "Ahrim's staff, Dharok's greataxe, Karil's crossbow, Torag's hammer, Verac's flail, Guthan's warspear",
   "Barrows (classic brothers + Akrisae)":
@@ -273,11 +273,9 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Book of Char": "The Book of Char, Char's training cave, Double Firemaking XP (daily), Pitch can",
   // https://runescape.wiki/w/Phoenix_Lair
   "Phoenix Lair": "Phoenix quills, Phoenix eggling, Phoenix familiar path",
-  // https://runescape.wiki/w/Airut — Kandarin + Desert dual majors
-  Airuts:
-    "Tuska's Wrath ability codex, Razorback gauntlets, Tuska mask, Warpriest of Tuska armour",
-  Airut:
-    "Tuska's Wrath ability codex, Razorback gauntlets, Tuska mask, Warpriest of Tuska armour",
+  // https://runescape.wiki/w/Airut - Kandarin + Desert dual majors
+  Airuts: "Tuska's Wrath ability codex, Razorback gauntlets, Tuska mask, Warpriest of Tuska armour",
+  Airut: "Tuska's Wrath ability codex, Razorback gauntlets, Tuska mask, Warpriest of Tuska armour",
 
   // https://runescape.wiki/w/Rewards_(Barbarian_Assault) - honour shop uniques; not agility/agile top
   "Barbarian Assault":
@@ -463,7 +461,7 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   // Chip-friendly payoff names (icons under permanent-unlocks / inventory art).
   "Moonrise Dig Site":
     "Ring of Kayazu, Tear of Inanna, Hungry Like the Wolf, Anzagar, Fang of Kayazu, Guardian's tear",
-  // Hub: Prayer/FM + path pointers only — metal/shiny key chips live on key majors.
+  // Hub: Prayer/FM + path pointers only; metal key chips live on key majors.
   "Shades of Mort'ton cremation":
     "Prayer XP, Firemaking XP, Shade keys path, Columbarium keys path",
   "Shade keys":
@@ -477,8 +475,7 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Hardwood Grove": "Teak trees, Mahogany trees",
   "Hardwood Grove teaks and mahoganies": "Teak trees, Mahogany trees",
   // Piscatoris grove (Kandarin): eternal planks ~3x mahogany Construction XP/h post July 20 rebalance
-  "Eternal magic trees":
-    "Eternal magic logs, Eternal magic planks, ~3x faster XP/h than mahogany",
+  "Eternal magic trees": "Eternal magic logs, Eternal magic planks, ~3x faster XP/h than mahogany",
   "Karambwan vessel fishing": "Karambwans",
   "Brimhaven Agility Arena": "Tickets, Agility lamps, herbs",
   "Karamja Volcano resource dungeon": "Resource dungeon",
@@ -496,7 +493,7 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
     "Apex hide cowl, Apex hide body, Apex hide chaps, Apex hide vambraces, Apex hide boots",
   "Clockwork box traps": "Multi-catch box traps",
   "Masterwork Ranged Armour materials": "Apex hide → masterwork ranged",
-  // Amberfell shop stock (wiki Fern's Finds) — not a generic "mushroom shop" → Meilyr plate.
+  // Amberfell stock from Fern's Finds, not the Meilyr recipe shop.
   "Fern's Finds":
     "Button mushroom, Bittercap mushroom, Morchella mushroom, Bittercap mushroom spore, Dwellberries, Redberries",
   "Heather's Crafting Supplies": "Emeralds, rubies, red topaz, opals",
@@ -505,10 +502,8 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Flower patch": "1 flower patch",
   "Jackalope familiar": "Soil storage, bonus Archaeology materials",
   // Chip-friendly fish-farm harvests (not taxonomy prose).
-  "Wendlewick fish farm":
-    "Raw lobster, Raw swordfish, Raw shark, Raw giant crayfish",
-  "Wendlewick fish farm (Havenhythe)":
-    "Raw lobster, Raw swordfish, Raw shark, Raw giant crayfish",
+  "Wendlewick fish farm": "Raw lobster, Raw swordfish, Raw shark, Raw giant crayfish",
+  "Wendlewick fish farm (Havenhythe)": "Raw lobster, Raw swordfish, Raw shark, Raw giant crayfish",
   "Havenhythe canoe network": "Four canoe stations",
   "Havenhythe birdhouses": "Birdhouse tiers to eternal magic",
   "Jackalopes (BIS early–mid Hunter method)": "Early–mid Hunter XP, antlers",
@@ -524,7 +519,7 @@ export const CONTENT_REWARD_OVERRIDES: Record<string, string> = {
   "Dalia's Tree Nursery": "Tree farming",
   "Wendlewick Teleport / lodestone": "Wendlewick access",
   "Trader Woes": "Shop stock",
-  // Hollow Hill food shop stock (wiki Old Meats) — chip-friendly item names.
+  // Hollow Hill food stock from Old Meats uses chip-friendly item names.
   "Old Meats":
     "Raw rabbit, Raw beef, Raw bird meat, Raw rat meat, Raw bear meat, Raw chicken, Cooked meat",
   "Old Meats (Hollow Hill meat shop)":

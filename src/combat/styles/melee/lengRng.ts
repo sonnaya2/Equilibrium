@@ -55,10 +55,7 @@ const TABLE_CACHE: (CompiledLengLandTable | null | undefined)[] = [
   undefined,
 ];
 
-export function compileLengLandTable(
-  hasEF: boolean,
-  hasBC: boolean,
-): CompiledLengLandTable | null {
+export function compileLengLandTable(hasEF: boolean, hasBC: boolean): CompiledLengLandTable | null {
   if (!hasEF && !hasBC) return null;
   return {
     hasEndlessFrost: hasEF,
@@ -67,10 +64,7 @@ export function compileLengLandTable(
   };
 }
 
-export function lengLandTableFor(
-  hasEF: boolean,
-  hasBC: boolean,
-): CompiledLengLandTable | null {
+export function lengLandTableFor(hasEF: boolean, hasBC: boolean): CompiledLengLandTable | null {
   const i = (hasEF ? 2 : 0) + (hasBC ? 1 : 0);
   if (i === 0) return null;
   const hit = TABLE_CACHE[i];

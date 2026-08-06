@@ -110,7 +110,7 @@ describe("snapshotRuntime shares no mutable collection", () => {
     expect(rt.queue.length).toBe(0);
   });
 
-  it("does not merge branches whose future state differs; endTick alone merges", () => {
+  it("keeps natural durations distinct and merges fixed-window endTick twins", () => {
     const rt = createRuntime(meleeInput);
     expect(
       mergeBranches([
@@ -128,17 +128,26 @@ describe("snapshotRuntime shares no mutable collection", () => {
       ]),
     ).toHaveLength(2);
 
-    // endTick is presentation only; not in the future-evolution key.
+    // Natural completion duration changes the terminal DPS denominator.
     const differentEnd = snapshotRuntime(rt);
     differentEnd.endTick = 1;
+    expect(
+      mergeBranches([
+        { weight: 0.4, rt },
+        { weight: 0.6, rt: differentEnd },
+      ]),
+    ).toHaveLength(2);
+
+    const fixed = createRuntime({ ...meleeInput, horizonTicks: 100 });
+    const fixedEnd = snapshotRuntime(fixed);
+    fixedEnd.endTick = 1;
     const endMerged = mergeBranches([
-      { weight: 0.4, rt },
-      { weight: 0.6, rt: differentEnd },
+      { weight: 0.4, rt: fixed },
+      { weight: 0.6, rt: fixedEnd },
     ]);
     expect(endMerged).toHaveLength(1);
-    expect(endMerged[0]!.rt.endTick).toBe(Math.max(rt.endTick, 1));
+    expect(endMerged[0]!.rt.endTick).toBe(Math.max(fixed.endTick, 1));
 
-    // Historical damage alone must not block a merge when future state matches.
     const differentDamage = snapshotRuntime(rt);
     differentDamage.totalExpected = 50_000;
     expect(
@@ -423,7 +432,7 @@ describe("snapshotRuntime score-only trim", () => {
       if (attempt.ok) commitCast(rt, attempt.prepared, false);
     }
     const clone = snapshotRuntime(rt);
-    // Analysis is empty and never mutated on score-only — shared shell is OK.
+    // Analysis is empty and never mutated on score-only; the shell can be shared.
     expect(clone.analysis).toBe(rt.analysis);
     // Presentation history stays empty without cloning parent event arrays.
     expect(clone.events).toEqual([]);
@@ -444,7 +453,7 @@ describe("snapshotRuntime score-only trim", () => {
     // Cast record shells independent so expected/min/max cannot leak.
     expect(clone.casts[0]).not.toBe(rt.casts[0]);
     expect(clone.casts[0]!.result).not.toBe(rt.casts[0]!.result);
-    // Score-only never grows hits — sharing the empty hits array is allowed.
+    // Score-only never grows hits; the empty hits array can be shared.
     expect(clone.casts[0]!.result.hits).toEqual([]);
     clone.casts[0]!.result.expected += 99;
     expect(rt.casts[0]!.result.expected).not.toBe(clone.casts[0]!.result.expected);
@@ -583,7 +592,12 @@ describe("score-only hitDetails retention", () => {
       capLoss: 0,
     } as never);
     expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
-    expect(mergeBranches([{ weight: 0.5, rt: a }, { weight: 0.5, rt: b }])).toHaveLength(1);
+    expect(
+      mergeBranches([
+        { weight: 0.5, rt: a },
+        { weight: 0.5, rt: b },
+      ]),
+    ).toHaveLength(1);
   });
 
   it("live derivedFrom hitDetails still split score-only branch keys", () => {
@@ -645,8 +659,7 @@ describe("capBranches", () => {
     expect(capped.branches[1]!.weight).toBeCloseTo(0.3);
     expect(capped.residualWeight).toBeCloseTo(0.15 + 0.1 + 0.05);
     expect(capped.exactness).toBe("bounded-approximation");
-    const mass =
-      capped.branches.reduce((s, b) => s + b.weight, 0) + capped.residualWeight;
+    const mass = capped.branches.reduce((s, b) => s + b.weight, 0) + capped.residualWeight;
     expect(mass).toBeCloseTo(1);
   });
 
@@ -675,8 +688,7 @@ describe("capBranches", () => {
     expect(out.branches.length).toBeLessThanOrEqual(16);
     expect(out.residualWeight).toBeGreaterThan(0);
     expect(out.exactness).toBe("bounded-approximation");
-    const mass =
-      out.branches.reduce((s, b) => s + b.weight, 0) + out.residualWeight;
+    const mass = out.branches.reduce((s, b) => s + b.weight, 0) + out.residualWeight;
     expect(mass).toBeCloseTo(1);
   });
 
@@ -693,7 +705,6 @@ describe("capBranches", () => {
     expect(out.residualWeight).toBe(0);
     expect(out.exactness).toBe("merged-exactly");
   });
-
 
   it("branch profile counters gate on and measure snapshot/mergeAndCap", () => {
     enableBranchProfiling(true);
@@ -795,13 +806,11 @@ describe("appendWithIntermediateCap / multi-parent intermediate bound", () => {
     expect(p.maxLiveBranches).toBeGreaterThan(0);
     // Residual law unchanged: concrete + residual discloses full mass when branched.
     if (summary.rng) {
-      const mass =
-        summary.rng.probabilityMass + (summary.rng.residualWeight ?? 0);
+      const mass = summary.rng.probabilityMass + (summary.rng.residualWeight ?? 0);
       expect(mass).toBeCloseTo(1, 8);
     }
   });
 });
-
 
 describe("RNG branches merge to the weighted mean", () => {
   it("Impatient's branch set totals the same as its two outcomes weighted", () => {
@@ -836,15 +845,11 @@ describe("RNG branches merge to the weighted mean", () => {
     // Perk arms do not change ability damage: E[D|concrete] tracks the plain path.
     // residual > 0: primary totalExpected is known-mass contribution, not that conditional.
     const residual = stochastic.rng?.residualWeight ?? 0;
-    const conditional =
-      stochastic.damage.conditionalConcreteMean ?? stochastic.totalExpected;
+    const conditional = stochastic.damage.conditionalConcreteMean ?? stochastic.totalExpected;
     expect(conditional).toBeCloseTo(plain.totalExpected, 8);
     if (residual > 1e-9) {
       expect(stochastic.damage.scope).toBe("known-mass-contribution");
-      expect(stochastic.totalExpected).toBeCloseTo(
-        conditional * stochastic.rng!.concreteMass,
-        8,
-      );
+      expect(stochastic.totalExpected).toBeCloseTo(conditional * stochastic.rng!.concreteMass, 8);
       expect(stochastic.totalExpected).toBeLessThan(plain.totalExpected);
     } else {
       expect(stochastic.totalExpected).toBeCloseTo(plain.totalExpected, 8);
@@ -1046,4 +1051,3 @@ describe("Relentless refund branching", () => {
     expect(s.casts[0].adrenalineAfter).toBe(9);
   });
 });
-

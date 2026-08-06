@@ -186,6 +186,17 @@ function assertLegalResult(
 }
 
 describe("solveFromRequest", () => {
+  it("rejects approximate Aftershock threshold state before searching", async () => {
+    const request = nakedRequest();
+    const loadout = request.loadout as SerializableRevolutionSimBase;
+    await expect(
+      solveFromRequest({
+        ...request,
+        loadout: { ...loadout, procs: { aftershockRank: 4, cracklingRank: 0 } },
+      }),
+    ).rejects.toThrow(/Aftershock is not available for verified solving/);
+  });
+
   it("returns a legal bar under naked base rules (simple path)", async () => {
     const result = await solveFromRequest(nakedRequest());
     assertLegalResult(result, { min: 3, max: 6 });

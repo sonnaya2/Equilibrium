@@ -7,9 +7,7 @@
     "fileTitle": "Codex of lost knowledge.png",
     "search": "Double Escape codex inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Double_Escape_codex",
-    "aliases": [
-      "upgrade-codex-double-escape"
-    ],
+    "aliases": ["upgrade-codex-double-escape"],
     "provenanceAlternates": [
       {
         "id": "upgrade-codex-double-escape",
@@ -25,9 +23,7 @@
     "fileTitle": "Codex of lost knowledge.png",
     "search": "Double Surge codex inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Double_Surge_codex",
-    "aliases": [
-      "upgrade-codex-double-surge"
-    ],
+    "aliases": ["upgrade-codex-double-surge"],
     "provenanceAlternates": [
       {
         "id": "upgrade-codex-double-surge",
@@ -43,9 +39,7 @@
     "fileTitle": "Ancient casket.png",
     "search": "Ancient casket inventory",
     "canonicalPage": "https://runescape.wiki/w/Ancient_casket",
-    "aliases": [
-      "upgrades-skilling-utility-ancient-casket"
-    ],
+    "aliases": ["upgrades-skilling-utility-ancient-casket"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-ancient-casket",
@@ -64,9 +58,7 @@
     "fileTitle": "Damaged artefact.png",
     "search": "Damaged artefact inventory",
     "canonicalPage": "https://runescape.wiki/w/Damaged_artefact",
-    "aliases": [
-      "upgrades-skilling-production-damaged-artefact"
-    ],
+    "aliases": ["upgrades-skilling-production-damaged-artefact"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-damaged-artefact",
@@ -85,9 +77,7 @@
     "fileTitle": "Museum donation bin.png",
     "search": "Museum donation bin inventory",
     "canonicalPage": "https://runescape.wiki/w/Museum_donation_bin",
-    "aliases": [
-      "upgrades-permanent-unlocks-museum-donation-bin"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-museum-donation-bin"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-museum-donation-bin",
@@ -106,9 +96,7 @@
     "fileTitle": "Dragon mattock.png",
     "search": "Dragon mattock inventory",
     "canonicalPage": "https://runescape.wiki/w/Dragon_mattock",
-    "aliases": [
-      "upgrade-dragon-mattock"
-    ]
+    "aliases": ["upgrade-dragon-mattock"]
   },
   {
     "id": "arch-master-outfit",
@@ -137,9 +125,7 @@
         "fileTitle": "Master Archaeologists Outfit.png"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-outfits/master-archaeologists-outfit.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/skilling-outfits/master-archaeologists-outfit.webp"]
   },
   {
     "id": "arch-monolith",
@@ -149,9 +135,7 @@
     "fileTitle": "Mysterious monolith (open).png",
     "search": "Mysterious monolith open",
     "canonicalPage": "https://runescape.wiki/w/Mysterious_monolith",
-    "aliases": [
-      "upgrades-permanent-unlocks-mysterious-monolith"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-mysterious-monolith"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-mysterious-monolith",
@@ -170,9 +154,7 @@
     "fileTitle": "Restored artefact replicator.png",
     "search": "Restored artefact replicator",
     "canonicalPage": "https://runescape.wiki/w/Artefact_restoration_station",
-    "aliases": [
-      "upgrades-skilling-utility-artefact-restoration-station"
-    ],
+    "aliases": ["upgrades-skilling-utility-artefact-restoration-station"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-artefact-restoration-station",
@@ -191,9 +173,7 @@
     "fileTitle": "Archaeologist's workbench.png",
     "search": "Archaeologist's workbench inventory",
     "canonicalPage": "https://runescape.wiki/w/Archaeologist%27s_workbench",
-    "aliases": [
-      "upgrades-skilling-utility-archaeologists-workbench"
-    ],
+    "aliases": ["upgrades-skilling-utility-archaeologists-workbench"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-archaeologists-workbench",
@@ -239,9 +219,7 @@
     "fileTitle": "First Necromancer's robe top.png",
     "search": "First Necromancer's robe top inventory icon",
     "canonicalPage": "https://runescape.wiki/w/First_Necromancer%27s_robe_top",
-    "aliases": [
-      "upgrade-first-necromancer-robe-top"
-    ],
+    "aliases": ["upgrade-first-necromancer-robe-top"],
     "provenanceAlternates": [
       {
         "id": "upgrade-first-necromancer-robe-top",
@@ -296,9 +274,7 @@
     "fileTitle": "Cryptbloom top.png",
     "search": "Cryptbloom top inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Cryptbloom_top",
-    "aliases": [
-      "upgrade-cryptbloom-top"
-    ],
+    "aliases": ["upgrade-cryptbloom-top"],
     "provenanceAlternates": [
       {
         "id": "upgrade-cryptbloom-top",
@@ -314,9 +290,7 @@
     "fileTitle": "Dracolich hauberk.png",
     "search": "Dracolich hauberk inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Dracolich_hauberk",
-    "aliases": [
-      "upgrade-dracolich-hauberk"
-    ]
+    "aliases": ["upgrade-dracolich-hauberk"]
   },
   {
     "id": "armour-gemstone-helm",
@@ -326,9 +300,7 @@
     "fileTitle": "Gemstone helm.png",
     "search": "Gemstone helm inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Gemstone_helm",
-    "aliases": [
-      "upgrades-progression-gemstone-helm"
-    ],
+    "aliases": ["upgrades-progression-gemstone-helm"],
     "provenanceAlternates": [
       {
         "id": "upgrades-progression-gemstone-helm",
@@ -347,9 +319,7 @@
     "fileTitle": "Malevolent cuirass.png",
     "search": "Malevolent cuirass inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Malevolent_cuirass",
-    "aliases": [
-      "upgrade-malevolent-cuirass"
-    ]
+    "aliases": ["upgrade-malevolent-cuirass"]
   },
   {
     "id": "armour-pernix-body",
@@ -395,9 +365,7 @@
     "fileTitle": "Ava's accumulator.png",
     "search": "Ava's accumulator inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ava%27s_accumulator",
-    "aliases": [
-      "upgrades-permanent-unlocks-avas-accumulator"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-avas-accumulator"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-avas-accumulator",
@@ -416,9 +384,7 @@
     "fileTitle": "Ava's attractor.png",
     "search": "Ava's attractor inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ava%27s_attractor",
-    "aliases": [
-      "upgrades-permanent-unlocks-avas-attractor"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-avas-attractor"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-avas-attractor",
@@ -458,9 +424,7 @@
         "fileTitle": "Ripper Demon Pouch.png"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/ripper-demon-pouch.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/ripper-demon-pouch.webp"]
   },
   {
     "id": "boot-blast-diffusion",
@@ -470,9 +434,7 @@
     "fileTitle": "Blast diffusion boots.png",
     "search": "Blast diffusion boots inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Blast_diffusion_boots",
-    "aliases": [
-      "upgrade-blast-diffusion-boots"
-    ],
+    "aliases": ["upgrade-blast-diffusion-boots"],
     "provenanceAlternates": [
       {
         "id": "upgrade-blast-diffusion-boots",
@@ -488,9 +450,7 @@
     "fileTitle": "Fleeting boots.png",
     "search": "Fleeting boots inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Fleeting_boots",
-    "aliases": [
-      "upgrade-fleeting-boots"
-    ],
+    "aliases": ["upgrade-fleeting-boots"],
     "provenanceAlternates": [
       {
         "id": "upgrade-fleeting-boots",
@@ -506,9 +466,7 @@
     "fileTitle": "Laceration boots.png",
     "search": "Laceration boots inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Laceration_boots",
-    "aliases": [
-      "upgrade-laceration-boots"
-    ],
+    "aliases": ["upgrade-laceration-boots"],
     "provenanceAlternates": [
       {
         "id": "upgrade-laceration-boots",
@@ -533,9 +491,7 @@
     "fileTitle": "Alchemiser mk. II.png",
     "search": "Alchemiser mk. II inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Alchemiser_mk._II",
-    "aliases": [
-      "upgrades-skilling-utility-alchemiser-mk-ii"
-    ],
+    "aliases": ["upgrades-skilling-utility-alchemiser-mk-ii"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-alchemiser-mk-ii",
@@ -575,9 +531,7 @@
         "fileTitle": "Ancient Weapon Gizmo Blueprint.png"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/ancient-weapon-gizmo-blueprint.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/skilling-production/ancient-weapon-gizmo-blueprint.webp"]
   },
   {
     "id": "bulk39-archaeologists-hat",
@@ -587,9 +541,7 @@
     "fileTitle": "Archaeologist's hat.png",
     "search": "Archaeologist's hat inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Archaeologist's_hat",
-    "aliases": [
-      "upgrades-skilling-outfits-archaeologists-hat"
-    ],
+    "aliases": ["upgrades-skilling-outfits-archaeologists-hat"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-outfits-archaeologists-hat",
@@ -608,9 +560,7 @@
     "fileTitle": "Ardougne cloak 2.png",
     "search": "Ardougne cloak 2 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ardougne_cloak_2",
-    "aliases": [
-      "upgrades-permanent-unlocks-ardougne-cloak-2"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-ardougne-cloak-2"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-ardougne-cloak-2",
@@ -629,9 +579,7 @@
     "fileTitle": "Ardougne cloak 3.png",
     "search": "Ardougne cloak 3 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ardougne_cloak_3",
-    "aliases": [
-      "upgrades-permanent-unlocks-ardougne-cloak-3"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-ardougne-cloak-3"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-ardougne-cloak-3",
@@ -650,9 +598,7 @@
     "fileTitle": "Armour gizmo shell.png",
     "search": "Armour gizmo shell inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Armour_gizmo_shell",
-    "aliases": [
-      "upgrades-skilling-production-armour-gizmo-shell"
-    ],
+    "aliases": ["upgrades-skilling-production-armour-gizmo-shell"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-armour-gizmo-shell",
@@ -680,9 +626,7 @@
     "fileTitle": "Auto disassembler mk. II.png",
     "search": "Auto disassembler mk. II inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Auto_disassembler_mk._II",
-    "aliases": [
-      "upgrades-skilling-utility-auto-disassembler-mk-ii"
-    ],
+    "aliases": ["upgrades-skilling-utility-auto-disassembler-mk-ii"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-auto-disassembler-mk-ii",
@@ -701,9 +645,7 @@
     "fileTitle": "Auto-sanctifier.png",
     "search": "Auto-sanctifier inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Auto-sanctifier",
-    "aliases": [
-      "upgrades-skilling-utility-auto-sanctifier"
-    ],
+    "aliases": ["upgrades-skilling-utility-auto-sanctifier"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-auto-sanctifier",
@@ -722,9 +664,7 @@
     "fileTitle": "Base parts.png",
     "search": "Base parts inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Base_parts",
-    "aliases": [
-      "upgrades-skilling-production-base-parts"
-    ],
+    "aliases": ["upgrades-skilling-production-base-parts"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-base-parts",
@@ -743,9 +683,7 @@
     "fileTitle": "Blade parts.png",
     "search": "Blade parts inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Blade_parts",
-    "aliases": [
-      "upgrades-skilling-production-blade-parts"
-    ],
+    "aliases": ["upgrades-skilling-production-blade-parts"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-blade-parts",
@@ -764,9 +702,7 @@
     "fileTitle": "Blueprint.png",
     "search": "Blueprint invention inventory",
     "canonicalPage": "https://runescape.wiki/w/Blueprints",
-    "aliases": [
-      "upgrades-skilling-production-blueprints"
-    ],
+    "aliases": ["upgrades-skilling-production-blueprints"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-blueprints",
@@ -783,9 +719,7 @@
     "fileTitle": "Clear parts.png",
     "search": "Clear parts inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Clear_parts",
-    "aliases": [
-      "upgrades-skilling-production-clear-parts"
-    ],
+    "aliases": ["upgrades-skilling-production-clear-parts"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-clear-parts",
@@ -804,9 +738,7 @@
     "fileTitle": "Connector parts.png",
     "search": "Connector parts inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Connector_parts",
-    "aliases": [
-      "upgrades-skilling-production-connector-parts"
-    ],
+    "aliases": ["upgrades-skilling-production-connector-parts"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-connector-parts",
@@ -825,9 +757,7 @@
     "fileTitle": "Cover parts.png",
     "search": "Cover parts inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Cover_parts",
-    "aliases": [
-      "upgrades-skilling-production-cover-parts"
-    ],
+    "aliases": ["upgrades-skilling-production-cover-parts"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-cover-parts",
@@ -846,9 +776,7 @@
     "fileTitle": "Crafted parts.png",
     "search": "Crafted parts inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Crafted_parts",
-    "aliases": [
-      "upgrades-skilling-production-crafted-parts"
-    ],
+    "aliases": ["upgrades-skilling-production-crafted-parts"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-crafted-parts",
@@ -867,9 +795,7 @@
     "fileTitle": "Crystal chisel.png",
     "search": "Crystal chisel inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Crystal_chisel",
-    "aliases": [
-      "upgrades-skilling-tools-crystal-chisel"
-    ],
+    "aliases": ["upgrades-skilling-tools-crystal-chisel"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-tools-crystal-chisel",
@@ -888,9 +814,7 @@
     "fileTitle": "Crystal knife.png",
     "search": "Crystal knife inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Crystal_knife",
-    "aliases": [
-      "upgrades-skilling-tools-crystal-knife"
-    ],
+    "aliases": ["upgrades-skilling-tools-crystal-knife"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-tools-crystal-knife",
@@ -909,9 +833,7 @@
     "fileTitle": "Crystal parts.png",
     "search": "Crystal parts inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Crystal_parts",
-    "aliases": [
-      "upgrades-skilling-production-crystal-parts"
-    ],
+    "aliases": ["upgrades-skilling-production-crystal-parts"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-crystal-parts",
@@ -930,9 +852,7 @@
     "fileTitle": "Crystal saw.png",
     "search": "Crystal saw inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Crystal_saw",
-    "aliases": [
-      "upgrades-skilling-tools-crystal-saw"
-    ],
+    "aliases": ["upgrades-skilling-tools-crystal-saw"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-tools-crystal-saw",
@@ -951,9 +871,7 @@
     "fileTitle": "Dark Facet of Luck.png",
     "search": "Dark Facet of Luck inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Dark_Facet_of_Luck",
-    "aliases": [
-      "upgrades-permanent-unlocks-dark-facet-of-luck"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-dark-facet-of-luck"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-dark-facet-of-luck",
@@ -972,9 +890,7 @@
     "fileTitle": "Deflecting parts.png",
     "search": "Deflecting parts inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Deflecting_parts",
-    "aliases": [
-      "upgrades-skilling-production-deflecting-parts"
-    ],
+    "aliases": ["upgrades-skilling-production-deflecting-parts"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-deflecting-parts",
@@ -993,9 +909,7 @@
     "fileTitle": "Delicate parts.png",
     "search": "Delicate parts inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Delicate_parts",
-    "aliases": [
-      "upgrades-skilling-production-delicate-parts"
-    ],
+    "aliases": ["upgrades-skilling-production-delicate-parts"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-delicate-parts",
@@ -1014,9 +928,7 @@
     "fileTitle": "Desert amulet 2.png",
     "search": "Desert amulet 2 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Desert_amulet_2",
-    "aliases": [
-      "upgrades-permanent-unlocks-desert-amulet-2"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-desert-amulet-2"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-desert-amulet-2",
@@ -1035,9 +947,7 @@
     "fileTitle": "Desert amulet 3.png",
     "search": "Desert amulet 3 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Desert_amulet_3",
-    "aliases": [
-      "upgrades-permanent-unlocks-desert-amulet-3"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-desert-amulet-3"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-desert-amulet-3",
@@ -1065,9 +975,7 @@
     "fileTitle": "Diviner's headwear.png",
     "search": "Diviner's headwear inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Diviner's_headwear",
-    "aliases": [
-      "upgrades-skilling-outfits-diviners-headwear"
-    ],
+    "aliases": ["upgrades-skilling-outfits-diviners-headwear"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-outfits-diviners-headwear",
@@ -1086,9 +994,7 @@
     "fileTitle": "Elder divination head.png",
     "search": "Elder divination headwear inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Elder_divination_headwear",
-    "aliases": [
-      "upgrades-skilling-outfits-elder-divination-headwear"
-    ],
+    "aliases": ["upgrades-skilling-outfits-elder-divination-headwear"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-outfits-elder-divination-headwear",
@@ -1107,9 +1013,7 @@
     "fileTitle": "Enhanced fishing rod-o-matic.png",
     "search": "Enhanced fishing rod-o-matic inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Enhanced_fishing_rod-o-matic",
-    "aliases": [
-      "upgrades-skilling-tools-enhanced-fishing-rod-o-matic"
-    ],
+    "aliases": ["upgrades-skilling-tools-enhanced-fishing-rod-o-matic"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-tools-enhanced-fishing-rod-o-matic",
@@ -1128,9 +1032,7 @@
     "fileTitle": "Enhanced hammer-tron.png",
     "search": "Enhanced hammer-tron inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Enhanced_hammer-tron",
-    "aliases": [
-      "upgrades-skilling-tools-enhanced-hammer-tron"
-    ],
+    "aliases": ["upgrades-skilling-tools-enhanced-hammer-tron"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-tools-enhanced-hammer-tron",
@@ -1149,9 +1051,7 @@
     "fileTitle": "Enhanced pyro-matic.png",
     "search": "Enhanced pyro-matic inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Enhanced_pyro-matic",
-    "aliases": [
-      "upgrades-skilling-tools-enhanced-pyro-matic"
-    ],
+    "aliases": ["upgrades-skilling-tools-enhanced-pyro-matic"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-tools-enhanced-pyro-matic",
@@ -1170,9 +1070,7 @@
     "fileTitle": "Enhancing components.png",
     "search": "Enhancing components inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Enhancing_components",
-    "aliases": [
-      "upgrades-skilling-production-enhancing-components"
-    ],
+    "aliases": ["upgrades-skilling-production-enhancing-components"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-enhancing-components",
@@ -1191,9 +1089,7 @@
     "fileTitle": "Evasive components.png",
     "search": "Evasive components inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Evasive_components",
-    "aliases": [
-      "upgrades-skilling-production-evasive-components"
-    ],
+    "aliases": ["upgrades-skilling-production-evasive-components"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-evasive-components",
@@ -1212,9 +1108,7 @@
     "fileTitle": "Explosive components.png",
     "search": "Explosive components inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Explosive_components",
-    "aliases": [
-      "upgrades-skilling-production-explosive-components"
-    ],
+    "aliases": ["upgrades-skilling-production-explosive-components"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-explosive-components",
@@ -1254,9 +1148,7 @@
         "fileTitle": "Inert Extreme Invention Potion.png"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/inert-extreme-invention-potion.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/skilling-production/inert-extreme-invention-potion.webp"]
   },
   {
     "id": "bulk39-eye-of-het",
@@ -1266,9 +1158,7 @@
     "fileTitle": "Eye of Het.png",
     "search": "Eye of Het inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Eye_of_Het",
-    "aliases": [
-      "upgrades-permanent-unlocks-eye-of-het"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-eye-of-het"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-eye-of-het",
@@ -1287,9 +1177,7 @@
     "fileTitle": "Falador shield 2.png",
     "search": "Falador shield 2 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Falador_shield_2",
-    "aliases": [
-      "upgrades-permanent-unlocks-falador-shield-2"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-falador-shield-2"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-falador-shield-2",
@@ -1308,9 +1196,7 @@
     "fileTitle": "Falador shield 3.png",
     "search": "Falador shield 3 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Falador_shield_3",
-    "aliases": [
-      "upgrades-permanent-unlocks-falador-shield-3"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-falador-shield-3"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-falador-shield-3",
@@ -1329,9 +1215,7 @@
     "fileTitle": "Farmer's hat.png",
     "search": "Farmer's hat inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Farmer's_hat",
-    "aliases": [
-      "upgrades-skilling-outfits-farmers-hat"
-    ],
+    "aliases": ["upgrades-skilling-outfits-farmers-hat"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-outfits-farmers-hat",
@@ -1350,9 +1234,7 @@
     "fileTitle": "Fishing rod-o-matic.png",
     "search": "Fishing rod-o-matic inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Fishing_rod-o-matic",
-    "aliases": [
-      "upgrades-skilling-tools-fishing-rod-o-matic"
-    ],
+    "aliases": ["upgrades-skilling-tools-fishing-rod-o-matic"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-tools-fishing-rod-o-matic",
@@ -1371,9 +1253,7 @@
     "fileTitle": "Flexible parts.png",
     "search": "Flexible parts inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Flexible_parts",
-    "aliases": [
-      "upgrades-skilling-production-flexible-parts"
-    ],
+    "aliases": ["upgrades-skilling-production-flexible-parts"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-flexible-parts",
@@ -1392,10 +1272,7 @@
     "fileTitle": "Font of Life.png",
     "search": "Font of Life inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Font_of_Life",
-    "aliases": [
-      "arch-font-of-life",
-      "upgrades-permanent-unlocks-font-of-life"
-    ],
+    "aliases": ["arch-font-of-life", "upgrades-permanent-unlocks-font-of-life"],
     "provenanceAlternates": [
       {
         "id": "arch-font-of-life",
@@ -1418,9 +1295,7 @@
     "fileTitle": "Fremennik sea boots 2.png",
     "search": "Fremennik sea boots 2 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Fremennik_sea_boots_2",
-    "aliases": [
-      "upgrades-permanent-unlocks-fremennik-sea-boots-2"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-fremennik-sea-boots-2"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-fremennik-sea-boots-2",
@@ -1439,9 +1314,7 @@
     "fileTitle": "Fremennik sea boots 3.png",
     "search": "Fremennik sea boots 3 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Fremennik_sea_boots_3",
-    "aliases": [
-      "upgrades-permanent-unlocks-fremennik-sea-boots-3"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-fremennik-sea-boots-3"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-fremennik-sea-boots-3",
@@ -1460,9 +1333,7 @@
     "fileTitle": "Fungal components.png",
     "search": "Fungal components inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Fungal_components",
-    "aliases": [
-      "upgrades-skilling-production-fungal-components"
-    ],
+    "aliases": ["upgrades-skilling-production-fungal-components"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-fungal-components",
@@ -1481,9 +1352,7 @@
     "fileTitle": "Hammer-tron.png",
     "search": "Hammer-tron inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Hammer-tron",
-    "aliases": [
-      "upgrades-skilling-tools-hammer-tron"
-    ],
+    "aliases": ["upgrades-skilling-tools-hammer-tron"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-tools-hammer-tron",
@@ -1502,9 +1371,7 @@
     "fileTitle": "Heavy components.png",
     "search": "Heavy components inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Heavy_components",
-    "aliases": [
-      "upgrades-skilling-production-heavy-components"
-    ],
+    "aliases": ["upgrades-skilling-production-heavy-components"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-heavy-components",
@@ -1523,9 +1390,7 @@
     "fileTitle": "Imbued components.png",
     "search": "Imbued components inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Imbued_components",
-    "aliases": [
-      "upgrades-skilling-production-imbued-components"
-    ],
+    "aliases": ["upgrades-skilling-production-imbued-components"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-imbued-components",
@@ -1544,9 +1409,7 @@
     "fileTitle": "Invention potion.png",
     "search": "Invention potion inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Invention_potion",
-    "aliases": [
-      "upgrades-skilling-production-invention-potion"
-    ],
+    "aliases": ["upgrades-skilling-production-invention-potion"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-invention-potion",
@@ -1565,9 +1428,7 @@
     "fileTitle": "Karamja gloves 2.png",
     "search": "Karamja gloves 2 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Karamja_gloves_2",
-    "aliases": [
-      "upgrades-permanent-unlocks-karamja-gloves-2"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-karamja-gloves-2"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-karamja-gloves-2",
@@ -1586,9 +1447,7 @@
     "fileTitle": "Karamja gloves 3.png",
     "search": "Karamja gloves 3 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Karamja_gloves_3",
-    "aliases": [
-      "upgrades-permanent-unlocks-karamja-gloves-3"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-karamja-gloves-3"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-karamja-gloves-3",
@@ -1607,9 +1466,7 @@
     "fileTitle": "Light components.png",
     "search": "Light components inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Light_components",
-    "aliases": [
-      "upgrades-skilling-production-light-components"
-    ],
+    "aliases": ["upgrades-skilling-production-light-components"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-light-components",
@@ -1637,9 +1494,7 @@
     "fileTitle": "Living components.png",
     "search": "Living components inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Living_components",
-    "aliases": [
-      "upgrades-skilling-production-living-components"
-    ],
+    "aliases": ["upgrades-skilling-production-living-components"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-living-components",
@@ -1658,9 +1513,7 @@
     "fileTitle": "Magic parts.png",
     "search": "Magic parts inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Magic_parts",
-    "aliases": [
-      "upgrades-skilling-production-magic-parts"
-    ],
+    "aliases": ["upgrades-skilling-production-magic-parts"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-magic-parts",
@@ -1679,9 +1532,7 @@
     "fileTitle": "Material cache (felt).png",
     "search": "Material cache inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Material_cache",
-    "aliases": [
-      "upgrades-skilling-utility-material-cache"
-    ],
+    "aliases": ["upgrades-skilling-utility-material-cache"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-material-cache",
@@ -1700,9 +1551,7 @@
     "fileTitle": "Metallic parts.png",
     "search": "Metallic parts inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Metallic_parts",
-    "aliases": [
-      "upgrades-skilling-production-metallic-parts"
-    ],
+    "aliases": ["upgrades-skilling-production-metallic-parts"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-metallic-parts",
@@ -1721,9 +1570,7 @@
     "fileTitle": "Optimised hide tanner.png",
     "search": "Optimised hide tanner inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Optimised_hide_tanner",
-    "aliases": [
-      "upgrades-skilling-utility-optimised-hide-tanner"
-    ],
+    "aliases": ["upgrades-skilling-utility-optimised-hide-tanner"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-optimised-hide-tanner",
@@ -1742,9 +1589,7 @@
     "fileTitle": "Organic parts.png",
     "search": "Organic parts inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Organic_parts",
-    "aliases": [
-      "upgrades-skilling-production-organic-parts"
-    ],
+    "aliases": ["upgrades-skilling-production-organic-parts"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-organic-parts",
@@ -1763,9 +1608,7 @@
     "fileTitle": "Padded parts.png",
     "search": "Padded parts inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Padded_parts",
-    "aliases": [
-      "upgrades-skilling-production-padded-parts"
-    ],
+    "aliases": ["upgrades-skilling-production-padded-parts"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-padded-parts",
@@ -1784,9 +1627,7 @@
     "fileTitle": "Powerful components.png",
     "search": "Powerful components inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Powerful_components",
-    "aliases": [
-      "upgrades-skilling-production-powerful-components"
-    ],
+    "aliases": ["upgrades-skilling-production-powerful-components"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-powerful-components",
@@ -1805,9 +1646,7 @@
     "fileTitle": "Precious components.png",
     "search": "Precious components inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Precious_components",
-    "aliases": [
-      "upgrades-skilling-production-precious-components"
-    ],
+    "aliases": ["upgrades-skilling-production-precious-components"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-precious-components",
@@ -1826,9 +1665,7 @@
     "fileTitle": "Precise components.png",
     "search": "Precise components inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Precise_components",
-    "aliases": [
-      "upgrades-skilling-production-precise-components"
-    ],
+    "aliases": ["upgrades-skilling-production-precise-components"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-precise-components",
@@ -1847,9 +1684,7 @@
     "fileTitle": "Refined components.png",
     "search": "Refined components inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Refined_components",
-    "aliases": [
-      "upgrades-skilling-production-refined-components"
-    ],
+    "aliases": ["upgrades-skilling-production-refined-components"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-refined-components",
@@ -1868,9 +1703,7 @@
     "fileTitle": "Seer's headband 2.png",
     "search": "Seer's headband 2 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Seer's_headband_2",
-    "aliases": [
-      "upgrades-permanent-unlocks-seers-headband-2"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-seers-headband-2"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-seers-headband-2",
@@ -1889,9 +1722,7 @@
     "fileTitle": "Seer's headband 3.png",
     "search": "Seer's headband 3 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Seer's_headband_3",
-    "aliases": [
-      "upgrades-permanent-unlocks-seers-headband-3"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-seers-headband-3"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-seers-headband-3",
@@ -1910,9 +1741,7 @@
     "fileTitle": "Sharp components.png",
     "search": "Sharp components inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Sharp_components",
-    "aliases": [
-      "upgrades-skilling-production-sharp-components"
-    ],
+    "aliases": ["upgrades-skilling-production-sharp-components"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-sharp-components",
@@ -1931,9 +1760,7 @@
     "fileTitle": "Simple parts.png",
     "search": "Simple parts inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Simple_parts",
-    "aliases": [
-      "upgrades-skilling-production-simple-parts"
-    ],
+    "aliases": ["upgrades-skilling-production-simple-parts"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-simple-parts",
@@ -1952,9 +1779,7 @@
     "fileTitle": "Stave parts.png",
     "search": "Stave parts inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Stave_parts",
-    "aliases": [
-      "upgrades-skilling-production-stave-parts"
-    ],
+    "aliases": ["upgrades-skilling-production-stave-parts"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-stave-parts",
@@ -1973,9 +1798,7 @@
     "fileTitle": "Strong components.png",
     "search": "Strong components inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Strong_components",
-    "aliases": [
-      "upgrades-skilling-production-strong-components"
-    ],
+    "aliases": ["upgrades-skilling-production-strong-components"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-strong-components",
@@ -1994,9 +1817,7 @@
     "fileTitle": "Stunning components.png",
     "search": "Stunning components inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Stunning_components",
-    "aliases": [
-      "upgrades-skilling-production-stunning-components"
-    ],
+    "aliases": ["upgrades-skilling-production-stunning-components"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-stunning-components",
@@ -2015,9 +1836,7 @@
     "fileTitle": "Subtle components.png",
     "search": "Subtle components inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Subtle_components",
-    "aliases": [
-      "upgrades-skilling-production-subtle-components"
-    ],
+    "aliases": ["upgrades-skilling-production-subtle-components"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-subtle-components",
@@ -2036,9 +1855,7 @@
     "fileTitle": "Swift components.png",
     "search": "Swift components inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Swift_components",
-    "aliases": [
-      "upgrades-skilling-production-swift-components"
-    ],
+    "aliases": ["upgrades-skilling-production-swift-components"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-swift-components",
@@ -2057,9 +1874,7 @@
     "fileTitle": "Tensile parts.png",
     "search": "Tensile parts inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Tensile_parts",
-    "aliases": [
-      "upgrades-skilling-production-tensile-parts"
-    ],
+    "aliases": ["upgrades-skilling-production-tensile-parts"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-tensile-parts",
@@ -2078,9 +1893,7 @@
     "fileTitle": "Tirannwn quiver 2.png",
     "search": "Tirannwn quiver 2 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Tirannwn_quiver_2",
-    "aliases": [
-      "upgrades-permanent-unlocks-tirannwn-quiver-2"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-tirannwn-quiver-2"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-tirannwn-quiver-2",
@@ -2099,9 +1912,7 @@
     "fileTitle": "Tirannwn quiver 3.png",
     "search": "Tirannwn quiver 3 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Tirannwn_quiver_3",
-    "aliases": [
-      "upgrades-permanent-unlocks-tirannwn-quiver-3"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-tirannwn-quiver-3"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-tirannwn-quiver-3",
@@ -2120,9 +1931,7 @@
     "fileTitle": "Tool gizmo shell.png",
     "search": "Tool gizmo shell inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Tool_gizmo_shell",
-    "aliases": [
-      "upgrades-skilling-production-tool-gizmo-shell"
-    ],
+    "aliases": ["upgrades-skilling-production-tool-gizmo-shell"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-tool-gizmo-shell",
@@ -2141,9 +1950,7 @@
     "fileTitle": "Variable components.png",
     "search": "Variable components inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Variable_components",
-    "aliases": [
-      "upgrades-skilling-production-variable-components"
-    ],
+    "aliases": ["upgrades-skilling-production-variable-components"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-variable-components",
@@ -2162,9 +1969,7 @@
     "fileTitle": "Varrock armour 2.png",
     "search": "Varrock armour 2 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Varrock_armour_2",
-    "aliases": [
-      "upgrades-permanent-unlocks-varrock-armour-2"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-varrock-armour-2"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-varrock-armour-2",
@@ -2183,9 +1988,7 @@
     "fileTitle": "Varrock armour 3.png",
     "search": "Varrock armour 3 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Varrock_armour_3",
-    "aliases": [
-      "upgrades-permanent-unlocks-varrock-armour-3"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-varrock-armour-3"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-varrock-armour-3",
@@ -2204,9 +2007,7 @@
     "fileTitle": "Voice of Seren icon.png",
     "search": "Voice of Seren icon",
     "canonicalPage": "https://runescape.wiki/w/Voice_of_Seren",
-    "aliases": [
-      "upgrades-permanent-unlocks-voice-of-seren"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-voice-of-seren"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-voice-of-seren",
@@ -2225,9 +2026,7 @@
     "fileTitle": "Wilderness sword 2.png",
     "search": "Wilderness sword 2 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Wilderness_sword_2",
-    "aliases": [
-      "upgrades-permanent-unlocks-wilderness-sword-2"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-wilderness-sword-2"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-wilderness-sword-2",
@@ -2246,9 +2045,7 @@
     "fileTitle": "Wilderness sword 3.png",
     "search": "Wilderness sword 3 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Wilderness_sword_3",
-    "aliases": [
-      "upgrades-permanent-unlocks-wilderness-sword-3"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-wilderness-sword-3"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-wilderness-sword-3",
@@ -2278,13 +2075,8 @@
     "search": "Ancient Elven Ritual Shard inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ancient_Elven_Ritual_Shard",
     "sourcePage": "https://runescape.wiki/w/File:Ancient_Elven_Ritual_Shard.png",
-    "aliases": [
-      "pocket-ancient-elven-ritual-shard",
-      "upgrade-ancient-elven-ritual-shard"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/progression/ancient-elven-ritual-shard.webp"
-    ]
+    "aliases": ["pocket-ancient-elven-ritual-shard", "upgrade-ancient-elven-ritual-shard"],
+    "alsoAt": ["public/game/upgrades/progression/ancient-elven-ritual-shard.webp"]
   },
   {
     "id": "bulk42-upgrades-permanent-unlocks-ancient-statuette",
@@ -2305,12 +2097,8 @@
     "search": "Anima Core Body of Zaros inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Anima_Core_Body_of_Zaros",
     "sourcePage": "https://runescape.wiki/w/File:Anima_Core_Body_of_Zaros.png",
-    "aliases": [
-      "armour-anima-core-zaros"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/progression/anima-core-body-of-zaros.webp"
-    ]
+    "aliases": ["armour-anima-core-zaros"],
+    "alsoAt": ["public/game/upgrades/progression/anima-core-body-of-zaros.webp"]
   },
   {
     "id": "bulk42-upgrades-permanent-unlocks-apex-hide-body",
@@ -2321,12 +2109,8 @@
     "search": "Apex Hide Body inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Apex_Hide_Body",
     "sourcePage": "https://runescape.wiki/w/File:Apex_Hide_Body.png",
-    "aliases": [
-      "upgrade-apex-hide-body"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/progression/apex-hide-body.webp"
-    ]
+    "aliases": ["upgrade-apex-hide-body"],
+    "alsoAt": ["public/game/upgrades/progression/apex-hide-body.webp"]
   },
   {
     "id": "bulk42-upgrades-permanent-unlocks-arcane-spirit-shield",
@@ -2347,12 +2131,8 @@
     "search": "Artificers Measure inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Artificers_Measure",
     "sourcePage": "https://runescape.wiki/w/File:Artificers_Measure.png",
-    "aliases": [
-      "skilling-artificers-measure"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-offhands/artificers-measure.webp"
-    ]
+    "aliases": ["skilling-artificers-measure"],
+    "alsoAt": ["public/game/upgrades/skilling-offhands/artificers-measure.webp"]
   },
   {
     "id": "bulk42-upgrades-permanent-unlocks-ascension-crossbow",
@@ -2363,12 +2143,8 @@
     "search": "Ascension Crossbow inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ascension_Crossbow",
     "sourcePage": "https://runescape.wiki/w/File:Ascension_Crossbow.png",
-    "aliases": [
-      "upgrade-ascension-crossbow"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/progression/ascension-crossbow.webp"
-    ]
+    "aliases": ["upgrade-ascension-crossbow"],
+    "alsoAt": ["public/game/upgrades/progression/ascension-crossbow.webp"]
   },
   {
     "id": "bulk42-upgrades-permanent-unlocks-balaraks-sash-brush",
@@ -2379,12 +2155,8 @@
     "search": "Balaraks Sash Brush inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Balaraks_Sash_Brush",
     "sourcePage": "https://runescape.wiki/w/File:Balaraks_Sash_Brush.png",
-    "aliases": [
-      "skilling-balaraks-sash-brush"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-offhands/balaraks-sash-brush.webp"
-    ]
+    "aliases": ["skilling-balaraks-sash-brush"],
+    "alsoAt": ["public/game/upgrades/skilling-offhands/balaraks-sash-brush.webp"]
   },
   {
     "id": "bulk42-upgrades-permanent-unlocks-barricade",
@@ -2425,9 +2197,7 @@
     "search": "Clue Scroll Easy inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Clue_Scroll_Easy",
     "sourcePage": "https://runescape.wiki/w/File:Clue_Scroll_Easy.png",
-    "aliases": [
-      "upgrades-upgrades-permanent-unlocks-clue-scroll-easy"
-    ]
+    "aliases": ["upgrades-upgrades-permanent-unlocks-clue-scroll-easy"]
   },
   {
     "id": "bulk42-upgrades-permanent-unlocks-corrupted-ore",
@@ -2438,13 +2208,8 @@
     "search": "Corrupted Ore inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Corrupted_Ore",
     "sourcePage": "https://runescape.wiki/w/File:Corrupted_Ore.png",
-    "aliases": [
-      "place-corrupted-ore",
-      "skilling-corrupted-ore"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/corrupted-ore.webp"
-    ]
+    "aliases": ["place-corrupted-ore", "skilling-corrupted-ore"],
+    "alsoAt": ["public/game/upgrades/skilling-production/corrupted-ore.webp"]
   },
   {
     "id": "bulk42-upgrades-permanent-unlocks-crystal-fishing-rod",
@@ -2475,11 +2240,7 @@
     "search": "Crystal Mattock inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Crystal_Mattock",
     "sourcePage": "https://runescape.wiki/w/File:Crystal_Mattock.png",
-    "aliases": [
-      "arch-crystal-mattock",
-      "tool-crystal-mattock",
-      "upgrade-crystal-mattock"
-    ],
+    "aliases": ["arch-crystal-mattock", "tool-crystal-mattock", "upgrade-crystal-mattock"],
     "provenanceAlternates": [
       {
         "id": "arch-crystal-mattock",
@@ -2500,20 +2261,14 @@
     "search": "Crystal Pickaxe inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Crystal_Pickaxe",
     "sourcePage": "https://runescape.wiki/w/File:Crystal_Pickaxe.png",
-    "aliases": [
-      "skilling-crystal-pickaxe",
-      "tool-crystal-pickaxe",
-      "u40-crystal-pickaxe"
-    ],
+    "aliases": ["skilling-crystal-pickaxe", "tool-crystal-pickaxe", "u40-crystal-pickaxe"],
     "provenanceAlternates": [
       {
         "id": "u40-crystal-pickaxe",
         "search": "Crystal pickaxe inventory"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-tools/crystal-pickaxe.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/skilling-tools/crystal-pickaxe.webp"]
   },
   {
     "id": "bulk42-upgrades-permanent-unlocks-crystallise",
@@ -2584,12 +2339,8 @@
     "search": "Expansive Essence Pouch inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Expansive_Essence_Pouch",
     "sourcePage": "https://runescape.wiki/w/File:Expansive_Essence_Pouch.png",
-    "aliases": [
-      "upgrades-upgrades-permanent-unlocks-expansive-essence-pouch"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-utility/expansive-essence-pouch.webp"
-    ]
+    "aliases": ["upgrades-upgrades-permanent-unlocks-expansive-essence-pouch"],
+    "alsoAt": ["public/game/upgrades/skilling-utility/expansive-essence-pouch.webp"]
   },
   {
     "id": "bulk42-upgrades-permanent-unlocks-ferocious-ring",
@@ -2630,9 +2381,7 @@
     "search": "Ham Logo inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ham_Logo",
     "sourcePage": "https://runescape.wiki/w/File:Ham_Logo.png",
-    "aliases": [
-      "upgrades-upgrades-permanent-unlocks-ham-logo"
-    ]
+    "aliases": ["upgrades-upgrades-permanent-unlocks-ham-logo"]
   },
   {
     "id": "bulk42-upgrades-permanent-unlocks-harmonic-dust",
@@ -2643,12 +2392,8 @@
     "search": "Harmonic Dust inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Harmonic_Dust",
     "sourcePage": "https://runescape.wiki/w/File:Harmonic_Dust.png",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-harmonic-dust"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/harmonic-dust.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-harmonic-dust"],
+    "alsoAt": ["public/game/upgrades/skilling-production/harmonic-dust.webp"]
   },
   {
     "id": "bulk42-upgrades-permanent-unlocks-inquisitor-staff",
@@ -2689,12 +2434,8 @@
     "search": "Mammoth Tusk inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Mammoth_Tusk",
     "sourcePage": "https://runescape.wiki/w/File:Mammoth_Tusk.png",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-mammoth-tusk"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/mammoth-tusk.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-mammoth-tusk"],
+    "alsoAt": ["public/game/upgrades/skilling-production/mammoth-tusk.webp"]
   },
   {
     "id": "bulk42-upgrades-permanent-unlocks-manual-auto-cycle",
@@ -2705,9 +2446,7 @@
     "search": "Manual Auto Cycle inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Manual_Auto_Cycle",
     "sourcePage": "https://runescape.wiki/w/File:Manual_Auto_Cycle.png",
-    "aliases": [
-      "upgrades-upgrades-permanent-unlocks-manual-auto-cycle"
-    ]
+    "aliases": ["upgrades-upgrades-permanent-unlocks-manual-auto-cycle"]
   },
   {
     "id": "bulk42-upgrades-permanent-unlocks-marigold-farm",
@@ -2728,9 +2467,7 @@
     "search": "Master Archaeologists Outfit inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Master_Archaeologists_Outfit",
     "sourcePage": "https://runescape.wiki/w/File:Master_Archaeologists_Outfit.png",
-    "aliases": [
-      "upgrades-upgrades-permanent-unlocks-master-archaeologists-outfit"
-    ]
+    "aliases": ["upgrades-upgrades-permanent-unlocks-master-archaeologists-outfit"]
   },
   {
     "id": "bulk42-upgrades-permanent-unlocks-master-farmer",
@@ -2741,12 +2478,8 @@
     "search": "Master Farmer inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Master_Farmer",
     "sourcePage": "https://runescape.wiki/w/File:Master_Farmer.png",
-    "aliases": [
-      "skilling-master-farmer-outfit"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-outfits/master-farmer.webp"
-    ]
+    "aliases": ["skilling-master-farmer-outfit"],
+    "alsoAt": ["public/game/upgrades/skilling-outfits/master-farmer.webp"]
   },
   {
     "id": "bulk42-upgrades-permanent-unlocks-morrigan-javelin",
@@ -2777,9 +2510,7 @@
     "search": "Muspah inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Muspah",
     "sourcePage": "https://runescape.wiki/w/File:Muspah.png",
-    "aliases": [
-      "upgrades-upgrades-permanent-unlocks-muspah"
-    ]
+    "aliases": ["upgrades-upgrades-permanent-unlocks-muspah"]
   },
   {
     "id": "bulk42-upgrades-permanent-unlocks-off-hand-ripper-claw",
@@ -2830,12 +2561,8 @@
     "search": "Potion Flask inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Potion_Flask",
     "sourcePage": "https://runescape.wiki/w/File:Potion_Flask.png",
-    "aliases": [
-      "skilling-potion-flask"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/potion-flask.webp"
-    ]
+    "aliases": ["skilling-potion-flask"],
+    "alsoAt": ["public/game/upgrades/skilling-production/potion-flask.webp"]
   },
   {
     "id": "bulk42-upgrades-permanent-unlocks-powder-of-burials",
@@ -2874,12 +2601,8 @@
     "search": "Red Chinchompas inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Red_Chinchompas",
     "sourcePage": "https://runescape.wiki/w/File:Red_Chinchompas.png",
-    "aliases": [
-      "upgrades-skilling-production-red-chinchompa"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/red-chinchompa.webp"
-    ]
+    "aliases": ["upgrades-skilling-production-red-chinchompa"],
+    "alsoAt": ["public/game/upgrades/skilling-production/red-chinchompa.webp"]
   },
   {
     "id": "bulk42-upgrades-permanent-unlocks-ripper-claw",
@@ -2920,9 +2643,7 @@
     "search": "Sealed Clue Scroll Easy inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Sealed_Clue_Scroll_Easy",
     "sourcePage": "https://runescape.wiki/w/File:Sealed_Clue_Scroll_Easy.png",
-    "aliases": [
-      "upgrades-upgrades-permanent-unlocks-sealed-clue-scroll-easy"
-    ]
+    "aliases": ["upgrades-upgrades-permanent-unlocks-sealed-clue-scroll-easy"]
   },
   {
     "id": "bulk42-upgrades-permanent-unlocks-skekas-hypnowand",
@@ -2933,12 +2654,8 @@
     "search": "Skekas Hypnowand inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Skekas_Hypnowand",
     "sourcePage": "https://runescape.wiki/w/File:Skekas_Hypnowand.png",
-    "aliases": [
-      "skilling-skekas-hypnowand"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-offhands/skekas-hypnowand.webp"
-    ]
+    "aliases": ["skilling-skekas-hypnowand"],
+    "alsoAt": ["public/game/upgrades/skilling-offhands/skekas-hypnowand.webp"]
   },
   {
     "id": "bulk42-upgrades-permanent-unlocks-spear-of-annihilation",
@@ -2949,12 +2666,8 @@
     "search": "Spear of Annihilation inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Spear_of_Annihilation",
     "sourcePage": "https://runescape.wiki/w/File:Spear_of_Annihilation.png",
-    "aliases": [
-      "arch-spear"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/progression/spear-of-annihilation.webp"
-    ]
+    "aliases": ["arch-spear"],
+    "alsoAt": ["public/game/upgrades/progression/spear-of-annihilation.webp"]
   },
   {
     "id": "bulk42-upgrades-permanent-unlocks-spectral-spirit-shield",
@@ -3025,10 +2738,7 @@
     "search": "Sunspear Melee inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Sunspear_Melee",
     "sourcePage": "https://runescape.wiki/w/File:Sunspear_Melee.png",
-    "aliases": [
-      "bulk42-upgrades-permanent-unlocks-sunspear",
-      "upgrade-sunspear-melee"
-    ],
+    "aliases": ["bulk42-upgrades-permanent-unlocks-sunspear", "upgrade-sunspear-melee"],
     "alsoAt": [
       "public/game/upgrades/permanent-unlocks/sunspear.webp",
       "public/game/upgrades/progression/sunspear-melee.webp"
@@ -3093,19 +2803,14 @@
     "search": "Blade of Leng inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Blade_of_Leng",
     "sourcePage": "https://runescape.wiki/w/File:Blade_of_Leng.png",
-    "aliases": [
-      "upgrade-dark-shard-of-leng",
-      "wep-dark-shard"
-    ],
+    "aliases": ["upgrade-dark-shard-of-leng", "wep-dark-shard"],
     "provenanceAlternates": [
       {
         "id": "upgrade-dark-shard-of-leng",
         "search": "Dark Shard of Leng inventory"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/progression/dark-shard-of-leng.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/progression/dark-shard-of-leng.webp"]
   },
   {
     "id": "bulk42-upgrades-progression-bow-of-the-last-guardian",
@@ -3186,9 +2891,7 @@
     "search": "Enhanced Kerapacs Wrist Wraps inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Enhanced_Kerapacs_Wrist_Wraps",
     "sourcePage": "https://runescape.wiki/w/File:Enhanced_Kerapacs_Wrist_Wraps.png",
-    "aliases": [
-      "upgrades-upgrades-progression-enhanced-kerapacs-wrist-wraps"
-    ]
+    "aliases": ["upgrades-upgrades-progression-enhanced-kerapacs-wrist-wraps"]
   },
   {
     "id": "bulk42-upgrades-progression-gemstone-hauberk",
@@ -3289,9 +2992,7 @@
     "search": "Senntisten Crystal inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Senntisten_Crystal",
     "sourcePage": "https://runescape.wiki/w/File:Senntisten_Crystal.png",
-    "aliases": [
-      "upgrades-upgrades-skilling-production-senntisten-crystal"
-    ]
+    "aliases": ["upgrades-upgrades-skilling-production-senntisten-crystal"]
   },
   {
     "id": "bulk42-upgrades-skilling-utility-archaeologists-tea",
@@ -3302,9 +3003,7 @@
     "search": "Archaeologists Tea inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Archaeologists_Tea",
     "sourcePage": "https://runescape.wiki/w/File:Archaeologists_Tea.png",
-    "aliases": [
-      "upgrades-upgrades-skilling-utility-archaeologists-tea"
-    ]
+    "aliases": ["upgrades-upgrades-skilling-utility-archaeologists-tea"]
   },
   {
     "id": "bulk42-upgrades-skilling-utility-junk-refiner",
@@ -3324,9 +3023,7 @@
     "fileTitle": "Adrenaline potion (4).png",
     "search": "Adrenaline potion inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Adrenaline_potion",
-    "aliases": [
-      "upgrades-skilling-production-adrenaline-potion"
-    ],
+    "aliases": ["upgrades-skilling-production-adrenaline-potion"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-adrenaline-potion",
@@ -3345,9 +3042,7 @@
     "fileTitle": "Binding contract (blood reaver).png",
     "search": "Blood reaver pouch inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Blood_reaver_pouch",
-    "aliases": [
-      "upgrades-permanent-unlocks-blood-reaver-pouch"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-blood-reaver-pouch"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-blood-reaver-pouch",
@@ -3366,9 +3061,7 @@
     "fileTitle": "Enhanced replenishment potion (6).png",
     "search": "Enhanced replenishment potion inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Enhanced_replenishment_potion",
-    "aliases": [
-      "upgrades-skilling-production-enhanced-replenishment-potion"
-    ],
+    "aliases": ["upgrades-skilling-production-enhanced-replenishment-potion"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-enhanced-replenishment-potion",
@@ -3387,9 +3080,7 @@
     "fileTitle": "Extended super antifire (4).png",
     "search": "Extended super antifire inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Extended_super_antifire",
-    "aliases": [
-      "upgrades-skilling-production-extended-super-antifire"
-    ],
+    "aliases": ["upgrades-skilling-production-extended-super-antifire"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-extended-super-antifire",
@@ -3408,9 +3099,7 @@
     "fileTitle": "Holy aggroverload (6).png",
     "search": "Holy aggroverload inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Holy_aggroverload",
-    "aliases": [
-      "upgrades-skilling-production-holy-aggroverload"
-    ],
+    "aliases": ["upgrades-skilling-production-holy-aggroverload"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-holy-aggroverload",
@@ -3429,9 +3118,7 @@
     "fileTitle": "Overload (4).png",
     "search": "Overload potion inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Overload",
-    "aliases": [
-      "upgrades-skilling-production-overload"
-    ],
+    "aliases": ["upgrades-skilling-production-overload"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-overload",
@@ -3448,9 +3135,7 @@
     "fileTitle": "Powerburst of vitality (4).png",
     "search": "Powerburst of vitality inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Powerburst_of_vitality",
-    "aliases": [
-      "upgrades-skilling-production-powerburst-of-vitality"
-    ],
+    "aliases": ["upgrades-skilling-production-powerburst-of-vitality"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-powerburst-of-vitality",
@@ -3469,9 +3154,7 @@
     "fileTitle": "Prayer renewal (4).png",
     "search": "Prayer renewal inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Prayer_renewal",
-    "aliases": [
-      "upgrades-skilling-production-prayer-renewal"
-    ],
+    "aliases": ["upgrades-skilling-production-prayer-renewal"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-prayer-renewal",
@@ -3490,9 +3173,7 @@
     "fileTitle": "Saradomin brew (4).png",
     "search": "Saradomin brew inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Saradomin_brew",
-    "aliases": [
-      "upgrades-skilling-production-saradomin-brew"
-    ],
+    "aliases": ["upgrades-skilling-production-saradomin-brew"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-saradomin-brew",
@@ -3511,9 +3192,7 @@
     "fileTitle": "Spiritual prayer potion (6).png",
     "search": "Spiritual prayer potion inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Spiritual_prayer_potion",
-    "aliases": [
-      "upgrades-skilling-production-spiritual-prayer-potion"
-    ],
+    "aliases": ["upgrades-skilling-production-spiritual-prayer-potion"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-spiritual-prayer-potion",
@@ -3532,9 +3211,7 @@
     "fileTitle": "Super adrenaline potion (4).png",
     "search": "Super adrenaline potion inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Super_adrenaline_potion",
-    "aliases": [
-      "upgrades-skilling-production-super-adrenaline-potion"
-    ],
+    "aliases": ["upgrades-skilling-production-super-adrenaline-potion"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-super-adrenaline-potion",
@@ -3553,9 +3230,7 @@
     "fileTitle": "Super antifire (4).png",
     "search": "Super antifire inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Super_antifire",
-    "aliases": [
-      "upgrades-skilling-production-super-antifire"
-    ],
+    "aliases": ["upgrades-skilling-production-super-antifire"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-super-antifire",
@@ -3574,9 +3249,7 @@
     "fileTitle": "Super prayer (4).png",
     "search": "Super prayer inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Super_prayer",
-    "aliases": [
-      "upgrades-skilling-production-super-prayer"
-    ],
+    "aliases": ["upgrades-skilling-production-super-prayer"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-super-prayer",
@@ -3595,9 +3268,7 @@
     "fileTitle": "Supreme overload potion (6).png",
     "search": "Supreme overload potion inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Supreme_overload_potion",
-    "aliases": [
-      "upgrades-skilling-production-supreme-overload-potion"
-    ],
+    "aliases": ["upgrades-skilling-production-supreme-overload-potion"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-supreme-overload-potion",
@@ -3616,9 +3287,7 @@
     "fileTitle": "Weapon poison++ (4).png",
     "search": "Weapon poison++ inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Weapon_poison%2B%2B",
-    "aliases": [
-      "upgrades-skilling-production-weapon-poison-plus-plus"
-    ],
+    "aliases": ["upgrades-skilling-production-weapon-poison-plus-plus"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-weapon-poison-plus-plus",
@@ -3637,9 +3306,7 @@
     "fileTitle": "Ardougne cloak 4.png",
     "search": "Ardougne cloak 4 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ardougne_cloak_4",
-    "aliases": [
-      "upgrades-permanent-unlocks-ardougne-cloak-4"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-ardougne-cloak-4"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-ardougne-cloak-4",
@@ -3658,9 +3325,7 @@
     "fileTitle": "Desert amulet 4.png",
     "search": "Desert amulet 4 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Desert_amulet_4",
-    "aliases": [
-      "upgrades-permanent-unlocks-desert-amulet-4"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-desert-amulet-4"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-desert-amulet-4",
@@ -3679,9 +3344,7 @@
     "fileTitle": "Explorer's ring 1.png",
     "search": "Explorer's ring 1 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Explorer%27s_ring_1",
-    "aliases": [
-      "upgrades-permanent-unlocks-explorers-ring-1"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-explorers-ring-1"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-explorers-ring-1",
@@ -3700,9 +3363,7 @@
     "fileTitle": "Explorer's ring 2.png",
     "search": "Explorer's ring 2 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Explorer%27s_ring_2",
-    "aliases": [
-      "upgrades-permanent-unlocks-explorers-ring-2"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-explorers-ring-2"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-explorers-ring-2",
@@ -3721,9 +3382,7 @@
     "fileTitle": "Explorer's ring 3.png",
     "search": "Explorer's ring 3 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Explorer%27s_ring_3",
-    "aliases": [
-      "upgrades-permanent-unlocks-explorers-ring-3"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-explorers-ring-3"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-explorers-ring-3",
@@ -3742,9 +3401,7 @@
     "fileTitle": "Falador shield 4.png",
     "search": "Falador shield 4 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Falador_shield_4",
-    "aliases": [
-      "upgrades-permanent-unlocks-falador-shield-4"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-falador-shield-4"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-falador-shield-4",
@@ -3776,9 +3433,7 @@
         "fileTitle": "Fremennik Sea Boots 4.png"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/fremennik-sea-boots.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/fremennik-sea-boots.webp"]
   },
   {
     "id": "diary-kandarin-headgear-4",
@@ -3825,9 +3480,7 @@
     "fileTitle": "Karamja gloves 4.png",
     "search": "Karamja gloves 4 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Karamja_gloves_4",
-    "aliases": [
-      "upgrades-permanent-unlocks-karamja-gloves-4"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-karamja-gloves-4"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-karamja-gloves-4",
@@ -3846,9 +3499,7 @@
     "fileTitle": "Morytania legs 4.png",
     "search": "Morytania legs 4 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Morytania_legs_4",
-    "aliases": [
-      "upgrades-permanent-unlocks-morytania-legs-4"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-morytania-legs-4"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-morytania-legs-4",
@@ -3867,9 +3518,7 @@
     "fileTitle": "Tirannwn quiver 4.png",
     "search": "Tirannwn quiver 4 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Tirannwn_quiver_4",
-    "aliases": [
-      "upgrades-permanent-unlocks-tirannwn-quiver-4"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-tirannwn-quiver-4"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-tirannwn-quiver-4",
@@ -3888,9 +3537,7 @@
     "fileTitle": "Wilderness sword 4.png",
     "search": "Wilderness sword 4 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Wilderness_sword_4",
-    "aliases": [
-      "upgrades-permanent-unlocks-wilderness-sword-4"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-wilderness-sword-4"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-wilderness-sword-4",
@@ -3909,9 +3556,7 @@
     "fileTitle": "Pale energy.png",
     "search": "Pale energy inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Pale_energy",
-    "aliases": [
-      "upgrades-skilling-production-pale-energy"
-    ],
+    "aliases": ["upgrades-skilling-production-pale-energy"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-pale-energy",
@@ -3930,9 +3575,7 @@
     "fileTitle": "Kerapac's wrist wraps.png",
     "search": "Kerapac's wrist wraps inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Kerapac%27s_wrist_wraps",
-    "aliases": [
-      "upgrade-kerapacs-wrist-wraps"
-    ]
+    "aliases": ["upgrade-kerapacs-wrist-wraps"]
   },
   {
     "id": "hunter-black-chinchompa",
@@ -3942,9 +3585,7 @@
     "fileTitle": "Black chinchompa.png",
     "search": "Black chinchompa inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Black_chinchompa",
-    "aliases": [
-      "upgrades-skilling-production-black-chinchompa"
-    ],
+    "aliases": ["upgrades-skilling-production-black-chinchompa"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-black-chinchompa",
@@ -3963,9 +3604,7 @@
     "fileTitle": "Box trap.png",
     "search": "Box trap inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Box_trap",
-    "aliases": [
-      "upgrades-skilling-utility-box-trap"
-    ],
+    "aliases": ["upgrades-skilling-utility-box-trap"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-box-trap",
@@ -3984,9 +3623,7 @@
     "fileTitle": "Raw giant crayfish.png",
     "search": "Raw giant crayfish inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Raw_giant_crayfish",
-    "aliases": [
-      "upgrades-skilling-production-raw-giant-crayfish"
-    ],
+    "aliases": ["upgrades-skilling-production-raw-giant-crayfish"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-raw-giant-crayfish",
@@ -4005,9 +3642,7 @@
     "fileTitle": "Augmentor.png",
     "search": "Augmentor inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Augmentor",
-    "aliases": [
-      "upgrades-skilling-production-augmentor"
-    ]
+    "aliases": ["upgrades-skilling-production-augmentor"]
   },
   {
     "id": "inv-classic-components",
@@ -4017,9 +3652,7 @@
     "fileTitle": "Classic components.png",
     "search": "Classic components inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Classic_components",
-    "aliases": [
-      "upgrades-skilling-production-classic-components"
-    ],
+    "aliases": ["upgrades-skilling-production-classic-components"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-classic-components",
@@ -4038,10 +3671,7 @@
     "fileTitle": "Divine charge.png",
     "search": "Divine charge inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Divine_charge",
-    "aliases": [
-      "unlock-divine-charge",
-      "upgrades-skilling-production-divine-charge"
-    ],
+    "aliases": ["unlock-divine-charge", "upgrades-skilling-production-divine-charge"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-divine-charge",
@@ -4051,9 +3681,7 @@
         "fileTitle": "Divine Charge.png"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-utility/divine-charge.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/skilling-utility/divine-charge.webp"]
   },
   {
     "id": "inv-gizmo-shell",
@@ -4063,9 +3691,7 @@
     "fileTitle": "Weapon gizmo shell.png",
     "search": "Weapon gizmo shell inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Weapon_gizmo_shell",
-    "aliases": [
-      "upgrades-skilling-production-weapon-gizmo-shell"
-    ],
+    "aliases": ["upgrades-skilling-production-weapon-gizmo-shell"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-weapon-gizmo-shell",
@@ -4084,9 +3710,7 @@
     "fileTitle": "Historic components.png",
     "search": "Historic components inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Historic_components",
-    "aliases": [
-      "upgrades-skilling-production-historic-components"
-    ],
+    "aliases": ["upgrades-skilling-production-historic-components"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-historic-components",
@@ -4105,9 +3729,7 @@
     "fileTitle": "Protective components.png",
     "search": "Protective components inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Protective_components",
-    "aliases": [
-      "upgrades-skilling-production-protective-components"
-    ],
+    "aliases": ["upgrades-skilling-production-protective-components"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-protective-components",
@@ -4126,9 +3748,7 @@
     "fileTitle": "Silent components.png",
     "search": "Silent components inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Silent_components",
-    "aliases": [
-      "upgrades-skilling-production-silent-components"
-    ],
+    "aliases": ["upgrades-skilling-production-silent-components"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-silent-components",
@@ -4147,9 +3767,7 @@
     "fileTitle": "Timeworn components.png",
     "search": "Timeworn components inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Timeworn_components",
-    "aliases": [
-      "upgrades-skilling-production-timeworn-components"
-    ],
+    "aliases": ["upgrades-skilling-production-timeworn-components"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-timeworn-components",
@@ -4168,9 +3786,7 @@
     "fileTitle": "Vintage components.png",
     "search": "Vintage components inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Vintage_components",
-    "aliases": [
-      "upgrades-skilling-production-vintage-components"
-    ],
+    "aliases": ["upgrades-skilling-production-vintage-components"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-vintage-components",
@@ -4189,10 +3805,7 @@
     "fileTitle": "Chronotes.png",
     "search": "Chronotes inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Chronotes",
-    "aliases": [
-      "arch-chronotes",
-      "upgrades-skilling-utility-chronotes"
-    ],
+    "aliases": ["arch-chronotes", "upgrades-skilling-utility-chronotes"],
     "provenanceAlternates": [
       {
         "id": "arch-chronotes",
@@ -4208,10 +3821,7 @@
     "fileTitle": "Complete tome.png",
     "search": "Complete tome inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Complete_tome",
-    "aliases": [
-      "arch-complete-tome",
-      "upgrades-skilling-utility-complete-tome"
-    ],
+    "aliases": ["arch-complete-tome", "upgrades-skilling-utility-complete-tome"],
     "provenanceAlternates": [
       {
         "id": "arch-complete-tome",
@@ -4234,9 +3844,7 @@
     "fileTitle": "Adamant mattock.png",
     "search": "Mattock precision upgrade inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Mattocks",
-    "aliases": [
-      "upgrades-skilling-utility-mattock-precision"
-    ],
+    "aliases": ["upgrades-skilling-utility-mattock-precision"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-mattock-precision",
@@ -4255,9 +3863,7 @@
     "fileTitle": "Ancient gravel.png",
     "search": "Ancient gravel inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ancient_gravel",
-    "aliases": [
-      "upgrades-skilling-production-ancient-gravel"
-    ],
+    "aliases": ["upgrades-skilling-production-ancient-gravel"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-ancient-gravel",
@@ -4276,9 +3882,7 @@
     "fileTitle": "Tetracompass (powered).png",
     "search": "Tetracompass (powered) inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Tetracompass_(powered)",
-    "aliases": [
-      "arch-tetracompass"
-    ],
+    "aliases": ["arch-tetracompass"],
     "provenanceAlternates": [
       {
         "id": "arch-tetracompass",
@@ -4304,9 +3908,7 @@
     "fileTitle": "Amulet of souls (or).png",
     "search": "Amulet of souls (or) inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Amulet_of_souls_(or)",
-    "aliases": [
-      "upgrades-combat-utility-amulet-of-souls-or"
-    ],
+    "aliases": ["upgrades-combat-utility-amulet-of-souls-or"],
     "provenanceAlternates": [
       {
         "id": "upgrades-combat-utility-amulet-of-souls-or",
@@ -4325,10 +3927,7 @@
     "fileTitle": "Asylum surgeon's ring (i).png",
     "search": "Asylum surgeon's ring (i) inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Asylum_surgeon%27s_ring_(i)",
-    "aliases": [
-      "upgrade-asylum-surgeons-ring",
-      "upgrades-combat-utility-asylum-surgeons-ring-i"
-    ],
+    "aliases": ["upgrade-asylum-surgeons-ring", "upgrades-combat-utility-asylum-surgeons-ring-i"],
     "provenanceAlternates": [
       {
         "id": "upgrades-combat-utility-asylum-surgeons-ring-i",
@@ -4338,9 +3937,7 @@
         "fileTitle": "Asylum Surgeons Ring I.png"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/combat-utility/asylum-surgeons-ring.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/combat-utility/asylum-surgeons-ring.webp"]
   },
   {
     "id": "jewel-champions-ring",
@@ -4368,9 +3965,7 @@
     "fileTitle": "Cinderbane gloves.png",
     "search": "Cinderbane gloves inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Cinderbane_gloves",
-    "aliases": [
-      "glove-cinderbane"
-    ]
+    "aliases": ["glove-cinderbane"]
   },
   {
     "id": "jewel-combat-bracelet",
@@ -4380,9 +3975,7 @@
     "fileTitle": "Combat bracelet.png",
     "search": "Combat bracelet inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Combat_bracelet",
-    "aliases": [
-      "upgrades-permanent-unlocks-combat-bracelet"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-combat-bracelet"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-combat-bracelet",
@@ -4401,9 +3994,7 @@
     "fileTitle": "Games necklace.png",
     "search": "Games necklace inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Games_necklace",
-    "aliases": [
-      "upgrades-permanent-unlocks-games-necklace"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-games-necklace"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-games-necklace",
@@ -4422,10 +4013,7 @@
     "fileTitle": "Luck of the dwarves (i).png",
     "search": "Luck of the dwarves (i) inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Luck_of_the_Dwarves_(i)",
-    "aliases": [
-      "jewel-lotd",
-      "upgrades-permanent-unlocks-luck-of-the-dwarves-i"
-    ],
+    "aliases": ["jewel-lotd", "upgrades-permanent-unlocks-luck-of-the-dwarves-i"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-luck-of-the-dwarves-i",
@@ -4435,9 +4023,7 @@
         "fileTitle": "Luck Of The Dwarves I.png"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/luck-of-the-dwarves.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/luck-of-the-dwarves.webp"]
   },
   {
     "id": "jewel-maniacal-aura",
@@ -4465,9 +4051,7 @@
     "fileTitle": "Reaper necklace (or).png",
     "search": "Reaper necklace (or) inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Reaper_necklace_(or)",
-    "aliases": [
-      "upgrades-combat-utility-reaper-necklace-or"
-    ],
+    "aliases": ["upgrades-combat-utility-reaper-necklace-or"],
     "provenanceAlternates": [
       {
         "id": "upgrades-combat-utility-reaper-necklace-or",
@@ -4504,9 +4088,7 @@
     "fileTitle": "Ring of death (i).png",
     "search": "Ring of death (i) inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ring_of_death_(i)",
-    "aliases": [
-      "upgrades-combat-utility-ring-of-death-i"
-    ],
+    "aliases": ["upgrades-combat-utility-ring-of-death-i"],
     "provenanceAlternates": [
       {
         "id": "upgrades-combat-utility-ring-of-death-i",
@@ -4525,9 +4107,7 @@
     "fileTitle": "Ring of duelling.png",
     "search": "Ring of duelling inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ring_of_duelling",
-    "aliases": [
-      "upgrades-permanent-unlocks-ring-of-duelling"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-ring-of-duelling"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-ring-of-duelling",
@@ -4546,9 +4126,7 @@
     "fileTitle": "Ring of respawn.png",
     "search": "Ring of respawn inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ring_of_respawn",
-    "aliases": [
-      "upgrades-permanent-unlocks-ring-of-respawn"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-ring-of-respawn"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-ring-of-respawn",
@@ -4588,9 +4166,7 @@
         "fileTitle": "Ring Of Wealth.png"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/ring-of-wealth.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/ring-of-wealth.webp"]
   },
   {
     "id": "jewel-skills-necklace",
@@ -4600,9 +4176,7 @@
     "fileTitle": "Skills necklace.png",
     "search": "Skills necklace inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Skills_necklace",
-    "aliases": [
-      "upgrades-permanent-unlocks-skills-necklace"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-skills-necklace"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-skills-necklace",
@@ -4630,9 +4204,7 @@
     "fileTitle": "Soulbound lantern.png",
     "search": "Conduit necromancy inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Conduit",
-    "aliases": [
-      "upgrades-progression-conduit"
-    ],
+    "aliases": ["upgrades-progression-conduit"],
     "provenanceAlternates": [
       {
         "id": "upgrades-progression-conduit",
@@ -4649,10 +4221,7 @@
     "fileTitle": "Death guard.png",
     "search": "Death guard inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Death_guard",
-    "aliases": [
-      "bulk42-upgrades-progression-deathguard",
-      "upgrades-progression-death-guard"
-    ],
+    "aliases": ["bulk42-upgrades-progression-deathguard", "upgrades-progression-death-guard"],
     "provenanceAlternates": [
       {
         "id": "upgrades-progression-death-guard",
@@ -4662,9 +4231,7 @@
         "fileTitle": "Death Guard.png"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/progression/deathguard.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/progression/deathguard.webp"]
   },
   {
     "id": "necro-ectoplasm",
@@ -4674,9 +4241,7 @@
     "fileTitle": "Ectoplasm.png",
     "search": "Ectoplasm inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ectoplasm",
-    "aliases": [
-      "upgrades-skilling-production-ectoplasm"
-    ]
+    "aliases": ["upgrades-skilling-production-ectoplasm"]
   },
   {
     "id": "necro-necromancy-cape",
@@ -4686,9 +4251,7 @@
     "fileTitle": "Necromancy cape.png",
     "search": "Necromancy cape inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Necromancy_cape",
-    "aliases": [
-      "upgrades-permanent-unlocks-necromancy-cape"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-necromancy-cape"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-necromancy-cape",
@@ -4707,9 +4270,7 @@
     "fileTitle": "Residual Soul.png",
     "search": "Residual soul inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Residual_soul",
-    "aliases": [
-      "upgrades-skilling-utility-residual-soul"
-    ],
+    "aliases": ["upgrades-skilling-utility-residual-soul"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-residual-soul",
@@ -4736,9 +4297,7 @@
     "fileTitle": "Off-hand blightbound crossbow.png",
     "search": "Off-hand blightbound crossbow inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Off-hand_blightbound_crossbow",
-    "aliases": [
-      "upgrade-offhand-blightbound-crossbow"
-    ],
+    "aliases": ["upgrade-offhand-blightbound-crossbow"],
     "provenanceAlternates": [
       {
         "id": "upgrade-offhand-blightbound-crossbow",
@@ -4756,9 +4315,7 @@
     "fileTitle": "Devourer's Guard.png",
     "search": "Devourer's Guard inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Devourer%27s_Guard",
-    "aliases": [
-      "upgrade-devourers-guard"
-    ],
+    "aliases": ["upgrade-devourers-guard"],
     "provenanceAlternates": [
       {
         "id": "upgrade-devourers-guard",
@@ -4774,9 +4331,7 @@
     "fileTitle": "Imperium core.png",
     "search": "Imperium core inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Imperium_core",
-    "aliases": [
-      "upgrade-imperium-core"
-    ],
+    "aliases": ["upgrade-imperium-core"],
     "provenanceAlternates": [
       {
         "id": "upgrade-imperium-core",
@@ -4792,9 +4347,7 @@
     "fileTitle": "Seismic singularity.png",
     "search": "Seismic singularity inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Seismic_singularity",
-    "aliases": [
-      "upgrade-seismic-singularity"
-    ],
+    "aliases": ["upgrade-seismic-singularity"],
     "provenanceAlternates": [
       {
         "id": "upgrade-seismic-singularity",
@@ -4810,10 +4363,7 @@
     "fileTitle": "Archaeologist's hat.png",
     "search": "Archaeologist's hat inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Archaeologist%27s_outfit",
-    "aliases": [
-      "arch-outfit",
-      "upgrades-skilling-outfits-archaeologists"
-    ],
+    "aliases": ["arch-outfit", "upgrades-skilling-outfits-archaeologists"],
     "provenanceAlternates": [
       {
         "id": "arch-outfit",
@@ -4837,9 +4387,7 @@
     "fileTitle": "Artisan's top.png",
     "search": "Artisan's top inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Artisan%27s_outfit",
-    "aliases": [
-      "upgrades-skilling-outfits-artisans"
-    ],
+    "aliases": ["upgrades-skilling-outfits-artisans"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-outfits-artisans",
@@ -4858,9 +4406,7 @@
     "fileTitle": "Farmer's hat.png",
     "search": "Farmer's hat inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Farmer%27s_outfit",
-    "aliases": [
-      "skilling-farmers-outfit"
-    ],
+    "aliases": ["skilling-farmers-outfit"],
     "provenanceAlternates": [
       {
         "id": "skilling-farmers-outfit",
@@ -4876,9 +4422,7 @@
     "fileTitle": "First age tiara.png",
     "search": "First age tiara inventory icon",
     "canonicalPage": "https://runescape.wiki/w/First_age_outfit",
-    "aliases": [
-      "skilling-first-age-outfit"
-    ],
+    "aliases": ["skilling-first-age-outfit"],
     "provenanceAlternates": [
       {
         "id": "skilling-first-age-outfit",
@@ -4894,10 +4438,7 @@
     "fileTitle": "Golden mining helmet.png",
     "search": "Golden mining helmet inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Golden_mining_suit",
-    "aliases": [
-      "skilling-golden-suit",
-      "upgrades-skilling-outfits-golden-mining-suit"
-    ],
+    "aliases": ["skilling-golden-suit", "upgrades-skilling-outfits-golden-mining-suit"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-outfits-golden-mining-suit",
@@ -4907,9 +4448,7 @@
         "fileTitle": "Golden Mining Suit.png"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-outfits/golden-suit.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/skilling-outfits/golden-suit.webp"]
   },
   {
     "id": "outfit-master-runecrafter",
@@ -4919,9 +4458,7 @@
     "fileTitle": "Master runecrafter hat.png",
     "search": "Master runecrafter hat inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Master_runecrafter_robes",
-    "aliases": [
-      "skilling-master-runecrafter-robes"
-    ],
+    "aliases": ["skilling-master-runecrafter-robes"],
     "provenanceAlternates": [
       {
         "id": "skilling-master-runecrafter-robes",
@@ -4937,9 +4474,7 @@
     "fileTitle": "Ritualist's mask.png",
     "search": "Ritualist's mask inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ritualist%27s_outfit",
-    "aliases": [
-      "skilling-ritualists-outfit"
-    ],
+    "aliases": ["skilling-ritualists-outfit"],
     "provenanceAlternates": [
       {
         "id": "skilling-ritualists-outfit",
@@ -4955,9 +4490,7 @@
     "fileTitle": "Trahaearn exoskeleton headband.png",
     "search": "Trahaearn exoskeleton headband inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Trahaearn_exoskeleton_set",
-    "aliases": [
-      "skilling-trahaearn-exoskeleton"
-    ],
+    "aliases": ["skilling-trahaearn-exoskeleton"],
     "provenanceAlternates": [
       {
         "id": "skilling-trahaearn-exoskeleton",
@@ -4974,9 +4507,7 @@
     "fileTitle": "Ancient Curses interface.png",
     "search": "Ancient Curses interface image",
     "canonicalPage": "https://runescape.wiki/w/Ancient_Curses",
-    "aliases": [
-      "upgrades-permanent-unlocks-ancient-curses"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-ancient-curses"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-ancient-curses",
@@ -4993,9 +4524,7 @@
     "fileTitle": "Spellbook Swap (Ancient) icon.png",
     "search": "Spellbook Swap Ancient icon",
     "canonicalPage": "https://runescape.wiki/w/Ancient_Magicks",
-    "aliases": [
-      "upgrades-permanent-unlocks-ancient-magicks"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-ancient-magicks"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-ancient-magicks",
@@ -5012,9 +4541,7 @@
     "fileTitle": "Crystal geode.png",
     "search": "Crystal geode inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Crystal_geode",
-    "aliases": [
-      "upgrades-skilling-production-crystal-geode"
-    ],
+    "aliases": ["upgrades-skilling-production-crystal-geode"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-crystal-geode",
@@ -5033,9 +4560,7 @@
     "fileTitle": "Elven grimoire.png",
     "search": "Elven grimoire inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Elven_grimoire",
-    "aliases": [
-      "upgrades-permanent-unlocks-elven-grimoire"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-elven-grimoire"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-elven-grimoire",
@@ -5054,9 +4579,7 @@
     "fileTitle": "Lunar spellbook.png",
     "search": "Lunar spellbook icon",
     "canonicalPage": "https://runescape.wiki/w/Lunar_spells",
-    "aliases": [
-      "upgrades-permanent-unlocks-lunar-spellbook"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-lunar-spellbook"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-lunar-spellbook",
@@ -5075,9 +4598,7 @@
     "fileTitle": "Death Scythe.png",
     "search": "Death Scythe inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Reaper_Crew",
-    "aliases": [
-      "upgrades-permanent-unlocks-reaper-crew"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-reaper-crew"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-reaper-crew",
@@ -5094,9 +4615,7 @@
     "fileTitle": "War's Grimoire.png",
     "search": "War's Grimoire inventory icon",
     "canonicalPage": "https://runescape.wiki/w/War%27s_Grimoire",
-    "aliases": [
-      "upgrades-permanent-unlocks-wars-grimoire"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-wars-grimoire"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-wars-grimoire",
@@ -5115,9 +4634,7 @@
     "fileTitle": "Erethdor's grimoire.png",
     "search": "Erethdor's grimoire inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Erethdor%27s_grimoire",
-    "aliases": [
-      "upgrade-erethdors-grimoire"
-    ]
+    "aliases": ["upgrade-erethdors-grimoire"]
   },
   {
     "id": "pocket-scripture-bik",
@@ -5127,9 +4644,7 @@
     "fileTitle": "Scripture of Bik.png",
     "search": "Scripture of Bik inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Scripture_of_Bik",
-    "aliases": [
-      "upgrade-scripture-of-bik"
-    ],
+    "aliases": ["upgrade-scripture-of-bik"],
     "provenanceAlternates": [
       {
         "id": "upgrade-scripture-of-bik",
@@ -5145,9 +4660,7 @@
     "fileTitle": "Crystal fishing rod.png",
     "search": "Crystal fishing rod inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Crystal_fishing_rod",
-    "aliases": [
-      "tool-crystal-fishing-rod"
-    ]
+    "aliases": ["tool-crystal-fishing-rod"]
   },
   {
     "id": "skilling-crystal-flask",
@@ -5157,9 +4670,7 @@
     "fileTitle": "Crystal flask.png",
     "search": "Crystal flask inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Crystal_flask",
-    "aliases": [
-      "place-crystal-flask"
-    ]
+    "aliases": ["place-crystal-flask"]
   },
   {
     "id": "skilling-crystal-tool-seed",
@@ -5169,9 +4680,7 @@
     "fileTitle": "Crystal tool seed.png",
     "search": "Crystal tool seed inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Crystal_tool_seed",
-    "aliases": [
-      "util-crystal-tool-seed"
-    ]
+    "aliases": ["util-crystal-tool-seed"]
   },
   {
     "id": "skilling-energised-meteorite-shard",
@@ -5226,10 +4735,7 @@
     "fileTitle": "Imcando pickaxe.png",
     "search": "Imcando pickaxe inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Imcando_pickaxe",
-    "aliases": [
-      "tool-imcando-pickaxe",
-      "u40-imcando-pickaxe"
-    ],
+    "aliases": ["tool-imcando-pickaxe", "u40-imcando-pickaxe"],
     "provenanceAlternates": [
       {
         "id": "u40-imcando-pickaxe",
@@ -5254,10 +4760,7 @@
     "fileTitle": "Mattock of Time and Space.png",
     "search": "Mattock of Time and Space inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Mattock_of_Time_and_Space",
-    "aliases": [
-      "arch-mattock-mts",
-      "tool-mattock-time-space"
-    ],
+    "aliases": ["arch-mattock-mts", "tool-mattock-time-space"],
     "provenanceAlternates": [
       {
         "id": "arch-mattock-mts",
@@ -5426,9 +4929,7 @@
     "fileTitle": "Tavia's fishing rod.png",
     "search": "Tavia's fishing rod inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Tavia%27s_fishing_rod",
-    "aliases": [
-      "tool-tavias-fishing-rod"
-    ]
+    "aliases": ["tool-tavias-fishing-rod"]
   },
   {
     "id": "u40-anachronia-totem",
@@ -5465,9 +4966,7 @@
     "fileTitle": "Area Tasks.png",
     "search": "Area Tasks icon",
     "canonicalPage": "https://runescape.wiki/w/Area_Tasks",
-    "aliases": [
-      "upgrades-permanent-unlocks-area-tasks"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-area-tasks"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-area-tasks",
@@ -5483,9 +4982,7 @@
     "fileTitle": "Cactus.png",
     "search": "Cactus farming inventory",
     "canonicalPage": "https://runescape.wiki/w/Cactus",
-    "aliases": [
-      "upgrades-skilling-production-cactus"
-    ],
+    "aliases": ["upgrades-skilling-production-cactus"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-cactus",
@@ -5501,9 +4998,7 @@
     "fileTitle": "Calquat tree seed.png",
     "search": "Calquat tree seed inventory",
     "canonicalPage": "https://runescape.wiki/w/Calquat_tree",
-    "aliases": [
-      "upgrades-skilling-production-calquat-tree"
-    ],
+    "aliases": ["upgrades-skilling-production-calquat-tree"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-calquat-tree",
@@ -5522,9 +5017,7 @@
     "fileTitle": "Decorated fishing urn (r).png",
     "search": "Decorated fishing urn inventory",
     "canonicalPage": "https://runescape.wiki/w/Decorated_fishing_urn",
-    "aliases": [
-      "upgrades-skilling-production-decorated-fishing-urn"
-    ],
+    "aliases": ["upgrades-skilling-production-decorated-fishing-urn"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-decorated-fishing-urn",
@@ -5543,9 +5036,7 @@
     "fileTitle": "Dragon hatchet.png",
     "search": "Dragon hatchet inventory",
     "canonicalPage": "https://runescape.wiki/w/Dragon_hatchet",
-    "aliases": [
-      "upgrade-dragon-hatchet"
-    ],
+    "aliases": ["upgrade-dragon-hatchet"],
     "provenanceAlternates": [
       {
         "id": "upgrade-dragon-hatchet",
@@ -5561,9 +5052,7 @@
     "fileTitle": "Exquisite cooking urn (r).png",
     "search": "Exquisite cooking urn inventory",
     "canonicalPage": "https://runescape.wiki/w/Exquisite_cooking_urn",
-    "aliases": [
-      "upgrades-skilling-production-exquisite-cooking-urn"
-    ],
+    "aliases": ["upgrades-skilling-production-exquisite-cooking-urn"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-exquisite-cooking-urn",
@@ -5582,9 +5071,7 @@
     "fileTitle": "Apple tree seed.png",
     "search": "Apple tree seed inventory",
     "canonicalPage": "https://runescape.wiki/w/Apple_tree_seed",
-    "aliases": [
-      "upgrades-skilling-production-fruit-tree-seed"
-    ],
+    "aliases": ["upgrades-skilling-production-fruit-tree-seed"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-fruit-tree-seed",
@@ -5603,9 +5090,7 @@
     "fileTitle": "Rune hatchet.png",
     "search": "Rune hatchet inventory",
     "canonicalPage": "https://runescape.wiki/w/Rune_hatchet",
-    "aliases": [
-      "upgrades-skilling-tools-rune-hatchet"
-    ],
+    "aliases": ["upgrades-skilling-tools-rune-hatchet"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-tools-rune-hatchet",
@@ -5624,9 +5109,7 @@
     "fileTitle": "Hunter's headwear.png",
     "search": "Hunter's headwear inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Hunter%27s_outfit",
-    "aliases": [
-      "upgrades-skilling-outfits-hunters-outfit"
-    ],
+    "aliases": ["upgrades-skilling-outfits-hunters-outfit"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-outfits-hunters-outfit",
@@ -5645,9 +5128,7 @@
     "fileTitle": "Infinity ethereal head.png",
     "search": "Infinity ethereal head inventory",
     "canonicalPage": "https://runescape.wiki/w/Infinity_ethereal_outfit",
-    "aliases": [
-      "upgrades-skilling-outfits-infinity-ethereal-head"
-    ],
+    "aliases": ["upgrades-skilling-outfits-infinity-ethereal-head"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-outfits-infinity-ethereal-head",
@@ -5666,9 +5147,7 @@
     "fileTitle": "Fertile Soil.png",
     "search": "Fertile Soil spell icon",
     "canonicalPage": "https://runescape.wiki/w/Fertile_Soil",
-    "aliases": [
-      "upgrades-permanent-unlocks-fertile-soil"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-fertile-soil"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-fertile-soil",
@@ -5684,19 +5163,14 @@
     "fileTitle": "Masterwork ranged body.png",
     "search": "Masterwork ranged body inventory",
     "canonicalPage": "https://runescape.wiki/w/Masterwork_ranged_body",
-    "aliases": [
-      "upgrade-masterwork-ranged-body",
-      "upgrades-progression-masterwork-ranged"
-    ],
+    "aliases": ["upgrade-masterwork-ranged-body", "upgrades-progression-masterwork-ranged"],
     "provenanceAlternates": [
       {
         "id": "upgrade-masterwork-ranged-body",
         "search": "Masterwork ranged body inventory icon"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/progression/masterwork-ranged.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/progression/masterwork-ranged.webp"]
   },
   {
     "id": "u40-mattock",
@@ -5706,9 +5180,7 @@
     "fileTitle": "Rune mattock.png",
     "search": "Rune mattock inventory",
     "canonicalPage": "https://runescape.wiki/w/Rune_mattock",
-    "aliases": [
-      "upgrades-skilling-tools-rune-mattock"
-    ],
+    "aliases": ["upgrades-skilling-tools-rune-mattock"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-tools-rune-mattock",
@@ -5727,9 +5199,7 @@
     "fileTitle": "Raw sailfish.png",
     "search": "Raw sailfish inventory",
     "canonicalPage": "https://runescape.wiki/w/Raw_sailfish",
-    "aliases": [
-      "upgrades-skilling-production-raw-sailfish"
-    ],
+    "aliases": ["upgrades-skilling-production-raw-sailfish"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-raw-sailfish",
@@ -5748,9 +5218,7 @@
     "fileTitle": "Rune pickaxe.png",
     "search": "Rune pickaxe inventory",
     "canonicalPage": "https://runescape.wiki/w/Rune_pickaxe",
-    "aliases": [
-      "upgrades-skilling-tools-rune-pickaxe"
-    ],
+    "aliases": ["upgrades-skilling-tools-rune-pickaxe"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-tools-rune-pickaxe",
@@ -5769,9 +5237,7 @@
     "fileTitle": "Pure essence.png",
     "search": "Pure essence inventory",
     "canonicalPage": "https://runescape.wiki/w/Pure_essence",
-    "aliases": [
-      "upgrades-skilling-production-pure-essence"
-    ],
+    "aliases": ["upgrades-skilling-production-pure-essence"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-pure-essence",
@@ -5790,9 +5256,7 @@
     "fileTitle": "Sandstone (1kg).png",
     "search": "Sandstone inventory",
     "canonicalPage": "https://runescape.wiki/w/Sandstone",
-    "aliases": [
-      "upgrades-skilling-production-sandstone"
-    ],
+    "aliases": ["upgrades-skilling-production-sandstone"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-sandstone",
@@ -5809,9 +5273,7 @@
     "fileTitle": "Cracked cooking urn (r).png",
     "search": "Cracked cooking urn inventory",
     "canonicalPage": "https://runescape.wiki/w/Cracked_cooking_urn",
-    "aliases": [
-      "upgrades-skilling-production-cracked-cooking-urn"
-    ],
+    "aliases": ["upgrades-skilling-production-cracked-cooking-urn"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-production-cracked-cooking-urn",
@@ -5830,10 +5292,7 @@
     "fileTitle": "Adrenaline renewal potion.png",
     "search": "Adrenaline renewal potion inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Adrenaline_renewal_potion",
-    "aliases": [
-      "cons-adrenaline-renewal",
-      "upgrades-combat-utility-adrenaline-renewal-potion"
-    ],
+    "aliases": ["cons-adrenaline-renewal", "upgrades-combat-utility-adrenaline-renewal-potion"],
     "provenanceAlternates": [
       {
         "id": "upgrades-combat-utility-adrenaline-renewal-potion",
@@ -5843,9 +5302,7 @@
         "fileTitle": "Adrenaline Renewal Potion.png"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/adrenaline-renewal-potion.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/skilling-production/adrenaline-renewal-potion.webp"]
   },
   {
     "id": "unlock-amulet-of-fury",
@@ -5855,9 +5312,7 @@
     "fileTitle": "Amulet of fury.png",
     "search": "Amulet of fury inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Amulet_of_fury",
-    "aliases": [
-      "upgrades-permanent-unlocks-amulet-of-fury"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-amulet-of-fury"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-amulet-of-fury",
@@ -5876,9 +5331,7 @@
     "fileTitle": "Amulet of glory.png",
     "search": "Amulet of glory inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Amulet_of_glory",
-    "aliases": [
-      "upgrades-permanent-unlocks-amulet-of-glory"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-amulet-of-glory"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-amulet-of-glory",
@@ -5897,9 +5350,7 @@
     "fileTitle": "Attuned crystal teleport seed.png",
     "search": "Attuned crystal teleport seed inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Attuned_crystal_teleport_seed",
-    "aliases": [
-      "upgrades-permanent-unlocks-attuned-crystal-teleport-seed"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-attuned-crystal-teleport-seed"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-attuned-crystal-teleport-seed",
@@ -5918,9 +5369,7 @@
     "fileTitle": "Auto-screener v1.080.png",
     "search": "Auto-screener v1.080 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Auto-screener_v1.080",
-    "aliases": [
-      "upgrades-permanent-unlocks-auto-screener"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-auto-screener"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-auto-screener",
@@ -5939,9 +5388,7 @@
     "fileTitle": "Ava's alerter.png",
     "search": "Ava's alerter inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ava%27s_alerter",
-    "aliases": [
-      "upgrades-permanent-unlocks-avas-alerter"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-avas-alerter"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-avas-alerter",
@@ -5960,10 +5407,7 @@
     "fileTitle": "Binding contract.png",
     "search": "Binding contract inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Binding_contract",
-    "aliases": [
-      "cons-binding-contract",
-      "upgrades-permanent-unlocks-binding-contract"
-    ],
+    "aliases": ["cons-binding-contract", "upgrades-permanent-unlocks-binding-contract"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-binding-contract",
@@ -5982,9 +5426,7 @@
     "fileTitle": "Blood amulet of fury.png",
     "search": "Blood amulet of fury inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Blood_amulet_of_fury",
-    "aliases": [
-      "upgrades-permanent-unlocks-blood-amulet-of-fury"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-blood-amulet-of-fury"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-blood-amulet-of-fury",
@@ -6003,9 +5445,7 @@
     "fileTitle": "Bonecrusher.png",
     "search": "Bonecrusher necklace inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Bonecrusher_necklace",
-    "aliases": [
-      "upgrades-permanent-unlocks-bonecrusher-necklace"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-bonecrusher-necklace"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-bonecrusher-necklace",
@@ -6024,10 +5464,7 @@
     "fileTitle": "Brooch of the Gods.png",
     "search": "Brooch of the Gods inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Brooch_of_the_Gods",
-    "aliases": [
-      "upgrades-permanent-unlocks-brooch-of-the-gods",
-      "util-brooch-of-the-gods"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-brooch-of-the-gods", "util-brooch-of-the-gods"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-brooch-of-the-gods",
@@ -6046,9 +5483,7 @@
     "fileTitle": "Camulet.png",
     "search": "Camulet inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Camulet",
-    "aliases": [
-      "upgrades-permanent-unlocks-camulet"
-    ]
+    "aliases": ["upgrades-permanent-unlocks-camulet"]
   },
   {
     "id": "unlock-chaos-gauntlets",
@@ -6058,9 +5493,7 @@
     "fileTitle": "Chaos gauntlets.png",
     "search": "Chaos gauntlets inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Chaos_gauntlets",
-    "aliases": [
-      "upgrades-permanent-unlocks-chaos-gauntlets"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-chaos-gauntlets"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-chaos-gauntlets",
@@ -6088,9 +5521,7 @@
     "fileTitle": "Cooking gauntlets.png",
     "search": "Cooking gauntlets inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Cooking_gauntlets",
-    "aliases": [
-      "upgrades-permanent-unlocks-cooking-gauntlets"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-cooking-gauntlets"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-cooking-gauntlets",
@@ -6109,9 +5540,7 @@
     "fileTitle": "Corrupted slayer helmet.png",
     "search": "Corrupted slayer helmet inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Corrupted_slayer_helmet",
-    "aliases": [
-      "u40-slayer-helmet"
-    ],
+    "aliases": ["u40-slayer-helmet"],
     "provenanceAlternates": [
       {
         "id": "u40-slayer-helmet",
@@ -6127,9 +5556,7 @@
     "fileTitle": "Crystal teleport seed.png",
     "search": "Crystal teleport seed inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Crystal_teleport_seed",
-    "aliases": [
-      "upgrades-permanent-unlocks-crystal-teleport-seed"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-crystal-teleport-seed"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-crystal-teleport-seed",
@@ -6148,9 +5575,7 @@
     "fileTitle": "Culinaromancer's gloves 10.png",
     "search": "Culinaromancer's gloves 10 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Culinaromancer%27s_gloves_10",
-    "aliases": [
-      "upgrades-permanent-unlocks-culinaromancers-gloves-10"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-culinaromancers-gloves-10"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-culinaromancers-gloves-10",
@@ -6205,9 +5630,7 @@
     "fileTitle": "Drakan's medallion.png",
     "search": "Drakan's medallion inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Drakan%27s_medallion",
-    "aliases": [
-      "upgrades-permanent-unlocks-drakans-medallion"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-drakans-medallion"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-drakans-medallion",
@@ -6244,9 +5667,7 @@
     "fileTitle": "Ectophial.png",
     "search": "Ectophial inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ectophial",
-    "aliases": [
-      "upgrades-permanent-unlocks-ectophial"
-    ]
+    "aliases": ["upgrades-permanent-unlocks-ectophial"]
   },
   {
     "id": "unlock-elder-overload-potion",
@@ -6256,10 +5677,7 @@
     "fileTitle": "Elder overload potion.png",
     "search": "Elder overload potion inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Elder_overload_potion",
-    "aliases": [
-      "cons-elder-overload",
-      "upgrades-combat-utility-elder-overload-potion"
-    ],
+    "aliases": ["cons-elder-overload", "upgrades-combat-utility-elder-overload-potion"],
     "provenanceAlternates": [
       {
         "id": "upgrades-combat-utility-elder-overload-potion",
@@ -6269,9 +5687,7 @@
         "fileTitle": "Elder Overload Potion.png"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/elder-overload-potion.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/skilling-production/elder-overload-potion.webp"]
   },
   {
     "id": "unlock-enchanted-gem",
@@ -6281,9 +5697,7 @@
     "fileTitle": "Enchanted gem.png",
     "search": "Enchanted gem inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Enchanted_gem",
-    "aliases": [
-      "upgrades-permanent-unlocks-enchanted-gem"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-enchanted-gem"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-enchanted-gem",
@@ -6302,9 +5716,7 @@
     "fileTitle": "Headhunter's sacrifice.png",
     "search": "Expeditious bracelet inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Expeditious_bracelet",
-    "aliases": [
-      "upgrades-permanent-unlocks-expeditious-bracelet"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-expeditious-bracelet"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-expeditious-bracelet",
@@ -6323,9 +5735,7 @@
     "fileTitle": "Explorer's ring 4.png",
     "search": "Explorer's ring 4 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Explorer%27s_ring_4",
-    "aliases": [
-      "upgrades-permanent-unlocks-explorers-ring-4"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-explorers-ring-4"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-explorers-ring-4",
@@ -6344,9 +5754,7 @@
     "fileTitle": "Fire cape.png",
     "search": "Fire cape inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Fire_cape",
-    "aliases": [
-      "upgrade-fire-cape"
-    ]
+    "aliases": ["upgrade-fire-cape"]
   },
   {
     "id": "unlock-full-slayer-helmet",
@@ -6356,10 +5764,7 @@
     "fileTitle": "Full slayer helmet.png",
     "search": "Full slayer helmet inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Full_slayer_helmet",
-    "aliases": [
-      "u40-full-slayer",
-      "upgrades-permanent-unlocks-full-slayer-helmet"
-    ],
+    "aliases": ["u40-full-slayer", "upgrades-permanent-unlocks-full-slayer-helmet"],
     "provenanceAlternates": [
       {
         "id": "u40-full-slayer",
@@ -6382,9 +5787,7 @@
     "fileTitle": "Fury of the Small.png",
     "search": "Fury of the Small inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Fury_of_the_Small",
-    "aliases": [
-      "upgrades-permanent-unlocks-fury-of-the-small"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-fury-of-the-small"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-fury-of-the-small",
@@ -6403,9 +5806,7 @@
     "fileTitle": "Gem-finding scrimshaw.png",
     "search": "Gem-finding gloves inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Gem-finding_gloves",
-    "aliases": [
-      "upgrades-permanent-unlocks-gem-finding-gloves"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-gem-finding-gloves"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-gem-finding-gloves",
@@ -6446,9 +5847,7 @@
         "fileTitle": "Goldsmith Gauntlets.png"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/smelting-gauntlets.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/smelting-gauntlets.webp"]
   },
   {
     "id": "unlock-grace-of-the-elves",
@@ -6509,9 +5908,7 @@
     "fileTitle": "Hazelmere's signet ring.png",
     "search": "Hazelmere's signet ring inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Hazelmere%27s_signet_ring",
-    "aliases": [
-      "upgrades-permanent-unlocks-hazelmeres-signet-ring"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-hazelmeres-signet-ring"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-hazelmeres-signet-ring",
@@ -6530,9 +5927,7 @@
     "fileTitle": "Herb bag.png",
     "search": "Herb bag inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Herb_bag",
-    "aliases": [
-      "upgrades-skilling-utility-herb-bag"
-    ],
+    "aliases": ["upgrades-skilling-utility-herb-bag"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-herb-bag",
@@ -6551,9 +5946,7 @@
     "fileTitle": "Ice gloves.png",
     "search": "Ice gloves inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ice_gloves",
-    "aliases": [
-      "upgrades-permanent-unlocks-ice-gloves"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-ice-gloves"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-ice-gloves",
@@ -6572,9 +5965,7 @@
     "fileTitle": "Igneous Kal-Zuk.png",
     "search": "Igneous Kal-Zuk inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Igneous_Kal-Zuk",
-    "aliases": [
-      "upgrade-igneous-kal-zuk"
-    ]
+    "aliases": ["upgrade-igneous-kal-zuk"]
   },
   {
     "id": "unlock-keris-partisan",
@@ -6584,9 +5975,7 @@
     "fileTitle": "Consecrated keris.png",
     "search": "Keris partisan inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Keris_partisan",
-    "aliases": [
-      "upgrades-permanent-unlocks-keris-partisan"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-keris-partisan"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-keris-partisan",
@@ -6623,9 +6012,7 @@
     "fileTitle": "Culinaromancer's gloves 6.png",
     "search": "Mithril gloves inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Mithril_gloves",
-    "aliases": [
-      "upgrades-permanent-unlocks-mithril-gloves"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-mithril-gloves"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-mithril-gloves",
@@ -6644,9 +6031,7 @@
     "fileTitle": "Mithril seeds.png",
     "search": "Mithril seeds inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Mithril_seeds",
-    "aliases": [
-      "upgrades-skilling-utility-mithril-seeds"
-    ],
+    "aliases": ["upgrades-skilling-utility-mithril-seeds"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-mithril-seeds",
@@ -6665,9 +6050,7 @@
     "fileTitle": "Oldak coil.png",
     "search": "Oldak coil inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Oldak_coil",
-    "aliases": [
-      "upgrades-permanent-unlocks-oldak-coil"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-oldak-coil"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-oldak-coil",
@@ -6686,9 +6069,7 @@
     "fileTitle": "Passing bracelet.png",
     "search": "Passing bracelet inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Passing_bracelet",
-    "aliases": [
-      "upgrades-permanent-unlocks-passing-bracelet"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-passing-bracelet"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-passing-bracelet",
@@ -6707,9 +6088,7 @@
     "fileTitle": "Quest Cape.png",
     "search": "Quest point cape inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Quest_point_cape",
-    "aliases": [
-      "upgrades-permanent-unlocks-quest-point-cape"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-quest-point-cape"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-quest-point-cape",
@@ -6728,9 +6107,7 @@
     "fileTitle": "Ring of Fortune.png",
     "search": "Ring of Fortune inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ring_of_Fortune",
-    "aliases": [
-      "upgrades-permanent-unlocks-ring-of-fortune"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-ring-of-fortune"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-ring-of-fortune",
@@ -6758,9 +6135,7 @@
     "fileTitle": "Seed bag.png",
     "search": "Seed bag inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Seed_bag",
-    "aliases": [
-      "upgrades-skilling-utility-seed-bag"
-    ],
+    "aliases": ["upgrades-skilling-utility-seed-bag"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-seed-bag",
@@ -6779,9 +6154,7 @@
     "fileTitle": "Sixth-Age circuit.png",
     "search": "Sixth-Age circuit inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Sixth-Age_circuit",
-    "aliases": [
-      "upgrades-permanent-unlocks-sixth-age-circuit"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-sixth-age-circuit"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-sixth-age-circuit",
@@ -6813,9 +6186,7 @@
         "fileTitle": "Skillcape Rack.png"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/skillcape-shop.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/skillcape-shop.webp"]
   },
   {
     "id": "unlock-slaughter-bracelet",
@@ -6825,9 +6196,7 @@
     "fileTitle": "Headhunter's thrill.png",
     "search": "Bracelet of slaughter inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Bracelet_of_slaughter",
-    "aliases": [
-      "upgrades-permanent-unlocks-bracelet-of-slaughter"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-bracelet-of-slaughter"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-bracelet-of-slaughter",
@@ -6846,9 +6215,7 @@
     "fileTitle": "Slayer helmet.png",
     "search": "Slayer helmet inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Slayer_helmet",
-    "aliases": [
-      "upgrades-permanent-unlocks-slayer-helmet"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-slayer-helmet"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-slayer-helmet",
@@ -6867,9 +6234,7 @@
     "fileTitle": "TokHaar-Kal-Ket.png",
     "search": "TokHaar-Kal-Ket inventory icon",
     "canonicalPage": "https://runescape.wiki/w/TokHaar-Kal-Ket",
-    "aliases": [
-      "upgrade-tokhaar-kal-ket"
-    ]
+    "aliases": ["upgrade-tokhaar-kal-ket"]
   },
   {
     "id": "unlock-tokkulzo",
@@ -6897,9 +6262,7 @@
     "fileTitle": "Varrock armour 4.png",
     "search": "Varrock armour 4 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Varrock_armour_4",
-    "aliases": [
-      "upgrades-permanent-unlocks-varrock-armour-4"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-varrock-armour-4"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-varrock-armour-4",
@@ -6918,10 +6281,7 @@
     "fileTitle": "Vulnerability bomb.png",
     "search": "Vulnerability bomb inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Vulnerability_bomb",
-    "aliases": [
-      "cons-vulnerability-bomb",
-      "upgrades-combat-utility-vulnerability-bomb"
-    ],
+    "aliases": ["cons-vulnerability-bomb", "upgrades-combat-utility-vulnerability-bomb"],
     "provenanceAlternates": [
       {
         "id": "upgrades-combat-utility-vulnerability-bomb",
@@ -6931,9 +6291,7 @@
         "fileTitle": "Vulnerability Bomb.png"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/vulnerability-bomb.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/skilling-production/vulnerability-bomb.webp"]
   },
   {
     "id": "unlock-weapon-poison-plus-plus-plus",
@@ -6956,9 +6314,7 @@
         "fileTitle": "Weapon Poison Plus Plus Plus.png"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/weapon-poison-plus-plus-plus.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/skilling-production/weapon-poison-plus-plus-plus.webp"]
   },
   {
     "id": "upgrade-advanced-gold-accumulator",
@@ -7072,10 +6428,7 @@
     "path": "public/game/upgrades/ability-codices/corruption-blast",
     "search": "Corruption Blast ability codex inventory",
     "canonicalPage": "https://runescape.wiki/w/Corruption_Blast_ability_codex",
-    "aliases": [
-      "upgrade-codex-corruption-shot",
-      "upgrade-codex-onslaught"
-    ],
+    "aliases": ["upgrade-codex-corruption-shot", "upgrade-codex-onslaught"],
     "alsoAt": [
       "public/game/upgrades/ability-codices/corruption-shot.webp",
       "public/game/upgrades/ability-codices/onslaught.webp"
@@ -7458,9 +6811,7 @@
     "fileTitle": "Enhanced Excalibur.png",
     "search": "Enhanced Excalibur inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Enhanced_Excalibur",
-    "aliases": [
-      "off-enhanced-excalibur"
-    ]
+    "aliases": ["off-enhanced-excalibur"]
   },
   {
     "id": "upgrade-essence-of-finality",
@@ -7470,12 +6821,8 @@
     "fileTitle": "Essence of Finality amulet.png",
     "search": "Essence of Finality amulet inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Essence_of_Finality_amulet",
-    "aliases": [
-      "bulk42-upgrades-progression-essence-of-finality"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/progression/essence-of-finality.webp"
-    ]
+    "aliases": ["bulk42-upgrades-progression-essence-of-finality"],
+    "alsoAt": ["public/game/upgrades/progression/essence-of-finality.webp"]
   },
   {
     "id": "upgrade-frozen-core-of-leng",
@@ -7501,10 +6848,7 @@
     "fileTitle": "Harmonic dust.png",
     "search": "Harmonic dust inventory",
     "canonicalPage": "https://runescape.wiki/w/Harmonic_dust",
-    "aliases": [
-      "place-harmonised-dust",
-      "util-harmonic-dust"
-    ],
+    "aliases": ["place-harmonised-dust", "util-harmonic-dust"],
     "provenanceAlternates": [
       {
         "id": "util-harmonic-dust",
@@ -7550,9 +6894,7 @@
     "fileTitle": "Keris.png",
     "search": "Keris inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Keris",
-    "aliases": [
-      "unlock-keris"
-    ]
+    "aliases": ["unlock-keris"]
   },
   {
     "id": "upgrade-leng-artefact",
@@ -7569,7 +6911,8 @@
     "path": "public/game/upgrades/linzas-cuirass",
     "fileTitle": "Linza's cuirass.png",
     "search": "Linza cuirass inventory",
-    "canonicalPage": "https://runescape.wiki/w/Linza%27s_equipment"
+    "canonicalPage": "https://runescape.wiki/w/Linza%27s_equipment",
+    "alsoAt": ["public/game/combat/equipment/linzas-cuirass.webp"]
   },
   {
     "id": "upgrade-malevolent-energy",
@@ -7596,9 +6939,7 @@
     "fileTitle": "Torva platebody.png",
     "search": "Torva platebody inventory",
     "canonicalPage": "https://runescape.wiki/w/Ancient_Warriors%27_equipment",
-    "aliases": [
-      "armour-torva-platebody"
-    ],
+    "aliases": ["armour-torva-platebody"],
     "provenanceAlternates": [
       {
         "id": "armour-torva-platebody",
@@ -7648,12 +6989,8 @@
     "fileTitle": "Salve amulet (e).png",
     "search": "Salve amulet enchanted inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Salve_amulet_(e)",
-    "aliases": [
-      "bulk42-upgrades-permanent-unlocks-salve-amulet-e"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/salve-amulet-e.webp"
-    ]
+    "aliases": ["bulk42-upgrades-permanent-unlocks-salve-amulet-e"],
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/salve-amulet-e.webp"]
   },
   {
     "id": "upgrade-scripture-of-amascut",
@@ -7754,9 +7091,7 @@
     "fileTitle": "Spring cleaner 9001.png",
     "search": "Spring cleaner 9001 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Spring_cleaner_9001",
-    "aliases": [
-      "util-spring-cleaner"
-    ]
+    "aliases": ["util-spring-cleaner"]
   },
   {
     "id": "upgrade-subjugation",
@@ -7783,9 +7118,7 @@
     "fileTitle": "Tectonic robe top.png",
     "search": "Tectonic robe top inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Tectonic_robe_top",
-    "aliases": [
-      "armour-tectonic-robe-top"
-    ]
+    "aliases": ["armour-tectonic-robe-top"]
   },
   {
     "id": "upgrade-totem-of-summoning",
@@ -7819,12 +7152,8 @@
     "path": "public/game/upgrades/progression/wand-of-praesul",
     "search": "Wand of the praesul inventory",
     "canonicalPage": "https://runescape.wiki/w/Wand_of_the_praesul",
-    "aliases": [
-      "weapon-wand-of-praesul"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/progression/wand-of-the-praesul.webp"
-    ]
+    "aliases": ["weapon-wand-of-praesul"],
+    "alsoAt": ["public/game/upgrades/progression/wand-of-the-praesul.webp"]
   },
   {
     "id": "upgrade-wand-of-the-cywir-elders",
@@ -7904,12 +7233,8 @@
     "fileTitle": "Alchemical Hydrix.png",
     "search": "Alchemical Hydrix inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Alchemical_Hydrix",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-alchemical-hydrix"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/alchemical-hydrix.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-alchemical-hydrix"],
+    "alsoAt": ["public/game/upgrades/skilling-production/alchemical-hydrix.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-alchemical-onyx",
@@ -7919,12 +7244,8 @@
     "fileTitle": "Alchemical Onyx.png",
     "search": "Alchemical Onyx inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Alchemical_Onyx",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-alchemical-onyx"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/alchemical-onyx.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-alchemical-onyx"],
+    "alsoAt": ["public/game/upgrades/skilling-production/alchemical-onyx.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-alchemiser",
@@ -8042,12 +7363,8 @@
     "fileTitle": "Arcane Sigil.png",
     "search": "Arcane Sigil inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Arcane_Sigil",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-arcane-sigil"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/arcane-sigil.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-arcane-sigil"],
+    "alsoAt": ["public/game/upgrades/skilling-production/arcane-sigil.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-archaeology-guild-shop",
@@ -8183,10 +7500,7 @@
     "fileTitle": "Birdhouse.png",
     "search": "Birdhouse inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Birdhouse",
-    "aliases": [
-      "hunter-bird-house",
-      "upgrades-skilling-utility-bird-house"
-    ],
+    "aliases": ["hunter-bird-house", "upgrades-skilling-utility-bird-house"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-bird-house",
@@ -8196,9 +7510,7 @@
         "fileTitle": "Bird House.png"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-utility/bird-house.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/skilling-utility/bird-house.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-black-ibis-outfit",
@@ -8208,19 +7520,14 @@
     "fileTitle": "Black Ibis Outfit.png",
     "search": "Black Ibis Outfit inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Black_Ibis_Outfit",
-    "aliases": [
-      "outfit-black-ibis",
-      "skilling-black-ibis-outfit"
-    ],
+    "aliases": ["outfit-black-ibis", "skilling-black-ibis-outfit"],
     "provenanceAlternates": [
       {
         "id": "skilling-black-ibis-outfit",
         "search": "Black ibis outfit image"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-outfits/black-ibis.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/skilling-outfits/black-ibis.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-black-key",
@@ -8248,12 +7555,8 @@
     "fileTitle": "Blacksmiths Outfit.png",
     "search": "Blacksmiths Outfit inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Blacksmiths_Outfit",
-    "aliases": [
-      "skilling-blacksmith-outfit"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-outfits/blacksmith.webp"
-    ]
+    "aliases": ["skilling-blacksmith-outfit"],
+    "alsoAt": ["public/game/upgrades/skilling-outfits/blacksmith.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-blast-diffusion",
@@ -8326,12 +7629,8 @@
     "fileTitle": "Bonecrusher Maul.png",
     "search": "Bonecrusher Maul inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Bonecrusher_Maul",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-bonecrusher-maul"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/bonecrusher-maul.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-bonecrusher-maul"],
+    "alsoAt": ["public/game/upgrades/skilling-production/bonecrusher-maul.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-botanists-outfit",
@@ -8341,19 +7640,14 @@
     "fileTitle": "Botanist's mask.png",
     "search": "Botanist's mask inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Botanist's_mask",
-    "aliases": [
-      "outfit-botanists",
-      "skilling-botanists-outfit"
-    ],
+    "aliases": ["outfit-botanists", "skilling-botanists-outfit"],
     "provenanceAlternates": [
       {
         "id": "skilling-botanists-outfit",
         "search": "Botanist's mask inventory icon"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-outfits/botanists.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/skilling-outfits/botanists.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-botanists-workbench",
@@ -8372,12 +7666,8 @@
     "fileTitle": "Brawling Gloves.png",
     "search": "Brawling Gloves inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Brawling_Gloves",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-brawling-gloves"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/brawling-gloves.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-brawling-gloves"],
+    "alsoAt": ["public/game/upgrades/skilling-production/brawling-gloves.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-brawling-gloves-agility",
@@ -8621,12 +7911,8 @@
     "fileTitle": "Clockwork Box Trap.png",
     "search": "Clockwork Box Trap inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Clockwork_Box_Trap",
-    "aliases": [
-      "bulk42-upgrades-skilling-utility-clockwork-box-trap"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-utility/clockwork-box-trap.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-utility-clockwork-box-trap"],
+    "alsoAt": ["public/game/upgrades/skilling-utility/clockwork-box-trap.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-cobalt-skillchompa",
@@ -8636,12 +7922,8 @@
     "fileTitle": "Cobalt Skillchompa.png",
     "search": "Cobalt Skillchompa inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Cobalt_Skillchompa",
-    "aliases": [
-      "upgrades-permanent-unlocks-skillchompas"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/skillchompas.webp"
-    ]
+    "aliases": ["upgrades-permanent-unlocks-skillchompas"],
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/skillchompas.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-collectors-assemble",
@@ -8660,12 +7942,8 @@
     "fileTitle": "Colossal Bone.png",
     "search": "Colossal Bone inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Colossal_Bone",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-colossal-bone"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/colossal-bone.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-colossal-bone"],
+    "alsoAt": ["public/game/upgrades/skilling-production/colossal-bone.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-columbarium-ring",
@@ -8837,12 +8115,8 @@
     "fileTitle": "Dark Facet Of Grace.png",
     "search": "Dark Facet Of Grace inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Dark_Facet_Of_Grace",
-    "aliases": [
-      "upgrades-permanent-unlocks-dark-onyx-core"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/dark-onyx-core.webp"
-    ]
+    "aliases": ["upgrades-permanent-unlocks-dark-onyx-core"],
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/dark-onyx-core.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-dark-facet-of-passage",
@@ -8978,12 +8252,8 @@
     "fileTitle": "Divine Sigil.png",
     "search": "Divine Sigil inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Divine_Sigil",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-divine-sigil"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/divine-sigil.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-divine-sigil"],
+    "alsoAt": ["public/game/upgrades/skilling-production/divine-sigil.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-dragon-bones",
@@ -8993,12 +8263,8 @@
     "fileTitle": "Dragon Bones.png",
     "search": "Dragon Bones inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Dragon_Bones",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-dragon-bones"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/dragon-bones.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-dragon-bones"],
+    "alsoAt": ["public/game/upgrades/skilling-production/dragon-bones.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-dragon-implings",
@@ -9017,12 +8283,8 @@
     "fileTitle": "Dragonkin Potion.png",
     "search": "Dragonkin Potion inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Dragonkin_Potion",
-    "aliases": [
-      "upgrades-permanent-unlocks-the-prodigal-spender"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/the-prodigal-spender.webp"
-    ]
+    "aliases": ["upgrades-permanent-unlocks-the-prodigal-spender"],
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/the-prodigal-spender.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-dream-mentor",
@@ -9041,12 +8303,8 @@
     "fileTitle": "Drygore Weapons.png",
     "search": "Drygore Weapons inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Drygore_Weapons",
-    "aliases": [
-      "weapon-drygore-mace"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/progression/drygore-mace.webp"
-    ]
+    "aliases": ["weapon-drygore-mace"],
+    "alsoAt": ["public/game/upgrades/progression/drygore-mace.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-dundees-crocodile-upgrades",
@@ -9074,12 +8332,8 @@
     "fileTitle": "Earmuffs.png",
     "search": "Earmuffs inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Earmuffs",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-earmuffs"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/earmuffs.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-earmuffs"],
+    "alsoAt": ["public/game/upgrades/skilling-production/earmuffs.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-eastfold-farm",
@@ -9161,12 +8415,8 @@
     "fileTitle": "Elysian Sigil.png",
     "search": "Elysian Sigil inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Elysian_Sigil",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-elysian-sigil"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/elysian-sigil.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-elysian-sigil"],
+    "alsoAt": ["public/game/upgrades/skilling-production/elysian-sigil.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-emberkeen",
@@ -9185,12 +8435,8 @@
     "fileTitle": "Empty Divine Charge.png",
     "search": "Empty Divine Charge inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Empty_Divine_Charge",
-    "aliases": [
-      "bulk42-upgrades-skilling-utility-empty-divine-charge"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-utility/empty-divine-charge.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-utility-empty-divine-charge"],
+    "alsoAt": ["public/game/upgrades/skilling-utility/empty-divine-charge.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-enchanted-lyre",
@@ -9281,12 +8527,8 @@
     "fileTitle": "Equipment Siphon.png",
     "search": "Equipment Siphon inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Equipment_Siphon",
-    "aliases": [
-      "bulk42-upgrades-skilling-utility-equipment-siphon"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-utility/equipment-siphon.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-utility-equipment-siphon"],
+    "alsoAt": ["public/game/upgrades/skilling-utility/equipment-siphon.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-essential-oils",
@@ -9332,19 +8574,14 @@
     "fileTitle": "Factory mask.png",
     "search": "Factory mask inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Factory_mask",
-    "aliases": [
-      "outfit-factory",
-      "skilling-factory-outfit"
-    ],
+    "aliases": ["outfit-factory", "skilling-factory-outfit"],
     "provenanceAlternates": [
       {
         "id": "skilling-factory-outfit",
         "search": "Factory mask inventory icon"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-outfits/factory.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/skilling-outfits/factory.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-falador-shield-1",
@@ -9480,12 +8717,8 @@
     "fileTitle": "Focus Sight.png",
     "search": "Focus Sight inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Focus_Sight",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-focus-sight"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/focus-sight.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-focus-sight"],
+    "alsoAt": ["public/game/upgrades/skilling-production/focus-sight.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-focus-sight-detail",
@@ -9576,12 +8809,8 @@
     "fileTitle": "Ghost Hunter Body.png",
     "search": "Ghost Hunter Body inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ghost_Hunter_Body",
-    "aliases": [
-      "upgrades-permanent-unlocks-ghost-hunter-gear"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/ghost-hunter-gear.webp"
-    ]
+    "aliases": ["upgrades-permanent-unlocks-ghost-hunter-gear"],
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/ghost-hunter-gear.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-ghost-hunter-goggles",
@@ -9635,12 +8864,8 @@
     "fileTitle": "Ghoul Champions Scroll.png",
     "search": "Ghoul Champions Scroll inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ghoul_Champions_Scroll",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-ghoul-champions-scroll"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/ghoul-champions-scroll.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-ghoul-champions-scroll"],
+    "alsoAt": ["public/game/upgrades/skilling-production/ghoul-champions-scroll.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-gizmo-dissolver",
@@ -9695,12 +8920,8 @@
     "fileTitle": "Godswords.png",
     "search": "Godswords inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Godswords",
-    "aliases": [
-      "bulk42-upgrades-progression-armadyl-godsword"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/progression/armadyl-godsword.webp"
-    ]
+    "aliases": ["bulk42-upgrades-progression-armadyl-godsword"],
+    "alsoAt": ["public/game/upgrades/progression/armadyl-godsword.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-gold-accumulator",
@@ -9728,12 +8949,8 @@
     "fileTitle": "Grasping Rune Pouch.png",
     "search": "Grasping Rune Pouch inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Grasping_Rune_Pouch",
-    "aliases": [
-      "unlock-grasping-rune-pouch"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-utility/grasping-rune-pouch.webp"
-    ]
+    "aliases": ["unlock-grasping-rune-pouch"],
+    "alsoAt": ["public/game/upgrades/skilling-utility/grasping-rune-pouch.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-gravite",
@@ -9752,12 +8969,8 @@
     "fileTitle": "Green Dragonhide.png",
     "search": "Green Dragonhide inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Green_Dragonhide",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-green-dragonhide"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/green-dragonhide.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-green-dragonhide"],
+    "alsoAt": ["public/game/upgrades/skilling-production/green-dragonhide.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-greenfingers",
@@ -9892,12 +9105,8 @@
     "fileTitle": "Holy Elixir.png",
     "search": "Holy Elixir inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Holy_Elixir",
-    "aliases": [
-      "bulk39-holy-elixir"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/holy-elixir.webp"
-    ]
+    "aliases": ["bulk39-holy-elixir"],
+    "alsoAt": ["public/game/upgrades/skilling-production/holy-elixir.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-holy-overload-potion",
@@ -9961,12 +9170,8 @@
     "fileTitle": "Imcando Mattock.png",
     "search": "Imcando Mattock inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Imcando_Mattock",
-    "aliases": [
-      "arch-imcando-mattock"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-tools/imcando-mattock.webp"
-    ]
+    "aliases": ["arch-imcando-mattock"],
+    "alsoAt": ["public/game/upgrades/skilling-tools/imcando-mattock.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-inferno-adze",
@@ -9985,12 +9190,8 @@
     "fileTitle": "Infinity Ethereal.png",
     "search": "Infinity Ethereal inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Infinity_Ethereal",
-    "aliases": [
-      "upgrades-progression-infinity-ethereal-outfit"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/progression/infinity-ethereal-outfit.webp"
-    ]
+    "aliases": ["upgrades-progression-infinity-ethereal-outfit"],
+    "alsoAt": ["public/game/upgrades/progression/infinity-ethereal-outfit.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-inspire-awe",
@@ -10154,7 +9355,8 @@
     "fileTitle": "Kuradal.png",
     "search": "Kuradal",
     "canonicalPage": "https://runescape.wiki/w/Kuradal",
-    "sourcePage": "https://runescape.wiki/w/File:Kuradal.png"
+    "sourcePage": "https://runescape.wiki/w/File:Kuradal.png",
+    "alsoAt": ["public/game/activities/kuradal.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-kwuarm-incense-sticks",
@@ -10595,13 +9797,8 @@
     "fileTitle": "Noxious Weapons.png",
     "search": "Noxious Weapons inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Noxious_Weapons",
-    "aliases": [
-      "upgrade-noxious-scythe",
-      "weapon-noxious-scythe"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/progression/noxious-scythe.webp"
-    ]
+    "aliases": ["upgrade-noxious-scythe", "weapon-noxious-scythe"],
+    "alsoAt": ["public/game/upgrades/progression/noxious-scythe.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-npc-contact",
@@ -10656,12 +9853,8 @@
     "fileTitle": "Orthen Dig.png",
     "search": "Orthen Dig inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Orthen_Dig",
-    "aliases": [
-      "upgrades-permanent-unlocks-orthen-teleportation-device"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/orthen-teleportation-device.webp"
-    ]
+    "aliases": ["upgrades-permanent-unlocks-orthen-teleportation-device"],
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/orthen-teleportation-device.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-orthen-furnace",
@@ -10834,12 +10027,8 @@
     "fileTitle": "Porcelain Clay.png",
     "search": "Porcelain Clay inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Porcelain_Clay",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-porcelain-clay"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/porcelain-clay.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-porcelain-clay"],
+    "alsoAt": ["public/game/upgrades/skilling-production/porcelain-clay.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-porcelain-clay-rock",
@@ -10885,12 +10074,8 @@
     "fileTitle": "Powder Of Penance.png",
     "search": "Powder Of Penance inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Powder_Of_Penance",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-powder-of-penance"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/powder-of-penance.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-powder-of-penance"],
+    "alsoAt": ["public/game/upgrades/skilling-production/powder-of-penance.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-powder-of-pulverising",
@@ -10900,12 +10085,8 @@
     "fileTitle": "Powder Of Pulverising.png",
     "search": "Powder Of Pulverising inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Powder_Of_Pulverising",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-powder-of-pulverising"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/powder-of-pulverising.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-powder-of-pulverising"],
+    "alsoAt": ["public/game/upgrades/skilling-production/powder-of-pulverising.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-prawnbroker",
@@ -10933,12 +10114,8 @@
     "fileTitle": "Prifddinian Workers Outfit.png",
     "search": "Prifddinian Workers Outfit inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Prifddinian_Workers_Outfit",
-    "aliases": [
-      "bulk42-upgrades-skilling-outfits-prifddinian-workers-outfit"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-outfits/prifddinian-workers-outfit.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-outfits-prifddinian-workers-outfit"],
+    "alsoAt": ["public/game/upgrades/skilling-outfits/prifddinian-workers-outfit.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-primal-ore",
@@ -10957,12 +10134,8 @@
     "fileTitle": "Primal Ores.png",
     "search": "Primal Ores inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Primal_Ores",
-    "aliases": [
-      "upgrades-permanent-unlocks-promethium-rock"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/promethium-rock.webp"
-    ]
+    "aliases": ["upgrades-permanent-unlocks-promethium-rock"],
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/promethium-rock.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-pyro-matic",
@@ -10972,12 +10145,8 @@
     "fileTitle": "Pyro Matic.png",
     "search": "Pyro Matic inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Pyro_Matic",
-    "aliases": [
-      "bulk39-pyro-matic"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-tools/pyro-matic.webp"
-    ]
+    "aliases": ["bulk39-pyro-matic"],
+    "alsoAt": ["public/game/upgrades/skilling-tools/pyro-matic.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-quest-cape",
@@ -11167,12 +10336,8 @@
     "fileTitle": "Sanguine Matter.png",
     "search": "Sanguine Matter inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Sanguine_Matter",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-sanguine-matter"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/sanguine-matter.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-sanguine-matter"],
+    "alsoAt": ["public/game/upgrades/skilling-production/sanguine-matter.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-sanguine-spines",
@@ -11182,12 +10347,8 @@
     "fileTitle": "Sanguine Spines.png",
     "search": "Sanguine Spines inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Sanguine_Spines",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-sanguine-spines"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/sanguine-spines.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-sanguine-spines"],
+    "alsoAt": ["public/game/upgrades/skilling-production/sanguine-spines.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-saradomin-staff",
@@ -11215,12 +10376,8 @@
     "fileTitle": "Screening Station.png",
     "search": "Screening Station inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Screening_Station",
-    "aliases": [
-      "arch-screening"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-utility/screening-station.webp"
-    ]
+    "aliases": ["arch-screening"],
+    "alsoAt": ["public/game/upgrades/skilling-utility/screening-station.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-scrimshaw-crafter",
@@ -11389,10 +10546,7 @@
     "fileTitle": "Sign Of The Porter.png",
     "search": "Sign Of The Porter inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Sign_Of_The_Porter",
-    "aliases": [
-      "upgrades-skilling-utility-sign-of-the-porter-vii",
-      "util-grace-porters"
-    ],
+    "aliases": ["upgrades-skilling-utility-sign-of-the-porter-vii", "util-grace-porters"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-sign-of-the-porter-vii",
@@ -11402,9 +10556,7 @@
         "fileTitle": "Sign Of The Porter Vii.png"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-utility/sign-of-the-porter-vii.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/skilling-utility/sign-of-the-porter-vii.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-silver-key",
@@ -11423,12 +10575,8 @@
     "fileTitle": "Silver Spines.png",
     "search": "Silver Spines inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Silver_Spines",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-silver-spines"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/silver-spines.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-silver-spines"],
+    "alsoAt": ["public/game/upgrades/skilling-production/silver-spines.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-simple-generator",
@@ -11492,12 +10640,8 @@
     "fileTitle": "Smithing Autoheater.png",
     "search": "Smithing Autoheater inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Smithing_Autoheater",
-    "aliases": [
-      "skilling-autoheater"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-utility/autoheater.webp"
-    ]
+    "aliases": ["skilling-autoheater"],
+    "alsoAt": ["public/game/upgrades/skilling-utility/autoheater.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-smoking-kills",
@@ -11557,19 +10701,14 @@
     "fileTitle": "Sous Chefs Outfit.png",
     "search": "Sous Chefs Outfit inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Sous_Chefs_Outfit",
-    "aliases": [
-      "outfit-sous-chef",
-      "skilling-sous-chefs-outfit"
-    ],
+    "aliases": ["outfit-sous-chef", "skilling-sous-chefs-outfit"],
     "provenanceAlternates": [
       {
         "id": "skilling-sous-chefs-outfit",
         "search": "Sous chef's outfit image"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-outfits/sous-chef.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/skilling-outfits/sous-chef.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-sparkling-wisp-colony",
@@ -11597,12 +10736,8 @@
     "fileTitle": "Spectral Sigil.png",
     "search": "Spectral Sigil inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Spectral_Sigil",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-spectral-sigil"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/spectral-sigil.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-spectral-sigil"],
+    "alsoAt": ["public/game/upgrades/skilling-production/spectral-sigil.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-spin-flax",
@@ -11729,12 +10864,8 @@
     "fileTitle": "Super Attack.png",
     "search": "Super Attack inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Super_Attack",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-super-attack"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/super-attack.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-super-attack"],
+    "alsoAt": ["public/game/upgrades/skilling-production/super-attack.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-super-defence",
@@ -11744,12 +10875,8 @@
     "fileTitle": "Super Defence.png",
     "search": "Super Defence inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Super_Defence",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-super-defence"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/super-defence.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-super-defence"],
+    "alsoAt": ["public/game/upgrades/skilling-production/super-defence.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-super-magic",
@@ -11776,12 +10903,8 @@
     "fileTitle": "Super Necromancy.png",
     "search": "Super Necromancy inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Super_Necromancy",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-super-necromancy"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/super-necromancy.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-super-necromancy"],
+    "alsoAt": ["public/game/upgrades/skilling-production/super-necromancy.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-super-ranging",
@@ -11808,12 +10931,8 @@
     "fileTitle": "Super Restore.png",
     "search": "Super Restore inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Super_Restore",
-    "aliases": [
-      "cons-super-restore"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/super-restore.webp"
-    ]
+    "aliases": ["cons-super-restore"],
+    "alsoAt": ["public/game/upgrades/skilling-production/super-restore.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-super-strength",
@@ -11823,12 +10942,8 @@
     "fileTitle": "Super Strength.png",
     "search": "Super Strength inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Super_Strength",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-super-strength"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/super-strength.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-super-strength"],
+    "alsoAt": ["public/game/upgrades/skilling-production/super-strength.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-superglass-make",
@@ -11883,12 +10998,8 @@
     "fileTitle": "Tainted Seed.png",
     "search": "Tainted Seed inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Tainted_Seed",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-tainted-seed"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/tainted-seed.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-tainted-seed"],
+    "alsoAt": ["public/game/upgrades/skilling-production/tainted-seed.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-tear-of-inanna",
@@ -12015,12 +11126,8 @@
     "fileTitle": "Trader Woes.png",
     "search": "Trader Woes inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Trader_Woes",
-    "aliases": [
-      "upgrades-permanent-unlocks-wendlewick-lodestone"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/wendlewick-lodestone.webp"
-    ]
+    "aliases": ["upgrades-permanent-unlocks-wendlewick-lodestone"],
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/wendlewick-lodestone.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-trading-sticks",
@@ -12165,12 +11272,8 @@
     "fileTitle": "Volcanic Trapper.png",
     "search": "Volcanic Trapper inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Volcanic_Trapper",
-    "aliases": [
-      "bulk42-upgrades-skilling-outfits-volcanic-trapper"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-outfits/volcanic-trapper.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-outfits-volcanic-trapper"],
+    "alsoAt": ["public/game/upgrades/skilling-outfits/volcanic-trapper.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-vyres",
@@ -12288,12 +11391,8 @@
     "fileTitle": "Wilderness Herb Patch.png",
     "search": "Wilderness Herb Patch inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Wilderness_Herb_Patch",
-    "aliases": [
-      "upgrades-skilling-production-aggression-potion"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/aggression-potion.webp"
-    ]
+    "aliases": ["upgrades-skilling-production-aggression-potion"],
+    "alsoAt": ["public/game/upgrades/skilling-production/aggression-potion.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-wilderness-sword-1",
@@ -12330,12 +11429,8 @@
     "fileTitle": "Wood Box.png",
     "search": "Wood Box inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Wood_Box",
-    "aliases": [
-      "unlock-wood-box"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-utility/wood-box.webp"
-    ]
+    "aliases": ["unlock-wood-box"],
+    "alsoAt": ["public/game/upgrades/skilling-utility/wood-box.webp"]
   },
   {
     "id": "upgrades-permanent-unlocks-woodworking",
@@ -13111,10 +12206,7 @@
     "fileTitle": "Archaeologist's tea.png",
     "search": "Archaeologist's tea inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Archaeologist%27s_tea",
-    "aliases": [
-      "arch-tea",
-      "upgrades-skilling-production-archaeologists-tea"
-    ],
+    "aliases": ["arch-tea", "upgrades-skilling-production-archaeologists-tea"],
     "provenanceAlternates": [
       {
         "id": "arch-tea",
@@ -13137,10 +12229,7 @@
     "fileTitle": "Archaeology cape.png",
     "search": "Archaeology cape inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Archaeology_cape",
-    "aliases": [
-      "arch-cape",
-      "upgrades-permanent-unlocks-archaeology-cape"
-    ],
+    "aliases": ["arch-cape", "upgrades-permanent-unlocks-archaeology-cape"],
     "provenanceAlternates": [
       {
         "id": "arch-cape",
@@ -13163,10 +12252,7 @@
     "fileTitle": "Auto-screener v1.080.png",
     "search": "Auto-screener v1.080 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Auto-screener_v1.080",
-    "aliases": [
-      "arch-auto-screener",
-      "upgrades-skilling-utility-auto-screener-v1080"
-    ],
+    "aliases": ["arch-auto-screener", "upgrades-skilling-utility-auto-screener-v1080"],
     "provenanceAlternates": [
       {
         "id": "arch-auto-screener",
@@ -13189,9 +12275,7 @@
     "fileTitle": "Focus storage.png",
     "search": "Focus storage inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Focus_storage",
-    "aliases": [
-      "upgrades-skilling-utility-focus-storage"
-    ],
+    "aliases": ["upgrades-skilling-utility-focus-storage"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-focus-storage",
@@ -13210,9 +12294,7 @@
     "fileTitle": "Gem bag.png",
     "search": "Gem bag inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Gem_bag",
-    "aliases": [
-      "upgrades-skilling-utility-gem-bag"
-    ],
+    "aliases": ["upgrades-skilling-utility-gem-bag"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-gem-bag",
@@ -13231,9 +12313,7 @@
     "fileTitle": "Sign of the porter VI.png",
     "search": "Sign of the porter VI inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Sign_of_the_porter_VI",
-    "aliases": [
-      "upgrades-skilling-utility-sign-of-the-porter-vi"
-    ],
+    "aliases": ["upgrades-skilling-utility-sign-of-the-porter-vi"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-sign-of-the-porter-vi",
@@ -13252,9 +12332,7 @@
     "fileTitle": "Sign of the porter IV.png",
     "search": "Sign of the porter IV inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Sign_of_the_porter_IV",
-    "aliases": [
-      "upgrades-skilling-utility-sign-of-the-porter-iv"
-    ],
+    "aliases": ["upgrades-skilling-utility-sign-of-the-porter-iv"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-sign-of-the-porter-iv",
@@ -13273,9 +12351,7 @@
     "fileTitle": "Invention cape.png",
     "search": "Invention cape inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Invention_cape",
-    "aliases": [
-      "upgrades-permanent-unlocks-invention-cape"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-invention-cape"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-invention-cape",
@@ -13294,9 +12370,7 @@
     "fileTitle": "Lorehound.png",
     "search": "Lorehound pet inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Lorehound",
-    "aliases": [
-      "upgrades-skilling-utility-lorehound"
-    ],
+    "aliases": ["upgrades-skilling-utility-lorehound"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-lorehound",
@@ -13312,9 +12386,7 @@
     "fileTitle": "Magic notepaper.png",
     "search": "Magic notepaper inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Magic_notepaper",
-    "aliases": [
-      "upgrades-skilling-utility-magic-notepaper"
-    ],
+    "aliases": ["upgrades-skilling-utility-magic-notepaper"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-magic-notepaper",
@@ -13333,9 +12405,7 @@
     "fileTitle": "Master thief's lockpick.png",
     "search": "Master thief's lockpick inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Master_thief%27s_lockpick",
-    "aliases": [
-      "upgrades-permanent-unlocks-master-thiefs-lockpick"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-master-thiefs-lockpick"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-master-thiefs-lockpick",
@@ -13354,9 +12424,7 @@
     "fileTitle": "Master thief's stethoscope.png",
     "search": "Master thief's stethoscope inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Master_thief%27s_stethoscope",
-    "aliases": [
-      "upgrades-permanent-unlocks-master-thiefs-stethoscope"
-    ],
+    "aliases": ["upgrades-permanent-unlocks-master-thiefs-stethoscope"],
     "provenanceAlternates": [
       {
         "id": "upgrades-permanent-unlocks-master-thiefs-stethoscope",
@@ -13375,10 +12443,7 @@
     "fileTitle": "Material manual.png",
     "search": "Material manual inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Material_manual",
-    "aliases": [
-      "arch-material-manual",
-      "upgrades-skilling-utility-material-manual"
-    ],
+    "aliases": ["arch-material-manual", "upgrades-skilling-utility-material-manual"],
     "provenanceAlternates": [
       {
         "id": "arch-material-manual",
@@ -13401,9 +12466,7 @@
     "fileTitle": "Modified artisan's bandana.png",
     "search": "Modified artisan's bandana inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Modified_artisan%27s_bandana",
-    "aliases": [
-      "upgrades-skilling-outfits-modified-artisans-bandana"
-    ],
+    "aliases": ["upgrades-skilling-outfits-modified-artisans-bandana"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-outfits-modified-artisans-bandana",
@@ -13422,9 +12485,7 @@
     "fileTitle": "Fury ornament kit.png",
     "search": "Fury ornament kit inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Fury_ornament_kit",
-    "aliases": [
-      "upgrades-skilling-utility-ornament-kit-box"
-    ],
+    "aliases": ["upgrades-skilling-utility-ornament-kit-box"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-ornament-kit-box",
@@ -13443,9 +12504,7 @@
     "fileTitle": "Plank box.png",
     "search": "Plank box inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Plank_box",
-    "aliases": [
-      "upgrades-skilling-utility-plank-box"
-    ],
+    "aliases": ["upgrades-skilling-utility-plank-box"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-plank-box",
@@ -13464,9 +12523,7 @@
     "fileTitle": "Large rune pouch.png",
     "search": "Large rune pouch inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Large_rune_pouch",
-    "aliases": [
-      "upgrades-skilling-utility-rune-pouch"
-    ],
+    "aliases": ["upgrades-skilling-utility-rune-pouch"],
     "provenanceAlternates": [
       {
         "id": "upgrades-skilling-utility-rune-pouch",
@@ -13485,9 +12542,7 @@
     "fileTitle": "Chaotic rapier.png",
     "search": "Chaotic rapier inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Chaotic_rapier",
-    "aliases": [
-      "upgrade-chaotic-rapier"
-    ]
+    "aliases": ["upgrade-chaotic-rapier"]
   },
   {
     "id": "weapon-noxious-longbow",
@@ -13506,9 +12561,7 @@
     "fileTitle": "Seismic wand.png",
     "search": "Seismic wand inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Seismic_wand",
-    "aliases": [
-      "upgrade-seismic-wand"
-    ],
+    "aliases": ["upgrade-seismic-wand"],
     "provenanceAlternates": [
       {
         "id": "upgrade-seismic-wand",
@@ -13524,9 +12577,7 @@
     "fileTitle": "Dark Sliver of Leng.png",
     "search": "Dark Sliver of Leng inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Dark_Sliver_of_Leng",
-    "aliases": [
-      "upgrade-dark-sliver-of-leng"
-    ],
+    "aliases": ["upgrade-dark-sliver-of-leng"],
     "provenanceAlternates": [
       {
         "id": "upgrade-dark-sliver-of-leng",
@@ -13542,9 +12593,7 @@
     "fileTitle": "Dragon Rider lance.png",
     "search": "Dragon Rider lance inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Dragon_Rider_lance",
-    "aliases": [
-      "upgrade-dragon-rider-lance"
-    ]
+    "aliases": ["upgrade-dragon-rider-lance"]
   },
   {
     "id": "wep-ek-zekkil",
@@ -13554,9 +12603,7 @@
     "fileTitle": "Ek-ZekKil.png",
     "search": "Ek-ZekKil inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ek-ZekKil",
-    "aliases": [
-      "upgrade-ek-zekkil"
-    ],
+    "aliases": ["upgrade-ek-zekkil"],
     "provenanceAlternates": [
       {
         "id": "upgrade-ek-zekkil",
@@ -13572,9 +12619,7 @@
     "fileTitle": "Eldritch crossbow.png",
     "search": "Eldritch crossbow inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Eldritch_crossbow",
-    "aliases": [
-      "upgrade-eldritch-crossbow"
-    ],
+    "aliases": ["upgrade-eldritch-crossbow"],
     "provenanceAlternates": [
       {
         "id": "upgrade-eldritch-crossbow",
@@ -13590,9 +12635,7 @@
     "fileTitle": "Fractured Staff of Armadyl.png",
     "search": "Fractured Staff of Armadyl inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Fractured_Staff_of_Armadyl",
-    "aliases": [
-      "upgrade-fractured-staff-of-armadyl"
-    ],
+    "aliases": ["upgrade-fractured-staff-of-armadyl"],
     "provenanceAlternates": [
       {
         "id": "upgrade-fractured-staff-of-armadyl",
@@ -13608,9 +12651,7 @@
     "fileTitle": "Ode to Deceit.png",
     "search": "Ode to Deceit inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ode_to_Deceit",
-    "aliases": [
-      "upgrade-ode-to-deceit"
-    ],
+    "aliases": ["upgrade-ode-to-deceit"],
     "provenanceAlternates": [
       {
         "id": "upgrade-ode-to-deceit",
@@ -13626,9 +12667,7 @@
     "fileTitle": "Omni guard.png",
     "search": "Omni guard inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Omni_guard",
-    "aliases": [
-      "upgrade-omni-guard"
-    ],
+    "aliases": ["upgrade-omni-guard"],
     "provenanceAlternates": [
       {
         "id": "upgrade-omni-guard",
@@ -13644,9 +12683,7 @@
     "fileTitle": "Roar of Awakening.png",
     "search": "Roar of Awakening inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Roar_of_Awakening",
-    "aliases": [
-      "upgrade-roar-of-awakening"
-    ],
+    "aliases": ["upgrade-roar-of-awakening"],
     "provenanceAlternates": [
       {
         "id": "upgrade-roar-of-awakening",
@@ -13662,9 +12699,7 @@
     "fileTitle": "Seren godbow.png",
     "search": "Seren godbow inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Seren_godbow",
-    "aliases": [
-      "upgrade-seren-godbow"
-    ],
+    "aliases": ["upgrade-seren-godbow"],
     "provenanceAlternates": [
       {
         "id": "upgrade-seren-godbow",
@@ -13680,9 +12715,7 @@
     "fileTitle": "Shadow glaive.png",
     "search": "Shadow glaive inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Shadow_glaive",
-    "aliases": [
-      "upgrade-shadow-glaive"
-    ]
+    "aliases": ["upgrade-shadow-glaive"]
   },
   {
     "id": "wep-soulbound-lantern",
@@ -13692,9 +12725,7 @@
     "fileTitle": "Soulbound lantern.png",
     "search": "Soulbound lantern inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Soulbound_lantern",
-    "aliases": [
-      "upgrade-soulbound-lantern"
-    ],
+    "aliases": ["upgrade-soulbound-lantern"],
     "provenanceAlternates": [
       {
         "id": "upgrade-soulbound-lantern",
@@ -13710,9 +12741,7 @@
     "fileTitle": "Staff of Sliske.png",
     "search": "Staff of Slike inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Staff_of_Sliske",
-    "aliases": [
-      "upgrade-staff-of-sliske"
-    ],
+    "aliases": ["upgrade-staff-of-sliske"],
     "provenanceAlternates": [
       {
         "id": "upgrade-staff-of-sliske",
@@ -13728,9 +12757,7 @@
     "fileTitle": "Terrasaur maul.png",
     "search": "Terrasaur maul inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Terrasaur_maul",
-    "aliases": [
-      "upgrade-terrasaur-maul"
-    ],
+    "aliases": ["upgrade-terrasaur-maul"],
     "provenanceAlternates": [
       {
         "id": "upgrade-terrasaur-maul",
@@ -13746,14 +12773,32 @@
     "fileTitle": "Zaros godsword.png",
     "search": "Zaros godsword inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Zaros_godsword",
-    "aliases": [
-      "upgrade-zaros-godsword"
-    ],
+    "aliases": ["upgrade-zaros-godsword"],
     "provenanceAlternates": [
       {
         "id": "upgrade-zaros-godsword",
         "search": "Zaros godsword inventory"
       }
+    ]
+  },
+  {
+    "id": "upgrade-eternal-magic-logs-aliases",
+    "label": "Eternal magic logs",
+    "category": "rs3/upgrades/permanent-unlocks",
+    "path": "public/game/upgrades/permanent-unlocks/eternal-magic-logs",
+    "provenance": "unverified-local",
+    "alsoAt": ["public/game/upgrades/skilling-production/eternal-magic-logs.webp"]
+  },
+  {
+    "id": "upgrade-raw-meat-aliases",
+    "label": "Raw meat",
+    "category": "rs3/upgrades/skilling-production",
+    "path": "public/game/upgrades/skilling-production/raw-beef",
+    "provenance": "unverified-local",
+    "alsoAt": [
+      "public/game/upgrades/skilling-production/raw-bear-meat.webp",
+      "public/game/upgrades/skilling-production/raw-rat-meat.webp",
+      "public/game/upgrades/skilling-production/raw-yak-meat.webp"
     ]
   }
 ]

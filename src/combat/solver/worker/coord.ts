@@ -128,11 +128,7 @@ export class PoolCoordHost {
     if (n > this.agentEvals[agentIndex]!) this.agentEvals[agentIndex] = n;
   }
 
-  noteIncumbent(
-    score: number,
-    bar: readonly string[] | undefined,
-    fullScore?: number,
-  ): boolean {
+  noteIncumbent(score: number, bar: readonly string[] | undefined, fullScore?: number): boolean {
     if (!Number.isFinite(score) || !bar?.length) return false;
     const prev = this.incumbent;
     if (prev && score <= prev.score) {
@@ -254,9 +250,7 @@ export class WorkerCoordState {
         this.incumbent = {
           bar: [...batch.incumbent.bar],
           score: batch.incumbent.score,
-          ...(batch.incumbent.fullScore != null
-            ? { fullScore: batch.incumbent.fullScore }
-            : {}),
+          ...(batch.incumbent.fullScore != null ? { fullScore: batch.incumbent.fullScore } : {}),
         };
       }
     }

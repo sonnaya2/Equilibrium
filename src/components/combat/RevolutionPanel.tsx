@@ -47,10 +47,7 @@ const MIN_RUN_DURATION_SECONDS = 6;
 
 function clampRunDurationSeconds(raw: number): number {
   if (!Number.isFinite(raw)) return DEFAULT_DURATION_SECONDS;
-  return Math.min(
-    MAX_RUN_DURATION_SECONDS,
-    Math.max(MIN_RUN_DURATION_SECONDS, Math.floor(raw)),
-  );
+  return Math.min(MAX_RUN_DURATION_SECONDS, Math.max(MIN_RUN_DURATION_SECONDS, Math.floor(raw)));
 }
 
 /** Revolution mode: solver-first bar search; wiki bars as seeds/references. */
@@ -76,11 +73,10 @@ export function RevolutionPanel({
   const [durationSeconds, setDurationSeconds] = useState(DEFAULT_DURATION_SECONDS);
   const [result, setResult] = useState<RotationSummary | null>(null);
   /** Live-cap / adaptive fidelity meta from Run; separate from RotationSummary. */
-  const [branchFidelityMeta, setBranchFidelityMeta] = useState<BranchFidelityMeta | null>(
-    null,
-  );
+  const [branchFidelityMeta, setBranchFidelityMeta] = useState<BranchFidelityMeta | null>(null);
   const [runBusy, setRunBusy] = useState(false);
   const [runProgressLabel, setRunProgressLabel] = useState<string | null>(null);
+  const [runError, setRunError] = useState<string | null>(null);
   const [showAllCasts, setShowAllCasts] = useState(false);
   const [analysisOpen, setAnalysisOpen] = useState(false);
   const [activeBarIds, setActiveBarIds] = useState<string[] | null>(null);
@@ -101,9 +97,7 @@ export function RevolutionPanel({
         setActiveBarIds(null);
         return;
       }
-      setActiveBarIds(
-        ensureNecroConjuresOnBarIds(ids, loadout.style, stats.weaponConfiguration),
-      );
+      setActiveBarIds(ensureNecroConjuresOnBarIds(ids, loadout.style, stats.weaponConfiguration));
     },
     [loadout.style, stats.weaponConfiguration],
   );
@@ -262,6 +256,7 @@ export function RevolutionPanel({
     if (modelled.length === 0 || runBusy) return;
     setShowAllCasts(false);
     setAnalysisOpen(false);
+    setRunError(null);
 
     const cached = getUiRunCache(runKey);
     if (cached) {
@@ -298,9 +293,7 @@ export function RevolutionPanel({
                   `Probing live ${p.maxLiveBranches ?? "…"} (${p.done}/${p.total})`,
                 );
               } else {
-                setRunProgressLabel(
-                  `Full analysis live ${p.maxLiveBranches ?? "…"}…`,
-                );
+                setRunProgressLabel(`Full analysis live ${p.maxLiveBranches ?? "…"}…`);
               }
             },
           },
@@ -323,6 +316,9 @@ export function RevolutionPanel({
         if (!aborted && typeof console !== "undefined") {
           console.warn("[revo-run]", err);
         }
+        if (!aborted) {
+          setRunError(err instanceof Error ? err.message : "Revolution analysis failed");
+        }
       } finally {
         if (gen === runGenRef.current) {
           setRunBusy(false);
@@ -341,27 +337,17 @@ export function RevolutionPanel({
   };
 
   const applySolverBar = (ids: readonly string[]) => {
-    setActiveBarIds(
-      ensureNecroConjuresOnBarIds(ids, loadout.style, weaponConfiguration),
-    );
+    setActiveBarIds(ensureNecroConjuresOnBarIds(ids, loadout.style, weaponConfiguration));
     setResult(null);
     setBranchFidelityMeta(null);
   };
 
   // Run/active bars are necro-normalized; match verified DTO against the same face.
   const finalRunBar = solver.solverResult?.bar?.length
-    ? ensureNecroConjuresOnBarIds(
-        solver.solverResult.bar,
-        loadout.style,
-        weaponConfiguration,
-      )
+    ? ensureNecroConjuresOnBarIds(solver.solverResult.bar, loadout.style, weaponConfiguration)
     : null;
   const stoppedRunBar = solver.stoppedPreview?.bar?.length
-    ? ensureNecroConjuresOnBarIds(
-        solver.stoppedPreview.bar,
-        loadout.style,
-        weaponConfiguration,
-      )
+    ? ensureNecroConjuresOnBarIds(solver.stoppedPreview.bar, loadout.style, weaponConfiguration)
     : null;
   const currentSaveBar = activeBarIds?.length
     ? activeBarIds
@@ -395,8 +381,7 @@ export function RevolutionPanel({
     finalBar: finalRunBar,
     currentBar: currentSaveBar,
     solving: solver.solving,
-    proofLabel:
-      solver.solverResult?.proofLabel ?? solver.solverResult?.proof?.label,
+    proofLabel: solver.solverResult?.proofLabel ?? solver.solverResult?.proof?.label,
   });
   const alreadySaved =
     currentSaveBar != null && isBarAlreadySaved(solver.barLibrary, loadout.style, currentSaveBar);
@@ -493,6 +478,7 @@ export function RevolutionPanel({
         branchFidelityMeta={liveResult ? branchFidelityMeta : null}
         runBusy={runBusy}
         runProgressLabel={runProgressLabel}
+        runError={runError}
         onCancelRun={cancelRun}
         sliverToggle={
           loadout.equipmentSlots?.pocket === SLIVER_OF_EDICTS_ID && setLoadout

@@ -1,10 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { ScoredBar, SolveResult } from "./contracts";
-import {
-  collectParityGateBars,
-  selectAfterParity,
-  type ParityGateCandidate,
-} from "./parityGate";
+import { collectParityGateBars, selectAfterParity, type ParityGateCandidate } from "./parityGate";
 import type { WinnerPresentation } from "./evaluate";
 
 function fullBar(bar: readonly string[], score: number): ScoredBar {
@@ -33,10 +29,7 @@ function presentation(score: number): WinnerPresentation {
   };
 }
 
-function validated(
-  bar: readonly string[],
-  score: number,
-): ParityGateCandidate {
+function validated(bar: readonly string[], score: number): ParityGateCandidate {
   return {
     bar,
     fingerprint: bar.join("\0"),

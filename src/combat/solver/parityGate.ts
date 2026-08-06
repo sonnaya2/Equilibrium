@@ -2,7 +2,7 @@
  * Production hard gate: re-sim top + incumbent score-only vs full-analysis;
  * re-select winner only among parity-validated bars.
  */
-import type { ScoredBar, SolveResult } from "./contracts";
+import type { RevolutionBarEvaluation, ScoredBar, SolveResult } from "./contracts";
 import {
   barsEqual,
   candidateBeatsIncumbent,
@@ -14,9 +14,9 @@ import { barKey } from "./fingerprint";
 import {
   evaluateRevolutionBar,
   winnerPresentationFromEvaluation,
+  type RevolutionEvalRequestWithSession,
   type WinnerPresentation,
 } from "./evaluate";
-import type { RevolutionEvalRequest } from "./contracts";
 import {
   compareScoreAnalysisParity,
   parityFailureMessage,
@@ -46,8 +46,9 @@ export interface ParityGateReject {
 
 export interface ParityGateInput {
   result: SolveResult;
-  evalBase: Omit<RevolutionEvalRequest, "bar" | "detailLevel" | "durationTicks">;
+  evalBase: Omit<RevolutionEvalRequestWithSession, "bar" | "detailLevel" | "durationTicks">;
   fullTicks: number;
+  scoreOnlyEvaluations?: ReadonlyMap<string, RevolutionBarEvaluation>;
   isCancelled?: () => boolean;
   yieldSlice?: () => Promise<void>;
   onProgress?: (info: {
@@ -75,10 +76,10 @@ function throwCancelled(): never {
 function isFullRankable(s: ScoredBar | null | undefined): s is ScoredBar {
   return Boolean(
     s &&
-      s.mode === "full" &&
-      s.validForFinalRanking &&
-      Number.isFinite(s.robustScore) &&
-      s.bar.length > 0,
+    s.mode === "full" &&
+    s.validForFinalRanking &&
+    Number.isFinite(s.robustScore) &&
+    s.bar.length > 0,
   );
 }
 
@@ -192,7 +193,7 @@ export function selectAfterParity(args: {
 
   const incumbentValidated =
     incumbentBar?.length && scored.length > 0
-      ? scored.find((s) => barsEqual(s.bar, incumbentBar)) ?? null
+      ? (scored.find((s) => barsEqual(s.bar, incumbentBar)) ?? null)
       : null;
   const incumbentScore = incumbentValidated
     ? incumbentValidated.robustScore
@@ -254,11 +255,14 @@ export function selectAfterParity(args: {
   const percentImprovement = scoreImprovementPercent(winnerScore, incumbentScore, isUpgrade);
 
   const top = scored.map((s) => ({ ...s, bar: [...s.bar] }));
-  const bestFullScore =
-    scored[0]?.robustScore ?? Number.NEGATIVE_INFINITY;
+  const bestFullScore = scored[0]?.robustScore ?? Number.NEGATIVE_INFINITY;
 
   const proof: SolveResult["proof"] =
-    status === "failed" ? "failed" : prior.proof === "failed" ? "heuristic-best-found" : prior.proof;
+    status === "failed"
+      ? "failed"
+      : prior.proof === "failed"
+        ? "heuristic-best-found"
+        : prior.proof;
 
   return {
     best: best ? { ...best, bar: [...best.bar] } : null,
@@ -296,13 +300,15 @@ export async function runScoreAnalysisParityGate(
     input.onProgress?.({ done: i, total, label, bar });
 
     // Same adaptive live ladder as finalize ranking; only detailLevel differs.
-    const scoreOnlyEval = evaluateRevolutionBar({
-      ...evalBase,
-      bar,
-      durationTicks: fullTicks,
-      detailLevel: "score-only",
-      branchFidelityMode: "full",
-    });
+    const scoreOnlyEval =
+      input.scoreOnlyEvaluations?.get(fp) ??
+      evaluateRevolutionBar({
+        ...evalBase,
+        bar,
+        durationTicks: fullTicks,
+        detailLevel: "score-only",
+        branchFidelityMode: "full",
+      });
 
     if (!scoreOnlyEval.ok || !scoreOnlyEval.validForFinalRanking) {
       rejected.push({

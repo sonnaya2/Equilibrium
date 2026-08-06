@@ -32,9 +32,23 @@ test("rotation solver starts, shows progress, and cancel leaves no verified resu
   await sizeSelect.selectOption("fixed4");
   await expect(sizeSelect).toHaveValue("fixed4");
 
+  await page.evaluate(() => {
+    const tick = () => {
+      const root = document.documentElement;
+      root.dataset.solverFrames = String(Number(root.dataset.solverFrames ?? 0) + 1);
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+
   await optimize.click();
   await expect(page.getByTestId("revo-solver-progress")).toBeVisible({ timeout: 10_000 });
   await expect(page.getByTestId("revo-solver-cancel")).toBeVisible({ timeout: 5_000 });
+
+  const framesBefore = Number(await page.locator("html").getAttribute("data-solver-frames"));
+  await page.waitForTimeout(500);
+  const framesAfter = Number(await page.locator("html").getAttribute("data-solver-frames"));
+  expect(framesAfter - framesBefore).toBeGreaterThan(5);
 
   await page.getByTestId("revo-solver-cancel").click();
 
@@ -48,4 +62,38 @@ test("rotation solver starts, shows progress, and cancel leaves no verified resu
     expect(text.toLowerCase()).toMatch(/stopped|stop|preview/);
     expect(text.toLowerCase()).not.toMatch(/full-shortlist-best|globally-optimal/);
   }
+});
+
+test("uncached rotation analysis stays responsive and returns a worker result", async ({
+  page,
+}) => {
+  await page.getByRole("button", { name: "Buffs", exact: true }).click();
+  const vulnerability = page.getByRole("checkbox", { name: /Vulnerability/ });
+  await vulnerability.check();
+  await expect(vulnerability).toBeChecked();
+
+  await page.getByRole("tab", { name: "Rotation", exact: true }).click();
+  await page.getByTestId("revo-run-duration").fill("67");
+
+  await page.evaluate(() => {
+    const tick = () => {
+      const root = document.documentElement;
+      root.dataset.runFrames = String(Number(root.dataset.runFrames ?? 0) + 1);
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+
+  await page.getByTestId("revo-run-button").click();
+  await expect(page.getByTestId("revo-run-busy")).toBeVisible();
+
+  const framesBefore = Number(await page.locator("html").getAttribute("data-run-frames"));
+  await page.waitForTimeout(500);
+  const framesAfter = Number(await page.locator("html").getAttribute("data-run-frames"));
+  expect(framesAfter - framesBefore).toBeGreaterThan(5);
+
+  await expect(page.getByText("Fixed-window DPS", { exact: true })).toBeVisible({
+    timeout: 25_000,
+  });
+  await expect(page.getByTestId("revo-run-worker-error")).toHaveCount(0);
 });

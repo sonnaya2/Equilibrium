@@ -62,11 +62,7 @@ export function onMagicHitLanded(
   }
   // Tsunami arms/refreshes the crit-adren window when the hit deals damage
   // (wiki: includes damage-immune targets; sim uses max/expected > 0).
-  if (
-    ability.id === "tsunami" &&
-    damage != null &&
-    (damage.max > 0 || damage.expected > 0)
-  ) {
+  if (ability.id === "tsunami" && damage != null && (damage.max > 0 || damage.expected > 0)) {
     rt.state = patchMagic(rt.state, {
       tsunamiCritAdrenUntilTick: armTsunamiCritAdren(event.tick),
     });

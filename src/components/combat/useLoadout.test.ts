@@ -218,6 +218,7 @@ describe("normalizeLoadout", () => {
       strengthCape99: false,
       attackCape120: false,
       protectionPrayer: false,
+      aegisArmourBasis: "total-rating",
       berserkersFury: false,
       furyOfTheSmall: false,
       heightenedSenses: false,
@@ -225,6 +226,7 @@ describe("normalizeLoadout", () => {
       ringOfVigourPassive: false,
       slayerHelmetStand: null,
       ensouledSpectralLens: false,
+      sliverOfEdictsActive: false,
     });
     expect(next.currentHealthPercent).toBe(50);
     expect(next.equipmentSlots).toEqual({});

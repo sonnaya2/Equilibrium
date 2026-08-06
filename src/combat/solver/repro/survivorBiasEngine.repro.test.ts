@@ -17,6 +17,7 @@ import { TICK_SECONDS } from "../../core/ticks";
 import { simulateRevolution } from "../../engine/simulation/revolution";
 import { buildCandidatePool } from "../candidatePool";
 import { evaluateRevolutionBar } from "../evaluate";
+import { budgetForLiveCap } from "../branchFidelity";
 import { MIN_RANKABLE_HORIZON_TICKS, scoreSummary } from "../objective";
 import {
   measureResidualStats,
@@ -32,11 +33,15 @@ function exploratoryDpm(totalExpected: number, ticks: number): number {
 }
 
 describe("REPRO: real engine residual mass (Leng+Impatient+Relentless)", () => {
-  it("primary fixture has residual fraction >= 0.5 and concrete-terminals basis", () => {
-    const stats = measureResidualStats(survivorBiasPrimaryFixture(), {
+  let cachedPrimary: ReturnType<typeof measureResidualStats> | undefined;
+  const primaryStats = () =>
+    (cachedPrimary ??= measureResidualStats(survivorBiasPrimaryFixture(), {
       detailLevel: "score-only",
-    });
-    console.log(
+    }));
+
+  it("primary fixture has residual fraction >= 0.5 and concrete-terminals basis", () => {
+    const stats = primaryStats();
+    console.warn(
       "[engine residual PRIMARY]",
       JSON.stringify(
         {
@@ -87,9 +92,9 @@ describe("REPRO: real engine residual mass (Leng+Impatient+Relentless)", () => {
   });
 
   it("extreme fixture residual fraction is higher than primary", () => {
-    const primary = measureResidualStats(survivorBiasPrimaryFixture());
+    const primary = primaryStats();
     const extreme = measureResidualStats(survivorBiasExtremeFixture());
-    console.log(
+    console.warn(
       "[engine residual EXTREME]",
       JSON.stringify(
         {
@@ -107,17 +112,20 @@ describe("REPRO: real engine residual mass (Leng+Impatient+Relentless)", () => {
     expect(extreme.residualFraction).toBeGreaterThan(0.5);
   });
 
-  it("same bar without Impatient/Relentless is residual-free (current-bar baseline)", () => {
+  it("same bar without Impatient/Relentless is residual-free at the first sufficient cap", () => {
     const fx = survivorBiasPrimaryFixture();
     const clean = simulateRevolution(
       {
         ...fx.revoInput,
         adrenaline: undefined,
       },
-      { detailLevel: "score-only" },
+      {
+        detailLevel: "score-only",
+        branchBudget: budgetForLiveCap(128, 1e-12),
+      },
     );
     const stats = residualStatsFromSummary("user-no-rng-perks", clean);
-    console.log(
+    console.warn(
       "[engine residual USER CLEAN]",
       JSON.stringify(
         {
@@ -187,20 +195,19 @@ describe("REPRO: real engine residual mass (Leng+Impatient+Relentless)", () => {
       sim: { ...fx.revoInput, adrenaline: undefined },
       profileId: "balanced",
       detailLevel: "score-only",
+      branchFidelityMode: "full",
+      branchFidelityOverrides: { full: { liveCaps: [128] } },
       size: { min: 2, max: 8 },
     });
 
     const proposedResidual =
-      proposedFull.summary?.damage?.residualMass ??
-      proposedFull.summary?.rng?.residualWeight ??
-      0;
+      proposedFull.summary?.damage?.residualMass ?? proposedFull.summary?.rng?.residualWeight ?? 0;
     const proposedConcrete =
       proposedFull.summary?.damage?.concreteMass ??
       proposedFull.summary?.rng?.concreteMass ??
       proposedFull.summary?.rng?.probabilityMass ??
       0;
-    const proposedConditional =
-      proposedFull.summary?.damage?.conditionalConcreteMean ?? 0;
+    const proposedConditional = proposedFull.summary?.damage?.conditionalConcreteMean ?? 0;
     const proposedKnownMass =
       proposedFull.summary?.damage?.knownMassExpectedDamage ??
       proposedFull.summary?.totalExpected ??
@@ -232,18 +239,16 @@ describe("REPRO: real engine residual mass (Leng+Impatient+Relentless)", () => {
       legacyConditionalDpm_proposed: exploratoryDpm(proposedConditional, searchTicks),
     };
 
-    console.log(
+    console.warn(
       "[evaluate PHASE-2]",
-      JSON.stringify(
-        phase2,
-        (_k, v) => (v === Number.NEGATIVE_INFINITY ? "-Infinity" : v),
-        2,
-      ),
+      JSON.stringify(phase2, (_k, v) => (v === Number.NEGATIVE_INFINITY ? "-Infinity" : v), 2),
     );
 
     // 1. Substantial residual on proposed full-horizon sim.
     expect(proposedResidual).toBeGreaterThan(0.5);
-    expect(["concrete-terminals", "known-mass-contribution"]).toContain(phase2.totalsBasis_proposed);
+    expect(["concrete-terminals", "known-mass-contribution"]).toContain(
+      phase2.totalsBasis_proposed,
+    );
 
     // 2. Phase 2 progress: short explore must not rank residual conditional mean.
     expect(proposedShort.ok).toBe(false);
@@ -251,12 +256,12 @@ describe("REPRO: real engine residual mass (Leng+Impatient+Relentless)", () => {
     expect(proposedShort.validForFinalRanking).toBe(false);
     expect(proposedShort.score).toBe(Number.NEGATIVE_INFINITY);
     expect(proposedShort.failureReason ?? "").toMatch(/residualWeight|totalsBasis|exactness/);
-    expect((proposedShort.summary?.rng?.residualWeight ?? 0)).toBeGreaterThan(0);
+    expect(proposedShort.summary?.rng?.residualWeight ?? 0).toBeGreaterThan(0);
     // Residual-free user short path remains finite rankable exploratory.
     expect(userShort.ok).toBe(true);
     expect(userShort.exploratory).toBe(true);
     expect(Number.isFinite(userShort.score) && userShort.score > 0).toBe(true);
-    expect((userShort.summary?.rng?.residualWeight ?? 0)).toBeLessThan(1e-9);
+    expect(userShort.summary?.rng?.residualWeight ?? 0).toBeLessThan(1e-9);
 
     // 3. Full: proposed unrankable (residual); user rankable and higher known-mass.
     expect(proposedFull.validForFinalRanking).toBe(false);

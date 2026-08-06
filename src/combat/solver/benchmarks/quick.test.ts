@@ -76,8 +76,12 @@ describe.skipIf(!enabled)("solver benchmark (quick)", () => {
     expect(secondCase.bar).toEqual(firstCase.bar);
 
     // Context change moves fingerprint (melee vs leng equipment).
-    const plain = await fingerprintSolveContext(defs.find((d) => d.id === "melee-2h-4slot")!.build());
-    const leng = await fingerprintSolveContext(defs.find((d) => d.id === "leng-icy-context")!.build());
+    const plain = await fingerprintSolveContext(
+      defs.find((d) => d.id === "melee-2h-4slot")!.build(),
+    );
+    const leng = await fingerprintSolveContext(
+      defs.find((d) => d.id === "leng-icy-context")!.build(),
+    );
     expect(plain).not.toBe(leng);
   }, 90_000);
 });

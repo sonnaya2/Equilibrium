@@ -103,7 +103,7 @@ describe("presentation reconciles with engine inputs", () => {
     );
   });
 
-  it("armour breakdown equals totalArmour and Aegis qualifying armour", () => {
+  it("armour breakdowns reconcile with the default Aegis basis", () => {
     const stats = loadoutStats(
       {
         ...base,
@@ -113,10 +113,8 @@ describe("presentation reconciles with engine inputs", () => {
       { blessingPicks: ["Order"] },
     );
     expect(sumBreakdown(stats.armourBreakdown)).toBe(stats.defence.totalArmour);
-    expect(stats.aegis.qualifyingArmour).toBe(stats.defence.totalArmour);
-    expect(stats.aegis.excludedBlockArmour).toBe(
-      stats.defence.blockArmourRating - stats.defence.totalArmour,
-    );
+    expect(stats.aegis.qualifyingArmour).toBe(stats.defence.blockArmourRating);
+    expect(stats.aegis.excludedBlockArmour).toBe(0);
     expect(sumBreakdown(stats.armourRatingBreakdown)).toBe(stats.defence.blockArmourRating);
   });
 

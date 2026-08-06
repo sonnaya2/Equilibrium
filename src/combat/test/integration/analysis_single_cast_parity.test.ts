@@ -128,11 +128,7 @@ describe("analyzeSingleCast simple-cast parity", () => {
       }),
       { now: NOW },
     );
-    const analysis = expectAnalysisMatchesOneCast(
-      "icy_tempest",
-      model,
-      abilityById("icy_tempest"),
-    );
+    const analysis = expectAnalysisMatchesOneCast("icy_tempest", model, abilityById("icy_tempest"));
     expect(analysis.statefulLimitations.some((l) => l.id === "primordial_ice_stacks")).toBe(true);
   });
 });
@@ -296,9 +292,7 @@ describe("analyzeSingleCast adrenaline + failed cast honesty", () => {
 
     expect(analysis.ok).toBe(false);
     expect(analysis.parity).toBe("limited");
-    expect(analysis.statefulLimitations.some((l) => l.id === "conjure_already_active")).toBe(
-      true,
-    );
+    expect(analysis.statefulLimitations.some((l) => l.id === "conjure_already_active")).toBe(true);
     expect(analysis.expected).toBe(0);
     expect(analysis.min).toBe(0);
     expect(analysis.max).toBe(0);

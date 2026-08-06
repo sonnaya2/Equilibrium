@@ -1,9 +1,6 @@
 import { endBerserk } from "../../styles/melee/bloodlust";
 import { METEOR_STRIKE_PASSIVE_ADREN_PER_TICK } from "../../styles/melee/effects";
-import {
-  applyLengLandToDistribution,
-  expirePrimordialIce,
-} from "../../styles/melee/primordialIce";
+import { applyLengLandToDistribution, expirePrimordialIce } from "../../styles/melee/primordialIce";
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { scheduleCastEvents } from "../cast/schedule";
 import { applyCastEffects, applyCompletionEffects, castEffectContext } from "../cast/effects";
@@ -139,8 +136,7 @@ function foldAfterExpand(
   noteBranchLiveCount(acc.length);
   const before = acc.length;
   const merged = mergeBranches(acc);
-  const exactness: BranchExactness =
-    merged.length < before ? "merged-exactly" : "exact";
+  const exactness: BranchExactness = merged.length < before ? "merged-exactly" : "exact";
   if (merged.length <= intermediateMax) {
     noteBranchLiveCount(merged.length);
     return { branches: merged, residualWeight: 0, exactness };
@@ -257,8 +253,7 @@ function advanceToBranchesInner(
     }
 
     // Heaviest first: mid-round hard-cap prefers mass the final heaviest-k keeps.
-    const ordered =
-      live.length > 1 ? [...live].sort((a, b) => b.weight - a.weight) : live;
+    const ordered = live.length > 1 ? [...live].sort((a, b) => b.weight - a.weight) : live;
 
     let next: Branch[] = [];
     let expandedAny = false;
@@ -383,10 +378,7 @@ function advanceToBranchesInner(
   return { branches: live, residualWeight, exactness };
 }
 
-function castSeqOf(
-  rt: SimulationRuntime,
-  prepared: PreparedCast,
-): number | undefined {
+function castSeqOf(rt: SimulationRuntime, prepared: PreparedCast): number | undefined {
   for (const [seq, rec] of rt.recordBySeq) {
     if (rec.tick === prepared.candidate && rec.abilityId === prepared.ability.id) return seq;
   }
@@ -482,12 +474,7 @@ function drainBranchToEndInner(
   const rt = branch.rt;
   const effectiveHorizon = horizonTicks ?? rt.horizon;
   if (effectiveHorizon != null && effectiveHorizon > 0) {
-    const advanced = advanceToBranches(
-      branch,
-      effectiveHorizon - 1,
-      maxLive,
-      intermediateMax,
-    );
+    const advanced = advanceToBranches(branch, effectiveHorizon - 1, maxLive, intermediateMax);
     for (const b of advanced.branches) {
       if (b.rt.state.tick < effectiveHorizon) {
         b.rt.state = { ...b.rt.state, tick: effectiveHorizon };

@@ -86,10 +86,7 @@ type Loadout = import("./useLoadout").Loadout;
 
 const ORDER = ["Order", "Order", "Order"] as const;
 
-const aegisOf = (
-  loadout: Partial<Loadout>,
-  basis: "equipment" | "total-rating" = "equipment",
-) =>
+const aegisOf = (loadout: Partial<Loadout>, basis: "equipment" | "total-rating" = "equipment") =>
   loadoutStats(
     {
       ...DEFAULT_LOADOUT,

@@ -7,7 +7,10 @@ import { expect, test, type Page } from "@playwright/test";
 
 async function openArch(page: Page) {
   await page.getByRole("tab", { name: "Loadout", exact: true }).click();
-  await page.getByRole("navigation", { name: "Loadout sections" }).getByRole("button", { name: "Arch", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "Loadout sections" })
+    .getByRole("button", { name: "Arch", exact: true })
+    .click();
 }
 
 async function selectRelicIfNeeded(page: Page, name: RegExp) {
@@ -22,7 +25,10 @@ async function selectRelicIfNeeded(page: Page, name: RegExp) {
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/combat");
-  await page.evaluate(() => window.localStorage.clear());
+  await page.evaluate(() => {
+    window.localStorage.clear();
+    window.localStorage.setItem("eq:build:v1", JSON.stringify({ elective: ["kandarin"] }));
+  });
   await page.reload();
 });
 
@@ -65,7 +71,10 @@ test("manual rotation casts Death's Swiftness with CoE + FotS at 100 start adren
 
   // Success: Natural DPS metrics and DS row in the cast table.
   await expect(page.getByText("Natural DPS", { exact: true })).toBeVisible({ timeout: 15_000 });
-  const dsRow = page.locator("tbody tr").filter({ hasText: /Death's Swiftness/i }).first();
+  const dsRow = page
+    .locator("tbody tr")
+    .filter({ hasText: /Death's Swiftness/i })
+    .first();
   await expect(dsRow).toBeVisible();
   // CoE leaves 10 after a 100 dump when starting full (adren column on that row).
   await expect(dsRow.locator("td").last()).toHaveText(/10%/);

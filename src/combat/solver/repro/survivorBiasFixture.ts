@@ -275,9 +275,7 @@ export function fromRealResidualSummary(
 }
 
 /** Sanity: search horizon must stay below rankable so short path applies. */
-export function assertSearchHorizonIsExploratory(
-  ticks: number = REPRO_SEARCH_HORIZON_TICKS,
-): void {
+export function assertSearchHorizonIsExploratory(ticks: number = REPRO_SEARCH_HORIZON_TICKS): void {
   if (ticks >= MIN_RANKABLE_HORIZON_TICKS) {
     throw new Error(
       `repro search horizon ${ticks} must be < MIN_RANKABLE_HORIZON_TICKS=${MIN_RANKABLE_HORIZON_TICKS}`,

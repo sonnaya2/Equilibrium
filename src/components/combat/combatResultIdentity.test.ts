@@ -58,19 +58,21 @@ function packFromLoadout(
     now,
     ...(unlockedRegions ? { unlockedRegions: [...unlockedRegions] } : {}),
   });
-  const combatModel = toResolvedCombatModel(loadout, {
-    now,
-    ...(unlockedRegions ? { unlockedRegions: [...unlockedRegions] } : {}),
-  }, stats);
+  const combatModel = toResolvedCombatModel(
+    loadout,
+    {
+      now,
+      ...(unlockedRegions ? { unlockedRegions: [...unlockedRegions] } : {}),
+    },
+    stats,
+  );
   const snapshot = solverSnapshotFromResolvedModel(combatModel);
   const request = packSolverRequest({
     model: combatModel,
     style: combatModel.style,
     build: emptyBuild(),
     now,
-    ...(unlockedRegions
-      ? { useBuildRegions: false, unlockedRegions }
-      : {}),
+    ...(unlockedRegions ? { useBuildRegions: false, unlockedRegions } : {}),
   });
   return { stats, snapshot, request, combatModel };
 }
@@ -236,14 +238,12 @@ describe("combat result identity (stale-result product rule)", () => {
   describe("bar library score verification is context-bound", () => {
     it("verified under loadout context A is not verified under context B", () => {
       const contextA = solveIdentityFromRequest(
-        packFromLoadout(
-          withLoadout({ baseDamage: { mode: "manual", manualValue: 2_000 } }),
-        ).request,
+        packFromLoadout(withLoadout({ baseDamage: { mode: "manual", manualValue: 2_000 } }))
+          .request,
       );
       const contextB = solveIdentityFromRequest(
-        packFromLoadout(
-          withLoadout({ baseDamage: { mode: "manual", manualValue: 3_000 } }),
-        ).request,
+        packFromLoadout(withLoadout({ baseDamage: { mode: "manual", manualValue: 3_000 } }))
+          .request,
       );
       expect(contextA).not.toBe(contextB);
       expect(contextA.length).toBeGreaterThan(0);
@@ -284,39 +284,27 @@ describe("combat result identity (stale-result product rule)", () => {
       ).request;
       const identity = solveIdentityFromRequest(request);
       const otherIdentity = solveIdentityFromRequest(
-        packFromLoadout(
-          withLoadout({ baseDamage: { mode: "manual", manualValue: 2_100 } }),
-        ).request,
+        packFromLoadout(withLoadout({ baseDamage: { mode: "manual", manualValue: 2_100 } }))
+          .request,
       );
       expect(identity).not.toBe(otherIdentity);
 
+      expect(resultMatchesRequestIdentity(request, verifiedDto({ solveIdentity: identity }))).toBe(
+        true,
+      );
       expect(
-        resultMatchesRequestIdentity(request, verifiedDto({ solveIdentity: identity })),
-      ).toBe(true);
-      expect(
-        resultMatchesRequestIdentity(
-          request,
-          verifiedDto({ solveIdentity: otherIdentity }),
-        ),
+        resultMatchesRequestIdentity(request, verifiedDto({ solveIdentity: otherIdentity })),
       ).toBe(false);
-      expect(
-        resultMatchesRequestIdentity(request, verifiedDto({ solveIdentity: "" })),
-      ).toBe(false);
+      expect(resultMatchesRequestIdentity(request, verifiedDto({ solveIdentity: "" }))).toBe(false);
 
+      expect(isVerifiedCacheableResult(request, verifiedDto({ solveIdentity: identity }))).toBe(
+        true,
+      );
       expect(
-        isVerifiedCacheableResult(request, verifiedDto({ solveIdentity: identity })),
-      ).toBe(true);
-      expect(
-        isVerifiedCacheableResult(
-          request,
-          verifiedDto({ solveIdentity: otherIdentity }),
-        ),
+        isVerifiedCacheableResult(request, verifiedDto({ solveIdentity: otherIdentity })),
       ).toBe(false);
       expect(
-        isVerifiedCacheableResult(
-          request,
-          verifiedDto({ solveIdentity: identity + "stale" }),
-        ),
+        isVerifiedCacheableResult(request, verifiedDto({ solveIdentity: identity + "stale" })),
       ).toBe(false);
     });
   });

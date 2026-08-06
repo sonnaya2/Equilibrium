@@ -27,12 +27,10 @@ export type { SolveFn, SolveProgressHandler, SolveRuntimeOptions } from "./solve
 export { solverPoolSize } from "./pool";
 export { setWorkerFactoryForTests, setWorkerHostTimeoutsForTests } from "./workerCreate";
 
-/** After a hard worker failure, prefer main-thread for the rest of the tab session. */
-let stickyMainThread = false;
 let sharedClient: RevolutionSolverClient | null = null;
 
 /**
- * Product-level run token shared by pool, single worker, sticky/forced main, and fallback.
+ * Product-level run token shared by pool, single worker, and explicit main runs.
  * cancelOptimize always flips this so no path needs a separate AbortController.
  */
 let productRun: ProductRunToken | null = null;
@@ -71,13 +69,8 @@ function abortError(message = "revolution solver cancelled"): DOMException {
   return new DOMException(message, "AbortError");
 }
 
-export function isSolverPreferringMainThread(): boolean {
-  return stickyMainThread;
-}
-
 /** Test / recovery hook - not part of the product combat barrel. */
 export function resetSolverHostForTests(): void {
-  stickyMainThread = false;
   if (productRun) productRun.cancelled = true;
   productRun = null;
   // disposeQuiet settles active without requiring callers to have attached handlers yet.
@@ -143,9 +136,9 @@ export type PauseResumeResult =
   { ok: true } | { ok: false; reason: "no-active-run" | "main-thread" | "worker-unavailable" };
 
 /**
- * Product entry: parallel worker agents when possible; sticky main fallback after
- * infrastructure failure. Cancellation is always via {@link cancelOptimize}
- * (or options.isCancelled / signal) - one path for every mode.
+ * Product entry: parallel worker agents with a single-worker retry.
+ * Main-thread execution is explicit test/dev behavior because a synchronous
+ * combat evaluation cannot yield or cancel mid-simulation.
  */
 export async function runOptimize(
   request: SerializableSolverRequest,
@@ -172,26 +165,29 @@ export async function runOptimize(
     if (cancelled()) throw abortError();
 
     if (!isSerializableSimBase(request.loadout)) {
-      // Shape limitation for this request only - not a worker infrastructure failure.
-      return await runTrackedMain(request, onProgress, cancelled);
+      if (options?.forceMainThread === true) {
+        return await runTrackedMain(request, onProgress, cancelled);
+      }
+      throw new Error("revolution solver requires a worker-safe combat model");
     }
 
     let payload: SerializableSolverRequest;
     try {
       payload = structuredClone(request);
     } catch (err) {
-      // This request is not cloneable; next cloneable request may still use workers.
-      if (typeof console !== "undefined") {
-        console.warn("[revo-solver] request not cloneable, main-thread only", err);
+      if (options?.forceMainThread === true) {
+        return await runTrackedMain(request, onProgress, cancelled);
       }
-      return await runTrackedMain(request, onProgress, cancelled);
+      throw new Error(
+        `revolution solver request cannot be sent to a worker: ${err instanceof Error ? err.message : String(err)}`,
+      );
     }
 
-    const forceMain =
-      options?.forceMainThread === true || stickyMainThread || !canCreateSolverWorker();
-
-    if (forceMain) {
+    if (options?.forceMainThread === true) {
       return await runTrackedMain(payload, onProgress, cancelled);
+    }
+    if (!canCreateSolverWorker()) {
+      throw new Error("revolution solver workers are unavailable in this browser");
     }
 
     // Parallel agent pool (product path)
@@ -227,18 +223,15 @@ export async function runOptimize(
       if (cancelled() || isAbortError(err2)) {
         throw isAbortError(err2) ? err2 : abortError();
       }
-      stickyMainThread = true;
-      if (typeof console !== "undefined") {
-        console.warn("[revo-solver] worker unavailable, main-thread fallback", err2);
-      }
       try {
         client.disposeQuiet();
       } catch {
         // ignore
       }
       if (sharedClient === client) sharedClient = null;
-      if (cancelled()) throw abortError();
-      return await runTrackedMain(payload, onProgress, cancelled);
+      throw new Error(
+        `revolution solver worker failed: ${err2 instanceof Error ? err2.message : String(err2)}`,
+      );
     }
   } finally {
     options?.signal?.removeEventListener("abort", onAbort);
@@ -247,8 +240,8 @@ export async function runOptimize(
 }
 
 /**
- * Cancel every execution mode: agent pool, single worker, direct/sticky/forced
- * main, fallback, and any superseded previous run.
+ * Cancel every execution mode: agent pool, single worker, explicit main, and
+ * any superseded previous run.
  *
  * Soft cancel messages alone cannot interrupt a sync full-horizon simulation on
  * a worker - so product cancel also **terminates** pool/single workers. The next
@@ -438,7 +431,7 @@ export class RevolutionSolverClient {
       return Promise.reject(abortError());
     }
 
-    const useMain = options?.forceMainThread === true || stickyMainThread;
+    const useMain = options?.forceMainThread === true;
 
     if (!useMain) {
       const worker = this.ensureWorker();

@@ -29,6 +29,11 @@ describe.skipIf(!enabled)("solver benchmark (full)", () => {
       expect(c.seed).toBe(request.seed);
       expect(c.bounds).toEqual({ min: request.minBarSize, max: request.maxBarSize });
       expect(["ok", "degraded", "failed", "error"]).toContain(c.status);
+      if (def.expectedFullError) {
+        expect(c.status).toBe("error");
+        expect(c.error).toContain(def.expectedFullError);
+        continue;
+      }
       expect(c.status).not.toBe("error");
       if (c.bar?.length) {
         expect(c.bar.length).toBeGreaterThanOrEqual(c.bounds.min);

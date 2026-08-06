@@ -1,11 +1,6 @@
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { prepareCast, type PreparedCast } from "../cast/prepare";
-import {
-  castRejection,
-  candidateTick,
-  resolveCastAbility,
-  rngPointsFor,
-} from "../cast/rules";
+import { castRejection, candidateTick, resolveCastAbility, rngPointsFor } from "../cast/rules";
 import { resolveIcyTempest } from "../../styles/melee/icyTempest";
 import { firstLegalTickFor } from "../runtime/state";
 import type { CastRng } from "./contracts";
@@ -25,12 +20,7 @@ import {
 import { advanceToBranches, commitCastBranches } from "./lengLandBranch";
 import { runWithHitReuseScope } from "../resolution/hitReuse";
 
-export type {
-  Branch,
-  BranchExactness,
-  BranchSet,
-  BranchProfile,
-} from "./branchCore";
+export type { Branch, BranchExactness, BranchSet, BranchProfile } from "./branchCore";
 export {
   combineExactness,
   emptyBranchSet,
@@ -336,14 +326,7 @@ export function castOutcomes(
   maxLive: number = MAX_LIVE_BRANCHES,
   intermediateMax: number = MAX_INTERMEDIATE_BRANCHES,
 ): BranchSet {
-  const planned = planCastOutcomes(
-    branch,
-    ability,
-    readyTick,
-    auto,
-    maxLive,
-    intermediateMax,
-  );
+  const planned = planCastOutcomes(branch, ability, readyTick, auto, maxLive, intermediateMax);
   if (planned.plans.length === 0) {
     return {
       branches: planned.errors,
@@ -363,10 +346,7 @@ export function castOutcomes(
   };
 }
 
-export type {
-  CompiledLengLandTable,
-  LengLandArm,
-} from "../../styles/melee/lengRng";
+export type { CompiledLengLandTable, LengLandArm } from "../../styles/melee/lengRng";
 export {
   compileLengLandArms,
   compileLengLandTable,

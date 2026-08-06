@@ -109,13 +109,7 @@ export function resolveIcyTempest(
       hits,
       postCastPrimordialIce,
     };
-    const key = JSON.stringify([
-      stacksConsumed,
-      requirement,
-      spend,
-      hits,
-      postCastPrimordialIce,
-    ]);
+    const key = JSON.stringify([stacksConsumed, requirement, spend, hits, postCastPrimordialIce]);
     const prior = outcomesByKey.get(key);
     outcomesByKey.set(
       key,
@@ -129,9 +123,7 @@ export function resolveIcyTempest(
     requirement,
     outcomes: [...outcomesByKey.values()].sort(
       (a, b) =>
-        a.stacksConsumed - b.stacksConsumed ||
-        a.spend - b.spend ||
-        a.probability - b.probability,
+        a.stacksConsumed - b.stacksConsumed || a.spend - b.spend || a.probability - b.probability,
     ),
     expectedSpend,
     expectedStacks,

@@ -35,9 +35,7 @@ describe("getBerserkersFuryBonus", () => {
 
   it("returns 0 for invalid maxima", () => {
     expect(getBerserkersFuryBonus({ currentLifePoints: 1, maximumLifePoints: 0 })).toBe(0);
-    expect(
-      getBerserkersFuryBonus({ currentLifePoints: 1, maximumLifePoints: Number.NaN }),
-    ).toBe(0);
+    expect(getBerserkersFuryBonus({ currentLifePoints: 1, maximumLifePoints: Number.NaN })).toBe(0);
   });
 
   it("matches wiki 0.5% band just below max", () => {
@@ -45,9 +43,7 @@ describe("getBerserkersFuryBonus", () => {
     expect(getBerserkersFuryBonus({ currentLifePoints: max - 1, maximumLifePoints: max })).toBe(
       0.005,
     );
-    expect(getBerserkersFuryBonus({ currentLifePoints: 9191, maximumLifePoints: max })).toBe(
-      0.005,
-    );
+    expect(getBerserkersFuryBonus({ currentLifePoints: 9191, maximumLifePoints: max })).toBe(0.005);
   });
 
   it("steps to 1.0% below the 91% floor", () => {
@@ -84,9 +80,7 @@ describe("getBerserkersFuryBonus", () => {
   it("uses discrete 0.5% steps (no linear missing-health interpolation)", () => {
     // 60% of 10100 = 6060 -> [51%, 61%) = 2.5%, not 0.4*5.5%
     const at60 = lifePointsFromHealthPercent(max, 60);
-    expect(getBerserkersFuryBonus({ currentLifePoints: at60, maximumLifePoints: max })).toBe(
-      0.025,
-    );
+    expect(getBerserkersFuryBonus({ currentLifePoints: at60, maximumLifePoints: max })).toBe(0.025);
     const linearWrong = (1 - 0.6) * 0.055;
     expect(linearWrong).not.toBe(0.025);
   });
@@ -105,9 +99,9 @@ describe("getBerserkersFuryBonus", () => {
       [1, 0.055],
     ];
     for (const [current, expected] of samples) {
-      expect(
-        getBerserkersFuryBonus({ currentLifePoints: current, maximumLifePoints: round }),
-      ).toBe(expected);
+      expect(getBerserkersFuryBonus({ currentLifePoints: current, maximumLifePoints: round })).toBe(
+        expected,
+      );
     }
   });
 });

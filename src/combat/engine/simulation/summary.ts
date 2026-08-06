@@ -36,6 +36,7 @@ import { TICK_SECONDS } from "../../core/ticks";
 import {
   finiteOrZero,
   PROB_TOLERANCE,
+  RESIDUAL_FREE_TOLERANCE,
   supportMaxFrom,
   supportMinFrom,
   weightedMean,
@@ -314,6 +315,9 @@ export function combineBranchSummaries(
   // Drain unlanded queue with Leng land forks before assembling terminal summaries.
   let residual = residualWeight;
   let exact: EngineBranchExactness = exactness;
+  if (branches.some((branch) => (branch.rt.input.procs?.aftershockRank ?? 0) > 0)) {
+    exact = combineExactness(exact, "bounded-approximation");
+  }
   let forkedAtDrain = false;
   let drained: Branch[] = [];
   for (const branch of branches) {
@@ -432,7 +436,7 @@ export function combineBranchSummaries(
 
   const safeResidual = finiteOrZero(residual);
   const concreteMass = rawMass;
-  const hasResidual = safeResidual > PROB_TOLERANCE;
+  const hasResidual = safeResidual > RESIDUAL_FREE_TOLERANCE;
   // Known-mass scale: multiply conditional means by concreteMass when residual remains.
   // residual ~ 0 => concreteMass ~ 1 => scale 1 leaves unit-mass EV.
   const knownMassScale = hasResidual ? concreteMass : 1;
@@ -557,7 +561,7 @@ export function combineBranchSummaries(
   const multiClass = parts.length > 1;
   // Absolute probability mass of the representative class (not share of concrete-only mass).
   const classWeight = representative.weight;
-  const useRepresentativeHistory = branching || multiClass || residual > PROB_TOLERANCE;
+  const useRepresentativeHistory = branching || multiClass || residual > RESIDUAL_FREE_TOLERANCE;
   // Branching merges weight-mix ledgers with one event log: events are not a
   // safe rebuild source for weighted totals.
   const eventsReconcileWithWeightedTotals =
@@ -605,7 +609,7 @@ export function combineBranchSummaries(
 
   const resolvedExactness: BranchExactness =
     exact === "exact" || exact === "merged-exactly"
-      ? safeResidual > PROB_TOLERANCE
+      ? safeResidual > RESIDUAL_FREE_TOLERANCE
         ? "approximated"
         : "exact"
       : "approximated";
@@ -616,7 +620,10 @@ export function combineBranchSummaries(
   // Stochastic rng when branching, multi-terminal, or residual mass remains.
   // probabilityMass/concreteMass = expanded measure only.
   const rng: StochasticRngSummary | undefined =
-    branching || multiClass || safeResidual > PROB_TOLERANCE || resolvedExactness !== "exact"
+    branching ||
+    multiClass ||
+    safeResidual > RESIDUAL_FREE_TOLERANCE ||
+    resolvedExactness !== "exact"
       ? {
           method: "probability-weighted branching",
           terminalClasses: parts.length,

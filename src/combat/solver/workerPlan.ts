@@ -1,11 +1,7 @@
 /** Worker assignment plan for parallel Revolution solvers. */
 
 import type { SearchTier } from "./contracts";
-import {
-  agentBarSizeBounds,
-  clampSolverBarSizes,
-  type SolverBarSizeBounds,
-} from "./barPolicy";
+import { agentBarSizeBounds, clampSolverBarSizes, type SolverBarSizeBounds } from "./barPolicy";
 
 export type WorkerRecipe = "default" | "evolutionary" | "anneal_local";
 
@@ -26,7 +22,7 @@ export const SAFE_GLOBAL_AGENT_CEILING = 8;
  * `hardwareCores > tierMax + 1`. That keeps agent count (and total evaluation
  * capacity N * TIER_BUDGETS) identical to the no-reserve path whenever cores
  * would otherwise force a drop (e.g. cores=4 + thorough tierMax=4 still
- * launches 4 agents — never 3).
+ * launches 4 agents, never 3).
  *
  * Do NOT flip this true with a naive `max(1, cores-1)` alone: on low-core
  * machines that lowers N and therefore total capacity. Prefer this flag true
@@ -69,7 +65,9 @@ export interface WorkerPlan {
 export function detectHardwareCores(): number {
   try {
     const n =
-      typeof navigator !== "undefined" && navigator && typeof navigator.hardwareConcurrency === "number"
+      typeof navigator !== "undefined" &&
+      navigator &&
+      typeof navigator.hardwareConcurrency === "number"
         ? navigator.hardwareConcurrency
         : undefined;
     if (typeof n === "number" && Number.isFinite(n) && n >= 1) return Math.floor(n);
@@ -123,7 +121,9 @@ export function planRecipe(agentIndex: number, tier: SearchTier): WorkerRecipe {
   return recipes[i % recipes.length]!;
 }
 
-function assignmentKey(a: Pick<WorkerAssignment, "minBarSize" | "maxBarSize" | "recipe" | "seed">): string {
+function assignmentKey(
+  a: Pick<WorkerAssignment, "minBarSize" | "maxBarSize" | "recipe" | "seed">,
+): string {
   return `${a.minBarSize}:${a.maxBarSize}|${a.recipe}|${a.seed}`;
 }
 

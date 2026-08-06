@@ -98,9 +98,7 @@
     "fileTitle": "Commander Zilyana (boss portal) texture.png",
     "search": "Commander Zilyana boss portal texture",
     "canonicalPage": "https://runescape.wiki/w/Commander_Zilyana",
-    "aliases": [
-      "boss-zilyana"
-    ],
+    "aliases": ["boss-zilyana"],
     "provenanceAlternates": [
       {
         "id": "boss-zilyana",
@@ -117,9 +115,7 @@
     "fileTitle": "Corporeal Beast.png",
     "search": "Corporeal Beast boss image",
     "canonicalPage": "https://runescape.wiki/w/Corporeal_Beast",
-    "aliases": [
-      "boss-corporeal-beast"
-    ],
+    "aliases": ["boss-corporeal-beast"],
     "provenanceAlternates": [
       {
         "id": "boss-corporeal-beast",
@@ -167,9 +163,7 @@
     "fileTitle": "General Graardor (boss portal) texture.png",
     "search": "General Graardor boss portal texture",
     "canonicalPage": "https://runescape.wiki/w/General_Graardor",
-    "aliases": [
-      "boss-graardor"
-    ],
+    "aliases": ["boss-graardor"],
     "provenanceAlternates": [
       {
         "id": "boss-graardor",
@@ -232,9 +226,7 @@
     "fileTitle": "Hermod, the Spirit of War.png",
     "search": "Hermod, the Spirit of War",
     "canonicalPage": "https://runescape.wiki/w/Hermod,_the_Spirit_of_War",
-    "aliases": [
-      "boss-hermod"
-    ],
+    "aliases": ["boss-hermod"],
     "provenanceAlternates": [
       {
         "id": "boss-hermod",
@@ -251,12 +243,8 @@
     "fileTitle": "Ivar, King of Bones.png",
     "search": "Ivar King of Bones official boss image",
     "canonicalPage": "https://runescape.wiki/w/Ivar,_King_of_Bones",
-    "aliases": [
-      "upgrades-permanent-unlocks-ivar-uniques"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/ivar-uniques.webp"
-    ]
+    "aliases": ["upgrades-permanent-unlocks-ivar-uniques"],
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/ivar-uniques.webp"]
   },
   {
     "id": "boss-jad",
@@ -266,9 +254,7 @@
     "fileTitle": "TzTok-Jad.png",
     "search": "TzTok-Jad boss image",
     "canonicalPage": "https://runescape.wiki/w/TzTok-Jad",
-    "aliases": [
-      "boss-tztok-jad"
-    ]
+    "aliases": ["boss-tztok-jad"]
   },
   {
     "id": "boss-kalphite-king",
@@ -285,12 +271,8 @@
     "path": "public/game/bosses/kalphite-queen",
     "search": "Kalphite Queen boss image",
     "canonicalPage": "https://runescape.wiki/w/Kalphite_Queen",
-    "aliases": [
-      "bulk42-upgrades-permanent-unlocks-kalphite-queen"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/kalphite-queen.webp"
-    ]
+    "aliases": ["bulk42-upgrades-permanent-unlocks-kalphite-queen"],
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/kalphite-queen.webp"]
   },
   {
     "id": "boss-kerapac",
@@ -316,9 +298,7 @@
     "fileTitle": "Kree'arra (boss portal) texture.png",
     "search": "Kree'arra boss portal texture",
     "canonicalPage": "https://runescape.wiki/w/Kree%27arra",
-    "aliases": [
-      "boss-kree"
-    ],
+    "aliases": ["boss-kree"],
     "provenanceAlternates": [
       {
         "id": "boss-kree",
@@ -335,9 +315,7 @@
     "fileTitle": "K'ril Tsutsaroth (boss portal) texture.png",
     "search": "K'ril Tsutsaroth boss portal texture",
     "canonicalPage": "https://runescape.wiki/w/K%27ril_Tsutsaroth",
-    "aliases": [
-      "boss-kril"
-    ],
+    "aliases": ["boss-kril"],
     "provenanceAlternates": [
       {
         "id": "boss-kril",
@@ -396,9 +374,7 @@
     "fileTitle": "Queen Black Dragon.png",
     "search": "Queen Black Dragon boss image",
     "canonicalPage": "https://runescape.wiki/w/Queen_Black_Dragon",
-    "aliases": [
-      "boss-queen-black-dragon"
-    ]
+    "aliases": ["boss-queen-black-dragon"]
   },
   {
     "id": "boss-raksha",
@@ -432,10 +408,7 @@
     "fileTitle": "Sanguine crawler.png",
     "search": "Sanguine crawler boss image",
     "canonicalPage": "https://runescape.wiki/w/Sanguine_Crawler",
-    "aliases": [
-      "bosses-sanguine-crawler",
-      "upgrades-permanent-unlocks-sanguine-crawler-uniques"
-    ],
+    "aliases": ["bosses-sanguine-crawler", "upgrades-permanent-unlocks-sanguine-crawler-uniques"],
     "provenanceAlternates": [
       {
         "id": "bosses-sanguine-crawler",
@@ -443,9 +416,7 @@
         "fileTitle": "Sanguine Crawler.png"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/sanguine-crawler-uniques.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/sanguine-crawler-uniques.webp"]
   },
   {
     "id": "boss-seiryu",
@@ -463,12 +434,8 @@
     "fileTitle": "Silverquill, the Dreadhog.png",
     "search": "Silverquill Dreadhog official boss image",
     "canonicalPage": "https://runescape.wiki/w/Silverquill,_the_Dreadhog",
-    "aliases": [
-      "upgrades-permanent-unlocks-silverquill-uniques"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/silverquill-uniques.webp"
-    ]
+    "aliases": ["upgrades-permanent-unlocks-silverquill-uniques"],
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/silverquill-uniques.webp"]
   },
   {
     "id": "boss-solak",
@@ -477,9 +444,7 @@
     "path": "public/game/bosses/solak",
     "search": "Solak boss image",
     "canonicalPage": "https://runescape.wiki/w/Solak",
-    "alsoAt": [
-      "public/game/activities/solak.webp"
-    ]
+    "alsoAt": ["public/game/activities/solak.webp"]
   },
   {
     "id": "boss-taraket",
@@ -544,9 +509,7 @@
     "fileTitle": "Vindicta.png",
     "search": "Vindicta boss image",
     "canonicalPage": "https://runescape.wiki/w/Vindicta",
-    "aliases": [
-      "boss-vindicta-gorvek"
-    ],
+    "aliases": ["boss-vindicta-gorvek"],
     "provenanceAlternates": [
       {
         "id": "boss-vindicta-gorvek",
@@ -571,12 +534,8 @@
     "path": "public/game/bosses/yakamaru",
     "search": "Yakamaru boss image",
     "canonicalPage": "https://runescape.wiki/w/Yakamaru",
-    "aliases": [
-      "bulk42-upgrades-permanent-unlocks-yakamaru"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/yakamaru.webp"
-    ]
+    "aliases": ["bulk42-upgrades-permanent-unlocks-yakamaru"],
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/yakamaru.webp"]
   },
   {
     "id": "boss-zamorak",
@@ -602,7 +561,8 @@
     "fileTitle": "Throwing muspah.png",
     "search": "Throwing muspah creature render",
     "canonicalPage": "https://runescape.wiki/w/Muspah",
-    "sourcePage": "https://runescape.wiki/w/File:Throwing_muspah.png"
+    "sourcePage": "https://runescape.wiki/w/File:Throwing_muspah.png",
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/muspah.webp"]
   },
   {
     "id": "bosses-nightmare",
@@ -612,12 +572,8 @@
     "fileTitle": "Nightmare.png",
     "search": "Nightmare inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Nightmare",
-    "aliases": [
-      "upgrades-upgrades-permanent-unlocks-nightmare"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/nightmare.webp"
-    ]
+    "aliases": ["upgrades-upgrades-permanent-unlocks-nightmare"],
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/nightmare.webp"]
   },
   {
     "id": "bosses-rune-dragon",
@@ -636,9 +592,7 @@
     "fileTitle": "Bork.png",
     "search": "Bork inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Bork",
-    "aliases": [
-      "bosses-bork"
-    ]
+    "aliases": ["bosses-bork"]
   },
   {
     "id": "bulk39-legio-primus",
@@ -648,9 +602,7 @@
     "fileTitle": "Legio Primus.png",
     "search": "Legio Primus inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Legio_Primus",
-    "aliases": [
-      "bosses-legio-primus"
-    ]
+    "aliases": ["bosses-legio-primus"]
   },
   {
     "id": "bulk39-tormented-demon",
@@ -660,9 +612,7 @@
     "fileTitle": "Tormented Demon.png",
     "search": "Tormented demon inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Tormented_demon",
-    "aliases": [
-      "bosses-tormented-demon"
-    ],
+    "aliases": ["bosses-tormented-demon"],
     "provenanceAlternates": [
       {
         "id": "bosses-tormented-demon",

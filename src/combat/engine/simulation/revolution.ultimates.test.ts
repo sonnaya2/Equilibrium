@@ -2,10 +2,7 @@ import { describe, expect, it } from "vitest";
 import { firstLegalTick } from "../runtime/state";
 import { MAGIC_ABILITIES } from "../../styles/magic/abilities";
 import { RANGED_ABILITIES } from "../../styles/ranged/abilities";
-import {
-  activateDeathsSwiftness,
-  deathsSwiftnessActive,
-} from "../../styles/ranged/effects";
+import { activateDeathsSwiftness, deathsSwiftnessActive } from "../../styles/ranged/effects";
 import { activateSunshine, sunshineActive } from "../../styles/magic/effects";
 import { createCastContext } from "./context";
 import { simulateRevolution } from "./revolution";
@@ -115,7 +112,7 @@ describe("revolution ultimates — Sunshine", () => {
 
   it("moving Sunshine above the threshold fixes opener starvation at 100 adren", () => {
     // Strict priority: with Sunshine first and adren already 100, it fires before the threshold.
-    // (A lower-priority threshold still drains when Sunshine is unaffordable from 0 —
+    // (A lower-priority threshold still drains when Sunshine is unaffordable from 0;
     // that is intentional no-banking, not "reservation".)
     const { summary: s, bar } = revoMagic(["sunshine", "wild_magic"], {
       durationTicks: 30,
@@ -130,7 +127,7 @@ describe("revolution ultimates — Sunshine", () => {
   });
 
   it("casts Sunshine a second time after its 60s cooldown", () => {
-    // CD ready-at is cast+100. GCD lattice after cast@0 is 3,6,...,99,102 — first
+    // CD ready-at is cast+100. GCD lattice after cast@0 is 3,6,...,99,102; first
     // legal GCD with CD ready is 102 (not 100, which is mid-GCD).
     const { summary: s, bar } = revoMagic(["sunshine"], {
       durationTicks: 106,
@@ -148,20 +145,20 @@ describe("revolution ultimates — Sunshine", () => {
     const before = revoMagic(["sunshine"], { durationTicks: 36, startingAdrenaline: 0 });
     expect(before.summary.casts.filter((c) => c.abilityId === "sunshine")).toHaveLength(0);
     const after = revoMagic(["sunshine"], { durationTicks: 37, startingAdrenaline: 0 });
-    expect(after.summary.casts.filter((c) => c.abilityId === "sunshine").map((c) => c.tick)).toEqual(
-      [36],
-    );
+    expect(
+      after.summary.casts.filter((c) => c.abilityId === "sunshine").map((c) => c.tick),
+    ).toEqual([36]);
   });
 
   it("horizon ends just before / after second Sunshine", () => {
     const before = revoMagic(["sunshine"], { durationTicks: 102, startingAdrenaline: 100 });
-    expect(before.summary.casts.filter((c) => c.abilityId === "sunshine").map((c) => c.tick)).toEqual(
-      [0],
-    );
+    expect(
+      before.summary.casts.filter((c) => c.abilityId === "sunshine").map((c) => c.tick),
+    ).toEqual([0]);
     const after = revoMagic(["sunshine"], { durationTicks: 103, startingAdrenaline: 100 });
-    expect(after.summary.casts.filter((c) => c.abilityId === "sunshine").map((c) => c.tick)).toEqual(
-      [0, 102],
-    );
+    expect(
+      after.summary.casts.filter((c) => c.abilityId === "sunshine").map((c) => c.tick),
+    ).toEqual([0, 102]);
   });
 });
 
@@ -240,9 +237,7 @@ describe("ultimate cooldowns — replacement group", () => {
     expect(ctx.firstLegalTick("sunshine")).toBe(100);
     expect(ctx.firstLegalTick("greater_sunshine")).toBe(100);
     // Peer readiness uses the same group key via firstLegalTick helper.
-    expect(
-      firstLegalTick(ctx.getState(), "greater_sunshine", "sunshine"),
-    ).toBe(100);
+    expect(firstLegalTick(ctx.getState(), "greater_sunshine", "sunshine")).toBe(100);
   });
 
   it("Death's Swiftness and Greater DS share the replacement-group clock", () => {

@@ -13,10 +13,7 @@ import { OBJECTIVE_VERSION } from "../contracts";
 import { indexPool } from "../candidatePool";
 import { canAdd } from "../eligibility";
 import { fingerprintBar } from "../fingerprint";
-import {
-  noteBarKeySeen,
-  noteDuplicateEvalAttempt,
-} from "../profiling";
+import { noteBarKeySeen, noteDuplicateEvalAttempt } from "../profiling";
 import { isFiniteEval } from "../objective";
 import type { Rng } from "../rng";
 import { createRng } from "../rng";
@@ -63,6 +60,7 @@ export interface SearchState {
   budget: { remaining: number; used: number; total: number };
   /** Mode-keyed eval cache: search / medium / full never share entries. */
   cache: EvalCache<{ score: number; scored: ScoredBar }>;
+  failedCacheKeys: Set<string>;
   searchCacheHits: number;
   mediumCacheHits: number;
   fullCacheHits: number;
@@ -121,11 +119,7 @@ export function normalizeEvalMode(mode: EvalMode | undefined): ScoreEvalMode {
  * Per-solve eval cache key. Mode separates search/medium/full.
  * Optional fidelityToken keeps ladders distinct if EvaluateFn policies diverge.
  */
-export function cacheKeyFor(
-  mode: ScoreEvalMode,
-  fingerprint: string,
-  fidelityToken = "",
-): string {
+export function cacheKeyFor(mode: ScoreEvalMode, fingerprint: string, fidelityToken = ""): string {
   const fid = fidelityToken.length > 0 ? `|bf=${fidelityToken}` : "";
   return `m=${mode}|ov=${OBJECTIVE_VERSION}${fid}|${fingerprint}`;
 }
@@ -158,6 +152,7 @@ export function createSearchState(opts: {
       total: opts.config.evaluationBudget,
     },
     cache,
+    failedCacheKeys: new Set(),
     searchCacheHits: 0,
     mediumCacheHits: 0,
     fullCacheHits: 0,
@@ -257,6 +252,10 @@ function evalBar(
     else touchFullBest(state, cached.scored);
     return cached.scored;
   }
+  if (state.failedCacheKeys.has(cacheKey)) {
+    noteDuplicateEvalAttempt();
+    return null;
+  }
 
   if (state.budget.remaining <= 0 && !force) return null;
   if (state.budget.remaining > 0) {
@@ -279,11 +278,12 @@ function evalBar(
 
   const result = state.evaluate({ bar, mode });
   if (result.finite === false) {
-    // Do not cache failures as rankable bars (would pollute beam/local).
+    state.failedCacheKeys.add(cacheKey);
     return null;
   }
   const scored = toScoredBar(bar, result, state.config, scoreMode, source, fp);
   if (!isFiniteEval({ score: scored.robustScore })) {
+    state.failedCacheKeys.add(cacheKey);
     return null;
   }
 
@@ -381,8 +381,7 @@ export function toScoredBar(
   // tests can exercise finalize; production evaluate always sets flags.
   // Medium never final-ranks even when mocks omit flags.
   const score = result.score;
-  const exploratory =
-    result.exploratory !== undefined ? result.exploratory : mode === "search";
+  const exploratory = result.exploratory !== undefined ? result.exploratory : mode === "search";
   let validForFinalRanking =
     result.validForFinalRanking !== undefined
       ? result.validForFinalRanking

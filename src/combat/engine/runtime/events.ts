@@ -30,9 +30,7 @@ export interface PendingKeyRanks {
 }
 
 /** Build key-only ranks from a pending list (already ordered by tick, seq). */
-export function pendingKeyRanks<T>(
-  items: readonly ScheduledEvent<T>[],
-): PendingKeyRanks {
+export function pendingKeyRanks<T>(items: readonly ScheduledEvent<T>[]): PendingKeyRanks {
   const seqRank = new Map<number, number>();
   const castIds = new Set<number>();
   const histDerived = new Set<number>();
@@ -62,10 +60,7 @@ export function pendingKeyRanks<T>(
  * none=-1; pending rank r>=0; historical rank h encoded as -2-h (<= -2).
  * Namespaces never collide: pending, none, and historical occupy disjoint ranges.
  */
-export function mapEventRefForKey(
-  abs: number | undefined | null,
-  ranks: PendingKeyRanks,
-): number {
+export function mapEventRefForKey(abs: number | undefined | null, ranks: PendingKeyRanks): number {
   if (abs == null) return -1;
   const pending = ranks.seqRank.get(abs);
   if (pending !== undefined) return pending;
@@ -125,22 +120,18 @@ function snapSig(s: CastSnapshot, castSeqKey: number): string {
     US +
     (s.hauntedAtCast ? 1 : 0) +
     US +
-    s.hauntedCapAd
+    s.hauntedCapAd +
+    US +
+    (s.tuskasEmpoweredDamage ?? "")
   );
 }
 
-function eventSig<T>(
-  e: ScheduledEvent<T>,
-  seqKey: number,
-  ranks: PendingKeyRanks,
-): string {
+function eventSig<T>(e: ScheduledEvent<T>, seqKey: number, ranks: PendingKeyRanks): string {
   const sourceCastKey = mapCastRefForKey(e.sourceCast, ranks, -1);
   const cancelOwnerKey = mapCastRefForKey(e.cancelOwner, ranks, -1);
   const derivedFromKey = mapEventRefForKey(e.derivedFrom, ranks);
   const castSnapKey =
-    e.castSnap != null
-      ? snapSig(e.castSnap, mapCastRefForKey(e.castSnap.castSeq, ranks, 0))
-      : "";
+    e.castSnap != null ? snapSig(e.castSnap, mapCastRefForKey(e.castSnap.castSeq, ranks, 0)) : "";
   return (
     e.tick +
     US +

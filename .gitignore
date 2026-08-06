@@ -12,8 +12,7 @@ node_modules/
 /dist/
 /build/
 /coverage/
-/reports/*
-!/reports/*.md
+/reports/
 /playwright-report/
 /test-results/
 /blob-report/
@@ -55,7 +54,8 @@ certificates/
 # ---------------------------------------------------------------------------
 # AI assistants and local agent tooling
 # ---------------------------------------------------------------------------
-# AGENTS.md + CLAUDE.md are tracked (comment law / agent handoff).
+/AGENTS.md
+/CLAUDE.md
 /.claude/
 /skills/
 /.mcp.json

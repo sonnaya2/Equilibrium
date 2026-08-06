@@ -217,8 +217,20 @@ describe("compareVigourSearch", () => {
 
   it("aligns reeval with exclusive-group filter of illegal co-group pair", () => {
     const exclusivePool: PoolAbility[] = [
-      { id: "u1", category: "ultimate", averageDamage: 100, occupancyTicks: 3, exclusiveGroup: "ult" },
-      { id: "u2", category: "ultimate", averageDamage: 90, occupancyTicks: 3, exclusiveGroup: "ult" },
+      {
+        id: "u1",
+        category: "ultimate",
+        averageDamage: 100,
+        occupancyTicks: 3,
+        exclusiveGroup: "ult",
+      },
+      {
+        id: "u2",
+        category: "ultimate",
+        averageDamage: 90,
+        occupancyTicks: 3,
+        exclusiveGroup: "ult",
+      },
       { id: "b1", category: "basic", averageDamage: 10, occupancyTicks: 3 },
       { id: "b2", category: "basic", averageDamage: 12, occupancyTicks: 3 },
     ];

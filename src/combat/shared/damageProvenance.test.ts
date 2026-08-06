@@ -24,9 +24,9 @@ describe("assertProvenance", () => {
   });
 
   it("throws on unknown kind", () => {
-    expect(() =>
-      assertProvenance({ kind: "not_a_real_kind" as DamageProvenanceKind }),
-    ).toThrow(/unknown kind/);
+    expect(() => assertProvenance({ kind: "not_a_real_kind" as DamageProvenanceKind })).toThrow(
+      /unknown kind/,
+    );
   });
 });
 
@@ -43,15 +43,16 @@ describe("provenanceForCastHit", () => {
   });
 
   it("converted channel before plain DoT", () => {
-    expect(
-      provenanceForCastHit({ isCommand: false, isDot: true, convertedChannel: true }),
-    ).toEqual({ kind: "player_converted_channel" });
+    expect(provenanceForCastHit({ isCommand: false, isDot: true, convertedChannel: true })).toEqual(
+      { kind: "player_converted_channel" },
+    );
   });
 
   it("DoT with detail from dotKind or bleedId", () => {
-    expect(
-      provenanceForCastHit({ isCommand: false, isDot: true, dotKind: "bleed" }),
-    ).toEqual({ kind: "player_dot", detail: "bleed" });
+    expect(provenanceForCastHit({ isCommand: false, isDot: true, dotKind: "bleed" })).toEqual({
+      kind: "player_dot",
+      detail: "bleed",
+    });
     expect(
       provenanceForCastHit({ isCommand: false, isDot: true, bleedId: "corruption_shot" }),
     ).toEqual({ kind: "player_dot", detail: "corruption_shot" });
@@ -61,9 +62,9 @@ describe("provenanceForCastHit", () => {
   });
 
   it("auto and direct", () => {
-    expect(
-      provenanceForCastHit({ isCommand: false, isDot: false, autoAttack: true }),
-    ).toEqual({ kind: "player_auto" });
+    expect(provenanceForCastHit({ isCommand: false, isDot: false, autoAttack: true })).toEqual({
+      kind: "player_auto",
+    });
     expect(provenanceForCastHit({ isCommand: false, isDot: false })).toEqual({
       kind: "player_direct",
     });
@@ -103,9 +104,9 @@ describe("provenanceFromLegacy / resolveCombatProvenance", () => {
     expect(() => resolveCombatProvenance(undefined, { strict: true })).toThrow(/ambiguous/);
     expect(() => resolveCombatProvenance(null, { strict: true })).toThrow(/ambiguous/);
     expect(() => provenanceFromLegacy({ strict: true })).toThrow(/ambiguous/);
-    expect(() =>
-      contextWithProvenance({ style: "melee" }, undefined, { strict: true }),
-    ).toThrow(/ambiguous/);
+    expect(() => contextWithProvenance({ style: "melee" }, undefined, { strict: true })).toThrow(
+      /ambiguous/,
+    );
   });
 
   it("explicit provenance wins over legacy flags", () => {

@@ -177,7 +177,7 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
     conjureDurationMult: roundN(loadout.conjureDurationMult ?? 1, 6),
     tumekensPieces: loadout.tumekensPieces ?? 0,
     tumekensCritEnabled: loadout.tumekensCritEnabled === true,
-    targetHpPercent: loadout.targetHpPercent ?? 100,
+    targetHpPercent: loadout.targetHpPercent ?? null,
     cap: normalizeHitCap(loadout.cap),
     adrenaline: loadout.adrenaline
       ? {
@@ -203,6 +203,7 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
       ruleset: loadout.league.ruleset,
       // Full blessing id set (order-independent).
       blessingIds: sortedStrings(loadout.league.blessingIds as readonly string[]),
+      relics: sortedStrings(loadout.league.relics),
       totalArmour: loadout.league.totalArmour,
       maximumLife: loadout.league.maximumLife,
       // Exact remaining ticks - different durations change damage; never collapse to boolean.
@@ -252,6 +253,7 @@ export function canonicalSolveJobExtras(request: SerializableSolverRequest): unk
   return {
     tier: request.tier,
     seed: request.seed,
+    userBar: request.userBar?.length ? [...request.userBar] : null,
     searchPolicyVersion: SEARCH_POLICY_VERSION,
     pool: canonicalPoolFilterIdentity(request),
   };

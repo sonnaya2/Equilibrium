@@ -27,9 +27,7 @@ export interface UiRunProbeResult {
  * Prefer residual-free at the *lowest* live cap (cheapest full-analysis).
  * Else lowest residual; among equal residual, higher live (more mass kept).
  */
-export function pickBestUiRunProbe(
-  probes: readonly UiRunProbeResult[],
-): UiRunProbeResult | null {
+export function pickBestUiRunProbe(probes: readonly UiRunProbeResult[]): UiRunProbeResult | null {
   const ok = probes.filter((p) => p.ok);
   const pool = ok.length > 0 ? ok : [...probes];
   if (pool.length === 0) return null;
@@ -63,10 +61,7 @@ export function isResidualFreeProbe(p: UiRunProbeResult): boolean {
 }
 
 /** Chunk ladder for wave probes (cheapest wave first). */
-export function chunkUiRunCaps(
-  caps: readonly number[],
-  waveSize: number,
-): number[][] {
+export function chunkUiRunCaps(caps: readonly number[], waveSize: number): number[][] {
   const size = Math.max(1, waveSize);
   const out: number[][] = [];
   for (let i = 0; i < caps.length; i += size) {
@@ -92,8 +87,7 @@ export function probeFromSummary(
   summary: RotationSummary,
   maxLiveBranches: number,
 ): UiRunProbeResult {
-  const residual =
-    typeof summary.rng?.residualWeight === "number" ? summary.rng.residualWeight : 0;
+  const residual = typeof summary.rng?.residualWeight === "number" ? summary.rng.residualWeight : 0;
   return {
     maxLiveBranches,
     residualWeight: residual,
@@ -136,8 +130,7 @@ export function simulateUiRunFullAnalysis(
     detailLevel: options?.detailLevel ?? "full-analysis",
     branchBudget: budget,
   });
-  const residual =
-    typeof summary.rng?.residualWeight === "number" ? summary.rng.residualWeight : 0;
+  const residual = typeof summary.rng?.residualWeight === "number" ? summary.rng.residualWeight : 0;
   const meta: BranchFidelityAttemptMeta = {
     mode: ladder.mode,
     attempts: 1,
@@ -150,7 +143,7 @@ export function simulateUiRunFullAnalysis(
 }
 
 /**
- * Sequential hybrid (main-thread fallback): score-only climb then one full-analysis.
+ * Sequential hybrid for explicit main-thread runs: score-only climb then one full-analysis.
  */
 export function simulateRevolutionForUiHybrid(
   input: RevolutionInput,

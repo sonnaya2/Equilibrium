@@ -57,6 +57,7 @@ export type RevoRunResultsProps = {
   /** Multi-worker Run in flight. */
   runBusy?: boolean;
   runProgressLabel?: string | null;
+  runError?: string | null;
   onCancelRun?: () => void;
   /** Sliver of Edicts start-activate (Naragi); shown beside Run when pocket is Sliver. */
   sliverToggle?: {
@@ -97,6 +98,7 @@ export function RevoRunResults({
   branchFidelityMeta = null,
   runBusy = false,
   runProgressLabel = null,
+  runError = null,
   onCancelRun,
   sliverToggle = null,
 }: RevoRunResultsProps) {
@@ -246,6 +248,12 @@ export function RevoRunResults({
             <span className="revo-run-busy__cursor" />
           </div>
         </div>
+      ) : null}
+
+      {runError ? (
+        <p className="mt-3 text-xs text-chaos-300" role="alert" data-testid="revo-run-worker-error">
+          {runError}
+        </p>
       ) : null}
 
       {result && !result.ok ? (

@@ -20,12 +20,7 @@ import {
   RING_OF_VIGOUR_REFUND,
 } from "./ringOfVigour";
 
-export type SpendPreventedBy =
-  | "none"
-  | "relentless"
-  | "deathspore"
-  | "avernic-rampage"
-  | string;
+export type SpendPreventedBy = "none" | "relentless" | "deathspore" | "avernic-rampage" | string;
 
 export interface AdrenalineTransaction {
   before: number;
@@ -169,8 +164,7 @@ export function previewAdrenalineTransaction(
   const rules = adren ?? {};
   const listedCost = ability.adrenaline?.cost ?? 0;
   const effectiveCost =
-    isWeaponSpecialAbility({ weaponSpecial: ability.weaponSpecial }) &&
-    rules.ringOfVigour === true
+    isWeaponSpecialAbility({ weaponSpecial: ability.weaponSpecial }) && rules.ringOfVigour === true
       ? resolveSpecialAttackAdrenalineCost(listedCost, true)
       : listedCost;
 

@@ -1,5 +1,6 @@
 import { TICK_SECONDS } from "../core/ticks";
 import { simulateRevolution, type RevolutionInput } from "../engine/simulation/revolution";
+import type { RotationSummary } from "../engine/simulation/contracts";
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 import type { ItemPassiveId } from "../data/records";
 import { resolveEquippedAbilityId, resolveEquippedAbilityVariant } from "../shared/requirements";
@@ -175,8 +176,8 @@ function modeForHorizon(durationTicks: number): ScoreEvalMode {
 function failEval(
   request: RevolutionEvalRequest,
   reasons: ExclusionReason[],
-  extra: Partial<RevolutionBarEvaluation> = {},
-): RevolutionBarEvaluation {
+  extra: Partial<RevolutionBarEvaluation<RotationSummary>> = {},
+): RevolutionBarEvaluation<RotationSummary> {
   const horizonTicks = request.durationTicks;
   const mode = modeForHorizon(horizonTicks);
   return {
@@ -200,10 +201,8 @@ function diagnosticMetrics(summary: ScoreableSummary & { totalExpected?: number 
   knownMassExpectedDamage?: number;
   conditionalConcreteMean?: number;
 } {
-  const known =
-    summary.knownMassExpectedDamage ?? summary.damage?.knownMassExpectedDamage;
-  const conditional =
-    summary.conditionalConcreteMean ?? summary.damage?.conditionalConcreteMean;
+  const known = summary.knownMassExpectedDamage ?? summary.damage?.knownMassExpectedDamage;
+  const conditional = summary.conditionalConcreteMean ?? summary.damage?.conditionalConcreteMean;
   return {
     ...(known !== undefined ? { knownMassExpectedDamage: known } : {}),
     ...(conditional !== undefined ? { conditionalConcreteMean: conditional } : {}),
@@ -224,7 +223,7 @@ function diagnosticMetrics(summary: ScoreableSummary & { totalExpected?: number 
  */
 export function evaluateRevolutionBar(
   request: RevolutionEvalRequestWithSession,
-): RevolutionBarEvaluation {
+): RevolutionBarEvaluation<RotationSummary> {
   const {
     bar,
     style,
@@ -241,8 +240,7 @@ export function evaluateRevolutionBar(
   const reasons: ExclusionReason[] = [];
   const simFields = sim as Omit<RevolutionInput, "bar" | "style" | "durationTicks">;
   const weaponConfiguration = simFields.weaponConfiguration as
-    | CandidatePoolOptions["weaponConfiguration"]
-    | undefined;
+    CandidatePoolOptions["weaponConfiguration"] | undefined;
   const equipmentIds = simFields.equipmentIds;
   const passiveIds = (simFields as { equipmentEffects?: { passiveIds?: readonly string[] } })
     .equipmentEffects?.passiveIds;

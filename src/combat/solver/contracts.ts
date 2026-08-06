@@ -1,4 +1,5 @@
 /** Revolution-bar solver contracts. Pure types for evaluate/search layers. */
+import type { AdrenalineRules } from "../engine/simulation/contracts";
 
 /** Bumped when evaluation inputs change shape (e.g. Basic Attack subtype). */
 export const SOLVER_SCHEMA_VERSION = 5 as const;
@@ -445,6 +446,7 @@ export interface RevolutionEvalSimBase {
   equipmentIds?: readonly string[];
   weaponConfiguration?: CandidatePoolOptions["weaponConfiguration"];
   startingAdrenaline?: number;
+  adrenaline?: AdrenalineRules;
   // Additional SimulateInput fields are allowed by structural typing at the call site.
 }
 
@@ -491,7 +493,17 @@ export interface RevolutionEvalRequest {
  * Exact bar evaluation with explicit mode tagging.
  * Search exploratory DPM and full robust scores never share a rank scale.
  */
-export interface RevolutionBarEvaluation {
+export type MinimalEvaluationSummary = ScoreableSummary & {
+  totalExpected?: number;
+  dps?: number;
+  ticks?: number;
+  ok: boolean;
+  error?: string;
+};
+
+export interface RevolutionBarEvaluation<
+  TSummary extends ScoreableSummary = MinimalEvaluationSummary,
+> {
   ok: boolean;
   /** search when horizon < robust windows; full at objective horizon. */
   mode: ScoreEvalMode;
@@ -506,13 +518,7 @@ export interface RevolutionBarEvaluation {
   bar: Bar;
   resolved?: readonly PoolAbility[];
   /** Present when simulateRevolution ran. */
-  summary?: ScoreableSummary & {
-    totalExpected?: number;
-    dps?: number;
-    ticks?: number;
-    ok: boolean;
-    error?: string;
-  };
+  summary?: TSummary;
   objective?: ObjectiveScore;
   metrics?: {
     dpm: number;

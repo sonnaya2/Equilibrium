@@ -14,18 +14,12 @@ describe("conservationOfEnergy", () => {
   });
 
   it("qualifies ultimates other than onslaught", () => {
-    expect(ultimateAdrenalineRefundQualifies({ id: "berserk", category: "ultimate" })).toBe(
-      true,
-    );
-    expect(ultimateAdrenalineRefundQualifies({ id: "overpower", category: "ultimate" })).toBe(
-      true,
-    );
+    expect(ultimateAdrenalineRefundQualifies({ id: "berserk", category: "ultimate" })).toBe(true);
+    expect(ultimateAdrenalineRefundQualifies({ id: "overpower", category: "ultimate" })).toBe(true);
   });
 
   it("rejects thresholds, basics, and onslaught", () => {
-    expect(
-      ultimateAdrenalineRefundQualifies({ id: "assault", category: "threshold" }),
-    ).toBe(false);
+    expect(ultimateAdrenalineRefundQualifies({ id: "assault", category: "threshold" })).toBe(false);
     expect(ultimateAdrenalineRefundQualifies({ id: "attack", category: "basic" })).toBe(false);
     expect(ultimateAdrenalineRefundQualifies({ id: "onslaught", category: "ultimate" })).toBe(
       false,

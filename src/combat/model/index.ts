@@ -7,14 +7,8 @@ export type {
   ResolvedWeaponConfiguration,
 } from "./contracts";
 
-export type {
-  ResolvedBerserkersFuryDiagnostics,
-  ResolvedCombatDiagnostics,
-} from "./diagnostics";
-export {
-  emptyBerserkersFuryDiagnostics,
-  emptyCombatDiagnostics,
-} from "./diagnostics";
+export type { ResolvedBerserkersFuryDiagnostics, ResolvedCombatDiagnostics } from "./diagnostics";
+export { emptyBerserkersFuryDiagnostics, emptyCombatDiagnostics } from "./diagnostics";
 
 export {
   emptyModifierSources,
@@ -29,16 +23,9 @@ export {
   modifiersFromSources,
 } from "./modifiers";
 
-export {
-  buildResolvedCombatModel,
-  isResolvedCombatModel,
-} from "./resolve";
+export { buildResolvedCombatModel, isResolvedCombatModel } from "./resolve";
 
-export {
-  projectSerializableSimBase,
-  reviveLeague,
-  serializeLeague,
-} from "./simulationInput";
+export { projectSerializableSimBase, reviveLeague, serializeLeague } from "./simulationInput";
 
 export {
   buildManualStatSimulationInputBase,

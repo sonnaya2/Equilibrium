@@ -27,10 +27,7 @@ function clampBarSize(raw: number | undefined, fallback: number): number {
  * Preserves caller intent: does not expand a narrow window to the full range.
  * Inverted ranges collapse to a fixed size at the higher floor.
  */
-export function clampSolverBarSizes(
-  minBarSize?: number,
-  maxBarSize?: number,
-): SolverBarSizeBounds {
+export function clampSolverBarSizes(minBarSize?: number, maxBarSize?: number): SolverBarSizeBounds {
   const min = clampBarSize(minBarSize, MIN_SOLVER_BAR_SIZE);
   const max = Math.max(min, clampBarSize(maxBarSize, DEFAULT_MAX_BAR_SIZE));
   return { minBarSize: min, maxBarSize: max };

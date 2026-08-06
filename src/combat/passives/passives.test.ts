@@ -96,15 +96,15 @@ describe("presentPassive parity", () => {
 
   it("enduring-ruin / ring enchantment overlays", () => {
     expect(presentPassive("enduring-ruin", emptyCtx).label).toBe("Enduring Ruin");
-    expect(presentPassive("enduring-ruin", { ...emptyCtx, passageAgonyActive: true })).toMatchObject(
-      {
-        label: "Enduring Ruin + Agony",
-        effects: [
-          "Rend grants +16% damage to the next attack for 6 seconds.",
-          "Bleeds take +25% damage for 10 seconds.",
-        ],
-      },
-    );
+    expect(
+      presentPassive("enduring-ruin", { ...emptyCtx, passageAgonyActive: true }),
+    ).toMatchObject({
+      label: "Enduring Ruin + Agony",
+      effects: [
+        "Rend grants +16% damage to the next attack for 6 seconds.",
+        "Bleeds take +25% damage for 10 seconds.",
+      ],
+    });
 
     expect(presentPassive("champion-ring", { ...emptyCtx, hasHeroism: true }).label).toBe(
       "Champion's ring + Heroism",

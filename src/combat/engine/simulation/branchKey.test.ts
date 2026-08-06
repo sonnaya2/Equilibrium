@@ -49,7 +49,10 @@ const lengInput: CastContextInput = {
 const noop = () => ({ damage: { min: 0, max: 0, expected: 0 } });
 
 /** Canonical partition of indices by key; order-independent. */
-function partition(rts: readonly SimulationRuntime[], keyFn: (rt: SimulationRuntime) => string): number[][] {
+function partition(
+  rts: readonly SimulationRuntime[],
+  keyFn: (rt: SimulationRuntime) => string,
+): number[][] {
   const buckets = new Map<string, number[]>();
   rts.forEach((rt, i) => {
     const k = keyFn(rt);
@@ -77,21 +80,41 @@ describe("branchKey structural vs JSON partitions", () => {
     const b = snapshotRuntime(a);
     b.totalExpected = 99_999;
     expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
-    expect(mergeBranches([{ weight: 0.4, rt: a }, { weight: 0.6, rt: b }])).toHaveLength(1);
+    expect(
+      mergeBranches([
+        { weight: 0.4, rt: a },
+        { weight: 0.6, rt: b },
+      ]),
+    ).toHaveLength(1);
   });
 
-  it("endTick twins merge; survivor keeps max endTick", () => {
+  it("natural endTick twins stay distinct; fixed-window twins merge", () => {
     const a = createRuntime(meleeInput);
     const b = snapshotRuntime(a);
     a.endTick = 5;
     b.endTick = 40;
     a.totalExpected = 100;
     b.totalExpected = 300;
-    expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
-    expect(branchKeyJson(a)).toBe(branchKeyJson(b));
+    expect(branchKeyStructural(a)).not.toBe(branchKeyStructural(b));
+    expect(branchKeyJson(a)).not.toBe(branchKeyJson(b));
+    expect(
+      mergeBranches([
+        { weight: 0.25, rt: a },
+        { weight: 0.75, rt: b },
+      ]),
+    ).toHaveLength(2);
+
+    const fixedA = createRuntime({ ...meleeInput, horizonTicks: 50 });
+    const fixedB = snapshotRuntime(fixedA);
+    fixedA.endTick = 5;
+    fixedB.endTick = 40;
+    fixedA.totalExpected = 100;
+    fixedB.totalExpected = 300;
+    expect(branchKeyStructural(fixedA)).toBe(branchKeyStructural(fixedB));
+    expect(branchKeyJson(fixedA)).toBe(branchKeyJson(fixedB));
     const merged = mergeBranches([
-      { weight: 0.25, rt: a },
-      { weight: 0.75, rt: b },
+      { weight: 0.25, rt: fixedA },
+      { weight: 0.75, rt: fixedB },
     ]);
     expect(merged).toHaveLength(1);
     expect(merged[0]!.rt.endTick).toBe(40);
@@ -179,13 +202,19 @@ describe("branchKey structural vs JSON partitions", () => {
     const b = snapshotRuntime(base);
     const c = snapshotRuntime(base);
     a.state = patchMelee(a.state, {
-      primordialIce: { atoms: [{ weight: 1, stacks: 1, stacksExpireAtTick: 100, frostbladesExpireAtTick: 0 }] },
+      primordialIce: {
+        atoms: [{ weight: 1, stacks: 1, stacksExpireAtTick: 100, frostbladesExpireAtTick: 0 }],
+      },
     });
     b.state = patchMelee(b.state, {
-      primordialIce: { atoms: [{ weight: 1, stacks: 2, stacksExpireAtTick: 100, frostbladesExpireAtTick: 0 }] },
+      primordialIce: {
+        atoms: [{ weight: 1, stacks: 2, stacksExpireAtTick: 100, frostbladesExpireAtTick: 0 }],
+      },
     });
     c.state = patchMelee(c.state, {
-      primordialIce: { atoms: [{ weight: 1, stacks: 1, stacksExpireAtTick: 100, frostbladesExpireAtTick: 20 }] },
+      primordialIce: {
+        atoms: [{ weight: 1, stacks: 1, stacksExpireAtTick: 100, frostbladesExpireAtTick: 20 }],
+      },
     });
     expect(branchKeyStructural(a)).not.toBe(branchKeyStructural(b));
     expect(branchKeyStructural(a)).not.toBe(branchKeyStructural(c));
@@ -211,7 +240,12 @@ describe("branchKey structural vs JSON partitions", () => {
       },
     });
     expect(branchKeyStructural(a)).not.toBe(branchKeyStructural(b));
-    expect(mergeBranches([{ weight: 0.5, rt: a }, { weight: 0.5, rt: b }])).toHaveLength(2);
+    expect(
+      mergeBranches([
+        { weight: 0.5, rt: a },
+        { weight: 0.5, rt: b },
+      ]),
+    ).toHaveLength(2);
   });
 
   it("same atom distribution merges", () => {
@@ -230,7 +264,12 @@ describe("branchKey structural vs JSON partitions", () => {
       primordialIce: { atoms: [...atoms].reverse() },
     });
     expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
-    expect(mergeBranches([{ weight: 0.4, rt: a }, { weight: 0.6, rt: b }])).toHaveLength(1);
+    expect(
+      mergeBranches([
+        { weight: 0.4, rt: a },
+        { weight: 0.6, rt: b },
+      ]),
+    ).toHaveLength(1);
   });
 
   it("queue ability id and castSnap.searingWindsAtCast split keys", () => {
@@ -296,10 +335,18 @@ describe("branchKey structural vs JSON partitions", () => {
 
     const lengA = createRuntime(lengInput);
     castN(lengA, 2);
-    lengA.state = patchMelee(lengA.state, { primordialIce: { atoms: [{ weight: 1, stacks: 3, stacksExpireAtTick: 0, frostbladesExpireAtTick: 0 }] } });
+    lengA.state = patchMelee(lengA.state, {
+      primordialIce: {
+        atoms: [{ weight: 1, stacks: 3, stacksExpireAtTick: 0, frostbladesExpireAtTick: 0 }],
+      },
+    });
     fixtures.push(lengA);
     const lengB = snapshotRuntime(lengA);
-    lengB.state = patchMelee(lengB.state, { primordialIce: { atoms: [{ weight: 1, stacks: 3, stacksExpireAtTick: 0, frostbladesExpireAtTick: 15 }] } });
+    lengB.state = patchMelee(lengB.state, {
+      primordialIce: {
+        atoms: [{ weight: 1, stacks: 3, stacksExpireAtTick: 0, frostbladesExpireAtTick: 15 }],
+      },
+    });
     fixtures.push(lengB);
 
     const endTick = snapshotRuntime(afterAttacks);
@@ -383,16 +430,17 @@ describe("branchKey structural vs JSON partitions", () => {
     const jsonPart = partition(fixtures, branchKeyJson);
     expect(structuralPart).toEqual(jsonPart);
 
-    // Golden groups (indices) under future-only key:
+    // Golden groups (indices) under future and terminal-duration key:
     // 0,1,11,12: plain twins + historical hitDetails (not live-derived) + nextSeq
-    // 2,3,7,8: afterAttacks + damage twin + endTick + nextSeq
-    // 4 / 5 / 6 / 9 / 10 / 13 / 14: distinct futures
+    // 2,3,8: afterAttacks + damage twin + nextSeq
+    // 4 / 5 / 6 / 7 / 9 / 10 / 13 / 14: distinct futures
     const groups = structuralPart.map((g) => g.join(","));
     expect(groups).toContain("0,1,11,12");
-    expect(groups).toContain("2,3,7,8");
+    expect(groups).toContain("2,3,8");
     expect(groups).toContain("4");
     expect(groups).toContain("5");
     expect(groups).toContain("6");
+    expect(groups).toContain("7");
     expect(groups).toContain("9");
     expect(groups).toContain("10");
     expect(groups).toContain("13");
@@ -417,7 +465,12 @@ describe("branchKey structural vs JSON partitions", () => {
     });
     expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
     expect(branchKeyJson(a)).toBe(branchKeyJson(b));
-    expect(mergeBranches([{ weight: 0.5, rt: a }, { weight: 0.5, rt: b }])).toHaveLength(1);
+    expect(
+      mergeBranches([
+        { weight: 0.5, rt: a },
+        { weight: 0.5, rt: b },
+      ]),
+    ).toHaveLength(1);
   });
 
   it("expired primordial ice mass shares key with empty ice (structural + JSON)", () => {
@@ -438,7 +491,12 @@ describe("branchKey structural vs JSON partitions", () => {
     });
     expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
     expect(branchKeyJson(a)).toBe(branchKeyJson(b));
-    expect(mergeBranches([{ weight: 0.5, rt: a }, { weight: 0.5, rt: b }])).toHaveLength(1);
+    expect(
+      mergeBranches([
+        { weight: 0.5, rt: a },
+        { weight: 0.5, rt: b },
+      ]),
+    ).toHaveLength(1);
   });
 
   it("expired haunted with residual cap merges with newHaunted()", () => {
@@ -453,7 +511,12 @@ describe("branchKey structural vs JSON partitions", () => {
     b.state = patchTarget(b.state, { haunted: newHaunted() });
     expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
     expect(branchKeyJson(a)).toBe(branchKeyJson(b));
-    expect(mergeBranches([{ weight: 0.5, rt: a }, { weight: 0.5, rt: b }])).toHaveLength(1);
+    expect(
+      mergeBranches([
+        { weight: 0.5, rt: a },
+        { weight: 0.5, rt: b },
+      ]),
+    ).toHaveLength(1);
   });
 
   it("expired blastInfusedUntilTick merges with zero (mirror tsunami)", () => {
@@ -466,7 +529,12 @@ describe("branchKey structural vs JSON partitions", () => {
     b.state = patchMagic(b.state, { blastInfusedUntilTick: 0 });
     expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
     expect(branchKeyJson(a)).toBe(branchKeyJson(b));
-    expect(mergeBranches([{ weight: 0.5, rt: a }, { weight: 0.5, rt: b }])).toHaveLength(1);
+    expect(
+      mergeBranches([
+        { weight: 0.5, rt: a },
+        { weight: 0.5, rt: b },
+      ]),
+    ).toHaveLength(1);
 
     // Live window still splits.
     const live = snapshotRuntime(base);
@@ -501,7 +569,12 @@ describe("branchKey structural vs JSON partitions", () => {
     });
     expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
     expect(branchKeyJson(a)).toBe(branchKeyJson(b));
-    expect(mergeBranches([{ weight: 0.5, rt: a }, { weight: 0.5, rt: b }])).toHaveLength(1);
+    expect(
+      mergeBranches([
+        { weight: 0.5, rt: a },
+        { weight: 0.5, rt: b },
+      ]),
+    ).toHaveLength(1);
   });
 
   it("expired burn residue merges with missing burn; live until still splits", () => {
@@ -522,11 +595,17 @@ describe("branchKey structural vs JSON partitions", () => {
     expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
     expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
     expect(
-      mergeBranches([{ weight: 0.5, rt: expired }, { weight: 0.5, rt: clean }]),
+      mergeBranches([
+        { weight: 0.5, rt: expired },
+        { weight: 0.5, rt: clean },
+      ]),
     ).toHaveLength(1);
     expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
     expect(
-      mergeBranches([{ weight: 0.5, rt: live }, { weight: 0.5, rt: clean }]),
+      mergeBranches([
+        { weight: 0.5, rt: live },
+        { weight: 0.5, rt: clean },
+      ]),
     ).toHaveLength(2);
   });
 
@@ -556,11 +635,17 @@ describe("branchKey structural vs JSON partitions", () => {
     expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
     expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
     expect(
-      mergeBranches([{ weight: 0.5, rt: expired }, { weight: 0.5, rt: clean }]),
+      mergeBranches([
+        { weight: 0.5, rt: expired },
+        { weight: 0.5, rt: clean },
+      ]),
     ).toHaveLength(1);
     expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
     expect(
-      mergeBranches([{ weight: 0.5, rt: live }, { weight: 0.5, rt: clean }]),
+      mergeBranches([
+        { weight: 0.5, rt: live },
+        { weight: 0.5, rt: clean },
+      ]),
     ).toHaveLength(2);
   });
 
@@ -602,11 +687,17 @@ describe("branchKey structural vs JSON partitions", () => {
     expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
     expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
     expect(
-      mergeBranches([{ weight: 0.5, rt: expired }, { weight: 0.5, rt: clean }]),
+      mergeBranches([
+        { weight: 0.5, rt: expired },
+        { weight: 0.5, rt: clean },
+      ]),
     ).toHaveLength(1);
     expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
     expect(
-      mergeBranches([{ weight: 0.5, rt: live }, { weight: 0.5, rt: clean }]),
+      mergeBranches([
+        { weight: 0.5, rt: live },
+        { weight: 0.5, rt: clean },
+      ]),
     ).toHaveLength(2);
   });
 
@@ -634,11 +725,17 @@ describe("branchKey structural vs JSON partitions", () => {
     expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
     expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
     expect(
-      mergeBranches([{ weight: 0.5, rt: expired }, { weight: 0.5, rt: clean }]),
+      mergeBranches([
+        { weight: 0.5, rt: expired },
+        { weight: 0.5, rt: clean },
+      ]),
     ).toHaveLength(1);
     expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
     expect(
-      mergeBranches([{ weight: 0.5, rt: live }, { weight: 0.5, rt: clean }]),
+      mergeBranches([
+        { weight: 0.5, rt: live },
+        { weight: 0.5, rt: clean },
+      ]),
     ).toHaveLength(2);
   });
 
@@ -671,11 +768,17 @@ describe("branchKey structural vs JSON partitions", () => {
     expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
     expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
     expect(
-      mergeBranches([{ weight: 0.5, rt: expired }, { weight: 0.5, rt: clean }]),
+      mergeBranches([
+        { weight: 0.5, rt: expired },
+        { weight: 0.5, rt: clean },
+      ]),
     ).toHaveLength(1);
     expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
     expect(
-      mergeBranches([{ weight: 0.5, rt: live }, { weight: 0.5, rt: clean }]),
+      mergeBranches([
+        { weight: 0.5, rt: live },
+        { weight: 0.5, rt: clean },
+      ]),
     ).toHaveLength(2);
   });
 
@@ -708,11 +811,17 @@ describe("branchKey structural vs JSON partitions", () => {
     expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
     expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
     expect(
-      mergeBranches([{ weight: 0.5, rt: expired }, { weight: 0.5, rt: clean }]),
+      mergeBranches([
+        { weight: 0.5, rt: expired },
+        { weight: 0.5, rt: clean },
+      ]),
     ).toHaveLength(1);
     expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
     expect(
-      mergeBranches([{ weight: 0.5, rt: live }, { weight: 0.5, rt: clean }]),
+      mergeBranches([
+        { weight: 0.5, rt: live },
+        { weight: 0.5, rt: clean },
+      ]),
     ).toHaveLength(2);
   });
 
@@ -740,11 +849,17 @@ describe("branchKey structural vs JSON partitions", () => {
     expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
     expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
     expect(
-      mergeBranches([{ weight: 0.5, rt: expired }, { weight: 0.5, rt: clean }]),
+      mergeBranches([
+        { weight: 0.5, rt: expired },
+        { weight: 0.5, rt: clean },
+      ]),
     ).toHaveLength(1);
     expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
     expect(
-      mergeBranches([{ weight: 0.5, rt: live }, { weight: 0.5, rt: clean }]),
+      mergeBranches([
+        { weight: 0.5, rt: live },
+        { weight: 0.5, rt: clean },
+      ]),
     ).toHaveLength(2);
   });
 
@@ -787,13 +902,19 @@ describe("branchKey structural vs JSON partitions", () => {
     expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
     expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
     expect(
-      mergeBranches([{ weight: 0.5, rt: expired }, { weight: 0.5, rt: clean }]),
+      mergeBranches([
+        { weight: 0.5, rt: expired },
+        { weight: 0.5, rt: clean },
+      ]),
     ).toHaveLength(1);
     expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
     expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(liveAlt));
     expect(branchKeyJson(live)).not.toBe(branchKeyJson(liveAlt));
     expect(
-      mergeBranches([{ weight: 0.5, rt: live }, { weight: 0.5, rt: clean }]),
+      mergeBranches([
+        { weight: 0.5, rt: live },
+        { weight: 0.5, rt: clean },
+      ]),
     ).toHaveLength(2);
   });
 
@@ -839,13 +960,19 @@ describe("branchKey structural vs JSON partitions", () => {
     expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
     expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
     expect(
-      mergeBranches([{ weight: 0.5, rt: expired }, { weight: 0.5, rt: clean }]),
+      mergeBranches([
+        { weight: 0.5, rt: expired },
+        { weight: 0.5, rt: clean },
+      ]),
     ).toHaveLength(1);
     expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
     expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(liveAlt));
     expect(branchKeyJson(live)).not.toBe(branchKeyJson(liveAlt));
     expect(
-      mergeBranches([{ weight: 0.5, rt: live }, { weight: 0.5, rt: clean }]),
+      mergeBranches([
+        { weight: 0.5, rt: live },
+        { weight: 0.5, rt: clean },
+      ]),
     ).toHaveLength(2);
   });
 
@@ -882,13 +1009,19 @@ describe("branchKey structural vs JSON partitions", () => {
     expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
     expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
     expect(
-      mergeBranches([{ weight: 0.5, rt: expired }, { weight: 0.5, rt: clean }]),
+      mergeBranches([
+        { weight: 0.5, rt: expired },
+        { weight: 0.5, rt: clean },
+      ]),
     ).toHaveLength(1);
     expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
     expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(live3));
     expect(branchKeyJson(live)).not.toBe(branchKeyJson(live3));
     expect(
-      mergeBranches([{ weight: 0.5, rt: live }, { weight: 0.5, rt: clean }]),
+      mergeBranches([
+        { weight: 0.5, rt: live },
+        { weight: 0.5, rt: clean },
+      ]),
     ).toHaveLength(2);
   });
 
@@ -949,11 +1082,17 @@ describe("branchKey structural vs JSON partitions", () => {
     expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
     expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
     expect(
-      mergeBranches([{ weight: 0.5, rt: expired }, { weight: 0.5, rt: clean }]),
+      mergeBranches([
+        { weight: 0.5, rt: expired },
+        { weight: 0.5, rt: clean },
+      ]),
     ).toHaveLength(1);
     expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
     expect(
-      mergeBranches([{ weight: 0.5, rt: live }, { weight: 0.5, rt: clean }]),
+      mergeBranches([
+        { weight: 0.5, rt: live },
+        { weight: 0.5, rt: clean },
+      ]),
     ).toHaveLength(2);
     expect(branchKeyStructural(poisonTail)).not.toBe(branchKeyStructural(poisonClean));
     expect(branchKeyJson(poisonTail)).not.toBe(branchKeyJson(poisonClean));
@@ -995,7 +1134,12 @@ describe("branchKey structural vs JSON partitions", () => {
       capLoss: 0,
     });
     expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
-    expect(mergeBranches([{ weight: 0.2, rt: a }, { weight: 0.8, rt: b }])).toHaveLength(1);
+    expect(
+      mergeBranches([
+        { weight: 0.2, rt: a },
+        { weight: 0.8, rt: b },
+      ]),
+    ).toHaveLength(1);
   });
 
   it("live derivedFrom hitDetails still split keys", () => {
@@ -1102,7 +1246,12 @@ describe("branchKey structural vs JSON partitions", () => {
     expect(a.queue.signature()).toBe(b.queue.signature());
     expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
     expect(branchKeyJson(a)).toBe(branchKeyJson(b));
-    expect(mergeBranches([{ weight: 0.4, rt: a }, { weight: 0.6, rt: b }])).toHaveLength(1);
+    expect(
+      mergeBranches([
+        { weight: 0.4, rt: a },
+        { weight: 0.6, rt: b },
+      ]),
+    ).toHaveLength(1);
   });
 
   it("different derivedFrom relative graphs still split after seq rank normalize", () => {
@@ -1211,7 +1360,10 @@ describe("branchKey structural vs JSON partitions", () => {
     expect(branchKeyStructural(fromFirst)).not.toBe(branchKeyStructural(fromSecond));
     expect(branchKeyJson(fromFirst)).not.toBe(branchKeyJson(fromSecond));
     expect(
-      mergeBranches([{ weight: 0.5, rt: fromFirst }, { weight: 0.5, rt: fromSecond }]),
+      mergeBranches([
+        { weight: 0.5, rt: fromFirst },
+        { weight: 0.5, rt: fromSecond },
+      ]),
     ).toHaveLength(2);
   });
 
@@ -1253,7 +1405,12 @@ describe("branchKey structural vs JSON partitions", () => {
     const b = mk(30, 100);
     expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
     expect(branchKeyJson(a)).toBe(branchKeyJson(b));
-    expect(mergeBranches([{ weight: 0.5, rt: a }, { weight: 0.5, rt: b }])).toHaveLength(1);
+    expect(
+      mergeBranches([
+        { weight: 0.5, rt: a },
+        { weight: 0.5, rt: b },
+      ]),
+    ).toHaveLength(1);
 
     const c = mk(3, 10);
     c.hitDetails.set(3, { ...hit, expected: 99 });

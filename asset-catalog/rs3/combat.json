@@ -302,7 +302,8 @@
     "category": "rs3/combat/abilities/melee",
     "path": "public/game/combat/abilities/melee/greater-barge",
     "search": "Greater Barge ability icon",
-    "canonicalPage": "https://runescape.wiki/w/Greater_Barge"
+    "canonicalPage": "https://runescape.wiki/w/Greater_Barge",
+    "alsoAt": ["public/game/upgrades/ability-codices/greater-barge.webp"]
   },
   {
     "id": "ability-greater-chain",
@@ -496,12 +497,8 @@
     "path": "public/game/combat/abilities/ranged/piercing-shot",
     "search": "Piercing Shot ability icon",
     "canonicalPage": "https://runescape.wiki/w/Piercing_Shot",
-    "aliases": [
-      "combat-abilities-ranged-ranged-attack"
-    ],
-    "alsoAt": [
-      "public/game/combat/abilities/ranged/ranged-attack.webp"
-    ]
+    "aliases": ["combat-abilities-ranged-ranged-attack"],
+    "alsoAt": ["public/game/combat/abilities/ranged/ranged-attack.webp"]
   },
   {
     "id": "ability-punish",
@@ -847,12 +844,8 @@
     "search": "Drygore Longsword inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Drygore_Longsword",
     "sourcePage": "https://runescape.wiki/w/File:Drygore_Longsword.png",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-drygore-longsword"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/drygore-longsword.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-drygore-longsword"],
+    "alsoAt": ["public/game/upgrades/skilling-production/drygore-longsword.webp"]
   },
   {
     "id": "bulk42-combat-equipment-ek-zekkil",
@@ -963,12 +956,8 @@
     "search": "Kerapacs Wrist Wraps inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Kerapacs_Wrist_Wraps",
     "sourcePage": "https://runescape.wiki/w/File:Kerapacs_Wrist_Wraps.png",
-    "aliases": [
-      "bulk42-combat-equipment-scripture-of-jas"
-    ],
-    "alsoAt": [
-      "public/game/combat/equipment/scripture-of-jas.webp"
-    ]
+    "aliases": ["bulk42-combat-equipment-scripture-of-jas"],
+    "alsoAt": ["public/game/combat/equipment/scripture-of-jas.webp"]
   },
   {
     "id": "bulk42-combat-equipment-laceration-boots",
@@ -1049,9 +1038,7 @@
     "search": "Scripture of Amascut inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Scripture_of_Amascut",
     "sourcePage": "https://runescape.wiki/w/File:Scripture_of_Amascut.png",
-    "alsoAt": [
-      "public/game/upgrades/progression/scripture-of-amascut.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/progression/scripture-of-amascut.webp"]
   },
   {
     "id": "bulk42-combat-equipment-scripture-of-bik",
@@ -1132,12 +1119,8 @@
     "search": "Shadow Glaive inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Shadow_Glaive",
     "sourcePage": "https://runescape.wiki/w/File:Shadow_Glaive.png",
-    "aliases": [
-      "upgrades-permanent-unlocks-shadow-glaives"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/shadow-glaives.webp"
-    ]
+    "aliases": ["upgrades-permanent-unlocks-shadow-glaives"],
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/shadow-glaives.webp"]
   },
   {
     "id": "bulk42-combat-equipment-soulbound-lantern",
@@ -1148,9 +1131,7 @@
     "search": "Soulbound Lantern inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Soulbound_Lantern",
     "sourcePage": "https://runescape.wiki/w/File:Soulbound_Lantern.png",
-    "alsoAt": [
-      "public/game/upgrades/progression/soulbound-lantern.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/progression/soulbound-lantern.webp"]
   },
   {
     "id": "bulk42-combat-equipment-staff-of-sliske",
@@ -1230,12 +1211,8 @@
     "fileTitle": "Asphyxiate Resplendence.png",
     "search": "Asphyxiate Resplendence inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Asphyxiate_Resplendence",
-    "aliases": [
-      "ability-asphyxiate"
-    ],
-    "alsoAt": [
-      "public/game/combat/abilities/magic/asphyxiate.webp"
-    ]
+    "aliases": ["ability-asphyxiate"],
+    "alsoAt": ["public/game/combat/abilities/magic/asphyxiate.webp"]
   },
   {
     "id": "combat-abilities-magic-chain",
@@ -1254,12 +1231,8 @@
     "fileTitle": "Claws Of Guthix.png",
     "search": "Claws Of Guthix inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Claws_Of_Guthix",
-    "aliases": [
-      "combat-abilities-magic-instability"
-    ],
-    "alsoAt": [
-      "public/game/combat/abilities/magic/instability.webp"
-    ]
+    "aliases": ["combat-abilities-magic-instability"],
+    "alsoAt": ["public/game/combat/abilities/magic/instability.webp"]
   },
   {
     "id": "combat-abilities-magic-combust",
@@ -1278,12 +1251,8 @@
     "fileTitle": "Dragon Breath Empowered.png",
     "search": "Dragon Breath Empowered inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Dragon_Breath_Empowered",
-    "aliases": [
-      "ability-dragon-breath"
-    ],
-    "alsoAt": [
-      "public/game/combat/abilities/magic/dragon-breath.webp"
-    ]
+    "aliases": ["ability-dragon-breath"],
+    "alsoAt": ["public/game/combat/abilities/magic/dragon-breath.webp"]
   },
   {
     "id": "combat-abilities-magic-impact",
@@ -1311,12 +1280,8 @@
     "fileTitle": "Omnipower Igneous.png",
     "search": "Omnipower Igneous inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Omnipower_Igneous",
-    "aliases": [
-      "combat-abilities-magic-omnipower"
-    ],
-    "alsoAt": [
-      "public/game/combat/abilities/magic/omnipower.webp"
-    ]
+    "aliases": ["combat-abilities-magic-omnipower"],
+    "alsoAt": ["public/game/combat/abilities/magic/omnipower.webp"]
   },
   {
     "id": "combat-abilities-melee-adaptive-strike-2h",
@@ -1326,12 +1291,8 @@
     "fileTitle": "Adaptive Strike 2h.png",
     "search": "Adaptive Strike 2h inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Adaptive_Strike_2h",
-    "aliases": [
-      "combat-abilities-melee-adaptive-strike-dw"
-    ],
-    "alsoAt": [
-      "public/game/combat/abilities/melee/adaptive-strike-dw.webp"
-    ]
+    "aliases": ["combat-abilities-melee-adaptive-strike-dw"],
+    "alsoAt": ["public/game/combat/abilities/melee/adaptive-strike-dw.webp"]
   },
   {
     "id": "combat-abilities-melee-backhand",
@@ -1386,12 +1347,8 @@
     "fileTitle": "Overpower Igneous.png",
     "search": "Overpower Igneous inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Overpower_Igneous",
-    "aliases": [
-      "ability-overpower"
-    ],
-    "alsoAt": [
-      "public/game/combat/abilities/melee/overpower.webp"
-    ]
+    "aliases": ["ability-overpower"],
+    "alsoAt": ["public/game/combat/abilities/melee/overpower.webp"]
   },
   {
     "id": "combat-abilities-melee-pulverise",
@@ -1446,10 +1403,7 @@
     "fileTitle": "Spectral Scythe 2.png",
     "search": "Spectral Scythe 2 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Spectral_Scythe_2",
-    "aliases": [
-      "ability-spectral-scythe",
-      "combat-abilities-necromancy-spectral-scythe-3"
-    ],
+    "aliases": ["ability-spectral-scythe", "combat-abilities-necromancy-spectral-scythe-3"],
     "alsoAt": [
       "public/game/combat/abilities/necromancy/spectral-scythe-3.webp",
       "public/game/combat/abilities/necromancy/spectral-scythe.webp"
@@ -1525,12 +1479,8 @@
     "fileTitle": "Deadshot Igneous.png",
     "search": "Deadshot Igneous inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Deadshot_Igneous",
-    "aliases": [
-      "ability-deadshot"
-    ],
-    "alsoAt": [
-      "public/game/combat/abilities/ranged/deadshot.webp"
-    ]
+    "aliases": ["ability-deadshot"],
+    "alsoAt": ["public/game/combat/abilities/ranged/deadshot.webp"]
   },
   {
     "id": "combat-adrenaline",
@@ -1573,10 +1523,7 @@
     "path": "public/game/combat/equilibrium-perk",
     "search": "Equilibrium perk icon",
     "canonicalPage": "https://runescape.wiki/w/Equilibrium",
-    "aliases": [
-      "combat-perks-equilibrium",
-      "inv-equilibrium"
-    ],
+    "aliases": ["combat-perks-equilibrium", "inv-equilibrium"],
     "provenanceAlternates": [
       {
         "id": "combat-perks-equilibrium",
@@ -1584,9 +1531,7 @@
         "canonicalPage": "https://runescape.wiki/w/Equilibrium"
       }
     ],
-    "alsoAt": [
-      "public/game/combat/perks/equilibrium.webp"
-    ]
+    "alsoAt": ["public/game/combat/perks/equilibrium.webp"]
   },
   {
     "id": "combat-equipment-abyssal-orb",
@@ -1876,12 +1821,8 @@
     "fileTitle": "Ancient Warriors Equipment.png",
     "search": "Ancient Warriors Equipment inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ancient_Warriors_Equipment",
-    "aliases": [
-      "bulk42-upgrades-permanent-unlocks-ancient-warriors-equipment"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/ancient-warriors-equipment.webp"
-    ]
+    "aliases": ["bulk42-upgrades-permanent-unlocks-ancient-warriors-equipment"],
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/ancient-warriors-equipment.webp"]
   },
   {
     "id": "combat-equipment-anima-core-body-of-seren",
@@ -2278,12 +2219,8 @@
     "fileTitle": "Blade Of Leng.png",
     "search": "Blade Of Leng inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Blade_Of_Leng",
-    "aliases": [
-      "bulk42-combat-equipment-dark-shard-of-leng"
-    ],
-    "alsoAt": [
-      "public/game/combat/equipment/dark-shard-of-leng.webp"
-    ]
+    "aliases": ["bulk42-combat-equipment-dark-shard-of-leng"],
+    "alsoAt": ["public/game/combat/equipment/dark-shard-of-leng.webp"]
   },
   {
     "id": "combat-equipment-blade-of-nymora",
@@ -2473,12 +2410,8 @@
     "fileTitle": "Cinderbane Gloves.png",
     "search": "Cinderbane Gloves inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Cinderbane_Gloves",
-    "aliases": [
-      "bulk42-upgrades-permanent-unlocks-cinderbane-gloves"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/cinderbane-gloves.webp"
-    ]
+    "aliases": ["bulk42-upgrades-permanent-unlocks-cinderbane-gloves"],
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/cinderbane-gloves.webp"]
   },
   {
     "id": "combat-equipment-completionist-cape",
@@ -2857,10 +2790,7 @@
     "fileTitle": "Deathguard T80.png",
     "search": "Deathguard T80 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Deathguard_T80",
-    "aliases": [
-      "combat-equipment-deathguard",
-      "combat-equipment-deathguard-t90"
-    ],
+    "aliases": ["combat-equipment-deathguard", "combat-equipment-deathguard-t90"],
     "alsoAt": [
       "public/game/combat/equipment/deathguard-t90.webp",
       "public/game/combat/equipment/deathguard.webp"
@@ -3000,12 +2930,8 @@
     "fileTitle": "Dragon 2h Sword.png",
     "search": "Dragon 2h Sword inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Dragon_2h_Sword",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-dragon-2h-sword"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/dragon-2h-sword.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-dragon-2h-sword"],
+    "alsoAt": ["public/game/upgrades/skilling-production/dragon-2h-sword.webp"]
   },
   {
     "id": "combat-equipment-dragon-chainbody",
@@ -3015,12 +2941,8 @@
     "fileTitle": "Dragon Chainbody.png",
     "search": "Dragon Chainbody inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Dragon_Chainbody",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-dragon-chainbody"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/dragon-chainbody.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-dragon-chainbody"],
+    "alsoAt": ["public/game/upgrades/skilling-production/dragon-chainbody.webp"]
   },
   {
     "id": "combat-equipment-dragon-defender",
@@ -3075,12 +2997,8 @@
     "fileTitle": "Drygore Mace.png",
     "search": "Drygore Mace inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Drygore_Mace",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-drygore-mace"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/drygore-mace.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-drygore-mace"],
+    "alsoAt": ["public/game/upgrades/skilling-production/drygore-mace.webp"]
   },
   {
     "id": "combat-equipment-drygore-rapier",
@@ -3090,12 +3008,8 @@
     "fileTitle": "Drygore Rapier.png",
     "search": "Drygore Rapier inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Drygore_Rapier",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-drygore-rapier"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/drygore-rapier.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-drygore-rapier"],
+    "alsoAt": ["public/game/upgrades/skilling-production/drygore-rapier.webp"]
   },
   {
     "id": "combat-equipment-eagle-eye-kiteshield",
@@ -3231,12 +3145,8 @@
     "fileTitle": "Elite Seasingers Robe Bottom.png",
     "search": "Elite Seasingers Robe Bottom inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Elite_Seasingers_Robe_Bottom",
-    "aliases": [
-      "combat-equipment-seasingers-robe-bottom"
-    ],
-    "alsoAt": [
-      "public/game/combat/equipment/seasingers-robe-bottom.webp"
-    ]
+    "aliases": ["combat-equipment-seasingers-robe-bottom"],
+    "alsoAt": ["public/game/combat/equipment/seasingers-robe-bottom.webp"]
   },
   {
     "id": "combat-equipment-elite-seasingers-robe-top",
@@ -3318,12 +3228,8 @@
     "fileTitle": "Elite Tetsu Helm.png",
     "search": "Elite Tetsu Helm inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Elite_Tetsu_Helm",
-    "aliases": [
-      "combat-equipment-tetsu-helm"
-    ],
-    "alsoAt": [
-      "public/game/combat/equipment/tetsu-helm.webp"
-    ]
+    "aliases": ["combat-equipment-tetsu-helm"],
+    "alsoAt": ["public/game/combat/equipment/tetsu-helm.webp"]
   },
   {
     "id": "combat-equipment-elite-tetsu-katana",
@@ -3378,12 +3284,8 @@
     "fileTitle": "Enchanted Bakriminel Bolts.png",
     "search": "Enchanted Bakriminel Bolts inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Enchanted_Bakriminel_Bolts",
-    "aliases": [
-      "combat-equipment-onyx-bakriminel-bolts-e"
-    ],
-    "alsoAt": [
-      "public/game/combat/equipment/onyx-bakriminel-bolts-e.webp"
-    ]
+    "aliases": ["combat-equipment-onyx-bakriminel-bolts-e"],
+    "alsoAt": ["public/game/combat/equipment/onyx-bakriminel-bolts-e.webp"]
   },
   {
     "id": "combat-equipment-enhanced-ancient-staff",
@@ -3447,12 +3349,8 @@
     "fileTitle": "Enhanced Nightmare Gauntlets.png",
     "search": "Enhanced Nightmare Gauntlets inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Enhanced_Nightmare_Gauntlets",
-    "aliases": [
-      "combat-equipment-nightmare-gauntlets"
-    ],
-    "alsoAt": [
-      "public/game/combat/equipment/nightmare-gauntlets.webp"
-    ]
+    "aliases": ["combat-equipment-nightmare-gauntlets"],
+    "alsoAt": ["public/game/combat/equipment/nightmare-gauntlets.webp"]
   },
   {
     "id": "combat-equipment-equilibrium-aura",
@@ -3480,12 +3378,8 @@
     "fileTitle": "Eternal Magic Orb Meagre.png",
     "search": "Eternal Magic Orb Meagre inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Eternal_Magic_Orb_Meagre",
-    "aliases": [
-      "combat-equipment-eternal-magic-orb-saturated"
-    ],
-    "alsoAt": [
-      "public/game/combat/equipment/eternal-magic-orb-saturated.webp"
-    ]
+    "aliases": ["combat-equipment-eternal-magic-orb-saturated"],
+    "alsoAt": ["public/game/combat/equipment/eternal-magic-orb-saturated.webp"]
   },
   {
     "id": "combat-equipment-eternal-magic-shortbow-mk-5",
@@ -3504,12 +3398,8 @@
     "fileTitle": "Eternal Magic Staff Meagre.png",
     "search": "Eternal Magic Staff Meagre inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Eternal_Magic_Staff_Meagre",
-    "aliases": [
-      "combat-equipment-eternal-magic-staff-saturated"
-    ],
-    "alsoAt": [
-      "public/game/combat/equipment/eternal-magic-staff-saturated.webp"
-    ]
+    "aliases": ["combat-equipment-eternal-magic-staff-saturated"],
+    "alsoAt": ["public/game/combat/equipment/eternal-magic-staff-saturated.webp"]
   },
   {
     "id": "combat-equipment-eternal-magic-wand-meagre",
@@ -3519,12 +3409,8 @@
     "fileTitle": "Eternal Magic Wand Meagre.png",
     "search": "Eternal Magic Wand Meagre inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Eternal_Magic_Wand_Meagre",
-    "aliases": [
-      "combat-equipment-eternal-magic-wand-saturated"
-    ],
-    "alsoAt": [
-      "public/game/combat/equipment/eternal-magic-wand-saturated.webp"
-    ]
+    "aliases": ["combat-equipment-eternal-magic-wand-saturated"],
+    "alsoAt": ["public/game/combat/equipment/eternal-magic-wand-saturated.webp"]
   },
   {
     "id": "combat-equipment-farsight-sniper-necklace",
@@ -3813,12 +3699,8 @@
     "fileTitle": "Illuminated Book Of Balance.png",
     "search": "Illuminated Book Of Balance inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Illuminated_Book_Of_Balance",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-illuminated-book-of-balance"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/illuminated-book-of-balance.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-illuminated-book-of-balance"],
+    "alsoAt": ["public/game/upgrades/skilling-production/illuminated-book-of-balance.webp"]
   },
   {
     "id": "combat-equipment-illuminated-book-of-chaos",
@@ -3828,12 +3710,8 @@
     "fileTitle": "Illuminated Book Of Chaos.png",
     "search": "Illuminated Book Of Chaos inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Illuminated_Book_Of_Chaos",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-illuminated-book-of-chaos"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/illuminated-book-of-chaos.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-illuminated-book-of-chaos"],
+    "alsoAt": ["public/game/upgrades/skilling-production/illuminated-book-of-chaos.webp"]
   },
   {
     "id": "combat-equipment-illuminated-book-of-law",
@@ -3862,12 +3740,8 @@
     "fileTitle": "Illuminated Book Of War.png",
     "search": "Illuminated Book Of War inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Illuminated_Book_Of_War",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-illuminated-book-of-war"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/illuminated-book-of-war.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-illuminated-book-of-war"],
+    "alsoAt": ["public/game/upgrades/skilling-production/illuminated-book-of-war.webp"]
   },
   {
     "id": "combat-equipment-illuminated-book-of-wisdom",
@@ -3877,12 +3751,8 @@
     "fileTitle": "Illuminated Book Of Wisdom.png",
     "search": "Illuminated Book Of Wisdom inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Illuminated_Book_Of_Wisdom",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-illuminated-book-of-wisdom"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/illuminated-book-of-wisdom.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-illuminated-book-of-wisdom"],
+    "alsoAt": ["public/game/upgrades/skilling-production/illuminated-book-of-wisdom.webp"]
   },
   {
     "id": "combat-equipment-inquisitor-staff",
@@ -3937,12 +3807,8 @@
     "fileTitle": "Kalphite Queen Head.png",
     "search": "Kalphite Queen Head inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Kalphite_Queen_Head",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-kalphite-queen-head"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/kalphite-queen-head.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-kalphite-queen-head"],
+    "alsoAt": ["public/game/upgrades/skilling-production/kalphite-queen-head.webp"]
   },
   {
     "id": "combat-equipment-kalphite-repriser",
@@ -4276,12 +4142,8 @@
     "fileTitle": "Masterwork Spear Of Annihilation.png",
     "search": "Masterwork Spear Of Annihilation inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Masterwork_Spear_Of_Annihilation",
-    "aliases": [
-      "combat-equipment-trimmed-masterwork-spear-of-annihilation"
-    ],
-    "alsoAt": [
-      "public/game/combat/equipment/trimmed-masterwork-spear-of-annihilation.webp"
-    ]
+    "aliases": ["combat-equipment-trimmed-masterwork-spear-of-annihilation"],
+    "alsoAt": ["public/game/combat/equipment/trimmed-masterwork-spear-of-annihilation.webp"]
   },
   {
     "id": "combat-equipment-masterwork-staff",
@@ -4480,12 +4342,8 @@
     "fileTitle": "Off Hand Drygore Longsword.png",
     "search": "Off Hand Drygore Longsword inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Off_Hand_Drygore_Longsword",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-off-hand-drygore-longsword"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/off-hand-drygore-longsword.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-off-hand-drygore-longsword"],
+    "alsoAt": ["public/game/upgrades/skilling-production/off-hand-drygore-longsword.webp"]
   },
   {
     "id": "combat-equipment-off-hand-drygore-mace",
@@ -4495,12 +4353,8 @@
     "fileTitle": "Off Hand Drygore Mace.png",
     "search": "Off Hand Drygore Mace inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Off_Hand_Drygore_Mace",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-off-hand-drygore-mace"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/off-hand-drygore-mace.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-off-hand-drygore-mace"],
+    "alsoAt": ["public/game/upgrades/skilling-production/off-hand-drygore-mace.webp"]
   },
   {
     "id": "combat-equipment-off-hand-drygore-rapier",
@@ -4510,12 +4364,8 @@
     "fileTitle": "Off Hand Drygore Rapier.png",
     "search": "Off Hand Drygore Rapier inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Off_Hand_Drygore_Rapier",
-    "aliases": [
-      "bulk42-upgrades-skilling-production-off-hand-drygore-rapier"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/skilling-production/off-hand-drygore-rapier.webp"
-    ]
+    "aliases": ["bulk42-upgrades-skilling-production-off-hand-drygore-rapier"],
+    "alsoAt": ["public/game/upgrades/skilling-production/off-hand-drygore-rapier.webp"]
   },
   {
     "id": "combat-equipment-off-hand-khopesh-of-the-kharidian",
@@ -4552,12 +4402,8 @@
     "fileTitle": "Off Hand Ruinous Crossbow.png",
     "search": "Off Hand Ruinous Crossbow inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Off_Hand_Ruinous_Crossbow",
-    "aliases": [
-      "combat-equipment-ruinous-crossbow"
-    ],
-    "alsoAt": [
-      "public/game/combat/equipment/ruinous-crossbow.webp"
-    ]
+    "aliases": ["combat-equipment-ruinous-crossbow"],
+    "alsoAt": ["public/game/combat/equipment/ruinous-crossbow.webp"]
   },
   {
     "id": "combat-equipment-off-hand-ruinous-rapier",
@@ -4594,12 +4440,8 @@
     "fileTitle": "Pack Mammoth.png",
     "search": "Pack Mammoth inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Pack_Mammoth",
-    "aliases": [
-      "bulk42-upgrades-permanent-unlocks-pack-mammoth"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/pack-mammoth.webp"
-    ]
+    "aliases": ["bulk42-upgrades-permanent-unlocks-pack-mammoth"],
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/pack-mammoth.webp"]
   },
   {
     "id": "combat-equipment-pernix-body",
@@ -4789,9 +4631,7 @@
     "fileTitle": "Reefwalker's cape.png",
     "search": "Reefwalker's cape inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Reefwalker%27s_cape",
-    "alsoAt": [
-      "public/game/combat/equipment/superior-reefwalkers-cape.webp"
-    ]
+    "alsoAt": ["public/game/combat/equipment/superior-reefwalkers-cape.webp"]
   },
   {
     "id": "combat-equipment-refined-anima-core-body-of-seren",
@@ -4954,12 +4794,8 @@
     "fileTitle": "Ruinous Rapier.png",
     "search": "Ruinous Rapier inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ruinous_Rapier",
-    "aliases": [
-      "bulk42-upgrades-progression-ruinous-rapier"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/progression/ruinous-rapier.webp"
-    ]
+    "aliases": ["bulk42-upgrades-progression-ruinous-rapier"],
+    "alsoAt": ["public/game/upgrades/progression/ruinous-rapier.webp"]
   },
   {
     "id": "combat-equipment-ruinous-staff",
@@ -5005,12 +4841,8 @@
     "fileTitle": "Scrimshaw Of Cruelty.png",
     "search": "Scrimshaw Of Cruelty inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Scrimshaw_Of_Cruelty",
-    "aliases": [
-      "combat-equipment-superior-scrimshaw-of-cruelty"
-    ],
-    "alsoAt": [
-      "public/game/combat/equipment/superior-scrimshaw-of-cruelty.webp"
-    ]
+    "aliases": ["combat-equipment-superior-scrimshaw-of-cruelty"],
+    "alsoAt": ["public/game/combat/equipment/superior-scrimshaw-of-cruelty.webp"]
   },
   {
     "id": "combat-equipment-scrimshaw-of-the-elements",
@@ -5020,12 +4852,8 @@
     "fileTitle": "Scrimshaw Of The Elements.png",
     "search": "Scrimshaw Of The Elements inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Scrimshaw_Of_The_Elements",
-    "aliases": [
-      "combat-equipment-superior-scrimshaw-of-the-elements"
-    ],
-    "alsoAt": [
-      "public/game/combat/equipment/superior-scrimshaw-of-the-elements.webp"
-    ]
+    "aliases": ["combat-equipment-superior-scrimshaw-of-the-elements"],
+    "alsoAt": ["public/game/combat/equipment/superior-scrimshaw-of-the-elements.webp"]
   },
   {
     "id": "combat-equipment-scrimshaw-of-vampyrism",
@@ -5035,12 +4863,8 @@
     "fileTitle": "Scrimshaw Of Vampyrism.png",
     "search": "Scrimshaw Of Vampyrism inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Scrimshaw_Of_Vampyrism",
-    "aliases": [
-      "combat-equipment-superior-scrimshaw-of-vampyrism"
-    ],
-    "alsoAt": [
-      "public/game/combat/equipment/superior-scrimshaw-of-vampyrism.webp"
-    ]
+    "aliases": ["combat-equipment-superior-scrimshaw-of-vampyrism"],
+    "alsoAt": ["public/game/combat/equipment/superior-scrimshaw-of-vampyrism.webp"]
   },
   {
     "id": "combat-equipment-seasinger-kiba",
@@ -5140,9 +4964,7 @@
     "fileTitle": "Skull lantern (tier 70).png",
     "search": "Skull Lantern inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Skull_lantern",
-    "alsoAt": [
-      "public/game/upgrades/progression/skull-lantern.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/progression/skull-lantern.webp"]
   },
   {
     "id": "combat-equipment-skull-lantern-t80",
@@ -5152,12 +4974,8 @@
     "fileTitle": "Skull Lantern T80.png",
     "search": "Skull Lantern T80 inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Skull_Lantern_T80",
-    "aliases": [
-      "combat-equipment-skull-lantern-t90"
-    ],
-    "alsoAt": [
-      "public/game/combat/equipment/skull-lantern-t90.webp"
-    ]
+    "aliases": ["combat-equipment-skull-lantern-t90"],
+    "alsoAt": ["public/game/combat/equipment/skull-lantern-t90.webp"]
   },
   {
     "id": "combat-equipment-slayer-helmet-i",
@@ -5320,12 +5138,8 @@
     "fileTitle": "Sunspear Magic.png",
     "search": "Sunspear Magic inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Sunspear_Magic",
-    "aliases": [
-      "bulk42-combat-equipment-sunspear-melee"
-    ],
-    "alsoAt": [
-      "public/game/combat/equipment/sunspear-melee.webp"
-    ]
+    "aliases": ["bulk42-combat-equipment-sunspear-melee"],
+    "alsoAt": ["public/game/combat/equipment/sunspear-melee.webp"]
   },
   {
     "id": "combat-equipment-sunspear-ranged",
@@ -6226,9 +6040,7 @@
     "fileTitle": "Archers' ring.png",
     "search": "Archers' ring inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Archers%27_ring",
-    "aliases": [
-      "combat-equipment-archers-ring"
-    ],
+    "aliases": ["combat-equipment-archers-ring"],
     "provenanceAlternates": [
       {
         "id": "combat-equipment-archers-ring",
@@ -6247,9 +6059,7 @@
     "fileTitle": "Deathwarden robe top (tier 90).png",
     "search": "Deathwarden robe top inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Deathwarden_robe_top",
-    "aliases": [
-      "combat-equipment-deathwarden-robe-top"
-    ],
+    "aliases": ["combat-equipment-deathwarden-robe-top"],
     "provenanceAlternates": [
       {
         "id": "combat-equipment-deathwarden-robe-top",
@@ -6268,9 +6078,7 @@
     "fileTitle": "Ferocious ring.png",
     "search": "Ferocious ring inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Ferocious_ring",
-    "aliases": [
-      "combat-equipment-ferocious-ring"
-    ],
+    "aliases": ["combat-equipment-ferocious-ring"],
     "provenanceAlternates": [
       {
         "id": "combat-equipment-ferocious-ring",
@@ -6289,9 +6097,7 @@
     "fileTitle": "Gemstone hauberk.png",
     "search": "Gemstone hauberk inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Gemstone_hauberk",
-    "aliases": [
-      "combat-equipment-gemstone-hauberk"
-    ],
+    "aliases": ["combat-equipment-gemstone-hauberk"],
     "provenanceAlternates": [
       {
         "id": "combat-equipment-gemstone-hauberk",
@@ -6331,9 +6137,7 @@
         "fileTitle": "Superior Leviathan Ring.png"
       }
     ],
-    "alsoAt": [
-      "public/game/combat/equipment/superior-leviathan-ring.webp"
-    ]
+    "alsoAt": ["public/game/combat/equipment/superior-leviathan-ring.webp"]
   },
   {
     "id": "equip-occultists-ring",
@@ -6356,9 +6160,7 @@
         "fileTitle": "Occultists Ring.png"
       }
     ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/occultists-ring.webp"
-    ]
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/occultists-ring.webp"]
   },
   {
     "id": "equip-seers-ring",
@@ -6368,9 +6170,7 @@
     "fileTitle": "Seers' ring.png",
     "search": "Seers' ring inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Seers%27_ring",
-    "aliases": [
-      "combat-equipment-seers-ring"
-    ],
+    "aliases": ["combat-equipment-seers-ring"],
     "provenanceAlternates": [
       {
         "id": "combat-equipment-seers-ring",
@@ -6389,9 +6189,7 @@
     "fileTitle": "Warrior ring.png",
     "search": "Warrior ring inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Warrior_ring",
-    "aliases": [
-      "combat-equipment-warrior-ring"
-    ],
+    "aliases": ["combat-equipment-warrior-ring"],
     "provenanceAlternates": [
       {
         "id": "combat-equipment-warrior-ring",
@@ -6410,9 +6208,7 @@
     "fileTitle": "Aftershock.png",
     "search": "Aftershock perk icon",
     "canonicalPage": "https://runescape.wiki/w/Aftershock",
-    "aliases": [
-      "combat-perks-aftershock"
-    ],
+    "aliases": ["combat-perks-aftershock"],
     "provenanceAlternates": [
       {
         "id": "combat-perks-aftershock",
@@ -6428,9 +6224,7 @@
     "fileTitle": "Biting.png",
     "search": "Biting perk icon",
     "canonicalPage": "https://runescape.wiki/w/Biting",
-    "aliases": [
-      "perk-biting"
-    ],
+    "aliases": ["perk-biting"],
     "provenanceAlternates": [
       {
         "id": "perk-biting",
@@ -6446,9 +6240,7 @@
     "fileTitle": "Crackling.png",
     "search": "Crackling perk icon",
     "canonicalPage": "https://runescape.wiki/w/Crackling",
-    "aliases": [
-      "perk-crackling"
-    ],
+    "aliases": ["perk-crackling"],
     "provenanceAlternates": [
       {
         "id": "perk-crackling",
@@ -6500,9 +6292,7 @@
     "fileTitle": "Precise.png",
     "search": "Precise invention perk icon",
     "canonicalPage": "https://runescape.wiki/w/Precise",
-    "aliases": [
-      "combat-perks-precise"
-    ],
+    "aliases": ["combat-perks-precise"],
     "provenanceAlternates": [
       {
         "id": "combat-perks-precise",
@@ -6518,9 +6308,7 @@
     "fileTitle": "Relentless.png",
     "search": "Relentless perk icon",
     "canonicalPage": "https://runescape.wiki/w/Relentless",
-    "aliases": [
-      "combat-perks-relentless"
-    ],
+    "aliases": ["combat-perks-relentless"],
     "provenanceAlternates": [
       {
         "id": "combat-perks-relentless",
@@ -6545,9 +6333,7 @@
     "fileTitle": "Greater Bone Shield.png",
     "search": "Greater Bone Shield ability icon",
     "canonicalPage": "https://runescape.wiki/w/Greater_Bone_Shield",
-    "aliases": [
-      "ability-greater-bone-shield"
-    ],
+    "aliases": ["ability-greater-bone-shield"],
     "provenanceAlternates": [
       {
         "id": "ability-greater-bone-shield",
@@ -6563,9 +6349,7 @@
     "fileTitle": "Invoke Death.png",
     "search": "Invoke Death ability icon",
     "canonicalPage": "https://runescape.wiki/w/Invoke_Death",
-    "aliases": [
-      "ability-invoke-death"
-    ]
+    "aliases": ["ability-invoke-death"]
   },
   {
     "id": "necro-threads-of-fate",
@@ -6575,9 +6359,7 @@
     "fileTitle": "Threads of Fate.png",
     "search": "Threads of Fate ability icon",
     "canonicalPage": "https://runescape.wiki/w/Threads_of_Fate",
-    "aliases": [
-      "ability-threads-of-fate"
-    ]
+    "aliases": ["ability-threads-of-fate"]
   },
   {
     "id": "necro-volley-of-souls",
@@ -6587,9 +6369,7 @@
     "fileTitle": "Volley of Souls.png",
     "search": "Volley of Souls ability icon",
     "canonicalPage": "https://runescape.wiki/w/Volley_of_Souls",
-    "aliases": [
-      "ability-volley-of-souls"
-    ]
+    "aliases": ["ability-volley-of-souls"]
   },
   {
     "id": "perk-energising",
@@ -6646,12 +6426,8 @@
     "path": "public/game/combat/perks/turtling",
     "search": "Turtling perk icon",
     "canonicalPage": "https://runescape.wiki/w/Turtling",
-    "aliases": [
-      "bulk42-upgrades-permanent-unlocks-turtling"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/turtling.webp"
-    ]
+    "aliases": ["bulk42-upgrades-permanent-unlocks-turtling"],
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/turtling.webp"]
   },
   {
     "id": "perk-ultimatums",
@@ -6669,13 +6445,8 @@
     "fileTitle": "Dive.png",
     "search": "Dive ability icon",
     "canonicalPage": "https://runescape.wiki/w/Dive",
-    "aliases": [
-      "ability-dive",
-      "bulk42-upgrades-permanent-unlocks-dive"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/dive.webp"
-    ]
+    "aliases": ["ability-dive", "bulk42-upgrades-permanent-unlocks-dive"],
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/dive.webp"]
   },
   {
     "id": "prayer-accelerated-decay",
@@ -6775,12 +6546,8 @@
     "fileTitle": "Rapid Renewal.png",
     "search": "Rapid Renewal prayer icon",
     "canonicalPage": "https://runescape.wiki/w/Rapid_Renewal",
-    "aliases": [
-      "bulk42-upgrades-permanent-unlocks-rapid-renewal"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/rapid-renewal.webp"
-    ]
+    "aliases": ["bulk42-upgrades-permanent-unlocks-rapid-renewal"],
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/rapid-renewal.webp"]
   },
   {
     "id": "prayer-rigour",
@@ -6815,12 +6582,8 @@
     "path": "public/game/combat/aspects/penance",
     "search": "Penance Aspect spell icon 2026",
     "canonicalPage": "https://runescape.wiki/w/Penance",
-    "aliases": [
-      "upgrades-permanent-unlocks-penance-aspect"
-    ],
-    "alsoAt": [
-      "public/game/upgrades/permanent-unlocks/penance-aspect.webp"
-    ]
+    "aliases": ["upgrades-permanent-unlocks-penance-aspect"],
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/penance-aspect.webp"]
   },
   {
     "id": "spell-aspect-vampyrism",
@@ -6903,8 +6666,6 @@
     "fileTitle": "Barricade.png",
     "search": "Barricade ability icon",
     "canonicalPage": "https://runescape.wiki/w/Barricade",
-    "aliases": [
-      "ability-barricade"
-    ]
+    "aliases": ["ability-barricade"]
   }
 ]

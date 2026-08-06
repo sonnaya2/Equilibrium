@@ -36,7 +36,9 @@ describe("manual / revo Ultimatums + Lunging parity", () => {
     expect(stats.globalModifiers.some((m) => m.id.startsWith("perk:lunging"))).toBe(false);
 
     // Factory still attaches Ultimatums for non-ultimates, but applies() is false.
-    const attackUlt = stats.castModifiersFor(attack).find((m) => m.id.startsWith("perk:ultimatums"));
+    const attackUlt = stats
+      .castModifiersFor(attack)
+      .find((m) => m.id.startsWith("perk:ultimatums"));
     expect(attackUlt).toBeDefined();
     expect(attackUlt!.applies({ style: "melee" })).toBe(false);
   });

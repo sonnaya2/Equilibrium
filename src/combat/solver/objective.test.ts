@@ -175,7 +175,12 @@ describe("scoreSummary", () => {
   });
 
   it("rejects non-exact exactness even when residualWeight is 0", () => {
-    for (const exactness of ["bounded-approximation", "truncated", "resampled", "approximated"] as const) {
+    for (const exactness of [
+      "bounded-approximation",
+      "truncated",
+      "resampled",
+      "approximated",
+    ] as const) {
       const s = scoreSummary(
         {
           ok: true,
@@ -304,11 +309,13 @@ describe("scoreSummary", () => {
       "burst",
     );
     expect(s.ok).toBe(true);
-    expect(summaryEligibleForObjectiveScore({
-      ok: true,
-      damageByTick: {},
-      rng: { residualWeight: 0, totalsBasis: "unit-mass", exactness: "exact" },
-    })).toBe(true);
+    expect(
+      summaryEligibleForObjectiveScore({
+        ok: true,
+        damageByTick: {},
+        rng: { residualWeight: 0, totalsBasis: "unit-mass", exactness: "exact" },
+      }),
+    ).toBe(true);
   });
 
   it("scores a successful summary from damageByTick", () => {

@@ -232,7 +232,8 @@ export function GearPanel({
   const unlocked = useMemo(() => unlockedRegions(build), [build]);
   const unlockedSet = useMemo(() => new Set<RegionId>(unlocked), [unlocked]);
   const activeRelicNames = useMemo(
-    () => Object.values(build.relics).filter((n): n is string => typeof n === "string" && n.length > 0),
+    () =>
+      Object.values(build.relics).filter((n): n is string => typeof n === "string" && n.length > 0),
     [build.relics],
   );
 
@@ -296,15 +297,21 @@ export function GearPanel({
       if (sortKey === "name") return byName(a, b);
       return byRegion(a, b) || (b.tier ?? 0) - (a.tier ?? 0) || byName(a, b);
     });
-  }, [wearables, activeSlot, browseStyle, regionFilter, myRegionsOnly, unlockedSet, search, sortKey]);
+  }, [
+    wearables,
+    activeSlot,
+    browseStyle,
+    regionFilter,
+    myRegionsOnly,
+    unlockedSet,
+    search,
+    sortKey,
+  ]);
 
   // Cap only on full unfiltered catalogue. Region / search / active slot filters
   // must not hide lower-tier matches under tier sort (All styles + weapon = 160+).
   const pickerFiltered =
-    regionFilter !== "all" ||
-    myRegionsOnly ||
-    search.trim().length > 0 ||
-    activeSlot != null;
+    regionFilter !== "all" || myRegionsOnly || search.trim().length > 0 || activeSlot != null;
   const wearablesCapped = !pickerFiltered && pickerRows.length > WEARABLE_CAP && !showAllWearables;
   const visiblePickerRows = wearablesCapped ? pickerRows.slice(0, WEARABLE_CAP) : pickerRows;
 
@@ -498,7 +505,7 @@ export function GearPanel({
                 const next = event.target.value as RegionFilter;
                 setRegionFilter(next);
                 setShowAllWearables(false);
-                // Region browse with Loadout style filter often looks empty - 
+                // Region browse with Loadout style filter often looks empty -
                 // open All styles so region gear is visible.
                 if (next !== "all" && styleBrowse === "setup") {
                   setStyleBrowse("all");

@@ -9,7 +9,11 @@ import {
   type DamageProvenanceKind,
 } from "./damageProvenance";
 import { isOnHitPlayerDamage } from "./onHitEligibility";
-import { FULL_SLAYER_HELMET_ITEM_ID, resolveSlayerHelmet, slayerHelmetDamageModifier } from "./slayerHelmet";
+import {
+  FULL_SLAYER_HELMET_ITEM_ID,
+  resolveSlayerHelmet,
+  slayerHelmetDamageModifier,
+} from "./slayerHelmet";
 
 /**
  * Event-family capability matrix. Columns are product gates; rows are provenance kinds.
@@ -311,22 +315,18 @@ describe("Lightning Surge + Slayer Helmet (bug fix)", () => {
     });
     const mod = slayerHelmetDamageModifier(r)!;
     expect(mod).toBeTruthy();
-    const direct = runPipeline(
-      { damage: 1000 },
-      [mod],
-      { style: "magic", damageSource: "direct", provenance: { kind: "player_direct" } },
-    ).damage;
+    const direct = runPipeline({ damage: 1000 }, [mod], {
+      style: "magic",
+      damageSource: "direct",
+      provenance: { kind: "player_direct" },
+    }).damage;
     expect(direct).toBe(mulFloor(1000, 1.075));
 
-    const surge = runPipeline(
-      { damage: 1000 },
-      [mod],
-      {
-        style: "magic",
-        damageSource: "proc",
-        provenance: { kind: "equipment_proc", detail: "lightning_surge" },
-      },
-    ).damage;
+    const surge = runPipeline({ damage: 1000 }, [mod], {
+      style: "magic",
+      damageSource: "proc",
+      provenance: { kind: "equipment_proc", detail: "lightning_surge" },
+    }).damage;
     expect(surge).toBe(1000);
     expect(
       isOnHitPlayerDamage({
@@ -350,26 +350,18 @@ describe("attached on-hit gear follows parent", () => {
     });
     const mod = slayerHelmetDamageModifier(r)!;
     // Live castHit uses parent provenance when parent.onHitGear is false.
-    const underDot = runPipeline(
-      { damage: 1000 },
-      [mod],
-      {
-        style: "ranged",
-        damageSource: "dot",
-        provenance: { kind: "player_dot", detail: "corruption_shot" },
-      },
-    ).damage;
+    const underDot = runPipeline({ damage: 1000 }, [mod], {
+      style: "ranged",
+      damageSource: "dot",
+      provenance: { kind: "player_dot", detail: "corruption_shot" },
+    }).damage;
     expect(underDot).toBe(1000);
 
-    const underDirect = runPipeline(
-      { damage: 1000 },
-      [mod],
-      {
-        style: "ranged",
-        damageSource: "direct",
-        provenance: { kind: "attached", detail: "searing_winds" },
-      },
-    ).damage;
+    const underDirect = runPipeline({ damage: 1000 }, [mod], {
+      style: "ranged",
+      damageSource: "direct",
+      provenance: { kind: "attached", detail: "searing_winds" },
+    }).damage;
     expect(underDirect).toBe(mulFloor(1000, 1.075));
   });
 });

@@ -18,9 +18,7 @@ function oracleHits(stacks: number) {
 
 function oraclePostCast(frostbladesExpireAtTick = 0) {
   return {
-    atoms: [
-      { weight: 1, stacks: 0, stacksExpireAtTick: 0, frostbladesExpireAtTick },
-    ],
+    atoms: [{ weight: 1, stacks: 0, stacksExpireAtTick: 0, frostbladesExpireAtTick }],
   };
 }
 
@@ -51,9 +49,10 @@ describe("Icy Tempest coupled outcome oracle", () => {
 
   it("matches the independent oracle for every unit stack count", () => {
     for (let stacks = 0; stacks <= PRIMORDIAL_ICE_CAP; stacks++) {
-      expect(resolveIcyTempest({ atoms: [{ ...mixedZeroThree.atoms[0], weight: 1, stacks }] }, 0, false).outcomes).toEqual([
-        outcomeFor(1, stacks),
-      ]);
+      expect(
+        resolveIcyTempest({ atoms: [{ ...mixedZeroThree.atoms[0], weight: 1, stacks }] }, 0, false)
+          .outcomes,
+      ).toEqual([outcomeFor(1, stacks)]);
     }
   });
 
@@ -117,6 +116,8 @@ describe("Icy Tempest coupled outcome oracle", () => {
     expect(first.outcomes).toEqual(second.outcomes);
     expect(first.outcomes.reduce((sum, outcome) => sum + outcome.probability, 0)).toBe(1);
     const partial = resolveIcyTempest({ atoms: atoms.slice(0, 2) }, 0, false);
-    expect(partial.outcomes.reduce((sum, outcome) => sum + outcome.probability, 0)).toBeCloseTo(0.5);
+    expect(partial.outcomes.reduce((sum, outcome) => sum + outcome.probability, 0)).toBeCloseTo(
+      0.5,
+    );
   });
 });

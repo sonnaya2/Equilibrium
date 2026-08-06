@@ -36,7 +36,6 @@ describe("PoolCoordHost unique set", () => {
     expect(host.getIncumbent()?.bar).toEqual(["z"]);
   });
 
-
   it("noteBar does not mark unique authoritative; noteKeys does", () => {
     const host = new PoolCoordHost(2, 10);
     expect(host.hasAuthoritativeUnique).toBe(false);

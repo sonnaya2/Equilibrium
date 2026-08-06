@@ -1,10 +1,10 @@
 /**
  * Production entry: serializable request → real engine evaluations → ranked bars.
  * Orchestration only - preparation, session, progress, and result building live
- * in sibling modules. Used by the worker and main-thread fallback.
+ * in sibling modules. Used by worker hosts and explicit test runs.
  */
 import type { AbilitySpec } from "../pipeline/calculateAbility";
-import type { SolveResult } from "./contracts";
+import type { RevolutionBarEvaluation, SolveResult } from "./contracts";
 import { configPatchForRecipe, solveAsync, type SolverAgentRecipe } from "./solve";
 import type { SerializableSolverRequest, SolverResultDTO } from "./worker/serializable";
 import { requireSimBase } from "./worker/revive";
@@ -26,6 +26,7 @@ import { buildMemoContext, createEvaluateFn } from "./evaluationSession";
 import { buildSolverResultDto } from "./resultBuilder";
 import type { WinnerPresentation } from "./evaluate";
 import { runScoreAnalysisParityGate } from "./parityGate";
+import { compileEvaluationContext } from "./compiledContext";
 import {
   createProfileCounters,
   isSolverProfileEnabled,
@@ -36,7 +37,7 @@ import {
 
 /**
  * Production entry: serializable request → real engine evaluations → ranked bars.
- * Used by the worker and main-thread fallback.
+ * Used by worker hosts and explicit test runs.
  */
 export const solveFromRequest: SolveFn = async (
   request: SerializableSolverRequest,
@@ -51,6 +52,11 @@ export const solveFromRequest: SolveFn = async (
   const profile = createProfileCounters(isSolverProfileEnabled(options?.profile));
 
   const simBase = requireSimBase(request.loadout);
+  if ((simBase.procs?.aftershockRank ?? 0) > 0) {
+    throw new Error(
+      "Aftershock is not available for verified solving: its damage-roll charge threshold is currently approximate",
+    );
+  }
   const disabled = new Set(request.disabledAbilityIds ?? []);
   const deny = regionDenyList(
     request.style,
@@ -78,9 +84,7 @@ export const solveFromRequest: SolveFn = async (
     level: simBase.level,
     ...(simBase.overrideBase != null ? { overrideBase: simBase.overrideBase } : {}),
     ...(simBase.overrideLevel != null ? { overrideLevel: simBase.overrideLevel } : {}),
-    ...(simBase.activateNaragiAtStart === true
-      ? { activateNaragiAtStart: true }
-      : {}),
+    ...(simBase.activateNaragiAtStart === true ? { activateNaragiAtStart: true } : {}),
     accuracy: simBase.accuracy,
     crit: simBase.crit,
     abilities,
@@ -141,6 +145,13 @@ export const solveFromRequest: SolveFn = async (
   };
 
   const memoContext = buildMemoContext(request, simBase);
+  const compiled = compileEvaluationContext({
+    style: request.style,
+    pool,
+    catalogue: simCommon.abilities as AbilitySpec[],
+    strengthCape99: simCommon.strengthCape99 === true,
+  });
+  const fullEvaluations = new Map<string, RevolutionBarEvaluation>();
   const evaluate = createEvaluateFn({
     request,
     pool,
@@ -151,6 +162,8 @@ export const solveFromRequest: SolveFn = async (
     memoContext,
     state,
     seenBars,
+    compiled,
+    fullEvaluations,
     options,
   });
 
@@ -170,69 +183,68 @@ export const solveFromRequest: SolveFn = async (
   setActiveSolverProfile(profile.enabled ? profile : undefined);
   let result: SolveResult;
   try {
-  const coord = options?.coord;
-  result = await solveAsync(
-    {
-      pool: searchPool,
-      sizeBounds: { min: request.minBarSize, max: request.maxBarSize },
-      evaluate,
-      tier: request.tier,
-      seed: request.seed,
-      authoredSeeds: authored,
-      incumbentBar,
-      requiredAbilityIds,
-      config: {
-        profileId: request.profileId,
-        ...recipePatch,
-        evaluationBudget,
-        searchHorizonTicks: exploreTicks,
-        ...(mediumTicks != null ? { mediumHorizonTicks: mediumTicks } : {}),
-        fullHorizonTicks: fullTicks,
+    const coord = options?.coord;
+    result = await solveAsync(
+      {
+        pool: searchPool,
+        sizeBounds: { min: request.minBarSize, max: request.maxBarSize },
+        evaluate,
+        tier: request.tier,
+        seed: request.seed,
+        authoredSeeds: authored,
+        incumbentBar,
+        requiredAbilityIds,
+        config: {
+          profileId: request.profileId,
+          ...recipePatch,
+          evaluationBudget,
+          searchHorizonTicks: exploreTicks,
+          ...(mediumTicks != null ? { mediumHorizonTicks: mediumTicks } : {}),
+          fullHorizonTicks: fullTicks,
+        },
+        shouldSkipFingerprint: coord ? (fp) => coord.shouldSkip(fp) : undefined,
+        isSearchStopped: coord ? () => coord.stopped : undefined,
       },
-      shouldSkipFingerprint: coord ? (fp) => coord.shouldSkip(fp) : undefined,
-      isSearchStopped: coord ? () => coord.stopped : undefined,
-    },
-    {
-      onPhase: (phase) => {
-        state.currentPhase = mapPhase(phase);
-        if (phase === "finalize") {
-          state.finalizeActive = true;
-          state.currentFidelity = "full";
-        } else if (phase === "medium") {
-          state.currentFidelity = "medium";
-        } else {
-          // Stay on medium once entered; otherwise short until finalize.
-          state.currentFidelity = state.currentFidelity === "medium" ? "medium" : "short";
-        }
-        emitProgress(options, state, true);
-      },
-      onFinalizeStep: (info) => {
-        state.currentPhase = "finalize";
-        state.finalizeActive = true;
-        state.finalizeDone = info.done;
-        state.finalizeTotal = Math.max(1, info.total);
-        state.scoringLabel = info.label;
-        state.scoringBarPreview = info.bar;
-        if (info.bar?.length) state.activePreview = [...info.bar];
-        emitProgress(options, state, true);
-      },
-      isCancelled: () => options?.isCancelled?.() === true || options?.signal?.aborted === true,
-      yieldSlice: async () => {
-        emitProgress(options, state, true);
-        if (options?.isCancelled?.() || options?.signal?.aborted) {
-          throwCancelled();
-        }
-        if (options?.isPaused?.()) {
-          while (options.isPaused?.() && !options?.isCancelled?.()) {
-            await new Promise((r) => setTimeout(r, 16));
+      {
+        onPhase: (phase) => {
+          state.currentPhase = mapPhase(phase);
+          if (phase === "finalize") {
+            state.finalizeActive = true;
+            state.currentFidelity = "full";
+          } else if (phase === "medium") {
+            state.currentFidelity = "medium";
+          } else {
+            // Stay on medium once entered; otherwise short until finalize.
+            state.currentFidelity = state.currentFidelity === "medium" ? "medium" : "short";
           }
-        }
-        // Double rAF-style yield: setTimeout(0) alone can still starve paint.
-        await options?.yieldSlice?.();
-        await new Promise((r) => setTimeout(r, 0));
+          emitProgress(options, state, true);
+        },
+        onFinalizeStep: (info) => {
+          state.currentPhase = "finalize";
+          state.finalizeActive = true;
+          state.finalizeDone = info.done;
+          state.finalizeTotal = Math.max(1, info.total);
+          state.scoringLabel = info.label;
+          state.scoringBarPreview = info.bar;
+          if (info.bar?.length) state.activePreview = [...info.bar];
+          emitProgress(options, state, true);
+        },
+        isCancelled: () => options?.isCancelled?.() === true || options?.signal?.aborted === true,
+        yieldSlice: async () => {
+          emitProgress(options, state, true);
+          if (options?.isCancelled?.() || options?.signal?.aborted) {
+            throwCancelled();
+          }
+          if (options?.isPaused?.()) {
+            while (options.isPaused?.() && !options?.isCancelled?.()) {
+              await new Promise((r) => setTimeout(r, 16));
+            }
+          }
+          if (options?.yieldSlice) await options.yieldSlice();
+          else await new Promise((r) => setTimeout(r, 0));
+        },
       },
-    },
-  );
+    );
   } finally {
     clearActiveSolverProfile();
   }
@@ -264,14 +276,15 @@ export const solveFromRequest: SolveFn = async (
         style: request.style,
         pool,
         sim: simCommon,
+        compiled,
         profileId: request.profileId,
         customWeights: request.customWeights,
         includePartial: request.includePartial,
         size: { min: request.minBarSize, max: request.maxBarSize },
       },
       fullTicks,
-      isCancelled: () =>
-        options?.isCancelled?.() === true || options?.signal?.aborted === true,
+      scoreOnlyEvaluations: fullEvaluations,
+      isCancelled: () => options?.isCancelled?.() === true || options?.signal?.aborted === true,
       yieldSlice: async () => {
         if (options?.isCancelled?.() || options?.signal?.aborted) {
           throwCancelled();

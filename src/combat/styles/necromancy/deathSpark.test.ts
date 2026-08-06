@@ -74,11 +74,7 @@ describe("Death Spark sim: Omni Guard stacks and empowered basic", () => {
     }
 
     // 6th basic: empower (double band) then stacks → 0
-    const empowerAttempt = ctx.performCast(
-      basic,
-      ctx.firstLegalTick("necromancy_basic"),
-      false,
-    );
+    const empowerAttempt = ctx.performCast(basic, ctx.firstLegalTick("necromancy_basic"), false);
     expect(empowerAttempt.ok).toBe(true);
     expect(ctx.getState().necromancy.resources.deathSparkStacks).toBe(0);
 

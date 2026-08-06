@@ -86,10 +86,7 @@ function playerHealResolve(
   };
 }
 
-function playerExpireResolve(
-  rt: SimulationRuntime,
-  _landTick: number,
-): EventResolution {
+function playerExpireResolve(rt: SimulationRuntime, _landTick: number): EventResolution {
   const player = rt.state.player;
   if (!player) return NO_DAMAGE;
   const naragi = expireNaragiActivation(player.naragi);
@@ -109,15 +106,11 @@ function playerExpireResolve(
  * Auto re-activate when UI toggle (activateNaragiAtStart) keeps Sliver on a cycle.
  * Uses landTick: clock advances state.tick only after due events land.
  */
-function playerReactivateResolve(
-  rt: SimulationRuntime,
-  landTick: number,
-): EventResolution {
+function playerReactivateResolve(rt: SimulationRuntime, landTick: number): EventResolution {
   if (rt.input.activateNaragiAtStart !== true) return NO_DAMAGE;
   activateNaragiSliver(rt, {
     relicActive: hasNaragiEdict(rt.input.league),
-    sliverWorn:
-      rt.input.equipmentIds?.includes(SLIVER_OF_EDICTS_ID) === true,
+    sliverWorn: rt.input.equipmentIds?.includes(SLIVER_OF_EDICTS_ID) === true,
     maximumLifePoints: rt.input.league?.maximumLife ?? 15_000,
     atTick: landTick,
   });
@@ -157,8 +150,7 @@ export function activateNaragiSliver(
       note: naragiActivationFailNote(gate.reason),
       activationTick: tick,
       healTicks: [],
-      cooldownReadyTick:
-        rt.state.cooldowns[SLIVER_OF_EDICTS_ACTIVATE_ID] ?? 0,
+      cooldownReadyTick: rt.state.cooldowns[SLIVER_OF_EDICTS_ACTIVATE_ID] ?? 0,
       activeUntilTick: player.naragi.activeUntilTick,
     };
   }
@@ -170,10 +162,7 @@ export function activateNaragiSliver(
   rt.state = {
     ...patchPlayer(rt.state, {
       naragi,
-      levelOverride: makeLevelOverride(
-        activeUntilTick,
-        NARAGI_LEVEL_OVERRIDE,
-      ),
+      levelOverride: makeLevelOverride(activeUntilTick, NARAGI_LEVEL_OVERRIDE),
       deathPrevention: makeDeathPrevention({
         sourceId: SLIVER_OF_EDICTS_ACTIVATE_ID,
         charges: NARAGI_REVIVAL_CHARGES,
@@ -301,10 +290,7 @@ export function applyPlayerDamageWithPrevention(
   revived: boolean;
   currentLifePoints: number;
 } {
-  rt.state = ensurePlayer(
-    rt.state,
-    opts.maximumLifePoints ?? 15_000,
-  );
+  rt.state = ensurePlayer(rt.state, opts.maximumLifePoints ?? 15_000);
   const player = rt.state.player!;
   if (player.dead) {
     return { died: true, revived: false, currentLifePoints: 0 };
@@ -352,9 +338,7 @@ export function applyPlayerDamageWithPrevention(
   };
 }
 
-export function readNaragiRuntime(
-  state: RotationState,
-): NaragiRuntimeState {
+export function readNaragiRuntime(state: RotationState): NaragiRuntimeState {
   return state.player?.naragi ?? newNaragiRuntime();
 }
 
@@ -364,12 +348,7 @@ export function effectiveLevelFromState(
   tick: number = state.tick,
 ): number {
   const override = state.player?.levelOverride;
-  if (
-    override &&
-    override.untilTick > 0 &&
-    tick < override.untilTick &&
-    override.level > 0
-  ) {
+  if (override && override.untilTick > 0 && tick < override.untilTick && override.level > 0) {
     return override.level;
   }
   return baseLevel;

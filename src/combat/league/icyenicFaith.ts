@@ -82,12 +82,7 @@ export function resolveIcyenicFaithBonuses(
 
 /** Protect / deflect style coverage for scenario notes (not a full protect model). */
 export type ProtectionPrayerStyle =
-  | "none"
-  | "melee"
-  | "ranged"
-  | "magic"
-  | "necromancy"
-  | "summoning";
+  "none" | "melee" | "ranged" | "magic" | "necromancy" | "summoning";
 
 export interface IcyenicProtectionScenario {
   /** Player has a protect prayer or deflection curse active. */
@@ -102,11 +97,7 @@ export interface IcyenicProtectionScenario {
 export type IcyenicProtectionSupport = "inactive" | "scenario-dependent" | "modeled";
 
 export type IcyenicProtectionUnavailability =
-  | "relic-inactive"
-  | "protection-off"
-  | "no-scenario"
-  | "invalid-interval"
-  | "invalid-duration";
+  "relic-inactive" | "protection-off" | "no-scenario" | "invalid-interval" | "invalid-duration";
 
 export interface IcyenicProtectionOutcome {
   support: IcyenicProtectionSupport;
@@ -118,13 +109,11 @@ export interface IcyenicProtectionOutcome {
   mitigatedDamage: number | null;
 }
 
-export function icyenicProtectionOutcome(
-  opts: {
-    relicActive: boolean;
-    windowSeconds: number;
-    scenario?: IcyenicProtectionScenario;
-  },
-): IcyenicProtectionOutcome {
+export function icyenicProtectionOutcome(opts: {
+  relicActive: boolean;
+  windowSeconds: number;
+  scenario?: IcyenicProtectionScenario;
+}): IcyenicProtectionOutcome {
   if (!opts.relicActive) {
     return {
       support: "inactive",

@@ -63,11 +63,11 @@ test("rotation planner queues, simulates, and persists", async ({ page }) => {
 });
 
 test("rotation reports adrenaline starvation honestly in manual mode", async ({ page }) => {
-  // Default start is 100% — force 0 so Overpower is unaffordable without weave.
+  // Default start is 100%; force 0 so Overpower is unaffordable without weave.
   await setStartingAdrenaline(page, 0);
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await page.getByRole("button", { name: "manual", exact: true }).click();
-  await page.getByRole("checkbox", { name: "Auto-weave basics" }).uncheck();
+  await page.getByRole("checkbox", { name: "Automatically use Basic Attacks" }).uncheck();
   await page.getByRole("button", { name: "Overpower ultimate 60%", exact: true }).click();
   await page.getByRole("button", { name: "Run", exact: true }).click();
   await expect(page.getByText(/Rotation fails: overpower needs 60% adrenaline/)).toBeVisible();
@@ -77,12 +77,14 @@ test("auto-weave fills basics to afford a queued ultimate", async ({ page }) => 
   await setStartingAdrenaline(page, 0);
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await page.getByRole("button", { name: "manual", exact: true }).click();
-  await expect(page.getByRole("checkbox", { name: "Auto-weave basics" })).toBeChecked();
+  await expect(
+    page.getByRole("checkbox", { name: "Automatically use Basic Attacks" }),
+  ).toBeChecked();
 
   await page.getByRole("button", { name: "Overpower ultimate 60%", exact: true }).click();
   await page.getByRole("button", { name: "Run", exact: true }).click();
   await expect(page.getByText("Natural DPS", { exact: true })).toBeVisible();
-  await expect(page.getByText("24 ticks · 14.4s").first()).toBeVisible();
+  await expect(page.getByText("25 ticks · 15.0s").first()).toBeVisible();
   await expect(page.getByText("auto").first()).toBeVisible();
 });
 
@@ -144,6 +146,11 @@ test("rotation defaults to the shared setup loadout", async ({ page }) => {
 });
 
 test("combat navigation exposes the production workspaces", async ({ page }) => {
+  await page.evaluate(() => {
+    localStorage.setItem("eq:build:v1", JSON.stringify({ elective: ["morytania"] }));
+  });
+  await page.reload();
+
   const tabs = page.getByRole("tab");
   await expect(tabs).toHaveCount(3);
   await expect(tabs).toHaveText(["Loadout", "Rotation", "Analysis"]);
@@ -169,7 +176,10 @@ test("combat navigation exposes the production workspaces", async ({ page }) => 
   await expect(page.getByRole("heading", { name: "Arch", exact: true })).toBeVisible();
   await expect(page.getByText("Berserker's Fury", { exact: true }).first()).toBeVisible();
   // BF LP controls appear only when the relic is selected.
-  await page.getByRole("button", { name: /Berserker's Fury/i }).first().click();
+  await page
+    .getByRole("button", { name: /Berserker's Fury/i })
+    .first()
+    .click();
   await expect(page.getByRole("spinbutton", { name: "Current HP" })).toBeVisible();
   await expect(page.getByText("Damage bonus")).toBeVisible();
 
@@ -396,6 +406,7 @@ test("solver progress advances at least twice before results", async ({ page }) 
 test("manual rotation still exposes necromancy abilities", async ({ page }) => {
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await page.getByRole("button", { name: "manual", exact: true }).click();
+  await page.getByRole("checkbox", { name: "Use Loadout" }).uncheck();
   await page.getByRole("button", { name: "Necromancy", exact: true }).click();
   await expect(page.getByRole("button", { name: /Volley of Souls/ })).toBeVisible();
 });
@@ -427,7 +438,7 @@ test("loadout calculation controls reset automatic base and persist into Revolut
   await page.getByRole("tab", { name: "Loadout", exact: true }).click();
   await page.getByRole("button", { name: "Abilities", exact: true }).click();
   await expect(page.getByRole("checkbox", { name: "Use Loadout" })).toBeChecked();
-  await expect(page.getByRole("spinbutton", { name: "Base ability damage" })).toHaveValue("1705");
+  await expect(page.getByRole("spinbutton", { name: "Base ability damage" })).toHaveValue("1774");
 
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await expect(page.getByRole("checkbox", { name: "30,000 hit cap" })).not.toBeChecked();

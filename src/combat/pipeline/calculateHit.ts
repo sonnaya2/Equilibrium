@@ -86,10 +86,7 @@ function resolvedHitContext(input: SharedHitInput): CombatContext {
  * Compile non-crit and (optional) crit ordered active lists once per hit context.
  * Same identity as per-roll orderModifiers + filter: stage then priority, then applies.
  */
-function compileHitPassKits(
-  input: SharedHitInput,
-  critMult: number | null,
-): HitPassKits {
+function compileHitPassKits(input: SharedHitInput, critMult: number | null): HitPassKits {
   const context = resolvedHitContext(input);
   const baseMods = input.modifiers ?? [];
   const nonCrit = compileActiveModifiers(baseMods, context);
@@ -128,7 +125,7 @@ function activeFor(kits: HitPassKits, critMult: number | null): readonly CombatM
 const MAX_EXACT_BAND_POINTS = 100_001;
 
 /**
- * Inclusive integer-band mean — the exact oracle path.
+ * Inclusive integer-band mean for the exact oracle path.
  * Walks every roll; each roll reuses pre-ordered modifiers (no re-sort).
  * Floor chain, DP, and cap remain per-roll; never collapsed to a single product.
  */
@@ -216,7 +213,7 @@ export function calculateRawHitBand(input: RawHitBandInput): HitResult {
   const capRule = kits.capRule;
   recordEndpointPass(2);
   const uncappedMaxNonCrit = runPass(input.max, nonCritMods, kits, false);
-  // When no crit path, critMult is null — same non-crit ordered list (matches prior behavior).
+  // When no crit path, critMult is null and the non-crit ordered list is reused.
   const uncappedMaxCrit = runPass(
     input.max,
     critMods !== null ? critMods : nonCritMods,

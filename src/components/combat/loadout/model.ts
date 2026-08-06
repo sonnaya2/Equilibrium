@@ -693,8 +693,7 @@ export function syncRelicGrantedEquipment(
   const nextSlots = stripUnavailableRelicItems(slots, activeRelicNames);
   const slotsChanged = nextSlots !== slots;
   const pocket = nextSlots.pocket;
-  const sliverStillOn =
-    typeof pocket === "string" && pocket === "item:sliver-of-edicts";
+  const sliverStillOn = typeof pocket === "string" && pocket === "item:sliver-of-edicts";
   const clearSliverActive = !sliverStillOn && loadout.buffs.sliverOfEdictsActive;
   if (!slotsChanged && !clearSliverActive) return loadout;
   const unlocks = unlockOnlyIds(loadout).filter((id) =>
@@ -704,9 +703,7 @@ export function syncRelicGrantedEquipment(
     ...loadout,
     equipmentSlots: nextSlots,
     equipmentIds: mergeEquipmentIds(nextSlots, unlocks),
-    buffs: clearSliverActive
-      ? { ...loadout.buffs, sliverOfEdictsActive: false }
-      : loadout.buffs,
+    buffs: clearSliverActive ? { ...loadout.buffs, sliverOfEdictsActive: false } : loadout.buffs,
   };
 }
 
@@ -1259,8 +1256,7 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       strengthCape99: rawBuffs.strengthCape99 === true,
       attackCape120: rawBuffs.attackCape120 === true,
       protectionPrayer: rawBuffs.protectionPrayer === true,
-      aegisArmourBasis:
-        rawBuffs.aegisArmourBasis === "equipment" ? "equipment" : "total-rating",
+      aegisArmourBasis: rawBuffs.aegisArmourBasis === "equipment" ? "equipment" : "total-rating",
       sliverOfEdictsActive: rawBuffs.sliverOfEdictsActive === true,
       ringOfVigourPassive: rawBuffs.ringOfVigourPassive === true,
       slayerHelmetStand: normalizeSlayerHelmetStand(rawBuffs.slayerHelmetStand),

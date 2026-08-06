@@ -194,8 +194,7 @@ export function resolveMergedUnique(
     uniqueCandidatesSum += parts[i]?.uniqueCandidates ?? 0;
   }
   const estimate = collectProgressBarKeys(parts).size;
-  const hasHost =
-    typeof hostUnique === "number" && Number.isFinite(hostUnique) && hostUnique >= 0;
+  const hasHost = typeof hostUnique === "number" && Number.isFinite(hostUnique) && hostUnique >= 0;
   if (hasHost) {
     return {
       uniqueCandidates: hostUnique,
@@ -252,8 +251,9 @@ export function buildPoolMetrics(
   if (live?.stragglersCancelled != null) metrics.stragglersCancelled = live.stragglersCancelled;
 
   if (live) {
-    const finishedAts = live.agentFinishedAtMs
-      .filter((t): t is number => typeof t === "number" && Number.isFinite(t));
+    const finishedAts = live.agentFinishedAtMs.filter(
+      (t): t is number => typeof t === "number" && Number.isFinite(t),
+    );
     if (finishedAts.length > 0) {
       const first = Math.min(...finishedAts);
       const last = Math.max(...finishedAts);
@@ -488,9 +488,7 @@ export function mergeResults(
   const merged: SolverResultDTO = {
     ...best,
     // Host session identity when available; else winner stamp (legacy/single-path).
-    solveIdentity: hostRequest
-      ? solveIdentityFromRequest(hostRequest)
-      : best.solveIdentity,
+    solveIdentity: hostRequest ? solveIdentityFromRequest(hostRequest) : best.solveIdentity,
     evaluations: poolMetrics?.globalEvaluations ?? evaluations,
     uniqueCandidates,
     top: top.slice(0, 5),
@@ -651,9 +649,7 @@ export class SolverAgentPool {
       coordStop: coordHost.shouldStop,
       stragglersCancelled: coordHost.stragglersCancelled,
       // Only claim honest unique after workers streamed seenKeys (not preview-only).
-      ...(coordHost.hasAuthoritativeUnique
-        ? { uniqueCandidates: coordHost.uniqueCandidates }
-        : {}),
+      ...(coordHost.hasAuthoritativeUnique ? { uniqueCandidates: coordHost.uniqueCandidates } : {}),
     });
 
     const agentMetaFor = () =>
@@ -1021,12 +1017,7 @@ export class SolverAgentPool {
         throw new Error(errors[0] ?? "revolution solver pool: all agents failed");
       }
 
-      const poolMetrics = buildPoolMetrics(
-        progressParts,
-        agentCount,
-        baseBudget,
-        liveMetrics(),
-      );
+      const poolMetrics = buildPoolMetrics(progressParts, agentCount, baseBudget, liveMetrics());
       // Re-stamp host identity + recompute upgrade vs host incumbent baseline.
       return mergeResults(ok, request, poolMetrics, hostIncumbent);
     } finally {

@@ -211,9 +211,9 @@ describe("Ring of Vigour invariants (SSOT pins)", () => {
 
   it("non-special costs never enter the special discount", () => {
     expect(listedWeaponSpecialCost({ adrenaline: { cost: 50 } }, true)).toBe(50);
-    expect(
-      listedWeaponSpecialCost({ weaponSpecial: false, adrenaline: { cost: 25 } }, true),
-    ).toBe(25);
+    expect(listedWeaponSpecialCost({ weaponSpecial: false, adrenaline: { cost: 25 } }, true)).toBe(
+      25,
+    );
   });
 });
 

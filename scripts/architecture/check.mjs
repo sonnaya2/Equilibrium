@@ -94,7 +94,6 @@ for (const abs of files) {
   violations.push(...hits);
 }
 
-// --- Public barrel ban list (barrel-leakage) ---
 const barrelPath = join(ROOT, "src", "combat", "index.ts");
 try {
   const barrelSrc = await readFile(barrelPath, "utf8");
@@ -128,7 +127,6 @@ try {
   /* index missing - other rules still run */
 }
 
-// --- Cycle detection within src/combat production files ---
 const combatFiles = files.filter((abs) => {
   const rel = fwd(relative(ROOT, abs));
   return rel.startsWith("src/combat/") && !isTestFile(rel);
@@ -170,7 +168,7 @@ function findCycles(g) {
     visiting.add(node);
     stack.push(node);
     for (const next of g.get(node) ?? []) {
-      // Exact key only — no endsWith heuristics (false multi-matches).
+      // Exact key only; endsWith can produce false multi-matches.
       if (g.has(next)) dfs(next);
     }
     stack.pop();

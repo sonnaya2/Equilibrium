@@ -145,8 +145,6 @@ export function isReactImport(spec) {
   );
 }
 
-// --- Pass 7: style catalogues / registries / solver UI seams -----------------
-
 /** Style ability catalogue modules (melee/ranged/magic/necromancy). */
 export const STYLE_CATALOGUE_SUFFIXES = [
   "styles/melee/abilities",
@@ -265,7 +263,7 @@ export const LINEAR_ID_CATALOGUE_NAMES = [
   "RECORD_TO_ENGINE",
 ];
 
-/** Data-layer record bags with known ById maps — linear .records.find by id banned. */
+/** Data-layer record bags with known ById maps; linear .records.find by id is banned. */
 export const LINEAR_ID_RECORDS_OWNERS = [
   "combatAbilities",
   "combatEquipment",
@@ -340,7 +338,7 @@ export function isRecordEngineMapCanonical(repoRelPath) {
   return fwd(repoRelPath) === RECORD_ENGINE_MAP_CANONICAL;
 }
 
-/** useLoadout (hook / loadout type module) — solver must not import. */
+/** Solver imports from useLoadout modules are banned. */
 export function isUseLoadoutImport(filePath, spec, root) {
   if (
     spec === "@/components/combat/useLoadout" ||
@@ -455,7 +453,6 @@ export function checkFile(opts) {
   const underPassives = isUnder(rel, "src/combat/passives");
   const underApp = isUnder(rel, "app");
 
-  // --- UI: no engine internals ---
   if (underUi && production) {
     for (const spec of specs) {
       if (isBannedEngineInternalImport(filePath, spec, root)) {
@@ -470,7 +467,6 @@ export function checkFile(opts) {
     }
   }
 
-  // --- UI: no style ability ARRAY imports (factories from same modules ok) ---
   if (underUi && production && !uiStyleCatalogueAllowlist.has(rel)) {
     for (const hit of findStyleAbilityArrayImports(source, filePath, root)) {
       out.push({
@@ -482,7 +478,6 @@ export function checkFile(opts) {
     }
   }
 
-  // --- no-linear-id-lookup (production combat + UI) ---
   if (
     production &&
     (underCombat || underUi) &&
@@ -498,7 +493,6 @@ export function checkFile(opts) {
     }
   }
 
-  // --- single-passive-registry ---
   if (production && underCombat && !underPassives) {
     if (definesPassiveDefinitions(source)) {
       out.push({
@@ -518,7 +512,6 @@ export function checkFile(opts) {
     }
   }
 
-  // --- single-record-engine-map ---
   if (production && underCombat && !isRecordEngineMapCanonical(rel)) {
     if (definesRecordToEngine(source)) {
       out.push({
@@ -530,7 +523,6 @@ export function checkFile(opts) {
     }
   }
 
-  // --- runtime-no-data-build (Next app production) ---
   if (underApp && production) {
     for (const spec of specs) {
       if (isNodeSqliteImport(spec)) {

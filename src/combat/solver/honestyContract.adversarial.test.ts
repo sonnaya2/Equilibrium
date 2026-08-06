@@ -824,112 +824,89 @@ describe("honesty contract: DTO + Apply", () => {
 });
 
 describe("honesty contract: end-to-end residual case", () => {
-  it(
-    "reproduces high residual case and refuses to rank/apply residual mass",
-    () => {
-      enableBranchProfiling(true);
-      resetBranchProfile();
-      const fixture = survivorBiasPrimaryFixture();
-      const stats = measureResidualStats(fixture);
-      expect(stats.residualWeight).toBeGreaterThanOrEqual(0.5);
-      expect(stats.concreteMass + stats.residualWeight).toBeCloseTo(1, 5);
+  it("reproduces high residual case and refuses to rank/apply residual mass", () => {
+    enableBranchProfiling(true);
+    resetBranchProfile();
+    const fixture = survivorBiasPrimaryFixture();
+    const stats = measureResidualStats(fixture);
+    expect(stats.residualWeight).toBeGreaterThanOrEqual(0.5);
+    expect(stats.concreteMass + stats.residualWeight).toBeCloseTo(1, 5);
 
-      // Pre-fix inflated view: conditional mean >> known-mass contribution.
-      expect(stats.conditionalConcreteMean).toBeGreaterThan(stats.knownMassDamage);
-      expect(stats.survivorRenormFactor).toBeGreaterThan(1);
+    // Pre-fix inflated view: conditional mean >> known-mass contribution.
+    expect(stats.conditionalConcreteMean).toBeGreaterThan(stats.knownMassDamage);
+    expect(stats.survivorRenormFactor).toBeGreaterThan(1);
 
-      const summary = simulateRevolution(fixture.revoInput, {
-        detailLevel: "score-only",
-        branchBudget: {
-          maxLiveBranches: 64,
-          maxIntermediateBranches: 128,
-          maximumResidualWeight: 1e-12,
-        },
-      });
-      expect(summary.rng?.residualWeight ?? 0).toBeGreaterThan(0.5);
-      expect(summaryEligibleForObjectiveScore(summary as ScoreableSummary)).toBe(false);
-      expect(scoreSummary(summary as ScoreableSummary, "balanced").ok).toBe(false);
+    const summary = simulateRevolution(fixture.revoInput, {
+      detailLevel: "score-only",
+      branchBudget: {
+        maxLiveBranches: 64,
+        maxIntermediateBranches: 128,
+        maximumResidualWeight: 1e-12,
+      },
+    });
+    expect(summary.rng?.residualWeight ?? 0).toBeGreaterThan(0.5);
+    expect(summaryEligibleForObjectiveScore(summary as ScoreableSummary)).toBe(false);
+    expect(scoreSummary(summary as ScoreableSummary, "balanced").ok).toBe(false);
 
-      // Bounded adaptive climb (not full 4096 ladder) keeps the suite tractable.
-      const adaptive = simulateWithAdaptiveBranchFidelity(
-        fixture.revoInput,
-        { detailLevel: "score-only" },
-        {
-          mode: "full",
-          liveCaps: [64, 128, 256],
-          maximumResidualWeight: 1e-12,
-          exactness: "exact-or-merged",
-        },
-      );
-      if (adaptive.meta.complete && adaptive.meta.residualWeight <= 1e-12) {
-        expect(summaryEligibleForObjectiveScore(adaptive.summary as ScoreableSummary)).toBe(
-          true,
-        );
-      } else {
-        expect(summaryEligibleForObjectiveScore(adaptive.summary as ScoreableSummary)).toBe(
-          false,
-        );
-      }
+    // Bounded adaptive climb (not full 4096 ladder) keeps the suite tractable.
+    const adaptive = simulateWithAdaptiveBranchFidelity(
+      fixture.revoInput,
+      { detailLevel: "score-only" },
+      {
+        mode: "full",
+        liveCaps: [64, 128, 256],
+        maximumResidualWeight: 1e-12,
+        exactness: "exact-or-merged",
+      },
+    );
+    if (adaptive.meta.complete && adaptive.meta.residualWeight <= 1e-12) {
+      expect(summaryEligibleForObjectiveScore(adaptive.summary as ScoreableSummary)).toBe(true);
+    } else {
+      expect(summaryEligibleForObjectiveScore(adaptive.summary as ScoreableSummary)).toBe(false);
+    }
 
-      const prof = getBranchProfile();
-      expect(prof.fidelityRetries).toBeGreaterThanOrEqual(1);
-      console.log(
-        "[honesty residual branch profile]",
-        JSON.stringify({
-          residualWeight: stats.residualWeight,
-          concreteMass: stats.concreteMass,
-          knownMassDamage: stats.knownMassDamage,
-          conditionalConcreteMean: stats.conditionalConcreteMean,
-          survivorRenormFactor: stats.survivorRenormFactor,
-          adaptiveAttempts: adaptive.meta.attempts,
-          adaptiveComplete: adaptive.meta.complete,
-          adaptiveResidual: adaptive.meta.residualWeight,
-          adaptiveMaxLive: adaptive.meta.finalBudget.maxLiveBranches,
-          profile: prof,
-        }),
-      );
+    const prof = getBranchProfile();
+    expect(prof.fidelityRetries).toBeGreaterThanOrEqual(1);
 
-      // Residual is what blocks Apply even when flags claim upgrade.
-      const winner = fullWinner(fixture.barIds, stats.knownMassDamage + 5_000);
-      const dto = buildSolverResultDto({
-        request: baseRequest,
-        result: okSolve(winner, {
-          incumbentBar: ["slice"],
-          incumbentScore: stats.knownMassDamage,
-          isUpgrade: true,
-          scoreImprovement: 5_000,
-          validForApply: true,
-        }),
-        poolSize: 3,
-        uniqueBars: 1,
-        fullTicks: fixture.durationTicks,
-        evaluationBudget: 28,
-        blessingIds: [],
-        presentation: {
-          recheckScore: stats.knownMassDamage + 5_000,
-          summary: {
-            totalExpected: stats.knownMassDamage,
-            dps: 1,
-            ticks: fixture.durationTicks,
-            ok: true,
-            rng: {
-              residualWeight: stats.residualWeight,
-              exactness: "approximated",
-              probabilityMass: stats.concreteMass,
-            },
+    // Residual is what blocks Apply even when flags claim upgrade.
+    const winner = fullWinner(fixture.barIds, stats.knownMassDamage + 5_000);
+    const dto = buildSolverResultDto({
+      request: baseRequest,
+      result: okSolve(winner, {
+        incumbentBar: ["slice"],
+        incumbentScore: stats.knownMassDamage,
+        isUpgrade: true,
+        scoreImprovement: 5_000,
+        validForApply: true,
+      }),
+      poolSize: 3,
+      uniqueBars: 1,
+      fullTicks: fixture.durationTicks,
+      evaluationBudget: 28,
+      blessingIds: [],
+      presentation: {
+        recheckScore: stats.knownMassDamage + 5_000,
+        summary: {
+          totalExpected: stats.knownMassDamage,
+          dps: 1,
+          ticks: fixture.durationTicks,
+          ok: true,
+          rng: {
+            residualWeight: stats.residualWeight,
+            exactness: "approximated",
+            probabilityMass: stats.concreteMass,
           },
-          rng: { residualWeight: stats.residualWeight, exactness: "approximated" },
         },
-      });
-      expect(dto.honesty?.beatsBar).toBe(true);
-      expect(dto.honesty?.residualMass).toBeGreaterThan(0.5);
-      expect(dto.honesty?.fullyValidated).toBe(false);
-      expect(dto.honesty?.applyAllowed).toBe(false);
-      expect(mayApplySolverResultBar(dto)).toBe(false);
+        rng: { residualWeight: stats.residualWeight, exactness: "approximated" },
+      },
+    });
+    expect(dto.honesty?.beatsBar).toBe(true);
+    expect(dto.honesty?.residualMass).toBeGreaterThan(0.5);
+    expect(dto.honesty?.fullyValidated).toBe(false);
+    expect(dto.honesty?.applyAllowed).toBe(false);
+    expect(mayApplySolverResultBar(dto)).toBe(false);
 
-      enableBranchProfiling(false);
-      resetBranchProfile();
-    },
-    60_000,
-  );
+    enableBranchProfiling(false);
+    resetBranchProfile();
+  }, 60_000);
 });

@@ -13,10 +13,7 @@ import type { RevolutionInput } from "../engine/simulation/revolution";
 import type { HitCapRule } from "../core/hitCaps";
 import type { CombatStyle } from "../types";
 import type { ResolvedAbilityCatalogue } from "../abilities/catalogue";
-import {
-  mapSpecsThroughCatalogue,
-  resolveAbilitySpecsFromCatalogue,
-} from "../abilities/catalogue";
+import { mapSpecsThroughCatalogue, resolveAbilitySpecsFromCatalogue } from "../abilities/catalogue";
 import type { HostCombatResolveInput, ResolvedCombatModel } from "./contracts";
 import { buildResolvedCombatModel } from "./resolve";
 import { modifiersFromSources } from "./modifiers";

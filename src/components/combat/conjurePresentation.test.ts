@@ -54,16 +54,16 @@ describe("conjurePresentation", () => {
     );
     expect(formatConjureByEffectLabel("touch_of_death", undefined, "Touch")).toBe("Touch");
 
-    expect(isConjureDamageEvent({ family: "conjureAuto", abilityId: "spirit_skeleton_warrior" })).toBe(
-      true,
-    );
+    expect(
+      isConjureDamageEvent({ family: "conjureAuto", abilityId: "spirit_skeleton_warrior" }),
+    ).toBe(true);
     expect(isConjureDamageEvent({ family: "command", abilityId: "command_skeleton_warrior" })).toBe(
       true,
     );
     expect(isConjureDamageEvent({ family: "hit", abilityId: "touch_of_death" })).toBe(false);
-    expect(conjureEventTypeLabel({ family: "poison", abilityId: "spirit_putrid_zombie_poison" })).toBe(
-      "Conjure poison",
-    );
+    expect(
+      conjureEventTypeLabel({ family: "poison", abilityId: "spirit_putrid_zombie_poison" }),
+    ).toBe("Conjure poison");
     expect(conjureEventTypeLabel({ family: "conjureAuto" })).toBe("Conjure auto");
     expect(conjureEventTypeLabel({ family: "command" })).toBe("Conjure command");
     expect(conjureEventTypeLabel({ family: "hit", abilityId: "slice" })).toBeNull();
@@ -91,9 +91,9 @@ describe("conjurePresentation", () => {
   it("surfaces putrid ST explode and army default-three honesty only when those casts run", () => {
     expect(conjureStAreaAssumptionRows(undefined)).toEqual([]);
     expect(conjureStAreaAssumptionRows([{ abilityId: "touch_of_death" }])).toEqual([]);
-    expect(rotationHasAbilityId([{ abilityId: "command_putrid_zombie" }], "command_putrid_zombie")).toBe(
-      true,
-    );
+    expect(
+      rotationHasAbilityId([{ abilityId: "command_putrid_zombie" }], "command_putrid_zombie"),
+    ).toBe(true);
 
     const putridOnly = conjureStAreaAssumptionRows([{ abilityId: "command_putrid_zombie" }]);
     expect(putridOnly).toEqual([["Command Putrid Zombie", COMMAND_PUTRID_ST_ASSUMPTION_NOTE]]);
@@ -112,10 +112,7 @@ describe("conjurePresentation", () => {
       { abilityId: "command_putrid_zombie" },
     ]);
     expect(both).toHaveLength(2);
-    expect(both.map(([label]) => label)).toEqual([
-      "Command Putrid Zombie",
-      "Conjure Undead Army",
-    ]);
+    expect(both.map(([label]) => label)).toEqual(["Command Putrid Zombie", "Conjure Undead Army"]);
   });
 
   it("assumption note strings stay aligned with ability supportNotes", async () => {
@@ -131,9 +128,9 @@ describe("conjurePresentation", () => {
       ["touch_of_death", "soul_sap", "volley_of_souls"],
       "necromancy",
     );
-    expect(without.some((id) => id === "conjure_undead_army" || id === "conjure_skeleton_warrior")).toBe(
-      true,
-    );
+    expect(
+      without.some((id) => id === "conjure_undead_army" || id === "conjure_skeleton_warrior"),
+    ).toBe(true);
     expect(without[0]).toBe(NECRO_BAR_CONJURE_FALLBACK);
     expect(without.slice(1)).toEqual(["touch_of_death", "soul_sap", "volley_of_souls"]);
 

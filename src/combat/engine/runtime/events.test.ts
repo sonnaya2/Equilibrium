@@ -113,6 +113,14 @@ describe("branch equivalence signature", () => {
     expect(a.signature()).not.toBe(c.signature());
   });
 
+  it("distinguishes castSnap Tuska empowered damage", () => {
+    const a = new EventQueue();
+    const b = new EventQueue();
+    a.push(event({ castSnap: castSnap({ tuskasEmpoweredDamage: 9_900 }) }));
+    b.push(event({ castSnap: castSnap() }));
+    expect(a.signature()).not.toBe(b.signature());
+  });
+
   it("distinguishes castSnap greaterFuryActive", () => {
     const a = new EventQueue();
     const b = new EventQueue();
@@ -251,13 +259,9 @@ describe("branch equivalence signature", () => {
     const histB = new EventQueue();
     // Two pending hits; tail derives from first vs second.
     linked.push(event({ tick: 1, seq: 1, abilityId: "h0", hitIndex: 0 }));
-    linked.push(
-      event({ tick: 2, seq: 2, abilityId: "tail", derivedFrom: 1, hitIndex: 1 }),
-    );
+    linked.push(event({ tick: 2, seq: 2, abilityId: "tail", derivedFrom: 1, hitIndex: 1 }));
     cross.push(event({ tick: 1, seq: 10, abilityId: "h0", hitIndex: 0 }));
-    cross.push(
-      event({ tick: 2, seq: 11, abilityId: "tail", derivedFrom: 10, hitIndex: 1 }),
-    );
+    cross.push(event({ tick: 2, seq: 11, abilityId: "tail", derivedFrom: 10, hitIndex: 1 }));
     // Same absolute relative as linked after rank (both derive from rank 0).
     expect(linked.signature()).toBe(cross.signature());
 
@@ -265,15 +269,11 @@ describe("branch equivalence signature", () => {
     const twoParents = new EventQueue();
     twoParents.push(event({ tick: 1, seq: 1, abilityId: "h0", hitIndex: 0 }));
     twoParents.push(event({ tick: 1, seq: 2, abilityId: "h1", hitIndex: 1 }));
-    twoParents.push(
-      event({ tick: 3, seq: 3, abilityId: "tail", derivedFrom: 2, hitIndex: 2 }),
-    );
+    twoParents.push(event({ tick: 3, seq: 3, abilityId: "tail", derivedFrom: 2, hitIndex: 2 }));
     const firstParent = new EventQueue();
     firstParent.push(event({ tick: 1, seq: 1, abilityId: "h0", hitIndex: 0 }));
     firstParent.push(event({ tick: 1, seq: 2, abilityId: "h1", hitIndex: 1 }));
-    firstParent.push(
-      event({ tick: 3, seq: 3, abilityId: "tail", derivedFrom: 1, hitIndex: 2 }),
-    );
+    firstParent.push(event({ tick: 3, seq: 3, abilityId: "tail", derivedFrom: 1, hitIndex: 2 }));
     expect(twoParents.signature()).not.toBe(firstParent.signature());
 
     // Distinct historical derivedFrom identity among multi-ref queues.

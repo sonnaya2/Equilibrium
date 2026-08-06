@@ -66,10 +66,7 @@ export function isSliverOfEdictsWorn(equipmentIds: readonly string[] | undefined
 }
 
 export type NaragiActivationFailReason =
-  | "relic-inactive"
-  | "sliver-unequipped"
-  | "already-active"
-  | "on-cooldown";
+  "relic-inactive" | "sliver-unequipped" | "already-active" | "on-cooldown";
 
 export interface NaragiActivationGate {
   ok: boolean;

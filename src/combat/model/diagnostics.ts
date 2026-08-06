@@ -1,6 +1,6 @@
 /**
  * Host freeze diagnostics on ResolvedCombatModel.
- * Audit trail for pre-tick-zero facts — not Setup UI breakdown rows.
+ * Audit trail for pre-tick-zero facts, not Setup UI breakdown rows.
  */
 import type {
   SerializableSalveSource,
@@ -30,7 +30,7 @@ export interface ResolvedCombatDiagnostics {
   readonly powerburstRemainingTicks: number;
   /** Ring of Vigour OR-collapsed; true when equipped and/or permanent passive applies. */
   readonly ringOfVigourActive: boolean;
-  /** Collapsed source labels (equipped / permanent) — one line of truth for UI later. */
+  /** Collapsed source labels (equipped / permanent) for UI. */
   readonly ringOfVigourSources: readonly string[];
   /** Archaeology selectedIds after host sanitization (region + energy + 3-slot). */
   readonly archaeologySelectedIds: readonly string[];

@@ -22,12 +22,7 @@ describe("deathPrevention", () => {
     expect(first.vitality.currentLifePoints).toBe(10_000);
     expect(first.deathPrevention.charges).toBe(0);
 
-    const second = applyPreventablePlayerDamage(
-      first.vitality,
-      first.deathPrevention,
-      50_000,
-      6,
-    );
+    const second = applyPreventablePlayerDamage(first.vitality, first.deathPrevention, 50_000, 6);
     expect(second.died).toBe(true);
     expect(second.revived).toBe(false);
   });

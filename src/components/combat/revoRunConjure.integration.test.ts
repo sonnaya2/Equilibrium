@@ -98,9 +98,10 @@ describe("RevolutionPanel.run UI path - necro conjures", () => {
       "necromancy",
       packed.weaponConfiguration,
     );
-    expect(barIds.some((id) => id.startsWith("conjure_")), `injected: ${barIds.join(",")}`).toBe(
-      true,
-    );
+    expect(
+      barIds.some((id) => id.startsWith("conjure_")),
+      `injected: ${barIds.join(",")}`,
+    ).toBe(true);
     expect(barIds[0]?.startsWith("conjure_")).toBe(true);
 
     const { summary } = await runUiRevolution(
@@ -126,9 +127,9 @@ describe("RevolutionPanel.run UI path - necro conjures", () => {
   it("modelled ids from pickBar/revoManaged match wiki conjure set for necromancy shape", () => {
     for (const wc of ["necromancy", "dualwield"] as const) {
       const ids = modelledBarIds(necroConduitLoadout(), wc);
-      expect(ids.some((id) => id === "conjure_undead_army" || id === "conjure_skeleton_warrior")).toBe(
-        true,
-      );
+      expect(
+        ids.some((id) => id === "conjure_undead_army" || id === "conjure_skeleton_warrior"),
+      ).toBe(true);
     }
   });
 });

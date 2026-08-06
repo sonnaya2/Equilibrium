@@ -10,11 +10,7 @@ import {
 } from "@/combat/model";
 import type { CombatStyle } from "@/combat/types";
 import { engineSpecsForStyle } from "@/combat/abilities/registry";
-import {
-  MAX_SOULS,
-  VOLLEY_MIN_SOULS,
-  volleyOfSouls,
-} from "@/combat/styles/necromancy/abilities";
+import { MAX_SOULS, VOLLEY_MIN_SOULS, volleyOfSouls } from "@/combat/styles/necromancy/abilities";
 import { abilityIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import { AbilityCategoryChip } from "./AbilityCategoryChip";
@@ -165,8 +161,7 @@ export function AnalysisTab({ loadout }: { loadout: Loadout }) {
   );
 
   const adrenTxA =
-    analysisA.adrenalineTransaction ??
-    analysisAdrenalineTransaction(ability, stats.adrenaline);
+    analysisA.adrenalineTransaction ?? analysisAdrenalineTransaction(ability, stats.adrenaline);
   const adrenBreakdownA = analysisAdrenalineBreakdownRows(adrenTxA);
 
   const delta =
@@ -289,8 +284,8 @@ export function AnalysisTab({ loadout }: { loadout: Loadout }) {
         <div className="analysis-results overflow-x-auto">
           <p className="mb-2 text-[11px] leading-4 text-parch-300">
             Single-cast damage EV on the shared combat model. FotS / CoE / Invigorating change{" "}
-            <strong className="font-medium text-parch-100">Adren Δ</strong> here; multi-cast
-            economy (second ultimates, starvation) is on Rotation / Revolution after Run.
+            <strong className="font-medium text-parch-100">Adren Δ</strong> here; multi-cast economy
+            (second ultimates, starvation) is on Rotation / Revolution after Run.
           </p>
 
           {castFailed ? (
@@ -299,8 +294,8 @@ export function AnalysisTab({ loadout }: { loadout: Loadout }) {
               role="alert"
             >
               Cast did not complete
-              {castError ? `: ${castError}` : "."} Damage figures below are blanked so a failed
-              cast is not shown as zero EV.
+              {castError ? `: ${castError}` : "."} Damage figures below are blanked so a failed cast
+              is not shown as zero EV.
             </p>
           ) : null}
 
@@ -314,9 +309,7 @@ export function AnalysisTab({ loadout }: { loadout: Loadout }) {
                 {limitations.map((item) => (
                   <li key={item.id}>
                     <span className="font-medium">{item.label}</span>
-                    {item.detail ? (
-                      <span className="text-parch-300"> — {item.detail}</span>
-                    ) : null}
+                    {item.detail ? <span className="text-parch-300"> — {item.detail}</span> : null}
                   </li>
                 ))}
               </ul>
@@ -370,9 +363,7 @@ export function AnalysisTab({ loadout }: { loadout: Loadout }) {
               <tr className="analysis-delta">
                 <td className="font-sans text-parch-300">B − A</td>
                 <td className="text-right text-gem-300">
-                  {deltaReady
-                    ? `${delta >= 0 ? "+" : ""}${Math.round(delta * 10) / 10}%`
-                    : "—"}
+                  {deltaReady ? `${delta >= 0 ? "+" : ""}${Math.round(delta * 10) / 10}%` : "—"}
                 </td>
                 <td colSpan={5} className="text-right font-sans text-xs text-parch-300">
                   Expected damage change (adren economy is not damage EV)

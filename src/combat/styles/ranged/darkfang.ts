@@ -6,10 +6,7 @@ import type { SourceReference } from "../../types";
  * instead of one 90-110%. Wiki Ranged (ability) Darkfang row.
  * https://runescape.wiki/w/Ranged_(ability)
  */
-export const DARKFANG_WEAPON_IDS: readonly string[] = [
-  "item:dark-bow",
-  "item:gloomfire-bow",
-];
+export const DARKFANG_WEAPON_IDS: readonly string[] = ["item:dark-bow", "item:gloomfire-bow"];
 
 export const DARKFANG_BASIC_HITS: readonly AbilityHit[] = [
   { band: { minPct: 45, maxPct: 55 } },

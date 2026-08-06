@@ -23,7 +23,7 @@ export function orderModifiers(modifiers: readonly CombatModifier[]): CombatModi
 
 /**
  * Apply an already-ordered modifier list (no sort).
- * When `preFiltered` is true, skips `applies` checks — only valid when the list was
+ * When `preFiltered` is true, skips `applies` checks; only valid when the list was
  * filtered against the same stable context used for every roll in a hit band.
  */
 export function runOrderedPipeline(

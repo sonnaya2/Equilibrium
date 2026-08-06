@@ -1,4 +1,5 @@
 import { TICK_SECONDS } from "../core/ticks";
+import { RESIDUAL_FREE_TOLERANCE } from "../engine/simulation/stats";
 import type {
   ObjectiveProfileId,
   ObjectiveScore,
@@ -263,7 +264,7 @@ export function resolveTotalsBasis(summary: ScoreableSummary): string | undefine
  * Residual at or below this is treated as residual-free for ranking, fidelity, Apply.
  * Shared across objective, adaptive ladders, and DTO honesty.
  */
-export const RESIDUAL_FREE_TOLERANCE = 1e-12;
+export { RESIDUAL_FREE_TOLERANCE };
 
 /**
  * Why a summary cannot produce a rankable score (objective or exploratory).

@@ -4,11 +4,7 @@ import { spiritPoisonPending } from "../../styles/necromancy/conjures";
 import { endBerserk } from "../../styles/melee/bloodlust";
 import { expirePrimordialIce } from "../../styles/melee/primordialIce";
 import { activePuncture } from "../../styles/ranged/puncture";
-import {
-  mapEventRefForKey,
-  pendingKeyRanks,
-  type PendingKeyRanks,
-} from "../runtime/events";
+import { mapEventRefForKey, pendingKeyRanks, type PendingKeyRanks } from "../runtime/events";
 import type { SimulationRuntime, SpiritEventMeta } from "../runtime/runtime";
 import type { RotationState } from "../runtime/state";
 import { liveDerivedSourceSeqs } from "../resolution/hitDetailsRetention";
@@ -19,7 +15,7 @@ import { liveDerivedSourceSeqs } from "../resolution/hitDetailsRetention";
  *
  * Field classes (merge key only; runtime still holds full history):
  * - Future: live state, pending queue, live derived hitDetails, spirit tracks/meta/hits
- * - Presentation/history (omitted): endTick, total* ledgers, casts/events logs
+ * - Presentation/history (omitted): fixed-window endTick, total* ledgers, casts/events logs
  * - Historical normalize: expired cooldowns/charges; frost/haunted/ghost/tsunami/blast;
  *   expired burns/bleeds; expired puncture via activePuncture; expired berserk via endBerserk;
  *   half-open untils (chaos/fury/meteor/endless/NI/vestments/relentless/LD/flow/scythe);
@@ -70,10 +66,7 @@ function halfOpenUntil(until: number, tick: number): number {
  * Map of clocks still live after `tick` (value > tick).
  * Shared by ability readyAt, burn until, bleed until: missing and expired are equivalent.
  */
-function recordLiveClocks(
-  rec: Readonly<Record<string, number>>,
-  tick: number,
-): string {
+function recordLiveClocks(rec: Readonly<Record<string, number>>, tick: number): string {
   const live: [string, number][] = [];
   for (const k of Object.keys(rec)) {
     const until = rec[k]!;
@@ -89,10 +82,7 @@ function recordLiveClocks(
 }
 
 /** Ability ready-at map. Prune readyAt <= tick (same as firstLegalTick: ready now). */
-function recordLiveReadyAt(
-  rec: Readonly<Record<string, number>>,
-  tick: number,
-): string {
+function recordLiveReadyAt(rec: Readonly<Record<string, number>>, tick: number): string {
   return recordLiveClocks(rec, tick);
 }
 
@@ -100,10 +90,7 @@ function recordLiveReadyAt(
  * Ability key -> still-recovering ready-at list.
  * Prune readyAt <= tick so fully recovered charges match never-spent state.
  */
-function recordChargeLists(
-  rec: Readonly<Record<string, readonly number[]>>,
-  tick: number,
-): string {
+function recordChargeLists(rec: Readonly<Record<string, readonly number[]>>, tick: number): string {
   const keys = Object.keys(rec).sort((a, b) => a.localeCompare(b));
   let out = "";
   let liveKeys = 0;
@@ -159,10 +146,7 @@ function liveChargesForKey(
  * Live while tick < untilTick. After until, only zombie poison tail remains
  * (autos cannot land past until; queue/meta still encode pending events).
  */
-function spiritsForKey(
-  spirits: readonly ActiveConjure[],
-  tick: number,
-): ActiveConjure[] {
+function spiritsForKey(spirits: readonly ActiveConjure[], tick: number): ActiveConjure[] {
   return spirits.filter((c) => tick < c.untilTick || spiritPoisonPending(c));
 }
 
@@ -192,15 +176,7 @@ function encodeConjure(c: ActiveConjure, tick: number): string {
         b(!!c.commanding && tick < c.untilTick)
       );
     case "putrid_zombie":
-      return (
-        "pz" +
-        US +
-        n(c.untilTick) +
-        US +
-        n(c.auto.nextTick) +
-        US +
-        n(c.poison.nextTick)
-      );
+      return "pz" + US + n(c.untilTick) + US + n(c.auto.nextTick) + US + n(c.poison.nextTick);
     case "phantom_guardian":
       return "pg" + US + n(c.untilTick);
   }
@@ -218,8 +194,7 @@ function encodeState(state: RotationState): string {
   const tick = state.tick;
   // Berserk land uses tick < until; clock endBerserk when until <= tick.
   const berserkExpired = m.berserkUntilTick <= tick;
-  const bloodlust =
-    m.bloodlust.berserk && berserkExpired ? endBerserk(m.bloodlust) : m.bloodlust;
+  const bloodlust = m.bloodlust.berserk && berserkExpired ? endBerserk(m.bloodlust) : m.bloodlust;
   const berserkUntil = berserkExpired ? 0 : m.berserkUntilTick;
   // Expired puncture zeros stacks/stored/pending; keeps generation + lastCompletedCastSeq.
   const punc = activePuncture(r.puncture, tick);
@@ -237,8 +212,7 @@ function encodeState(state: RotationState): string {
   const erGranted = erUntil > 0 ? m.enduringRuin.grantedByCast : -1;
   // Searing / sunshine / instability: expires residue + granted only while live.
   const searingExpires = halfOpenUntil(r.searingWinds.expiresAtTick, tick);
-  const searingGranted =
-    searingExpires > 0 ? r.searingWinds.grantedByCast : undefined;
+  const searingGranted = searingExpires > 0 ? r.searingWinds.grantedByCast : undefined;
   const sunExpires = halfOpenUntil(g.sunshine.expiresAtTick, tick);
   const sunStarts = sunExpires > 0 ? g.sunshine.startsAtTick : 0;
   const sunGranted = sunExpires > 0 ? g.sunshine.grantedByCast : undefined;
@@ -254,8 +228,7 @@ function encodeState(state: RotationState): string {
   const liveSpirits = spiritsForKey(nec.conjures.spirits, tick);
   // Target enduring ruin bleed vuln: land uses at < until.
   const targetErUntil = halfOpenUntil(tm.enduringRuin.untilTick, tick);
-  const targetErVuln =
-    targetErUntil > 0 ? tm.enduringRuin.bleedVulnerability : 0;
+  const targetErVuln = targetErUntil > 0 ? tm.enduringRuin.bleedVulnerability : 0;
   const parts: string[] = [
     n(tick),
     n(state.adrenaline),
@@ -357,9 +330,7 @@ function encodeState(state: RotationState): string {
   }
   // Expired Haunted ≡ newHaunted() (zero until and cap).
   const hauntedUntil =
-    t.haunted.untilTick > 0 && t.haunted.untilTick <= tick
-      ? 0
-      : t.haunted.untilTick;
+    t.haunted.untilTick > 0 && t.haunted.untilTick <= tick ? 0 : t.haunted.untilTick;
   parts.push(
     // target
     n(t.lastAttackTick),
@@ -429,10 +400,7 @@ function encodeOneHit(k: number, h: HitResult): (string | number)[] {
  * not permanently block stack/frost reconvergence merges.
  * Keys remapped with queue ranks so drained-history absolute seqs merge.
  */
-function encodeLiveDerivedHitDetails(
-  rt: SimulationRuntime,
-  ranks: PendingKeyRanks,
-): string {
+function encodeLiveDerivedHitDetails(rt: SimulationRuntime, ranks: PendingKeyRanks): string {
   const live = liveDerivedSourceSeqs(rt);
   if (live.length === 0) return "0";
   const entries: { key: number; h: HitResult }[] = [];
@@ -509,8 +477,7 @@ export function branchKeyJson(rt: SimulationRuntime): string {
   const res = rt.state.necromancy.resources;
   const tm = rt.state.target.melee;
   const berserkExpired = m.berserkUntilTick <= tick;
-  const bloodlust =
-    m.bloodlust.berserk && berserkExpired ? endBerserk(m.bloodlust) : m.bloodlust;
+  const bloodlust = m.bloodlust.berserk && berserkExpired ? endBerserk(m.bloodlust) : m.bloodlust;
   const punc = activePuncture(r.puncture, tick);
   const searingExpires = halfOpenUntil(r.searingWinds.expiresAtTick, tick);
   const sunExpires = halfOpenUntil(g.sunshine.expiresAtTick, tick);
@@ -590,17 +557,13 @@ export function branchKeyJson(rt: SimulationRuntime): string {
     target: {
       ...rt.state.target,
       burns: {
-        active: liveClocksForKey(
-          rt.state.target.burns.active as Record<string, number>,
-          tick,
-        ),
+        active: liveClocksForKey(rt.state.target.burns.active as Record<string, number>, tick),
       },
       melee: {
         ...tm,
         bleeds: liveClocksForKey(tm.bleeds as Record<string, number>, tick),
         enduringRuin: {
-          bleedVulnerability:
-            targetErUntil > 0 ? tm.enduringRuin.bleedVulnerability : 0,
+          bleedVulnerability: targetErUntil > 0 ? tm.enduringRuin.bleedVulnerability : 0,
           untilTick: targetErUntil,
         },
       },
@@ -610,7 +573,7 @@ export function branchKeyJson(rt: SimulationRuntime): string {
       },
     },
   };
-  // endTick / nextSeq / nextCastSeq omitted: presentation + allocators (merge maxes them).
+  // Natural completion keeps endTick distinct; fixed-window duration is request-owned.
   const ranks = pendingKeyRanks(rt.queue.pending());
   return JSON.stringify([
     stateForKey,
@@ -621,12 +584,12 @@ export function branchKeyJson(rt: SimulationRuntime): string {
       .sort(([a], [b]) => a - b),
     [...rt.scheduledSpiritTracks].sort(),
     [...rt.spiritHitCounts].sort(([a], [b]) => a.localeCompare(b)),
+    rt.horizon == null ? rt.endTick : null,
   ]);
 }
 
 /** Compact structural key used by merge. */
 export function branchKeyStructural(rt: SimulationRuntime): string {
-  // Future state only: no endTick / nextSeq / nextCastSeq (see file header).
   const ranks = pendingKeyRanks(rt.queue.pending());
   return (
     encodeState(rt.state) +
@@ -639,7 +602,9 @@ export function branchKeyStructural(rt: SimulationRuntime): string {
     RS +
     encodeTracks(rt.scheduledSpiritTracks) +
     RS +
-    encodeSpiritHits(rt.spiritHitCounts)
+    encodeSpiritHits(rt.spiritHitCounts) +
+    RS +
+    (rt.horizon == null ? n(rt.endTick) : "")
   );
 }
 

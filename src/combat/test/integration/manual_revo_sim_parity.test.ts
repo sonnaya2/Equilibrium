@@ -82,7 +82,10 @@ function summaryParity(label: string, a: RotationSummary, b: RotationSummary) {
     b.rng?.probabilityMass ?? (null as unknown as number),
     10,
   );
-  expect(a.rng?.residualWeight ?? 0, `${label} residual`).toBeCloseTo(b.rng?.residualWeight ?? 0, 10);
+  expect(a.rng?.residualWeight ?? 0, `${label} residual`).toBeCloseTo(
+    b.rng?.residualWeight ?? 0,
+    10,
+  );
   expect(a.rng?.failedWeight ?? 0, `${label} failedWeight`).toBeCloseTo(
     b.rng?.failedWeight ?? 0,
     10,
@@ -218,12 +221,10 @@ describe("Manual / Revolution new-path simulation", () => {
 
   it("necromancy use-build manual runs", () => {
     const loadout = withLoadout({ style: "necromancy", startingAdrenaline: 100 });
-    const ok = catalogueIds([
-      "necrotic_touch",
-      "soul_sap",
-      "touch_of_death",
-      "death_skulls",
-    ]).slice(0, 3);
+    const ok = catalogueIds(["necrotic_touch", "soul_sap", "touch_of_death", "death_skulls"]).slice(
+      0,
+      3,
+    );
     expect(ok.length).toBeGreaterThanOrEqual(2);
     expectOk("necro manual", newManualBuild(loadout, ok, false));
   });

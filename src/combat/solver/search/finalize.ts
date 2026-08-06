@@ -188,7 +188,10 @@ function forceEvalIncumbentFull(state: SearchState): ScoredBar | null {
   return state.forceEvalIncumbent(state.incumbentBar, "full", "incumbent-full");
 }
 
-function mergeFullUnique(shortlistFull: ScoredBar[], incumbentScored: ScoredBar | null): ScoredBar[] {
+function mergeFullUnique(
+  shortlistFull: ScoredBar[],
+  incumbentScored: ScoredBar | null,
+): ScoredBar[] {
   const byFp = new Map<string, ScoredBar>();
   for (const s of shortlistFull) {
     if (isFullRankable(s)) byFp.set(s.fingerprint, s);
@@ -237,9 +240,7 @@ function assembleResult(
   const topK = opts.topK ?? state.config.topK;
 
   const incumbentScored = isFullRankable(incumbentRaw) ? incumbentRaw : null;
-  const incumbentScore = incumbentScored
-    ? incumbentScored.robustScore
-    : Number.NEGATIVE_INFINITY;
+  const incumbentScore = incumbentScored ? incumbentScored.robustScore : Number.NEGATIVE_INFINITY;
 
   const rankedFull = mergeFullUnique(shortlistFull, incumbentScored);
   // Proposed: best full-rankable among shortlist + other full candidates (inc. incumbent).

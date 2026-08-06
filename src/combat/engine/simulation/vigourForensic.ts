@@ -77,9 +77,7 @@ export type LengthDivergenceDiagnostic = {
 };
 
 export type VigourForensicDiagnostic =
-  | SequenceDivergenceDiagnostic
-  | AdrenalineDivergenceDiagnostic
-  | LengthDivergenceDiagnostic;
+  SequenceDivergenceDiagnostic | AdrenalineDivergenceDiagnostic | LengthDivergenceDiagnostic;
 
 export interface VigourForensicReport {
   mode: "revolution" | "manual";
@@ -200,11 +198,7 @@ function adrenFieldDiff(
   off: GcdTraceRow,
   on: GcdTraceRow,
 ): AdrenalineDivergenceDiagnostic | null {
-  const fields = [
-    "adrenalineBefore",
-    "actualSpend",
-    "adrenalineAfter",
-  ] as const;
+  const fields = ["adrenalineBefore", "actualSpend", "adrenalineAfter"] as const;
   for (const field of fields) {
     if (off[field] !== on[field]) {
       return {
@@ -240,8 +234,7 @@ function findSequenceDiagnostic(
         index: i,
         lengthOff: off.rows.length,
         lengthOn: on.rows.length,
-        message:
-          `Cast lists diverge at index ${i}: length off=${off.rows.length}, on=${on.rows.length}.`,
+        message: `Cast lists diverge at index ${i}: length off=${off.rows.length}, on=${on.rows.length}.`,
       };
     }
     if (a.abilityId !== b.abilityId) return sequenceMessage(i, a, b);
@@ -279,8 +272,7 @@ export function diagnoseVigourDivergence(
         index: i,
         lengthOff: off.rows.length,
         lengthOn: on.rows.length,
-        message:
-          `Cast lists diverge at index ${i}: length off=${off.rows.length}, on=${on.rows.length}.`,
+        message: `Cast lists diverge at index ${i}: length off=${off.rows.length}, on=${on.rows.length}.`,
       };
       break;
     }
@@ -341,10 +333,7 @@ export function compareVigourRevolution(
     { ...input, adrenaline: adrenWithoutVigourFlag(baseAdren) },
     options,
   );
-  const on = simulateRevolution(
-    { ...input, adrenaline: adrenWithVigourFlag(baseAdren) },
-    options,
-  );
+  const on = simulateRevolution({ ...input, adrenaline: adrenWithVigourFlag(baseAdren) }, options);
   return compareArms("revolution", off, on);
 }
 
@@ -356,14 +345,8 @@ export function compareVigourManual(
   options?: SimulateOptions,
 ): VigourForensicReport {
   const baseAdren = input.adrenaline;
-  const off = simulate(
-    { ...input, adrenaline: adrenWithoutVigourFlag(baseAdren) },
-    options,
-  );
-  const on = simulate(
-    { ...input, adrenaline: adrenWithVigourFlag(baseAdren) },
-    options,
-  );
+  const off = simulate({ ...input, adrenaline: adrenWithoutVigourFlag(baseAdren) }, options);
+  const on = simulate({ ...input, adrenaline: adrenWithVigourFlag(baseAdren) }, options);
   return compareArms("manual", off, on);
 }
 

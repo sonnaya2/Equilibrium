@@ -71,10 +71,7 @@ function schedulePunctureSequence(
 }
 
 /** Schedule Puncture sequence after the applying ability finishes (finish+1). */
-export function schedulePunctureAfterFinish(
-  rt: SimulationRuntime,
-  finishTick: number,
-): void {
+export function schedulePunctureAfterFinish(rt: SimulationRuntime, finishTick: number): void {
   const p = rt.state.ranged.puncture;
   if (p.stacks <= 0 || p.storedDamage <= 0) {
     cancelPendingPuncture(rt);
@@ -137,8 +134,7 @@ export function onRangedHitLanded(
   // Open cast: pendingOwnerCast waits for applyCompletionEffects (one sequence per cast).
   // Finished / autonomous: pendingOwnerCast=-1 and schedule from land (finish analog = land tick).
   const owner = event.sourceCast;
-  const finished =
-    owner < 0 || owner <= rt.state.ranged.puncture.lastCompletedCastSeq;
+  const finished = owner < 0 || owner <= rt.state.ranged.puncture.lastCompletedCastSeq;
   const next = applyPunctureStack(
     rt.state.ranged.puncture,
     event.tick,

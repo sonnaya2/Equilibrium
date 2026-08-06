@@ -166,13 +166,13 @@ export function RevoSolverSection({
             ))}
           </optgroup>
           <optgroup label="Range">
-            {(
-              ["range4_6", "range4_10", "range4_11", "range5_8", "range8_11"] as const
-            ).map((id) => (
-              <option key={id} value={id}>
-                {BAR_SIZE_PRESETS[id].label}
-              </option>
-            ))}
+            {(["range4_6", "range4_10", "range4_11", "range5_8", "range8_11"] as const).map(
+              (id) => (
+                <option key={id} value={id}>
+                  {BAR_SIZE_PRESETS[id].label}
+                </option>
+              ),
+            )}
           </optgroup>
         </select>
         <label
@@ -544,7 +544,10 @@ export function RevoSolverSection({
             };
             const note = residualNote(residualSource);
             return note ? (
-              <p className="mt-1 text-[11px] text-amber-200/90" data-testid="revo-solver-residual-note">
+              <p
+                className="mt-1 text-[11px] text-amber-200/90"
+                data-testid="revo-solver-residual-note"
+              >
                 {note}
               </p>
             ) : null;

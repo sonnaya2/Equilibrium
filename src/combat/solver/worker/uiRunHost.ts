@@ -5,7 +5,6 @@
 import type { AdaptiveBranchFidelityResult } from "../branchFidelity";
 import { UI_RUN_BRANCH_FIDELITY_LADDER } from "../branchFidelity";
 import {
-  finishUiRunFromProbes,
   preferredUiRunWorkerCount,
   simulateRevolutionForUiHybrid,
   type UiRunProbeResult,
@@ -201,7 +200,7 @@ function throwIfCancelled(isCancelled?: () => boolean): void {
 
 /**
  * Parallel score-only probes across 2-4 workers, then one full-analysis at best cap.
- * Falls back to main-thread hybrid when Workers are unavailable.
+ * Main-thread execution remains an explicit test/dev option.
  */
 export async function runUiRevolution(
   request: SerializableUiRunRequest,
@@ -209,8 +208,7 @@ export async function runUiRevolution(
 ): Promise<AdaptiveBranchFidelityResult> {
   throwIfCancelled(options?.isCancelled);
 
-  const forceMain = options?.forceMainThread === true || !canCreateSolverWorker();
-  if (forceMain) {
+  if (options?.forceMainThread === true) {
     options?.onProgress?.({ phase: "probes", done: 0, total: 1 });
     const sim = requireSimBase(request.loadout);
     const cat = resolveAbilityCatalogue({
@@ -228,15 +226,15 @@ export async function runUiRevolution(
     options?.onProgress?.({ phase: "full", done: 1, total: 1 });
     return out;
   }
+  if (!canCreateSolverWorker()) {
+    throw new Error("Revolution analysis workers are unavailable in this browser");
+  }
 
   const caps = [...UI_RUN_BRANCH_FIDELITY_LADDER.liveCaps];
-  const workerN = Math.min(
-    options?.workers ?? preferredUiRunWorkerCount(),
-    caps.length,
-  );
+  const workerN = Math.min(options?.workers ?? preferredUiRunWorkerCount(), caps.length);
   const pool = ensureSlots(workerN);
   if (pool.length === 0) {
-    return runUiRevolution(request, { ...options, forceMainThread: true });
+    throw new Error("Revolution analysis worker could not be started");
   }
 
   const base = {
@@ -246,11 +244,8 @@ export async function runUiRevolution(
     durationTicks: request.durationTicks,
   };
 
-  // Wave cheapest caps first; stop when residual-free so we never wait on 2048
-  // after a clean 128/256 (was: Promise.all every cap = wall = slowest).
-  const { chunkUiRunCaps, isResidualFreeProbe, pickBestUiRunProbe } = await import(
-    "../uiRunCore"
-  );
+  // Wave cheapest caps first; stop after a residual-free wave.
+  const { chunkUiRunCaps, isResidualFreeProbe, pickBestUiRunProbe } = await import("../uiRunCore");
   const waves = chunkUiRunCaps(caps, workerN);
   const filled: UiRunProbeResult[] = [];
   let completed = 0;
@@ -296,40 +291,21 @@ export async function runUiRevolution(
   });
 
   const slot = pool[0]!;
-  try {
-    const full = await runFullOnSlot(slot, base, live, options?.isCancelled);
-    options?.onProgress?.({
-      phase: "full",
-      done: 1,
-      total: 1,
-      maxLiveBranches: live,
-      residualWeight: full.meta.residualWeight,
-    });
-    return {
-      summary: full.summary,
-      meta: {
-        ...full.meta,
-        attempts: filled.length + 1,
-      },
-    };
-  } catch (err) {
-    // Full postMessage of huge summary can fail; finish on main at best cap.
-    if (err instanceof Error && /post failed|DataClone|clone/i.test(err.message)) {
-      const sim = requireSimBase(request.loadout);
-      const cat = resolveAbilityCatalogue({
-        strengthCape99: sim.strengthCape99 === true,
-      });
-      const bar = resolveAbilitySpecsFromCatalogue(cat, request.barIds);
-      const input = buildRevolutionInput(sim, {
-        bar,
-        style: request.style,
-        durationTicks: request.durationTicks,
-        abilities: cat.catalogue,
-      });
-      return finishUiRunFromProbes(input, filled);
-    }
-    throw err;
-  }
+  const full = await runFullOnSlot(slot, base, live, options?.isCancelled);
+  options?.onProgress?.({
+    phase: "full",
+    done: 1,
+    total: 1,
+    maxLiveBranches: live,
+    residualWeight: full.meta.residualWeight,
+  });
+  return {
+    summary: full.summary,
+    meta: {
+      ...full.meta,
+      attempts: filled.length + 1,
+    },
+  };
 }
 
 /** Hard-stop UI Run workers (does not touch Optimize pool). */

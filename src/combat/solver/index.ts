@@ -270,10 +270,7 @@ export {
   branchExactnessOfDto,
   type SolverResultHonesty,
 } from "./solverDtoHonesty";
-export {
-  branchFidelityLadderMemoToken,
-  branchFidelityCacheToken,
-} from "./branchFidelity";
+export { branchFidelityLadderMemoToken, branchFidelityCacheToken } from "./branchFidelity";
 export {
   dualVersionDenyIds,
   styleRequiredAbilityIds,

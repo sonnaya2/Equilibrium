@@ -12,9 +12,7 @@ import type { SolverPackSnapshot } from "@/combat/solver";
  * Preferred adapter: copy only pre-resolved model fields.
  * No re-derive from raw Loadout perks/slots/buffs.
  */
-export function solverSnapshotFromResolvedModel(
-  model: ResolvedCombatModel,
-): SolverPackSnapshot {
+export function solverSnapshotFromResolvedModel(model: ResolvedCombatModel): SolverPackSnapshot {
   const sources = model.modifierSources;
   return {
     base: model.base,

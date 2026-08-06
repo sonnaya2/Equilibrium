@@ -60,9 +60,7 @@ describe("revoStochasticLabels", () => {
     expect(mayShowExactProofChrome(source)).toBe(false);
     expect(primaryDamageLabel(source)).toBe("Damage (approx.)");
     expect(primaryDpsLabel(source)).toBe("Fixed-window DPS (approx.)");
-    expect(residualNote(source)).toBe(
-      "12% of probability mass was discarded by branch caps;",
-    );
+    expect(residualNote(source)).toBe("12% of probability mass was discarded by branch caps;");
     expect(residualNote(source)).not.toMatch(/concrete mass/);
     expect(runDiagnosticsNote(source)).toMatch(/discarded by branch caps/);
     expect(runDiagnosticsNote(source)).toMatch(/concrete mass 88%/);
@@ -98,9 +96,7 @@ describe("revoStochasticLabels", () => {
     expect(branchCapDiagnosticsNote({})).toBeNull();
     expect(branchCapDiagnosticsNote({ rng: { residualWeight: 0 } })).toBeNull();
     // residualNote stays honesty-only; live-cap bits ride on runDiagnosticsNote opts.
-    expect(residualNote(source)).toBe(
-      "15% of probability mass was discarded by branch caps;",
-    );
+    expect(residualNote(source)).toBe("15% of probability mass was discarded by branch caps;");
     expect(residualNote(source)).not.toMatch(/live cap/);
     const note = runDiagnosticsNote(source, opts)!;
     expect(note).toMatch(/discarded by branch caps/);
@@ -118,9 +114,7 @@ describe("revoStochasticLabels", () => {
       rng: { residualWeight: 0.2, exactness: "approximated", probabilityMass: 0.8 },
     };
     expect(totalsBasisOf(source)).toBe("known-mass-contribution");
-    expect(residualNote(source)).toBe(
-      "20% of probability mass was discarded by branch caps;",
-    );
+    expect(residualNote(source)).toBe("20% of probability mass was discarded by branch caps;");
     expect(runDiagnosticsNote(source)).toMatch(/concrete mass 80%/);
   });
 
@@ -190,10 +184,7 @@ describe("revoStochasticLabels", () => {
     const rows = stochasticAssumptionRows(source);
     expect(rows).toContainEqual(["Residual mass", "20%"]);
     expect(rows).toContainEqual(["Concrete mass", "80%"]);
-    expect(rows).toContainEqual([
-      "Totals basis",
-      "Concrete terminals (E[D|concrete])",
-    ]);
+    expect(rows).toContainEqual(["Totals basis", "Concrete terminals (E[D|concrete])"]);
     expect(rows).toContainEqual([
       "Totals scope",
       "Unconditional over concrete path mass (residual excluded)",
@@ -309,9 +300,9 @@ describe("revoStochasticLabels", () => {
     expect(isExactClaimProofLabel("search-objective-exhaustive")).toBe(true);
     expect(isExactClaimProofLabel("heuristic-best-found")).toBe(false);
 
-    expect(
-      formatProofLabel("full-objective-global-optimum", { approximated: true }),
-    ).toBe("Approximated");
+    expect(formatProofLabel("full-objective-global-optimum", { approximated: true })).toBe(
+      "Approximated",
+    );
     expect(formatProofLabel("search-objective-exhaustive", { approximated: true })).toBe(
       "Approximated",
     );
@@ -444,9 +435,7 @@ describe("revoStochasticLabels", () => {
       rng: { residualWeight: 0.1, exactness: "approximated" },
     };
     expect(primaryManualDpsLabel(source)).toBe("Fixed-window DPS (approx.)");
-    expect(primaryManualDpsLabel({ metric: { type: "fixed-window" } })).toBe(
-      "Fixed-window DPS",
-    );
+    expect(primaryManualDpsLabel({ metric: { type: "fixed-window" } })).toBe("Fixed-window DPS");
     expect(primaryExpectedLabel({})).toBe("Expected");
     expect(
       primaryExpectedLabel({

@@ -87,9 +87,11 @@ describe("Adaptive Strike catalogue selection", () => {
       expect(slot.modelledBy).toBe("engine");
       expect(slot.spec?.id).toBe(engineId);
       expect(slot.spec?.hits).toHaveLength(hits);
-      expect(slot.spec?.hits.every((h) => h.band.minPct === band.minPct && h.band.maxPct === band.maxPct)).toBe(
-        true,
-      );
+      expect(
+        slot.spec?.hits.every(
+          (h) => h.band.minPct === band.minPct && h.band.maxPct === band.maxPct,
+        ),
+      ).toBe(true);
     },
   );
 
@@ -231,15 +233,18 @@ describe("Adaptive Strike cast legality", () => {
 });
 
 describe("Adaptive Strike solver pool", () => {
-  it.each(LEGAL)("pool under $config contains only $engineId Adaptive form", ({ config, engineId }) => {
-    const pool = buildCandidatePool(MELEE_ABILITIES, "melee", {
-      weaponConfiguration: config,
-    });
-    const adaptive = ["adaptive_strike_2h", "adaptive_strike_mh", "adaptive_strike_dw"] as const;
-    for (const id of adaptive) {
-      expect(pool.byId.has(id)).toBe(id === engineId);
-    }
-  });
+  it.each(LEGAL)(
+    "pool under $config contains only $engineId Adaptive form",
+    ({ config, engineId }) => {
+      const pool = buildCandidatePool(MELEE_ABILITIES, "melee", {
+        weaponConfiguration: config,
+      });
+      const adaptive = ["adaptive_strike_2h", "adaptive_strike_mh", "adaptive_strike_dw"] as const;
+      for (const id of adaptive) {
+        expect(pool.byId.has(id)).toBe(id === engineId);
+      }
+    },
+  );
 
   it.each(ILLEGAL)("pool under %s contains no Adaptive form", (config) => {
     const pool = buildCandidatePool(MELEE_ABILITIES, "melee", {

@@ -128,8 +128,7 @@ function runPipeline(): { result: SolveResult; record: Phase2Record } {
     exploreForceScore_user: exploreUser?.robustScore ?? Number.NEGATIVE_INFINITY,
     exploreForceScore_proposed: exploreProposed?.robustScore ?? Number.NEGATIVE_INFINITY,
     exploreFinite_user: exploreUser != null && Number.isFinite(exploreUser.robustScore),
-    exploreFinite_proposed:
-      exploreProposed != null && Number.isFinite(exploreProposed.robustScore),
+    exploreFinite_proposed: exploreProposed != null && Number.isFinite(exploreProposed.robustScore),
     trustworthyFullDpm_user: USER_DERIVED.trustworthyFullDpm,
     trustworthyFullDpm_proposed: PROPOSED_DERIVED.trustworthyFullDpm,
     fullRankable_user: fullUser?.validForFinalRanking === true,
@@ -146,20 +145,6 @@ function runPipeline(): { result: SolveResult; record: Phase2Record } {
     dtoProofLabel,
     dtoScore,
   };
-
-  console.log(
-    "[survivorBiasRanking.repro] PHASE-2/4 record",
-    JSON.stringify(
-      record,
-      (_k, v) =>
-        v === Number.NEGATIVE_INFINITY
-          ? "-Infinity"
-          : v === Number.POSITIVE_INFINITY
-            ? "Infinity"
-            : v,
-      2,
-    ),
-  );
 
   return { result, record };
 }
@@ -209,9 +194,7 @@ describe("REPRO: survivor-bias residual explore gates (Phase 2 + 4)", () => {
     expect(record.fullRankable_user).toBe(false);
     expect(record.fullRankable_proposed).toBe(false);
     expect(record.trustworthyFullDpm_proposed).toBeLessThan(record.trustworthyFullDpm_user);
-    expect(Number.isFinite(record.fullScore_proposed) && record.fullScore_proposed > 0).toBe(
-      false,
-    );
+    expect(Number.isFinite(record.fullScore_proposed) && record.fullScore_proposed > 0).toBe(false);
 
     // 4. Known-mass diagnostic still prefers user.
     expect(record.knownMassDamage_user).toBeGreaterThan(record.knownMassDamage_proposed);

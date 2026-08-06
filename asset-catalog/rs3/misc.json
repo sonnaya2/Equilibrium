@@ -7,5 +7,13 @@
     "fileTitle": "World Map Icon.png",
     "search": "World Map Icon inventory icon",
     "canonicalPage": "https://runescape.wiki/w/World_Map_Icon"
+  },
+  {
+    "id": "relic-hungry-like-the-wolf",
+    "label": "Hungry Like the Wolf",
+    "category": "rs3/relics",
+    "path": "public/game/relics/hungry-like-the-wolf",
+    "provenance": "unverified-local",
+    "alsoAt": ["public/game/upgrades/permanent-unlocks/hungry-like-the-wolf.webp"]
   }
 ]

@@ -1,10 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { EvaluateFn, PoolAbility } from "./contracts";
-import {
-  allocateFidelityBudget,
-  FIDELITY_BUDGET_SHARES,
-  mediumHorizonTicks,
-} from "./fidelity";
+import { allocateFidelityBudget, FIDELITY_BUDGET_SHARES, mediumHorizonTicks } from "./fidelity";
 import { MIN_RANKABLE_HORIZON_TICKS } from "./objective";
 import { configForTier, solve, TIER_BUDGETS } from "./solve";
 import { createSearchState } from "./search/types";
@@ -267,9 +263,7 @@ describe("multi-fidelity search honesty", () => {
     state.budget.remaining = plan.allocation.medium;
     runMediumScreen(state);
     expect(state.mediumEvaluations).toBeGreaterThan(0);
-    expect(state.bestMedium == null || state.bestMedium.validForFinalRanking === false).toBe(
-      true,
-    );
+    expect(state.bestMedium == null || state.bestMedium.validForFinalRanking === false).toBe(true);
   });
 
   it("fullCandidateList prefers medium incumbents before pure explore fillers", () => {

@@ -3,9 +3,7 @@ import { createCastContext } from "../simulation/simulate";
 import { calculateLeagueAbility } from "../../league/damage";
 import { resolveLeagueRules } from "../../league/ruleset";
 import { baseInput } from "../../test/fixtures/inputs";
-import {
-  CONSERVATION_OF_ENERGY_REFUND,
-} from "../../shared/conservationOfEnergy";
+import { CONSERVATION_OF_ENERGY_REFUND } from "../../shared/conservationOfEnergy";
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 
 const emptyLeague = resolveLeagueRules({ ruleset: "base" });

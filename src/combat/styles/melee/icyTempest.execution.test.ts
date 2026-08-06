@@ -133,5 +133,4 @@ describe("Icy Tempest execution outcomes", () => {
     expect(plans.errors[0]!.weight).toBe(1);
     expect(failedRt.state.melee.primordialIce).toEqual(unitPrimordialIce(3, 100));
   });
-
 });

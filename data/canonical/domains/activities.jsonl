@@ -35,7 +35,7 @@
 {"entityId":"activity:content:brawling-gloves"}
 {"entityId":"activity:content:brimhaven-agility-arena"}
 {"entityId":"activity:content:calquat-tree-patch"}
-{"entityId":"activity:content:canifis-mushroom-patch"}
+{"category":"Farming","entityId":"activity:content:canifis-mushroom-patch"}
 {"entityId":"activity:content:chaos-elemental"}
 {"entityId":"activity:content:chaos-tunnels"}
 {"entityId":"activity:content:chaotic-weapons"}
@@ -54,15 +54,15 @@
 {"entityId":"activity:content:crimson-skillchompas"}
 {"entityId":"activity:content:croesus"}
 {"entityId":"activity:content:crystal-sandstone-and-crystal-flasks"}
-{"entityId":"activity:content:crystal-skillchompas"}
-{"entityId":"activity:content:crystal-tools"}
+{"category":"Hunter","entityId":"activity:content:crystal-skillchompas"}
+{"category":"skilling tools","entityId":"activity:content:crystal-tools"}
 {"entityId":"activity:content:crystal-tree-farming-crystal-acorns"}
 {"entityId":"activity:content:daemonheim-dig-site"}
 {"entityId":"activity:content:daemonheim-divination"}
 {"entityId":"activity:content:daemonheim-rewards-shop"}
 {"entityId":"activity:content:dagannoth-kings"}
 {"entityId":"activity:content:dark-facets"}
-{"entityId":"activity:content:darkmeyer-thieving"}
+{"category":"Thieving","entityId":"activity:content:darkmeyer-thieving"}
 {"entityId":"activity:content:death-altar-temple-of-light-runecrafting"}
 {"category":"Fishing","entityId":"activity:content:deep-sea-fishing-hub"}
 {"entityId":"activity:content:desert-amulet"}
@@ -75,7 +75,7 @@
 {"category":"Passive XP stations","entityId":"activity:content:dream-of-iaia"}
 {"entityId":"activity:content:duradel"}
 {"category":"Combat utility / deployable","entityId":"activity:content:dwarf-multicannon"}
-{"entityId":"activity:content:ectofuntus"}
+{"category":"Prayer","entityId":"activity:content:ectofuntus"}
 {"entityId":"activity:content:edimmu-resource-dungeon"}
 {"entityId":"activity:content:effigy-incubator"}
 {"category":"Elite Dungeon","entityId":"activity:content:elite-dungeon-1"}
@@ -177,13 +177,13 @@
 {"category":"Archaeology dig site","entityId":"activity:content:orthen-dig-site"}
 {"category":"Runecrafting altar infrastructure","entityId":"activity:content:ourania-runecrafting-altar-zmi"}
 {"entityId":"activity:content:penguin-agility-course"}
-{"entityId":"activity:content:perfect-juju-potions"}
+{"category":"Herblore","entityId":"activity:content:perfect-juju-potions"}
 {"category":"Slayer D&D / skilling encounter","entityId":"activity:content:phoenix-lair"}
 {"entityId":"activity:content:piscatoris-fishing-colony"}
 {"entityId":"activity:content:piscatoris-hunter-area"}
 {"category":"mid-game Magic and Farming resource dungeon","entityId":"activity:content:polypore-dungeon-spore-and-stick-resources"}
 {"entityId":"activity:content:pontifex-observation-ring"}
-{"entityId":"activity:content:port-phasmatys-farming-patches"}
+{"category":"Farming","entityId":"activity:content:port-phasmatys-farming-patches"}
 {"category":"Transport and shop hub","entityId":"activity:content:port-sarim-docks-and-skilling-hub"}
 {"category":"Level 85 tank armour","entityId":"activity:content:ports-armour"}
 {"category":"Prayer unlock","entityId":"activity:content:praesul-codex"}

@@ -29,6 +29,18 @@ export const KNOWN_BLESSING_IDS = [
   "sacred-fervor",
   "splash-zone",
   "demons-mark",
+  "higher-power",
+  "true-equilibrium",
+  "havoc-born",
+  "lord-of-light",
+  "tearing-thorns",
+  "unholy-critual",
+  "tempered-heart",
+  "envenomed",
+  "perfidious",
+  "genesis-essence",
+  "power-archive",
+  "chaotic-insight",
 ] as const;
 export type BlessingId = (typeof KNOWN_BLESSING_IDS)[number];
 

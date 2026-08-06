@@ -102,6 +102,126 @@
     ]
   },
   {
+    "id": "equilibrium-blessing-chaotic-insight",
+    "label": "Chaotic Insight",
+    "category": "leagues/equilibrium/blessings",
+    "path": "public/game/blessings/chaotic-insight",
+    "fileTitle": "Chaotic Insight.png",
+    "canonicalPage": "https://runescape.wiki/w/Chaotic_Insight",
+    "provenance": "wiki-file",
+    "attribution": "Jagex Ltd. / RuneScape Wiki (CC BY-NC-SA)"
+  },
+  {
+    "id": "equilibrium-blessing-envenomed",
+    "label": "Envenomed",
+    "category": "leagues/equilibrium/blessings",
+    "path": "public/game/blessings/envenomed",
+    "fileTitle": "Envenomed.png",
+    "canonicalPage": "https://runescape.wiki/w/Envenomed",
+    "provenance": "wiki-file",
+    "attribution": "Jagex Ltd. / RuneScape Wiki (CC BY-NC-SA)"
+  },
+  {
+    "id": "equilibrium-blessing-genesis-essence",
+    "label": "Genesis Essence",
+    "category": "leagues/equilibrium/blessings",
+    "path": "public/game/blessings/genesis-essence",
+    "fileTitle": "Genesis Essence.png",
+    "canonicalPage": "https://runescape.wiki/w/Genesis_Essence",
+    "provenance": "wiki-file",
+    "attribution": "Jagex Ltd. / RuneScape Wiki (CC BY-NC-SA)"
+  },
+  {
+    "id": "equilibrium-blessing-havoc-born",
+    "label": "Havoc Born",
+    "category": "leagues/equilibrium/blessings",
+    "path": "public/game/blessings/havoc-born",
+    "fileTitle": "Havoc Born.png",
+    "canonicalPage": "https://runescape.wiki/w/Havoc_Born",
+    "provenance": "wiki-file",
+    "attribution": "Jagex Ltd. / RuneScape Wiki (CC BY-NC-SA)"
+  },
+  {
+    "id": "equilibrium-blessing-higher-power",
+    "label": "Higher Power",
+    "category": "leagues/equilibrium/blessings",
+    "path": "public/game/blessings/higher-power",
+    "fileTitle": "Higher Power.png",
+    "canonicalPage": "https://runescape.wiki/w/Higher_Power",
+    "provenance": "wiki-file",
+    "attribution": "Jagex Ltd. / RuneScape Wiki (CC BY-NC-SA)"
+  },
+  {
+    "id": "equilibrium-blessing-lord-of-light",
+    "label": "Lord of Light",
+    "category": "leagues/equilibrium/blessings",
+    "path": "public/game/blessings/lord-of-light",
+    "fileTitle": "Lord of Light.png",
+    "canonicalPage": "https://runescape.wiki/w/Lord_of_Light_(Equilibrium_League_Blessing)",
+    "provenance": "wiki-file",
+    "attribution": "Jagex Ltd. / RuneScape Wiki (CC BY-NC-SA)"
+  },
+  {
+    "id": "equilibrium-blessing-perfidious",
+    "label": "Perfidious",
+    "category": "leagues/equilibrium/blessings",
+    "path": "public/game/blessings/perfidious",
+    "fileTitle": "Perfidious.png",
+    "canonicalPage": "https://runescape.wiki/w/Perfidious",
+    "provenance": "wiki-file",
+    "attribution": "Jagex Ltd. / RuneScape Wiki (CC BY-NC-SA)"
+  },
+  {
+    "id": "equilibrium-blessing-power-archive",
+    "label": "Power Archive",
+    "category": "leagues/equilibrium/blessings",
+    "path": "public/game/blessings/power-archive",
+    "fileTitle": "Power Archive.png",
+    "canonicalPage": "https://runescape.wiki/w/Power_Archive",
+    "provenance": "wiki-file",
+    "attribution": "Jagex Ltd. / RuneScape Wiki (CC BY-NC-SA)"
+  },
+  {
+    "id": "equilibrium-blessing-tearing-thorns",
+    "label": "Tearing Thorns",
+    "category": "leagues/equilibrium/blessings",
+    "path": "public/game/blessings/tearing-thorns",
+    "fileTitle": "Tearing Thorns.png",
+    "canonicalPage": "https://runescape.wiki/w/Tearing_Thorns",
+    "provenance": "wiki-file",
+    "attribution": "Jagex Ltd. / RuneScape Wiki (CC BY-NC-SA)"
+  },
+  {
+    "id": "equilibrium-blessing-tempered-heart",
+    "label": "Tempered Heart",
+    "category": "leagues/equilibrium/blessings",
+    "path": "public/game/blessings/tempered-heart",
+    "fileTitle": "Tempered Heart.png",
+    "canonicalPage": "https://runescape.wiki/w/Tempered_Heart",
+    "provenance": "wiki-file",
+    "attribution": "Jagex Ltd. / RuneScape Wiki (CC BY-NC-SA)"
+  },
+  {
+    "id": "equilibrium-blessing-true-equilibrium",
+    "label": "True Equilibrium",
+    "category": "leagues/equilibrium/blessings",
+    "path": "public/game/blessings/true-equilibrium",
+    "fileTitle": "True Equilibrium.png",
+    "canonicalPage": "https://runescape.wiki/w/True_Equilibrium",
+    "provenance": "wiki-file",
+    "attribution": "Jagex Ltd. / RuneScape Wiki (CC BY-NC-SA)"
+  },
+  {
+    "id": "equilibrium-blessing-unholy-critual",
+    "label": "Unholy Critual",
+    "category": "leagues/equilibrium/blessings",
+    "path": "public/game/blessings/unholy-critual",
+    "fileTitle": "Unholy Critual.png",
+    "canonicalPage": "https://runescape.wiki/w/Unholy_Critual",
+    "provenance": "wiki-file",
+    "attribution": "Jagex Ltd. / RuneScape Wiki (CC BY-NC-SA)"
+  },
+  {
     "id": "equilibrium-promo-1",
     "label": "Equilibrium promotional art 1",
     "category": "leagues/equilibrium/official",

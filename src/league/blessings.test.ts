@@ -45,6 +45,23 @@ describe("canonical blessings data contract", () => {
     expect(blessingsData.records.filter((r) => r.godTier).map((r) => r.tier)).toEqual([4, 8]);
   });
 
+  it("contains every revealed card through God Tier 2", () => {
+    expect(blessingsData.records.map((record) => record.choices.length)).toEqual([
+      3, 3, 3, 3, 3, 3, 3, 3,
+    ]);
+    expect(BLESSING_IDS).toHaveLength(24);
+    expect(new Set(BLESSING_IDS).size).toBe(BLESSING_IDS.length);
+    for (const record of blessingsData.records.slice(4)) {
+      for (const choice of record.choices) {
+        expect(choice.support).toMatchObject({
+          status: "not-modeled",
+          mechanicsUnverified: true,
+        });
+        expect(choice.combat).toEqual({});
+      }
+    }
+  });
+
   it("emits stable ids, support status, and the granted God Tier from Build picks", () => {
     expect(BLESSING_IDS).toEqual(
       blessingsData.records.flatMap((record) => record.choices.map((choice) => choice.id)),
@@ -54,6 +71,16 @@ describe("canonical blessings data contract", () => {
       "abyssal-cinders",
       "avernic-rampage",
       "demons-mark",
+    ]);
+    expect(activeBlessings([B, B, B, B, B, B]).map((choice) => choice.id)).toEqual([
+      "big-boned",
+      "barkscales",
+      "eternal-sustenance",
+      "true-equilibrium",
+      "tearing-thorns",
+      "envenomed",
+      "splash-zone",
+      "power-archive",
     ]);
     expect(
       activeBlessings([O, O, O]).find((choice) => choice.id === "steadfast-will")?.support,

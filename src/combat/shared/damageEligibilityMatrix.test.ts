@@ -35,6 +35,8 @@ const CAP_KEYS: CapKey[] = [
   "recursiveDamage",
   "prayerMods",
   "canApplyAbyssalParasite",
+  "canApplyWeaponPoison",
+  "canApplyEvolvingToxin",
 ];
 
 /** Expected capability rows (product law). */
@@ -52,6 +54,8 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: true,
     prayerMods: true,
     canApplyAbyssalParasite: true,
+    canApplyWeaponPoison: true,
+    canApplyEvolvingToxin: true,
   },
   player_auto: {
     playerAttack: true,
@@ -66,6 +70,24 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: true,
     prayerMods: true,
     canApplyAbyssalParasite: true,
+    canApplyWeaponPoison: true,
+    canApplyEvolvingToxin: false,
+  },
+  player_poison: {
+    playerAttack: false,
+    directHit: false,
+    onHitGear: false,
+    blessingRider: false,
+    cindersOnHit: false,
+    blessingOnHit: false,
+    canCrit: false,
+    canGenerateResources: false,
+    canTriggerProcs: false,
+    recursiveDamage: false,
+    prayerMods: false,
+    canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: false,
+    canApplyEvolvingToxin: false,
   },
   player_dot: {
     playerAttack: true,

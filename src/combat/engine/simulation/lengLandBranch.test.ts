@@ -6,7 +6,7 @@ import { expectedStacksFromAtoms } from "../../styles/melee/primordialIce";
 import { createRuntime } from "../runtime/runtime";
 import { snapshotRuntime } from "./branchCore";
 import type { Branch } from "./branchCore";
-import { expandLengOnLand } from "./lengLandBranch";
+import { expandLengOnLand } from "./landBranch";
 
 function runtime() {
   return createRuntime({

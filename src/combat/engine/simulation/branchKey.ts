@@ -182,7 +182,7 @@ function encodeConjure(c: ActiveConjure, tick: number): string {
   }
 }
 
-function encodeState(state: RotationState): string {
+function encodeState(state: RotationState, ranks: PendingKeyRanks): string {
   const inv = state.invention;
   const m = state.melee;
   const r = state.ranged;
@@ -327,6 +327,12 @@ function encodeState(state: RotationState): string {
   // Expired Haunted ≡ newHaunted() (zero until and cap).
   const hauntedUntil =
     t.haunted.untilTick > 0 && t.haunted.untilTick <= tick ? 0 : t.haunted.untilTick;
+  const poisonLive =
+    t.weaponPoison.active &&
+    tick < t.weaponPoison.expiresAtTick &&
+    t.weaponPoison.remainingHits > 0;
+  const toxinStacks =
+    tick < t.evolvingToxin.expiresAtTick ? Math.max(0, t.evolvingToxin.stacks) : 0;
   parts.push(
     // target
     n(t.lastAttackTick),
@@ -345,6 +351,29 @@ function encodeState(state: RotationState): string {
     n(hauntedUntil),
     n(hauntedUntil === 0 ? 0 : t.haunted.capAbilityDamage),
   );
+  if (poisonLive) {
+    parts.push(
+      "1",
+      n(t.weaponPoison.appliedAtTick),
+      n(t.weaponPoison.expiresAtTick),
+      n(t.weaponPoison.effectiveTier),
+      n(t.weaponPoison.decayIndex),
+      n(t.weaponPoison.remainingHits),
+      n(t.weaponPoison.cadenceTicks),
+      n(t.weaponPoison.nextHitTick),
+      n(mapEventRefForKey(t.weaponPoison.pendingEventSeq, ranks)),
+      n(t.weaponPoison.sourceDamageMultiplier),
+      b(t.weaponPoison.cinderbaneContinuation),
+      n(t.weaponPoison.continuationChance),
+      s(t.weaponPoison.sourceLabel),
+    );
+  } else {
+    parts.push("0");
+  }
+  parts.push(toxinStacks > 0 ? "1" : "0");
+  if (toxinStacks > 0) {
+    parts.push(n(toxinStacks), n(t.evolvingToxin.expiresAtTick));
+  }
   // Player vitality / Naragi / level override (absent ≡ zeroed).
   const player = state.player;
   if (!player) {
@@ -575,6 +604,37 @@ export function branchKeyJson(rt: SimulationRuntime): string {
         untilTick: hauntedUntil,
         capAbilityDamage: hauntedUntil === 0 ? 0 : rt.state.target.haunted.capAbilityDamage,
       },
+      weaponPoison:
+        rt.state.target.weaponPoison.active &&
+        tick < rt.state.target.weaponPoison.expiresAtTick &&
+        rt.state.target.weaponPoison.remainingHits > 0
+          ? {
+              ...rt.state.target.weaponPoison,
+              pendingEventSeq: mapEventRefForKey(
+                rt.state.target.weaponPoison.pendingEventSeq,
+                pendingKeyRanks(rt.queue.pending()),
+              ),
+            }
+          : {
+              active: false,
+              appliedAtTick: -1,
+              expiresAtTick: 0,
+              effectiveTier: 1,
+              decayIndex: 0,
+              remainingHits: 0,
+              cadenceTicks: 16,
+              nextHitTick: 0,
+              pendingEventSeq: -1,
+              sourceDamageMultiplier: 1,
+              cinderbaneContinuation: false,
+              continuationChance: 0,
+              sourceLabel: "",
+            },
+      evolvingToxin:
+        tick < rt.state.target.evolvingToxin.expiresAtTick &&
+        rt.state.target.evolvingToxin.stacks > 0
+          ? rt.state.target.evolvingToxin
+          : { stacks: 0, expiresAtTick: 0 },
     },
   };
   // Natural completion keeps endTick distinct; fixed-window duration is request-owned.
@@ -596,7 +656,7 @@ export function branchKeyJson(rt: SimulationRuntime): string {
 export function branchKeyStructural(rt: SimulationRuntime): string {
   const ranks = pendingKeyRanks(rt.queue.pending());
   return (
-    encodeState(rt.state) +
+    encodeState(rt.state, ranks) +
     RS +
     rt.queue.signature() +
     RS +

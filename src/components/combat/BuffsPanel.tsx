@@ -399,6 +399,50 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
             </div>
           </div>
 
+          <div className="buff-group" role="group" aria-label="Player poison">
+            <h3 className="buff-group__title">Poison</h3>
+            <div className="blessing-settings mt-1.5">
+              <label className="loadout-select">
+                <span>Weapon poison</span>
+                <select
+                  aria-label="Weapon poison"
+                  value={loadout.buffs.weaponPoison}
+                  onChange={(event) =>
+                    setBuffs({
+                      weaponPoison: event.target.value as Loadout["buffs"]["weaponPoison"],
+                    })
+                  }
+                >
+                  <option value="none">None</option>
+                  <option value="weapon">Weapon poison</option>
+                  <option value="weapon-plus">Weapon poison+</option>
+                  <option value="weapon-plus-plus">Weapon poison++</option>
+                  <option value="weapon-plus-plus-plus">Weapon poison+++</option>
+                </select>
+              </label>
+              <label className="loadout-select">
+                <span>Kwuarm potency</span>
+                <select
+                  aria-label="Kwuarm potency"
+                  value={loadout.buffs.kwuarmPotency}
+                  onChange={(event) =>
+                    setBuffs({
+                      kwuarmPotency: Number(
+                        event.target.value,
+                      ) as Loadout["buffs"]["kwuarmPotency"],
+                    })
+                  }
+                >
+                  {[0, 1, 2, 3, 4].map((potency) => (
+                    <option key={potency} value={potency}>
+                      {potency === 0 ? "Off" : `${potency} (${potency * 2.5}%)`}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          </div>
+
           <div className="buff-group buff-prayers" role="group" aria-label="Prayers">
             <h3 className="buff-group__title">Prayers</h3>
             <div className="icon-tile-grid icon-tile-grid--prayers">

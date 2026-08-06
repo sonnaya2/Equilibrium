@@ -158,7 +158,7 @@ export function onMeleeHitLanded(
   if (mayStack) addParasiteStack(rt, event);
 
   // Leng stack / Frostblades RNG is probability-weighted in expandLengOnLand
-  // (simulation/lengLandBranch.ts), not a per-seq hash roll.
+  // (simulation/landBranch.ts), not a per-seq hash roll.
 }
 
 function applyHurricaneTargetCdr(

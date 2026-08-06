@@ -118,7 +118,10 @@ export type ItemPassiveId =
   /** Omni Guard: Death Spark - ready at 5 stacks; next basic doubles (every 6th). */
   | "death-spark"
   /** Devourer's Guard: Soul Reave - ready at 4 stacks; next basic grants residual soul on land (every 5th). */
-  | "soul-reave";
+  | "soul-reave"
+  | "cinderbane-weapon-poison"
+  | "blowpipe-weapon-poison"
+  | "laniakea-weapon-poison";
 
 export type WeaponClass = "bow" | "crossbow" | "thrown" | "other";
 

@@ -12,6 +12,8 @@ import type {
   SerializableRevolutionSimBase,
 } from "../solver/worker/serializable";
 import type { ResolvedCombatDiagnostics } from "./diagnostics";
+import type { PlayerPoisonProfile } from "../poison/mechanics";
+import type { StyleAmmoId } from "../styles/ranged/ammoModel";
 
 /** Static crit layers for sim (no per-hit eligibility). */
 export interface ResolvedCritInput {
@@ -32,6 +34,7 @@ export interface ResolvedTargetScenario {
   readonly demon?: boolean;
   readonly dragon?: boolean;
   readonly undead?: boolean;
+  readonly poisonImmune?: boolean;
 }
 
 export type ResolvedWeaponConfiguration = SerializableRevolutionSimBase["weaponConfiguration"];
@@ -66,10 +69,10 @@ export interface ResolvedCombatModel {
   readonly strengthCape99: boolean;
   readonly preciseRank: number;
   /**
-   * Style ammo (deathspore / splintering). Derived from equipment when unset
+   * Style ammo mechanics, including Bik. Derived from equipment when unset
    * on host input; explicit override wins.
    */
-  readonly ammo?: "deathspore" | "splintering";
+  readonly ammo?: StyleAmmoId;
   /** Caroming rank 1-4 (0 = off). */
   readonly caromingRank: number;
 
@@ -79,6 +82,7 @@ export interface ResolvedCombatModel {
   readonly tumekensCritEnabled: boolean;
 
   readonly target: ResolvedTargetScenario;
+  readonly playerPoison: PlayerPoisonProfile;
   /** Serializable league freeze (arrays, not Sets). */
   readonly league: SerializableLeagueRules;
   readonly context: CombatContext;
@@ -106,7 +110,7 @@ export interface HostCombatResolveInput {
   readonly plantedFeet?: boolean;
   readonly strengthCape99?: boolean;
   readonly preciseRank?: number;
-  readonly ammo?: "deathspore" | "splintering";
+  readonly ammo?: StyleAmmoId;
   readonly caromingRank?: number;
   readonly conjureBasicDamageMult?: number;
   readonly conjureDurationMult?: number;
@@ -128,6 +132,7 @@ export interface HostCombatResolveInput {
   readonly amHejDamageBonus?: number;
   readonly slayer?: { demon: number; dragon: number; undead: number };
   readonly target?: { demon?: boolean; dragon?: boolean; undead?: boolean };
+  readonly playerPoison?: PlayerPoisonProfile;
   readonly slayerHelmet?: SerializableModifierSources["slayerHelmet"];
   readonly salve?: SerializableModifierSources["salve"];
   readonly ultimatums?: number;

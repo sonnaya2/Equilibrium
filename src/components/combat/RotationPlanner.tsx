@@ -140,7 +140,7 @@ export function RotationPlanner({
   const [accuracy, setAccuracy] = useState(100);
   const [critChance, setCritChance] = useState(10);
   const [paletteStyle, setPaletteStyle] = useState<CombatStyle>("melee");
-  const [ammo, setAmmo] = useState<"none" | "deathspore" | "splintering">("none");
+  const [ammo, setAmmo] = useState<"none" | "deathspore" | "splintering" | "bik">("none");
   const [queue, setQueue] = useState<string[]>([]);
   const [result, setResult] = useState<RotationSummary | null>(null);
   const [analysisOpen, setAnalysisOpen] = useState(false);
@@ -430,12 +430,15 @@ export function RotationPlanner({
             <span>Ammo</span>
             <select
               value={ammo}
-              onChange={(e) => setAmmo(e.target.value as "none" | "deathspore" | "splintering")}
+              onChange={(e) =>
+                setAmmo(e.target.value as "none" | "deathspore" | "splintering" | "bik")
+              }
               className="w-full border border-stone-750 bg-transparent px-2 py-1 text-xs text-parch-50"
             >
               <option value="none">None</option>
               <option value="deathspore">Deathspore arrows</option>
               <option value="splintering">Splintering arrows</option>
+              <option value="bik">Bik arrows</option>
             </select>
           </label>
         </div>

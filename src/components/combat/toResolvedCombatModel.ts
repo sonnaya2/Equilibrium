@@ -15,6 +15,8 @@ import {
   SLIVER_OF_EDICTS_ID,
 } from "@/combat/league/naragiEdict";
 import { formatRingOfVigourSources, ringOfVigourActiveSources } from "@/combat/shared/ringOfVigour";
+import { hasPassive } from "@/combat/shared/equipment";
+import { weaponPoisonDurationTicks } from "@/combat/poison/mechanics";
 import {
   sanitizeArchaeologyState,
   sanitizeSelectedRelics,
@@ -104,6 +106,17 @@ export function hostInputFromLoadoutStats(
     equipmentIds: stats.equipmentIds,
     weaponConfiguration: stats.weaponConfiguration,
     equipmentSlots: loadout.equipmentSlots,
+    playerPoison: {
+      potion: loadout.buffs.weaponPoison,
+      potionUntilTick: weaponPoisonDurationTicks(loadout.buffs.weaponPoison),
+      kwuarmPotency: loadout.buffs.kwuarmPotency,
+      cinderbane: hasPassive(stats.equipmentEffects, "cinderbane-weapon-poison"),
+      blowpipe: hasPassive(stats.equipmentEffects, "blowpipe-weapon-poison"),
+      laniakea: hasPassive(stats.equipmentEffects, "laniakea-weapon-poison"),
+      bik: stats.equipmentIds.includes("item:bik-arrows"),
+      targetPoisonImmune: loadout.target?.poisonImmune === true,
+      vulnerability: loadout.buffs.vulnerability === true,
+    },
     vulnerability: loadout.buffs.vulnerability === true,
     styleCurseId: loadout.buffs.styleCurse ?? "none",
     amZiFlatDamage: stats.equipmentEffects.amZiFlatDamage ?? 0,

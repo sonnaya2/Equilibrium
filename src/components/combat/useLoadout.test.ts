@@ -26,6 +26,20 @@ import {
 } from "./useLoadout";
 
 describe("normalizeLoadout", () => {
+  it("normalizes player poison controls for old and invalid saves", () => {
+    expect(normalizeLoadout({}).buffs).toMatchObject({
+      weaponPoison: "none",
+      kwuarmPotency: 0,
+    });
+    expect(
+      normalizeLoadout({
+        buffs: { weaponPoison: "weapon-plus-plus-plus", kwuarmPotency: 4 },
+      }).buffs,
+    ).toMatchObject({ weaponPoison: "weapon-plus-plus-plus", kwuarmPotency: 4 });
+    expect(
+      normalizeLoadout({ buffs: { weaponPoison: "invented", kwuarmPotency: 99 } }).buffs,
+    ).toMatchObject({ weaponPoison: "none", kwuarmPotency: 0 });
+  });
   it("returns defaults for null / non-objects", () => {
     expect(normalizeLoadout(null)).toEqual(DEFAULT_LOADOUT);
     expect(normalizeLoadout("nope")).toEqual(DEFAULT_LOADOUT);
@@ -202,6 +216,8 @@ describe("normalizeLoadout", () => {
     const next = normalizeLoadout({ style: "magic", level: 99 });
     expect(next.buffs).toEqual({
       vulnerability: false,
+      weaponPoison: "none",
+      kwuarmPotency: 0,
       styleCurse: "none",
       overload: "none",
       fortitude: false,

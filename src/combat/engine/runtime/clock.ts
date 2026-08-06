@@ -4,6 +4,7 @@ import { processSpiritEvent } from "../schedulers/conjures";
 import { recordResolved } from "../resolution";
 import { gainAdrenaline, patchMelee } from "./state";
 import type { SimulationRuntime } from "./runtime";
+import { isPlayerPoisonEvent, processPlayerPoisonEvent } from "../schedulers/playerPoison";
 
 /**
  * The canonical simulation clock. Time moves only through advanceTo: it lands
@@ -17,6 +18,10 @@ function processDueEvents(rt: SimulationRuntime, bound: number): void {
     const event = rt.queue.peek();
     if (!event || event.tick > bound) return;
     rt.queue.shift();
+    if (event.family === "poison" && isPlayerPoisonEvent(event)) {
+      processPlayerPoisonEvent(rt, event);
+      continue;
+    }
     if (event.family === "conjureAuto" || event.family === "poison") {
       processSpiritEvent(rt, event);
       continue;

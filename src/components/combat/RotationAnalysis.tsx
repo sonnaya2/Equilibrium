@@ -33,6 +33,7 @@ const SOURCE_LABEL: Record<DamageSourceKind, string> = {
   "league-blessing": "Equilibrium blessings",
   perk: "Invention perks",
   "conjure-or-familiar": "Conjures and familiars",
+  "player-poison": "Player poison",
   "basic-attack": "Basic Attacks",
   "auto-attack": "Basic Attacks",
   "other-modeled": "Other effects",
@@ -40,6 +41,7 @@ const SOURCE_LABEL: Record<DamageSourceKind, string> = {
 const PROCEDURAL_EFFECT_LABEL: Record<string, string> = {
   aftershock: "Aftershock",
   crackling: "Crackling",
+  player_weapon_poison: "Player weapon poison",
 };
 
 /** Damage totals as whole numbers. */
@@ -89,6 +91,7 @@ function eventType(event: ResolvedEvent): string {
   if (conjureType) return conjureType;
   if (event.family === "dot") return event.dotKind ? `${event.dotKind} DoT` : "DoT";
   if (event.family === "proc") return "Proc";
+  if (event.family === "poison" && event.provenance.kind === "player_poison") return "Poison";
   return "Hit";
 }
 
@@ -384,6 +387,60 @@ export function RotationAnalysisModal({
             </div>
           ))}
         </dl>
+
+        {result.playerPoison ? (
+          <section className="border-b border-stone-750 py-3" data-testid="player-poison-analysis">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <div>
+                <h3 className="combat-section-title text-xs font-medium text-parch-50">
+                  Player poison
+                </h3>
+                <p className="mt-1 text-xs text-parch-300">
+                  {result.playerPoison.sourceLabel} · tier {result.playerPoison.effectiveTier} ·
+                  poison proc chance {formatPercent(result.playerPoison.procChance)}
+                </p>
+              </div>
+              <span className="text-[11px] text-parch-300">
+                {result.playerPoison.supportStatus} · probability mass{" "}
+                {formatPercent(result.playerPoison.probabilityMass)}
+                {result.playerPoison.residualMass > 0
+                  ? ` · residual ${formatPercent(result.playerPoison.residualMass)}`
+                  : ""}
+              </span>
+            </div>
+            <dl className="mt-2 grid grid-cols-2 gap-2 text-xs md:grid-cols-4">
+              <div className="combat-subpanel p-2">
+                <dt className="text-parch-300">Applications</dt>
+                <dd className="mt-1 font-mono text-parch-50">
+                  {formatExpected(result.playerPoison.successfulApplications)} /{" "}
+                  {formatExpected(result.playerPoison.applicationAttempts)} attempts
+                </dd>
+              </div>
+              <div className="combat-subpanel p-2">
+                <dt className="text-parch-300">Separate hits</dt>
+                <dd className="mt-1 font-mono text-parch-50">
+                  {formatExpected(result.playerPoison.separateHits)}
+                </dd>
+              </div>
+              <div className="combat-subpanel p-2">
+                <dt className="text-parch-300">Poison damage band</dt>
+                <dd className="mt-1 font-mono text-parch-50">
+                  {formatNumber(result.playerPoison.minimumDamage)} /{" "}
+                  {formatNumber(result.playerPoison.expectedDamage)} /{" "}
+                  {formatNumber(result.playerPoison.maximumDamage)}
+                </dd>
+              </div>
+              <div className="combat-subpanel p-2">
+                <dt className="text-parch-300">Representative target state</dt>
+                <dd className="mt-1 font-mono text-parch-50">
+                  decay {result.playerPoison.decayIndex} · poison{" "}
+                  {result.playerPoison.remainingTargetPoisonTicks}t · Bik{" "}
+                  {result.playerPoison.bikStacks} ({result.playerPoison.bikRemainingTicks}t)
+                </dd>
+              </div>
+            </dl>
+          </section>
+        ) : null}
 
         <div className="grid gap-5 lg:grid-cols-[0.7fr_1.3fr]">
           <section>

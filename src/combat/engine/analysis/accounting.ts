@@ -10,6 +10,7 @@ export function sourceKindOf(
   rt: SimulationRuntime,
   event: ScheduledEvent<SimulationRuntime>,
 ): DamageSourceKind {
+  if (event.provenance.kind === "player_poison") return "player-poison";
   if (event.blessingId) return "league-blessing";
   if (event.abilityId === "crackling" || event.abilityId === "aftershock") return "perk";
   if (event.abilityId === "abyssal_parasite" || event.abilityId === "puncture") {
@@ -91,6 +92,10 @@ export function accountAnalysisEvent(
   const ledger = analysis.effects.get(event.abilityId) ?? emptyLedger(event.abilityId, kind);
   ledger.kind = kind;
   ledger.totalDamage += expected;
+  if (kind === "player-poison") {
+    ledger.minimumDamage = (ledger.minimumDamage ?? 0) + damage.min;
+    ledger.maximumDamage = (ledger.maximumDamage ?? 0) + damage.max;
+  }
   ledger.directDamage += asDotLedger ? 0 : expected;
   ledger.dotDamage += asDotLedger ? expected : 0;
   ledger.criticalContribution += crit;

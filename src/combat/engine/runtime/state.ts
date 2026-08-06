@@ -21,6 +21,7 @@ import type { PlayerVitality } from "../../core/playerVitality";
 import { NO_DEATH_PREVENTION, type DeathPreventionState } from "./deathPrevention";
 import { newNaragiRuntime, type NaragiRuntimeState } from "../../league/naragiEdict";
 import { firstChargeReadyTick, maxChargesFor } from "./charges";
+import type { PoisonTier } from "../../poison/mechanics";
 
 export type { MeleeRotationState, RangedRotationState, MagicRotationState };
 export type { NecroRotationState, NecromancyRotationState, ConjureState };
@@ -98,6 +99,51 @@ export interface TargetRuntimeState {
   melee: MeleeTargetEffects;
   /** Haunted debuff from Command Vengeful Ghost autos. */
   haunted: HauntedState;
+  weaponPoison: TargetWeaponPoisonState;
+  evolvingToxin: EvolvingToxinState;
+}
+
+export interface TargetWeaponPoisonState {
+  active: boolean;
+  appliedAtTick: number;
+  expiresAtTick: number;
+  effectiveTier: PoisonTier;
+  decayIndex: number;
+  remainingHits: number;
+  cadenceTicks: 8 | 16;
+  nextHitTick: number;
+  pendingEventSeq: number;
+  sourceDamageMultiplier: number;
+  cinderbaneContinuation: boolean;
+  continuationChance: number;
+  sourceLabel: string;
+}
+
+export interface EvolvingToxinState {
+  stacks: number;
+  expiresAtTick: number;
+}
+
+export function inactiveTargetWeaponPoison(): TargetWeaponPoisonState {
+  return {
+    active: false,
+    appliedAtTick: -1,
+    expiresAtTick: 0,
+    effectiveTier: 1,
+    decayIndex: 0,
+    remainingHits: 0,
+    cadenceTicks: 16,
+    nextHitTick: 0,
+    pendingEventSeq: -1,
+    sourceDamageMultiplier: 1,
+    cinderbaneContinuation: false,
+    continuationChance: 0,
+    sourceLabel: "",
+  };
+}
+
+export function inactiveEvolvingToxin(): EvolvingToxinState {
+  return { stacks: 0, expiresAtTick: 0 };
 }
 
 /**
@@ -198,6 +244,8 @@ export function newRotationState(
       bloatedByCast: -1,
       melee: newMeleeTargetEffects(),
       haunted: newHaunted(),
+      weaponPoison: inactiveTargetWeaponPoison(),
+      evolvingToxin: inactiveEvolvingToxin(),
     },
   };
 }

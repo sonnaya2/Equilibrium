@@ -69,6 +69,7 @@ export function buildSimulationInputBase(
     conjureBasicDamageMult: model.conjureBasicDamageMult,
     conjureDurationMult: model.conjureDurationMult,
     targetHpPercent: model.target.hpPercent,
+    playerPoison: model.playerPoison,
   };
 }
 
@@ -152,6 +153,7 @@ export function toHybridManualCombatModel(
     league: scaffold.league,
     context: { ...scaffold.context, style: scaffold.style },
     targetHpPercent: scaffold.target.hpPercent,
+    playerPoison: { ...scaffold.playerPoison, vulnerability: false },
     cap: scaffold.cap,
     startingAdrenaline: scaffold.startingAdrenaline,
     // Preserve equipmentIds and weaponConfiguration from scaffold (Leng / passives).
@@ -198,7 +200,7 @@ export function toManualSimulateInput(
      * Manual UI ammo override over model-packed base.ammo:
      * - undefined: keep base.ammo (Revolution / omit path)
      * - null: force clear (Manual "None")
-     * - deathspore | splintering: set that ammo
+     * - deathspore | splintering | bik: set that ammo
      */
     ammo?: SimulateInput["ammo"] | null;
   },
@@ -208,6 +210,7 @@ export function toManualSimulateInput(
     const { ammo: _cleared, ...withoutAmmo } = base;
     return {
       ...withoutAmmo,
+      ...(base.playerPoison ? { playerPoison: { ...base.playerPoison, bik: false } } : {}),
       rotation: parts.rotation,
       autoWeave: parts.autoWeave,
     };
@@ -217,6 +220,9 @@ export function toManualSimulateInput(
     rotation: parts.rotation,
     autoWeave: parts.autoWeave,
     ...(parts.ammo !== undefined ? { ammo: parts.ammo } : {}),
+    ...(base.playerPoison && parts.ammo !== undefined
+      ? { playerPoison: { ...base.playerPoison, bik: parts.ammo === "bik" } }
+      : {}),
   };
 }
 

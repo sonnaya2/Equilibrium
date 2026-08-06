@@ -208,7 +208,8 @@ export type EventFamily =
   | "player";
 
 /** Analysis damage origin. Derived/attached keep parent origin (e.g. Big Boned on bleed stays "dot"). */
-export type DamageOriginKind = "direct" | "dot" | "command" | "conjure" | "proc" | "blessing";
+export type DamageOriginKind =
+  "direct" | "dot" | "command" | "conjure" | "proc" | "blessing" | "poison";
 
 /**
  * RT is the land-time runtime. Events do not close over a runtime so branches can

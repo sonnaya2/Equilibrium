@@ -4,7 +4,7 @@ import { castRejection, candidateTick, resolveCastAbility } from "./rules";
 import { scheduleCastEvents } from "./schedule";
 import { applyCastEffects, applyCompletionEffects, castEffectContext } from "./effects";
 import { prepareCast, type PreparedCast } from "./prepare";
-import { advanceToBranches } from "../simulation/lengLandBranch";
+import { advanceToBranches } from "../simulation/landBranch";
 import { firstLegalTickFor } from "../runtime/state";
 import type { CastAttempt, CastRng } from "../simulation/contracts";
 import type { CastRecord } from "../simulation/contracts";

@@ -8,7 +8,7 @@ import {
   type Branch,
   type BranchExactness as EngineBranchExactness,
 } from "./branch";
-import { drainBranchToEnd } from "./lengLandBranch";
+import { drainBranchToEnd } from "./landBranch";
 import type {
   BranchExactness,
   BranchFailureSummary,
@@ -19,11 +19,13 @@ import type {
   DpsSummary,
   HistoryProvenance,
   HistorySelectionReason,
+  PlayerPoisonAnalysis,
   RotationSummary,
   SimulateOptions,
   StochasticRngSummary,
   TailMetrics,
 } from "./contracts";
+import { PLAYER_POISON_EFFECT_ID, resolvePoisonApplication } from "../../poison/mechanics";
 import {
   keepsAnalysisLedgers,
   keepsPerAbilityMap,
@@ -49,6 +51,7 @@ const SOURCE_KINDS: readonly DamageSourceKind[] = [
   "league-blessing",
   "perk",
   "conjure-or-familiar",
+  "player-poison",
   "basic-attack",
   "auto-attack",
   "other-modeled",
@@ -67,6 +70,38 @@ const EMPTY_ANALYSIS = {
 function buildAnalysis(rt: SimulationRuntime) {
   if (!keepsAnalysisLedgers(rt.detailLevel)) return EMPTY_ANALYSIS;
   return finalizeAnalysis(rt.analysis, rt.totalExpected);
+}
+
+function buildPlayerPoisonAnalysis(
+  rt: SimulationRuntime,
+  analysis: ReturnType<typeof buildAnalysis>,
+): PlayerPoisonAnalysis | undefined {
+  if (!keepsAnalysisLedgers(rt.detailLevel)) return undefined;
+  const source = resolvePoisonApplication(rt.input.playerPoison, 0);
+  if (!source) return undefined;
+  const row = analysis.byEffect.find((effect) => effect.id === PLAYER_POISON_EFFECT_ID);
+  const poison = rt.state.target.weaponPoison;
+  const toxin = rt.state.target.evolvingToxin;
+  const poisonLive = poison.active && rt.state.tick < poison.expiresAtTick;
+  const toxinLive = rt.state.tick < toxin.expiresAtTick;
+  return {
+    sourceLabel: poisonLive ? poison.sourceLabel : source.sourceLabel,
+    effectiveTier: poisonLive ? poison.effectiveTier : source.effectiveTier,
+    procChance: source.procChance,
+    applicationAttempts: row?.triggerRolls ?? 0,
+    successfulApplications: row?.expectedActivations ?? 0,
+    separateHits: row?.expectedSeparateHits ?? 0,
+    minimumDamage: row?.minimumDamage ?? 0,
+    expectedDamage: row?.totalDamage ?? 0,
+    maximumDamage: row?.maximumDamage ?? 0,
+    decayIndex: poisonLive ? poison.decayIndex : 0,
+    remainingTargetPoisonTicks: poisonLive ? Math.max(0, poison.expiresAtTick - rt.state.tick) : 0,
+    bikStacks: toxinLive ? toxin.stacks : 0,
+    bikRemainingTicks: toxinLive ? toxin.expiresAtTick - rt.state.tick : 0,
+    probabilityMass: 1,
+    residualMass: 0,
+    supportStatus: "partially-modeled",
+  };
 }
 
 function pathSupportMin(rt: SimulationRuntime): number {
@@ -193,6 +228,8 @@ export function finish(
 
   const detail = resolveDetailLevel(rt.detailLevel);
   const presentHistory = keepsPresentationHistory(detail);
+  const analysis = buildAnalysis(rt);
+  const playerPoison = buildPlayerPoisonAnalysis(rt, analysis);
   return {
     ok: error === undefined,
     ...(error !== undefined ? { error } : {}),
@@ -238,7 +275,8 @@ export function finish(
     damageByTick: rt.damageByTick,
     events: presentHistory ? rt.events : [],
     history,
-    analysis: buildAnalysis(rt),
+    analysis,
+    ...(playerPoison ? { playerPoison } : {}),
     ...(tails !== undefined
       ? {
           tails,
@@ -503,7 +541,9 @@ export function combineBranchSummaries(
     | "directDamage"
     | "dotDamage"
     | "criticalContribution"
-    | "capLoss";
+    | "capLoss"
+    | "minimumDamage"
+    | "maximumDamage";
   // Count fields stay conditional means; damage fields use known-mass scale with residual.
   const DAMAGE_EFFECT_FIELDS = new Set<EffectNumericField>([
     "totalDamage",
@@ -512,6 +552,8 @@ export function combineBranchSummaries(
     "dotDamage",
     "criticalContribution",
     "capLoss",
+    "minimumDamage",
+    "maximumDamage",
   ]);
   const byEffect: DamageEffectBreakdown[] = !wantAnalysis
     ? []
@@ -553,6 +595,12 @@ export function combineBranchSummaries(
               dotDamage: value("dotDamage"),
               criticalContribution: value("criticalContribution"),
               capLoss: value("capLoss"),
+              ...(sample.minimumDamage !== undefined
+                ? { minimumDamage: value("minimumDamage") }
+                : {}),
+              ...(sample.maximumDamage !== undefined
+                ? { maximumDamage: value("maximumDamage") }
+                : {}),
             };
           })
           .sort((a, b) => b.totalDamage - a.totalDamage);
@@ -660,6 +708,21 @@ export function combineBranchSummaries(
       perAbility[key] = toKnownMass(mix((s) => s.perAbility[key] ?? 0));
     }
   }
+  const poisonRow = byEffect.find((effect) => effect.id === PLAYER_POISON_EFFECT_ID);
+  const playerPoison =
+    wantAnalysis && modal.playerPoison
+      ? {
+          ...modal.playerPoison,
+          applicationAttempts: poisonRow?.triggerRolls ?? 0,
+          successfulApplications: poisonRow?.expectedActivations ?? 0,
+          separateHits: poisonRow?.expectedSeparateHits ?? 0,
+          minimumDamage: poisonRow?.minimumDamage ?? 0,
+          expectedDamage: poisonRow?.totalDamage ?? 0,
+          maximumDamage: poisonRow?.maximumDamage ?? 0,
+          probabilityMass: rawMass,
+          residualMass: safeResidual,
+        }
+      : undefined;
 
   return {
     ok,
@@ -714,6 +777,7 @@ export function combineBranchSummaries(
           capLoss: toKnownMass(mix((s) => s.analysis.capLoss)),
         }
       : EMPTY_ANALYSIS,
+    ...(playerPoison ? { playerPoison } : {}),
     ...(tails !== undefined
       ? {
           tails,

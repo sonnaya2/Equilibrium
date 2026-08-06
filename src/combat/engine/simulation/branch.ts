@@ -17,7 +17,7 @@ import {
   type BranchExactness,
   type BranchSet,
 } from "./branchCore";
-import { advanceToBranches, commitCastBranches } from "./lengLandBranch";
+import { advanceToBranches, commitCastBranches } from "./landBranch";
 import { runWithHitReuseScope } from "../resolution/hitReuse";
 
 export type { Branch, BranchExactness, BranchSet, BranchProfile } from "./branchCore";
@@ -353,8 +353,4 @@ export {
   FROSTBLADES_DURATION_TICKS,
   lengLandTableFor,
 } from "../../styles/melee/lengRng";
-export {
-  expandLengOnLand,
-  advanceToBranches,
-  MAX_LENG_INTERMEDIATE_BRANCHES,
-} from "./lengLandBranch";
+export { expandLengOnLand, advanceToBranches, MAX_LENG_INTERMEDIATE_BRANCHES } from "./landBranch";

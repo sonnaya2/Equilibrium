@@ -79,7 +79,8 @@ export function isConjureDamageEvent(event: {
   provenance?: { kind?: string };
 }): boolean {
   const family = event.family;
-  if (family === "conjureAuto" || family === "command" || family === "poison") return true;
+  if (family === "conjureAuto" || family === "command") return true;
+  if (family === "poison" && event.provenance?.kind !== "player_poison") return true;
   const id = event.abilityId ?? "";
   if (isSpiritLedgerId(id) || isConjureCommandAbilityId(id) || isConjureSummonAbilityId(id)) {
     return true;

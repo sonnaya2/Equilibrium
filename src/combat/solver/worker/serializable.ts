@@ -12,6 +12,8 @@ import type { ActiveEquipmentEffects } from "../../shared/equipment";
 import type { BlessingChoice, BlessingId, BlessingPath } from "@/league/blessings";
 import type { RegionId } from "@/league";
 import type { CombatContext, CombatStyle } from "../../types";
+import type { PlayerPoisonProfile } from "../../poison/mechanics";
+import type { StyleAmmoId } from "../../styles/ranged/ammoModel";
 
 export { SOLVER_SCHEMA_VERSION };
 export type { AbilityCategory };
@@ -106,8 +108,8 @@ export interface SerializableRevolutionSimBase {
   /** Strength cape (99): extend Dismember by three bleed hits in the worker catalogue. */
   strengthCape99?: boolean;
   preciseRank?: number;
-  /** Style ammo mechanic for Ranged (deathspore / splintering). */
-  ammo?: "deathspore" | "splintering";
+  /** Style ammo mechanic for Ranged, including Bik. */
+  ammo?: StyleAmmoId;
   /** Caroming rank 1-4 for Ricochet band construction. */
   caromingRank?: number;
   conjureBasicDamageMult?: number;
@@ -118,6 +120,7 @@ export interface SerializableRevolutionSimBase {
   league: SerializableLeagueRules;
   context?: CombatContext;
   targetHpPercent?: number;
+  playerPoison?: PlayerPoisonProfile;
   cap?: HitCapRule;
   startingAdrenaline?: number;
   equipmentIds: readonly string[];
@@ -163,12 +166,15 @@ export interface SerializableLoadoutPlain {
   buffs?: {
     vulnerability?: boolean;
     styleCurse?: string;
+    weaponPoison?: PlayerPoisonProfile["potion"];
+    kwuarmPotency?: PlayerPoisonProfile["kwuarmPotency"];
   };
   target?: {
     hpPercent?: number;
     demon?: boolean;
     dragon?: boolean;
     undead?: boolean;
+    poisonImmune?: boolean;
   };
   startingAdrenaline?: number;
   base?: number;

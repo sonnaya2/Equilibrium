@@ -29,6 +29,12 @@ import {
   isTsunamiCritAdrenEligibleLand,
   tsunamiCritChanceFromDamage,
 } from "./tsunamiCritBranch";
+import {
+  applyEvolvingToxinOnLand,
+  expandCinderbaneContinuation,
+  expandPlayerPoisonOnLand,
+} from "./poisonLandBranch";
+import { isPlayerPoisonEvent, processPlayerPoisonEvent } from "../schedulers/playerPoison";
 
 /**
  * Soft intermediate budget while folding Leng expands in one event tick.
@@ -272,6 +278,16 @@ function advanceToBranchesInner(
       }
 
       const event = b.rt.queue.shift()!;
+      if (event.family === "poison" && isPlayerPoisonEvent(event)) {
+        const continuation = processPlayerPoisonEvent(b.rt, event);
+        const expanded = expandCinderbaneContinuation(b, event.tick, continuation);
+        if (expanded.branches.length > 1) expandedAny = true;
+        const folded = foldAfterExpand(next, expanded.branches, maxLive, intermediateMax);
+        residualWeight += folded.residualWeight;
+        exactness = combineExactness(exactness, folded.exactness);
+        next = folded.branches;
+        continue;
+      }
       if (event.family === "conjureAuto" || event.family === "poison") {
         processSpiritEvent(b.rt, event);
         next.push(b);
@@ -286,6 +302,9 @@ function advanceToBranchesInner(
 
       const resolution = event.resolve(b.rt, event.tick);
       recordResolved(b.rt, event, resolution);
+      if (b.rt.input.playerPoison?.bik) {
+        applyEvolvingToxinOnLand(b.rt, event, resolution.damage);
+      }
 
       const ability = b.rt.byId.get(event.abilityId);
       // Failed residual banks still Leng-expand (error preserved): frostblades /
@@ -317,6 +336,18 @@ function advanceToBranchesInner(
         }
       }
       working = afterTsunami;
+
+      if (b.rt.input.playerPoison) {
+        const afterPoison: Branch[] = [];
+        for (const w of working) {
+          const pset = expandPlayerPoisonOnLand(w, event, resolution.damage);
+          residualWeight += pset.residualWeight;
+          exactness = combineExactness(exactness, pset.exactness);
+          if (pset.branches.length > 1) landExpanded = true;
+          afterPoison.push(...pset.branches);
+        }
+        working = afterPoison;
+      }
 
       if (landExpanded) {
         expandedAny = true;
@@ -386,7 +417,7 @@ function castSeqOf(rt: SimulationRuntime, prepared: PreparedCast): number | unde
 }
 
 /**
- * Commit a prepared cast with Leng land-time multi-branch advance through occupancy.
+ * Commit a prepared cast with branch-aware land-time advance through occupancy.
  * maxLive / intermediateMax must match the outer BranchBudget (not a silent 64 default).
  */
 export function commitCastBranches(

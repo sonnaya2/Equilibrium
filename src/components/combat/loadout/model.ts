@@ -32,6 +32,12 @@ import {
   type LoadoutEquipmentView,
 } from "@/combat/shared/equipment";
 import { normalizeSlayerHelmetStand, type SlayerHelmetTierId } from "@/combat/shared/slayerHelmet";
+import {
+  normalizeKwuarmPotency,
+  normalizeWeaponPoisonChoice,
+  type KwuarmPotency,
+  type WeaponPoisonChoice,
+} from "@/combat/poison/mechanics";
 import { STYLE_CURSES as STYLE_CURSE_BOOSTS, styleCurseById } from "@/combat/shared/prayers";
 import type { AffinityKind } from "@/combat/target/genericTarget";
 import type { CombatStyle } from "@/combat/types";
@@ -218,6 +224,8 @@ export type StyleCurseChoice =
 
 export interface LoadoutBuffs {
   vulnerability: boolean;
+  weaponPoison: WeaponPoisonChoice;
+  kwuarmPotency: KwuarmPotency;
   styleCurse: StyleCurseChoice;
   overload: OverloadChoice;
   fortitude: boolean;
@@ -461,6 +469,8 @@ export const DEFAULT_LOADOUT: Loadout = {
   gizmos: {},
   buffs: {
     vulnerability: false,
+    weaponPoison: "none",
+    kwuarmPotency: 0,
     styleCurse: "none",
     overload: "none",
     fortitude: false,
@@ -1229,6 +1239,8 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
     gizmos: normalizeGizmos((raw as { gizmos?: unknown }).gizmos),
     buffs: {
       vulnerability: rawBuffs.vulnerability === true,
+      weaponPoison: normalizeWeaponPoisonChoice(rawBuffs.weaponPoison),
+      kwuarmPotency: normalizeKwuarmPotency(rawBuffs.kwuarmPotency),
       styleCurse,
       overload: OVERLOADS.includes(rawBuffs.overload as OverloadChoice)
         ? (rawBuffs.overload as OverloadChoice)

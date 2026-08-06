@@ -19,6 +19,7 @@ import { hasPassive } from "../../shared/equipment";
 import { lengLandTableFor, type CompiledLengLandTable } from "../../styles/melee/lengRng";
 import { MAX_SOULS } from "../../styles/necromancy/abilities";
 import { residualSoulCapFor } from "../../styles/necromancy/effects";
+import { normalizeKwuarmPotency, normalizeWeaponPoisonChoice } from "../../poison/mechanics";
 
 /** Spirit event identity: a pending auto/poison event is live only for its summon instance. */
 export interface SpiritEventMeta {
@@ -150,6 +151,16 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
   }
   if (input.slayerLevel != null && (!Number.isFinite(input.slayerLevel) || input.slayerLevel < 0)) {
     throw new RangeError(`bad slayerLevel: ${input.slayerLevel}`);
+  }
+  if (
+    input.playerPoison &&
+    (normalizeWeaponPoisonChoice(input.playerPoison.potion) !== input.playerPoison.potion ||
+      normalizeKwuarmPotency(input.playerPoison.kwuarmPotency) !==
+        input.playerPoison.kwuarmPotency ||
+      !Number.isInteger(input.playerPoison.potionUntilTick) ||
+      input.playerPoison.potionUntilTick < 0)
+  ) {
+    throw new RangeError("invalid playerPoison profile");
   }
   // Solver compiled context may pass prebuilt maps (request-invariant).
   // When absent, rebuild from abilities (manual UI / unit tests / one-off sims).

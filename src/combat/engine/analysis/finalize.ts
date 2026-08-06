@@ -12,6 +12,7 @@ const SOURCE_KINDS: readonly DamageSourceKind[] = [
   "league-blessing",
   "perk",
   "conjure-or-familiar",
+  "player-poison",
   "basic-attack",
   "auto-attack",
   "other-modeled",
@@ -46,6 +47,8 @@ export function finalizeAnalysis(
           dotDamage: ledger.dotDamage,
           criticalContribution: ledger.criticalContribution,
           capLoss: ledger.capLoss,
+          ...(ledger.minimumDamage !== undefined ? { minimumDamage: ledger.minimumDamage } : {}),
+          ...(ledger.maximumDamage !== undefined ? { maximumDamage: ledger.maximumDamage } : {}),
         };
       })
       .sort((a, b) => b.totalDamage - a.totalDamage),

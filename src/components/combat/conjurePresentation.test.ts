@@ -62,6 +62,13 @@ describe("conjurePresentation", () => {
     );
     expect(isConjureDamageEvent({ family: "hit", abilityId: "touch_of_death" })).toBe(false);
     expect(
+      isConjureDamageEvent({
+        family: "poison",
+        abilityId: "player_weapon_poison",
+        provenance: { kind: "player_poison" },
+      }),
+    ).toBe(false);
+    expect(
       conjureEventTypeLabel({ family: "poison", abilityId: "spirit_putrid_zombie_poison" }),
     ).toBe("Conjure poison");
     expect(conjureEventTypeLabel({ family: "conjureAuto" })).toBe("Conjure auto");

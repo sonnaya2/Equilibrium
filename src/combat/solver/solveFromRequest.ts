@@ -106,6 +106,7 @@ export const solveFromRequest: SolveFn = async (
     league,
     context: simBase.context,
     targetHpPercent: simBase.targetHpPercent,
+    playerPoison: simBase.playerPoison,
     cap: simBase.cap,
     modifiers,
   };

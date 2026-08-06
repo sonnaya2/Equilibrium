@@ -63,6 +63,11 @@ function combatBaseAt(rt: SimulationRuntime, landTick: number, level: number): n
   return rt.input.base;
 }
 
+export function abilityDamageAt(rt: SimulationRuntime, landTick: number): number {
+  const level = combatLevelAt(rt, landTick);
+  return combatBaseAt(rt, landTick, level);
+}
+
 function mix(a: number, b: number, weight: number): number {
   return a + (b - a) * weight;
 }

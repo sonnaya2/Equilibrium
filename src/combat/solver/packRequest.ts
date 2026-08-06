@@ -25,6 +25,8 @@ import { TIER_HORIZON_SECONDS } from "./solve";
 import type { ResolvedCombatModel } from "../model/contracts";
 import { resolveModifierSourcesFromHost } from "../model/modifierSources";
 import { projectSerializableSimBase } from "../model/simulationInput";
+import type { PlayerPoisonProfile } from "../poison/mechanics";
+import type { StyleAmmoId } from "../styles/ranged/ammoModel";
 
 /**
  * Neutral combat-domain snapshot for solver packing.
@@ -47,7 +49,7 @@ export interface SolverPackSnapshot {
   plantedFeet?: boolean;
   strengthCape99?: boolean;
   preciseRank?: number;
-  ammo?: "deathspore" | "splintering";
+  ammo?: StyleAmmoId;
   conjureBasicDamageMult?: number;
   conjureDurationMult?: number;
   tumekensPieces?: number;
@@ -56,6 +58,7 @@ export interface SolverPackSnapshot {
   league: SerializableLeagueRules;
   context?: CombatContext;
   targetHpPercent?: number;
+  playerPoison?: PlayerPoisonProfile;
   cap?: HitCapRule;
   startingAdrenaline?: number;
   equipmentIds: readonly string[];
@@ -161,6 +164,7 @@ export function packSimBase(snapshot: SolverPackSnapshot): SerializableRevolutio
     league: snapshot.league,
     context: snapshot.context,
     targetHpPercent: snapshot.targetHpPercent,
+    playerPoison: snapshot.playerPoison ? { ...snapshot.playerPoison } : undefined,
     cap: snapshot.cap,
     startingAdrenaline: snapshot.startingAdrenaline,
     equipmentIds: snapshot.equipmentIds,

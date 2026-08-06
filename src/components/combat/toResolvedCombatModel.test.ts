@@ -343,4 +343,44 @@ describe("toResolvedCombatModel", () => {
     expect(fromPack).toEqual(fromModel);
     expect(fromSnap).toEqual(fromModel);
   });
+
+  it("resolves equipment, consumable, Bik, vulnerability, and immunity into one poison profile", () => {
+    const loadout = withLoadout({
+      buffs: {
+        ...DEFAULT_LOADOUT.buffs,
+        vulnerability: true,
+        weaponPoison: "weapon-plus-plus",
+        kwuarmPotency: 4,
+      },
+      equipmentSlots: {
+        twohand: "item:laniakeas-spear",
+        gloves: "item:cinderbane-gloves",
+        ammo: "item:bik-arrows",
+      },
+      target: { ...TARGET_DEFAULTS, poisonImmune: true },
+    });
+    const model = toResolvedCombatModel(loadout, { now: NOW });
+    expect(model.playerPoison).toEqual({
+      potion: "weapon-plus-plus",
+      potionUntilTick: 1_000,
+      kwuarmPotency: 4,
+      cinderbane: true,
+      blowpipe: false,
+      laniakea: true,
+      bik: true,
+      targetPoisonImmune: true,
+      vulnerability: true,
+    });
+    expect(model.target.poisonImmune).toBe(true);
+    expect(projectSerializableSimBase(model).playerPoison).toEqual(model.playerPoison);
+
+    const blowpipe = toResolvedCombatModel(
+      withLoadout({
+        style: "ranged",
+        equipmentSlots: { twohand: "item:upgraded-bone-blowpipe" },
+      }),
+      { now: NOW },
+    );
+    expect(blowpipe.playerPoison.blowpipe).toBe(true);
+  });
 });

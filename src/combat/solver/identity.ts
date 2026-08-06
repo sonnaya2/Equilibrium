@@ -178,6 +178,17 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
     tumekensPieces: loadout.tumekensPieces ?? 0,
     tumekensCritEnabled: loadout.tumekensCritEnabled === true,
     targetHpPercent: loadout.targetHpPercent ?? null,
+    playerPoison: {
+      potion: loadout.playerPoison?.potion ?? "none",
+      potionUntilTick: loadout.playerPoison?.potionUntilTick ?? 0,
+      kwuarmPotency: loadout.playerPoison?.kwuarmPotency ?? 0,
+      cinderbane: loadout.playerPoison?.cinderbane === true,
+      blowpipe: loadout.playerPoison?.blowpipe === true,
+      laniakea: loadout.playerPoison?.laniakea === true,
+      bik: loadout.playerPoison?.bik === true,
+      targetPoisonImmune: loadout.playerPoison?.targetPoisonImmune === true,
+      vulnerability: loadout.playerPoison?.vulnerability === true,
+    },
     cap: normalizeHitCap(loadout.cap),
     adrenaline: loadout.adrenaline
       ? {

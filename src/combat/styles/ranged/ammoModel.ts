@@ -3,12 +3,13 @@
  * Distinct from ammunitionTier (AD formula cap) which folds into model.base.
  */
 
-export type StyleAmmoId = "deathspore" | "splintering";
+export type StyleAmmoId = "deathspore" | "splintering" | "bik";
 
 /** Equipment catalogue ids that select a style ammo mechanic. */
 export const STYLE_AMMO_ITEM_IDS: Readonly<Record<StyleAmmoId, readonly string[]>> = {
   deathspore: ["item:deathspore-arrows"],
   splintering: ["item:splintering-arrows"],
+  bik: ["item:bik-arrows"],
 };
 
 /** Resolve style ammo from equipped item ids (ammo slot / equipment list). */

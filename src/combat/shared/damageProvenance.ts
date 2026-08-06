@@ -15,6 +15,7 @@ export type DamageProvenanceKind =
   | "player_auto"
   | "player_dot"
   | "player_converted_channel"
+  | "player_poison"
   | "conjure_auto"
   | "conjure_poison"
   | "conjure_command"
@@ -62,6 +63,8 @@ export interface DamageCapabilities {
   prayerMods: boolean;
   /** Stack Abyssal Parasite when melee + passive + damage (land-time). Matches directHit by product law. */
   canApplyAbyssalParasite: boolean;
+  canApplyWeaponPoison?: boolean;
+  canApplyEvolvingToxin?: boolean;
 }
 
 const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
@@ -78,6 +81,8 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: true,
     prayerMods: true,
     canApplyAbyssalParasite: true,
+    canApplyWeaponPoison: true,
+    canApplyEvolvingToxin: true,
   },
   player_auto: {
     playerAttack: true,
@@ -92,6 +97,24 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: true,
     prayerMods: true,
     canApplyAbyssalParasite: true,
+    canApplyWeaponPoison: true,
+    canApplyEvolvingToxin: false,
+  },
+  player_poison: {
+    playerAttack: false,
+    directHit: false,
+    onHitGear: false,
+    blessingRider: false,
+    cindersOnHit: false,
+    blessingOnHit: false,
+    canCrit: false,
+    canGenerateResources: false,
+    canTriggerProcs: false,
+    recursiveDamage: false,
+    prayerMods: false,
+    canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: false,
+    canApplyEvolvingToxin: false,
   },
   player_dot: {
     playerAttack: true,
@@ -309,6 +332,7 @@ export function outgoingSourceOf(p: DamageProvenance): OutgoingDamageSource {
   switch (p.kind) {
     case "player_dot":
     case "player_converted_channel":
+    case "player_poison":
     case "derived_tail":
       return "dot";
     case "conjure_auto":

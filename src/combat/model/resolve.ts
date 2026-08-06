@@ -5,6 +5,11 @@ import { STANDARD_HIT_CAP } from "../core/hitCaps";
 import { resolveStyleAmmo } from "../styles/ranged/ammoModel";
 import type { HostCombatResolveInput, ResolvedCombatModel } from "./contracts";
 import { resolveModifierSourcesFromHost } from "./modifierSources";
+import {
+  NO_PLAYER_POISON,
+  normalizeKwuarmPotency,
+  normalizeWeaponPoisonChoice,
+} from "../poison/mechanics";
 
 function freezeDeep<T>(value: T): T {
   if (value === null || typeof value !== "object") return value;
@@ -43,6 +48,7 @@ function copyEquipmentEffects(
 export function buildResolvedCombatModel(input: HostCombatResolveInput): ResolvedCombatModel {
   const modifierSources = resolveModifierSourcesFromHost(input);
   const diag = input.diagnostics;
+  const poison = input.playerPoison ?? NO_PLAYER_POISON;
   const model: ResolvedCombatModel = {
     style: input.style,
     base: input.base,
@@ -84,6 +90,21 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
       demon: input.target?.demon,
       dragon: input.target?.dragon,
       undead: input.target?.undead,
+      poisonImmune: poison.targetPoisonImmune === true,
+    },
+    playerPoison: {
+      potion: normalizeWeaponPoisonChoice(poison.potion),
+      potionUntilTick:
+        Number.isFinite(poison.potionUntilTick) && poison.potionUntilTick > 0
+          ? Math.floor(poison.potionUntilTick)
+          : 0,
+      kwuarmPotency: normalizeKwuarmPotency(poison.kwuarmPotency),
+      cinderbane: poison.cinderbane === true,
+      blowpipe: poison.blowpipe === true,
+      laniakea: poison.laniakea === true,
+      bik: poison.bik === true,
+      targetPoisonImmune: poison.targetPoisonImmune === true,
+      vulnerability: poison.vulnerability === true,
     },
     league: {
       ruleset: input.league.ruleset,

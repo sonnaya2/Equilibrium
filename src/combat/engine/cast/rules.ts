@@ -8,6 +8,7 @@ import {
   residualSoulCapFor,
 } from "../../styles/necromancy/effects";
 import { deathsporeFreeCastActive } from "../../styles/ranged/onHit";
+import type { StyleAmmoId } from "../../styles/ranged/ammoModel";
 import { impatientProcChance, relentlessProcChance } from "../../shared/perks";
 import {
   isWeaponSpecialAbility,
@@ -132,7 +133,7 @@ export function spendOf(
   state: RotationState,
   ability: AbilitySpec,
   tick: number,
-  ammo?: "deathspore" | "splintering",
+  ammo?: StyleAmmoId,
   icyTempestOutcome?: IcyTempestOutcome,
 ): number {
   // Concrete Icy Tempest casts must supply one discrete outcome.

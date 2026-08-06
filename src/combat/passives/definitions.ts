@@ -39,6 +39,9 @@ export const PASSIVE_SOURCE = {
   blastDiffusion: wiki("Blast diffusion boots", "Blast_diffusion_boots", "2026-08-04"),
   deathSpark: wiki("Omni guard", "Omni_guard", "2026-08-04"),
   soulReave: wiki("Devourer's Guard", "Devourer%27s_Guard", "2026-08-04"),
+  cinderbanePoison: wiki("Cinderbane gloves", "Cinderbane_gloves", "2026-08-06"),
+  blowpipePoison: wiki("Upgraded bone blowpipe", "Upgraded_bone_blowpipe", "2026-08-06"),
+  laniakeaPoison: wiki("Laniakea's spear", "Laniakea%27s_spear", "2026-08-06"),
 } as const;
 
 /**
@@ -325,6 +328,39 @@ export const PASSIVE_DEFINITIONS: readonly PassiveDefinition[] = [
       "Soul Crush special and mainhand-swap stack clear are not modeled.",
     ],
     source: PASSIVE_SOURCE.soulReave,
+  },
+  {
+    id: "cinderbane-weapon-poison",
+    label: "Cinderbane poison",
+    support: "partially-modeled",
+    duplicatePolicy: "collapse",
+    lifecycle: ["loadout-static", "landed-hit", "timed-runtime"],
+    implementationOwners: ["poison/mechanics.ts", "engine/schedulers/playerPoison.ts"],
+    effects: [
+      "Acts as weapon poison+ when no other poison is active.",
+      "Raises another poison source by one tier and lets poison hits refresh poison.",
+    ],
+    source: PASSIVE_SOURCE.cinderbanePoison,
+  },
+  {
+    id: "blowpipe-weapon-poison",
+    label: "Upgraded bone blowpipe poison",
+    support: "partially-modeled",
+    duplicatePolicy: "collapse",
+    lifecycle: ["loadout-static", "landed-hit", "timed-runtime"],
+    implementationOwners: ["poison/mechanics.ts", "engine/schedulers/playerPoison.ts"],
+    effects: ["Provides tier-1 poison at half damage with an 8-tick poison cadence."],
+    source: PASSIVE_SOURCE.blowpipePoison,
+  },
+  {
+    id: "laniakea-weapon-poison",
+    label: "Laniakea's spear poison",
+    support: "partially-modeled",
+    duplicatePolicy: "collapse",
+    lifecycle: ["loadout-static", "landed-hit"],
+    implementationOwners: ["poison/mechanics.ts", "engine/simulation/poisonLandBranch.ts"],
+    effects: ["Adds 5 percentage points to poison proc chance and 5% poison damage."],
+    source: PASSIVE_SOURCE.laniakeaPoison,
   },
 ];
 

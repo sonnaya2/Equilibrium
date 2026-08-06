@@ -72,6 +72,7 @@ export function reviveRevolutionBase(sim: SerializableRevolutionSimBase): Revive
     conjureBasicDamageMult: sim.conjureBasicDamageMult,
     conjureDurationMult: sim.conjureDurationMult,
     targetHpPercent: sim.targetHpPercent,
+    playerPoison: sim.playerPoison,
     // ponytail: naturalInstinctUntilTick / startingResidualSouls / slayerOnTask / slayerLevel
     // affect scores in-engine but are not on SerializableRevolutionSimBase yet.
   };

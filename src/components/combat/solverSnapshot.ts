@@ -46,6 +46,7 @@ export function solverSnapshotFromResolvedModel(model: ResolvedCombatModel): Sol
     },
     context: model.context,
     targetHpPercent: model.target.hpPercent,
+    playerPoison: { ...model.playerPoison },
     cap: model.cap,
     startingAdrenaline: model.startingAdrenaline,
     equipmentIds: model.equipmentIds,

@@ -7,6 +7,8 @@ import type { RotationState } from "../runtime/state";
 import type { ActiveEquipmentEffects } from "../../shared/equipment";
 import type { ResolvedLeagueRules } from "../../league/ruleset";
 import type { AdrenalineTransaction } from "../../shared/adrenalineTransaction";
+import type { PlayerPoisonProfile } from "../../poison/mechanics";
+import type { StyleAmmoId } from "../../styles/ranged/ammoModel";
 
 /** One queued cast; the simulator advances to its first legal tick. */
 export interface RotationAction {
@@ -97,7 +99,7 @@ export interface SimulateInput {
    * Style ammo mechanic (Deathspore free-cast, Puncture). Packed on Manual,
    * Revolution, and solver via resolved model / equipment derivation.
    */
-  ammo?: "deathspore" | "splintering";
+  ammo?: StyleAmmoId;
   /** Caroming rank 1-4; rewrites Ricochet hit bands at prepare. */
   caromingRank?: number;
   /** Use the style Basic Attack through idle GCDs and adrenaline shortfalls. */
@@ -123,6 +125,7 @@ export interface SimulateInput {
   conjureDurationMult?: number;
   /** Target LP% (0-100) for HP-gated mechanics (Bloodlust Flurry, Punish, Spectral Scythe); absent = no HP scale. */
   targetHpPercent?: number;
+  playerPoison?: PlayerPoisonProfile;
   /** Optional pre-active Natural Instinct window for Jaws adrenaline. */
   naturalInstinctUntilTick?: number;
   /**
@@ -250,6 +253,7 @@ export type DamageSourceKind =
   | "league-blessing"
   | "perk"
   | "conjure-or-familiar"
+  | "player-poison"
   | "basic-attack"
   /** @deprecated Read compatibility for pre-modernisation analysis payloads. */
   | "auto-attack"
@@ -283,6 +287,8 @@ export interface DamageEffectBreakdown {
   dotDamage: number;
   criticalContribution: number;
   capLoss: number;
+  minimumDamage?: number;
+  maximumDamage?: number;
 }
 
 export interface RotationDamageAnalysis {
@@ -292,6 +298,25 @@ export interface RotationDamageAnalysis {
   dotDamage: number;
   criticalContribution: number;
   capLoss: number;
+}
+
+export interface PlayerPoisonAnalysis {
+  sourceLabel: string;
+  effectiveTier: number;
+  procChance: number;
+  applicationAttempts: number;
+  successfulApplications: number;
+  separateHits: number;
+  minimumDamage: number;
+  expectedDamage: number;
+  maximumDamage: number;
+  decayIndex: number;
+  remainingTargetPoisonTicks: number;
+  bikStacks: number;
+  bikRemainingTicks: number;
+  probabilityMass: number;
+  residualMass: number;
+  supportStatus: "partially-modeled";
 }
 
 /**
@@ -553,6 +578,7 @@ export interface RotationSummary {
   history: HistoryProvenance;
   /** Reconciled engine-owned aggregations; never rebuilt from representative events. */
   analysis: RotationDamageAnalysis;
+  playerPoison?: PlayerPoisonAnalysis;
   /** Opt-in (includeTails); not the fixed-window DPS numerator. */
   tails?: TailMetrics;
   /** @deprecated Use tails.totalIncludingTails. */

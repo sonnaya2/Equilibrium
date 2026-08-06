@@ -79,6 +79,7 @@ export function projectSerializableSimBase(
     },
     context: model.context,
     targetHpPercent: model.target.hpPercent,
+    playerPoison: { ...model.playerPoison },
     cap: model.cap ?? { cap: STANDARD_HIT_CAP, bypass: false },
     startingAdrenaline: model.startingAdrenaline,
     equipmentIds: [...model.equipmentIds],

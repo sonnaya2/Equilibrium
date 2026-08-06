@@ -1455,4 +1455,35 @@ describe("branchKey structural vs JSON partitions", () => {
     const json = branchKeyJson(rt);
     expect(structural.length).toBeLessThan(json.length / 2);
   });
+
+  it("partitions live poison futures and normalizes expired poison and Bik state", () => {
+    const clean = createRuntime(meleeInput);
+    const live = snapshotRuntime(clean);
+    live.state = patchTarget(live.state, {
+      weaponPoison: {
+        active: true,
+        appliedAtTick: 0,
+        expiresAtTick: 300,
+        effectiveTier: 2,
+        decayIndex: 3,
+        remainingHits: 15,
+        cadenceTicks: 16,
+        nextHitTick: 50,
+        pendingEventSeq: -1,
+        sourceDamageMultiplier: 1,
+        cinderbaneContinuation: true,
+        continuationChance: 0.125,
+        sourceLabel: "Cinderbane (tier 2)",
+      },
+      evolvingToxin: { stacks: 20, expiresAtTick: 50 },
+    });
+    expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
+    expect(branchKeyJson(live)).not.toBe(branchKeyJson(clean));
+
+    const expired = snapshotRuntime(live);
+    expired.state = { ...expired.state, tick: 300 };
+    clean.state = { ...clean.state, tick: 300 };
+    expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
+    expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
+  });
 });

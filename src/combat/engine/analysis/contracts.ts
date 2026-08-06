@@ -28,6 +28,8 @@ export interface EffectAnalysisLedger {
    * bonus amount. Do not sum Bonus across rows with Total (would double-count).
    */
   bonusDamage: number;
+  minimumDamage?: number;
+  maximumDamage?: number;
 }
 
 export interface RuntimeAnalysisState {
@@ -110,6 +112,12 @@ export function mixAnalysisStates(
       expectedSeparateHits: mix(left?.expectedSeparateHits ?? 0, right?.expectedSeparateHits ?? 0),
       attachedComponents: mix(left?.attachedComponents ?? 0, right?.attachedComponents ?? 0),
       bonusDamage: mix(left?.bonusDamage ?? 0, right?.bonusDamage ?? 0),
+      ...(left?.minimumDamage !== undefined || right?.minimumDamage !== undefined
+        ? { minimumDamage: mix(left?.minimumDamage ?? 0, right?.minimumDamage ?? 0) }
+        : {}),
+      ...(left?.maximumDamage !== undefined || right?.maximumDamage !== undefined
+        ? { maximumDamage: mix(left?.maximumDamage ?? 0, right?.maximumDamage ?? 0) }
+        : {}),
     });
   }
   const sourceKinds = new Set([...a.sources.keys(), ...b.sources.keys()]);

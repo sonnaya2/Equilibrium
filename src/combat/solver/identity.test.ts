@@ -249,6 +249,39 @@ describe("fingerprint changes one field at a time", () => {
     await expectDiff("targetHp", (r) => withSim(r, (s) => ({ ...s, targetHpPercent: 25 })));
   });
 
+  it("every player poison input", async () => {
+    const off = {
+      potion: "none" as const,
+      potionUntilTick: 0,
+      kwuarmPotency: 0 as const,
+      cinderbane: false,
+      blowpipe: false,
+      laniakea: false,
+      bik: false,
+      targetPoisonImmune: false,
+      vulnerability: false,
+    };
+    const changes = [
+      { potion: "weapon" as const },
+      { potionUntilTick: 250 },
+      { kwuarmPotency: 4 as const },
+      { cinderbane: true },
+      { blowpipe: true },
+      { laniakea: true },
+      { bik: true },
+      { targetPoisonImmune: true },
+      { vulnerability: true },
+    ];
+    for (const change of changes) {
+      await expectDiff(Object.keys(change)[0]!, (request) =>
+        withSim(request, (sim) => ({
+          ...sim,
+          playerPoison: { ...off, ...change },
+        })),
+      );
+    }
+  });
+
   it("absent target HP differs from explicit 100%", async () => {
     await expectDiff("targetHpAbsent", (r) => withSim(r, (s) => ({ ...s, targetHpPercent: 100 })));
   });

@@ -61,6 +61,16 @@ describe("passive registry", () => {
   it("equipment catalogue passive refs resolve in the registry", () => {
     expect(validateEquipmentPassiveRefs(combatEquipment.records)).toEqual([]);
   });
+
+  it("attaches player poison passives to the sourced equipment records", () => {
+    expect(equipmentById("item:cinderbane-gloves")?.passiveIds).toContain(
+      "cinderbane-weapon-poison",
+    );
+    expect(equipmentById("item:upgraded-bone-blowpipe")?.passiveIds).toContain(
+      "blowpipe-weapon-poison",
+    );
+    expect(equipmentById("item:laniakeas-spear")?.passiveIds).toContain("laniakea-weapon-poison");
+  });
 });
 
 describe("presentPassive parity", () => {

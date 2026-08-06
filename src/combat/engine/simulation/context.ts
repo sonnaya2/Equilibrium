@@ -21,7 +21,7 @@ import type {
   CastRng,
   SimulateOptions,
 } from "./contracts";
-import { advanceToBranches } from "./lengLandBranch";
+import { advanceToBranches } from "./landBranch";
 import { combineBranchSummaries } from "./summary";
 
 /**

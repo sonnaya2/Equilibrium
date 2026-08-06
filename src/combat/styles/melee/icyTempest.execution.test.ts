@@ -3,7 +3,7 @@ import { createRuntime } from "../../engine/runtime/runtime";
 import { patchMelee, patchTarget } from "../../engine/runtime/state";
 import { resolveCastHit } from "../../engine/resolution";
 import { castOutcomes, planCastOutcomes } from "../../engine/simulation/branch";
-import { commitCastBranches } from "../../engine/simulation/lengLandBranch";
+import { commitCastBranches } from "../../engine/simulation/landBranch";
 import { activeEquipmentEffects } from "../../shared/equipment";
 import { baseInput } from "../../test/fixtures/inputs";
 import { MELEE_ABILITIES } from "./abilities";

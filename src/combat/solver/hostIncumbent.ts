@@ -91,6 +91,7 @@ export function evaluateHostIncumbentBaseline(
     league,
     context: simBase.context,
     targetHpPercent: simBase.targetHpPercent,
+    playerPoison: simBase.playerPoison,
     cap: simBase.cap,
     modifiers,
   };

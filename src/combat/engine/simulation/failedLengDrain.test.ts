@@ -11,7 +11,7 @@ import { createRuntime } from "../runtime/runtime";
 import { baseInput } from "../../test/fixtures/inputs";
 import { capBranches, snapshotRuntime, type Branch } from "./branchCore";
 import { rotationOf } from "./contracts";
-import { drainBranchToEnd, expandLengOnLand } from "./lengLandBranch";
+import { drainBranchToEnd, expandLengOnLand } from "./landBranch";
 import { simulate } from "./simulate";
 import { isNearOne, PROB_TOLERANCE } from "./stats";
 import { combineBranchSummaries, finish } from "./summary";

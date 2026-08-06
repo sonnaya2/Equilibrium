@@ -158,6 +158,7 @@ export function SetupTab({ loadout, setLoadout }: { loadout: Loadout; setLoadout
     { label: "Bonfire", value: life.bonfire },
     { label: "Totem of Vitality", value: life.totemOfVitality },
     { label: "Big Boned", value: life.leagueMaximumNormal + life.leagueMaximumTemporary },
+    { label: "Havoc Born", value: life.finalMaximumNormal + life.finalMaximumTemporary },
     { label: "Powerburst of vitality", value: life.powerburst },
   ];
 

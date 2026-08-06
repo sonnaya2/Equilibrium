@@ -51,8 +51,10 @@ export interface DefenceInput {
   prayerBlockLevels?: number;
   /** Fortitude's 15% block-calculation Defence boost. */
   fortitude?: boolean;
-  /** Summed equipment Armour from the canonical equipment aggregation. */
+  /** Summed raw equipment Armour from the canonical equipment aggregation. */
   equipmentArmour?: number;
+  /** Final Total Armor Value multiplier; raw equipment data stays unchanged. */
+  armourMultiplier?: number;
 }
 
 export interface DefenceStats {
@@ -81,6 +83,7 @@ export function defenceStats(input: DefenceInput): DefenceStats {
     prayerBlockLevels = 0,
     fortitude = false,
     equipmentArmour = 0,
+    armourMultiplier = 1,
   } = input;
   if (!Number.isFinite(baseLevel) || baseLevel < 1 || baseLevel > MAX_DEFENCE_LEVEL) {
     throw new RangeError(`defenceStats: bad base level ${baseLevel}`);
@@ -91,6 +94,9 @@ export function defenceStats(input: DefenceInput): DefenceStats {
   if (!Number.isFinite(equipmentArmour) || equipmentArmour < 0) {
     throw new RangeError(`defenceStats: bad equipment armour ${equipmentArmour}`);
   }
+  if (!Number.isFinite(armourMultiplier) || armourMultiplier <= 0) {
+    throw new RangeError(`defenceStats: bad armour multiplier ${armourMultiplier}`);
+  }
   if (fortitude && prayerBlockLevels > 0) {
     throw new RangeError("defenceStats: Fortitude and stat-boosting curses are incompatible");
   }
@@ -100,6 +106,8 @@ export function defenceStats(input: DefenceInput): DefenceStats {
     ? visibleLevel * FORTITUDE_BLOCK_MULTIPLIER
     : visibleLevel + prayerBlockLevels;
   const blockLevelArmour = accuracyCurve(blockLevel);
+  const resolvedTotalArmour =
+    equipmentArmour + Math.floor(equipmentArmour * (armourMultiplier - 1));
   return {
     baseLevel,
     potionBoost,
@@ -108,8 +116,8 @@ export function defenceStats(input: DefenceInput): DefenceStats {
     fortitude,
     blockLevel,
     equipmentArmour,
-    totalArmour: equipmentArmour,
+    totalArmour: resolvedTotalArmour,
     blockLevelArmour,
-    blockArmourRating: Math.floor(equipmentArmour + blockLevelArmour),
+    blockArmourRating: Math.floor(resolvedTotalArmour + blockLevelArmour),
   };
 }

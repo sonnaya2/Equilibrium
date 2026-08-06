@@ -1,16 +1,9 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { Cinzel } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/Nav";
 import { ShareImport } from "@/components/ShareImport";
-
-const cinzel = Cinzel({
-  subsets: ["latin"],
-  variable: "--font-cinzel",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
@@ -23,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={cinzel.variable}>
+    <html lang="en">
       <body className="flex min-h-screen flex-col font-sans antialiased">
         <a
           href="#main"

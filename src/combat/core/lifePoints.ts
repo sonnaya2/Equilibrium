@@ -63,6 +63,8 @@ export interface LifePointInput {
   powerburstOfVitality?: boolean;
   /** Equilibrium maximum-life stage (1 when no blessing is active). */
   maximumLifeMultiplier?: number;
+  /** Final derived maximum-life stage (1 when no final reduction is active). */
+  finalMaximumLifeMultiplier?: number;
   /** Defaults to the (temporary) maximum - a fully healed loadout. */
   currentLife?: number;
 }
@@ -99,6 +101,8 @@ export interface LifePointStats {
     powerburst: number;
     leagueMaximumNormal: number;
     leagueMaximumTemporary: number;
+    finalMaximumNormal: number;
+    finalMaximumTemporary: number;
   };
 }
 
@@ -110,6 +114,7 @@ export function lifePointStats(input: LifePointInput): LifePointStats {
     overheal = null,
     currentLife,
     maximumLifeMultiplier = 1,
+    finalMaximumLifeMultiplier = 1,
   } = input;
   if (
     !Number.isFinite(constitutionLevel) ||
@@ -121,8 +126,13 @@ export function lifePointStats(input: LifePointInput): LifePointStats {
   if (!Number.isFinite(equipmentLife) || equipmentLife < 0) {
     throw new RangeError(`lifePointStats: bad equipment life ${equipmentLife}`);
   }
-  if (!Number.isFinite(maximumLifeMultiplier) || maximumLifeMultiplier < 1) {
+  if (!Number.isFinite(maximumLifeMultiplier) || maximumLifeMultiplier <= 0) {
     throw new RangeError(`lifePointStats: bad maximum-life multiplier ${maximumLifeMultiplier}`);
+  }
+  if (!Number.isFinite(finalMaximumLifeMultiplier) || finalMaximumLifeMultiplier <= 0) {
+    throw new RangeError(
+      `lifePointStats: bad final maximum-life multiplier ${finalMaximumLifeMultiplier}`,
+    );
   }
   if (bonfireFiremakingLevel != null && input.totemOfVitality) {
     throw new RangeError("lifePointStats: bonfire and Totem of Vitality do not stack");
@@ -165,11 +175,16 @@ export function lifePointStats(input: LifePointInput): LifePointStats {
   const permanentLife = reaperCrewLife + boonOfHetLife + fontOfLife + totemOfVitalityLife;
   const baseNormalMaxLife = constitutionLife + equipmentLife + permanentLife;
   const leagueMaximumNormal = Math.floor(baseNormalMaxLife * (maximumLifeMultiplier - 1));
-  const normalMaxLife = baseNormalMaxLife + leagueMaximumNormal;
+  const normalBeforeFinal = baseNormalMaxLife + leagueMaximumNormal;
+  const finalMaximumNormal = Math.floor(normalBeforeFinal * (finalMaximumLifeMultiplier - 1));
+  const normalMaxLife = normalBeforeFinal + finalMaximumNormal;
   const baseTemporaryMaxLife = baseNormalMaxLife + temporaryFlatLife + bonfireLife;
   const leagueMaximumTotal = Math.floor(baseTemporaryMaxLife * (maximumLifeMultiplier - 1));
   const leagueMaximumTemporary = leagueMaximumTotal - leagueMaximumNormal;
-  let temporaryMaxLife = baseTemporaryMaxLife + leagueMaximumTotal;
+  const temporaryBeforeFinal = baseTemporaryMaxLife + leagueMaximumTotal;
+  const finalMaximumTotal = Math.floor(temporaryBeforeFinal * (finalMaximumLifeMultiplier - 1));
+  const finalMaximumTemporary = finalMaximumTotal - finalMaximumNormal;
+  let temporaryMaxLife = temporaryBeforeFinal + finalMaximumTotal;
   let overhealCeiling =
     overheal === "rocktail-line"
       ? temporaryMaxLife + Math.floor(0.1 * normalMaxLife)
@@ -220,6 +235,8 @@ export function lifePointStats(input: LifePointInput): LifePointStats {
       powerburst: powerburstLife,
       leagueMaximumNormal,
       leagueMaximumTemporary,
+      finalMaximumNormal,
+      finalMaximumTemporary,
     },
   };
 }

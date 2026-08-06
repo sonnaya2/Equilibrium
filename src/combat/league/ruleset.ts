@@ -192,11 +192,31 @@ export function aegisArmourBonus(
 }
 
 export function blessingLifeMultiplier(loadout: LeagueLoadout): number {
-  return (
-    activeBlessings(loadout.ruleset === "equilibrium" ? (loadout.blessingPicks ?? []) : []).find(
-      (choice) => choice.id === "big-boned",
-    )?.combat.maximumLifeMultiplier ?? 1
+  return activeBlessings(
+    loadout.ruleset === "equilibrium" ? (loadout.blessingPicks ?? []) : [],
+  ).reduce(
+    (multiplier, choice) => multiplier * Math.max(1, choice.combat.maximumLifeMultiplier ?? 1),
+    1,
   );
+}
+
+export function blessingFinalLifeMultiplier(loadout: LeagueLoadout): number {
+  return activeBlessings(
+    loadout.ruleset === "equilibrium" ? (loadout.blessingPicks ?? []) : [],
+  ).reduce(
+    (multiplier, choice) =>
+      multiplier *
+      (choice.combat.maximumLifeMultiplier != null && choice.combat.maximumLifeMultiplier < 1
+        ? choice.combat.maximumLifeMultiplier
+        : 1),
+    1,
+  );
+}
+
+export function blessingArmourMultiplier(loadout: LeagueLoadout): number {
+  return activeBlessings(
+    loadout.ruleset === "equilibrium" ? (loadout.blessingPicks ?? []) : [],
+  ).reduce((multiplier, choice) => multiplier * (choice.combat.armourMultiplier ?? 1), 1);
 }
 
 export function resolveMaximumAdrenaline(
@@ -284,6 +304,25 @@ export function leagueModifiers(rules: ResolvedLeagueRules | undefined): CombatM
         ),
       }),
       source: splash.source,
+    });
+  }
+  const havoc = byId.get("havoc-born");
+  if (havoc?.combat.damageMultiplier !== undefined) {
+    modifiers.push({
+      id: "blessing:havoc-born",
+      stage: "postHit",
+      priority: 920,
+      applies: (context) => context.ruleset === "equilibrium",
+      apply: (state) => ({
+        ...state,
+        damage:
+          state.damage +
+          Math.floor(
+            state.damage * (havoc.combat.damageMultiplier! - 1) +
+              Number.EPSILON * Math.max(1, Math.abs(state.damage)),
+          ),
+      }),
+      source: havoc.source,
     });
   }
   return modifiers;

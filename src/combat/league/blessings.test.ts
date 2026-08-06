@@ -1,16 +1,19 @@
 import { describe, expect, it } from "vitest";
-import type { BlessingPath } from "../../league/blessings";
+import { blessingChoice, type BlessingPath } from "../../league/blessings";
 import { createCastContext, simulate } from "../engine/simulation/simulate";
 import { rotationOf } from "../engine/simulation/contracts";
 import { MAGIC_ABILITIES } from "../styles/magic/abilities";
 import { baseInput } from "../test/fixtures/inputs";
 import { calculateLeagueAbility } from "./damage";
 import {
+  blessingArmourMultiplier,
   blessingAdrenalineGenerationMultiplier,
+  blessingFinalLifeMultiplier,
   blessingLifeMultiplier,
   leagueModifiers,
   resolveLeagueRules,
 } from "./ruleset";
+import { runPipeline } from "../pipeline/modifierPipeline";
 
 const rules = (
   blessingPicks: readonly BlessingPath[],
@@ -209,5 +212,87 @@ describe("Equilibrium blessing combat rules", () => {
       terminalClasses: 2,
       representativeClassWeight: 0.95,
     });
+  });
+});
+
+describe("Havoc Born", () => {
+  const picks = ["Order", "Balance", "Balance", "Chaos"] as const;
+
+  it("is the Chaos tier-5 choice with sourced combat parameters", () => {
+    expect(blessingChoice(5, "Chaos")).toMatchObject({
+      id: "havoc-born",
+      name: "Havoc Born",
+      path: "Chaos",
+      source: { url: "https://runescape.wiki/w/Special:PermanentLink/37141126" },
+      combat: { damageMultiplier: 1.2, maximumLifeMultiplier: 0.75, armourMultiplier: 0.75 },
+    });
+  });
+
+  it("uses one shared damage modifier across outgoing provenance kinds", () => {
+    const league = rules(picks);
+    const modifier = leagueModifiers(league).find((entry) => entry.id === "blessing:havoc-born")!;
+    expect(modifier.stage).toBe("postHit");
+    const applicable = [
+      "player_direct",
+      "player_dot",
+      "conjure_auto",
+      "conjure_poison",
+      "conjure_command",
+      "equipment_proc",
+      "invention_proc",
+      "attached",
+      "reflected",
+      "blessing",
+    ] as const;
+    for (const kind of applicable) {
+      expect(
+        modifier.applies({ style: "melee", ruleset: "equilibrium", provenance: { kind } }),
+      ).toBe(true);
+    }
+    expect(
+      modifier.apply({ damage: 1_000 }, { style: "melee", ruleset: "equilibrium" }).damage,
+    ).toBe(1_200);
+  });
+
+  it("stacks with another outgoing modifier in pipeline order", () => {
+    const league = rules(["Balance", "Balance", "Chaos", "Chaos"], { targetTiles: 2 });
+    const result = runPipeline({ damage: 1_000 }, leagueModifiers(league), {
+      style: "magic",
+      ruleset: "equilibrium",
+      area: "aoe",
+    });
+    expect(result.damage).toBe(1_680);
+  });
+
+  it("changes simulation damage while disabled or switched off", () => {
+    const attack = baseInput.abilities.find((ability) => ability.id === "attack")!;
+    const league = rules(picks);
+    const input = {
+      ...baseInput,
+      rules: league,
+      context: { style: "melee" as const, ruleset: "equilibrium" as const },
+    };
+    const plain = calculateLeagueAbility(attack, { ...input, modifiers: [] });
+    const havoc = calculateLeagueAbility(attack, {
+      ...input,
+      modifiers: leagueModifiers(league),
+    });
+    expect(plain.expected).toBe(1_200);
+    expect(havoc.expected).toBeCloseTo(1_440, 0);
+    expect(leagueModifiers(rules(["Order", "Balance", "Balance", "Order"]))).not.toEqual(
+      expect.arrayContaining([expect.objectContaining({ id: "blessing:havoc-born" })]),
+    );
+  });
+
+  it("keeps Havoc Born as a final life stage beside positive life blessings", () => {
+    const loadout = {
+      ruleset: "equilibrium" as const,
+      blessingPicks: ["Balance", "Balance", "Chaos", "Chaos"] as const,
+    };
+    expect(blessingLifeMultiplier(loadout)).toBe(1.5);
+    expect(blessingFinalLifeMultiplier(loadout)).toBe(0.75);
+    expect(blessingArmourMultiplier(loadout)).toBe(0.75);
+    expect(blessingLifeMultiplier({ ruleset: "base", blessingPicks: picks })).toBe(1);
+    expect(blessingArmourMultiplier({ ruleset: "base", blessingPicks: picks })).toBe(1);
   });
 });

@@ -99,7 +99,9 @@ import {
 } from "@/combat/shared/equipmentStats";
 import {
   aegisArmourBonus,
+  blessingArmourMultiplier,
   blessingAdrenalineGenerationMultiplier,
+  blessingFinalLifeMultiplier,
   blessingLifeMultiplier,
   blessingRule,
   effectiveTargetAffinity,
@@ -404,6 +406,7 @@ export function resolveDefenceLife(
     prayerBlockLevels: levels.curse?.defenceLevels ?? 0,
     fortitude: loadout.buffs.fortitude,
     equipmentArmour: equipment.equipmentStats.armour,
+    armourMultiplier: blessingArmourMultiplier(leagueLoadout),
   });
   const powerburstActive = isPowerburstOfVitalityActive(loadout, now);
   const lifeInputBase = {
@@ -418,6 +421,7 @@ export function resolveDefenceLife(
     totemOfVitality: loadout.buffs.totemOfVitality,
     overheal: loadout.buffs.overheal === "none" ? null : loadout.buffs.overheal,
     maximumLifeMultiplier: blessingLifeMultiplier(leagueLoadout),
+    finalMaximumLifeMultiplier: blessingFinalLifeMultiplier(leagueLoadout),
   } as const;
   // Absolute currentLife wins; otherwise derive from shared currentHealthPercent of undoubled max.
   const undoubledMax = lifePointStats({

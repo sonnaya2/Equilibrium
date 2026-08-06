@@ -65,7 +65,9 @@ export interface BlessingCombatRules {
   baseAbilityDamageArmourPercent?: number;
   defenderArmourMultiplier?: number;
   shieldArmourMultiplier?: number;
+  damageMultiplier?: number;
   maximumLifeMultiplier?: number;
+  armourMultiplier?: number;
   maxLifeDamagePercent?: number;
   maximumAdrenaline?: number;
   adrenalineGenerationMultiplier?: number;

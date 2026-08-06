@@ -1,5 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 import { baseAbilityDamage } from "@/combat/core/abilityDamage";
+import { simulate } from "@/combat/engine/simulation/simulate";
+import { rotationOf } from "@/combat/engine/simulation/contracts";
+import { MELEE_ABILITIES } from "@/combat/styles/melee/abilities";
+import { baseInput } from "@/combat/test/fixtures/inputs";
 import { runPipeline } from "@/combat/pipeline/modifierPipeline";
 import { sumNonWeaponAccuracy } from "@/combat/shared/equipment";
 import { equilibriumDamageBonus } from "@/combat/shared/perks";
@@ -1040,6 +1044,47 @@ describe("loadoutStats", () => {
       expect(
         loadoutStats(base, { blessingPicks: ["Chaos", "Balance", "Balance"] }).maxAdrenaline,
       ).toBe(150);
+    });
+
+    it("applies Havoc Born to final displayed stats and the simulator state", () => {
+      const loadout: Loadout = {
+        ...base,
+        equipmentSlots: { body: "mock:defence-body" },
+      };
+      const plain = loadoutStats(loadout);
+      const havoc = loadoutStats(loadout, {
+        blessingPicks: ["Chaos", "Balance", "Balance", "Chaos"],
+      });
+      expect(havoc.equipment.armour).toBe(500);
+      expect(havoc.defence.equipmentArmour).toBe(500);
+      expect(havoc.defence.totalArmour).toBe(375);
+      expect(havoc.defence.blockArmourRating).toBe(
+        Math.floor(375 + havoc.defence.blockLevelArmour),
+      );
+      expect(havoc.life.normalMaxLife).toBe(8_175);
+      expect(havoc.life.temporaryMaxLife).toBe(8_175);
+      expect(havoc.league).toMatchObject({ totalArmour: 375, maximumLife: 8_175 });
+
+      const attack = MELEE_ABILITIES.find((ability) => ability.id === "attack")!;
+      const run = (stats: typeof havoc) =>
+        simulate({
+          ...baseInput,
+          rotation: rotationOf("attack"),
+          modifiers: stats.globalModifiers,
+          context: stats.combatContext,
+        });
+      expect(run(plain).totalExpected).toBe(1_200);
+      expect(run(havoc).totalExpected).toBeCloseTo(1_440, 0);
+      expect(havoc.castModifiersFor(attack)).toEqual(
+        expect.arrayContaining([expect.objectContaining({ id: "blessing:havoc-born" })]),
+      );
+
+      const bigHavoc = loadoutStats(base, {
+        blessingPicks: ["Balance", "Order", "Order", "Chaos"],
+      });
+      expect(bigHavoc.life.normalMaxLife).toBe(11_137);
+      expect(bigHavoc.life.breakdown.leagueMaximumNormal).toBe(4_950);
+      expect(bigHavoc.life.breakdown.finalMaximumNormal).toBe(-3_713);
     });
 
     it("boosts Defence through the overload formula", () => {

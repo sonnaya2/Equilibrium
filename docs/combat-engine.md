@@ -178,6 +178,12 @@ Current cast RNG points include `impatient`, `relentless`, `avernic-rampage` (`C
 - `resolve` closures stay out of the key; equivalent branches schedule identical events from identical casts.
 - Seeded Monte Carlo only when exact branching is unreasonably expensive; method and assumptions appear in result metadata and tests.
 
+### Analysis count semantics
+
+Every count in `analysis.byEffect` is a conditional expected value over expanded concrete terminal mass: `expectedCasts`, `expectedTriggerRolls`, `expectedActivations`, `expectedSeparateHits`, and `expectedAttachedComponents`. Residual mass is not assigned counts. These values may be fractional after branch weighting or deterministic expected-value packing.
+
+`summary.casts` and `summary.events` are concrete arrays from the complete history or one representative terminal class. Their array lengths are integers and must not be used to reconstruct or reconcile the weighted analysis ledger when `history.eventsReconcileWithWeightedTotals` is false.
+
 ## Resource clocks and lockouts
 
 A timed resource owns its full lifecycle in one place (stacks/charges, free-cast window, rebuild lockout, expiration tick, provenance). Clocks are checked **after** canonical advancement. Spend/conversion/lockout start are atomic. Stack generation during a sourced lockout is rejected by the state helper.

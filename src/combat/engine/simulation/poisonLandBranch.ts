@@ -39,15 +39,15 @@ function expandApplication(
   atTick: number,
   source: PoisonApplicationSnapshot,
 ): BranchSet {
-  recordPlayerPoisonApplication(branch.rt, false);
+  recordPlayerPoisonApplication(branch.rt, "attempt");
   const chance = source.procChance;
   if (chance >= 1) {
-    recordPlayerPoisonApplication(branch.rt, true);
+    recordPlayerPoisonApplication(branch.rt, "success");
     applyPlayerPoison(branch.rt, atTick, source);
     return exact([branch]);
   }
   const success = snapshotRuntime(branch.rt);
-  recordPlayerPoisonApplication(success, true);
+  recordPlayerPoisonApplication(success, "success");
   applyPlayerPoison(success, atTick, source);
   return exact([
     { ...branch, weight: branch.weight * (1 - chance) },

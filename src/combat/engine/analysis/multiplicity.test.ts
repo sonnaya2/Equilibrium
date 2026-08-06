@@ -37,10 +37,10 @@ const bigBoned = () =>
 describe("resolveEventMultiplicity defaults", () => {
   it("treats an ordinary deterministic direct hit as one separate hit, no rolls", () => {
     expect(resolveEventMultiplicity(event({}))).toEqual({
-      triggerRolls: 0,
+      expectedTriggerRolls: 0,
       expectedActivations: 1,
       expectedSeparateHits: 1,
-      attachedComponents: 0,
+      expectedAttachedComponents: 0,
     });
   });
 
@@ -54,14 +54,14 @@ describe("resolveEventMultiplicity defaults", () => {
           expectedOccurrences: 1,
           expectedActivations: 1,
           expectedSeparateHits: 0,
-          triggerRolls: 0,
+          expectedTriggerRolls: 0,
         }),
       ),
     ).toEqual({
-      triggerRolls: 0,
+      expectedTriggerRolls: 0,
       expectedActivations: 1,
       expectedSeparateHits: 0,
-      attachedComponents: 1,
+      expectedAttachedComponents: 1,
     });
   });
 
@@ -72,25 +72,25 @@ describe("resolveEventMultiplicity defaults", () => {
           family: "blessing",
           abilityId: "inferno-of-zamorak",
           expectedOccurrences: 0.05 / 0.95,
-          triggerRolls: 1 / 0.95,
+          expectedTriggerRolls: 1 / 0.95,
           expectedActivations: 0.05 / 0.95,
           expectedSeparateHits: 0.05 / 0.95,
         }),
       ),
     ).toEqual({
-      triggerRolls: 1 / 0.95,
+      expectedTriggerRolls: 1 / 0.95,
       expectedActivations: 0.05 / 0.95,
       expectedSeparateHits: 0.05 / 0.95,
-      attachedComponents: 0,
+      expectedAttachedComponents: 0,
     });
   });
 
   it("legacy chance-weighted EV still implies one trigger roll", () => {
     expect(resolveEventMultiplicity(event({ expectedOccurrences: 0.05 }))).toEqual({
-      triggerRolls: 1,
+      expectedTriggerRolls: 1,
       expectedActivations: 0.05,
       expectedSeparateHits: 0.05,
-      attachedComponents: 0,
+      expectedAttachedComponents: 0,
     });
   });
 });
@@ -105,10 +105,10 @@ describe("scheduled hit multiplicity and origin provenance", () => {
     expect(hits).toHaveLength(1);
     expect(hits[0]!.originKind).toBe("direct");
     expect(resolveEventMultiplicity(hits[0]!)).toMatchObject({
-      triggerRolls: 0,
+      expectedTriggerRolls: 0,
       expectedActivations: 1,
       expectedSeparateHits: 1,
-      attachedComponents: 0,
+      expectedAttachedComponents: 0,
     });
   });
 
@@ -143,13 +143,13 @@ describe("scheduled hit multiplicity and origin provenance", () => {
       expect(rider.damageTag).toBe("bonus-damage");
       expect(rider.originKind).toBe("direct");
       expect(rider.expectedSeparateHits).toBe(0);
-      expect(rider.triggerRolls).toBe(0);
+      expect(rider.expectedTriggerRolls).toBe(0);
       expect(rider.expectedActivations).toBe(1);
       expect(resolveEventMultiplicity(rider)).toEqual({
-        triggerRolls: 0,
+        expectedTriggerRolls: 0,
         expectedActivations: 1,
         expectedSeparateHits: 0,
-        attachedComponents: 1,
+        expectedAttachedComponents: 1,
       });
     }
     const bb = summary.analysis.byEffect.find((row) => row.id === "big-boned");
@@ -174,21 +174,21 @@ describe("scheduled hit multiplicity and origin provenance", () => {
     expect(riders).toHaveLength(7);
     expect(infernos).toHaveLength(7);
 
-    let triggerRolls = 0;
+    let expectedTriggerRolls = 0;
     let activations = 0;
     let separateHits = 0;
     for (const inferno of infernos) {
       expect(inferno.attached).toBe(false);
-      expect(inferno.triggerRolls).toBeCloseTo(1 / 0.95, 10);
+      expect(inferno.expectedTriggerRolls).toBeCloseTo(1 / 0.95, 10);
       expect(inferno.expectedActivations).toBeCloseTo(0.05 / 0.95, 10);
       expect(inferno.expectedSeparateHits).toBeCloseTo(0.05 / 0.95, 10);
       expect(inferno.originKind).toBe("blessing");
       const mult = resolveEventMultiplicity(inferno);
-      triggerRolls += mult.triggerRolls;
+      expectedTriggerRolls += mult.expectedTriggerRolls;
       activations += mult.expectedActivations;
       separateHits += mult.expectedSeparateHits;
     }
-    expect(triggerRolls).toBeCloseTo(7 / 0.95, 10);
+    expect(expectedTriggerRolls).toBeCloseTo(7 / 0.95, 10);
     expect(activations).toBeCloseTo((7 * 0.05) / 0.95, 10);
     expect(separateHits).toBeCloseTo((7 * 0.05) / 0.95, 10);
 
@@ -199,10 +199,14 @@ describe("scheduled hit multiplicity and origin provenance", () => {
       expect(resolveEventMultiplicity(rider)).toMatchObject({
         expectedActivations: 1 / 0.95,
         expectedSeparateHits: 0,
-        attachedComponents: 1 / 0.95,
+        expectedAttachedComponents: 1 / 0.95,
       });
       expect(infernoSeqs.has(rider.derivedFrom ?? -1)).toBe(false);
     }
+    const cindersRow = summary.analysis.byEffect.find((row) => row.id === "abyssal-cinders");
+    const gr = summary.analysis.byEffect.find((row) => row.id === "greater_ricochet");
+    expect(cindersRow?.bonusDamage).toBe(0);
+    expect(gr?.bonusDamage).toBeCloseTo(cindersRow?.totalDamage ?? 0, 6);
   });
 
   it("DoT rider preserves originKind 'dot' from the parent bleed tick", () => {

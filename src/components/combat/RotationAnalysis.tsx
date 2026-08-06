@@ -50,11 +50,6 @@ const formatNumber = (value: number) =>
 /** Expected activations/hits; keep fractional weight (never round 0.35 → 0). */
 const formatExpected = (value: number) =>
   new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(value);
-/** Casts / trigger rolls / attached counts; integers when whole. */
-const formatLiteral = (value: number) =>
-  new Intl.NumberFormat("en-US", {
-    maximumFractionDigits: Number.isInteger(value) ? 0 : 2,
-  }).format(value);
 const formatPercent = (value: number) => `${(value * 100).toFixed(1)}%`;
 
 function effectName(id: string, nameForId: (id: string) => string): string {
@@ -117,11 +112,11 @@ function parentEffectLabel(
 
 type EffectColumnId =
   | "bonusDamage"
-  | "casts"
-  | "triggerRolls"
+  | "expectedCasts"
+  | "expectedTriggerRolls"
   | "expectedActivations"
   | "expectedSeparateHits"
-  | "attachedComponents"
+  | "expectedAttachedComponents"
   | "averagePerActivation"
   | "capLoss";
 
@@ -147,20 +142,20 @@ const EFFECT_COLUMNS: readonly {
     format: (row) => (row.bonusDamage !== 0 ? formatNumber(row.bonusDamage) : "–"),
   },
   {
-    id: "casts",
-    label: "Casts",
-    title: "Distinct owning casts for this effect",
+    id: "expectedCasts",
+    label: "Expected casts",
+    title: "Probability-weighted owning casts for this effect",
     align: "right",
-    showIf: (row) => row.casts !== 0,
-    format: (row) => formatLiteral(row.casts),
+    showIf: (row) => row.expectedCasts !== 0,
+    format: (row) => formatExpected(row.expectedCasts),
   },
   {
-    id: "triggerRolls",
-    label: "Trigger rolls",
-    title: "Probability rolls that produced expected activations",
+    id: "expectedTriggerRolls",
+    label: "Expected trigger rolls",
+    title: "Probability-weighted proc rolls represented by this effect",
     align: "right",
-    showIf: (row) => row.triggerRolls !== 0,
-    format: (row) => formatLiteral(row.triggerRolls),
+    showIf: (row) => row.expectedTriggerRolls !== 0,
+    format: (row) => formatExpected(row.expectedTriggerRolls),
   },
   {
     id: "expectedActivations",
@@ -179,12 +174,12 @@ const EFFECT_COLUMNS: readonly {
     format: (row) => formatExpected(row.expectedSeparateHits),
   },
   {
-    id: "attachedComponents",
-    label: "Attached",
-    title: "Bonus damage components added to another hit",
+    id: "expectedAttachedComponents",
+    label: "Expected attached",
+    title: "Probability-weighted bonus damage components added to another hit",
     align: "right",
-    showIf: (row) => row.attachedComponents !== 0,
-    format: (row) => formatLiteral(row.attachedComponents),
+    showIf: (row) => row.expectedAttachedComponents !== 0,
+    format: (row) => formatExpected(row.expectedAttachedComponents),
   },
   {
     id: "averagePerActivation",

@@ -179,7 +179,7 @@ export function scheduleBlessingDamage(
       originKind: componentOrigin,
       provenance: { kind: "blessing", detail: component.effectId },
       expectedOccurrences: component.expectedOccurrences * parentWeight,
-      triggerRolls: component.triggerRolls,
+      expectedTriggerRolls: component.expectedTriggerRolls * parentWeight,
       expectedActivations: component.expectedActivations * parentWeight,
       expectedSeparateHits: component.expectedSeparateHits * parentWeight,
       resolve: () => ({

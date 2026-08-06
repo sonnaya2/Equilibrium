@@ -34,6 +34,7 @@ describe("blessing damage component reuse", () => {
       attached: false,
       procEligible: true,
       recursionAllowed: false,
+      expectedActivations: 0.25,
       provenance: { kind: "player_direct" },
       resolve: () => ({ damage: { min: 0, max: 0, expected: 0 } }),
     };
@@ -44,6 +45,10 @@ describe("blessing damage component reuse", () => {
       resetHitPipelineCounters();
       scheduleBlessingDamage(rt, event, damage);
       expect(snapshotHitPipelineCounters().hitExpectationCalls).toBeGreaterThan(0);
+      expect(
+        rt.queue.pending().find((pending) => pending.abilityId === "inferno-of-zamorak")
+          ?.expectedTriggerRolls,
+      ).toBeCloseTo(5 / 19, 10);
 
       resetHitPipelineCounters();
       scheduleBlessingDamage(rt, event, damage);

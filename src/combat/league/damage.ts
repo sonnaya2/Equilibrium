@@ -35,8 +35,8 @@ export interface LeagueDamageComponent {
   bonusTargetId?: string;
   /** Legacy application weight; kept for older consumers and EV packing. */
   expectedOccurrences: number;
-  /** Probability rolls this component represents (Inferno 5% = 1). */
-  triggerRolls: number;
+  /** Expected proc rolls this component represents (Inferno 5% = 1). */
+  expectedTriggerRolls: number;
   /** Expected activations (0.05 for one 5% roll; 1 for a deterministic rider). */
   expectedActivations: number;
   /** Expected separate hits; 0 when attached. */
@@ -281,7 +281,7 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
         damageTag: "bonus-damage",
         ...(bonusTargetId ? { bonusTargetId } : {}),
         expectedOccurrences: activations,
-        triggerRolls: 0,
+        expectedTriggerRolls: 0,
         expectedActivations: activations,
         expectedSeparateHits: 0,
         damage: weightedDamage(hit, activations, minActivations, maxActivations, true),
@@ -325,7 +325,7 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
       attached: true,
       damageTag: "bonus-damage",
       expectedOccurrences: cindersRiderActivations,
-      triggerRolls: 0,
+      expectedTriggerRolls: 0,
       expectedActivations: cindersRiderActivations,
       expectedSeparateHits: 0,
       damage: weightedDamage(
@@ -355,7 +355,7 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
       blessingId: "abyssal-cinders",
       attached: false,
       expectedOccurrences: infernoActivations,
-      triggerRolls: recursiveFactor,
+      expectedTriggerRolls: recursiveFactor,
       expectedActivations: infernoActivations,
       expectedSeparateHits: infernoActivations,
       damage: weightedDamage(hit, infernoActivations, 0, recursiveFactor),
@@ -379,7 +379,7 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
       blessingId: "striking-light",
       attached: false,
       expectedOccurrences: 1,
-      triggerRolls: 0,
+      expectedTriggerRolls: 0,
       expectedActivations: 1,
       expectedSeparateHits: 1,
       damage: damageOf(hit),
@@ -441,7 +441,7 @@ export function graspOfGuthixComponent(
     blessingId: "barkscales",
     attached: false,
     expectedOccurrences: applications,
-    triggerRolls: 0,
+    expectedTriggerRolls: 0,
     expectedActivations: applications,
     expectedSeparateHits: applications,
     damage: {

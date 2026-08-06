@@ -188,7 +188,7 @@ describe("branch equivalence signature", () => {
       { cancelOwner: 0 },
       { derivedFrom: 0 },
       { originKind: "dot" },
-      { triggerRolls: 1 },
+      { expectedTriggerRolls: 1 },
       { expectedActivations: 0.05 },
       { expectedSeparateHits: 1 },
       { damageTag: "bonus-damage" },

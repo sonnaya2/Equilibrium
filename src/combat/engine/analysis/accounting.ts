@@ -41,11 +41,11 @@ function emptyLedger(id: string, kind: DamageSourceKind): EffectAnalysisLedger {
     dotDamage: 0,
     criticalContribution: 0,
     capLoss: 0,
-    casts: 0,
-    triggerRolls: 0,
+    expectedCasts: 0,
+    expectedTriggerRolls: 0,
     expectedActivations: 0,
     expectedSeparateHits: 0,
-    attachedComponents: 0,
+    expectedAttachedComponents: 0,
     bonusDamage: 0,
   };
 }
@@ -100,10 +100,10 @@ export function accountAnalysisEvent(
   ledger.dotDamage += asDotLedger ? expected : 0;
   ledger.criticalContribution += crit;
   ledger.capLoss += cap;
-  ledger.triggerRolls += mult.triggerRolls;
+  ledger.expectedTriggerRolls += mult.expectedTriggerRolls;
   ledger.expectedActivations += mult.expectedActivations;
   ledger.expectedSeparateHits += mult.expectedSeparateHits;
-  ledger.attachedComponents += mult.attachedComponents;
+  ledger.expectedAttachedComponents += mult.expectedAttachedComponents;
   // Attribute bonus damage to its parent effect; packed blessing chains name it explicitly.
   if (event.damageTag === "bonus-damage") {
     const parentId = event.bonusTargetId ?? parentAbilityId(rt, event);
@@ -127,7 +127,7 @@ export function accountAnalysisEvent(
     const key = `${event.abilityId}:${event.sourceCast}`;
     if (!analysis.castKeys.has(key)) {
       analysis.castKeys.add(key);
-      ledger.casts += 1;
+      ledger.expectedCasts += 1;
     }
   }
 

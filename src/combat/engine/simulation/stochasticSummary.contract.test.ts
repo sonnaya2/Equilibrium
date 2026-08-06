@@ -40,11 +40,11 @@ function seedRuntime(damage: {
     dotDamage: 0,
     criticalContribution: 0,
     capLoss: 0,
-    casts: 1,
-    triggerRolls: 0,
+    expectedCasts: 1,
+    expectedTriggerRolls: 0,
     expectedActivations: 1,
     expectedSeparateHits: 1,
-    attachedComponents: 0,
+    expectedAttachedComponents: 0,
     bonusDamage: 0,
   });
   if (damage.supportMinOffset !== undefined) {
@@ -302,6 +302,29 @@ describe("stochastic summary contract", () => {
     expect(analysisReconciles(s.analysis, s.totalExpected)).toBe(true);
   });
 
+  it("reports branch-weighted multiplicities as expected values", () => {
+    const low = seedRuntime({ expected: 100, min: 80, max: 120, endTick: 3 });
+    const high = seedRuntime({ expected: 300, min: 240, max: 360, endTick: 3 });
+    high.analysis.effects.get("attack")!.expectedCasts = 2;
+    high.analysis.effects.get("attack")!.expectedTriggerRolls = 3;
+    high.analysis.effects.get("attack")!.expectedAttachedComponents = 4;
+
+    const summary = combineBranchSummaries(
+      [
+        { weight: 0.25, rt: low },
+        { weight: 0.75, rt: high },
+      ],
+      undefined,
+      undefined,
+      true,
+    );
+    expect(summary.analysis.byEffect[0]).toMatchObject({
+      expectedCasts: 1.75,
+      expectedTriggerRolls: 2.25,
+      expectedAttachedComponents: 3,
+    });
+  });
+
   it("11. direct plus DoT damage reconciles", () => {
     const rt = seedRuntime({ expected: 500, min: 400, max: 600, endTick: 10 });
     rt.analysis.directDamage = 300;
@@ -316,11 +339,11 @@ describe("stochastic summary contract", () => {
       dotDamage: 0,
       criticalContribution: 0,
       capLoss: 0,
-      casts: 1,
-      triggerRolls: 0,
+      expectedCasts: 1,
+      expectedTriggerRolls: 0,
       expectedActivations: 1,
       expectedSeparateHits: 1,
-      attachedComponents: 0,
+      expectedAttachedComponents: 0,
       bonusDamage: 0,
     });
     rt.analysis.effects.set("bleed", {
@@ -331,11 +354,11 @@ describe("stochastic summary contract", () => {
       dotDamage: 200,
       criticalContribution: 0,
       capLoss: 0,
-      casts: 1,
-      triggerRolls: 0,
+      expectedCasts: 1,
+      expectedTriggerRolls: 0,
       expectedActivations: 4,
       expectedSeparateHits: 4,
-      attachedComponents: 0,
+      expectedAttachedComponents: 0,
       bonusDamage: 0,
     });
     const s = combineBranchSummaries([{ weight: 1, rt }], undefined, undefined, false);

@@ -12,16 +12,16 @@ export interface EffectAnalysisLedger {
   dotDamage: number;
   criticalContribution: number;
   capLoss: number;
-  /** Distinct owning casts (ability-family events), weight-averaged after merges. */
-  casts: number;
-  /** Probability rolls that produced expected activations (e.g. Inferno 5%). */
-  triggerRolls: number;
+  /** Probability-weighted owning casts (ability-family events). */
+  expectedCasts: number;
+  /** Probability-weighted proc rolls (e.g. Inferno 5%). */
+  expectedTriggerRolls: number;
   /** Probability-weighted times the effect occurs. */
   expectedActivations: number;
   /** Probability-weighted separate hits; attached riders contribute 0. */
   expectedSeparateHits: number;
-  /** Attached bonus components (Big Boned, Cinders rider, …). */
-  attachedComponents: number;
+  /** Probability-weighted attached bonus components (Big Boned, Cinders rider, etc.). */
+  expectedAttachedComponents: number;
   /**
    * Bonus-damage riders attributed onto this parent effect (how much Big Boned
    * added to its damage). Always 0 on the rider's own row - rider Total is the
@@ -42,7 +42,7 @@ export interface RuntimeAnalysisState {
   /**
    * Per-run cast identity for cast-count dedup before any branch merge.
    * Keys are `effectId:sourceCast`. Not part of the merge signature - only the
-   * numeric `casts` field is weight-averaged after merge.
+   * numeric `expectedCasts` field is weight-averaged after merge.
    */
   castKeys: Set<string>;
   /**
@@ -106,11 +106,14 @@ export function mixAnalysisStates(
       dotDamage: mix(left?.dotDamage ?? 0, right?.dotDamage ?? 0),
       criticalContribution: mix(left?.criticalContribution ?? 0, right?.criticalContribution ?? 0),
       capLoss: mix(left?.capLoss ?? 0, right?.capLoss ?? 0),
-      casts: mix(left?.casts ?? 0, right?.casts ?? 0),
-      triggerRolls: mix(left?.triggerRolls ?? 0, right?.triggerRolls ?? 0),
+      expectedCasts: mix(left?.expectedCasts ?? 0, right?.expectedCasts ?? 0),
+      expectedTriggerRolls: mix(left?.expectedTriggerRolls ?? 0, right?.expectedTriggerRolls ?? 0),
       expectedActivations: mix(left?.expectedActivations ?? 0, right?.expectedActivations ?? 0),
       expectedSeparateHits: mix(left?.expectedSeparateHits ?? 0, right?.expectedSeparateHits ?? 0),
-      attachedComponents: mix(left?.attachedComponents ?? 0, right?.attachedComponents ?? 0),
+      expectedAttachedComponents: mix(
+        left?.expectedAttachedComponents ?? 0,
+        right?.expectedAttachedComponents ?? 0,
+      ),
       bonusDamage: mix(left?.bonusDamage ?? 0, right?.bonusDamage ?? 0),
       ...(left?.minimumDamage !== undefined || right?.minimumDamage !== undefined
         ? { minimumDamage: mix(left?.minimumDamage ?? 0, right?.minimumDamage ?? 0) }
@@ -132,7 +135,7 @@ export function mixAnalysisStates(
     dotDamage: mix(a.dotDamage, b.dotDamage),
     criticalContribution: mix(a.criticalContribution, b.criticalContribution),
     capLoss: mix(a.capLoss, b.capLoss),
-    // Post-merge castKeys are unused; numeric casts already mixed.
+    // Post-merge castKeys are unused; expected casts are already mixed.
     castKeys: new Set(),
     // Offsets are set by branch mergePair from path totals after this mix.
     supportMinOffset: a.supportMinOffset,

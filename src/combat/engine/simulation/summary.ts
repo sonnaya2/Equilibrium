@@ -88,7 +88,7 @@ function buildPlayerPoisonAnalysis(
     sourceLabel: poisonLive ? poison.sourceLabel : source.sourceLabel,
     effectiveTier: poisonLive ? poison.effectiveTier : source.effectiveTier,
     procChance: source.procChance,
-    applicationAttempts: row?.triggerRolls ?? 0,
+    applicationAttempts: row?.expectedTriggerRolls ?? 0,
     successfulApplications: row?.expectedActivations ?? 0,
     separateHits: row?.expectedSeparateHits ?? 0,
     minimumDamage: row?.minimumDamage ?? 0,
@@ -532,11 +532,11 @@ export function combineBranchSummaries(
 
   type EffectNumericField =
     | "totalDamage"
-    | "casts"
-    | "triggerRolls"
+    | "expectedCasts"
+    | "expectedTriggerRolls"
     | "expectedActivations"
     | "expectedSeparateHits"
-    | "attachedComponents"
+    | "expectedAttachedComponents"
     | "bonusDamage"
     | "directDamage"
     | "dotDamage"
@@ -582,11 +582,11 @@ export function combineBranchSummaries(
               kind: sample.kind,
               totalDamage,
               share: expectedDamage > 0 ? totalDamage / expectedDamage : 0,
-              casts: value("casts"),
-              triggerRolls: value("triggerRolls"),
+              expectedCasts: value("expectedCasts"),
+              expectedTriggerRolls: value("expectedTriggerRolls"),
               expectedActivations,
               expectedSeparateHits: value("expectedSeparateHits"),
-              attachedComponents: value("attachedComponents"),
+              expectedAttachedComponents: value("expectedAttachedComponents"),
               bonusDamage: value("bonusDamage"),
               // Per-activation stays on conditional scale (mass does not change hit size).
               averagePerActivation:
@@ -713,7 +713,7 @@ export function combineBranchSummaries(
     wantAnalysis && modal.playerPoison
       ? {
           ...modal.playerPoison,
-          applicationAttempts: poisonRow?.triggerRolls ?? 0,
+          applicationAttempts: poisonRow?.expectedTriggerRolls ?? 0,
           successfulApplications: poisonRow?.expectedActivations ?? 0,
           separateHits: poisonRow?.expectedSeparateHits ?? 0,
           minimumDamage: poisonRow?.minimumDamage ?? 0,

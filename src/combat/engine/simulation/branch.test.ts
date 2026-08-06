@@ -234,11 +234,11 @@ describe("snapshotRuntime shares no mutable collection", () => {
       dotDamage: 0,
       criticalContribution: 10,
       capLoss: 4,
-      casts: 1,
-      triggerRolls: 0,
+      expectedCasts: 1,
+      expectedTriggerRolls: 0,
       expectedActivations: 1,
       expectedSeparateHits: 1,
-      attachedComponents: 0,
+      expectedAttachedComponents: 0,
       bonusDamage: 0,
     });
     // Representative provenance log only reflects this branch's past.
@@ -272,11 +272,11 @@ describe("snapshotRuntime shares no mutable collection", () => {
       dotDamage: 0,
       criticalContribution: 30,
       capLoss: 12,
-      casts: 1,
-      triggerRolls: 0,
+      expectedCasts: 2,
+      expectedTriggerRolls: 0,
       expectedActivations: 3,
       expectedSeparateHits: 3,
-      attachedComponents: 0,
+      expectedAttachedComponents: 0,
       bonusDamage: 0,
     });
     high.events[0] = {
@@ -301,7 +301,7 @@ describe("snapshotRuntime shares no mutable collection", () => {
     expect(attack.totalDamage).toBe(250);
     expect(attack.expectedActivations).toBe(2.5);
     expect(attack.expectedSeparateHits).toBe(2.5);
-    expect(attack.casts).toBe(1);
+    expect(attack.expectedCasts).toBe(1.75);
     expect(attack.criticalContribution).toBe(25);
     expect(attack.capLoss).toBe(10);
     // keep = high (weight 0.75); events are representative, not the weighted mean.

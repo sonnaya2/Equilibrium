@@ -237,11 +237,11 @@ describe("summary finalization", () => {
       dotDamage: 0,
       criticalContribution: 40,
       capLoss: 8,
-      casts: 1,
-      triggerRolls: 0,
+      expectedCasts: 1,
+      expectedTriggerRolls: 0,
       expectedActivations: 2,
       expectedSeparateHits: 2,
-      attachedComponents: 0,
+      expectedAttachedComponents: 0,
       bonusDamage: 0,
     });
     // Event log deliberately disagrees with the ledger.

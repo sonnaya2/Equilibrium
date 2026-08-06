@@ -300,7 +300,7 @@ describe("Inferno of Zamorak recursively rolls from every landed hit", () => {
     });
     const inferno = summary.analysis.byEffect.find((effect) => effect.id === "inferno-of-zamorak")!;
     expect(inferno.expectedActivations).toBeCloseTo(7 * INFERNOS_PER_HIT, 10);
-    expect(inferno.triggerRolls).toBeCloseTo(7 * CINDERS_RIDERS_PER_HIT, 10);
+    expect(inferno.expectedTriggerRolls).toBeCloseTo(7 * CINDERS_RIDERS_PER_HIT, 10);
     expect(inferno.averagePerActivation).toBeGreaterThan(1_500);
     expect(inferno.totalDamage).toBeCloseTo(
       inferno.expectedActivations * inferno.averagePerActivation,

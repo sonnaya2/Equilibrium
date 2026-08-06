@@ -48,7 +48,7 @@ function queuePoisonHit(rt: SimulationRuntime, tick: number): number {
     attached: false,
     procEligible: false,
     recursionAllowed: false,
-    triggerRolls: 0,
+    expectedTriggerRolls: 0,
     expectedActivations: 0,
     expectedSeparateHits: 1,
     originKind: "poison",
@@ -89,7 +89,10 @@ export function applyPlayerPoison(
   });
 }
 
-export function recordPlayerPoisonApplication(rt: SimulationRuntime, successful: boolean): void {
+export function recordPlayerPoisonApplication(
+  rt: SimulationRuntime,
+  kind: "attempt" | "success",
+): void {
   if (!keepsAnalysisLedgers(rt.detailLevel)) return;
   const existing = rt.analysis.effects.get(PLAYER_POISON_EFFECT_ID);
   const ledger = existing ?? {
@@ -100,15 +103,15 @@ export function recordPlayerPoisonApplication(rt: SimulationRuntime, successful:
     dotDamage: 0,
     criticalContribution: 0,
     capLoss: 0,
-    casts: 0,
-    triggerRolls: 0,
+    expectedCasts: 0,
+    expectedTriggerRolls: 0,
     expectedActivations: 0,
     expectedSeparateHits: 0,
-    attachedComponents: 0,
+    expectedAttachedComponents: 0,
     bonusDamage: 0,
   };
-  if (successful) ledger.expectedActivations += 1;
-  else ledger.triggerRolls += 1;
+  if (kind === "success") ledger.expectedActivations += 1;
+  else ledger.expectedTriggerRolls += 1;
   rt.analysis.effects.set(PLAYER_POISON_EFFECT_ID, ledger);
 }
 

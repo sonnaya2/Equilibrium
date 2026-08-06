@@ -29,7 +29,7 @@ describe("player poison simulation", () => {
     expect(result.ok).toBe(true);
     expect(result.rng?.probabilityMass).toBeCloseTo(1, 12);
     expect(result.rng?.residualWeight).toBe(0);
-    expect(poison?.triggerRolls).toBe(1);
+    expect(poison?.expectedTriggerRolls).toBe(1);
     expect(poison?.expectedActivations).toBeCloseTo(0.125, 12);
     expect(poison?.expectedSeparateHits).toBeCloseTo(18 * 0.125, 12);
     expect(result.playerPoison).toMatchObject({
@@ -94,7 +94,7 @@ describe("player poison simulation", () => {
       playerPoison: profile(),
     });
     const poison = result.analysis.byEffect.find((row) => row.id === PLAYER_POISON_EFFECT_ID);
-    expect(poison?.triggerRolls).toBe(2);
+    expect(poison?.expectedTriggerRolls).toBe(2);
   });
 
   it("matches the bounded Cinderbane continuation oracle for base and Laniakea chance", () => {

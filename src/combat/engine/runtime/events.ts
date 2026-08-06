@@ -171,7 +171,7 @@ function eventSig<T>(e: ScheduledEvent<T>, seqKey: number, ranks: PendingKeyRank
     US +
     (e.originKind ?? "") +
     US +
-    (e.triggerRolls ?? "") +
+    (e.expectedTriggerRolls ?? "") +
     US +
     (e.expectedActivations ?? "") +
     US +
@@ -235,8 +235,8 @@ export interface ScheduledEvent<RT = unknown> {
    * multiplicity fields below; kept so older schedulers and tests still work.
    */
   expectedOccurrences?: number;
-  /** Probability rolls represented by this event (e.g. one Inferno 5% roll). */
-  triggerRolls?: number;
+  /** Expected proc rolls represented by this event (e.g. one Inferno 5% roll). */
+  expectedTriggerRolls?: number;
   /** Expected activations represented (0.05 for one 5% roll). */
   expectedActivations?: number;
   /** Expected separate hits represented; 0 when attached. */

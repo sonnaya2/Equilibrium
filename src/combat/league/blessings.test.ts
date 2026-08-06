@@ -76,7 +76,7 @@ describe("Equilibrium blessing combat rules", () => {
       damage: { min: 0 },
     });
     expect(inferno.expectedOccurrences).toBeCloseTo(1 / 19, 10);
-    expect(inferno.triggerRolls).toBeCloseTo(20 / 19, 10);
+    expect(inferno.expectedTriggerRolls).toBeCloseTo(20 / 19, 10);
     expect(inferno.expectedActivations).toBeCloseTo(1 / 19, 10);
     expect(inferno.expectedSeparateHits).toBeCloseTo(1 / 19, 10);
     expect(inferno.damage.max).toBeCloseTo((2_000 * 20) / 19, 6);

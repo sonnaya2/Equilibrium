@@ -68,6 +68,7 @@ describe("Leng integration gate", () => {
       sim,
       profileId: "balanced",
       detailLevel: "full-analysis",
+      branchFidelityMode: "full",
     });
     const evalScore = evaluateRevolutionBar({
       bar: evalBar,
@@ -77,6 +78,7 @@ describe("Leng integration gate", () => {
       sim,
       profileId: "balanced",
       detailLevel: "score-only",
+      branchFidelityMode: "full",
     });
     expect(evalFull.ok).toBe(true);
     expect(evalScore.ok).toBe(true);

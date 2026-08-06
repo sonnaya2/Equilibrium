@@ -65,7 +65,7 @@ describe("Leng state and Icy Tempest", () => {
     ).toBe(true);
   });
 
-  it("Icy Tempest uses weighted integer spend groups, never a heaviest-arm state", () => {
+  it("Icy Tempest uses weighted coupled integer outcomes", () => {
     const ctx = createCastContext(lengInput());
     const attack = MELEE_ABILITIES.find((ability) => ability.id === "attack")!;
     const tempest = MELEE_ABILITIES.find((ability) => ability.id === "icy_tempest")!;

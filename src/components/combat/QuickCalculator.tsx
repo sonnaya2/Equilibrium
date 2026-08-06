@@ -7,6 +7,7 @@ import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import type { CombatStyle } from "@/combat/types";
 import { engineSpecsForStyle } from "@/combat/abilities/registry";
 import { isMeleeAbility } from "@/combat/styles/melee/abilities";
+import { resolveIcyTempest } from "@/combat/styles/melee/icyTempest";
 import { resplendentAsphyxiate } from "@/combat/styles/magic/abilities";
 import {
   MAX_SOULS,
@@ -171,6 +172,21 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
     useBuild && equippedAbility?.id === "asphyxiate" && (setup.tumekensPieces ?? 0) >= 4
       ? resplendentAsphyxiate(equippedAbility)
       : equippedAbility;
+  const quickAbility =
+    calculatedAbility?.id === "icy_tempest"
+      ? (() => {
+          const outcome = resolveIcyTempest(
+            { atoms: [{ weight: 1, stacks: 0, stacksExpireAtTick: 0, frostbladesExpireAtTick: 0 }] },
+            0,
+            useBuild && setup.adrenaline?.ringOfVigour === true,
+          ).outcomes[0]!;
+          return {
+            ...calculatedAbility,
+            hits: outcome.hits.map((hit) => ({ band: { ...hit.band } })),
+            adrenaline: { ...calculatedAbility.adrenaline, cost: outcome.requirement },
+          };
+        })()
+      : calculatedAbility;
   const crit = {
     chance: Math.min(Math.max(0, finite(effectiveCritChance, 10)), 100) / 100,
     guaranteed: calculatedAbility?.guaranteedCrit,
@@ -179,22 +195,22 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
   };
 
   const result =
-    calculatedAbility && calculatedAbility.hits.length > 0
+    quickAbility && quickAbility.hits.length > 0
       ? useBuild
-        ? calculateLeagueAbility(calculatedAbility, {
+        ? calculateLeagueAbility(quickAbility, {
             base: Math.max(0, finite(effectiveBase, 0)),
             level: Math.min(Math.max(1, finite(effectiveLevel, 99)), 145),
             accuracy: Math.min(Math.max(0, finite(effectiveAccuracy, 100)), 100) / 100,
             crit,
-            critByHit: useBuild ? setup.critByHitFor(calculatedAbility, crit) : undefined,
-            modifiers: useBuild ? setup.castModifiersFor(calculatedAbility) : undefined,
+            critByHit: useBuild ? setup.critByHitFor(quickAbility, crit) : undefined,
+            modifiers: useBuild ? setup.castModifiersFor(quickAbility) : undefined,
             context: setup.combatContext,
             cap: setup.cap,
             rules: setup.league,
             // FotS / Invigorating / AJ from the same resolve path as rotations.
             adrenaline: setup.adrenaline,
           })
-        : calculateAbility(calculatedAbility, {
+        : calculateAbility(quickAbility, {
             base: Math.max(0, finite(effectiveBase, 0)),
             level: Math.min(Math.max(1, finite(effectiveLevel, 99)), 145),
             accuracy: Math.min(Math.max(0, finite(effectiveAccuracy, 100)), 100) / 100,
@@ -354,11 +370,17 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
                 <SupportStatusChip ability={ability} />
               </h3>
               <span className="font-mono text-[11px] font-normal normal-case tracking-normal text-parch-300">
-                {hitBandLabel(ability)}
+                {hitBandLabel(quickAbility ?? ability)}
               </span>
             </div>
             <div className="panel-body space-y-3">
-              <p className="text-xs leading-5 text-parch-300">{abilityMeta(ability)}</p>
+              <p className="text-xs leading-5 text-parch-300">{abilityMeta(quickAbility ?? ability)}</p>
+              {ability.id === "icy_tempest" ? (
+                <p className="text-xs leading-5 text-parch-300">
+                  Quick uses the zero-stack baseline. Rotation and solver retain branch-specific
+                  Leng outcomes.
+                </p>
+              ) : null}
               {ability.supportNote ? (
                 <p className="text-xs leading-5 text-parch-300">{ability.supportNote}</p>
               ) : null}

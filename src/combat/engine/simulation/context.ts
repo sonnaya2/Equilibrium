@@ -27,8 +27,7 @@ import { combineBranchSummaries } from "./summary";
 /**
  * Manual CastContext: multi-branch under the hood.
  * performCast uses planCastOutcomes + materializeCastPlans (same as Revolution/solver),
- * so Icy Tempest forks on distinct integer post-cast adrenaline spends only - never
- * floors E[stacks] into a single fractional spend.
+ * so Icy Tempest forks on coupled integer stack outcomes.
  * finish drains via combineBranchSummaries. getState reads heaviest live branch.
  */
 export function createCastContext(
@@ -61,23 +60,13 @@ export function createCastContext(
 
   /**
    * When the caller forces CastRng (Relentless/Impatient tests), collapse RNG product
-   * arms onto that forced outcome while keeping distinct Icy Tempest spend groups.
+   * arms onto that forced outcome without collapsing distinct future states.
    */
   function applyForcedRng(plans: readonly CastOutcomePlan[], rng: CastRng): CastOutcomePlan[] {
-    const bySpend = new Map<number, CastOutcomePlan>();
-    for (const p of plans) {
-      const spend = p.prepared.spend;
-      const prev = bySpend.get(spend);
-      if (!prev) {
-        bySpend.set(spend, { ...p, rng, weight: p.weight });
-      } else {
-        bySpend.set(spend, { ...prev, weight: prev.weight + p.weight, rng });
-      }
-    }
-    const collapsed = [...bySpend.values()];
-    return collapsed.map((p) => ({
+    return plans.map((p) => ({
       ...p,
-      inPlace: collapsed.length === 1,
+      rng,
+      inPlace: plans.length === 1,
     }));
   }
 

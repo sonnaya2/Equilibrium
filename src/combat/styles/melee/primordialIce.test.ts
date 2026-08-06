@@ -9,7 +9,6 @@ import {
   PRIMORDIAL_ICE_DURATION_TICKS,
   activeFrostbladesMass,
   applyLengLandToDistribution,
-  consumePrimordialIce,
   emptyPrimordialIce,
   expirePrimordialIce,
   expectedStacksFromAtoms,
@@ -220,20 +219,39 @@ describe("sparse Leng atom oracle", () => {
       ],
     };
     const resolved = resolveIcyTempest(dist, 20, false);
-    expect(resolved.spendDistribution).toEqual([
-      { spend: 18, probability: 0.75, expectedStacks: 1 },
-      { spend: 0, probability: 0.25, expectedStacks: 3 },
+    expect(resolved.outcomes).toEqual([
+      {
+        probability: 0.75,
+        stacksConsumed: 1,
+        requirement: 30,
+        spend: 18,
+        hits: [
+          { band: { minPct: 133, maxPct: 157 } },
+          { band: { minPct: 193, maxPct: 227 } },
+        ],
+        postCastPrimordialIce: {
+          atoms: [
+            { weight: 1, stacks: 0, stacksExpireAtTick: 0, frostbladesExpireAtTick: 0 },
+          ],
+        },
+      },
+      {
+        probability: 0.25,
+        stacksConsumed: 3,
+        requirement: 30,
+        spend: 0,
+        hits: [
+          { band: { minPct: 169, maxPct: 201 } },
+          { band: { minPct: 229, maxPct: 271 } },
+        ],
+        postCastPrimordialIce: {
+          atoms: [
+            { weight: 1, stacks: 0, stacksExpireAtTick: 0, frostbladesExpireAtTick: 140 },
+          ],
+        },
+      },
     ]);
     expect(resolved.expectedStacks).toBeCloseTo(1.5, 12);
-    expect(resolved.expectedHits).toEqual([
-      { band: { minPct: 142, maxPct: 168 } },
-      { band: { minPct: 202, maxPct: 238 } },
-    ]);
-    const consumed = consumePrimordialIce(dist);
-    expect(consumed.atoms).toEqual([
-      { weight: 0.75, stacks: 0, stacksExpireAtTick: 0, frostbladesExpireAtTick: 0 },
-      { weight: 0.25, stacks: 0, stacksExpireAtTick: 0, frostbladesExpireAtTick: 140 },
-    ]);
   });
 
   it("expires stale probability during a long run instead of carrying it forward", () => {

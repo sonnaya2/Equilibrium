@@ -10,7 +10,11 @@ import {
   GREATER_BARGE_ENDLESS_ASSAULT_WINDOW_SECONDS,
   greaterBargeIdleBand,
 } from "../../styles/melee/effects";
-import { resolveIcyTempest } from "../../styles/melee/icyTempest";
+import {
+  resolveIcyTempest,
+  type IcyTempestOutcome,
+} from "../../styles/melee/icyTempest";
+import type { PrimordialIceDistribution } from "../../styles/melee/primordialIce";
 import { searingWindsBonusPct } from "../../styles/ranged/onHit";
 import { hauntedActive } from "../../styles/necromancy/haunted";
 import { applyCaromingToRicochetHits, isRicochetAbility } from "../../styles/ranged/caroming";
@@ -89,7 +93,7 @@ export type PreparedTransition =
   | { kind: "consumeFury" }
   | { kind: "consumeEnduringRuin" }
   /** Icy Tempest spends all Primordial Ice stacks on cast. */
-  | { kind: "consumePrimordialIce" };
+  | { kind: "consumePrimordialIce"; next: PrimordialIceDistribution };
 
 /**
  * Everything one atomic cast needs, computed once against the advanced state
@@ -137,8 +141,10 @@ export function prepareCast(
   rt: SimulationRuntime,
   ability: AbilitySpec,
   candidate: number,
+  icyTempestOutcome?: IcyTempestOutcome,
 ): PreparedCast {
   const input = rt.input;
+  let selectedIcyTempestOutcome = icyTempestOutcome;
 
   // Equipment-adjusted hit list (e.g. Masterwork spear bleed duration) before
   // Bloodlust / other variants so extra hits keep the same bands and cadence.
@@ -210,16 +216,22 @@ export function prepareCast(
       };
     }
   }
-  // Icy Tempest: distribution-resolved bands; spend path is spendOf (resolveIcyTempest).
+  // Icy Tempest must be prepared from one discrete stack outcome.
   if (ability.id === "icy_tempest") {
-    const resolved = resolveIcyTempest(
-      rt.state.melee.primordialIce,
-      candidate,
-      rt.state.ringOfVigour,
-    );
+    if (selectedIcyTempestOutcome === undefined) {
+      const resolved = resolveIcyTempest(
+        rt.state.melee.primordialIce,
+        candidate,
+        rt.state.ringOfVigour,
+      );
+      if (resolved.outcomes.length !== 1) {
+        throw new Error("Icy Tempest mixed stack state requires a resolved outcome");
+      }
+      selectedIcyTempestOutcome = resolved.outcomes[0];
+    }
     working = {
       ...working,
-      hits: resolved.expectedHits.map((h) => ({ band: { ...h.band } })),
+      hits: selectedIcyTempestOutcome.hits.map((h) => ({ band: { ...h.band } })),
     };
   }
   if (ability.id === "asphyxiate" && (input.tumekensPieces ?? 0) >= 4) {
@@ -364,7 +376,12 @@ export function prepareCast(
   if (greaterFuryConsume) transitions.push({ kind: "consumeGreaterFury" });
   if (furyConsume) transitions.push({ kind: "consumeFury" });
   if (enduringRuinConsume) transitions.push({ kind: "consumeEnduringRuin" });
-  if (ability.id === "icy_tempest") transitions.push({ kind: "consumePrimordialIce" });
+  if (ability.id === "icy_tempest") {
+    transitions.push({
+      kind: "consumePrimordialIce",
+      next: selectedIcyTempestOutcome!.postCastPrimordialIce,
+    });
+  }
 
   const sonic = ability.id === "sonic_wave" || ability.id === "greater_sonic_wave";
   const flowReduction = sonic
@@ -374,7 +391,8 @@ export function prepareCast(
 
   // costOf / spendOf share Vigour special discount; Icy Tempest stack reduction is spend-only.
   const cost = costOf(rt.state, ability, candidate);
-  const spend = spendOf(rt.state, ability, candidate, input.ammo);
+  const spend =
+    spendOf(rt.state, ability, candidate, input.ammo, selectedIcyTempestOutcome);
 
   return {
     ability,

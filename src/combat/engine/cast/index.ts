@@ -12,7 +12,7 @@ import type { SimulationRuntime } from "../runtime/runtime";
 import { patchMagic } from "../runtime/state";
 import { noteCastsGrowth } from "../../profiling/allocation";
 import { planCastOutcomes, type BranchSet } from "../simulation/branch";
-import { expirePrimordialIce } from "../../styles/melee/primordialIce";
+import { resolveIcyTempest } from "../../styles/melee/icyTempest";
 
 function emptyAbilityResult(): AbilityResult {
   return { hits: [], min: 0, max: 0, expected: 0, listedAdrenalineDelta: 0, adrenalineDelta: 0 };
@@ -41,7 +41,7 @@ function adoptHeaviestBranch(rt: SimulationRuntime, set: BranchSet): void {
 
 /**
  * Advance to candidate tick, then validate + prepare. Rejection only advances time;
- * prepareCast is read-only. Pre-cast uses advanceToBranches (compact Primordial Ice).
+ * prepareCast is read-only. Pre-cast uses advanceToBranches (sparse Leng atoms).
  *
  * Mixed Icy Tempest spend groups require the branched cast context.
  */
@@ -73,10 +73,12 @@ export function prepareSimulationCast(
   );
   if (rejection) return { ok: false, error: rejection };
   if (castAbility.id === "icy_tempest") {
-    const stacks = new Set(
-      expirePrimordialIce(rt.state.melee.primordialIce, candidate).atoms.map((atom) => atom.stacks),
+    const resolved = resolveIcyTempest(
+      rt.state.melee.primordialIce,
+      candidate,
+      rt.state.ringOfVigour,
     );
-    if (stacks.size > 1) {
+    if (resolved.outcomes.length > 1) {
       return { ok: false, error: "Icy Tempest mixed stack state requires a branched cast context" };
     }
   }
@@ -152,13 +154,23 @@ export function performCast(
       error: planned.errors[0]?.error ?? `unable to cast ${ability.id}`,
     };
   }
-  if (
-    ability.id === "icy_tempest" &&
-    new Set(planned.plans.map((plan) => plan.prepared.working.hits[0]?.band.minPct)).size > 1
-  ) {
-    return { ok: false, error: "Icy Tempest mixed stack state requires a branched cast context" };
+  if (ability.id === "icy_tempest") {
+    const outcomes = new Set(
+      planned.plans.map((plan) =>
+        JSON.stringify({
+          spend: plan.prepared.spend,
+          hits: plan.prepared.working.hits,
+          next: plan.prepared.transitions.find(
+            (transition) => transition.kind === "consumePrimordialIce",
+          ),
+        }),
+      ),
+    );
+    if (outcomes.size > 1) {
+      return { ok: false, error: "Icy Tempest mixed stack state requires a branched cast context" };
+    }
   }
-  // Heaviest future (max weight). For icy_tempest this is an integer spend group.
+  // This single-runtime API has already rejected mixed Icy outcomes.
   const heaviest = planned.plans.reduce((a, b) => (a.weight >= b.weight ? a : b));
   // planCastOutcomes may have forked parent rts; adopt the heaviest parent first.
   if (heaviest.parent.rt !== rt) {

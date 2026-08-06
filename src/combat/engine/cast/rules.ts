@@ -1,7 +1,10 @@
 import type { ItemPassiveId } from "../../data/records";
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { isMeleeAbility } from "../../styles/melee/abilities";
-import { resolveIcyTempest } from "../../styles/melee/icyTempest";
+import {
+  resolveIcyTempest,
+  type IcyTempestOutcome,
+} from "../../styles/melee/icyTempest";
 import {
   necroAdrenalineCost,
   necroCanCast,
@@ -134,13 +137,17 @@ export function spendOf(
   ability: AbilitySpec,
   tick: number,
   ammo?: "deathspore" | "splintering",
+  icyTempestOutcome?: IcyTempestOutcome,
 ): number {
-  // Icy Tempest: resolve the expected spend for display and prepare-only callers.
-  // Concrete casts use planCastOutcomes to retain integer spend groups.
+  // Concrete Icy Tempest casts must supply one discrete outcome.
   if (ability.id === "icy_tempest") {
     if (avernicFree(state, tick)) return 0;
+    if (icyTempestOutcome !== undefined) return icyTempestOutcome.spend;
     const resolved = resolveIcyTempest(state.melee.primordialIce, tick, state.ringOfVigour);
-    return resolved.expectedSpend;
+    if (resolved.outcomes.length !== 1) {
+      throw new Error("Icy Tempest mixed stack state requires a resolved outcome");
+    }
+    return resolved.outcomes[0]!.spend;
   }
 
   const cost = costOf(state, ability, tick);

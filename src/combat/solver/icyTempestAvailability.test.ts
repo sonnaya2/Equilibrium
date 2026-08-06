@@ -6,6 +6,7 @@ import { expectedStacksFromAtoms, unitPrimordialIce } from "../styles/melee/prim
 import { resolveIcyTempest } from "../styles/melee/icyTempest";
 import { createRuntime } from "../engine/runtime/runtime";
 import { performCast, prepareSimulationCast } from "../engine/cast";
+import { spendOf } from "../engine/cast/rules";
 import { createCastContext } from "../engine/simulation/simulate";
 import { planCastOutcomes } from "../engine/simulation/branch";
 import { buildCandidatePool } from "./candidatePool";
@@ -98,7 +99,7 @@ describe("Icy Tempest solver and availability", () => {
     ]);
   });
 
-  it("branched manual planning retains integer spend groups", () => {
+  it("branched manual planning retains coupled integer outcomes", () => {
     const input = lengInput();
     const attack = MELEE_ABILITIES.find((ability) => ability.id === "attack")!;
     const tempest = MELEE_ABILITIES.find((ability) => ability.id === "icy_tempest")!;
@@ -113,6 +114,13 @@ describe("Icy Tempest solver and availability", () => {
       6,
     ]);
     expect(plans.plans.every((plan) => Number.isInteger(plan.prepared.spend))).toBe(true);
+    const bySpend = new Map(plans.plans.map((plan) => [plan.prepared.spend, plan.prepared]));
+    expect(bySpend.get(30)!.working.hits[0]!.band).toEqual({ minPct: 115, maxPct: 135 });
+    expect(bySpend.get(18)!.working.hits[0]!.band).toEqual({ minPct: 133, maxPct: 157 });
+    expect(bySpend.get(6)!.working.hits[0]!.band).toEqual({ minPct: 151, maxPct: 179 });
+    expect(
+      plans.plans.reduce((sum, plan) => sum + plan.weight, 0),
+    ).toBeCloseTo(1, 12);
     expect(plans.plans.reduce((sum, plan) => sum + plan.weight * plan.prepared.spend, 0)).toBeCloseTo(
       28.56,
       12,
@@ -126,9 +134,31 @@ describe("Icy Tempest solver and availability", () => {
     const attack = rt.byId.get("attack")!;
     expect(performCast(rt, attack, 0, false).ok).toBe(true);
     const tempest = rt.byId.get("icy_tempest")!;
+    expect(() => spendOf(rt.state, tempest, rt.state.tick)).toThrow("resolved outcome");
     const prepared = prepareSimulationCast(rt, tempest, rt.state.tick);
     if (prepared.ok) throw new Error("mixed Icy Tempest unexpectedly prepared on one runtime");
     expect(prepared.error).toContain("branched cast context");
+  });
+
+  it("single-runtime helper refuses equal-hit arms with different future Frostblades state", () => {
+    const rt = createRuntime(lengInput());
+    rt.state = {
+      ...rt.state,
+      melee: {
+        ...rt.state.melee,
+        primordialIce: {
+          atoms: [
+            { weight: 0.5, stacks: 2, stacksExpireAtTick: 999, frostbladesExpireAtTick: 0 },
+            { weight: 0.5, stacks: 2, stacksExpireAtTick: 999, frostbladesExpireAtTick: 200 },
+          ],
+        },
+      },
+    };
+    const tempest = rt.byId.get("icy_tempest")!;
+    expect(performCast(rt, tempest, 0, false)).toEqual({
+      ok: false,
+      error: "Icy Tempest mixed stack state requires a branched cast context",
+    });
   });
 
   it("native and EoF special access remain separate from passive ownership", () => {

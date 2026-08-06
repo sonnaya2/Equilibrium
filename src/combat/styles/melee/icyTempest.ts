@@ -14,7 +14,6 @@ import {
 } from "./effects";
 import {
   PRIMORDIAL_ICE_BINS,
-  expectedStacksFromAtoms,
   type PrimordialIceDistribution,
   expirePrimordialIce,
 } from "./primordialIce";
@@ -23,17 +22,19 @@ export interface IcyTempestHitBand {
   band: { minPct: number; maxPct: number };
 }
 
-export interface IcyTempestSpendGroup {
-  readonly spend: number;
+export interface IcyTempestOutcome {
   readonly probability: number;
-  readonly expectedStacks: number;
+  readonly stacksConsumed: number;
+  readonly requirement: number;
+  readonly spend: number;
+  readonly hits: readonly IcyTempestHitBand[];
+  readonly postCastPrimordialIce: PrimordialIceDistribution;
 }
 
 export interface ResolvedIcyTempest {
   readonly requirement: number;
+  readonly outcomes: readonly IcyTempestOutcome[];
   readonly expectedSpend: number;
-  readonly spendDistribution: readonly IcyTempestSpendGroup[];
-  readonly expectedHits: readonly IcyTempestHitBand[];
   readonly expectedStacks: number;
 }
 
@@ -77,38 +78,63 @@ export function resolveIcyTempest(
   ringOfVigour: boolean,
 ): ResolvedIcyTempest {
   const live = expirePrimordialIce(dist, tick);
-  const eStacks = expectedStacksFromAtoms(live.atoms);
-
-  const groups = new Map<number, { prob: number; eStacks: number }>();
-  for (const atom of live.atoms) {
-    const spend = icyTempestSpendAfterVigour(atom.stacks, ringOfVigour);
-    const p = atom.weight;
-    if (!(p > 0)) continue;
-    const g = groups.get(spend);
-    if (g) {
-      g.prob += p;
-      g.eStacks += atom.stacks * p;
-    } else {
-      groups.set(spend, { prob: p, eStacks: atom.stacks * p });
-    }
-  }
-
-  const spendDistribution: IcyTempestSpendGroup[] = [];
+  const requirement = icyTempestRequirement(ringOfVigour);
+  const outcomesByKey = new Map<string, IcyTempestOutcome>();
   let expectedSpend = 0;
-  for (const [spend, g] of groups) {
-    const probability = g.prob;
-    const expectedStacks = probability > 0 ? g.eStacks / probability : 0;
-    spendDistribution.push({ spend, probability, expectedStacks });
-    expectedSpend += spend * probability;
+  let expectedStacks = 0;
+  const atoms =
+    live.atoms.length > 0
+      ? live.atoms
+      : [{ weight: 1, stacks: 0, stacksExpireAtTick: 0, frostbladesExpireAtTick: 0 }];
+  for (const atom of atoms) {
+    if (!(atom.weight > 0)) continue;
+    const stacksConsumed = Math.max(0, Math.min(PRIMORDIAL_ICE_CAP, Math.floor(atom.stacks)));
+    const spend = icyTempestSpendAfterVigour(stacksConsumed, ringOfVigour);
+    const hits = icyTempestHitsLinear(stacksConsumed);
+    const postCastPrimordialIce: PrimordialIceDistribution = {
+      atoms: [
+        {
+          weight: 1,
+          stacks: 0,
+          stacksExpireAtTick: 0,
+          frostbladesExpireAtTick: atom.frostbladesExpireAtTick,
+        },
+      ],
+    };
+    const outcome: IcyTempestOutcome = {
+      probability: atom.weight,
+      stacksConsumed,
+      requirement,
+      spend,
+      hits,
+      postCastPrimordialIce,
+    };
+    const key = JSON.stringify([
+      stacksConsumed,
+      requirement,
+      spend,
+      hits,
+      postCastPrimordialIce,
+    ]);
+    const prior = outcomesByKey.get(key);
+    outcomesByKey.set(
+      key,
+      prior ? { ...prior, probability: prior.probability + atom.weight } : outcome,
+    );
+    expectedSpend += spend * atom.weight;
+    expectedStacks += stacksConsumed * atom.weight;
   }
-  spendDistribution.sort((a, b) => b.spend - a.spend || b.probability - a.probability);
 
   return {
-    requirement: icyTempestRequirement(ringOfVigour),
+    requirement,
+    outcomes: [...outcomesByKey.values()].sort(
+      (a, b) =>
+        a.stacksConsumed - b.stacksConsumed ||
+        a.spend - b.spend ||
+        a.probability - b.probability,
+    ),
     expectedSpend,
-    spendDistribution,
-    expectedHits: icyTempestHitsLinear(eStacks),
-    expectedStacks: eStacks,
+    expectedStacks,
   };
 }
 

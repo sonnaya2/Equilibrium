@@ -134,17 +134,3 @@ export function applyLengLandToDistribution(
   const atoms = sortedAtoms(merged);
   return atoms.length > 0 ? { atoms } : { atoms: [] };
 }
-
-export function consumePrimordialIce(dist: PrimordialIceDistribution): PrimordialIceDistribution {
-  const merged = new Map<string, LengAtom>();
-  for (const atom of dist.atoms) {
-    addAtom(merged, {
-      weight: atom.weight,
-      stacks: 0,
-      stacksExpireAtTick: 0,
-      frostbladesExpireAtTick: atom.frostbladesExpireAtTick,
-    });
-  }
-  const atoms = sortedAtoms(merged);
-  return atoms.length > 0 ? { atoms } : { atoms: [] };
-}

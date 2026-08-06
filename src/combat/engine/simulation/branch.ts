@@ -6,11 +6,7 @@ import {
   resolveCastAbility,
   rngPointsFor,
 } from "../cast/rules";
-import {
-  icyTempestHitsLinear,
-  icyTempestSpendAfterVigour,
-} from "../../styles/melee/icyTempest";
-import { expirePrimordialIce } from "../../styles/melee/primordialIce";
+import { resolveIcyTempest } from "../../styles/melee/icyTempest";
 import { firstLegalTickFor } from "../runtime/state";
 import type { CastRng } from "./contracts";
 import {
@@ -139,51 +135,40 @@ export function planCastOutcomes(
       errors.push({ ...at, error: rejection });
       continue;
     }
-    const prepared = prepareCast(at.rt, castAbility, candidate);
-
-    // Icy Tempest: preserve integer stack hit bands before grouping equal futures.
+    // Icy Tempest: enumerate coupled stack, damage, spend, and post-cast state.
     if (castAbility.id === "icy_tempest") {
-      const stackProbabilities = new Map<number, number>();
-      for (const atom of expirePrimordialIce(at.rt.state.melee.primordialIce, candidate).atoms) {
-        stackProbabilities.set(
-          atom.stacks,
-          (stackProbabilities.get(atom.stacks) ?? 0) + atom.weight,
-        );
-      }
-      for (const [stacks, probability] of stackProbabilities) {
-        if (!(probability > 0)) continue;
-        const groupPrepared: PreparedCast = {
-          ...prepared,
-          spend: icyTempestSpendAfterVigour(stacks, at.rt.state.ringOfVigour),
-          working: {
-            ...prepared.working,
-            hits: icyTempestHitsLinear(stacks).map((hit) => ({ band: { ...hit.band } })),
-          },
-        };
+      const resolved = resolveIcyTempest(
+        at.rt.state.melee.primordialIce,
+        candidate,
+        at.rt.state.ringOfVigour,
+      );
+      for (const outcome of resolved.outcomes) {
+        if (!(outcome.probability > 0)) continue;
+        const outcomePrepared = prepareCast(at.rt, castAbility, candidate, outcome);
         const points = rngPointsFor(
           at.rt.state,
           castAbility,
-          groupPrepared.candidate,
-          groupPrepared.spend,
+          outcomePrepared.candidate,
+          outcomePrepared.spend,
           at.rt.input.adrenaline,
           at.rt.input.league,
         );
         if (points.length === 0) {
           plans.push({
-            weight: at.weight * probability,
+            weight: at.weight * outcome.probability,
             parent: at,
-            prepared: groupPrepared,
+            prepared: outcomePrepared,
             auto,
-            inPlace: stackProbabilities.size === 1,
+            inPlace: resolved.outcomes.length === 1,
           });
           continue;
         }
         for (const { rng, weight } of rngWeightProduct(points)) {
           if (weight <= 0) continue;
           plans.push({
-            weight: at.weight * probability * weight,
+            weight: at.weight * outcome.probability * weight,
             parent: at,
-            prepared: groupPrepared,
+            prepared: outcomePrepared,
             auto,
             rng,
             inPlace: false,
@@ -193,6 +178,7 @@ export function planCastOutcomes(
       continue;
     }
 
+    const prepared = prepareCast(at.rt, castAbility, candidate);
     const points = rngPointsFor(
       at.rt.state,
       castAbility,

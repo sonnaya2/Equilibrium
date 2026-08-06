@@ -118,6 +118,23 @@ describe("analyzeSingleCast simple-cast parity", () => {
       expectAnalysisMatchesOneCast(id, model, ability);
     }
   });
+
+  it("matches one-cast simulate for zero-stack Icy Tempest and labels Leng state", () => {
+    const model = toResolvedCombatModel(
+      withLoadout({
+        style: "melee",
+        startingAdrenaline: 100,
+        equipmentSlots: { amulet: "item:essence-of-finality" },
+      }),
+      { now: NOW },
+    );
+    const analysis = expectAnalysisMatchesOneCast(
+      "icy_tempest",
+      model,
+      abilityById("icy_tempest"),
+    );
+    expect(analysis.statefulLimitations.some((l) => l.id === "primordial_ice_stacks")).toBe(true);
+  });
 });
 
 describe("analyzeSingleCast modifiers still resolve", () => {

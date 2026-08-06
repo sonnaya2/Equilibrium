@@ -297,7 +297,7 @@ export function SetupTab({ loadout, setLoadout }: { loadout: Loadout; setLoadout
                 <Breakdown total={stats.defence.visibleLevel} items={stats.defenceBreakdown} />
               </SummaryMetric>
               <SummaryMetric
-                label="Armour"
+                label="Total Armor Value"
                 value={formatNum(stats.defence.totalArmour)}
                 partialItems={missingArmour}
               >

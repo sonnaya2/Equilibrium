@@ -159,16 +159,7 @@ export function blessingRule(
   return blessingsIndex(rules).get(id)?.combat;
 }
 
-/** Which armour figure Teragard's Aegis reads (wiki "total armour" is ambiguous). */
-export type AegisArmourBasis = "equipment" | "total-rating";
-
 export interface AegisArmourBonus {
-  /** Armour figure the blessing multiplies (equipment or block rating per basis). */
-  qualifyingArmour: number;
-  /** Block rating minus equipment Armour (0 when basis is total-rating). */
-  excludedBlockArmour: number;
-  /** Which figure was used. */
-  basis: AegisArmourBasis;
   offhand: "shield" | "defender" | "none";
   /** The resolved share of armour: 25%, 50% wielding a defender, 75% wielding a shield. */
   armourPercent: number;
@@ -180,18 +171,12 @@ export interface AegisArmourBonus {
  * Teragard's Aegis: base ability damage +25% of armour (50% with defender,
  * 75% with shield). Flat share then one floor: floor(armour * 0.75), not
  * floor(armour * 0.25) * 3 (provisional until live-verified).
- *
- * basis "total-rating" (default): block armour rating (equipment + Defence/prayer/Fortitude).
- * basis "equipment": equipment Armour only (excludes level-derived block share).
  */
 export function aegisArmourBonus(
   rule: BlessingChoice["combat"] | undefined,
-  armour: { totalArmour: number; blockArmourRating: number },
+  armour: { totalArmour: number },
   offhand: "shield" | "defender" | null,
-  opts?: { basis?: AegisArmourBasis },
 ): AegisArmourBonus {
-  const basis: AegisArmourBasis = opts?.basis === "equipment" ? "equipment" : "total-rating";
-  const qualifyingArmour = basis === "total-rating" ? armour.blockArmourRating : armour.totalArmour;
   const multiplier =
     offhand === "shield"
       ? (rule?.shieldArmourMultiplier ?? 1)
@@ -200,12 +185,9 @@ export function aegisArmourBonus(
         : 1;
   const armourPercent = (rule?.baseAbilityDamageArmourPercent ?? 0) * multiplier;
   return {
-    qualifyingArmour,
-    excludedBlockArmour: basis === "equipment" ? armour.blockArmourRating - armour.totalArmour : 0,
-    basis,
     offhand: offhand ?? "none",
     armourPercent,
-    baseAbilityDamageBonus: Math.floor(qualifyingArmour * armourPercent),
+    baseAbilityDamageBonus: Math.floor(armour.totalArmour * armourPercent),
   };
 }
 

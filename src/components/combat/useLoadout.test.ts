@@ -218,7 +218,6 @@ describe("normalizeLoadout", () => {
       strengthCape99: false,
       attackCape120: false,
       protectionPrayer: false,
-      aegisArmourBasis: "total-rating",
       berserkersFury: false,
       furyOfTheSmall: false,
       heightenedSenses: false,
@@ -236,6 +235,11 @@ describe("normalizeLoadout", () => {
     expect(next.perks.impatient).toBe(0);
     expect(next.perks.impatientLevel20).toBe(false);
     expect(next.perks.plantedFeet).toBe(0);
+  });
+
+  it("drops the removed Aegis basis from saved builds", () => {
+    const next = normalizeLoadout({ buffs: { aegisArmourBasis: "total-rating" } });
+    expect(next.buffs).not.toHaveProperty("aegisArmourBasis");
   });
 
   it("migrates legacy berserkersFury buff into archaeology.selectedIds", () => {

@@ -107,23 +107,18 @@ export function CalculationAssumptions({
           ],
         ] as Array<[string, string | number]>)
       : []),
-    // Aegis converts armour into flat base damage, so a wrong armour basis or a
-    // stale off-hand is invisible in the total. Show the whole conversion.
+    // Aegis converts the shared Total Armor Value into flat base damage.
     ...(stats.aegis.armourPercent > 0
       ? ([
           [
-            "Aegis qualifying armour",
-            `${formatNumber(stats.aegis.qualifyingArmour)} · ${
-              stats.aegis.basis === "equipment" ? "equipment only" : "total rating"
-            } · ${PERCENT_FORMAT.format(stats.aegis.armourPercent)} · off-hand ${stats.aegis.offhand}`,
+            "Aegis Total Armor Value",
+            `${formatNumber(stats.defence.totalArmour)} · ${PERCENT_FORMAT.format(
+              stats.aegis.armourPercent,
+            )} · off-hand ${stats.aegis.offhand}`,
           ],
           [
             "Aegis base-damage bonus",
-            stats.aegis.basis === "equipment"
-              ? `+${formatNumber(stats.aegis.baseAbilityDamageBonus)} (${formatNumber(
-                  stats.aegis.excludedBlockArmour,
-                )} block-only armour excluded)`
-              : `+${formatNumber(stats.aegis.baseAbilityDamageBonus)} (total block rating)`,
+            `+${formatNumber(stats.aegis.baseAbilityDamageBonus)} (shared Total Armor Value)`,
           ],
         ] as Array<[string, string | number]>)
       : []),

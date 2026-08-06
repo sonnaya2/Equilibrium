@@ -1004,7 +1004,6 @@ describe("loadoutStats", () => {
     it("derives blessing inputs from Build picks without replacing the existing stats model", () => {
       const aegisLoadout: Loadout = {
         ...base,
-        buffs: { ...base.buffs, aegisArmourBasis: "equipment" },
         equipmentSlots: { body: "mock:defence-body" },
       };
       const aegis = loadoutStats(aegisLoadout, {
@@ -1012,7 +1011,6 @@ describe("loadoutStats", () => {
       });
       expect(aegis.leagueBaseAbilityDamageBonus).toBe(125);
       expect(aegis.aegis).toMatchObject({
-        qualifyingArmour: 500,
         offhand: "none",
         armourPercent: 0.25,
       });

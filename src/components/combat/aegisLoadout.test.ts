@@ -3,7 +3,7 @@ import type { EquipmentRecord } from "@/combat/data/records";
 
 /**
  * Teragard's Aegis resolved through a real Setup loadout (stale off-hand and
- * Fortitude interactions). Armour values are chosen so the qualifying total is
+ * Fortitude interactions). Armour values are chosen so the shared total is
  * exactly 1,000 without a shield.
  */
 const RECORDS: Record<string, EquipmentRecord> = {
@@ -86,7 +86,7 @@ type Loadout = import("./useLoadout").Loadout;
 
 const ORDER = ["Order", "Order", "Order"] as const;
 
-const aegisOf = (loadout: Partial<Loadout>, basis: "equipment" | "total-rating" = "equipment") =>
+const aegisOf = (loadout: Partial<Loadout>) =>
   loadoutStats(
     {
       ...DEFAULT_LOADOUT,
@@ -95,7 +95,6 @@ const aegisOf = (loadout: Partial<Loadout>, basis: "equipment" | "total-rating" 
       buffs: {
         ...DEFAULT_LOADOUT.buffs,
         ...loadout.buffs,
-        aegisArmourBasis: basis,
       },
     } as Loadout,
     { blessingPicks: [...ORDER] },
@@ -162,41 +161,19 @@ describe("Aegis through a Setup loadout", () => {
     expect(shielded.base).toBe(2_000 + 900);
   });
 
-  it("equipment basis is identical with Fortitude off and on", () => {
+  it("uses Total Armor Value while block rating changes independently", () => {
     const slots = { mainhand: "mock:mainhand", offhand: "mock:shield", body: "mock:body-1000" };
-    const off = aegisOf({ equipmentSlots: slots }, "equipment");
-    const on = aegisOf(
-      {
-        equipmentSlots: slots,
-        buffs: { ...DEFAULT_LOADOUT.buffs, fortitude: true },
-      },
-      "equipment",
-    );
+    const off = aegisOf({ equipmentSlots: slots });
+    const on = aegisOf({
+      equipmentSlots: slots,
+      buffs: { ...DEFAULT_LOADOUT.buffs, fortitude: true },
+    });
     expect(on.leagueBaseAbilityDamageBonus).toBe(off.leagueBaseAbilityDamageBonus);
     expect(on.base).toBe(off.base);
     expect(on.defence.blockArmourRating).toBeGreaterThan(off.defence.blockArmourRating);
     expect(on.life.temporaryMaxLife).toBeGreaterThan(off.life.temporaryMaxLife);
     expect(on.defence.totalArmour).not.toBe(on.defence.blockArmourRating);
-    expect(on.aegis.qualifyingArmour).toBe(on.defence.totalArmour);
-    expect(on.aegis.basis).toBe("equipment");
-    expect(on.aegis.excludedBlockArmour).toBe(
-      on.defence.blockArmourRating - on.defence.totalArmour,
-    );
-  });
-
-  it("total-rating basis includes Fortitude block share (default product mode)", () => {
-    const slots = { mainhand: "mock:mainhand", offhand: "mock:shield", body: "mock:body-1000" };
-    const off = aegisOf({ equipmentSlots: slots }, "total-rating");
-    const on = aegisOf(
-      {
-        equipmentSlots: slots,
-        buffs: { ...DEFAULT_LOADOUT.buffs, fortitude: true },
-      },
-      "total-rating",
-    );
-    expect(on.aegis.basis).toBe("total-rating");
-    expect(on.aegis.qualifyingArmour).toBe(on.defence.blockArmourRating);
-    expect(on.leagueBaseAbilityDamageBonus).toBeGreaterThan(off.leagueBaseAbilityDamageBonus);
+    expect(on.aegis.armourPercent).toBe(0.75);
   });
 
   it("switching a shield for a two-handed weapon drops the multiplier without clearing the slot", () => {

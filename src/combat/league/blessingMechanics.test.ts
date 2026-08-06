@@ -33,7 +33,7 @@ describe("Teragard's Aegis and Basic Attacks", () => {
     // Aegis is applied at loadout resolve (aegisArmourBonus → base), not inside simulate.
     const aegisBonus = aegisArmourBonus(
       blessingChoice(1, "Order")!.combat,
-      { totalArmour: 1_000, blockArmourRating: 1_000 },
+      { totalArmour: 1_000 },
       null,
     ).baseAbilityDamageBonus;
     expect(aegisBonus).toBe(250);

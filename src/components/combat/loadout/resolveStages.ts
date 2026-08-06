@@ -483,7 +483,6 @@ export function resolveLeagueBundle(
     blessingRule(league, "teragards-aegis"),
     defenceLife.defence,
     wieldedOffhandKind(loadout),
-    { basis: loadout.buffs?.aegisArmourBasis === "equipment" ? "equipment" : "total-rating" },
   );
   // Barkscales needs an incoming attack cadence the outgoing rotation cannot
   // supply; the scenario is stated on the target or the result stays unavailable.

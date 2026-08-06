@@ -281,10 +281,10 @@ export function StatsPanel({
               }
             />
           ) : null}
-          {/* Two different numbers: the Loadout screen's Armour stat, which every
+          {/* Two different numbers: the Loadout screen's Total Armor Value, which every
               "% of your armour value" effect reads, and the hit-chance rating
               that Defence level, curses and Fortitude also feed. */}
-          <DerivedRow label="Armour" value={format(stats.defence.totalArmour)} />
+          <DerivedRow label="Total Armor Value" value={format(stats.defence.totalArmour)} />
           <DerivedRow
             label="Armour rating"
             value={format(stats.defence.blockArmourRating)}

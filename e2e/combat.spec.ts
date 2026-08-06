@@ -238,8 +238,8 @@ test("setup summary exposes the complete core-derived stat line", async ({ page 
     "Crit chance",
     "Crit damage",
     "Defence",
-    // Armour is the Loadout-screen stat; armour rating is hit-chance only.
-    "Armour",
+    // Total Armor Value is the Loadout-screen stat; armour rating is hit-chance only.
+    "Total Armor Value",
     "Armour rating",
     "Maximum HP",
     "Current HP",

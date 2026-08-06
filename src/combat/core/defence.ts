@@ -4,7 +4,7 @@ import { accuracyCurve } from "../target/genericTarget";
 
 /**
  * Player-as-defender (vs GenericTarget for NPCs).
- * totalArmour = equipment Armour only (Loadout/Hero; no Defence level).
+ * totalArmour = shared Total Armor Value from equipment (Loadout/Hero; no Defence level).
  * blockArmourRating d = floor(equipmentArmour + f(blockLevel)); hit-chance denom only.
  * f(x)=x^3/1250+4x+40; blockLevel = visible+prayer or Fortitude x1.15 (incompatible with curse Def).
  * Armour-% effects (Teragard, Striking Light, Barkscales) read totalArmour. Wiki sources below.
@@ -66,7 +66,7 @@ export interface DefenceStats {
   /** Visible level plus prayer block levels (or Fortitude's ×1.15) - feeds f(x). */
   blockLevel: number;
   equipmentArmour: number;
-  /** Equipment Armour alone (Loadout); armour-% effects read this - never block-only boosts. */
+  /** Shared Total Armor Value; armour-% effects read this, never block-only boosts. */
   totalArmour: number;
   /** f(blockLevel), unfloored; the floor belongs to the rating. */
   blockLevelArmour: number;

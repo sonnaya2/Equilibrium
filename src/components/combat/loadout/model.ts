@@ -8,7 +8,6 @@ import {
 } from "@/combat";
 import { equipmentById } from "@/combat/data";
 import type { EquipmentSlot } from "@/combat/data/records";
-import type { AegisArmourBasis } from "@/combat/league/ruleset";
 import {
   isRelicGrantedItemAvailable,
   relicGrantedItemForRelic,
@@ -245,11 +244,6 @@ export interface LoadoutBuffs {
    * 100% block + Soul Split-on-protect).
    */
   protectionPrayer: boolean;
-  /**
-   * Teragard's Aegis armour basis: total block rating (default) or equipment Armour only.
-   * Wiki wording is ambiguous; toggle until live-verified.
-   */
-  aegisArmourBasis: AegisArmourBasis;
   /** Archaeology: Berserker's Fury monolith relic (damage scales with missing LP). */
   berserkersFury: boolean;
   /** Archaeology: Fury of the Small (+1% adren on adrenaline-generating basics). */
@@ -483,7 +477,6 @@ export const DEFAULT_LOADOUT: Loadout = {
     strengthCape99: false,
     attackCape120: false,
     protectionPrayer: false,
-    aegisArmourBasis: "total-rating",
     berserkersFury: false,
     furyOfTheSmall: false,
     heightenedSenses: false,
@@ -1256,7 +1249,6 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       strengthCape99: rawBuffs.strengthCape99 === true,
       attackCape120: rawBuffs.attackCape120 === true,
       protectionPrayer: rawBuffs.protectionPrayer === true,
-      aegisArmourBasis: rawBuffs.aegisArmourBasis === "equipment" ? "equipment" : "total-rating",
       sliverOfEdictsActive: rawBuffs.sliverOfEdictsActive === true,
       ringOfVigourPassive: rawBuffs.ringOfVigourPassive === true,
       slayerHelmetStand: normalizeSlayerHelmetStand(rawBuffs.slayerHelmetStand),

@@ -103,7 +103,7 @@ describe("presentation reconciles with engine inputs", () => {
     );
   });
 
-  it("armour breakdowns reconcile with the default Aegis basis", () => {
+  it("armour breakdowns reconcile with the shared Total Armor Value", () => {
     const stats = loadoutStats(
       {
         ...base,
@@ -113,8 +113,9 @@ describe("presentation reconciles with engine inputs", () => {
       { blessingPicks: ["Order"] },
     );
     expect(sumBreakdown(stats.armourBreakdown)).toBe(stats.defence.totalArmour);
-    expect(stats.aegis.qualifyingArmour).toBe(stats.defence.blockArmourRating);
-    expect(stats.aegis.excludedBlockArmour).toBe(0);
+    expect(stats.aegis.baseAbilityDamageBonus).toBe(
+      Math.floor(stats.defence.totalArmour * stats.aegis.armourPercent),
+    );
     expect(sumBreakdown(stats.armourRatingBreakdown)).toBe(stats.defence.blockArmourRating);
   });
 

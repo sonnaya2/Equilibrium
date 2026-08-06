@@ -725,30 +725,6 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
             <p className="mt-1.5 text-[11px] text-parch-300">
               From Build. Unmodeled stays out of totals.
             </p>
-            {selectedBlessings.some((c) => c.id === "teragards-aegis") ? (
-              <div className="mt-2" role="group" aria-label="Teragard's Aegis armour basis">
-                <h3 className="buff-group__title">Teragard&apos;s Aegis armour</h3>
-                <p className="mb-1.5 text-[11px] text-parch-300">
-                  Wiki says total armour; live may be equipment-only. Toggle until verified.
-                </p>
-                <div className="icon-tile-grid">
-                  <BuffTile
-                    icon={null}
-                    label="Total rating"
-                    effect="Block armour rating (equipment + Defence / prayer / Fortitude)"
-                    pressed={loadout.buffs.aegisArmourBasis !== "equipment"}
-                    onClick={() => setBuffs({ aegisArmourBasis: "total-rating" })}
-                  />
-                  <BuffTile
-                    icon={null}
-                    label="Equipment only"
-                    effect="Equipped Armour stat only (excludes level-derived block share)"
-                    pressed={loadout.buffs.aegisArmourBasis === "equipment"}
-                    onClick={() => setBuffs({ aegisArmourBasis: "equipment" })}
-                  />
-                </div>
-              </div>
-            ) : null}
           </div>
 
           <div className="buff-group buff-life" role="group" aria-label="Defence and life">

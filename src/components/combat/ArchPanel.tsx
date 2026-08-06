@@ -239,18 +239,22 @@ export function ArchPanel({ loadout, setLoadout }: { loadout: Loadout; setLoadou
   ].filter((line): line is string => line != null);
 
   const toggleRelic = (relicId: string) => {
+    const cap = resolveMonolithEnergyCap({
+      unlockedRegions,
+      requestedCap: loadout.archaeology?.energyCap ?? null,
+    });
+    const attempt = applyArchaeologyToggle(loadout, relicId, cap, unlockedRegions);
+    if (!attempt.result.ok) {
+      setRejectHint(archaeologyRejectLabel(attempt.result.reason));
+      return;
+    }
+    setRejectHint(null);
     setLoadout((prev) => {
-      const cap = resolveMonolithEnergyCap({
+      const currentCap = resolveMonolithEnergyCap({
         unlockedRegions,
         requestedCap: prev.archaeology?.energyCap ?? null,
       });
-      const { loadout: next, result } = applyArchaeologyToggle(prev, relicId, cap, unlockedRegions);
-      if (!result.ok) {
-        setRejectHint(archaeologyRejectLabel(result.reason));
-        return prev;
-      }
-      setRejectHint(null);
-      return next;
+      return applyArchaeologyToggle(prev, relicId, currentCap, unlockedRegions).loadout;
     });
   };
 

@@ -111,6 +111,7 @@ import {
   leagueModifiers,
   resolveLeagueRules,
   resolveMaximumAdrenaline,
+  weaponTierOverride,
   type AegisArmourBonus,
   type ResolvedLeagueRules,
 } from "@/combat/league/ruleset";
@@ -132,9 +133,9 @@ import {
   loadoutOverloadTier,
   loadoutEffectiveDamageLevel,
   loadoutWeaponConfig,
-  loadoutWeaponTier,
   computedLoadoutBase,
   loadoutBase,
+  type WeaponTierOverrides,
   type StyleDamageContribution,
   type WeaponHand,
 } from "./weaponConfiguration";
@@ -300,15 +301,28 @@ export interface ResolvedEquipment {
   weaponConfiguration: "twohand" | "dualwield" | "mainhand" | "shield" | "defender" | "necromancy";
   equipmentStyleDamageBonus: number;
   styleDamageBonus: number;
+  weaponTierOverride: number | null;
+  weaponTierOverrides: WeaponTierOverrides;
 }
 
-export function resolveEquipment(loadout: Loadout, levels: ResolvedLevels): ResolvedEquipment {
+export function resolveEquipment(
+  loadout: Loadout,
+  levels: ResolvedLevels,
+  options: LoadoutStatsOptions = {},
+): ResolvedEquipment {
   const equipmentStats = aggregateLoadoutEquipment({
     equipmentSlots: loadout.equipmentSlots,
     style: loadout.style,
   });
   const accessoryAccuracy = equipmentStats.appliedAccuracy;
-  const weaponTier = loadoutWeaponTier(loadout);
+  const league = resolveLeagueRules({
+    ruleset: leagueRulesetFromOptions(options),
+    blessingPicks: options.blessingPicks,
+    relics: options.relics,
+  });
+  const resolvedWeaponTierOverride = weaponTierOverride(league);
+  const weaponTierOverrides: WeaponTierOverrides =
+    resolvedWeaponTierOverride == null ? [] : [resolvedWeaponTierOverride];
   const equipmentEffects = activeEquipmentEffects({
     style: loadout.style,
     equipmentSlots: loadout.equipmentSlots,
@@ -320,7 +334,7 @@ export function resolveEquipment(loadout: Loadout, levels: ResolvedLevels): Reso
   const tumekensPieces = effectiveTumekenPieces(setCounts);
   const styleContributions = equipmentStyleDamageContributions(loadout);
   const styleGearDamage = equipmentStyleDamageBonus(loadout);
-  const weaponConfig = loadoutWeaponConfig(loadout);
+  const weaponConfig = loadoutWeaponConfig(loadout, weaponTierOverrides);
   const wieldedOffhand = wieldedOffhandKind(loadout);
   const equipmentDamage = styleGearDamage;
   const mainhandTier =
@@ -361,7 +375,8 @@ export function resolveEquipment(loadout: Loadout, levels: ResolvedLevels): Reso
   return {
     equipmentStats,
     equipmentEffects,
-    weaponTier,
+    weaponTier:
+      weaponConfig.kind === "necromancy" ? weaponConfig.deathGuard.tier : weaponConfig.weapon.tier,
     weaponConfig,
     accessoryAccuracy,
     setCounts,
@@ -377,6 +392,8 @@ export function resolveEquipment(loadout: Loadout, levels: ResolvedLevels): Reso
     weaponConfiguration,
     equipmentStyleDamageBonus: equipmentDamage,
     styleDamageBonus: equipmentDamage + loadout.styleDamageBonus,
+    weaponTierOverride: resolvedWeaponTierOverride,
+    weaponTierOverrides,
   };
 }
 
@@ -612,7 +629,7 @@ export function resolveAccuracyDp(
 }
 
 export interface ResolvedBaseDamage {
-  baseDamageMode: "automatic" | "manual";
+  baseDamageMode: "automatic";
   rawBase: number;
   base: number;
   baseAbilityDamageBreakdown: readonly BreakdownRow[];
@@ -630,12 +647,9 @@ export function resolveBaseDamage(
   defenceLife: ResolvedDefenceLife,
   leagueBundle: ResolvedLeagueBundle,
 ): ResolvedBaseDamage {
-  const formulaBase = computedLoadoutBase(loadout);
-  const enteredBase =
-    loadout.baseDamage.mode === "manual" && loadout.baseDamage.manualValue > 0
-      ? loadout.baseDamage.manualValue
-      : formulaBase;
-  const afterPerksBase = loadoutBase(loadout);
+  const formulaBase = computedLoadoutBase(loadout, equipment.weaponTierOverrides);
+  const enteredBase = formulaBase;
+  const afterPerksBase = loadoutBase(loadout, equipment.weaponTierOverrides);
   const withAegis = afterPerksBase + leagueBundle.leagueBaseAbilityDamageBonus;
   const icyenicMult = leagueBundle.icyenic.baseAbilityDamageMultiplier;
   const resolvedBase = icyenicMult === 1 ? withAegis : mulFloor(withAegis, icyenicMult);
@@ -646,19 +660,15 @@ export function resolveBaseDamage(
         `${row.label}: ${row.blockedByStyle} style damage not applied (loadout is ${loadout.style})`,
     );
   // Split weapon tier AD from style Damage (rings/armour) so Channeller's etc. show.
-  const bareWeaponBase =
-    loadout.baseDamage.mode === "manual"
-      ? enteredBase
-      : baseAbilityDamage(levels.effectiveDamageLevel, {
-          ...equipment.weaponConfig,
-          styleBonus: 0,
-        });
-  const styleInBase =
-    loadout.baseDamage.mode === "manual" ? 0 : Math.max(0, formulaBase - bareWeaponBase);
+  const bareWeaponBase = baseAbilityDamage(levels.effectiveDamageLevel, {
+    ...equipment.weaponConfig,
+    styleBonus: 0,
+  });
+  const styleInBase = Math.max(0, formulaBase - bareWeaponBase);
   const baseAbilityDamageBreakdown: BreakdownRow[] = [
     {
-      label: loadout.baseDamage.mode === "manual" ? "Manual" : "Weapon",
-      value: loadout.baseDamage.mode === "manual" ? enteredBase : bareWeaponBase,
+      label: "Weapon",
+      value: bareWeaponBase,
     },
     { label: "Style damage", value: styleInBase },
     { label: "Invention perks", value: afterPerksBase - enteredBase },
@@ -700,7 +710,7 @@ export function resolveBaseDamage(
     },
   ];
   return {
-    baseDamageMode: loadout.baseDamage.mode,
+    baseDamageMode: "automatic",
     rawBase: enteredBase,
     base: resolvedBase,
     baseAbilityDamageBreakdown,

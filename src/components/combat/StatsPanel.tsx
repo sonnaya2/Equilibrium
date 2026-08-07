@@ -14,6 +14,8 @@ import {
 import type { CombatStyle } from "@/combat/types";
 import { unlockedRegions } from "@/league";
 import { useBuild } from "@/league/useBuild";
+import { blessingIconPath } from "@/lib/gameArt";
+import { GameIcon } from "../GameIcon";
 
 /** Skill each style draws its damage level from. */
 const DAMAGE_SKILL: Record<CombatStyle, string> = {
@@ -32,10 +34,6 @@ function StatsGroup({ title, children }: { title: string; children: React.ReactN
   );
 }
 
-/**
- * Numeric row whose value is engine-derived until the user takes it over. The
- * checkbox sits beside the number so the two read as one control.
- */
 function AutoNumberField({
   label,
   value,
@@ -104,13 +102,9 @@ export function StatsPanel({
     relics: Object.values(build.relics).filter(Boolean),
     unlockedRegions: unlockedRegions(build),
   });
+  const genesisEssenceActive = stats.weaponTierOverride != null;
   const overloadTier = loadoutOverloadTier(loadout);
-  const automatic = (patch: Partial<Loadout>) =>
-    setLoadout({
-      ...loadout,
-      ...patch,
-      baseDamage: { ...loadout.baseDamage, mode: "automatic" },
-    });
+  const automatic = (patch: Partial<Loadout>) => setLoadout({ ...loadout, ...patch });
 
   const boostNote = (base: number) =>
     overloadTier ? `+${overloadBoostedLevel(base, overloadTier) - base} from overload` : undefined;
@@ -184,8 +178,20 @@ export function StatsPanel({
             </label>
           ) : null}
           <NumberField
-            label={loadout.style === "necromancy" ? "Death guard tier" : "Main weapon tier"}
-            value={loadout.weaponTier}
+            label={
+              genesisEssenceActive ? (
+                <span className="inline-flex items-center gap-1">
+                  {loadout.style === "necromancy" ? "Death guard tier" : "Main weapon tier"}
+                  <GameIcon src={blessingIconPath("Genesis Essence")} size={16} />
+                </span>
+              ) : loadout.style === "necromancy" ? (
+                "Death guard tier"
+              ) : (
+                "Main weapon tier"
+              )
+            }
+            value={genesisEssenceActive ? 120 : loadout.weaponTier}
+            disabled={genesisEssenceActive}
             onChange={(weaponTier) => automatic({ weaponTier })}
           />
           {loadout.style === "necromancy" ||
@@ -216,34 +222,12 @@ export function StatsPanel({
             value={loadout.styleDamageBonus}
             onChange={(styleDamageBonus) => automatic({ styleDamageBonus })}
           />
-          <AutoNumberField
+          <DerivedRow
             label="Base ability damage"
-            value={
-              loadout.baseDamage.mode === "manual" ? loadout.baseDamage.manualValue : stats.rawBase
-            }
-            auto={loadout.baseDamage.mode === "automatic"}
-            onAutoChange={(auto) =>
-              setLoadout({
-                ...loadout,
-                baseDamage: {
-                  mode: auto ? "automatic" : "manual",
-                  // Freeze pre-perk / pre-Aegis entered base; loadoutBase + Aegis re-apply once.
-                  manualValue: auto ? loadout.baseDamage.manualValue : stats.rawBase,
-                },
-              })
-            }
-            onChange={(manualValue) =>
-              setLoadout({
-                ...loadout,
-                baseDamage: { mode: "manual", manualValue: Math.max(1, manualValue) },
-              })
-            }
+            value={format(stats.rawBase)}
+            note="Calculated from level, weapon, and style"
           />
-          {/* Engine total after Invention perks and Teragard's Aegis when it differs from the field. */}
-          {stats.base !==
-          (loadout.baseDamage.mode === "manual"
-            ? loadout.baseDamage.manualValue
-            : stats.rawBase) ? (
+          {stats.base !== stats.rawBase ? (
             <DerivedRow label="After modifiers" value={format(stats.base)} />
           ) : null}
         </StatsGroup>

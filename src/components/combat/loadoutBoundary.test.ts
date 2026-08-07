@@ -192,8 +192,7 @@ describe("saved loadout migration preserves gear and blessings boundary", () => 
       weaponTier: 90,
       equipmentSlots: { mainhand: "item:drygore-longsword" },
     });
-    expect(legacy.baseDamage.mode).toBe("automatic"); // legacy base value preserved; mode freezes on demand
-    expect(legacy.baseDamage.manualValue).toBe(2000);
+    expect(legacy.baseDamage).toEqual({ mode: "automatic" });
     expect(legacy.equipmentSlots.mainhand).toBe("item:drygore-longsword");
     expect(legacy.weaponConfiguration).toBe("mainhand");
   });

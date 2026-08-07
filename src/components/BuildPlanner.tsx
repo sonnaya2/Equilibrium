@@ -6,9 +6,14 @@
  */
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { equipmentById } from "@/combat/data";
 import type { EquipmentSlot } from "@/combat/data/records";
+import {
+  syncRelicGrantedEquipmentWithAutoEquip,
+  useLoadout,
+  type Loadout,
+} from "@/components/combat/useLoadout";
 import { canSelectElective, ELECTIVE_CAP, type BuildState, type RegionId } from "@/league";
 import { godTierAlignments, PATH_TIERS, type BlessingPath } from "@/league/blessings";
 import { buildShareUrl } from "@/league/share";
@@ -21,7 +26,6 @@ import {
   styleIconPath,
 } from "@/lib/gameArt";
 import { GameIcon } from "@/components/GameIcon";
-import { useLoadout } from "@/components/combat/useLoadout";
 import "./build-board.css";
 
 export type PlannerRegion = {
@@ -175,12 +179,13 @@ function CharacterLoadout({
   build,
   regions,
   relicTierCount,
+  loadout,
 }: {
   build: BuildState;
   regions: PlannerRegion[];
   relicTierCount: number;
+  loadout: Loadout;
 }) {
-  const [loadout] = useLoadout();
   const equippedCount = LOADOUT_DOLL.reduce(
     (count, entry) => count + (entry && entry !== "style" && loadout.equipmentSlots[entry] ? 1 : 0),
     0,
@@ -287,6 +292,19 @@ export function BuildPlanner({
 }) {
   const { build, loaded, toggleRegion, toggleRelic, pickBlessing, clearElectives, resetBuild } =
     useBuild();
+  const [loadout, setLoadout] = useLoadout();
+
+  const activeRelicNames = useMemo(
+    () =>
+      Object.values(build.relics).filter(
+        (name): name is string => typeof name === "string" && name.length > 0,
+      ),
+    [build.relics],
+  );
+  useEffect(() => {
+    if (!loaded) return;
+    setLoadout((prev) => syncRelicGrantedEquipmentWithAutoEquip(prev, activeRelicNames));
+  }, [activeRelicNames, loaded, setLoadout]);
 
   const [copyFeedback, setCopyFeedback] = useState<"idle" | "ok" | "err">("idle");
 
@@ -627,7 +645,12 @@ export function BuildPlanner({
             </section>
           </div>
 
-          <CharacterLoadout build={build} regions={regions} relicTierCount={relicTiers.length} />
+          <CharacterLoadout
+            build={build}
+            regions={regions}
+            relicTierCount={relicTiers.length}
+            loadout={loadout}
+          />
         </div>
       </div>
     </div>

@@ -62,6 +62,8 @@ export interface BlessingSupport {
 
 /** Sourced/provisional parameters stored in SQLite and emitted into the build shard. */
 export interface BlessingCombatRules {
+  /** Minimum effective tier for equipped weapon profiles. */
+  weaponTierOverride?: number;
   baseAbilityDamageArmourPercent?: number;
   defenderArmourMultiplier?: number;
   shieldArmourMultiplier?: number;

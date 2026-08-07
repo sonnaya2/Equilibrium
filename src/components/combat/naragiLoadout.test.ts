@@ -13,6 +13,7 @@ import {
   equipGrantedItemForRelic,
   equipInSlot,
   syncRelicGrantedEquipment,
+  syncRelicGrantedEquipmentWithAutoEquip,
   type Loadout,
 } from "./useLoadout";
 import { loadoutStats } from "./loadoutStats";
@@ -128,6 +129,21 @@ describe("Naragi / Icyenic granted-item equip rules", () => {
   it("equipGrantedItemForRelic pockets the Tome when Icyenic is active", () => {
     const empty = { ...DEFAULT_LOADOUT, equipmentSlots: {} };
     const next = equipGrantedItemForRelic(empty, "Icyenic Faith", ["Icyenic Faith"]);
+    expect(next.equipmentSlots.pocket).toBe("item:tome-of-the-icyene");
+  });
+
+  it("auto-equips the selected T7 grant after build hydration or selection", () => {
+    const empty = { ...DEFAULT_LOADOUT, equipmentSlots: {} };
+    const next = syncRelicGrantedEquipmentWithAutoEquip(empty, RELICS);
+    expect(next.equipmentSlots.pocket).toBe(SLIVER_OF_EDICTS_ID);
+  });
+
+  it("swaps the pocket grant when the selected T7 relic changes", () => {
+    const worn = {
+      ...DEFAULT_LOADOUT,
+      equipmentSlots: { pocket: SLIVER_OF_EDICTS_ID },
+    };
+    const next = syncRelicGrantedEquipmentWithAutoEquip(worn, ["Icyenic Faith"]);
     expect(next.equipmentSlots.pocket).toBe("item:tome-of-the-icyene");
   });
 });

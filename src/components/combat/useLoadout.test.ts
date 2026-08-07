@@ -48,9 +48,9 @@ describe("normalizeLoadout", () => {
     expect(normalizeLoadout("nope")).toEqual(DEFAULT_LOADOUT);
   });
 
-  it("defaults stored loadouts to automatic base damage and migrates the legacy base as a fallback", () => {
+  it("defaults stored loadouts to automatic base damage and drops legacy overrides", () => {
     const legacy = normalizeLoadout({ base: 777, startingAdrenaline: 140 });
-    expect(legacy.baseDamage).toEqual({ mode: "automatic", manualValue: 777 });
+    expect(legacy.baseDamage).toEqual({ mode: "automatic" });
     expect(legacy.startingAdrenaline).toBe(100);
     expect(legacy.hitCapEnabled).toBe(true);
     expect(legacy.loadoutSchemaVersion).toBe(2);
@@ -60,7 +60,7 @@ describe("normalizeLoadout", () => {
       startingAdrenaline: -5,
       hitCapEnabled: false,
     });
-    expect(manual.baseDamage).toEqual({ mode: "manual", manualValue: 1234 });
+    expect(manual.baseDamage).toEqual({ mode: "automatic" });
     expect(manual.startingAdrenaline).toBe(0);
     expect(manual.hitCapEnabled).toBe(false);
   });
@@ -78,10 +78,10 @@ describe("normalizeLoadout", () => {
     ).toBe(72);
   });
 
-  it("rejects non-positive persisted manual base values", () => {
+  it("ignores legacy manual base values", () => {
     expect(
       normalizeLoadout({ baseDamage: { mode: "manual", manualValue: -4 } }).baseDamage,
-    ).toEqual({ mode: "manual", manualValue: 1 });
+    ).toEqual({ mode: "automatic" });
   });
 
   it("keeps up to 120 starting adrenaline with four Vestments pieces", () => {
@@ -168,7 +168,7 @@ describe("normalizeLoadout", () => {
       // Anguish is the ranged curse, so following the wand moves it to Torment.
       buffs: { vulnerability: true, styleCurse: "torment", overload: "elder" },
       target: { defenceLevel: 88, armour: 420, affinity: "strong" },
-      baseDamage: { mode: "manual", manualValue: 4321 },
+      baseDamage: { mode: "automatic" },
       startingAdrenaline: 72,
       hitCapEnabled: false,
     });
@@ -547,14 +547,11 @@ describe("equipInSlot twohand exclusivity", () => {
     expect(loadout.equipmentSlots).toEqual({ ring: "item:ring" });
   });
 
-  it("equipment, equipment clearing, and style changes return manual base mode to automatic", () => {
-    const manual = {
-      ...DEFAULT_LOADOUT,
-      baseDamage: { mode: "manual" as const, manualValue: 4321 },
-    };
-    expect(equipInSlot(manual, "helmet", "item:helm").baseDamage.mode).toBe("automatic");
-    expect(clearEquipment(manual).baseDamage.mode).toBe("automatic");
-    expect(withCombatStyle(manual, "magic").baseDamage.mode).toBe("automatic");
+  it("equipment and style changes preserve automatic base calculation", () => {
+    const automatic = { ...DEFAULT_LOADOUT };
+    expect(equipInSlot(automatic, "helmet", "item:helm").baseDamage).toEqual({ mode: "automatic" });
+    expect(clearEquipment(automatic).baseDamage).toEqual({ mode: "automatic" });
+    expect(withCombatStyle(automatic, "magic").baseDamage).toEqual({ mode: "automatic" });
   });
 });
 

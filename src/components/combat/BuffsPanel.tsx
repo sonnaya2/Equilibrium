@@ -41,6 +41,7 @@ import {
   isPowerburstOfVitalityActive,
   isPowerburstOfVitalityReady,
   syncRelicGrantedEquipment,
+  syncRelicGrantedEquipmentWithAutoEquip,
   toggleEquipmentEnchantment,
   withLoadoutBuffs,
   type Loadout,
@@ -301,7 +302,7 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
 
   // Drop Tome / Sliver when their T7 relic is not selected (import / deselect / swap).
   useEffect(() => {
-    setLoadout((prev) => syncRelicGrantedEquipment(prev, activeRelicNames));
+    setLoadout((prev) => syncRelicGrantedEquipmentWithAutoEquip(prev, activeRelicNames));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeRelicNames.join("\0")]);
   const anachroniaUnlocked = isRegionUnlocked(build, "anachronia");

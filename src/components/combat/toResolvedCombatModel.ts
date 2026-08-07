@@ -46,9 +46,14 @@ function sanitizedArchaeologyIds(
 export function naragiBaseDamageCompare(
   loadout: Loadout,
   statsBase: number,
+  weaponTierOverride: number | null = null,
 ): { off: number; on: number } {
-  const formulaNormal = computedLoadoutBase(loadout);
-  const formulaOverride = baseAbilityDamage(NARAGI_LEVEL_OVERRIDE, loadoutWeaponConfig(loadout));
+  const overrides = weaponTierOverride == null ? [] : [weaponTierOverride];
+  const formulaNormal = computedLoadoutBase(loadout, overrides);
+  const formulaOverride = baseAbilityDamage(
+    NARAGI_LEVEL_OVERRIDE,
+    loadoutWeaponConfig(loadout, overrides),
+  );
   const on =
     formulaNormal > 0 ? Math.floor((statsBase * formulaOverride) / formulaNormal) : statsBase;
   return { off: statsBase, on };
@@ -67,7 +72,11 @@ export function hostInputFromLoadoutStats(
   });
 
   // Precompute base AD at Naragi 255 so land-time override swaps formula base exactly.
-  const { on: overrideBase } = naragiBaseDamageCompare(loadout, stats.base);
+  const { on: overrideBase } = naragiBaseDamageCompare(
+    loadout,
+    stats.base,
+    stats.weaponTierOverride,
+  );
   const sliverWorn = loadout.equipmentSlots?.pocket === SLIVER_OF_EDICTS_ID;
   const naragiPicked =
     options.relics?.includes(NARAGI_EDICT_RELIC) === true ||

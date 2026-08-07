@@ -64,7 +64,8 @@ describe("canonical blessings data contract", () => {
         choice.id === "lord-of-light" ||
         choice.id === "tempered-heart" ||
         choice.id === "envenomed" ||
-        choice.id === "perfidious"
+        choice.id === "perfidious" ||
+        choice.id === "genesis-essence"
       ) {
         continue;
       }
@@ -109,6 +110,10 @@ describe("canonical blessings data contract", () => {
     expect(lateChoices.find((choice) => choice.id === "perfidious")).toMatchObject({
       support: { status: "partially-modeled" },
       combat: { strikingLightCooldownTicks: 8 },
+    });
+    expect(lateChoices.find((choice) => choice.id === "genesis-essence")).toMatchObject({
+      support: { status: "modeled", mechanicsUnverified: true },
+      combat: { weaponTierOverride: 120 },
     });
   });
 

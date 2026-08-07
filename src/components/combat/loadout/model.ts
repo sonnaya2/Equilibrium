@@ -93,8 +93,7 @@ export interface LoadoutTarget {
 }
 
 export interface BaseDamageSettings {
-  mode: "automatic" | "manual";
-  manualValue: number;
+  mode: "automatic";
 }
 
 /** Stored weapon shape. Shield / defender are set from equipped gear (not the manual select). */
@@ -438,7 +437,7 @@ export const DEFAULT_LOADOUT: Loadout = {
   ammunitionTier: 90,
   styleDamageBonus: 0,
   weaponConfiguration: "twohand",
-  baseDamage: { mode: "automatic", manualValue: 1000 },
+  baseDamage: { mode: "automatic" },
   // Combat open is full adren in almost every PvM setup; 0 made ultimates
   // (Death's Swiftness, Sunshine, Berserk) look "broken" until Stats was touched.
   startingAdrenaline: 100,
@@ -674,7 +673,6 @@ export function equipInSlot(
   const unlocks = unlockOnlyIds(loadout);
   const next: Loadout = {
     ...loadout,
-    baseDamage: { ...loadout.baseDamage, mode: "automatic" },
     equipmentSlots: slots,
     equipmentIds: mergeEquipmentIds(slots, unlocks),
     buffs:
@@ -712,6 +710,20 @@ export function syncRelicGrantedEquipment(
     equipmentIds: mergeEquipmentIds(nextSlots, unlocks),
     buffs: clearSliverActive ? { ...loadout.buffs, sliverOfEdictsActive: false } : loadout.buffs,
   };
+}
+
+/** Strip inactive grants, then equip each active grant when a selection changes. */
+export function syncRelicGrantedEquipmentWithAutoEquip(
+  loadout: Loadout,
+  activeRelicNames: readonly string[] | ReadonlySet<string> | undefined,
+): Loadout {
+  const active =
+    activeRelicNames instanceof Set ? [...activeRelicNames] : [...(activeRelicNames ?? [])];
+  let next = syncRelicGrantedEquipment(loadout, active);
+  for (const relicName of active) {
+    next = equipGrantedItemForRelic(next, relicName, active);
+  }
+  return next;
 }
 
 /**
@@ -754,7 +766,6 @@ export function toggleEquipmentEnchantment(
 export function clearEquipment(loadout: Loadout): Loadout {
   return {
     ...loadout,
-    baseDamage: { ...loadout.baseDamage, mode: "automatic" },
     equipmentSlots: {},
     equipmentIds: [],
   };
@@ -837,7 +848,6 @@ export function withCombatStyle(loadout: Loadout, style: CombatStyle): Loadout {
   return {
     ...loadout,
     style,
-    baseDamage: { ...loadout.baseDamage, mode: "automatic" },
     // Melee damage level is Strength; leave/enter melee seeds `level` from strengthLevel.
     level: style === "melee" || loadout.style === "melee" ? loadout.strengthLevel : loadout.level,
     buffs: { ...loadout.buffs, styleCurse: curseForStyle(loadout.buffs.styleCurse, style) },
@@ -1021,10 +1031,6 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
   const rawPerks = (raw.perks ?? {}) as Partial<LoadoutPerks>;
   const rawBuffs = (raw.buffs ?? {}) as Partial<LoadoutBuffs>;
   const rawTarget = raw.target as Partial<LoadoutTarget> | null | undefined;
-  const rawBaseDamage =
-    typeof raw.baseDamage === "object" && raw.baseDamage !== null
-      ? (raw.baseDamage as Partial<BaseDamageSettings>)
-      : undefined;
   const equipmentSlots = normalizeEquipmentSlots(raw.equipmentSlots);
   const storedStyle = STYLES.includes(raw.style as string)
     ? (raw.style as CombatStyle)
@@ -1166,13 +1172,7 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       raw.weaponConfiguration === "defender"
         ? raw.weaponConfiguration
         : "twohand"),
-    baseDamage: {
-      mode: rawBaseDamage?.mode === "manual" ? "manual" : "automatic",
-      manualValue: Math.max(
-        1,
-        num(rawBaseDamage?.manualValue, num(raw.base, DEFAULT_LOADOUT.baseDamage.manualValue)),
-      ),
-    },
+    baseDamage: { mode: "automatic" },
     startingAdrenaline,
     loadoutSchemaVersion: LOADOUT_SCHEMA_VERSION,
     hitCapEnabled: raw.hitCapEnabled !== false,

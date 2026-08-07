@@ -24,7 +24,7 @@ import {
   loadoutWeaponTier,
   nonWeaponAccuracyBonus,
 } from "./loadoutStats";
-import { DEFAULT_LOADOUT, type Loadout } from "./useLoadout";
+import { DEFAULT_LOADOUT, normalizeLoadout, type Loadout } from "./useLoadout";
 
 vi.mock("@/combat/data", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/combat/data")>();
@@ -239,48 +239,32 @@ describe("loadoutStats", () => {
     expect(stats.damagePotentialSource).toBe("manual override");
   });
 
-  it("keeps automatic base reactive while manual base is an explicit raw-AD override", () => {
+  it("always computes base ability damage from the current loadout", () => {
     const automatic = loadoutStats({ ...base, level: 110, strengthLevel: 110 });
     expect(automatic.rawBase).toBe(
       computedLoadoutBase({ ...base, level: 110, strengthLevel: 110 }),
     );
 
-    const manual = loadoutStats({
+    const legacy = normalizeLoadout({
       ...base,
       level: 110,
       strengthLevel: 110,
       baseDamage: { mode: "manual", manualValue: 2345 },
-      startingAdrenaline: 72,
-      hitCapEnabled: false,
     });
-    expect(manual.rawBase).toBe(2345);
-    expect(manual.base).toBe(2345);
-    expect(manual.startingAdrenaline).toBe(72);
-    expect(manual.cap).toEqual({ cap: 30_000, bypass: true });
+    const legacyStats = loadoutStats(legacy);
+    expect(legacyStats.rawBase).toBe(computedLoadoutBase(legacy));
+    expect(legacyStats.baseDamageMode).toBe("automatic");
   });
 
-  it("freezing automatic base into manual stores rawBase so perks/Aegis apply once", () => {
+  it("keeps perk modifiers reactive after legacy base values are removed", () => {
     const autoLoadout: Loadout = {
       ...base,
       perks: { ...base.perks, equilibrium: 4, eruptive: 4 },
     };
     const auto = loadoutStats(autoLoadout);
     expect(auto.rawBase).toBeLessThan(auto.base);
-
-    // Correct freeze path (StatsPanel auto→manual): store pre-perk rawBase.
-    const frozen = loadoutStats({
-      ...autoLoadout,
-      baseDamage: { mode: "manual", manualValue: auto.rawBase },
-    });
-    expect(frozen.rawBase).toBe(auto.rawBase);
-    expect(frozen.base).toBe(auto.base);
-
-    // Freezing stats.base re-applies perks and double-counts.
-    const doubleCounted = loadoutStats({
-      ...autoLoadout,
-      baseDamage: { mode: "manual", manualValue: auto.base },
-    });
-    expect(doubleCounted.base).toBeGreaterThan(auto.base);
+    const changedLevel = loadoutStats({ ...autoLoadout, strengthLevel: 100, level: 100 });
+    expect(changedLevel.rawBase).not.toBe(auto.rawBase);
   });
 
   it("adds Energising's flat accuracy inside the target model only", () => {
@@ -695,7 +679,7 @@ describe("loadoutStats", () => {
       ...base,
       style: "magic",
       equipmentSlots: {},
-      baseDamage: { mode: "automatic", manualValue: 0 },
+      baseDamage: { mode: "automatic" },
     };
     const ring: Loadout = {
       ...bare,

@@ -10,6 +10,29 @@ const clampLevel = (value: number) => Math.min(Math.max(1, value), 145);
 
 const WEAPON_SLOTS = new Set(["mainhand", "offhand", "twohand", "ammo"]);
 
+export type WeaponTierOverrides = readonly (number | null | undefined)[];
+
+/** Tier overrides are floors, so applying the same override twice is harmless. */
+export function effectiveWeaponTier(baseTier: number, overrides: WeaponTierOverrides = []): number {
+  if (!Number.isFinite(baseTier) || baseTier < 0) {
+    throw new RangeError(`effectiveWeaponTier: bad base tier ${baseTier}`);
+  }
+  let effectiveTier = baseTier;
+  for (const override of overrides) {
+    if (override == null) continue;
+    if (!Number.isFinite(override) || override < 0) {
+      throw new RangeError(`effectiveWeaponTier: bad override ${override}`);
+    }
+    effectiveTier = Math.max(effectiveTier, Math.floor(override));
+  }
+  return effectiveTier;
+}
+
+function effectiveWeaponProfileTier(tier: number, overrides: WeaponTierOverrides): number {
+  // Zero is the explicit weaponless sentinel used by manual loadout setups.
+  return tier === 0 ? tier : effectiveWeaponTier(tier, overrides);
+}
+
 /**
  * Unique records the player is actually wearing. Unlock pins are never equipped,
  * and a stale main-hand/off-hand under a two-handed weapon is resolved away by
@@ -85,8 +108,8 @@ export function equippedWeaponTier(loadout: Loadout): number | null {
   return null;
 }
 
-export function loadoutWeaponTier(loadout: Loadout): number {
-  return equippedWeaponTier(loadout) ?? loadout.weaponTier;
+export function loadoutWeaponTier(loadout: Loadout, overrides: WeaponTierOverrides = []): number {
+  return effectiveWeaponProfileTier(equippedWeaponTier(loadout) ?? loadout.weaponTier, overrides);
 }
 
 export function loadoutAttackLevel(loadout: Loadout): number {
@@ -117,6 +140,7 @@ export function loadoutEffectiveDamageLevel(loadout: Loadout): number {
 function slotWeaponTier(
   loadout: Loadout,
   slot: "twohand" | "mainhand" | "offhand" | "ammo",
+  overrides: WeaponTierOverrides,
 ): number | null {
   const id = resolvedEquipmentSlots(loadout)[slot];
   if (id === undefined) return null;
@@ -126,7 +150,8 @@ function slotWeaponTier(
   const tier = record.tier;
   if (tier == null || !Number.isFinite(tier)) return null;
   if (slot === "offhand" && record.shield && !record.defender) return null;
-  return slot === "offhand" && record.defender ? tier / 2 : tier;
+  const effectiveTier = effectiveWeaponProfileTier(tier, overrides);
+  return slot === "offhand" && record.defender ? effectiveTier / 2 : effectiveTier;
 }
 
 export type WeaponHand = Parameters<typeof baseAbilityDamage>[1];
@@ -137,28 +162,33 @@ export type WeaponHand = Parameters<typeof baseAbilityDamage>[1];
  * routes here); mainhand only → main hand. No tiered weapon in any slot → the
  * legacy fallback: weaponTier slider through the twohand formula, as before.
  */
-export function loadoutWeaponConfig(loadout: Loadout): WeaponHand {
+export function loadoutWeaponConfig(
+  loadout: Loadout,
+  overrides: WeaponTierOverrides = [],
+): WeaponHand {
   const styleBonus = equipmentStyleDamageBonus(loadout) + loadout.styleDamageBonus;
-  const twohandTier = slotWeaponTier(loadout, "twohand");
-  const mainhandTier = slotWeaponTier(loadout, "mainhand");
-  const offhandTier = slotWeaponTier(loadout, "offhand");
+  const twohandTier = slotWeaponTier(loadout, "twohand", overrides);
+  const mainhandTier = slotWeaponTier(loadout, "mainhand", overrides);
+  const offhandTier = slotWeaponTier(loadout, "offhand", overrides);
   const offhandOccupied = resolvedEquipmentSlots(loadout).offhand !== undefined;
   if (loadout.style === "necromancy") {
     return {
       kind: "necromancy",
-      deathGuard: { tier: mainhandTier ?? loadout.weaponTier },
+      deathGuard: {
+        tier: mainhandTier ?? effectiveWeaponProfileTier(loadout.weaponTier, overrides),
+      },
       conduit:
         offhandTier != null
           ? { tier: offhandTier }
           : offhandOccupied
             ? undefined
-            : { tier: loadout.offhandTier },
+            : { tier: effectiveWeaponProfileTier(loadout.offhandTier, overrides) },
       styleBonus,
     };
   }
   const caps =
     loadout.style === "ranged"
-      ? { ammunitionTier: slotWeaponTier(loadout, "ammo") ?? loadout.ammunitionTier }
+      ? { ammunitionTier: slotWeaponTier(loadout, "ammo", []) ?? loadout.ammunitionTier }
       : loadout.style === "magic"
         ? { spellTier: loadout.spellTier }
         : {};
@@ -195,7 +225,7 @@ export function loadoutWeaponConfig(loadout: Loadout): WeaponHand {
     return {
       kind: "mainhand",
       style: loadout.style,
-      weapon: { tier: loadout.weaponTier },
+      weapon: { tier: effectiveWeaponProfileTier(loadout.weaponTier, overrides) },
       styleBonus,
       ...caps,
     };
@@ -204,8 +234,8 @@ export function loadoutWeaponConfig(loadout: Loadout): WeaponHand {
     return {
       kind: "mainhand",
       style: loadout.style,
-      weapon: { tier: loadout.weaponTier },
-      offhand: { tier: loadout.offhandTier / 2 },
+      weapon: { tier: effectiveWeaponProfileTier(loadout.weaponTier, overrides) },
+      offhand: { tier: effectiveWeaponProfileTier(loadout.offhandTier, overrides) / 2 },
       styleBonus,
       ...caps,
     };
@@ -214,15 +244,15 @@ export function loadoutWeaponConfig(loadout: Loadout): WeaponHand {
     return {
       kind: "mainhand",
       style: loadout.style,
-      weapon: { tier: loadout.weaponTier },
-      offhand: { tier: loadout.offhandTier },
+      weapon: { tier: effectiveWeaponProfileTier(loadout.weaponTier, overrides) },
+      offhand: { tier: effectiveWeaponProfileTier(loadout.offhandTier, overrides) },
       styleBonus,
       ...caps,
     };
   }
   return {
     kind: "twohand",
-    weapon: { tier: loadoutWeaponTier(loadout) },
+    weapon: { tier: effectiveWeaponProfileTier(loadoutWeaponTier(loadout), overrides) },
     style: loadout.style,
     styleBonus,
     ...caps,
@@ -230,15 +260,15 @@ export function loadoutWeaponConfig(loadout: Loadout): WeaponHand {
 }
 
 /** Base ability damage computed from the effective level and equipped weapon config. */
-export function computedLoadoutBase(loadout: Loadout): number {
-  return baseAbilityDamage(loadoutEffectiveDamageLevel(loadout), loadoutWeaponConfig(loadout));
+export function computedLoadoutBase(loadout: Loadout, overrides: WeaponTierOverrides = []): number {
+  return baseAbilityDamage(
+    loadoutEffectiveDamageLevel(loadout),
+    loadoutWeaponConfig(loadout, overrides),
+  );
 }
 
-export function loadoutBase(loadout: Loadout): number {
-  const raw =
-    loadout.baseDamage.mode === "manual" && loadout.baseDamage.manualValue > 0
-      ? loadout.baseDamage.manualValue
-      : computedLoadoutBase(loadout);
+export function loadoutBase(loadout: Loadout, overrides: WeaponTierOverrides = []): number {
+  const raw = computedLoadoutBase(loadout, overrides);
   const equilibrium =
     loadout.perks.equilibrium > 0 ? 1 + equilibriumDamageBonus(loadout.perks.equilibrium) : 1;
   const eruptive = loadout.perks.eruptive > 0 ? 1 + eruptiveDamageBonus(loadout.perks.eruptive) : 1;

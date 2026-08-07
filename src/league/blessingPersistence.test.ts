@@ -48,6 +48,23 @@ describe("stable blessing selection persistence", () => {
     );
   });
 
+  it("round-trips Genesis Essence as the Order God Tier 2 selection", () => {
+    const state = normalizeBuild({
+      blessingSelections: [
+        { tier: 1, blessingId: "teragards-aegis" },
+        { tier: 2, blessingId: "striking-light" },
+        { tier: 3, blessingId: "steadfast-will" },
+        { tier: 5, blessingId: "higher-power" },
+        { tier: 6, blessingId: "lord-of-light" },
+        { tier: 7, blessingId: "tempered-heart" },
+      ],
+    });
+    expect(activeBlessings(state.blessingPicks).map((choice) => choice.id)).toContain(
+      "genesis-essence",
+    );
+    expect(state.blessingSelections).toHaveLength(6);
+  });
+
   it("prunes invalid, duplicate, and tier-mismatched blessing ids", () => {
     const state = normalizeBuild({
       blessingSelections: [

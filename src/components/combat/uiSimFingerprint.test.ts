@@ -48,9 +48,9 @@ describe("uiRunFingerprint", () => {
     expect(a).toBe(b);
   });
 
-  it("changing base invalidates fingerprint", () => {
+  it("changing weapon tier invalidates fingerprint", () => {
     const higher = withLoadout({
-      baseDamage: { mode: "manual", manualValue: 2_100 },
+      weaponTier: 120,
     });
     const { stats: higherStats, combatModel: higherModel } = resolve(higher);
     expect(higherModel.base).not.toBe(combatModel.base);

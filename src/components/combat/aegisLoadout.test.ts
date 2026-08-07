@@ -142,23 +142,21 @@ describe("Aegis through a Setup loadout", () => {
     expect(stats.aegis.armourPercent).toBe(0.25);
   });
 
-  it("gives a manual-weapon loadout with no real shield the plain 25%", () => {
+  it("gives a weaponless loadout with no real shield the plain 25%", () => {
     const stats = aegisOf({
       weaponConfiguration: "shield" as Loadout["weaponConfiguration"],
-      baseDamage: { mode: "manual", manualValue: 2_000 },
       equipmentSlots: { body: "mock:body-1000" },
     });
     expect(stats.aegis.offhand).toBe("none");
     expect(stats.leagueBaseAbilityDamageBonus).toBe(250);
-    expect(stats.base).toBe(2_250);
+    expect(stats.base).toBe(stats.rawBase + 250);
   });
 
-  it("adds to manual base ability damage rather than multiplying final damage", () => {
+  it("adds to computed base ability damage rather than multiplying final damage", () => {
     const shielded = aegisOf({
-      baseDamage: { mode: "manual", manualValue: 2_000 },
       equipmentSlots: { mainhand: "mock:mainhand", offhand: "mock:shield", body: "mock:body-1000" },
     });
-    expect(shielded.base).toBe(2_000 + 900);
+    expect(shielded.base).toBe(shielded.rawBase + 900);
   });
 
   it("uses Total Armor Value while block rating changes independently", () => {

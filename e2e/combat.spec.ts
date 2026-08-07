@@ -522,24 +522,20 @@ test("manual rotation still exposes necromancy abilities", async ({ page }) => {
   await expect(page.getByRole("button", { name: /Volley of Souls/ })).toBeVisible();
 });
 
-test("loadout calculation controls reset automatic base and persist into Revolution", async ({
+test("loadout base damage follows the weapon tier and persists into Revolution", async ({
   page,
 }) => {
   await page.getByRole("tab", { name: "Loadout", exact: true }).click();
   await page.getByRole("button", { name: "Stats", exact: true }).click();
 
-  const baseAuto = page.getByRole("checkbox", { name: "Base ability damage automatic" });
-  await baseAuto.uncheck();
-  await page.getByRole("spinbutton", { name: "Base ability damage" }).fill("9999");
-  // Manual entry shows in the summary total when Aegis is 0; open the dropdown
-  // only to prove the Manual source line also reconciles.
+  await expect(
+    page.getByText("Calculated from level, weapon, and style", { exact: true }),
+  ).toBeVisible();
   const baseMetric = summaryMetric(page, "Base ability damage");
-  await expect(baseMetric.locator("strong")).toHaveText("9,999");
-  await baseMetric.locator("summary").click();
-  await expect(baseMetric.locator("dd").filter({ hasText: "9,999" })).toBeVisible();
+  const before = await baseMetric.locator("strong").innerText();
 
   await page.getByRole("spinbutton", { name: "Main weapon tier" }).fill("91");
-  await expect(baseAuto).toBeChecked();
+  await expect(baseMetric.locator("strong")).not.toHaveText(before);
   await page.getByRole("spinbutton", { name: "Starting adrenaline" }).fill("62");
 
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
@@ -547,9 +543,11 @@ test("loadout calculation controls reset automatic base and persist into Revolut
 
   await page.reload();
   await page.getByRole("tab", { name: "Loadout", exact: true }).click();
-  await page.getByRole("button", { name: "Abilities", exact: true }).click();
-  await expect(page.getByRole("checkbox", { name: "Use Loadout" })).toBeChecked();
-  await expect(page.getByRole("spinbutton", { name: "Base ability damage" })).toHaveValue("1774");
+  await page.getByRole("button", { name: "Stats", exact: true }).click();
+  await expect(page.getByRole("spinbutton", { name: "Main weapon tier" })).toHaveValue("91");
+  await expect(
+    page.getByText("Calculated from level, weapon, and style", { exact: true }),
+  ).toBeVisible();
 
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await expect(page.getByRole("checkbox", { name: "30,000 hit cap" })).not.toBeChecked();
@@ -590,8 +588,11 @@ test("v1 loadout migration and Defence/life controls persist across reload", asy
   await expect(page.getByRole("spinbutton", { name: "Defence level" })).toHaveValue("99");
   await expect(page.getByRole("spinbutton", { name: "Constitution level" })).toHaveValue("99");
   await expect(
-    page.getByRole("checkbox", { name: "Base ability damage automatic" }),
-  ).not.toBeChecked();
+    page.getByText("Calculated from level, weapon, and style", { exact: true }),
+  ).toBeVisible();
+  await expect(summaryMetric(page, "Base ability damage").locator("strong")).not.toHaveText(
+    "4,321",
+  );
   await expect(page.getByRole("spinbutton", { name: "Starting adrenaline" })).toHaveValue("72");
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await expect(page.getByRole("checkbox", { name: "30,000 hit cap" })).not.toBeChecked();
@@ -653,7 +654,7 @@ test("v1 loadout migration and Defence/life controls persist across reload", asy
     defenceLevel: 73,
     constitutionLevel: 88,
     currentLife: 6000,
-    baseDamage: { mode: "manual", manualValue: 4321 },
+    baseDamage: { mode: "automatic" },
     startingAdrenaline: 72,
     hitCapEnabled: false,
     buffs: {
@@ -787,6 +788,36 @@ test("combat blessing choices stay synced with Build", async ({ page }) => {
   await expect(page.getByRole("combobox", { name: "Blessing tier 1" })).toHaveValue("Order");
   await expect(page.getByRole("combobox", { name: "Blessing tier 2" })).toHaveValue("Chaos");
   await expect(page.getByRole("combobox", { name: "Blessing tier 3" })).toHaveValue("Balance");
+});
+
+test("T7 relic selection equips its granted pocket item in the Build loadout", async ({ page }) => {
+  await page.goto("/build");
+    await page.getByRole("option", { name: "Naragi Edict", exact: true }).click();
+
+  const finalLoadout = page.getByRole("complementary", { name: "Final loadout" });
+  await expect(finalLoadout.locator('[aria-label="Pocket: Sliver of Edicts"]')).toBeVisible();
+});
+
+test("Genesis locks the displayed main weapon tier to T120", async ({ page }) => {
+  await page.evaluate(() => {
+    window.localStorage.setItem(
+      "eq:build:v1",
+      JSON.stringify({
+        elective: [],
+        relics: {},
+          blessingPicks: ["Order", "Order", "Order", "Order", "Order", "Order"],
+        blessingSelections: [],
+        blessingResetsUsed: 0,
+      }),
+    );
+  });
+  await page.reload();
+  await page.getByRole("button", { name: "Stats", exact: true }).click();
+
+  const weaponTier = page.getByRole("spinbutton", { name: "Main weapon tier" });
+  await expect(weaponTier).toHaveValue("120");
+  await expect(weaponTier).toBeDisabled();
+  await expect(page.locator('img[src="/game/blessings/genesis-essence.webp"]')).toBeVisible();
 });
 
 test("combat interaction chrome uses the shared emerald gem token", async ({ page }) => {

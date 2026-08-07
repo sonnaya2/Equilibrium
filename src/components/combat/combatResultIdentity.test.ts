@@ -104,13 +104,12 @@ function verifiedDto(overrides: Partial<SolverResultDTO> = {}): SolverResultDTO 
 
 describe("combat result identity (stale-result product rule)", () => {
   describe("material sim input changes shared simulation identity", () => {
-    it("base damage change invalidates packed sim identity and ui fingerprint", () => {
-      const loadoutA = withLoadout({ baseDamage: { mode: "manual", manualValue: 2_000 } });
-      const loadoutB = withLoadout({ baseDamage: { mode: "manual", manualValue: 2_500 } });
+    it("weapon tier change invalidates packed sim identity and ui fingerprint", () => {
+      const loadoutA = withLoadout({ weaponTier: 90 });
+      const loadoutB = withLoadout({ weaponTier: 120 });
       const a = packFromLoadout(loadoutA);
       const b = packFromLoadout(loadoutB);
-      expect(a.stats.base).toBe(2_000);
-      expect(b.stats.base).toBe(2_500);
+      expect(a.stats.base).not.toBe(b.stats.base);
       expect(simIdentityString(a.request)).not.toBe(simIdentityString(b.request));
       expect(solveIdentityFromRequest(a.request)).not.toBe(solveIdentityFromRequest(b.request));
 
@@ -238,12 +237,10 @@ describe("combat result identity (stale-result product rule)", () => {
   describe("bar library score verification is context-bound", () => {
     it("verified under loadout context A is not verified under context B", () => {
       const contextA = solveIdentityFromRequest(
-        packFromLoadout(withLoadout({ baseDamage: { mode: "manual", manualValue: 2_000 } }))
-          .request,
+        packFromLoadout(withLoadout({ weaponTier: 90 })).request,
       );
       const contextB = solveIdentityFromRequest(
-        packFromLoadout(withLoadout({ baseDamage: { mode: "manual", manualValue: 3_000 } }))
-          .request,
+        packFromLoadout(withLoadout({ weaponTier: 120 })).request,
       );
       expect(contextA).not.toBe(contextB);
       expect(contextA.length).toBeGreaterThan(0);
@@ -279,13 +276,10 @@ describe("combat result identity (stale-result product rule)", () => {
 
   describe("solveIdentity mismatch rejects verified cache", () => {
     it("resultMatchesRequestIdentity and isVerifiedCacheableResult gate stale stamps", () => {
-      const request = packFromLoadout(
-        withLoadout({ baseDamage: { mode: "manual", manualValue: 2_000 } }),
-      ).request;
+      const request = packFromLoadout(withLoadout({ weaponTier: 90 })).request;
       const identity = solveIdentityFromRequest(request);
       const otherIdentity = solveIdentityFromRequest(
-        packFromLoadout(withLoadout({ baseDamage: { mode: "manual", manualValue: 2_100 } }))
-          .request,
+        packFromLoadout(withLoadout({ weaponTier: 120 })).request,
       );
       expect(identity).not.toBe(otherIdentity);
 
@@ -372,13 +366,11 @@ describe("end-to-end: stale score never verifies after material change", () => {
     const reqA = packFromLoadout(
       withLoadout({
         target: { defenceLevel: 80, affinity: "same", demon: false },
-        baseDamage: { mode: "manual", manualValue: 1_800 },
       }),
     ).request;
     const reqB = packFromLoadout(
       withLoadout({
         target: { defenceLevel: 80, affinity: "same", demon: true },
-        baseDamage: { mode: "manual", manualValue: 1_800 },
       }),
     ).request;
     const idA = solveIdentityFromRequest(reqA);

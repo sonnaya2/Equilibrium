@@ -169,6 +169,13 @@ export function blessingRule(
   return blessingsIndex(rules).get(id)?.combat;
 }
 
+/** Resolve tier-changing blessings once; callers apply the result idempotently. */
+export function weaponTierOverride(rules: ResolvedLeagueRules | undefined): number | null {
+  const value = blessingRule(rules, "genesis-essence")?.weaponTierOverride;
+  if (value == null || !Number.isFinite(value) || value <= 0) return null;
+  return Math.floor(value);
+}
+
 export interface AegisArmourBonus {
   offhand: "shield" | "defender" | "none";
   /** The resolved share of armour: 25%, 50% wielding a defender, 75% wielding a shield. */

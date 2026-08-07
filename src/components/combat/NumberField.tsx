@@ -11,7 +11,7 @@ export function NumberField({
   max,
   disabled = false,
 }: {
-  label: string;
+  label: React.ReactNode;
   value: number;
   onChange: (value: number) => void;
   suffix?: string;

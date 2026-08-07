@@ -161,6 +161,7 @@ export interface CalcStats {
   damagePotentialSource: "target stats" | "target weakness" | "manual override" | "100% assumption";
   equipmentIds: readonly string[];
   weaponConfiguration: "twohand" | "dualwield" | "mainhand" | "shield" | "defender" | "necromancy";
+  weaponTierOverride: number | null;
   globalModifiers: CombatModifier[];
   castModifiersFor: (ability: AbilitySpec) => CombatModifier[];
   /** Invigorating / Impatient rules for rotation + revolution sim. */
@@ -230,7 +231,7 @@ export function nonWeaponAccuracyBonus(loadout: Loadout): number {
 export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}): CalcStats {
   const now = options.now ?? Date.now();
   const levels = resolveLevels(loadout);
-  const equipment = resolveEquipment(loadout, levels);
+  const equipment = resolveEquipment(loadout, levels, options);
   const defenceLife = resolveDefenceLife(loadout, levels, equipment, {
     now,
     blessingPicks: options.blessingPicks,
@@ -294,6 +295,7 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     damagePotentialSource: accuracyDp.damagePotentialSource,
     equipmentIds: equipment.equipmentIds,
     weaponConfiguration: equipment.weaponConfiguration,
+    weaponTierOverride: equipment.weaponTierOverride,
     globalModifiers: combat.globalModifiers,
     castModifiersFor: combat.castModifiersFor,
     adrenaline: combat.adrenaline,

@@ -7,7 +7,11 @@ import {
   SLIVER_OF_EDICTS_ID,
   SLIVER_PASSIVE,
 } from "@/combat/league/naragiEdict";
-import { stripUnavailableRelicItems } from "@/combat/league/relicGrantedItems";
+import {
+  AVERNIC_STAR_ID,
+  INFERNAL_FIRE_RELIC,
+  stripUnavailableRelicItems,
+} from "@/combat/league/relicGrantedItems";
 import {
   DEFAULT_LOADOUT,
   equipGrantedItemForRelic,
@@ -101,7 +105,7 @@ describe("Naragi loadout passives", () => {
   });
 });
 
-describe("Naragi / Icyenic granted-item equip rules", () => {
+describe("Tier 7 granted-item equip rules", () => {
   it("rejects equipping Sliver without Naragi when relics are provided", () => {
     const base = { ...DEFAULT_LOADOUT, equipmentSlots: {} };
     const blocked = equipInSlot(base, "pocket", SLIVER_OF_EDICTS_ID, []);
@@ -132,6 +136,12 @@ describe("Naragi / Icyenic granted-item equip rules", () => {
     expect(next.equipmentSlots.pocket).toBe("item:tome-of-the-icyene");
   });
 
+  it("equipGrantedItemForRelic pockets the Avernic Star when Infernal Fire is active", () => {
+    const empty = { ...DEFAULT_LOADOUT, equipmentSlots: {} };
+    const next = equipGrantedItemForRelic(empty, INFERNAL_FIRE_RELIC, [INFERNAL_FIRE_RELIC]);
+    expect(next.equipmentSlots.pocket).toBe(AVERNIC_STAR_ID);
+  });
+
   it("auto-equips the selected T7 grant after build hydration or selection", () => {
     const empty = { ...DEFAULT_LOADOUT, equipmentSlots: {} };
     const next = syncRelicGrantedEquipmentWithAutoEquip(empty, RELICS);
@@ -145,5 +155,14 @@ describe("Naragi / Icyenic granted-item equip rules", () => {
     };
     const next = syncRelicGrantedEquipmentWithAutoEquip(worn, ["Icyenic Faith"]);
     expect(next.equipmentSlots.pocket).toBe("item:tome-of-the-icyene");
+  });
+
+  it("swaps the Sliver for the Avernic Star when Infernal Fire is selected", () => {
+    const worn = {
+      ...DEFAULT_LOADOUT,
+      equipmentSlots: { pocket: SLIVER_OF_EDICTS_ID },
+    };
+    const next = syncRelicGrantedEquipmentWithAutoEquip(worn, [INFERNAL_FIRE_RELIC]);
+    expect(next.equipmentSlots.pocket).toBe(AVERNIC_STAR_ID);
   });
 });

@@ -731,7 +731,7 @@ export function syncRelicGrantedEquipmentWithAutoEquip(
 
 /**
  * After selecting a relic, strip invalid grants then equip that relic's item
- * when the grant table names one (Tome / Sliver). No-op when deselecting.
+ * when the grant table names one. No-op when deselecting.
  */
 export function equipGrantedItemForRelic(
   loadout: Loadout,

@@ -303,7 +303,7 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
     [build.relics],
   );
 
-  // Drop Tome / Sliver when their T7 relic is not selected (import / deselect / swap).
+  // Drop relic-granted gear when its T7 relic is not selected (import / deselect / swap).
   useEffect(() => {
     setLoadout((prev) => syncRelicGrantedEquipmentWithAutoEquip(prev, activeRelicNames));
     // eslint-disable-next-line react-hooks/exhaustive-deps

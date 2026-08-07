@@ -2,6 +2,9 @@ import type { EquipmentSlot } from "../data/records";
 import { ICYENIC_FAITH_RELIC, TOME_OF_THE_ICYENE_ID } from "./icyenicFaith";
 import { NARAGI_EDICT_RELIC, SLIVER_OF_EDICTS_ID } from "./naragiEdict";
 
+export const INFERNAL_FIRE_RELIC = "Infernal Fire";
+export const AVERNIC_STAR_ID = "item:avernic-star";
+
 /**
  * Relic-granted equipment availability. One table for hide/equip/unequip rules;
  * no display-name checks and no UI-only gates.
@@ -26,6 +29,12 @@ export const RELIC_GRANTED_ITEMS: readonly RelicGrantedItem[] = [
   {
     relicName: NARAGI_EDICT_RELIC,
     itemId: SLIVER_OF_EDICTS_ID,
+    tier: 7,
+    slot: "pocket",
+  },
+  {
+    relicName: INFERNAL_FIRE_RELIC,
+    itemId: AVERNIC_STAR_ID,
     tier: 7,
     slot: "pocket",
   },

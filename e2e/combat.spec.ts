@@ -792,10 +792,13 @@ test("combat blessing choices stay synced with Build", async ({ page }) => {
 
 test("T7 relic selection equips its granted pocket item in the Build loadout", async ({ page }) => {
   await page.goto("/build");
-    await page.getByRole("option", { name: "Naragi Edict", exact: true }).click();
+  await page.getByRole("option", { name: "Naragi Edict", exact: true }).click();
 
   const finalLoadout = page.getByRole("complementary", { name: "Final loadout" });
   await expect(finalLoadout.locator('[aria-label="Pocket: Sliver of Edicts"]')).toBeVisible();
+
+  await page.getByRole("option", { name: "Infernal Fire", exact: true }).click();
+  await expect(finalLoadout.locator('[aria-label="Pocket: Avernic Star"]')).toBeVisible();
 });
 
 test("Genesis locks the displayed main weapon tier to T120", async ({ page }) => {

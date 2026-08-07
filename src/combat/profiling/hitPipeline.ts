@@ -13,6 +13,10 @@ export interface HitPipelineCounters {
   hitExpectationCalls: number;
   /** min/max (and crit/uncapped bound) runPass probes outside the band loop. */
   endpointPasses: number;
+  /** Ordered modifier programs evaluated. */
+  modifierProgramEvaluations: number;
+  /** Active modifier applications across evaluated programs. */
+  modifierApplications: number;
 }
 
 const ZERO: HitPipelineCounters = {
@@ -20,6 +24,8 @@ const ZERO: HitPipelineCounters = {
   integerBandPoints: 0,
   hitExpectationCalls: 0,
   endpointPasses: 0,
+  modifierProgramEvaluations: 0,
+  modifierApplications: 0,
 };
 
 export const hitPipelineCounters: HitPipelineCounters = { ...ZERO };
@@ -46,6 +52,8 @@ export function resetHitPipelineCounters(): void {
   hitPipelineCounters.integerBandPoints = 0;
   hitPipelineCounters.hitExpectationCalls = 0;
   hitPipelineCounters.endpointPasses = 0;
+  hitPipelineCounters.modifierProgramEvaluations = 0;
+  hitPipelineCounters.modifierApplications = 0;
 }
 
 export function snapshotHitPipelineCounters(): HitPipelineCounters {
@@ -70,4 +78,10 @@ export function recordHitExpectationCall(): void {
 export function recordEndpointPass(n = 1): void {
   if (!enabled) return;
   hitPipelineCounters.endpointPasses += n;
+}
+
+export function recordModifierProgramEvaluation(applications: number): void {
+  if (!enabled) return;
+  hitPipelineCounters.modifierProgramEvaluations += 1;
+  hitPipelineCounters.modifierApplications += applications;
 }

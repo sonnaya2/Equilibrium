@@ -3,14 +3,14 @@ import { prepareCast, type PreparedCast } from "../cast/prepare";
 import { castRejection, candidateTick, resolveCastAbility, rngPointsFor } from "../cast/rules";
 import { resolveIcyTempest } from "../../styles/melee/icyTempest";
 import { firstLegalTickFor } from "../runtime/state";
-import type { CastRng } from "./contracts";
+import type { CastRng, CastRngPointId } from "./contracts";
 import {
   combineExactness,
   mergeAndCapBranches,
   MAX_INTERMEDIATE_BRANCHES,
   MAX_LIVE_BRANCHES,
   noteBranchLiveCount,
-  noteResidualMass,
+  noteTransitionPlansCollapsed,
   snapshotRuntime,
   type Branch,
   type BranchExactness,
@@ -41,6 +41,7 @@ export {
   noteFidelityRetry,
   noteBranchKeyConstructionMs,
   noteResidualMass,
+  noteTransitionPlansCollapsed,
 } from "./branchCore";
 
 /** Weight plan for one RNG outcome before snapshot+commit. */
@@ -65,6 +66,67 @@ function rngWeightProduct(
       ]),
     [{ rng: {}, weight: 1 }],
   );
+}
+
+function rngOutcomeAffectsFuture(plan: CastOutcomePlan, point: CastRngPointId): boolean {
+  switch (point) {
+    case "impatient":
+      return plan.parent.rt.state.adrenaline < plan.parent.rt.state.adrenalineCap;
+    case "relentless":
+    case "avernic-rampage":
+    case "spectral_scythe_soul":
+      return true;
+  }
+}
+
+function transitionKey(plan: CastOutcomePlan, points: readonly CastRngPointId[]): string {
+  return points
+    .filter((point) => rngOutcomeAffectsFuture(plan, point))
+    .map((point) => `${point}:${plan.rng?.[point] === true ? 1 : 0}`)
+    .join("\0");
+}
+
+function collapseEquivalentTransitions(plans: readonly CastOutcomePlan[]): CastOutcomePlan[] {
+  const byParent = new Map<Branch, Map<PreparedCast, CastOutcomePlan[]>>();
+  for (const plan of plans) {
+    let byPrepared = byParent.get(plan.parent);
+    if (!byPrepared) {
+      byPrepared = new Map();
+      byParent.set(plan.parent, byPrepared);
+    }
+    const group = byPrepared.get(plan.prepared);
+    if (group) group.push(plan);
+    else byPrepared.set(plan.prepared, [plan]);
+  }
+
+  const collapsed: CastOutcomePlan[] = [];
+  for (const byPrepared of byParent.values()) {
+    for (const group of byPrepared.values()) {
+      if (group.length === 1) {
+        collapsed.push(group[0]!);
+        continue;
+      }
+      const points = Object.keys(group[0]!.rng ?? {}).sort() as CastRngPointId[];
+      const byTransition = new Map<string, CastOutcomePlan>();
+      for (const plan of group) {
+        const key = transitionKey(plan, points);
+        const existing = byTransition.get(key);
+        if (!existing) {
+          byTransition.set(key, { ...plan });
+          continue;
+        }
+        const weight = existing.weight + plan.weight;
+        if (plan.weight > existing.weight) {
+          byTransition.set(key, { ...plan, weight });
+        } else {
+          existing.weight = weight;
+        }
+      }
+      collapsed.push(...byTransition.values());
+    }
+  }
+  noteTransitionPlansCollapsed(plans.length - collapsed.length);
+  return collapsed;
 }
 
 /**
@@ -217,8 +279,8 @@ export function planCastOutcomes(
 }
 
 /**
- * Snapshot+commit plans (Leng land forks inside commit), keeping at most `max`
- * pre-commit forks by weight. Discarded fork mass is residual (not reassigned).
+ * Snapshot+commit plans (Leng land forks inside commit). Identical cast-state
+ * transitions collapse before full runtime snapshots.
  *
  * Batch committed branches to `intermediateMax` before merge+cap. Residual is
  * disclosed whenever the batch is reduced to `max`.
@@ -281,16 +343,7 @@ function materializeCastPlansInner(
     absorb(committed.branches);
   }
 
-  let keep = forked;
-  if (forked.length > max) {
-    const sorted = [...forked].sort((a, b) => b.weight - a.weight);
-    keep = sorted.slice(0, max).map((p) => ({ ...p }));
-    let trimmed = 0;
-    for (let i = max; i < sorted.length; i++) trimmed += sorted[i]!.weight;
-    residualWeight += trimmed;
-    if (trimmed > 0) noteResidualMass(trimmed);
-    if (forked.length > max) exactness = combineExactness(exactness, "bounded-approximation");
-  }
+  const keep = collapseEquivalentTransitions(forked);
 
   noteBranchLiveCount(keep.length + inPlace.length);
   for (const plan of keep) {

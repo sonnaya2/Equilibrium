@@ -48,8 +48,10 @@ describe("allocation profiling counters", () => {
       eventQueuePush: 0,
       eventQueueShift: 0,
       eventQueueCancel: 0,
+      eventQueueMaxDepth: 0,
       castsGrowthOps: 0,
       historyEventsGrowthOps: 0,
+      attachedTermsResolved: 0,
     });
   });
 
@@ -76,5 +78,6 @@ describe("allocation profiling counters", () => {
     expect(snap.eventQueueShift).toBe(1);
     expect(snap.eventQueueCancel).toBe(1);
     expect(snap.eventQueueOps).toBe(4);
+    expect(snap.eventQueueMaxDepth).toBe(2);
   });
 });

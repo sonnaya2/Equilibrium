@@ -582,6 +582,51 @@ describe("solver host lifecycle", () => {
     ).toBe(true);
   });
 
+  it("returns worker profiling with measured host wait", async () => {
+    FakeWorker.autoStarted = false;
+    const onProfile = vi.fn();
+    const client = getRevolutionSolverClient();
+    const promise = client.start(sampleRequest(), undefined, {
+      preferWorker: true,
+      profile: true,
+      onProfile,
+    });
+    await vi.advanceTimersByTimeAsync(0);
+    const worker = FakeWorker.instances[0]!;
+    const start = worker.lastStart;
+    if (!start || start.type !== "start") throw new Error("expected worker start");
+    expect(start.profile).toBe(true);
+    worker.emit({ type: "started", requestId: start.requestId });
+    worker.emit({
+      type: "result",
+      requestId: start.requestId,
+      result: sampleResult(),
+      profile: {
+        wallMs: 5,
+        evaluations: 2,
+        searchEvals: 1,
+        fullEvals: 1,
+        evalsPerSec: 400,
+        memoHits: 0,
+        uniqueBars: 2,
+        progressEmits: 1,
+        workerWaitMs: 0,
+        neighborGenerated: 2,
+        neighborDeduped: 0,
+        neighborDuplicateSkipped: 0,
+        barKeysSeenWithinWorker: 2,
+        duplicateEvalAttempts: 0,
+        fingerprintJoins: 0,
+        beamChildrenGenerated: 0,
+        beamChildrenUniqueKeys: 0,
+      },
+    });
+    await expect(promise).resolves.toMatchObject({ score: 100 });
+    expect(onProfile).toHaveBeenCalledOnce();
+    expect(onProfile.mock.calls[0]![0]).toMatchObject({ evaluations: 2 });
+    expect(onProfile.mock.calls[0]![0].workerWaitMs).toBeGreaterThanOrEqual(0);
+  });
+
   it("Worker constructor failure rejects preferWorker path", async () => {
     FakeWorker.failConstruct = true;
     const client = getRevolutionSolverClient();

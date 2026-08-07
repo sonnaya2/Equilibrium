@@ -1,4 +1,4 @@
-import { recordModifierSort } from "../profiling/hitPipeline";
+import { recordModifierProgramEvaluation, recordModifierSort } from "../profiling/hitPipeline";
 import type { CombatContext, CombatModifier, DamageState, ModifierStage } from "../types";
 
 /** Explicit stage order - the pipeline is deterministic, never one combined formula. */
@@ -35,6 +35,7 @@ export function runOrderedPipeline(
   const active = preFiltered
     ? orderedModifiers
     : orderedModifiers.filter((m) => m.applies(context));
+  recordModifierProgramEvaluation(active.length);
   let state = initial;
   for (const m of active) {
     state = m.apply(state, context);

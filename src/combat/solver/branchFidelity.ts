@@ -247,6 +247,11 @@ export const UI_RUN_BRANCH_FIDELITY_LADDER: BranchFidelityLadder = {
   exactness: "any",
 };
 
+export const UI_MAIN_THREAD_BRANCH_FIDELITY_LADDER: BranchFidelityLadder = {
+  ...UI_RUN_BRANCH_FIDELITY_LADDER,
+  liveCaps: [UI_RUN_INITIAL_LIVE_BRANCH_CAP, 256],
+};
+
 /**
  * Explicit synchronous UI Run: score-only ladder climb + one full-analysis.
  * Product UI uses the worker multi-probe host.
@@ -255,5 +260,5 @@ export function simulateRevolutionForUi(
   input: RevolutionInput,
   options?: SimulateOptions,
 ): AdaptiveBranchFidelityResult {
-  return simulateRevolutionForUiHybrid(input, options, UI_RUN_BRANCH_FIDELITY_LADDER);
+  return simulateRevolutionForUiHybrid(input, options, UI_MAIN_THREAD_BRANCH_FIDELITY_LADDER);
 }

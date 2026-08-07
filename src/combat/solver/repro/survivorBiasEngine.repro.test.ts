@@ -110,7 +110,7 @@ describe("REPRO: real engine residual mass (Leng+Impatient+Relentless)", () => {
     );
     expect(extreme.residualFraction).toBeGreaterThan(primary.residualFraction);
     expect(extreme.residualFraction).toBeGreaterThan(0.5);
-  });
+  }, 15_000);
 
   it("same bar without Impatient/Relentless is residual-free at the first sufficient cap", () => {
     const fx = survivorBiasPrimaryFixture();

@@ -18,41 +18,42 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const modeArg = (process.argv[2] ?? "quick").toLowerCase();
 const mode = modeArg === "json" ? "quick" : modeArg;
 
-if (mode !== "quick" && mode !== "full") {
-  console.error(`Usage: node scripts/benchmarks/solver.mjs [quick|full|json]`);
+if (mode !== "quick" && mode !== "full" && mode !== "stress") {
+  console.error(`Usage: node scripts/benchmarks/solver.mjs [quick|full|stress|json]`);
   process.exit(2);
 }
 
 const testFile =
-  mode === "full"
-    ? "src/combat/solver/benchmarks/full.test.ts"
-    : "src/combat/solver/benchmarks/quick.test.ts";
+  mode === "stress"
+    ? "src/combat/solver/benchmarks/branchStress.test.ts"
+    : mode === "full"
+      ? "src/combat/solver/benchmarks/full.test.ts"
+      : "src/combat/solver/benchmarks/quick.test.ts";
 
 const reportName =
-  mode === "full" ? "solver-benchmark-full.json" : "solver-benchmark-quick.json";
-const reportPath = join(root, "reports", reportName);
+  mode === "stress"
+    ? null
+    : mode === "full"
+      ? "solver-benchmark-full.json"
+      : "solver-benchmark-quick.json";
+const reportPath = reportName === null ? null : join(root, "reports", reportName);
 
-const benchEnv =
-  modeArg === "json" ? "json" : mode === "full" ? "full" : "quick";
+const benchEnv = modeArg === "json" ? "json" : mode;
 
 const npx = process.platform === "win32" ? "npx.cmd" : "npx";
-const result = spawnSync(
-  npx,
-  ["vitest", "run", testFile, "--reporter=verbose"],
-  {
-    cwd: root,
-    stdio: "inherit",
-    env: {
-      ...process.env,
-      FORCE_COLOR: process.env.FORCE_COLOR ?? "1",
-      SOLVER_BENCH: benchEnv,
-    },
-    shell: process.platform === "win32",
+const result = spawnSync(npx, ["vitest", "run", testFile, "--reporter=verbose"], {
+  cwd: root,
+  stdio: "inherit",
+  env: {
+    ...process.env,
+    FORCE_COLOR: process.env.FORCE_COLOR ?? "1",
+    SOLVER_BENCH: benchEnv,
   },
-);
+  shell: process.platform === "win32",
+});
 
 const code = result.status ?? 1;
-if (code === 0) {
+if (code === 0 && reportPath !== null) {
   if (existsSync(reportPath)) {
     console.log(`[solver-bench] wrote ${reportPath}`);
   } else {

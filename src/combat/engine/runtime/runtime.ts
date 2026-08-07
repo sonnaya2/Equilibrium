@@ -10,7 +10,13 @@ import { isSharedConstitutionAbilityId } from "../../styles/shared/constitutionA
 import { assertProvenance } from "../../shared/damageProvenance";
 import { emptyAnalysisState, type RuntimeAnalysisState } from "../analysis";
 import { EventQueue, type ResolvedEvent, type ScheduledEvent } from "./events";
-import { ADRENALINE_CAP, newRotationState, type RotationState } from "./state";
+import {
+  ADRENALINE_CAP,
+  createTargetWeaponPoisonFutureInterner,
+  newRotationState,
+  type RotationState,
+  type TargetWeaponPoisonFutureInterner,
+} from "./state";
 import { hasBlessing, hasNaragiEdict, resolveMaximumAdrenaline } from "../../league/ruleset";
 import { activateNaragiSliver } from "../../league/naragiActivation";
 import { SLIVER_OF_EDICTS_ID } from "../../league/naragiEdict";
@@ -47,6 +53,8 @@ export interface SimulationRuntime {
    * Compiled once in createRuntime; shared across branch snapshots.
    */
   readonly lengLandTable: CompiledLengLandTable | null;
+  readonly poisonFutureInterner: TargetWeaponPoisonFutureInterner;
+  readonly playerPoisonDamageCache: Map<string, unknown>;
   readonly queue: EventQueue<SimulationRuntime>;
   state: RotationState;
   readonly casts: CastRecord[];
@@ -208,6 +216,8 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
     byId,
     basicByStyle,
     lengLandTable,
+    poisonFutureInterner: createTargetWeaponPoisonFutureInterner(),
+    playerPoisonDamageCache: new Map(),
     queue: new EventQueue<SimulationRuntime>(),
     state,
     casts: [],

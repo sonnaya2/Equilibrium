@@ -19,10 +19,13 @@ export interface AllocationCounters {
   eventQueuePush: number;
   eventQueueShift: number;
   eventQueueCancel: number;
+  eventQueueMaxDepth: number;
   /** rt.casts.push sites */
   castsGrowthOps: number;
   /** rt.events.push sites (resolved history log) */
   historyEventsGrowthOps: number;
+  /** Attached damage terms written through the landed-event ledger. */
+  attachedTermsResolved: number;
 }
 
 const ZERO: AllocationCounters = {
@@ -33,8 +36,10 @@ const ZERO: AllocationCounters = {
   eventQueuePush: 0,
   eventQueueShift: 0,
   eventQueueCancel: 0,
+  eventQueueMaxDepth: 0,
   castsGrowthOps: 0,
   historyEventsGrowthOps: 0,
+  attachedTermsResolved: 0,
 };
 
 /** Live counters object (mutate in place when enabled). */
@@ -66,8 +71,10 @@ export function resetAllocationCounters(): void {
   allocationCounters.eventQueuePush = 0;
   allocationCounters.eventQueueShift = 0;
   allocationCounters.eventQueueCancel = 0;
+  allocationCounters.eventQueueMaxDepth = 0;
   allocationCounters.castsGrowthOps = 0;
   allocationCounters.historyEventsGrowthOps = 0;
+  allocationCounters.attachedTermsResolved = 0;
 }
 
 /** Snapshot copy of counters (safe to log / serialize). */
@@ -90,10 +97,13 @@ export function noteCatalogueArrayRebuild(): void {
   allocationCounters.catalogueArrayRebuilds += 1;
 }
 
-export function noteEventQueuePush(): void {
+export function noteEventQueuePush(depth?: number): void {
   if (!enabled) return;
   allocationCounters.eventQueueOps += 1;
   allocationCounters.eventQueuePush += 1;
+  if (depth !== undefined && depth > allocationCounters.eventQueueMaxDepth) {
+    allocationCounters.eventQueueMaxDepth = depth;
+  }
 }
 
 export function noteEventQueueShift(): void {
@@ -116,4 +126,9 @@ export function noteCastsGrowth(): void {
 export function noteHistoryEventsGrowth(): void {
   if (!enabled) return;
   allocationCounters.historyEventsGrowthOps += 1;
+}
+
+export function noteAttachedTermsResolved(count: number): void {
+  if (!enabled || count <= 0) return;
+  allocationCounters.attachedTermsResolved += count;
 }

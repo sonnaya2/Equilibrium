@@ -1,5 +1,6 @@
 import type { SerializableSolverRequest, SolverProofDTO, SolverResultDTO } from "./serializable";
 import type { HostCoordBatch, WorkerCoordReport } from "./coord";
+import type { SolverProfileSnapshot } from "../profiling/counters";
 
 export type { SolverResultDTO, SolverProofDTO };
 export type { HostCoordBatch, WorkerCoordReport };
@@ -170,6 +171,7 @@ export interface StartSolverMessage {
   type: "start";
   requestId: number;
   payload: SerializableSolverRequest;
+  profile?: boolean;
   /** Optional pool coordination bootstrap (Phase 2). Older workers ignore. */
   coord?: {
     agentIndex: number;
@@ -232,6 +234,7 @@ export interface ResultSolverMessage {
   type: "result";
   requestId: number;
   result: SolverResultDTO;
+  profile?: SolverProfileSnapshot;
 }
 
 export interface ErrorSolverMessage {

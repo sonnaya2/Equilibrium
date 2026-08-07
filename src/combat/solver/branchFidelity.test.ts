@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   budgetForLiveCap,
   DEFAULT_BRANCH_FIDELITY_LADDERS,
+  UI_MAIN_THREAD_BRANCH_FIDELITY_LADDER,
   UI_RUN_BRANCH_FIDELITY_LADDER,
   UI_RUN_INITIAL_LIVE_BRANCH_CAP,
   UI_RUN_MAX_LIVE_BRANCH_CAP,
@@ -321,6 +322,7 @@ describe("UI_RUN_BRANCH_FIDELITY_LADDER", () => {
     expect(UI_RUN_INITIAL_LIVE_BRANCH_CAP).toBe(128);
     expect(UI_RUN_MAX_LIVE_BRANCH_CAP).toBe(4096);
     expect(UI_RUN_BRANCH_FIDELITY_LADDER.liveCaps).toEqual([128, 256, 512, 1024, 2048, 4096]);
+    expect(UI_MAIN_THREAD_BRANCH_FIDELITY_LADDER.liveCaps).toEqual([128, 256]);
     expect(budgetForLiveCap(UI_RUN_MAX_LIVE_BRANCH_CAP, 1e-12)).toEqual({
       maxLiveBranches: 4096,
       maxIntermediateBranches: 8192,

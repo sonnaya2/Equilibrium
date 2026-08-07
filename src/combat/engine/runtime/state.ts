@@ -1,4 +1,5 @@
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
+import { notePoisonFutureIntern } from "./poisonFutureProfile";
 import { gainBloodlust } from "../../styles/melee/bloodlust";
 import {
   newMeleeRotationState,
@@ -144,13 +145,50 @@ export interface TargetWeaponPoisonAtom {
   readonly probability: number;
   readonly poison: TargetWeaponPoisonState;
   readonly immunityDisabledUntilTick: number;
-  readonly supportMin: number;
-  readonly supportMax: number;
+}
+
+export interface TargetWeaponPoisonSupport {
+  readonly min: number;
+  readonly max: number;
 }
 
 export interface TargetWeaponPoisonDistribution {
   readonly atoms: readonly TargetWeaponPoisonAtom[];
   readonly nextAtomId: number;
+  readonly futureId: number;
+  readonly supportByAtom: Readonly<Record<number, TargetWeaponPoisonSupport>>;
+}
+
+export interface TargetWeaponPoisonFuture {
+  readonly id: number;
+  readonly atoms: readonly TargetWeaponPoisonAtom[];
+  readonly nextAtomId: number;
+}
+
+export interface TargetWeaponPoisonFutureInterner {
+  nextId: number;
+  readonly byKey: Map<string, TargetWeaponPoisonFuture>;
+}
+
+export function createTargetWeaponPoisonFutureInterner(): TargetWeaponPoisonFutureInterner {
+  return { nextId: 1, byKey: new Map() };
+}
+
+export function internTargetWeaponPoisonFuture(
+  interner: TargetWeaponPoisonFutureInterner,
+  key: string,
+  atoms: readonly TargetWeaponPoisonAtom[],
+  nextAtomId: number,
+): { readonly future: TargetWeaponPoisonFuture; readonly hit: boolean } {
+  const existing = interner.byKey.get(key);
+  if (existing) {
+    notePoisonFutureIntern(true);
+    return { future: existing, hit: true };
+  }
+  const future = { id: interner.nextId++, atoms, nextAtomId };
+  interner.byKey.set(key, future);
+  notePoisonFutureIntern(false);
+  return { future, hit: false };
 }
 
 export interface EvolvingToxinState {
@@ -184,11 +222,11 @@ export function inactiveTargetWeaponPoison(): TargetWeaponPoisonDistribution {
         probability: 1,
         poison: inactiveTargetWeaponPoisonState(),
         immunityDisabledUntilTick: 0,
-        supportMin: 0,
-        supportMax: 0,
       },
     ],
     nextAtomId: 1,
+    futureId: 0,
+    supportByAtom: { 0: { min: 0, max: 0 } },
   };
 }
 
@@ -314,15 +352,22 @@ export function mergeTargetWeaponPoisonHistories(
 ): TargetWeaponPoisonDistribution {
   if (left.atoms.length !== right.atoms.length) return left;
   return {
+    ...left,
     nextAtomId: Math.max(left.nextAtomId, right.nextAtomId),
-    atoms: left.atoms.map((atom, index) => {
-      const other = right.atoms[index]!;
-      return {
-        ...atom,
-        supportMin: Math.min(atom.supportMin, other.supportMin),
-        supportMax: Math.max(atom.supportMax, other.supportMax),
-      };
-    }),
+    supportByAtom: Object.fromEntries(
+      left.atoms.map((atom, index) => {
+        const other = right.atoms[index]!;
+        const leftSupport = left.supportByAtom[atom.id] ?? { min: 0, max: 0 };
+        const rightSupport = right.supportByAtom[other.id] ?? { min: 0, max: 0 };
+        return [
+          atom.id,
+          {
+            min: Math.min(leftSupport.min, rightSupport.min),
+            max: Math.max(leftSupport.max, rightSupport.max),
+          },
+        ];
+      }),
+    ),
   };
 }
 

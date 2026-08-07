@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { resolvePoisonApplication, type PlayerPoisonProfile } from "../../poison/mechanics";
 import { advanceTo } from "../runtime/clock";
 import { createRuntime } from "../runtime/runtime";
+import { snapshotRuntime } from "../simulation/branch";
 import {
   applyPlayerPoisonLandOccurrence,
   lastPlayerPoisonTick,
@@ -59,6 +60,21 @@ function poisonState(rt: ReturnType<typeof runtime>) {
 }
 
 describe("player poison scheduler", () => {
+  it("interns equal poison futures while keeping branch-local support history", () => {
+    const input = profile({ cinderbane: true });
+    const base = runtime(input);
+    const left = snapshotRuntime(base);
+    const right = snapshotRuntime(base);
+    const source = resolvePoisonApplication(input, 0)!;
+    applyPoison(left, 0, source);
+    applyPoison(right, 0, source);
+    expect(left.state.target.weaponPoison.futureId).toBe(right.state.target.weaponPoison.futureId);
+    expect(left.state.target.weaponPoison.atoms).toBe(right.state.target.weaponPoison.atoms);
+    expect(left.state.target.weaponPoison.supportByAtom).not.toBe(
+      right.state.target.weaponPoison.supportByAtom,
+    );
+  });
+
   it("lands the standard 18-hit sequence from tick 2 through 274", () => {
     const input = profile();
     const rt = runtime(input);

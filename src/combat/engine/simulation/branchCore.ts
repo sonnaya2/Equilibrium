@@ -3,12 +3,17 @@ import type { BranchBudget, CastRecord } from "./contracts";
 import { keepsAnalysisLedgers, keepsPerAbilityMap, keepsPresentationHistory } from "./contracts";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { mergeSupportOffsets } from "./stats";
-import { buildBranchKey } from "./branchKey";
+import { buildBranchFingerprint, fingerprintBranchKey, type BranchFingerprint } from "./branchKey";
 import {
   mergeTargetWeaponPoisonHistories,
   patchTarget,
   type RotationState,
 } from "../runtime/state";
+import {
+  enablePoisonFutureInternProfile,
+  poisonFutureInternProfile,
+  resetPoisonFutureInternProfile,
+} from "../runtime/poisonFutureProfile";
 
 /**
  * Probability-weighted branch for state-changing RNG (Impatient, Relentless,
@@ -66,16 +71,30 @@ export interface BranchProfile {
   snapshotFieldsCloned: number;
   /** Order-of-magnitude bytes cloned (not exact heap). */
   snapshotBytesEstimate: number;
+  /** Exact UTF-8 bytes of the cloned mutable payload under profiling. */
+  snapshotBytesActual: number;
+  /** Snapshots measured for snapshotBytesActual (first 16, then powers of two). */
+  snapshotByteSamples: number;
   /** Immutable poison distributions shared instead of deep-cloned. */
   poisonDistributionsShared: number;
   /** Poison atoms covered by those shared distributions. */
   poisonAtomsShared: number;
+  /** Immutable decay PMFs covered by shared poison atoms. */
+  poisonPmfsShared: number;
+  /** Canonical poison futures reused by copy-on-write updates. */
+  poisonFutureInternHits: number;
+  /** New canonical poison futures created by copy-on-write updates. */
+  poisonFutureInternMisses: number;
   /** branchKey builds (merge equivalence keys). */
   branchKeySerializations: number;
   /** Sum of serialized key string lengths (UTF-16 code units). */
   branchKeyChars: number;
   /** Wall ms spent in branchKey construction (when profiling). */
   branchKeyConstructionMs: number;
+  /** Same-hash candidates rejected by structural equality. */
+  branchFingerprintCollisions: number;
+  /** RNG plans removed because their post-cast future was identical. */
+  transitionPlansCollapsed: number;
   /** mergeAndCapBranches invocations. */
   mergeAndCapCalls: number;
   /** Branches dropped by hard cap (merged count - kept count). */
@@ -98,11 +117,18 @@ const EMPTY_BRANCH_PROFILE: BranchProfile = {
   branchSnapshots: 0,
   snapshotFieldsCloned: 0,
   snapshotBytesEstimate: 0,
+  snapshotBytesActual: 0,
+  snapshotByteSamples: 0,
   poisonDistributionsShared: 0,
   poisonAtomsShared: 0,
+  poisonPmfsShared: 0,
+  poisonFutureInternHits: 0,
+  poisonFutureInternMisses: 0,
   branchKeySerializations: 0,
   branchKeyChars: 0,
   branchKeyConstructionMs: 0,
+  branchFingerprintCollisions: 0,
+  transitionPlansCollapsed: 0,
   mergeAndCapCalls: 0,
   mergeAndCapDiscards: 0,
   exactMerges: 0,
@@ -121,9 +147,11 @@ function envBranchProfEnabled(): boolean {
 
 let branchProfEnabled = envBranchProfEnabled();
 const branchProf: BranchProfile = { ...EMPTY_BRANCH_PROFILE };
+enablePoisonFutureInternProfile(branchProfEnabled);
 
 export function enableBranchProfiling(on = true): void {
   branchProfEnabled = on;
+  enablePoisonFutureInternProfile(on);
 }
 
 export function isBranchProfilingEnabled(): boolean {
@@ -132,10 +160,16 @@ export function isBranchProfilingEnabled(): boolean {
 
 export function resetBranchProfile(): void {
   Object.assign(branchProf, EMPTY_BRANCH_PROFILE);
+  resetPoisonFutureInternProfile();
 }
 
 export function getBranchProfile(): Readonly<BranchProfile> {
-  return { ...branchProf };
+  const poisonIntern = poisonFutureInternProfile();
+  return {
+    ...branchProf,
+    poisonFutureInternHits: poisonIntern.hits,
+    poisonFutureInternMisses: poisonIntern.misses,
+  };
 }
 
 /** Record a live branch-array size (peak tracker). No-op when profiling off. */
@@ -162,6 +196,11 @@ export function noteResidualMass(weight: number): void {
   if (!branchProfEnabled || !(weight > 0)) return;
   branchProf.residualMassEvents += 1;
   branchProf.residualMassTotal += weight;
+}
+
+export function noteTransitionPlansCollapsed(count: number): void {
+  if (!branchProfEnabled || count <= 0) return;
+  branchProf.transitionPlansCollapsed += count;
 }
 
 /**
@@ -265,7 +304,12 @@ export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
     branchProf.snapshotBytesEstimate += est.bytes;
     branchProf.poisonDistributionsShared += 1;
     branchProf.poisonAtomsShared += rt.state.target.weaponPoison.atoms.length;
+    branchProf.poisonPmfsShared += rt.state.target.weaponPoison.atoms.length;
   }
+  const sampleSnapshotBytes =
+    branchProfEnabled &&
+    (branchProf.branchSnapshots <= 16 ||
+      (branchProf.branchSnapshots & (branchProf.branchSnapshots - 1)) === 0);
 
   const scoreOnly = rt.detailLevel === "score-only";
   const recordClones = new Map<CastRecord, CastRecord>();
@@ -323,6 +367,24 @@ export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
     target: { ...clonedState.target, weaponPoison },
   } as RotationState;
 
+  if (sampleSnapshotBytes) {
+    const payload = JSON.stringify([
+      state,
+      rt.queue.signature(),
+      casts,
+      rt.damageByTick,
+      events,
+      [...recordBySeq],
+      [...hitDetails],
+      [...spiritEventMeta],
+      [...rt.scheduledSpiritTracks],
+      [...rt.spiritHitCounts],
+      analysis,
+    ]);
+    branchProf.snapshotBytesActual += new TextEncoder().encode(payload).byteLength;
+    branchProf.snapshotByteSamples += 1;
+  }
+
   return {
     ...rt,
     queue: rt.queue.clone(),
@@ -345,15 +407,17 @@ export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
  * Live hitDetails / spirit meta stay in the key for land-time reads.
  * RS3_BRANCH_KEY_JSON=1 restores full JSON for debug/oracle.
  */
-function branchKey(rt: SimulationRuntime): string {
+function branchFingerprint(rt: SimulationRuntime, error?: string): BranchFingerprint {
   const t0 = branchProfEnabled ? performance.now() : 0;
-  const key = buildBranchKey(rt);
+  const future = buildBranchFingerprint(rt);
+  const fingerprint =
+    error === undefined ? future : fingerprintBranchKey(`e:${error}\0${future.structural}`);
   if (branchProfEnabled) {
     branchProf.branchKeySerializations++;
-    branchProf.branchKeyChars += key.length;
+    branchProf.branchKeyChars += fingerprint.structural.length;
     branchProf.branchKeyConstructionMs += performance.now() - t0;
   }
-  return key;
+  return fingerprint;
 }
 
 /** Weight-average expected ledgers; support extrema via min/max offsets. */
@@ -422,16 +486,35 @@ function mergePair(a: Branch, b: Branch): Branch {
 export function mergeBranches(branches: readonly Branch[]): Branch[] {
   if (branchProfEnabled) noteBranchLiveCount(branches.length);
   if (branches.length <= 1) return [...branches];
-  const byKey = new Map<string, Branch>();
+  const byHash = new Map<
+    number,
+    Map<number, Array<{ fingerprint: BranchFingerprint; branch: Branch }>>
+  >();
   for (const branch of branches) {
-    const key =
-      branch.error !== undefined
-        ? `e:${branch.error}\0${branchKey(branch.rt)}`
-        : branchKey(branch.rt);
-    const existing = byKey.get(key);
-    byKey.set(key, existing ? mergePair(existing, branch) : branch);
+    const fingerprint = branchFingerprint(branch.rt, branch.error);
+    let bySecond = byHash.get(fingerprint.hashA);
+    if (!bySecond) {
+      bySecond = new Map();
+      byHash.set(fingerprint.hashA, bySecond);
+    }
+    let bucket = bySecond.get(fingerprint.hashB);
+    if (!bucket) {
+      bucket = [];
+      bySecond.set(fingerprint.hashB, bucket);
+    }
+    const existing = bucket.find(
+      (entry) => entry.fingerprint.structural === fingerprint.structural,
+    );
+    if (existing) {
+      existing.branch = mergePair(existing.branch, branch);
+    } else {
+      if (branchProfEnabled && bucket.length > 0) branchProf.branchFingerprintCollisions += 1;
+      bucket.push({ fingerprint, branch });
+    }
   }
-  const out = [...byKey.values()];
+  const out = [...byHash.values()].flatMap((bySecond) =>
+    [...bySecond.values()].flatMap((bucket) => bucket.map((entry) => entry.branch)),
+  );
   if (branchProfEnabled) noteBranchLiveCount(out.length);
   return out;
 }

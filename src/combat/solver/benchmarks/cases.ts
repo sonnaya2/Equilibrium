@@ -157,6 +157,7 @@ function makeRequest(opts: {
   authoredSeedBars?: readonly AuthoredSeedBar[];
   /** Include partially-modeled catalogue abilities (e.g. necromancy conjures). */
   includePartial?: boolean;
+  permittedCategories?: SerializableSolverRequest["permittedCategories"];
   unlockedRegions?: SerializableSolverRequest["unlockedRegions"];
   playerPoison?: PlayerPoisonProfile;
   /** Short horizons keep real evals cheap in CI. */
@@ -176,6 +177,7 @@ function makeRequest(opts: {
     unlockedRegions: opts.unlockedRegions ?? ["misthalin", "havenhythe", "karamja", "asgarnia"],
     includeUnknownAvailability: true,
     includePartial: opts.includePartial === true,
+    permittedCategories: opts.permittedCategories ?? ["basic", "enhanced", "ultimate"],
     ruleset,
     blessingPicks: opts.blessingPicks ? [...opts.blessingPicks] : [],
     authoredSeedBars: opts.authoredSeedBars ? [...opts.authoredSeedBars] : [],
@@ -282,14 +284,15 @@ function leagueLengRequest(seed: number, leagueEnabled: boolean): SerializableSo
       : {}),
     durationTicks: 100,
     exploreDurationTicks: 30,
+    permittedCategories: ["basic", "enhanced", "ultimate", "utility"],
     authoredSeedBars: [
       seedBar("league-leng", [
         "icy_tempest",
-        "destroy",
         "assault",
-        "hurricane",
         "dismember",
+        "greater_flurry",
         "fury",
+        "adaptive_strike_dw",
       ]),
     ],
   });
@@ -356,7 +359,7 @@ function leaguePoisonRequest(seed: number, leagueEnabled: boolean): Serializable
         "hurricane",
         "dismember",
         "assault",
-        "cleave",
+        "adaptive_strike_2h",
         "punish",
       ]),
     ],

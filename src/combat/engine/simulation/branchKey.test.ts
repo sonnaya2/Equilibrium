@@ -1567,6 +1567,7 @@ describe("branchKey structural vs JSON partitions", () => {
     const renumbered = snapshotRuntime(live);
     renumbered.state = patchTarget(renumbered.state, {
       weaponPoison: {
+        ...renumbered.state.target.weaponPoison,
         atoms: renumbered.state.target.weaponPoison.atoms.map((atom) => ({ ...atom, id: 99 })),
         nextAtomId: 100,
       },

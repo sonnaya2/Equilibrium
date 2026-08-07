@@ -345,8 +345,8 @@ export class EventQueue<RT = unknown> {
   }
 
   push(event: ScheduledEvent<RT>): void {
-    noteEventQueuePush();
     this.heap.push(event);
+    noteEventQueuePush(this.heap.length);
     this.siftUp(this.heap.length - 1);
     this.invalidateOrdered();
   }

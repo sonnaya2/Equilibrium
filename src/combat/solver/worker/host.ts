@@ -9,6 +9,7 @@ import {
   type WorkerToHostMessage,
 } from "./protocol";
 import type { SolveFn, SolveProgressHandler } from "./solveTypes";
+import type { SolverProfileSnapshot } from "../profiling/counters";
 import {
   cancelSolverAgentPool,
   disposeSolverAgentPool,
@@ -91,7 +92,11 @@ export function resetSolverHostForTests(): void {
 export async function runSolverOnMainThread(
   request: SerializableSolverRequest,
   onProgress?: SolveProgressHandler,
-  options?: { isCancelled?: () => boolean },
+  options?: {
+    isCancelled?: () => boolean;
+    profile?: boolean;
+    onProfile?: (snapshot: SolverProfileSnapshot) => void;
+  },
 ): Promise<SolverResultDTO> {
   const solve = await loadSolve();
   let finished = false;
@@ -103,6 +108,8 @@ export async function runSolverOnMainThread(
       onProgress,
       isCancelled,
       isPaused: () => false,
+      profile: options?.profile,
+      onProfile: options?.onProfile,
       // Yield only for paint; cancellation is observed via isCancelled after each yield
       // so abandoned yield promises never reject unhandled.
       yieldSlice: () =>
@@ -130,6 +137,8 @@ export type RunOptimizeOptions = {
   forceMainThread?: boolean;
   /** Override parallel agent count (tier ceilings: 4 / 6 / 8). */
   agents?: number;
+  profile?: boolean;
+  onProfile?: (snapshot: SolverProfileSnapshot) => void;
 };
 
 export type PauseResumeResult =
@@ -166,7 +175,13 @@ export async function runOptimize(
 
     if (!isSerializableSimBase(request.loadout)) {
       if (options?.forceMainThread === true) {
-        return await runTrackedMain(request, onProgress, cancelled);
+        return await runTrackedMain(
+          request,
+          onProgress,
+          cancelled,
+          options?.profile,
+          options?.onProfile,
+        );
       }
       throw new Error("revolution solver requires a worker-safe combat model");
     }
@@ -176,7 +191,13 @@ export async function runOptimize(
       payload = structuredClone(request);
     } catch (err) {
       if (options?.forceMainThread === true) {
-        return await runTrackedMain(request, onProgress, cancelled);
+        return await runTrackedMain(
+          request,
+          onProgress,
+          cancelled,
+          options?.profile,
+          options?.onProfile,
+        );
       }
       throw new Error(
         `revolution solver request cannot be sent to a worker: ${err instanceof Error ? err.message : String(err)}`,
@@ -184,7 +205,13 @@ export async function runOptimize(
     }
 
     if (options?.forceMainThread === true) {
-      return await runTrackedMain(payload, onProgress, cancelled);
+      return await runTrackedMain(
+        payload,
+        onProgress,
+        cancelled,
+        options?.profile,
+        options?.onProfile,
+      );
     }
     if (!canCreateSolverWorker()) {
       throw new Error("revolution solver workers are unavailable in this browser");
@@ -198,6 +225,8 @@ export async function runOptimize(
         isCancelled: cancelled,
         signal: options?.signal,
         agents,
+        profile: options?.profile,
+        onProfile: options?.onProfile,
       });
     } catch (err) {
       if (cancelled() || isAbortError(err)) {
@@ -218,6 +247,8 @@ export async function runOptimize(
         isCancelled: cancelled,
         signal: options?.signal,
         preferWorker: true,
+        profile: options?.profile,
+        onProfile: options?.onProfile,
       });
     } catch (err2) {
       if (cancelled() || isAbortError(err2)) {
@@ -273,11 +304,15 @@ async function runTrackedMain(
   request: SerializableSolverRequest,
   onProgress: SolveProgressHandler | undefined,
   isCancelled: () => boolean,
+  profile?: boolean,
+  onProfile?: (snapshot: SolverProfileSnapshot) => void,
 ): Promise<SolverResultDTO> {
   const client = getRevolutionSolverClient();
   return client.start(request, onProgress, {
     isCancelled,
     forceMainThread: true,
+    profile,
+    onProfile,
   });
 }
 
@@ -291,6 +326,8 @@ type ActiveRun = {
   settled: boolean;
   mode: "worker" | "main";
   acknowledged: boolean;
+  startedAtMs: number;
+  onProfile?: (snapshot: SolverProfileSnapshot) => void;
   bootTimer?: ReturnType<typeof setTimeout>;
 };
 
@@ -398,6 +435,13 @@ export class RevolutionSolverClient {
         }
         break;
       case "result":
+        if (msg.profile && run.onProfile) {
+          const elapsed = Math.max(0, performance.now() - run.startedAtMs);
+          run.onProfile({
+            ...msg.profile,
+            workerWaitMs: Math.max(0, elapsed - msg.profile.wallMs),
+          });
+        }
         this.settleActive(run, "resolve", msg.result);
         break;
       case "error":
@@ -418,6 +462,8 @@ export class RevolutionSolverClient {
       signal?: AbortSignal;
       forceMainThread?: boolean;
       preferWorker?: boolean;
+      profile?: boolean;
+      onProfile?: (snapshot: SolverProfileSnapshot) => void;
     },
   ): Promise<SolverResultDTO> {
     // Soft-cancel previous run; previous awaiter rejects exactly once via settleActive.
@@ -458,7 +504,13 @@ export class RevolutionSolverClient {
     requestId: number,
     request: SerializableSolverRequest,
     onProgress: SolveProgressHandler | undefined,
-    options: { signal?: AbortSignal } | undefined,
+    options:
+      | {
+          signal?: AbortSignal;
+          profile?: boolean;
+          onProfile?: (snapshot: SolverProfileSnapshot) => void;
+        }
+      | undefined,
     externalCancelled: () => boolean,
   ): Promise<SolverResultDTO> {
     return new Promise<SolverResultDTO>((resolve, reject) => {
@@ -471,6 +523,8 @@ export class RevolutionSolverClient {
         settled: false,
         mode: "main",
         acknowledged: true,
+        startedAtMs: performance.now(),
+        onProfile: options?.onProfile,
       };
       this.active = run;
 
@@ -493,6 +547,8 @@ export class RevolutionSolverClient {
 
       void runSolverOnMainThread(request, onProgress, {
         isCancelled: () => run.aborted || externalCancelled(),
+        profile: options?.profile,
+        onProfile: options?.onProfile,
       })
         .then((result) => {
           if (run.aborted || externalCancelled()) {
@@ -517,7 +573,13 @@ export class RevolutionSolverClient {
     requestId: number,
     request: SerializableSolverRequest,
     onProgress: SolveProgressHandler | undefined,
-    options: { signal?: AbortSignal } | undefined,
+    options:
+      | {
+          signal?: AbortSignal;
+          profile?: boolean;
+          onProfile?: (snapshot: SolverProfileSnapshot) => void;
+        }
+      | undefined,
     externalCancelled: () => boolean,
   ): Promise<SolverResultDTO> {
     return new Promise<SolverResultDTO>((resolve, reject) => {
@@ -530,6 +592,8 @@ export class RevolutionSolverClient {
         settled: false,
         mode: "worker",
         acknowledged: false,
+        startedAtMs: performance.now(),
+        onProfile: options?.onProfile,
       };
       this.active = run;
 
@@ -568,7 +632,12 @@ export class RevolutionSolverClient {
       }, ackMs);
 
       try {
-        post(worker, { type: "start", requestId, payload: request });
+        post(worker, {
+          type: "start",
+          requestId,
+          payload: request,
+          profile: options?.profile === true,
+        });
       } catch (err) {
         this.dropWorker();
         this.settleActive(run, "reject", err instanceof Error ? err : new Error(String(err)));

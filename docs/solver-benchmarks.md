@@ -10,6 +10,7 @@ npm run benchmark:solver:quick   # 4-slot subset, tiny budgets, <60s target
 npm run benchmark:solver         # same as quick
 npm run benchmark:solver:json    # quick + prints report path
 npm run benchmark:solver:full    # all cases via solveFromRequest (slow)
+npm run benchmark:solver:branch-stress # three valid League builds + matched controls
 ```
 
 Or directly:
@@ -31,6 +32,7 @@ Single case (programmatic / vitest harness): import `runBenchmark` from
 | `src/combat/solver/benchmarks/quick.test.ts`   | Vitest entry (quick)                     |
 | `src/combat/solver/benchmarks/full.test.ts`    | Vitest entry (full)                      |
 | `scripts/benchmarks/solver.mjs`                | CLI wrapper around vitest                |
+| `src/combat/solver/benchmarks/branchStress.ts` | Exactness and pipeline stress runner     |
 | `reports/solver-benchmark-*.json`              | Local report output (gitignored)         |
 | `reports/solver-performance-*.md`              | Short baseline / phase check summaries   |
 
@@ -87,6 +89,15 @@ Single case (programmatic / vitest harness): import `runBenchmark` from
 - Production **`solveFromRequest`** with request tier budgets and horizons as
   defined in cases (still short vs product UI for most cases; `unhinged-300s`
   uses the full 500-tick / unhinged budget path).
+
+### Branch stress
+
+- Evaluates fixed, legal Leng, poison melee, and necromancy conjure League builds.
+- Runs a matched non-League control for each build.
+- Uses a 30-tick fixed stress window, full adaptive branch ladder, and score-only production simulation.
+- Repeats the suite and gates probability mass, residual mass, exactness, and determinism.
+- Records poison interning, queue depth, attached terms, modifier programs, snapshot bytes, and branch timing.
+- Applies absolute duration/snapshot/live-branch ceilings on the pinned Windows x64 Node 26 runner and a broad League/control ratio elsewhere.
 
 ## Report schema (per case)
 

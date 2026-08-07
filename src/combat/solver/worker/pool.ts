@@ -14,6 +14,7 @@ import {
   type WorkerToHostMessage,
 } from "./protocol";
 import type { SolveProgressHandler } from "./solveTypes";
+import type { SolverProfileSnapshot } from "../profiling/counters";
 import { createSolverWorker, getFirstAckMs } from "./workerCreate";
 import { TIER_BUDGETS } from "../solve";
 import {
@@ -55,6 +56,48 @@ function isAbortError(err: unknown): boolean {
     (err instanceof DOMException && err.name === "AbortError") ||
     (err instanceof Error && err.name === "AbortError")
   );
+}
+
+function mergeProfiles(profiles: readonly SolverProfileSnapshot[]): SolverProfileSnapshot {
+  const merged: SolverProfileSnapshot = {
+    wallMs: 0,
+    evaluations: 0,
+    searchEvals: 0,
+    fullEvals: 0,
+    evalsPerSec: 0,
+    memoHits: 0,
+    uniqueBars: 0,
+    progressEmits: 0,
+    workerWaitMs: 0,
+    neighborGenerated: 0,
+    neighborDeduped: 0,
+    neighborDuplicateSkipped: 0,
+    barKeysSeenWithinWorker: 0,
+    duplicateEvalAttempts: 0,
+    fingerprintJoins: 0,
+    beamChildrenGenerated: 0,
+    beamChildrenUniqueKeys: 0,
+  };
+  for (const profile of profiles) {
+    merged.wallMs = Math.max(merged.wallMs, profile.wallMs);
+    merged.evaluations += profile.evaluations;
+    merged.searchEvals += profile.searchEvals;
+    merged.fullEvals += profile.fullEvals;
+    merged.memoHits += profile.memoHits;
+    merged.uniqueBars += profile.uniqueBars;
+    merged.progressEmits += profile.progressEmits;
+    merged.workerWaitMs += profile.workerWaitMs;
+    merged.neighborGenerated += profile.neighborGenerated;
+    merged.neighborDeduped += profile.neighborDeduped;
+    merged.neighborDuplicateSkipped += profile.neighborDuplicateSkipped;
+    merged.barKeysSeenWithinWorker += profile.barKeysSeenWithinWorker;
+    merged.duplicateEvalAttempts += profile.duplicateEvalAttempts;
+    merged.fingerprintJoins += profile.fingerprintJoins;
+    merged.beamChildrenGenerated += profile.beamChildrenGenerated;
+    merged.beamChildrenUniqueKeys += profile.beamChildrenUniqueKeys;
+  }
+  merged.evalsPerSec = merged.wallMs > 0 ? (merged.evaluations * 1000) / merged.wallMs : 0;
+  return merged;
 }
 
 function phaseRank(phase: SolverProgress["phase"] | undefined): number {
@@ -591,7 +634,13 @@ export class SolverAgentPool {
   async run(
     request: SerializableSolverRequest,
     onProgress?: SolveProgressHandler,
-    options?: { isCancelled?: () => boolean; signal?: AbortSignal; agents?: number },
+    options?: {
+      isCancelled?: () => boolean;
+      signal?: AbortSignal;
+      agents?: number;
+      profile?: boolean;
+      onProfile?: (snapshot: SolverProfileSnapshot) => void;
+    },
   ): Promise<SolverResultDTO> {
     this.cancel();
 
@@ -635,6 +684,9 @@ export class SolverAgentPool {
     });
     const startedAtMs = Date.now();
     const agentFinishedAtMs: (number | undefined)[] = Array.from({ length: agentCount });
+    const agentProfiles: (SolverProfileSnapshot | undefined)[] = Array.from({
+      length: agentCount,
+    });
     const finishOrder: number[] = [];
     const tierMax = TIER_MAX_AGENTS[request.tier] ?? TIER_MAX_AGENTS.thorough;
     const reservedCore = shouldReserveUiCore(tierMax, hardwareCores);
@@ -793,6 +845,7 @@ export class SolverAgentPool {
       }
 
       return new Promise<SolverResultDTO>((resolve, reject) => {
+        const agentStartedAtMs = Date.now();
         let settled = false;
         let acknowledged = false;
         let bootTimer: ReturnType<typeof setTimeout> | undefined;
@@ -886,6 +939,12 @@ export class SolverAgentPool {
               }
               break;
             case "result": {
+              if (msg.profile) {
+                agentProfiles[index] = {
+                  ...msg.profile,
+                  workerWaitMs: Math.max(0, Date.now() - agentStartedAtMs - msg.profile.wallMs),
+                };
+              }
               const prev = progressParts[index];
               const exp =
                 msg.result.bestExploratoryScore ??
@@ -964,6 +1023,7 @@ export class SolverAgentPool {
             type: "start",
             requestId,
             payload,
+            profile: options?.profile === true,
             coord: {
               agentIndex: index,
               agentCount,
@@ -1018,6 +1078,12 @@ export class SolverAgentPool {
       }
 
       const poolMetrics = buildPoolMetrics(progressParts, agentCount, baseBudget, liveMetrics());
+      if (options?.onProfile) {
+        const profiles = agentProfiles.filter(
+          (profile): profile is SolverProfileSnapshot => profile !== undefined,
+        );
+        if (profiles.length > 0) options.onProfile(mergeProfiles(profiles));
+      }
       // Re-stamp host identity + recompute upgrade vs host incumbent baseline.
       return mergeResults(ok, request, poolMetrics, hostIncumbent);
     } finally {

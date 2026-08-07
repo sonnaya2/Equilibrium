@@ -139,6 +139,7 @@ async function runUiJob(
 async function runStart(
   requestId: number,
   payload: SerializableSolverRequest,
+  profileEnabled?: boolean,
   coordBootstrap?: {
     agentIndex: number;
     agentCount: number;
@@ -169,6 +170,7 @@ async function runStart(
 
     const isDead = () => cancelled.has(requestId) || runningId !== requestId;
 
+    let profile: import("../profiling/counters").SolverProfileSnapshot | undefined;
     const options: SolveRuntimeOptions = {
       onProgress: (progress: SolverProgress) => {
         if (isDead()) return;
@@ -190,6 +192,10 @@ async function runStart(
         await new Promise((resolve) => setTimeout(resolve, 0));
       },
       coord,
+      profile: profileEnabled === true,
+      onProfile: (snapshot) => {
+        profile = snapshot;
+      },
     };
 
     const result: SolverResultDTO = await solve(payload, options);
@@ -199,7 +205,7 @@ async function runStart(
       return;
     }
     try {
-      post({ type: "result", requestId, result });
+      post({ type: "result", requestId, result, ...(profile ? { profile } : {}) });
     } catch (cloneErr) {
       post({
         type: "error",
@@ -243,7 +249,7 @@ self.onmessage = (event: MessageEvent<unknown>) => {
       if (runningId !== null && runningId !== typed.requestId) {
         cancelled.add(runningId);
       }
-      void runStart(typed.requestId, typed.payload, typed.coord);
+      void runStart(typed.requestId, typed.payload, typed.profile, typed.coord);
       break;
     case "ui_run":
       if (runningId !== null && runningId !== typed.requestId) {

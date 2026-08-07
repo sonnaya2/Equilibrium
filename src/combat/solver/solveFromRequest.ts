@@ -34,7 +34,6 @@ import {
   clearActiveSolverProfile,
   snapshotProfile,
 } from "./profiling/counters";
-import { playerPoisonModifiersFromSources } from "../model";
 
 /**
  * Production entry: serializable request → real engine evaluations → ranked bars.
@@ -76,43 +75,9 @@ export const solveFromRequest: SolveFn = async (
   const { exploreTicks, mediumTicks, fullTicks, evaluationBudget } =
     computeHorizonsAndBudget(request);
 
-  const { reviveModifiers, reviveLeague } = await import("./worker/revive");
-  const league = reviveLeague(simBase.league);
-  const modifiers = reviveModifiers(simBase.modifierSources, league);
-
-  const simCommon = {
-    base: simBase.base,
-    level: simBase.level,
-    ...(simBase.overrideBase != null ? { overrideBase: simBase.overrideBase } : {}),
-    ...(simBase.overrideLevel != null ? { overrideLevel: simBase.overrideLevel } : {}),
-    ...(simBase.activateNaragiAtStart === true ? { activateNaragiAtStart: true } : {}),
-    accuracy: simBase.accuracy,
-    crit: simBase.crit,
-    abilities,
-    equipmentIds: simBase.equipmentIds,
-    weaponConfiguration: simBase.weaponConfiguration,
-    startingAdrenaline: simBase.startingAdrenaline,
-    adrenaline: simBase.adrenaline,
-    procs: simBase.procs,
-    plantedFeet: simBase.plantedFeet,
-    strengthCape99: simBase.strengthCape99,
-    preciseRank: simBase.preciseRank,
-    ammo: simBase.ammo,
-    caromingRank: simBase.caromingRank ?? simBase.modifierSources?.caroming ?? 0,
-    conjureBasicDamageMult: simBase.conjureBasicDamageMult,
-    conjureDurationMult: simBase.conjureDurationMult,
-    tumekensPieces: simBase.tumekensPieces,
-    tumekensCritEnabled: simBase.tumekensCritEnabled,
-    equipmentEffects: simBase.equipmentEffects,
-    league,
-    context: simBase.context,
-    targetHpPercent: simBase.targetHpPercent,
-    playerPoison: simBase.playerPoison,
-    playerPoisonModifiers: playerPoisonModifiersFromSources(simBase.modifierSources, league),
-    targetPoisonImmune: simBase.targetPoisonImmune === true,
-    cap: simBase.cap,
-    modifiers,
-  };
+  const { reviveRevolutionBase } = await import("./worker/revive");
+  const revivedBase = reviveRevolutionBase(simBase);
+  const simCommon = { ...revivedBase, abilities };
 
   const state: ProgressState = {
     currentPhase: "seed" as SolverPhase,

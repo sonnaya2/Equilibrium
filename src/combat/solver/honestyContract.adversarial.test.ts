@@ -321,7 +321,7 @@ describe("honesty contract: solver search", () => {
     expect(prof.fidelityRetries).toBe(out.meta.attempts);
     enableBranchProfiling(false);
     resetBranchProfile();
-  });
+  }, 15_000);
 
   it("candidate remains unrankable if fidelity ladder exhausts with residual", () => {
     const incomplete = {

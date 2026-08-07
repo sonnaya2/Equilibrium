@@ -17,7 +17,7 @@ import { configForTier, solveAsync, TIER_BUDGETS } from "../solve";
 import { fingerprintSolveContext } from "../solutionStore";
 import { solveFromRequest } from "../solveFromRequest";
 import type { SerializableSolverRequest } from "../worker/serializable";
-import { requireSimBase, reviveLeague, reviveModifiers } from "../worker/revive";
+import { requireSimBase, reviveRevolutionBase } from "../worker/revive";
 import {
   isHitPipelineProfilingEnabled,
   resetHitPipelineCounters,
@@ -154,7 +154,8 @@ async function solveWithBudget(
   const denySet = new Set(deny);
   const catalogue = allEngineSpecs();
   const passiveIds = simBase.equipmentEffects?.passiveIds;
-  const league = reviveLeague(simBase.league);
+  const revivedBase = reviveRevolutionBase(simBase);
+  const league = revivedBase.league!;
 
   let pool = buildCandidatePool(catalogue, request.style, {
     includePartial: request.includePartial === true,
@@ -192,32 +193,7 @@ async function solveWithBudget(
     request.durationTicks > 0 ? request.durationTicks : MIN_RANKABLE_HORIZON_TICKS,
   );
 
-  const modifiers = reviveModifiers(simBase.modifierSources, league);
-  const simCommon = {
-    base: simBase.base,
-    level: simBase.level,
-    accuracy: simBase.accuracy,
-    crit: simBase.crit,
-    abilities,
-    equipmentIds: simBase.equipmentIds,
-    weaponConfiguration: simBase.weaponConfiguration,
-    startingAdrenaline: simBase.startingAdrenaline,
-    adrenaline: simBase.adrenaline,
-    procs: simBase.procs,
-    plantedFeet: simBase.plantedFeet,
-    strengthCape99: simBase.strengthCape99,
-    preciseRank: simBase.preciseRank,
-    conjureBasicDamageMult: simBase.conjureBasicDamageMult,
-    conjureDurationMult: simBase.conjureDurationMult,
-    tumekensPieces: simBase.tumekensPieces,
-    tumekensCritEnabled: simBase.tumekensCritEnabled,
-    equipmentEffects: simBase.equipmentEffects,
-    league,
-    context: simBase.context,
-    targetHpPercent: simBase.targetHpPercent,
-    cap: simBase.cap,
-    modifiers,
-  };
+  const simCommon = { ...revivedBase, abilities };
 
   let uniqueCandidates = 0;
   const seenBars = new Set<string>();

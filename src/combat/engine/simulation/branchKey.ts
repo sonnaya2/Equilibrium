@@ -755,3 +755,25 @@ export function branchKeyStructural(rt: SimulationRuntime): string {
 export function buildBranchKey(rt: SimulationRuntime): string {
   return envJsonBranchKey() ? branchKeyJson(rt) : branchKeyStructural(rt);
 }
+
+export interface BranchFingerprint {
+  readonly hashA: number;
+  readonly hashB: number;
+  readonly structural: string;
+}
+
+export function fingerprintBranchKey(structural: string): BranchFingerprint {
+  let hashA = 0x811c9dc5;
+  let hashB = 0x9e3779b9;
+  for (let index = 0; index < structural.length; index++) {
+    const code = structural.charCodeAt(index);
+    hashA = Math.imul(hashA ^ code, 0x01000193);
+    hashB = Math.imul(hashB ^ code, 0x85ebca6b);
+    hashB ^= hashB >>> 13;
+  }
+  return { hashA: hashA >>> 0, hashB: hashB >>> 0, structural };
+}
+
+export function buildBranchFingerprint(rt: SimulationRuntime): BranchFingerprint {
+  return fingerprintBranchKey(buildBranchKey(rt));
+}

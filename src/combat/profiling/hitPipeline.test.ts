@@ -30,6 +30,8 @@ describe("hitPipeline profiling counters", () => {
       integerBandPoints: 0,
       hitExpectationCalls: 0,
       endpointPasses: 0,
+      modifierProgramEvaluations: 0,
+      modifierApplications: 0,
     });
   });
 
@@ -50,6 +52,7 @@ describe("hitPipeline profiling counters", () => {
     expect(snap.endpointPasses).toBe(4);
     // Phase 5: no longer sorts === endpoints + band points
     expect(snap.modifierSorts).toBe(1);
+    expect(snap.modifierProgramEvaluations).toBeGreaterThan(0);
     expect(snap.modifierSorts).toBeLessThan(snap.endpointPasses + snap.integerBandPoints);
   });
 

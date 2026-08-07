@@ -67,6 +67,7 @@
     "benchmark:solver:quick": "node scripts/benchmarks/solver.mjs quick",
     "benchmark:solver:json": "node scripts/benchmarks/solver.mjs json",
     "benchmark:solver:full": "node scripts/benchmarks/solver.mjs full",
+    "benchmark:solver:branch-stress": "node scripts/benchmarks/solver.mjs stress",
     "benchmark:solver:leng-micro": "node scripts/benchmarks/leng-micro.mjs",
     "test:components": "vitest run src/components",
     "playwright:install": "playwright install chromium",

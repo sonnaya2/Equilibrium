@@ -6,6 +6,7 @@ import { recordEventAccounting } from "./accounting";
 import { releaseScoreOnlyHitDetails } from "./hitDetailsRetention";
 import { applyInventionProcs } from "./procs/invention";
 import { applyBlessingDamage } from "./league/blessingDamage";
+import { noteAttachedTermsResolved } from "../../profiling/allocation";
 
 /**
  * Sole ledger-write step for a landed event (resolvers only calculate).
@@ -21,6 +22,7 @@ export function recordResolved(
   resolution: EventResolution,
 ): void {
   const composed = applyBlessingDamage(rt, event, resolution);
+  noteAttachedTermsResolved(composed.components?.length ?? 0);
   recordEventAccounting(rt, event, composed);
 
   const { damage } = composed;

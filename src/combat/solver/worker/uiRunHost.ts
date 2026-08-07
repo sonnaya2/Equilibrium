@@ -4,6 +4,7 @@
  */
 import type { AdaptiveBranchFidelityResult } from "../branchFidelity";
 import {
+  UI_MAIN_THREAD_BRANCH_FIDELITY_LADDER,
   UI_RUN_BRANCH_FIDELITY_LADDER,
   UI_RUN_INITIAL_LIVE_BRANCH_CAP,
   UI_RUN_MAX_LIVE_BRANCH_CAP,
@@ -227,7 +228,11 @@ export async function runUiRevolution(
       abilities: cat.catalogue,
     });
     options?.onProgress?.({ phase: "full", done: 0, total: 1 });
-    const out = simulateRevolutionForUiHybrid(input);
+    const out = simulateRevolutionForUiHybrid(
+      input,
+      undefined,
+      UI_MAIN_THREAD_BRANCH_FIDELITY_LADDER,
+    );
     options?.onProgress?.({ phase: "full", done: 1, total: 1 });
     return out;
   }

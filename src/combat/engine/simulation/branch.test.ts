@@ -740,6 +740,27 @@ describe("capBranches", () => {
     expect(getBranchProfile().branchSnapshots).toBe(0);
   });
 
+  it("collapses RNG outcomes with the same post-cast future before snapshots", () => {
+    const rt = createRuntime({
+      ...meleeInput,
+      startingAdrenaline: 100,
+      adrenaline: { impatientRank: 4 },
+    });
+    const plans = planCastOutcomes({ weight: 1, rt }, rt.byId.get("attack")!, 0, false).plans;
+    expect(plans).toHaveLength(2);
+    enableBranchProfiling(true);
+    resetBranchProfile();
+    const result = materializeCastPlans(plans, 64, 128);
+    const profile = getBranchProfile();
+    enableBranchProfiling(false);
+    resetBranchProfile();
+    expect(result.branches).toHaveLength(1);
+    expect(result.branches[0]!.weight).toBeCloseTo(1, 12);
+    expect(result.residualWeight).toBe(0);
+    expect(profile.transitionPlansCollapsed).toBe(1);
+    expect(profile.branchSnapshots).toBe(1);
+  });
+
   it("combineExactness takes the more approximate label", () => {
     expect(combineExactness("exact", "merged-exactly")).toBe("merged-exactly");
     expect(combineExactness("merged-exactly", "bounded-approximation")).toBe(

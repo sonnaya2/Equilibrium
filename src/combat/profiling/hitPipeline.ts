@@ -17,6 +17,10 @@ export interface HitPipelineCounters {
   modifierProgramEvaluations: number;
   /** Active modifier applications across evaluated programs. */
   modifierApplications: number;
+  /** Cast-hit resolutions reused by an exact land-time identity. */
+  resolutionCacheHits: number;
+  /** Cast-hit resolutions materialized for a new land-time identity. */
+  resolutionCacheMisses: number;
 }
 
 const ZERO: HitPipelineCounters = {
@@ -26,6 +30,8 @@ const ZERO: HitPipelineCounters = {
   endpointPasses: 0,
   modifierProgramEvaluations: 0,
   modifierApplications: 0,
+  resolutionCacheHits: 0,
+  resolutionCacheMisses: 0,
 };
 
 export const hitPipelineCounters: HitPipelineCounters = { ...ZERO };
@@ -54,6 +60,8 @@ export function resetHitPipelineCounters(): void {
   hitPipelineCounters.endpointPasses = 0;
   hitPipelineCounters.modifierProgramEvaluations = 0;
   hitPipelineCounters.modifierApplications = 0;
+  hitPipelineCounters.resolutionCacheHits = 0;
+  hitPipelineCounters.resolutionCacheMisses = 0;
 }
 
 export function snapshotHitPipelineCounters(): HitPipelineCounters {
@@ -84,4 +92,10 @@ export function recordModifierProgramEvaluation(applications: number): void {
   if (!enabled) return;
   hitPipelineCounters.modifierProgramEvaluations += 1;
   hitPipelineCounters.modifierApplications += applications;
+}
+
+export function recordResolutionCache(hit: boolean): void {
+  if (!enabled) return;
+  if (hit) hitPipelineCounters.resolutionCacheHits += 1;
+  else hitPipelineCounters.resolutionCacheMisses += 1;
 }

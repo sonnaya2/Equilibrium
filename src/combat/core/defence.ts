@@ -7,7 +7,8 @@ import { accuracyCurve } from "../target/genericTarget";
  * totalArmour = shared Total Armor Value from equipment (Loadout/Hero; no Defence level).
  * blockArmourRating d = floor(equipmentArmour + f(blockLevel)); hit-chance denom only.
  * f(x)=x^3/1250+4x+40; blockLevel = visible+prayer or Fortitude x1.15 (incompatible with curse Def).
- * Armour-% effects (Teragard, Striking Light, Barkscales) read totalArmour. Wiki sources below.
+ * Armour-% effects read either totalArmour or blockArmourRating according to their mechanic.
+ * Wiki sources below.
  */
 export const DEFENCE_LEVEL_ARMOUR_SOURCE: SourceReference = {
   source: "runescape-wiki",

@@ -1,7 +1,7 @@
 /**
  * Complete land-time identity for resolveCastHit reuse.
  * Must cover every input that feeds calculateHit / attached SW / Haunted bonus.
- * Snap + input use object identity (WeakMap) so closed-over baseMods stay exact.
+ * Input and memoized base modifiers use object identity so closed-over modifiers stay exact.
  */
 
 import type { AbilityHit, AbilitySpec } from "../../pipeline/calculateAbility";
@@ -90,7 +90,7 @@ export function landHitIdentity(
 
   return [
     oid(input),
-    oid(snap),
+    oid(snap.baseMods),
     equipId,
     ability.id,
     ability.style,
@@ -145,5 +145,7 @@ export function landHitIdentity(
     snap.critLayers.damageBonus ?? 0,
     b(!!snap.critLayers.guaranteed),
     b(!!snap.critLayers.disabled),
+    b(snap.critLayers.eligible !== false),
+    snap.tuskasEmpoweredDamage ?? -1,
   ].join("\x1f");
 }

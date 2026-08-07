@@ -42,9 +42,16 @@ export type BenchCaseId =
   | "league-blessings"
   | "league-blessings-control"
   | "league-poison-melee"
+  | "league-poison-melee-aftershock"
   | "league-poison-melee-control"
+  | "league-avernic-delta"
+  | "league-avernic-delta-control"
   | "league-necro-conjures"
   | "league-necro-conjures-control"
+  | "league-light-ranged"
+  | "league-light-ranged-control"
+  | "league-aoe-magic"
+  | "league-aoe-magic-control"
   | "unhinged-300s";
 
 export interface BenchCaseDef {
@@ -85,8 +92,11 @@ function baseLoadout(opts: {
   procs?: ProcRules;
   plantedFeet?: boolean;
   preciseRank?: number;
+  ammo?: SerializableRevolutionSimBase["ammo"];
   conjureBasicDamageMult?: number;
   conjureDurationMult?: number;
+  tumekensPieces?: number;
+  tumekensCritEnabled?: boolean;
   crit?: SerializableRevolutionSimBase["crit"];
   league?: SerializableRevolutionSimBase["league"];
   context?: SerializableRevolutionSimBase["context"];
@@ -119,8 +129,11 @@ function baseLoadout(opts: {
     playerPoison: opts.playerPoison,
     plantedFeet: opts.plantedFeet,
     preciseRank: opts.preciseRank,
+    ammo: opts.ammo,
     conjureBasicDamageMult: opts.conjureBasicDamageMult,
     conjureDurationMult: opts.conjureDurationMult,
+    tumekensPieces: opts.tumekensPieces,
+    tumekensCritEnabled: opts.tumekensCritEnabled,
     modifierSources: emptyModifierSources(),
   };
 }
@@ -146,8 +159,11 @@ function makeRequest(opts: {
   procs?: ProcRules;
   plantedFeet?: boolean;
   preciseRank?: number;
+  ammo?: SerializableRevolutionSimBase["ammo"];
   conjureBasicDamageMult?: number;
   conjureDurationMult?: number;
+  tumekensPieces?: number;
+  tumekensCritEnabled?: boolean;
   crit?: SerializableRevolutionSimBase["crit"];
   league?: SerializableRevolutionSimBase["league"];
   context?: SerializableRevolutionSimBase["context"];
@@ -190,8 +206,11 @@ function makeRequest(opts: {
       procs: opts.procs,
       plantedFeet: opts.plantedFeet,
       preciseRank: opts.preciseRank,
+      ammo: opts.ammo,
       conjureBasicDamageMult: opts.conjureBasicDamageMult,
       conjureDurationMult: opts.conjureDurationMult,
+      tumekensPieces: opts.tumekensPieces,
+      tumekensCritEnabled: opts.tumekensCritEnabled,
       crit: opts.crit,
       league: opts.league,
       context: opts.context,
@@ -232,13 +251,13 @@ const LEAGUE_LENG_PICKS = [
 ] as const satisfies readonly BlessingPath[];
 
 const LEAGUE_POISON_PICKS = [
+  "Balance",
   "Chaos",
   "Chaos",
   "Chaos",
   "Chaos",
   "Balance",
   "Balance",
-  "Order",
   "Balance",
 ] as const satisfies readonly BlessingPath[];
 
@@ -250,6 +269,50 @@ const LEAGUE_NECRO_PICKS = [
   "Balance",
   "Order",
   "Chaos",
+  "Balance",
+] as const satisfies readonly BlessingPath[];
+
+const LEAGUE_LIGHT_PICKS = [
+  "Balance",
+  "Order",
+  "Order",
+  "Order",
+  "Order",
+  "Order",
+  "Chaos",
+  "Order",
+] as const satisfies readonly BlessingPath[];
+
+const LEAGUE_AOE_PICKS = [
+  "Balance",
+  "Balance",
+  "Balance",
+  "Balance",
+  "Chaos",
+  "Balance",
+  "Balance",
+  "Balance",
+] as const satisfies readonly BlessingPath[];
+
+const LEAGUE_AVERNIC_PICKS = [
+  "Chaos",
+  "Chaos",
+  "Chaos",
+  "Order",
+  "Balance",
+  "Balance",
+  "Balance",
+  "Balance",
+] as const satisfies readonly BlessingPath[];
+
+const LEAGUE_AVERNIC_CONTROL_PICKS = [
+  "Chaos",
+  "Chaos",
+  "Balance",
+  "Order",
+  "Balance",
+  "Balance",
+  "Balance",
   "Balance",
 ] as const satisfies readonly BlessingPath[];
 
@@ -298,7 +361,11 @@ function leagueLengRequest(seed: number, leagueEnabled: boolean): SerializableSo
   });
 }
 
-function leaguePoisonRequest(seed: number, leagueEnabled: boolean): SerializableSolverRequest {
+function leaguePoisonRequest(
+  seed: number,
+  leagueEnabled: boolean,
+  aftershock = false,
+): SerializableSolverRequest {
   const playerPoison: PlayerPoisonProfile = {
     potion: "weapon-plus-plus-plus",
     potionUntilTick: 1_200,
@@ -323,6 +390,7 @@ function leaguePoisonRequest(seed: number, leagueEnabled: boolean): Serializable
     weaponConfiguration: "twohand",
     equipmentIds: ["item:laniakeas-spear", "item:cinderbane-gloves"],
     passiveIds: ["laniakea-weapon-poison", "cinderbane-weapon-poison"],
+    procs: { cracklingRank: 4, ...(aftershock ? { aftershockRank: 4 } : {}) },
     playerPoison,
     unlockedRegions: ["misthalin", "havenhythe", "karamja", "asgarnia", "tirannwn", "anachronia"],
     adrenaline: {
@@ -355,12 +423,172 @@ function leaguePoisonRequest(seed: number, leagueEnabled: boolean): Serializable
     exploreDurationTicks: 30,
     authoredSeedBars: [
       seedBar("league-poison", [
-        "berserk",
-        "hurricane",
-        "dismember",
         "assault",
+        "dismember",
         "adaptive_strike_2h",
         "punish",
+        "fury",
+        "backhand",
+      ]),
+    ],
+  });
+}
+
+function leagueAvernicRequest(seed: number, avernic: boolean): SerializableSolverRequest {
+  const picks = avernic ? LEAGUE_AVERNIC_PICKS : LEAGUE_AVERNIC_CONTROL_PICKS;
+  const league = equilibriumLeague(picks);
+  return makeRequest({
+    style: "melee",
+    seed,
+    minBarSize: 6,
+    maxBarSize: 6,
+    weaponConfiguration: "twohand",
+    ruleset: "equilibrium",
+    blessingPicks: picks,
+    league,
+    context: {
+      style: "melee",
+      ruleset: "equilibrium",
+      targetSize: 1,
+      occupiedTiles: 1,
+    },
+    durationTicks: 100,
+    exploreDurationTicks: 30,
+    authoredSeedBars: [
+      seedBar("league-avernic", [
+        "assault",
+        "dismember",
+        "adaptive_strike_2h",
+        "punish",
+        "fury",
+        "backhand",
+      ]),
+    ],
+  });
+}
+
+function leagueLightRequest(seed: number, leagueEnabled: boolean): SerializableSolverRequest {
+  const playerPoison: PlayerPoisonProfile = {
+    potion: "weapon-plus-plus-plus",
+    potionUntilTick: 1_200,
+    kwuarmPotency: 4,
+    cinderbane: true,
+    blowpipe: false,
+    laniakea: false,
+  };
+  const league = leagueEnabled
+    ? equilibriumLeague(LEAGUE_LIGHT_PICKS, {
+        totalArmour: 2_400,
+        maximumLife: 14_000,
+        areaTargets: 8,
+        prayerBonus: 60,
+        herbloreLevel: 120,
+      })
+    : undefined;
+  return makeRequest({
+    style: "ranged",
+    seed,
+    minBarSize: 6,
+    maxBarSize: 6,
+    weaponConfiguration: "twohand",
+    equipmentIds: ["item:bik-arrows", "item:cinderbane-gloves", "item:am-zi"],
+    passiveIds: ["cinderbane-weapon-poison", "am-zi"],
+    playerPoison,
+    ammo: "bik",
+    procs: { cracklingRank: 4 },
+    adrenaline: {
+      impatientRank: 4,
+      impatientLevel20: true,
+      relentlessRank: 5,
+      relentlessLevel20: true,
+    },
+    ...(leagueEnabled
+      ? {
+          ruleset: "equilibrium" as const,
+          blessingPicks: LEAGUE_LIGHT_PICKS,
+          league,
+          context: {
+            style: "ranged" as const,
+            ruleset: "equilibrium" as const,
+            targetSize: 1,
+            occupiedTiles: 1,
+          },
+        }
+      : {}),
+    durationTicks: 180,
+    exploreDurationTicks: 45,
+    authoredSeedBars: [
+      seedBar("league-light", [
+        "ranged_attack",
+        "greater_ricochet",
+        "piercing_shot",
+        "corruption_shot",
+        "rapid_fire",
+        "snap_shot",
+      ]),
+    ],
+  });
+}
+
+function leagueAoeRequest(seed: number, leagueEnabled: boolean): SerializableSolverRequest {
+  const league = leagueEnabled
+    ? equilibriumLeague(LEAGUE_AOE_PICKS, {
+        totalArmour: 2_400,
+        maximumLife: 14_000,
+        targetSize: 5,
+        occupiedTiles: 25,
+        areaTargets: 9,
+      })
+    : undefined;
+  return makeRequest({
+    style: "magic",
+    seed,
+    minBarSize: 6,
+    maxBarSize: 6,
+    weaponConfiguration: "dualwield",
+    equipmentIds: [
+      "item:tumekens-resplendence-helm",
+      "item:tumekens-resplendence-body",
+      "item:tumekens-resplendence-legs",
+      "item:tumekens-resplendence-gloves",
+      "item:tumekens-resplendence-boots",
+      "item:igneous-kal-mej",
+    ],
+    passiveIds: ["igneous-omnipower"],
+    tumekensPieces: 5,
+    tumekensCritEnabled: true,
+    procs: { cracklingRank: 4 },
+    ...(leagueEnabled
+      ? {
+          ruleset: "equilibrium" as const,
+          blessingPicks: LEAGUE_AOE_PICKS,
+          league,
+          context: {
+            style: "magic" as const,
+            ruleset: "equilibrium" as const,
+            targetSize: 5,
+            occupiedTiles: 25,
+          },
+        }
+      : {
+          context: {
+            style: "magic" as const,
+            ruleset: "base" as const,
+            targetSize: 5,
+            occupiedTiles: 25,
+          },
+        }),
+    durationTicks: 180,
+    exploreDurationTicks: 45,
+    includePartial: true,
+    authoredSeedBars: [
+      seedBar("league-aoe", [
+        "dragon_breath",
+        "greater_chain",
+        "combust",
+        "corruption_blast",
+        "magma_tempest",
+        "omnipower",
       ]),
     ],
   });
@@ -767,6 +995,24 @@ export const BENCH_CASES: readonly BenchCaseDef[] = [
     build: () => leaguePoisonRequest(218, false),
   },
   {
+    id: "league-poison-melee-aftershock",
+    quick: false,
+    seed: 219,
+    build: () => leaguePoisonRequest(219, true, true),
+  },
+  {
+    id: "league-avernic-delta",
+    quick: false,
+    seed: 223,
+    build: () => leagueAvernicRequest(223, true),
+  },
+  {
+    id: "league-avernic-delta-control",
+    quick: false,
+    seed: 223,
+    build: () => leagueAvernicRequest(223, false),
+  },
+  {
     id: "league-necro-conjures",
     quick: false,
     seed: 220,
@@ -777,6 +1023,30 @@ export const BENCH_CASES: readonly BenchCaseDef[] = [
     quick: false,
     seed: 220,
     build: () => leagueNecroRequest(220, false),
+  },
+  {
+    id: "league-light-ranged",
+    quick: false,
+    seed: 221,
+    build: () => leagueLightRequest(221, true),
+  },
+  {
+    id: "league-light-ranged-control",
+    quick: false,
+    seed: 221,
+    build: () => leagueLightRequest(221, false),
+  },
+  {
+    id: "league-aoe-magic",
+    quick: false,
+    seed: 222,
+    build: () => leagueAoeRequest(222, true),
+  },
+  {
+    id: "league-aoe-magic-control",
+    quick: false,
+    seed: 222,
+    build: () => leagueAoeRequest(222, false),
   },
 
   /**

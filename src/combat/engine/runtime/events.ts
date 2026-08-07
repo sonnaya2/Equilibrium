@@ -296,9 +296,11 @@ function compareEvents<RT>(a: ScheduledEvent<RT>, b: ScheduledEvent<RT>): number
 export class EventQueue<RT = unknown> {
   private heap: ScheduledEvent<RT>[] = [];
   private ordered: readonly ScheduledEvent<RT>[] | null = null;
+  private signatureValue: string | null = null;
 
   private invalidateOrdered(): void {
     this.ordered = null;
+    this.signatureValue = null;
   }
 
   private siftUp(index: number): void {
@@ -403,6 +405,7 @@ export class EventQueue<RT = unknown> {
     const next = new EventQueue<RT>();
     next.heap = [...this.heap];
     next.ordered = this.ordered;
+    next.signatureValue = this.signatureValue;
     return next;
   }
 
@@ -414,14 +417,19 @@ export class EventQueue<RT = unknown> {
    * Relative graphs (shared owners, derived edges) still distinguish.
    */
   signature(): string {
+    if (this.signatureValue !== null) return this.signatureValue;
     const items = this.pending();
-    if (items.length === 0) return "";
+    if (items.length === 0) {
+      this.signatureValue = "";
+      return this.signatureValue;
+    }
     const ranks = pendingKeyRanks(items);
     let out = eventSig(items[0]!, 0, ranks);
     for (let i = 1; i < items.length; i++) {
       out += RS + eventSig(items[i]!, i, ranks);
     }
-    return out;
+    this.signatureValue = out;
+    return this.signatureValue;
   }
 
   get length(): number {

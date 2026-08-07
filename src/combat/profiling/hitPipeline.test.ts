@@ -32,6 +32,8 @@ describe("hitPipeline profiling counters", () => {
       endpointPasses: 0,
       modifierProgramEvaluations: 0,
       modifierApplications: 0,
+      resolutionCacheHits: 0,
+      resolutionCacheMisses: 0,
     });
   });
 

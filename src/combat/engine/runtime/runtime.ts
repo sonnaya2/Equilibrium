@@ -1,5 +1,6 @@
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import type { HitResult } from "../../pipeline/calculateHit";
+import type { CombatModifier } from "../../types";
 import type { ConjureId } from "../../styles/necromancy/conjures";
 import type { CastContextInput, CastRecord, SimulationDetailLevel } from "../simulation/contracts";
 import { resolveDetailLevel } from "../simulation/contracts";
@@ -55,6 +56,7 @@ export interface SimulationRuntime {
   readonly lengLandTable: CompiledLengLandTable | null;
   readonly poisonFutureInterner: TargetWeaponPoisonFutureInterner;
   readonly playerPoisonDamageCache: Map<string, unknown>;
+  readonly leagueDamageCache: Map<string, unknown>;
   readonly queue: EventQueue<SimulationRuntime>;
   state: RotationState;
   readonly casts: CastRecord[];
@@ -124,7 +126,22 @@ function mapBasicsByStyle(
 export function createRuntime(input: CastContextInput): SimulationRuntime {
   noteRuntimeCreated();
   const ammo = resolveStyleAmmo(input.ammo, input.equipmentIds, input.context?.style);
-  const runtimeInput = ammo === input.ammo ? input : { ...input, ammo };
+  const withAmmo = ammo === input.ammo ? input : { ...input, ammo };
+  let runtimeInput = withAmmo;
+  if (typeof withAmmo.modifiers === "function") {
+    const source = withAmmo.modifiers;
+    const modifiersByAbility = new WeakMap<AbilitySpec, CombatModifier[]>();
+    runtimeInput = {
+      ...withAmmo,
+      modifiers: (ability) => {
+        const cached = modifiersByAbility.get(ability);
+        if (cached) return cached;
+        const modifiers = source(ability);
+        modifiersByAbility.set(ability, modifiers);
+        return modifiers;
+      },
+    };
+  }
   const adrenalineCap = resolveMaximumAdrenaline(
     input.equipmentEffects?.vestments.increasedAdrenalineCap ? 120 : ADRENALINE_CAP,
     input.league,
@@ -218,6 +235,7 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
     lengLandTable,
     poisonFutureInterner: createTargetWeaponPoisonFutureInterner(),
     playerPoisonDamageCache: new Map(),
+    leagueDamageCache: new Map(),
     queue: new EventQueue<SimulationRuntime>(),
     state,
     casts: [],

@@ -1,9 +1,9 @@
 /// <reference lib="webworker" />
 
-import type { SerializableSolverRequest, SolverResultDTO } from "./serializable";
+import type { SerializableSolverRequest } from "./serializable";
 import type { HostToWorkerMessage, SolverProgress, WorkerToHostMessage } from "./protocol";
-import type { SolveFn, SolveRuntimeOptions } from "./solveTypes";
 import { WorkerCoordState } from "./coord";
+import { executeWorkerSolve } from "./workerExecution";
 
 declare const self: DedicatedWorkerGlobalScope;
 
@@ -20,18 +20,6 @@ function post(message: WorkerToHostMessage): void {
 function clearRequestState(requestId: number): void {
   cancelled.delete(requestId);
   paused.delete(requestId);
-}
-
-async function loadSolve(): Promise<SolveFn> {
-  const mod = (await import(/* webpackMode: "lazy" */ "../solveFromRequest")) as {
-    solveFromRequest?: SolveFn;
-    default?: SolveFn;
-  };
-  const fn = mod.solveFromRequest ?? mod.default;
-  if (typeof fn !== "function") {
-    throw new Error("revolution solver: solveFromRequest export missing");
-  }
-  return fn;
 }
 
 async function waitWhilePaused(requestId: number): Promise<void> {
@@ -162,7 +150,6 @@ async function runStart(
       return;
     }
 
-    const solve = await loadSolve();
     if (cancelled.has(requestId) || runningId !== requestId) {
       post({ type: "cancelled", requestId });
       return;
@@ -170,8 +157,7 @@ async function runStart(
 
     const isDead = () => cancelled.has(requestId) || runningId !== requestId;
 
-    let profile: import("../profiling/counters").SolverProfileSnapshot | undefined;
-    const options: SolveRuntimeOptions = {
+    const execution = await executeWorkerSolve(payload, {
       onProgress: (progress: SolverProgress) => {
         if (isDead()) return;
         try {
@@ -193,19 +179,19 @@ async function runStart(
       },
       coord,
       profile: profileEnabled === true,
-      onProfile: (snapshot) => {
-        profile = snapshot;
-      },
-    };
-
-    const result: SolverResultDTO = await solve(payload, options);
+    });
 
     if (isDead()) {
       post({ type: "cancelled", requestId });
       return;
     }
     try {
-      post({ type: "result", requestId, result, ...(profile ? { profile } : {}) });
+      post({
+        type: "result",
+        requestId,
+        result: execution.result,
+        ...(execution.profile ? { profile: execution.profile } : {}),
+      });
     } catch (cloneErr) {
       post({
         type: "error",

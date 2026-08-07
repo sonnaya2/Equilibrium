@@ -102,29 +102,29 @@ const aegisOf = (loadout: Partial<Loadout>) =>
 
 describe("Aegis through a Setup loadout", () => {
   it.each([
-    ["no off-hand", { twohand: "mock:2h", body: "mock:body-1000" }, 250, "none"],
+    ["no off-hand", { twohand: "mock:2h", body: "mock:body-1000" }, 553, "none"],
     [
       "a stale shield under a two-handed weapon",
       { twohand: "mock:2h", offhand: "mock:shield", body: "mock:body-1000" },
-      250,
+      553,
       "none",
     ],
     [
       "a stale defender under a two-handed weapon",
       { twohand: "mock:2h", offhand: "mock:defender", body: "mock:body-1000" },
-      250,
+      553,
       "none",
     ],
     [
       "a genuine defender",
       { mainhand: "mock:mainhand", offhand: "mock:defender", body: "mock:body-1000" },
-      560,
+      1_166,
       "defender",
     ],
     [
       "a genuine shield",
       { mainhand: "mock:mainhand", offhand: "mock:shield", body: "mock:body-1000" },
-      900,
+      1_809,
       "shield",
     ],
   ])("resolves %s", (_name, equipmentSlots, expected, offhand) => {
@@ -148,26 +148,27 @@ describe("Aegis through a Setup loadout", () => {
       equipmentSlots: { body: "mock:body-1000" },
     });
     expect(stats.aegis.offhand).toBe("none");
-    expect(stats.leagueBaseAbilityDamageBonus).toBe(250);
-    expect(stats.base).toBe(stats.rawBase + 250);
+    expect(stats.leagueBaseAbilityDamageBonus).toBe(553);
+    expect(stats.base).toBe(stats.rawBase + 553);
   });
 
   it("adds to computed base ability damage rather than multiplying final damage", () => {
     const shielded = aegisOf({
       equipmentSlots: { mainhand: "mock:mainhand", offhand: "mock:shield", body: "mock:body-1000" },
     });
-    expect(shielded.base).toBe(shielded.rawBase + 900);
+    expect(shielded.base).toBe(shielded.rawBase + 1_809);
   });
 
-  it("uses Total Armor Value while block rating changes independently", () => {
+  it("uses Armour rating when Fortitude changes the block rating", () => {
     const slots = { mainhand: "mock:mainhand", offhand: "mock:shield", body: "mock:body-1000" };
     const off = aegisOf({ equipmentSlots: slots });
     const on = aegisOf({
       equipmentSlots: slots,
       buffs: { ...DEFAULT_LOADOUT.buffs, fortitude: true },
     });
-    expect(on.leagueBaseAbilityDamageBonus).toBe(off.leagueBaseAbilityDamageBonus);
-    expect(on.base).toBe(off.base);
+    expect(on.leagueBaseAbilityDamageBonus).toBe(2_156);
+    expect(off.leagueBaseAbilityDamageBonus).toBe(1_809);
+    expect(on.base).toBeGreaterThan(off.base);
     expect(on.defence.blockArmourRating).toBeGreaterThan(off.defence.blockArmourRating);
     expect(on.life.temporaryMaxLife).toBeGreaterThan(off.life.temporaryMaxLife);
     expect(on.defence.totalArmour).not.toBe(on.defence.blockArmourRating);
@@ -188,8 +189,8 @@ describe("Aegis through a Setup loadout", () => {
     });
     expect(withShield.aegis.offhand).toBe("shield");
     expect(switched.aegis.offhand).toBe("none");
-    expect(switched.leagueBaseAbilityDamageBonus).toBe(250);
-    // The shield's own armour left the total as well, so the two agree.
+    expect(switched.leagueBaseAbilityDamageBonus).toBe(553);
+    // The shield's own Armour leaves both the rating and the share lower.
     expect(switched.defence.totalArmour).toBe(1_000);
     expect(withShield.defence.totalArmour).toBe(1_200);
   });
@@ -204,7 +205,7 @@ describe("Aegis through a Setup loadout", () => {
       },
     });
     expect(switched.aegis.offhand).toBe("none");
-    expect(switched.leagueBaseAbilityDamageBonus).toBe(250);
+    expect(switched.leagueBaseAbilityDamageBonus).toBe(553);
   });
 
   it("reports nothing without the blessing", () => {

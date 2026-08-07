@@ -170,6 +170,8 @@ export interface TargetWeaponPoisonFutureInterner {
   readonly byKey: Map<string, TargetWeaponPoisonFuture>;
 }
 
+const MAX_INTERNED_POISON_FUTURES = 64;
+
 export function createTargetWeaponPoisonFutureInterner(): TargetWeaponPoisonFutureInterner {
   return { nextId: 1, byKey: new Map() };
 }
@@ -187,6 +189,10 @@ export function internTargetWeaponPoisonFuture(
   }
   const future = { id: interner.nextId++, atoms, nextAtomId };
   interner.byKey.set(key, future);
+  if (interner.byKey.size > MAX_INTERNED_POISON_FUTURES) {
+    const oldest = interner.byKey.keys().next().value;
+    if (oldest !== undefined) interner.byKey.delete(oldest);
+  }
   notePoisonFutureIntern(false);
   return { future, hit: false };
 }

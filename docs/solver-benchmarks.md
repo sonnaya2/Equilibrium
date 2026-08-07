@@ -10,7 +10,7 @@ npm run benchmark:solver:quick   # 4-slot subset, tiny budgets, <60s target
 npm run benchmark:solver         # same as quick
 npm run benchmark:solver:json    # quick + prints report path
 npm run benchmark:solver:full    # all cases via solveFromRequest (slow)
-npm run benchmark:solver:branch-stress # three valid League builds + matched controls
+npm run benchmark:solver:branch-stress # valid League stress matrix + matched controls
 ```
 
 Or directly:
@@ -34,6 +34,7 @@ Single case (programmatic / vitest harness): import `runBenchmark` from
 | `scripts/benchmarks/solver.mjs`                | CLI wrapper around vitest                |
 | `src/combat/solver/benchmarks/branchStress.ts` | Exactness and pipeline stress runner     |
 | `reports/solver-benchmark-*.json`              | Local report output (gitignored)         |
+| `reports/solver-branch-stress.json`             | Latest branch stress report (gitignored) |
 | `reports/solver-performance-*.md`              | Short baseline / phase check summaries   |
 
 ## Case IDs
@@ -92,11 +93,12 @@ Single case (programmatic / vitest harness): import `runBenchmark` from
 
 ### Branch stress
 
-- Evaluates fixed, legal Leng, poison melee, and necromancy conjure League builds.
-- Runs a matched non-League control for each build.
-- Uses a 30-tick fixed stress window, full adaptive branch ladder, and score-only production simulation.
-- Repeats the suite and gates probability mass, residual mass, exactness, and determinism.
-- Records poison interning, queue depth, attached terms, modifier programs, snapshot bytes, and branch timing.
+- Evaluates fixed, legal League builds for Leng, poison melee, necromancy conjures, Lord of Light fanout, multi-target magic, and an isolated Avernic Rampage delta.
+- Runs matched controls so League overhead and state changes can be separated from the underlying rotation.
+- Runs score-only and full-analysis simulations at 30, 45, and 60 ticks, plus a 30-tick 16,384-branch oracle. Leng stops at 45 ticks because its 60-tick state space is not exact under the 8,192 release cap.
+- Uses an adaptive live-cap ladder of 512, 1,024, 2,048, 4,096, and 8,192. A release case passes only when the final attempt is exact, probability mass plus residual mass is one, residual and failed mass are zero, and score/full results agree deterministically.
+- Keeps the Aftershock poison variant profile-only because that workload is already labeled approximate by the verified solver contract; the corresponding poison case without Aftershock remains an exact release gate through 60 ticks.
+- Records branch-key cache work, poison atoms and transition caches, blessing damage reuse, hit-resolution reuse, modifier evaluation, queue depth, snapshot bytes, RSS/heap observations, and branch timing.
 - Applies absolute duration/snapshot/live-branch ceilings on the pinned Windows x64 Node 26 runner and a broad League/control ratio elsewhere.
 
 ## Report schema (per case)

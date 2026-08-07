@@ -194,64 +194,23 @@ function poisonStateLive(
   return (poison.active && tick < poison.expiresAtTick) || poison.pendingApplicationHits.length > 0;
 }
 
-function encodePendingPoisonHits(
-  poison: TargetWeaponPoisonDistribution["atoms"][number]["poison"],
+function poisonPendingOrder(
   pending: readonly ScheduledEvent<SimulationRuntime>[],
-): string {
-  return poison.pendingApplicationHits
-    .map((hit) => {
-      const multiplicity = hit.multiplicity;
-      const model =
-        multiplicity.kind === "positive-binomial"
-          ? `b:${n(multiplicity.trials)}:${n(multiplicity.probability)}`
-          : multiplicity.kind === "positive-geometric"
-            ? `g:${n(multiplicity.continuationProbability)}`
-            : "s";
-      return `${n(hit.tick)}:${n(poisonPendingOrder(pending, hit.tick, hit.seq))}:${model}`;
-    })
-    .join(",");
+  tick: number,
+  seq: number,
+): number {
+  let order = 0;
+  for (const event of pending) {
+    if (event.tick > tick) break;
+    if (event.tick === tick && event.seq < seq) order++;
+  }
+  return order;
 }
 
-function encodeWeaponPoison(
-  distribution: TargetWeaponPoisonDistribution,
-  tick: number,
-  pending: readonly ScheduledEvent<SimulationRuntime>[],
-): string {
-  let out = String(distribution.atoms.length);
-  for (const atom of distribution.atoms) {
-    const poison = atom.poison;
-    out += FS + n(atom.probability) + US + n(halfOpenUntil(atom.immunityDisabledUntilTick, tick));
-    if (!poisonStateLive(poison, tick)) {
-      out += US + "0";
-      continue;
-    }
-    out +=
-      US +
-      "1" +
-      US +
-      n(poison.expiresAtTick) +
-      US +
-      n(poison.effectiveTier) +
-      US +
-      poison.decayMass.map(n).join(",") +
-      US +
-      n(poison.remainingHits) +
-      US +
-      n(poison.cadenceTicks) +
-      US +
-      n(poison.nextHitTick) +
-      US +
-      n(poisonPendingOrder(pending, poison.nextHitTick, poison.pendingEventSeq)) +
-      US +
-      n(poison.sourceDamageMultiplier) +
-      US +
-      b(poison.cinderbaneContinuation) +
-      US +
-      s(poison.sourceLabel) +
-      US +
-      encodePendingPoisonHits(poison, pending);
-  }
-  return out;
+function weaponPoisonFutureKey(distribution: TargetWeaponPoisonDistribution, tick: number): number {
+  return distribution.atoms.some((atom) => poisonStateLive(atom.poison, tick))
+    ? distribution.futureId
+    : 0;
 }
 
 function weaponPoisonJson(
@@ -280,24 +239,7 @@ function weaponPoisonJson(
   }));
 }
 
-function poisonPendingOrder(
-  pending: readonly ScheduledEvent<SimulationRuntime>[],
-  tick: number,
-  seq: number,
-): number {
-  let order = 0;
-  for (const event of pending) {
-    if (event.tick > tick) break;
-    if (event.tick === tick && event.seq < seq) order++;
-  }
-  return order;
-}
-
-function encodeState(
-  state: RotationState,
-  ranks: PendingKeyRanks,
-  pending: readonly ScheduledEvent<SimulationRuntime>[],
-): string {
+function encodeState(state: RotationState): string {
   const inv = state.invention;
   const m = state.melee;
   const r = state.ranged;
@@ -470,7 +412,7 @@ function encodeState(
     n(targetErUntil),
     n(hauntedUntil),
     n(hauntedUntil === 0 ? 0 : t.haunted.capAbilityDamage),
-    encodeWeaponPoison(t.weaponPoison, tick, pending),
+    n(weaponPoisonFutureKey(t.weaponPoison, tick)),
   );
   parts.push(toxinStacks > 0 ? "1" : "0");
   if (toxinStacks > 0) {
@@ -731,13 +673,10 @@ export function branchKeyJson(rt: SimulationRuntime): string {
   ]);
 }
 
-/** Compact structural key used by merge. */
-export function branchKeyStructural(rt: SimulationRuntime): string {
+function branchKeyStructuralFuture(rt: SimulationRuntime) {
   const pending = rt.queue.pending();
   const ranks = pendingKeyRanks(pending);
-  return (
-    encodeState(rt.state, ranks, pending) +
-    RS +
+  const suffix =
     rt.queue.signature() +
     RS +
     encodeLiveDerivedHitDetails(rt, ranks) +
@@ -748,8 +687,14 @@ export function branchKeyStructural(rt: SimulationRuntime): string {
     RS +
     encodeSpiritHits(rt.spiritHitCounts) +
     RS +
-    (rt.horizon == null ? n(rt.endTick) : "")
-  );
+    (rt.horizon == null ? n(rt.endTick) : "");
+  return { pending, ranks, suffix };
+}
+
+/** Compact structural key used by merge. */
+export function branchKeyStructural(rt: SimulationRuntime): string {
+  const future = branchKeyStructuralFuture(rt);
+  return encodeState(rt.state) + RS + future.suffix;
 }
 
 export function buildBranchKey(rt: SimulationRuntime): string {
@@ -760,6 +705,7 @@ export interface BranchFingerprint {
   readonly hashA: number;
   readonly hashB: number;
   readonly structural: string;
+  readonly cacheHit: boolean;
 }
 
 export function fingerprintBranchKey(structural: string): BranchFingerprint {
@@ -771,9 +717,26 @@ export function fingerprintBranchKey(structural: string): BranchFingerprint {
     hashB = Math.imul(hashB ^ code, 0x85ebca6b);
     hashB ^= hashB >>> 13;
   }
-  return { hashA: hashA >>> 0, hashB: hashB >>> 0, structural };
+  return { hashA: hashA >>> 0, hashB: hashB >>> 0, structural, cacheHit: false };
 }
 
+const MAX_FINGERPRINTS_PER_STATE = 8;
+const fingerprintCache = new WeakMap<RotationState, Map<string, BranchFingerprint>>();
+
 export function buildBranchFingerprint(rt: SimulationRuntime): BranchFingerprint {
-  return fingerprintBranchKey(buildBranchKey(rt));
+  if (envJsonBranchKey()) return fingerprintBranchKey(branchKeyJson(rt));
+  const future = branchKeyStructuralFuture(rt);
+  let bySuffix = fingerprintCache.get(rt.state);
+  const cached = bySuffix?.get(future.suffix);
+  if (cached) return { ...cached, cacheHit: true };
+  const fingerprint = fingerprintBranchKey(encodeState(rt.state) + RS + future.suffix);
+  if (!bySuffix) {
+    bySuffix = new Map();
+    fingerprintCache.set(rt.state, bySuffix);
+  } else if (bySuffix.size >= MAX_FINGERPRINTS_PER_STATE) {
+    const oldest = bySuffix.keys().next().value as string | undefined;
+    if (oldest !== undefined) bySuffix.delete(oldest);
+  }
+  bySuffix.set(future.suffix, fingerprint);
+  return fingerprint;
 }

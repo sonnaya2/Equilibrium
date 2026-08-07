@@ -998,7 +998,7 @@ describe("loadoutStats", () => {
       const aegis = loadoutStats(aegisLoadout, {
         blessingPicks: ["Order", "Order", "Order"],
       });
-      expect(aegis.leagueBaseAbilityDamageBonus).toBe(125);
+      expect(aegis.leagueBaseAbilityDamageBonus).toBe(428);
       expect(aegis.aegis).toMatchObject({
         offhand: "none",
         armourPercent: 0.25,
@@ -1127,7 +1127,7 @@ describe("loadoutStats", () => {
         {
           picks: ["Order", "Order", "Order", "Balance"] as const,
           count: 2,
-          base: 1_936,
+          base: 2_239,
           armour: 100,
           life: 10_900,
           crit: 0.2,
@@ -1137,7 +1137,7 @@ describe("loadoutStats", () => {
         {
           picks: ["Order", "Balance", "Chaos", "Balance"] as const,
           count: 3,
-          base: 2_023,
+          base: 2_326,
           armour: 150,
           life: 11_400,
           crit: 0.25,
@@ -1187,7 +1187,7 @@ describe("loadoutStats", () => {
         blessingPicks: ["Order", "Order", "Order", "Balance"],
         relics: ["Icyenic Faith"],
       });
-      expect(stats.base).toBe(1_936);
+      expect(stats.base).toBe(2_239);
       expect(stats.defence.totalArmour).toBe(100);
       expect(stats.league.prayerBonus).toBe(10);
       expect(stats.icyenic.totalPrayerBonus).toBe(0);
@@ -1199,14 +1199,14 @@ describe("loadoutStats", () => {
           relics: ["Icyenic Faith"],
         },
       );
-      expect(withTome.base).toBe(2_168);
+      expect(withTome.base).toBe(2_507);
       expect(withTome.league.prayerBonus).toBe(60);
       expect(withTome.icyenic.totalPrayerBonus).toBe(60);
       expect(withTome.critChance).toBeCloseTo(0.32, 10);
       expect(withTome.baseAbilityDamageBreakdown).toEqual(
         expect.arrayContaining([
           { label: "True Equilibrium", value: 150 },
-          { label: "Icyenic Faith", value: 232 },
+          { label: "Icyenic Faith", value: 268 },
         ]),
       );
       expect(withTome.critDamageSources).toEqual(
@@ -1218,11 +1218,11 @@ describe("loadoutStats", () => {
       const stats = loadoutStats(base, {
         blessingPicks: ["Order", "Order", "Order", "Order"],
       });
-      expect(stats.base).toBe(2_289);
+      expect(stats.base).toBe(2_683);
       expect(stats.leagueBaseAbilityDamageMultiplier).toBe(1.3);
       expect(stats.league.blessingIds.has("higher-power")).toBe(true);
       expect(stats.baseAbilityDamageBreakdown).toEqual(
-        expect.arrayContaining([{ label: "Higher Power", value: 528 }]),
+        expect.arrayContaining([{ label: "Higher Power", value: 619 }]),
       );
     });
 

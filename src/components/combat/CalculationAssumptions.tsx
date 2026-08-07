@@ -111,18 +111,18 @@ export function CalculationAssumptions({
           ],
         ] as Array<[string, string | number]>)
       : []),
-    // Aegis converts the shared Total Armor Value into flat base damage.
+    // Aegis converts Armour rating into flat base damage.
     ...(stats.aegis.armourPercent > 0
       ? ([
           [
-            "Aegis Total Armor Value",
-            `${formatNumber(stats.defence.totalArmour)} · ${PERCENT_FORMAT.format(
+            "Aegis Armour rating",
+            `${formatNumber(stats.defence.blockArmourRating)} · ${PERCENT_FORMAT.format(
               stats.aegis.armourPercent,
             )} · off-hand ${stats.aegis.offhand}`,
           ],
           [
             "Aegis base-damage bonus",
-            `+${formatNumber(stats.aegis.baseAbilityDamageBonus)} (shared Total Armor Value)`,
+            `+${formatNumber(stats.aegis.baseAbilityDamageBonus)} (Armour rating)`,
           ],
         ] as Array<[string, string | number]>)
       : []),

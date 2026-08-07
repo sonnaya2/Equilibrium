@@ -26,6 +26,26 @@ function runtimeWithAssault() {
 }
 
 describe("hit reuse under multi-branch land identity", () => {
+  it("memoizes ability modifier programs across equivalent branch casts", () => {
+    let builds = 0;
+    const rt = createRuntime({
+      base: 1000,
+      level: 99,
+      accuracy: 1,
+      crit: { chance: 0 },
+      abilities: MELEE_ABILITIES,
+      context: { style: "melee" },
+      modifiers: () => {
+        builds += 1;
+        return [];
+      },
+    });
+    const first = prepareCast(rt, assault, 0);
+    const second = prepareCast(rt, assault, 0);
+    expect(first.snap.baseMods).toBe(second.snap.baseMods);
+    expect(builds).toBe(1);
+  });
+
   it("reuses EventResolution for identical land context within a scope", () => {
     setHitPipelineProfiling(true);
     resetHitPipelineCounters();

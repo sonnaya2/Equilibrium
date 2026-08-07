@@ -26,6 +26,19 @@ export interface AllocationCounters {
   historyEventsGrowthOps: number;
   /** Attached damage terms written through the landed-event ledger. */
   attachedTermsResolved: number;
+  /** Fallback blessing Maps rebuilt because a revived ruleset lacked its cached index. */
+  blessingIndexRebuilds: number;
+  blessingDamageCacheHits: number;
+  blessingDamageCacheMisses: number;
+  /** Poison atoms presented to and emitted by exact future merging. */
+  poisonAtomMergeInputs: number;
+  poisonAtomMergeOutputs: number;
+  /** Pending queue entries scanned to classify poison event ordering. */
+  poisonOrderingScans: number;
+  /** Probability-vector bytes materialized while rebuilding local poison distributions. */
+  poisonProbabilityBytesMaterialized: number;
+  poisonTransitionCacheHits: number;
+  poisonTransitionCacheMisses: number;
 }
 
 const ZERO: AllocationCounters = {
@@ -40,6 +53,15 @@ const ZERO: AllocationCounters = {
   castsGrowthOps: 0,
   historyEventsGrowthOps: 0,
   attachedTermsResolved: 0,
+  blessingIndexRebuilds: 0,
+  blessingDamageCacheHits: 0,
+  blessingDamageCacheMisses: 0,
+  poisonAtomMergeInputs: 0,
+  poisonAtomMergeOutputs: 0,
+  poisonOrderingScans: 0,
+  poisonProbabilityBytesMaterialized: 0,
+  poisonTransitionCacheHits: 0,
+  poisonTransitionCacheMisses: 0,
 };
 
 /** Live counters object (mutate in place when enabled). */
@@ -75,6 +97,15 @@ export function resetAllocationCounters(): void {
   allocationCounters.castsGrowthOps = 0;
   allocationCounters.historyEventsGrowthOps = 0;
   allocationCounters.attachedTermsResolved = 0;
+  allocationCounters.blessingIndexRebuilds = 0;
+  allocationCounters.blessingDamageCacheHits = 0;
+  allocationCounters.blessingDamageCacheMisses = 0;
+  allocationCounters.poisonAtomMergeInputs = 0;
+  allocationCounters.poisonAtomMergeOutputs = 0;
+  allocationCounters.poisonOrderingScans = 0;
+  allocationCounters.poisonProbabilityBytesMaterialized = 0;
+  allocationCounters.poisonTransitionCacheHits = 0;
+  allocationCounters.poisonTransitionCacheMisses = 0;
 }
 
 /** Snapshot copy of counters (safe to log / serialize). */
@@ -131,4 +162,38 @@ export function noteHistoryEventsGrowth(): void {
 export function noteAttachedTermsResolved(count: number): void {
   if (!enabled || count <= 0) return;
   allocationCounters.attachedTermsResolved += count;
+}
+
+export function noteBlessingIndexRebuild(): void {
+  if (!enabled) return;
+  allocationCounters.blessingIndexRebuilds += 1;
+}
+
+export function noteBlessingDamageCache(hit: boolean): void {
+  if (!enabled) return;
+  if (hit) allocationCounters.blessingDamageCacheHits += 1;
+  else allocationCounters.blessingDamageCacheMisses += 1;
+}
+
+export function notePoisonAtomMerge(inputCount: number, outputCount: number): void {
+  if (!enabled) return;
+  allocationCounters.poisonAtomMergeInputs += Math.max(0, inputCount);
+  allocationCounters.poisonAtomMergeOutputs += Math.max(0, outputCount);
+}
+
+export function notePoisonOrderingScan(count: number): void {
+  if (!enabled || count <= 0) return;
+  allocationCounters.poisonOrderingScans += count;
+}
+
+export function notePoisonProbabilityMaterialization(atomCount: number): void {
+  if (!enabled || atomCount <= 0) return;
+  allocationCounters.poisonProbabilityBytesMaterialized +=
+    atomCount * Float64Array.BYTES_PER_ELEMENT;
+}
+
+export function notePoisonTransitionCache(hit: boolean): void {
+  if (!enabled) return;
+  if (hit) allocationCounters.poisonTransitionCacheHits += 1;
+  else allocationCounters.poisonTransitionCacheMisses += 1;
 }

@@ -4,6 +4,7 @@ import {
   attachedResolutionComponent,
   blessingHitEligibility,
   leagueDamageComponents,
+  resolveLeagueAttachedTerms,
   type BlessingDamageSource,
 } from "../../../league/damage";
 import type { DamageProvenance } from "../../../shared/damageProvenance";
@@ -17,6 +18,7 @@ import {
 } from "../types";
 import { isBasicAttack } from "../../../shared/adrenalineGain";
 import { statefulOccurrenceProbability } from "../../analysis/multiplicity";
+import { noteBlessingDamageCache } from "../../../profiling/allocation";
 
 /**
  * Prefer scheduled DamageProvenance (keeps blessing detail for rider carve-out);
@@ -110,31 +112,68 @@ export function applyBlessingDamage(
   };
   const strikingLightReady = event.tick >= (rt.state.league?.strikingLightReadyTick ?? Infinity);
   const lordOfLightReady = event.tick >= (rt.state.league?.lordOfLightReadyTick ?? Infinity);
-  const components = leagueDamageComponents({
+  const includedAttached = new Set(resolution.components?.map((component) => component.id) ?? []);
+  const expectedAttached = resolveLeagueAttachedTerms({
     rules: rt.input.league,
-    ability: resolvedAbility,
-    hitIndex: event.hitIndex,
     source,
     attached: event.attached,
     landTick: event.tick,
-    base: rt.input.base,
-    level: rt.input.level,
-    accuracy: rt.input.accuracy,
-    crit: rt.input.crit,
-    parentCrit,
-    modifiers,
-    context: {
-      ...rt.input.context,
-      style,
-      abilityCategory: resolvedAbility.category,
-      basicAttack: isBasicAttack(resolvedAbility),
-      area: resolvedAbility.area,
-    },
-    cap: rt.input.cap,
-    preciseRank: rt.input.preciseRank,
-    strikingLightReady: ability != null && strikingLightReady,
-    lordOfLightReady: ability != null && lordOfLightReady,
+    abilityBase: rt.input.base,
   });
+  const includeAttachedHost = expectedAttached.some((term) => !includedAttached.has(term.id));
+  if (!includeAttachedHost && !eligible.cinders && !eligible.onHit) return resolution;
+  const componentCacheKey = [
+    event.tick,
+    event.abilityId,
+    event.hitIndex,
+    event.attached ? 1 : 0,
+    typeof source === "string" ? source : `${source.kind}:${source.detail ?? ""}`,
+    parentCrit.chance,
+    parentCrit.damageBonus ?? 0,
+    parentCrit.guaranteed ? 1 : 0,
+    parentCrit.eligible === false ? 0 : 1,
+    strikingLightReady ? 1 : 0,
+    lordOfLightReady ? 1 : 0,
+    includeAttachedHost ? 1 : 0,
+  ].join("\x1f");
+  let components = rt.leagueDamageCache.get(componentCacheKey) as
+    ReturnType<typeof leagueDamageComponents> | undefined;
+  if (components) {
+    noteBlessingDamageCache(true);
+  } else {
+    noteBlessingDamageCache(false);
+    components = leagueDamageComponents({
+      rules: rt.input.league,
+      ability: resolvedAbility,
+      hitIndex: event.hitIndex,
+      source,
+      attached: event.attached,
+      landTick: event.tick,
+      base: rt.input.base,
+      level: rt.input.level,
+      accuracy: rt.input.accuracy,
+      crit: rt.input.crit,
+      parentCrit,
+      modifiers,
+      context: {
+        ...rt.input.context,
+        style,
+        abilityCategory: resolvedAbility.category,
+        basicAttack: isBasicAttack(resolvedAbility),
+        area: resolvedAbility.area,
+      },
+      cap: rt.input.cap,
+      preciseRank: rt.input.preciseRank,
+      strikingLightReady: ability != null && strikingLightReady,
+      lordOfLightReady: ability != null && lordOfLightReady,
+      includeAttachedHost,
+    });
+    rt.leagueDamageCache.set(componentCacheKey, components);
+    if (rt.leagueDamageCache.size > 1_024) {
+      const oldest = rt.leagueDamageCache.keys().next().value;
+      if (oldest !== undefined) rt.leagueDamageCache.delete(oldest);
+    }
+  }
   if (components.some((component) => component.blessingId === "striking-light")) {
     const cooldown =
       blessingRule(rt.input.league, "perfidious")?.strikingLightCooldownTicks ??
@@ -152,7 +191,6 @@ export function applyBlessingDamage(
   // Chance-weighted parents pass their activation mass into attached components.
   const parentWeight = event.expectedActivations ?? event.expectedOccurrences ?? 1;
   const parentOccurrenceProbability = statefulOccurrenceProbability(event);
-  const includedAttached = new Set(resolution.components?.map((component) => component.id) ?? []);
   let composed = resolution;
   for (const component of components) {
     const scaledDamage = scaleResolvedDamage(component.damage, parentWeight);

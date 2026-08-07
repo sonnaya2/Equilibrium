@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { createCastContext, simulate } from "../engine/simulation/simulate";
 import { rotationOf } from "../engine/simulation/contracts";
+import type { AbilitySpec } from "../pipeline/calculateAbility";
 import { MAGIC_ABILITIES } from "../styles/magic/abilities";
 import { MELEE_ABILITIES } from "../styles/melee/abilities";
-import { baseInput, magicInput } from "../test/fixtures/inputs";
+import { NECROMANCY_ABILITIES } from "../styles/necromancy/abilities";
+import { baseInput, magicInput, necroInput } from "../test/fixtures/inputs";
 import { secondsToTicks } from "../core/ticks";
 import { AFFINITY } from "../target/genericTarget";
 import { blessingChoice } from "../../league/blessings";
@@ -34,18 +36,18 @@ describe("Teragard's Aegis and Basic Attacks", () => {
     // Aegis is applied at loadout resolve (aegisArmourBonus → base), not inside simulate.
     const aegisBonus = aegisArmourBonus(
       blessingChoice(1, "Order")!.combat,
-      { totalArmour: 1_000 },
+      { blockArmourRating: 2_212 },
       null,
     ).baseAbilityDamageBonus;
-    expect(aegisBonus).toBe(250);
+    expect(aegisBonus).toBe(553);
 
     const aegis = simulate({
       ...baseInput,
       base: baseInput.base + aegisBonus,
       rotation: rotationOf("attack"),
     });
-    // Mid of 110-130% on 1,250 ability damage.
-    expect(aegis.totalExpected).toBe(1_500);
+    // Mid of 110-130% on 1,553 ability damage.
+    expect(aegis.totalExpected).toBe(1_863);
   });
 });
 
@@ -93,6 +95,59 @@ describe("Avernic Rampage window boundary", () => {
     context.performCast(attack, 0, false, { "avernic-rampage": true });
     context.performCast(attack, 3, false, { "avernic-rampage": true });
     expect(context.getState().league?.avernicRampageUntilTick).toBe(12);
+  });
+
+  it("changes expected damage when only a proc-funded follow-up is affordable", () => {
+    const withoutRampage = simulate({
+      ...baseInput,
+      league: rules(["Chaos", "Chaos"]),
+      startingAdrenaline: 25,
+      rotation: rotationOf("assault", "assault"),
+      horizonTicks: 20,
+    });
+    const withRampage = simulate({
+      ...baseInput,
+      league: avernic,
+      startingAdrenaline: 25,
+      rotation: rotationOf("assault", "assault"),
+      horizonTicks: 20,
+    });
+
+    expect(withoutRampage.totalExpected).toBe(6_500);
+    expect(withRampage.totalExpected).toBe(6_825);
+    expect(withRampage.rng).toMatchObject({
+      method: "probability-weighted branching",
+      successfulClasses: 1,
+      failedClasses: 1,
+    });
+  });
+
+  it("rolls for damage resolved during preparation", () => {
+    const volleyPlaceholder: AbilitySpec = {
+      id: "volley_of_souls",
+      name: "Volley of Souls",
+      style: "necromancy",
+      category: "enhanced",
+      hits: [],
+      adrenaline: { cost: 0 },
+    };
+    const input = {
+      ...necroInput,
+      abilities: [...NECROMANCY_ABILITIES, volleyPlaceholder],
+      startingAdrenaline: 0,
+      startingResidualSouls: 3,
+      rotation: rotationOf("volley_of_souls", "finger_of_death"),
+    } as const;
+    const withoutRampage = simulate({ ...input, league: rules(["Chaos", "Chaos"]) });
+    const withRampage = simulate({ ...input, league: avernic });
+
+    expect(withoutRampage.totalExpected).toBe(5_175);
+    expect(withRampage.totalExpected).toBe(5_336.25);
+    expect(withRampage.rng).toMatchObject({
+      method: "probability-weighted branching",
+      successfulClasses: 1,
+      failedClasses: 1,
+    });
   });
 });
 

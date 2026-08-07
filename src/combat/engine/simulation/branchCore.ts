@@ -4,11 +4,7 @@ import { keepsAnalysisLedgers, keepsPerAbilityMap, keepsPresentationHistory } fr
 import type { SimulationRuntime } from "../runtime/runtime";
 import { mergeSupportOffsets } from "./stats";
 import { buildBranchFingerprint, fingerprintBranchKey, type BranchFingerprint } from "./branchKey";
-import {
-  mergeTargetWeaponPoisonHistories,
-  patchTarget,
-  type RotationState,
-} from "../runtime/state";
+import { mergeTargetWeaponPoisonHistories, patchTarget } from "../runtime/state";
 import {
   enablePoisonFutureInternProfile,
   poisonFutureInternProfile,
@@ -89,6 +85,12 @@ export interface BranchProfile {
   branchKeySerializations: number;
   /** Sum of serialized key string lengths (UTF-16 code units). */
   branchKeyChars: number;
+  /** Fingerprints reused for the same immutable state and pending-future suffix. */
+  branchKeyCacheHits: number;
+  /** Fingerprints materialized because no cached structural future matched. */
+  branchKeyCacheMisses: number;
+  /** Structural key characters actually materialized on cache misses. */
+  branchKeyMaterializedChars: number;
   /** Wall ms spent in branchKey construction (when profiling). */
   branchKeyConstructionMs: number;
   /** Same-hash candidates rejected by structural equality. */
@@ -126,6 +128,9 @@ const EMPTY_BRANCH_PROFILE: BranchProfile = {
   poisonFutureInternMisses: 0,
   branchKeySerializations: 0,
   branchKeyChars: 0,
+  branchKeyCacheHits: 0,
+  branchKeyCacheMisses: 0,
+  branchKeyMaterializedChars: 0,
   branchKeyConstructionMs: 0,
   branchFingerprintCollisions: 0,
   transitionPlansCollapsed: 0,
@@ -236,7 +241,7 @@ function estimateSnapshotCost(rt: SimulationRuntime): { fields: number; bytes: n
   // One unit per container clone + per entry walk (maps/arrays).
   const fields =
     1 + // queue.clone
-    1 + // structuredClone(state except immutable poison distribution)
+    1 + // immutable RotationState reference
     casts +
     castHits +
     (scoreOnly ? 0 : 1 + perAbility) + // perAbility spread only when kept
@@ -253,7 +258,7 @@ function estimateSnapshotCost(rt: SimulationRuntime): { fields: number; bytes: n
   // Order-of-magnitude payload (tuned for relative A/B, not allocator truth).
   const bytes =
     queueLen * 160 +
-    900 + // RotationState clone excluding poison-local atoms
+    8 + // RotationState reference
     casts * (scoreOnly ? 200 : 280) +
     castHits * 24 +
     perAbility * 32 +
@@ -356,20 +361,10 @@ export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
   // Score-only never writes perAbility; skip shallow-copy of the empty map.
   const perAbility = scoreOnly ? ({} as Record<string, number>) : { ...rt.perAbility };
 
-  const weaponPoison = rt.state.target.weaponPoison;
-  const stateWithoutPoison = {
-    ...rt.state,
-    target: { ...rt.state.target, weaponPoison: undefined },
-  };
-  const clonedState = structuredClone(stateWithoutPoison);
-  const state = {
-    ...clonedState,
-    target: { ...clonedState.target, weaponPoison },
-  } as RotationState;
+  const state = rt.state;
 
   if (sampleSnapshotBytes) {
     const payload = JSON.stringify([
-      state,
       rt.queue.signature(),
       casts,
       rt.damageByTick,
@@ -415,6 +410,12 @@ function branchFingerprint(rt: SimulationRuntime, error?: string): BranchFingerp
   if (branchProfEnabled) {
     branchProf.branchKeySerializations++;
     branchProf.branchKeyChars += fingerprint.structural.length;
+    if (future.cacheHit) {
+      branchProf.branchKeyCacheHits += 1;
+    } else {
+      branchProf.branchKeyCacheMisses += 1;
+      branchProf.branchKeyMaterializedChars += future.structural.length;
+    }
     branchProf.branchKeyConstructionMs += performance.now() - t0;
   }
   return fingerprint;

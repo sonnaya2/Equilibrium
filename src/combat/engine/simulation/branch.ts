@@ -200,7 +200,7 @@ export function planCastOutcomes(
         const outcomePrepared = prepareCast(at.rt, castAbility, candidate, outcome);
         const points = rngPointsFor(
           at.rt.state,
-          castAbility,
+          outcomePrepared.working,
           outcomePrepared.candidate,
           outcomePrepared.spend,
           at.rt.input.adrenaline,
@@ -234,7 +234,7 @@ export function planCastOutcomes(
     const prepared = prepareCast(at.rt, castAbility, candidate);
     const points = rngPointsFor(
       at.rt.state,
-      castAbility,
+      prepared.working,
       prepared.candidate,
       prepared.spend,
       at.rt.input.adrenaline,

@@ -117,6 +117,19 @@ describe("adrenalinePresentation", () => {
     expect(rows.some(([label]) => label === "Ultimate adren retain")).toBe(false);
   });
 
+  it("surfaces Avernic Rampage as a stateful rotation assumption", () => {
+    const stats = loadoutStats(base, {
+      ruleset: "equilibrium",
+      blessingPicks: ["Chaos", "Chaos", "Chaos"],
+    });
+    const rows = adrenEconomyAssumptionRows(stats);
+    expect(rows).toContainEqual([
+      "Avernic Rampage",
+      "5% on damaging attack · later abilities and weapon specials cost 0 for 12 ticks (rotation RNG)",
+    ]);
+    expect(adrenEconomyFingerprint(stats)).not.toBe(adrenEconomyFingerprint(loadoutStats(base)));
+  });
+
   it("loadout path: CoE + FotS + RoV resolve the same rules for Arch / Analysis", () => {
     const loadout: Loadout = {
       ...base,

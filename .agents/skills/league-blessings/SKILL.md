@@ -59,7 +59,7 @@ Author factual changes through the repository's normal JSONL patch workflow. Nev
 
 | Tier  | Chaos                                                                                                                                                              | Balance                                                                                                                                                               | Order                                                                                                                                                                                                               |
 | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1     | **Adrenaline Junkie** — maximum adrenaline +50%; adrenaline generation +50%                                                                                        | **Big Boned** — maximum life points +50%; damage dealt gains bonus damage equal to 5% of maximum life points                                                          | **Teragard's Aegis** — base ability damage gains 25% of total armour value, doubled with a defender and tripled with a shield; base health regeneration gains 2.5% of maximum life points with the same multipliers |
+| 1     | **Adrenaline Junkie** — maximum adrenaline +50%; adrenaline generation +50%                                                                                        | **Big Boned** — maximum life points +50%; damage dealt gains bonus damage equal to 5% of maximum life points                                                          | **Teragard's Aegis** — base ability damage gains 25% of Armour rating, doubled with a defender and tripled with a shield; base health regeneration gains 2.5% of maximum life points with the same multipliers |
 | 2     | **Abyssal Cinders** — attacks deal 15% of ability damage as bonus damage; 5% on-hit chance to trigger Inferno of Zamorak for 100-200% ability damage to one target | **Barkscales** — incoming damage is reduced by 10% of armour value; after five reductions, trigger Grasp of Guthix for 80-120% ability damage as poison in a 3×3 area | **Striking Light** — basic attack damage +40%; basic attacks trigger Light of Saradomin on a 9-second cooldown for 40-60% ability damage plus 250% of armour value                                                  |
 | 3     | **Avernic Rampage** — 5% on-attack chance to activate a 7.2-second window where abilities and special attacks cost 0% adrenaline                                   | **Eternal Sustenance** — food is not consumed when eaten; eating no longer drains adrenaline                                                                          | **Steadfast Will** — empowers Bash, Preparation, Reflect, and Revenge                                                                                                                                               |
 | God 1 | **Demon's Mark** — accuracy is always calculated using the target's weakness                                                                                       | **Splash Zone** — AoE and multi-target attacks deal 30% more damage; AoE abilities deal 5% more damage per tile occupied by the target                                | **Sacred Fervor** — ability and special-attack cooldowns are reduced by 30% for all four combat styles                                                                                                              |
@@ -222,12 +222,12 @@ Status: `partially modeled`, `mechanics unverified`
   from wiki `Hit chance`. Fortitude's ×1.15, prayer and curse block levels, and the Defence level
   itself live here and nowhere else.
 
-Every "% of your armour value" effect — Aegis, Striking Light, Barkscales, Steadfast Will's Bash —
-reads `totalArmour`. A boost that only moves the block calculation must never reach them.
+Aegis reads `blockArmourRating`. Striking Light, Barkscales, and Steadfast Will's Bash read
+`totalArmour`; boosts that only move the block calculation do not reach those mechanics.
 
 Implementation:
 
-- add 25% of the total Armour stat to base ability damage, 50% wielding a defender, 75% wielding a
+- add 25% of the Armour rating to base ability damage, 50% wielding a defender, 75% wielding a
   shield — the card's three flat shares, so the percentage resolves before a single rounding:
   `floor(armour × 0.75)`, not `floor(armour × 0.25) × 3`;
 - it is additive base ability damage, never a final-damage multiplier. At 1,000 qualifying armour a
@@ -239,8 +239,7 @@ Implementation:
 
 Still unverified:
 
-- whether "total armour value" is confirmed in game to be the Loadout-screen stat rather than the
-  internal armour rating — the single assumption the whole magnitude rests on;
+- whether the resolved Armour-rating interpretation matches live-game magnitudes;
 - whether the Loadout screen's combat-triangle style bonus adjusts the qualifying value;
 - the rounding stage against live values;
 - regeneration tick timing.
@@ -265,7 +264,7 @@ drift apart:
 | conjure command                       | yes             | no                      |
 | autonomous conjure auto or poison     | yes             | no                      |
 | invention proc                        | yes             | no                      |
-| equipment proc                        | no              | no                      |
+| equipment proc                        | yes             | no                      |
 | attached component                    | no              | no                      |
 | separate Light or Inferno hit         | yes             | no                      |
 | player weapon-poison hit              | yes             | no                      |
@@ -326,8 +325,7 @@ Provisional implementation:
 - Light of Saradomin activates from the first landed direct hit while off cooldown, once per cast —
   its 9-second cooldown outlives any single cast;
 - Light is a separate hit and may crit;
-- Light damage is the 40-60% ability-damage band plus a flat 250% of the **total Armour stat**, the
-  same value Teragard's Aegis reads;
+- Light damage is the 40-60% ability-damage band plus a flat 250% of the **total Armour stat**;
 - the cooldown is 9 seconds.
 
 Still unverified:
@@ -431,14 +429,14 @@ Provisional implementation:
 - AoE status comes from existing ability tags or equipment behaviour such as chinchompas;
 - multi-target status uses existing attack metadata;
 - the +30% bonus and +5%-per-tile bonus may apply together;
-- tile count uses the target's full footprint from game data;
+- the per-size count uses the target's size dimension, not its occupied footprint;
 - the two Splash Zone bonuses are additive with each other;
 - interaction with unrelated modifiers follows the existing ordered modifier pipeline.
 
 Still unverified:
 
 - whether all tagged AoE abilities qualify identically;
-- whether occupied tiles means full footprint or tiles actually struck;
+- whether every target-size dimension is intended to count identically;
 - whether the tile bonus has a cap;
 - exact modifier stage and rounding.
 
@@ -480,10 +478,10 @@ Until testing proves otherwise:
 
 Blessing implementation may require shared derived context for:
 
-- total armour value after all active boosts;
+- total Armour and resolved Armour rating as separate values;
 - maximum life points after all active bonuses;
 - shield or defender state;
-- target footprint;
+- target size dimension and occupied footprint as separate fields;
 - target weakness or affinities;
 - attack and ability tags;
 - auto-attack versus Basic-category ability;

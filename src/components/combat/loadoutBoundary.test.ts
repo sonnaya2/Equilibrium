@@ -113,9 +113,7 @@ describe("presentation reconciles with engine inputs", () => {
       { blessingPicks: ["Order"] },
     );
     expect(sumBreakdown(stats.armourBreakdown)).toBe(stats.defence.totalArmour);
-    expect(stats.aegis.baseAbilityDamageBonus).toBe(
-      Math.floor(stats.defence.totalArmour * stats.aegis.armourPercent),
-    );
+    expect(stats.aegis.baseAbilityDamageBonus).toBe(516);
     expect(sumBreakdown(stats.armourRatingBreakdown)).toBe(stats.defence.blockArmourRating);
   });
 

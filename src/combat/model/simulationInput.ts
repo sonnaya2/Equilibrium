@@ -1,7 +1,7 @@
 /**
  * Project ResolvedCombatModel into existing sim/solver plain payloads (no Maps).
  */
-import type { BlessingId } from "@/league/blessings";
+import { indexActiveBlessings, type BlessingId } from "@/league/blessings";
 import type { ResolvedLeagueRules } from "../league/ruleset";
 import { STANDARD_HIT_CAP } from "../core/hitCaps";
 import type {
@@ -16,6 +16,7 @@ export function reviveLeague(league: SerializableLeagueRules): ResolvedLeagueRul
   return {
     ruleset: league.ruleset,
     blessings: league.blessings,
+    blessingsById: indexActiveBlessings(league.blessings),
     tierPassives: league.tierPassives ?? [],
     blessingIds: new Set<BlessingId>(league.blessingIds),
     relics,

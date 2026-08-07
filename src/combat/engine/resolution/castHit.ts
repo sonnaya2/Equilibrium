@@ -48,6 +48,7 @@ import {
   resolveLeagueAttachedHost,
   resolveLeagueAttachedRawHost,
 } from "../../league/damage";
+import { recordResolutionCache } from "../../profiling/hitPipeline";
 
 /** Style level at land tick: temporary override (e.g. Naragi 255) wins when active. */
 function combatLevelAt(rt: SimulationRuntime, landTick: number): number {
@@ -173,7 +174,11 @@ export function resolveCastHit(
   if (isHitReuseActive()) {
     const key = landHitIdentity(rt, at, hitSpec, hitIndex, ability, snap, isDot, convertedChannel);
     const cached = hitReuseGet(key);
-    if (cached) return cached;
+    if (cached) {
+      recordResolutionCache(true);
+      return cached;
+    }
+    recordResolutionCache(false);
     const resolved = resolveCastHitUncached(
       rt,
       at,

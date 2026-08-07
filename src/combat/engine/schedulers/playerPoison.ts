@@ -12,14 +12,18 @@ import {
   type PoisonDamageBand,
 } from "../../poison/mechanics";
 import { isRangedAmmoActive } from "../../styles/ranged/ammoModel";
-import {
-  blessingRule,
-  envenomedPoisonImmunityDisableTicks,
-  resolveMaximumLife,
-} from "../../league/ruleset";
+import { envenomedPoisonImmunityDisableTicks } from "../../league/ruleset";
+import { resolveLeagueAttachedTerms, type LeagueAttachedTerm } from "../../league/damage";
+import { resolveHostDamageInstance } from "../../core/hostDamage";
 import { runPipeline } from "../../pipeline/modifierPipeline";
 import { contextWithProvenance } from "../../shared/damageProvenance";
 import type { CombatModifier } from "../../types";
+import {
+  notePoisonAtomMerge,
+  notePoisonOrderingScan,
+  notePoisonProbabilityMaterialization,
+  notePoisonTransitionCache,
+} from "../../profiling/allocation";
 import { keepsAnalysisLedgers } from "../simulation/contracts";
 import { recordResolved } from "../resolution";
 import { abilityDamageAt } from "../resolution/castHit";
@@ -45,7 +49,39 @@ import {
 type PoisonAtomWithHistory = TargetWeaponPoisonAtom & {
   readonly supportMin: number;
   readonly supportMax: number;
+  readonly supportParents: readonly number[];
 };
+
+interface CachedPoisonDistribution {
+  readonly atoms: readonly TargetWeaponPoisonAtom[];
+  readonly nextAtomId: number;
+  readonly futureId: number;
+  readonly supportParentsByAtom: Readonly<Record<number, readonly number[]>>;
+}
+
+interface CachedPoisonLandTransition {
+  readonly distribution: CachedPoisonDistribution;
+  readonly result: PlayerPoisonLandResult;
+}
+
+interface CachedPoisonEventTransition {
+  readonly distribution: CachedPoisonDistribution;
+  readonly nextSeq: number;
+  readonly continuationAttempts: number;
+  readonly continuationActivations: number;
+  readonly continuationHits: number;
+}
+
+const poisonLandTransitionCaches = new WeakMap<object, Map<string, CachedPoisonLandTransition>>();
+const poisonEventTransitionCaches = new WeakMap<object, Map<string, CachedPoisonEventTransition>>();
+const MAX_POISON_TRANSITIONS = 512;
+
+function rememberPoisonTransition<T>(cache: Map<string, T>, key: string, value: T): void {
+  cache.set(key, value);
+  if (cache.size <= MAX_POISON_TRANSITIONS) return;
+  const oldest = cache.keys().next().value;
+  if (oldest !== undefined) cache.delete(oldest);
+}
 
 export interface PlayerPoisonEventOrder {
   tick: number;
@@ -214,7 +250,9 @@ function pendingOrderClasses(rt: SimulationRuntime): (tick: number, seq: number)
   return (tick, seq) => {
     if (!sequencesByTick) {
       sequencesByTick = new Map();
-      for (const event of rt.queue.pending()) {
+      const pending = rt.queue.pending();
+      notePoisonOrderingScan(pending.length);
+      for (const event of pending) {
         const sequences = sequencesByTick.get(event.tick);
         if (sequences) sequences.push(event.seq);
         else sequencesByTick.set(event.tick, [event.seq]);
@@ -381,18 +419,56 @@ function mergeAtoms(
       },
       supportMin: Math.min(current.supportMin, atom.supportMin),
       supportMax: Math.max(current.supportMax, atom.supportMax),
+      supportParents: [...new Set([...current.supportParents, ...atom.supportParents])],
     });
   }
-  return [...merged.entries()]
+  const result = [...merged.entries()]
     .sort(([left], [right]) => (left < right ? -1 : left > right ? 1 : 0))
     .map(([, atom]) => atom);
+  notePoisonAtomMerge(atoms.length, result.length);
+  return result;
 }
 
 function atomsWithHistory(distribution: TargetWeaponPoisonDistribution): PoisonAtomWithHistory[] {
   return distribution.atoms.map((atom) => {
     const support = distribution.supportByAtom[atom.id] ?? { min: 0, max: 0 };
-    return { ...atom, supportMin: support.min, supportMax: support.max };
+    return {
+      ...atom,
+      supportMin: support.min,
+      supportMax: support.max,
+      supportParents: [atom.id],
+    };
   });
+}
+
+function distributionFromCache(
+  cached: CachedPoisonDistribution,
+  current: TargetWeaponPoisonDistribution,
+): TargetWeaponPoisonDistribution {
+  return {
+    atoms: cached.atoms,
+    nextAtomId: cached.nextAtomId,
+    futureId: cached.futureId,
+    supportByAtom: Object.fromEntries(
+      cached.atoms.map((atom) => {
+        const parents = cached.supportParentsByAtom[atom.id] ?? [];
+        let min = Number.POSITIVE_INFINITY;
+        let max = Number.NEGATIVE_INFINITY;
+        for (const parentId of parents) {
+          const support = current.supportByAtom[parentId] ?? { min: 0, max: 0 };
+          min = Math.min(min, support.min);
+          max = Math.max(max, support.max);
+        }
+        return [
+          atom.id,
+          {
+            min: Number.isFinite(min) ? min : 0,
+            max: Number.isFinite(max) ? max : 0,
+          },
+        ];
+      }),
+    ),
+  };
 }
 
 function distributionFromAtoms(
@@ -400,9 +476,12 @@ function distributionFromAtoms(
   atoms: readonly PoisonAtomWithHistory[],
   nextAtomId: number,
   atTick: number,
-): TargetWeaponPoisonDistribution {
+): { distribution: TargetWeaponPoisonDistribution; cached: CachedPoisonDistribution } {
   const merged = mergeAtoms(rt, atoms, atTick);
-  const futureAtoms = merged.map(({ supportMin: _min, supportMax: _max, ...atom }) => atom);
+  notePoisonProbabilityMaterialization(merged.length);
+  const futureAtoms = merged.map(
+    ({ supportMin: _min, supportMax: _max, supportParents: _parents, ...atom }) => atom,
+  );
   const key = JSON.stringify([nextAtomId, futureAtoms]);
   const { future } = internTargetWeaponPoisonFuture(
     rt.poisonFutureInterner,
@@ -410,13 +489,24 @@ function distributionFromAtoms(
     futureAtoms,
     nextAtomId,
   );
-  return {
+  const distribution = {
     atoms: future.atoms,
     nextAtomId: future.nextAtomId,
     futureId: future.id,
     supportByAtom: Object.fromEntries(
       merged.map((atom) => [atom.id, { min: atom.supportMin, max: atom.supportMax }]),
     ),
+  };
+  return {
+    distribution,
+    cached: {
+      atoms: future.atoms,
+      nextAtomId: future.nextAtomId,
+      futureId: future.id,
+      supportParentsByAtom: Object.fromEntries(
+        merged.map((atom) => [atom.id, atom.supportParents]),
+      ),
+    },
   };
 }
 
@@ -752,6 +842,36 @@ export function applyPlayerPoisonLandOccurrence(
   const selected = atomIds ? new Set(atomIds) : null;
   const applicationHitOrder = source && applicationSuccessProbability > 0 ? rt.nextSeq++ : -1;
   const cadenceOrder = source && applicationSuccessProbability > 0 ? rt.nextSeq++ : -1;
+  const transitionKey = [
+    current.futureId,
+    atTick,
+    rt.horizon ?? -1,
+    applicationHitOrder,
+    cadenceOrder,
+    occurrenceProbability,
+    occurrence.expectedOccurrences,
+    applicationSuccessProbability,
+    JSON.stringify(occurrence.applicationSuccessMultiplicity),
+    occurrence.immunityDisabledUntilTick,
+    source ? JSON.stringify(source) : "",
+    atomIds ? [...atomIds].sort((left, right) => left - right).join(",") : "*",
+  ].join("\x1f");
+  let transitionCache = poisonLandTransitionCaches.get(rt.poisonFutureInterner);
+  if (!transitionCache) {
+    transitionCache = new Map();
+    poisonLandTransitionCaches.set(rt.poisonFutureInterner, transitionCache);
+  }
+  const cachedTransition = transitionCache.get(transitionKey);
+  if (cachedTransition) {
+    notePoisonTransitionCache(true);
+    recordPlayerPoisonApplication(rt, "attempt", cachedTransition.result.expectedAttempts);
+    recordPlayerPoisonApplication(rt, "success", cachedTransition.result.expectedSuccesses);
+    rt.state = patchTarget(rt.state, {
+      weaponPoison: distributionFromCache(cachedTransition.distribution, current),
+    });
+    return cachedTransition.result;
+  }
+  notePoisonTransitionCache(false);
   const atoms: PoisonAtomWithHistory[] = [];
   let nextAtomId = current.nextAtomId;
   let expectedAttempts = 0;
@@ -837,10 +957,16 @@ export function applyPlayerPoisonLandOccurrence(
 
   recordPlayerPoisonApplication(rt, "attempt", expectedAttempts);
   recordPlayerPoisonApplication(rt, "success", expectedSuccesses);
-  rt.state = patchTarget(rt.state, {
-    weaponPoison: distributionFromAtoms(rt, atoms, nextAtomId, atTick),
+  const result = { expectedAttempts, expectedSuccesses, expectedApplicationHits };
+  const built = distributionFromAtoms(rt, atoms, nextAtomId, atTick);
+  rememberPoisonTransition(transitionCache, transitionKey, {
+    distribution: built.cached,
+    result,
   });
-  return { expectedAttempts, expectedSuccesses, expectedApplicationHits };
+  rt.state = patchTarget(rt.state, {
+    weaponPoison: built.distribution,
+  });
+  return result;
 }
 
 export function refreshPlayerPoisonImmunity(
@@ -900,9 +1026,29 @@ function recordPlayerPoisonContinuationHits(rt: SimulationRuntime, amount: numbe
   if (ledger) ledger.expectedPlayerPoisonHits += amount;
 }
 
+function recordPlayerPoisonContinuation(
+  rt: SimulationRuntime,
+  attempts: number,
+  activations: number,
+  hits: number,
+): void {
+  if (keepsAnalysisLedgers(rt.detailLevel)) {
+    rt.analysis.playerPoisonContinuationAttempts += attempts;
+    rt.analysis.playerPoisonContinuationActivations += activations;
+  }
+  recordPlayerPoisonApplication(rt, "attempt", attempts);
+  recordPlayerPoisonApplication(rt, "success", activations);
+  recordPlayerPoisonContinuationHits(rt, hits);
+}
+
+interface ResolvedPlayerPoisonAttached {
+  term: LeagueAttachedTerm;
+  damage: PoisonDamageBand;
+}
+
 interface ResolvedPlayerPoisonHit {
-  poison: PoisonDamageBand;
-  bigBoned?: PoisonDamageBand;
+  host: PoisonDamageBand;
+  attached: readonly ResolvedPlayerPoisonAttached[];
 }
 
 type MutablePoisonDamageBand = { min: number; expected: number; max: number };
@@ -920,6 +1066,36 @@ function addScaledPoisonBand(
   target.min += source.min * scale;
   target.expected += source.expected * scale;
   target.max += source.max * scale;
+}
+
+function poisonBandDelta(after: PoisonDamageBand, before: PoisonDamageBand): PoisonDamageBand {
+  return {
+    min: after.min - before.min,
+    expected: after.expected - before.expected,
+    max: after.max - before.max,
+  };
+}
+
+function addResolvedPoisonAttached(
+  target: Map<string, { term: LeagueAttachedTerm; damage: MutablePoisonDamageBand }>,
+  source: readonly ResolvedPlayerPoisonAttached[],
+  scale: number,
+): void {
+  for (const attached of source) {
+    let entry = target.get(attached.term.id);
+    if (!entry) {
+      entry = { term: attached.term, damage: zeroPoisonBand() };
+      target.set(attached.term.id, entry);
+    }
+    addScaledPoisonBand(entry.damage, attached.damage, scale);
+  }
+}
+
+function resolvedPoisonHit(
+  host: PoisonDamageBand,
+  attached: ReadonlyMap<string, { term: LeagueAttachedTerm; damage: PoisonDamageBand }>,
+): ResolvedPlayerPoisonHit {
+  return { host, attached: [...attached.values()] };
 }
 
 function multiplicityKey(multiplicity: TargetWeaponPoisonHitMultiplicity): string {
@@ -943,25 +1119,25 @@ function resolvePlayerPoison(
   const stacks = activeEvolvingToxinStacks(toxin.stacks, toxin.expiresAtTick, atTick);
   const baseAbilityDamage = abilityDamageAt(rt, atTick);
   const league = rt.input.league;
-  const bigBoned = blessingRule(league, "big-boned");
-  const maximumLife =
-    league && bigBoned?.maxLifeDamagePercent !== undefined ? resolveMaximumLife(league, atTick) : 0;
+  const attachedTerms = league
+    ? resolveLeagueAttachedTerms({
+        rules: league,
+        source: { kind: "player_poison" },
+        landTick: atTick,
+        abilityBase: baseAbilityDamage,
+      })
+    : [];
   const cacheKey = [
     baseAbilityDamage,
     poison.effectiveTier,
     decayIndex,
     poison.sourceDamageMultiplier,
     stacks,
-    maximumLife,
+    attachedTerms.map((term) => `${term.id}:${term.amount}`).join(","),
   ].join("\x1f");
   const cached = rt.playerPoisonDamageCache.get(cacheKey) as ResolvedPlayerPoisonHit | undefined;
   if (cached) return cached;
-  const baseBand = playerPoisonDamage(
-    baseAbilityDamage,
-    poison.effectiveTier,
-    decayIndex,
-    poison.sourceDamageMultiplier,
-  );
+  const baseBand = playerPoisonDamage(baseAbilityDamage, poison.effectiveTier, decayIndex, 1);
   const configured =
     rt.input.playerPoisonModifiers ??
     (() => {
@@ -1002,29 +1178,30 @@ function resolvePlayerPoison(
           expected: apply(band.expected),
           max: apply(band.max),
         };
-  const resolvedPoison = applyBand(baseBand);
-  const resolved: ResolvedPlayerPoisonHit = { poison: resolvedPoison };
-  if (!league || bigBoned?.maxLifeDamagePercent === undefined) {
-    rt.playerPoisonDamageCache.set(cacheKey, resolved);
-    return resolved;
-  }
-  const flatDamage =
-    Math.floor(maximumLife * bigBoned.maxLifeDamagePercent) * poison.sourceDamageMultiplier;
-  const combined = applyBand({
-    min: baseBand.min + flatDamage,
-    expected: baseBand.expected + flatDamage,
-    max: baseBand.max + flatDamage,
-  });
-  const withBigBoned = {
-    ...resolved,
-    bigBoned: {
-      min: combined.min - resolvedPoison.min,
-      expected: combined.expected - resolvedPoison.expected,
-      max: combined.max - resolvedPoison.max,
+  const resolveBand = (band: PoisonDamageBand): PoisonDamageBand =>
+    applyBand({
+      min: band.min * poison.sourceDamageMultiplier,
+      expected: band.expected * poison.sourceDamageMultiplier,
+      max: band.max * poison.sourceDamageMultiplier,
+    });
+  const composed = resolveHostDamageInstance(
+    { host: baseBand, attached: attachedTerms },
+    {
+      add: (host, amount) => ({
+        min: host.min + amount,
+        expected: host.expected + amount,
+        max: host.max + amount,
+      }),
+      resolve: resolveBand,
+      delta: poisonBandDelta,
     },
+  );
+  const resolved: ResolvedPlayerPoisonHit = {
+    host: composed.hostDamage,
+    attached: composed.attached.map(({ term, damage }) => ({ term, damage })),
   };
-  rt.playerPoisonDamageCache.set(cacheKey, withBigBoned);
-  return withBigBoned;
+  rt.playerPoisonDamageCache.set(cacheKey, resolved);
+  return resolved;
 }
 
 function compareOrder(a: PlayerPoisonEventOrder, b: PlayerPoisonEventOrder): number {
@@ -1038,22 +1215,19 @@ function resolvePlayerPoisonBatch(
   resolveAtDecay: (decayIndex: number) => ResolvedPlayerPoisonHit,
 ): ResolvedPlayerPoisonHit {
   const resolveOccupancy = (occupancy: readonly number[]): ResolvedPlayerPoisonHit => {
-    const poisonBand = zeroPoisonBand();
-    let bigBonedBand: MutablePoisonDamageBand | undefined;
+    const host = zeroPoisonBand();
+    const attached = new Map<
+      string,
+      { term: LeagueAttachedTerm; damage: MutablePoisonDamageBand }
+    >();
     for (let decayIndex = 0; decayIndex < occupancy.length; decayIndex++) {
       const probability = occupancy[decayIndex]!;
       if (!(probability > 0)) continue;
       const resolved = resolveAtDecay(decayIndex);
-      addScaledPoisonBand(poisonBand, resolved.poison, probability);
-      if (resolved.bigBoned) {
-        bigBonedBand ??= zeroPoisonBand();
-        addScaledPoisonBand(bigBonedBand, resolved.bigBoned, probability);
-      }
+      addScaledPoisonBand(host, resolved.host, probability);
+      addResolvedPoisonAttached(attached, resolved.attached, probability);
     }
-    return {
-      poison: poisonBand,
-      ...(bigBonedBand ? { bigBoned: bigBonedBand } : {}),
-    };
+    return resolvedPoisonHit(host, attached);
   };
   const resolveFixed = (hitCount: number): ResolvedPlayerPoisonHit => {
     let state = normalizedDecayMass(poison.decayMass);
@@ -1072,22 +1246,19 @@ function resolvePlayerPoisonBatch(
   };
   const finite = finiteCountMass(multiplicity);
   if (finite) {
-    const poisonBand = zeroPoisonBand();
-    let bigBonedBand: MutablePoisonDamageBand | undefined;
+    const host = zeroPoisonBand();
+    const attached = new Map<
+      string,
+      { term: LeagueAttachedTerm; damage: MutablePoisonDamageBand }
+    >();
     for (let hitCount = 1; hitCount < finite.length; hitCount++) {
       const probability = finite[hitCount]!;
       if (!(probability > 0)) continue;
       const resolved = resolveFixed(hitCount);
-      addScaledPoisonBand(poisonBand, resolved.poison, probability);
-      if (resolved.bigBoned) {
-        bigBonedBand ??= zeroPoisonBand();
-        addScaledPoisonBand(bigBonedBand, resolved.bigBoned, probability);
-      }
+      addScaledPoisonBand(host, resolved.host, probability);
+      addResolvedPoisonAttached(attached, resolved.attached, probability);
     }
-    return {
-      poison: poisonBand,
-      ...(bigBonedBand ? { bigBoned: bigBonedBand } : {}),
-    };
+    return resolvedPoisonHit(host, attached);
   }
   if (multiplicity.kind !== "positive-geometric") {
     throw new Error("unsupported poison hit multiplicity");
@@ -1178,9 +1349,10 @@ function recordPlayerPoisonGroup(
   let min = 0;
   let expected = 0;
   let max = 0;
-  let bigBonedMin = 0;
-  let bigBonedExpected = 0;
-  let bigBonedMax = 0;
+  const attachedBands = new Map<
+    string,
+    { term: LeagueAttachedTerm; damage: MutablePoisonDamageBand }
+  >();
   let probability = 0;
   const availableContinuation = resolvePoisonApplication(rt.input.playerPoison, order.tick);
   const resolvedCache = new WeakMap<readonly number[], Map<string, ResolvedPlayerPoisonHit>>();
@@ -1236,21 +1408,26 @@ function recordPlayerPoisonGroup(
           );
           byMass.set(resolveKey, resolved);
         }
-        const band = resolved.poison;
-        const bigBoned = resolved.bigBoned;
+        const band = resolved.host;
         const hitMass = due.atom.probability * hitCount;
         probability += hitMass;
         min += due.atom.probability * band.min;
         expected += due.atom.probability * band.expected;
         max += due.atom.probability * band.max;
-        bigBonedMin += due.atom.probability * (bigBoned?.min ?? 0);
-        bigBonedExpected += due.atom.probability * (bigBoned?.expected ?? 0);
-        bigBonedMax += due.atom.probability * (bigBoned?.max ?? 0);
+        addResolvedPoisonAttached(attachedBands, resolved.attached, due.atom.probability);
+        const attachedMin = resolved.attached.reduce(
+          (total, component) => total + component.damage.min,
+          0,
+        );
+        const attachedMax = resolved.attached.reduce(
+          (total, component) => total + component.damage.max,
+          0,
+        );
         return [
           atom.id,
           {
-            min: support.min + band.min + (bigBoned?.min ?? 0),
-            max: support.max + band.max + (bigBoned?.max ?? 0),
+            min: support.min + band.min + attachedMin,
+            max: support.max + band.max + attachedMax,
           },
         ];
       }),
@@ -1279,28 +1456,35 @@ function recordPlayerPoisonGroup(
     provenance: { kind: "player_poison" },
     resolve: () => NO_DAMAGE,
   };
-  const bigBonedComponent: AttachedDamageComponent | undefined =
-    bigBonedExpected > 0
-      ? {
-          id: "big-boned",
-          damage: { min: bigBonedMin, expected: bigBonedExpected, max: bigBonedMax },
-          attached: true,
-          hitCapPolicy: "shared",
-          analysis: {
-            kind: "league-blessing",
-            blessingId: "big-boned",
-            bonusTargetId: PLAYER_POISON_EFFECT_ID,
-            expectedActivations: probability,
-          },
-        }
-      : undefined;
+  const attachedComponents: AttachedDamageComponent[] = [...attachedBands.values()]
+    .filter(({ damage }) => damage.expected > 0 || damage.max > 0)
+    .map(({ term, damage }) => ({
+      id: term.id,
+      damage,
+      attached: true,
+      hitCapPolicy: "shared",
+      analysis: {
+        kind: "league-blessing",
+        blessingId: term.blessingId,
+        bonusTargetId: PLAYER_POISON_EFFECT_ID,
+        expectedActivations: probability,
+      },
+    }));
+  const attachedTotals = attachedComponents.reduce(
+    (total, component) => ({
+      min: total.min + component.damage.min,
+      expected: total.expected + component.damage.expected,
+      max: total.max + component.damage.max,
+    }),
+    zeroPoisonBand(),
+  );
   recordResolved(rt, event, {
     damage: {
-      min: min + bigBonedMin,
-      expected: expected + bigBonedExpected,
-      max: max + bigBonedMax,
+      min: min + attachedTotals.min,
+      expected: expected + attachedTotals.expected,
+      max: max + attachedTotals.max,
     },
-    ...(bigBonedComponent ? { components: [bigBonedComponent] } : {}),
+    ...(attachedComponents.length > 0 ? { components: attachedComponents } : {}),
   });
   refreshPlayerPoisonImmunity(
     rt,
@@ -1310,8 +1494,8 @@ function recordPlayerPoisonGroup(
     dueHits.map((due) => due.atom.id),
   );
   const supportAfter = poisonSupport(rt.state.target.weaponPoison);
-  rt.analysis.supportMinOffset += supportAfter.min - supportBefore.min - min - bigBonedMin;
-  rt.analysis.supportMaxOffset += supportAfter.max - supportBefore.max - max - bigBonedMax;
+  rt.analysis.supportMinOffset += supportAfter.min - supportBefore.min - min - attachedTotals.min;
+  rt.analysis.supportMaxOffset += supportAfter.max - supportBefore.max - max - attachedTotals.max;
 }
 
 export function processNextPlayerPoisonEvent(
@@ -1348,6 +1532,43 @@ export function processNextPlayerPoisonEvent(
   let hasSuccess = false;
   const availableContinuation = resolvePoisonApplication(rt.input.playerPoison, next.tick);
   const outcomeCache = new WeakMap<readonly number[], Map<string, ContinuationOutcome[]>>();
+  const transitionKey = [
+    distribution.futureId,
+    next.tick,
+    orderClass,
+    rt.horizon ?? -1,
+    rt.nextSeq,
+    due
+      .map(
+        (hit) =>
+          `${hit.atom.id}:${hit.kind}:${multiplicityKey(hit.multiplicity)}:${hit.pending?.tick ?? -1}:${hit.pending?.seq ?? -1}`,
+      )
+      .join(","),
+  ].join("\x1f");
+  let transitionCache = poisonEventTransitionCaches.get(rt.poisonFutureInterner);
+  if (!transitionCache) {
+    transitionCache = new Map();
+    poisonEventTransitionCaches.set(rt.poisonFutureInterner, transitionCache);
+  }
+  const cachedTransition = transitionCache.get(transitionKey);
+  if (cachedTransition) {
+    notePoisonTransitionCache(true);
+    recordPlayerPoisonContinuation(
+      rt,
+      cachedTransition.continuationAttempts,
+      cachedTransition.continuationActivations,
+      cachedTransition.continuationHits,
+    );
+    rt.nextSeq = cachedTransition.nextSeq;
+    rt.state = patchTarget(rt.state, {
+      weaponPoison: distributionFromCache(cachedTransition.distribution, distribution),
+    });
+    return true;
+  }
+  notePoisonTransitionCache(false);
+  let continuationAttempts = 0;
+  let continuationActivations = 0;
+  let continuationHits = 0;
 
   for (const dueHit of due) {
     const before = dueHit.atom;
@@ -1411,23 +1632,12 @@ export function processNextPlayerPoisonEvent(
       );
       byMass.set(outcomeKey, outcomes);
     }
-    if (keepsAnalysisLedgers(rt.detailLevel)) {
-      rt.analysis.playerPoisonContinuationAttempts += landed.probability * hitCount;
-      rt.analysis.playerPoisonContinuationActivations +=
-        landed.probability * expectedContinuationSuccesses;
-    }
-    recordPlayerPoisonApplication(rt, "attempt", landed.probability * hitCount);
-    recordPlayerPoisonApplication(
-      rt,
-      "success",
-      landed.probability * expectedContinuationSuccesses,
-    );
-    recordPlayerPoisonContinuationHits(
-      rt,
+    continuationAttempts += landed.probability * hitCount;
+    continuationActivations += landed.probability * expectedContinuationSuccesses;
+    continuationHits +=
       rt.horizon === undefined || next.tick + PLAYER_POISON_FIRST_HIT_DELAY < rt.horizon
         ? landed.probability * expectedContinuationSuccesses
-        : 0,
-    );
+        : 0;
     for (const outcome of outcomes) {
       const outcomeProbability = landed.probability * outcome.probability;
       if (!(outcomeProbability > 0)) continue;
@@ -1495,9 +1705,21 @@ export function processNextPlayerPoisonEvent(
       },
     })),
   ];
-  rt.state = patchTarget(rt.state, {
-    weaponPoison: distributionFromAtoms(rt, atoms, nextAtomId, next.tick),
+  recordPlayerPoisonContinuation(
+    rt,
+    continuationAttempts,
+    continuationActivations,
+    continuationHits,
+  );
+  const built = distributionFromAtoms(rt, atoms, nextAtomId, next.tick);
+  rememberPoisonTransition(transitionCache, transitionKey, {
+    distribution: built.cached,
+    nextSeq: rt.nextSeq,
+    continuationAttempts,
+    continuationActivations,
+    continuationHits,
   });
+  rt.state = patchTarget(rt.state, { weaponPoison: built.distribution });
   return true;
 }
 

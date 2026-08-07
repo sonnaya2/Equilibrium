@@ -32,11 +32,11 @@ const testFile =
 
 const reportName =
   mode === "stress"
-    ? null
+    ? "solver-branch-stress.json"
     : mode === "full"
       ? "solver-benchmark-full.json"
       : "solver-benchmark-quick.json";
-const reportPath = reportName === null ? null : join(root, "reports", reportName);
+const reportPath = join(root, "reports", reportName);
 
 const benchEnv = modeArg === "json" ? "json" : mode;
 
@@ -53,7 +53,7 @@ const result = spawnSync(npx, ["vitest", "run", testFile, "--reporter=verbose"],
 });
 
 const code = result.status ?? 1;
-if (code === 0 && reportPath !== null) {
+if (code === 0) {
   if (existsSync(reportPath)) {
     console.log(`[solver-bench] wrote ${reportPath}`);
   } else {

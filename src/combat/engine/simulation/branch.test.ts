@@ -87,6 +87,7 @@ describe("snapshotRuntime isolates mutable runtime state", () => {
     expect(clone.analysis.effects).not.toBe(rt.analysis.effects);
     expect(clone.analysis.sources).not.toBe(rt.analysis.sources);
     expect(clone.analysis.castKeys).not.toBe(rt.analysis.castKeys);
+    expect(clone.state).toBe(rt.state);
     expect(clone.state.target.weaponPoison).toBe(rt.state.target.weaponPoison);
     // Cast records are cloned, not aliased - a branch's totals must not leak.
     expect(clone.casts[0]).not.toBe(rt.casts[0]);
@@ -420,12 +421,13 @@ describe("snapshotRuntime isolates mutable runtime state", () => {
 });
 
 describe("snapshotRuntime score-only trim", () => {
-  it("never shares state by ref; always structuredClone", () => {
+  it("shares immutable state until one branch replaces it", () => {
     const rt = createRuntime({ ...meleeInput, detailLevel: "score-only" });
     const clone = snapshotRuntime(rt);
-    expect(clone.state).not.toBe(rt.state);
+    expect(clone.state).toBe(rt.state);
     const parentMelee = rt.state.melee;
     clone.state = { ...clone.state, adrenaline: (clone.state.adrenaline ?? 0) + 1 };
+    expect(clone.state).not.toBe(rt.state);
     expect(rt.state.melee).toBe(parentMelee);
     expect(rt.state.adrenaline).not.toBe(clone.state.adrenaline);
   });
@@ -738,6 +740,23 @@ describe("capBranches", () => {
     resetBranchProfile();
     snapshotRuntime(base);
     expect(getBranchProfile().branchSnapshots).toBe(0);
+  });
+
+  it("reuses a cached structural fingerprint for snapshot twins", () => {
+    enableBranchProfiling(true);
+    resetBranchProfile();
+    const base = createRuntime(meleeInput);
+    const out = mergeBranches([
+      { weight: 0.4, rt: snapshotRuntime(base) },
+      { weight: 0.6, rt: snapshotRuntime(base) },
+    ]);
+    const profile = getBranchProfile();
+    expect(out).toHaveLength(1);
+    expect(profile.branchKeyCacheMisses).toBe(1);
+    expect(profile.branchKeyCacheHits).toBe(1);
+    expect(profile.branchKeyMaterializedChars).toBeLessThan(profile.branchKeyChars);
+    enableBranchProfiling(false);
+    resetBranchProfile();
   });
 
   it("collapses RNG outcomes with the same post-cast future before snapshots", () => {

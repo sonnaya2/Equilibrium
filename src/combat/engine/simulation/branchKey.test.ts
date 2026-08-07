@@ -447,6 +447,95 @@ describe("branchKey structural vs JSON partitions", () => {
     expect(groups).toContain("14");
   });
 
+  it("matches the JSON oracle across deterministic generated futures", () => {
+    let seed = 0x6d2b79f5;
+    const random = () => {
+      seed = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      seed ^= seed + Math.imul(seed ^ (seed >>> 7), 61 | seed);
+      return (seed ^ (seed >>> 14)) >>> 0;
+    };
+    const fixtures: SimulationRuntime[] = [];
+
+    for (let index = 0; index < 64; index++) {
+      const rt = createRuntime({ ...meleeInput, horizonTicks: 120 });
+      const tick = random() % 80;
+      const expiry = random() % 120;
+      rt.state = {
+        ...rt.state,
+        tick,
+        adrenaline: random() % (rt.state.adrenalineCap + 1),
+        cooldowns: {
+          ...(random() % 2 === 0 ? { attack: random() % 120 } : {}),
+          ...(random() % 3 === 0 ? { assault: random() % 120 } : {}),
+        },
+        relentlessUntilTick: expiry,
+        naturalInstinctUntilTick: random() % 120,
+        invention: {
+          cracklingReadyTick: random() % 120,
+          aftershockCharge: random() % 50_001,
+          aftershockReadyTick: random() % 120,
+          aftershockPending: random() % 2 === 0,
+        },
+        league: {
+          avernicRampageUntilTick: random() % 120,
+          strikingLightReadyTick: random() % 120,
+          lordOfLightReadyTick: random() % 120,
+        },
+      };
+      rt.state = patchMelee(rt.state, {
+        chaosRoarUntilTick: random() % 120,
+        greaterFuryUntilTick: random() % 120,
+        meteorStrikeUntilTick: random() % 120,
+      });
+      rt.state = patchMagic(rt.state, {
+        blastInfusedUntilTick: random() % 120,
+        flowUntilTick: random() % 120,
+        flowReduction: random() % 20,
+      });
+      rt.state = patchTarget(rt.state, {
+        burns: {
+          active: random() % 2 === 0 ? { combust: random() % 120 } : {},
+        },
+      });
+
+      if (random() % 3 === 0) {
+        enqueueEvent(rt, {
+          tick: tick + 1 + (random() % 20),
+          seq: rt.nextSeq++,
+          family: random() % 2 === 0 ? "hit" : "dot",
+          abilityId: random() % 2 === 0 ? "attack" : "dismember",
+          sourceCast: random() % 5,
+          hitIndex: random() % 4,
+          attached: false,
+          procEligible: true,
+          recursionAllowed: false,
+          provenance: { kind: "player_direct" },
+          resolve: noop,
+        });
+      }
+
+      fixtures.push(rt);
+      const historyTwin = snapshotRuntime(rt);
+      historyTwin.totalExpected = random() % 100_000;
+      historyTwin.totalMin = random() % 100_000;
+      historyTwin.totalMax = random() % 100_000;
+      historyTwin.nextSeq += random() % 8;
+      fixtures.push(historyTwin);
+
+      const futureSplit = snapshotRuntime(rt);
+      futureSplit.state = {
+        ...futureSplit.state,
+        adrenaline: (futureSplit.state.adrenaline + 1) % (futureSplit.state.adrenalineCap + 1),
+      };
+      fixtures.push(futureSplit);
+    }
+
+    const structural = partition(fixtures, branchKeyStructural);
+    expect(structural).toEqual(partition(fixtures, branchKeyJson));
+    expect(structural.some((group) => group.length > 1)).toBe(true);
+    expect(structural.length).toBeGreaterThan(64);
+  });
+
   it("expired frost timestamps share key with frost=0", () => {
     const base = createRuntime(lengInput);
     const a = snapshotRuntime(base);
@@ -1156,6 +1245,7 @@ describe("branchKey structural vs JSON partitions", () => {
     live.state = patchTarget(live.state, {
       weaponPoison: {
         ...live.state.target.weaponPoison,
+        futureId: 1,
         atoms: live.state.target.weaponPoison.atoms.map((atom) => ({
           ...atom,
           immunityDisabledUntilTick: 50,
@@ -1166,6 +1256,7 @@ describe("branchKey structural vs JSON partitions", () => {
     expired.state = patchTarget(expired.state, {
       weaponPoison: {
         ...expired.state.target.weaponPoison,
+        futureId: 1,
         atoms: expired.state.target.weaponPoison.atoms.map((atom) => ({
           ...atom,
           immunityDisabledUntilTick: 50,
@@ -1508,6 +1599,7 @@ describe("branchKey structural vs JSON partitions", () => {
     live.state = patchTarget(live.state, {
       weaponPoison: {
         ...live.state.target.weaponPoison,
+        futureId: 1,
         atoms: live.state.target.weaponPoison.atoms.map((atom) => ({
           ...atom,
           poison: {
@@ -1536,6 +1628,7 @@ describe("branchKey structural vs JSON partitions", () => {
     differentDecay.state = patchTarget(differentDecay.state, {
       weaponPoison: {
         ...differentDecay.state.target.weaponPoison,
+        futureId: 2,
         atoms: differentDecay.state.target.weaponPoison.atoms.map((atom, index) =>
           index === 0
             ? {

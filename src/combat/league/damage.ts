@@ -137,6 +137,8 @@ export interface LeagueDamageInput {
   preciseRank?: number;
   strikingLightReady?: boolean;
   lordOfLightReady?: boolean;
+  /** Parent host already resolved its attached blessing terms. */
+  includeAttachedHost?: boolean;
 }
 
 export type LeagueAbilityInput = Parameters<typeof calculateAbility>[1] & {
@@ -223,13 +225,13 @@ export interface LeagueAttachedHostResult {
   components: readonly LeagueDamageComponent[];
 }
 
-type LeagueAttachedTerm = {
+export type LeagueAttachedTerm = {
   id: "big-boned" | "abyssal-cinders";
   blessingId: "big-boned" | "abyssal-cinders";
   amount: number;
 };
 
-function leagueAttachedTerms(input: {
+export function resolveLeagueAttachedTerms(input: {
   rules: ResolvedLeagueRules;
   source: BlessingDamageSource | DamageProvenance;
   attached?: boolean;
@@ -307,7 +309,11 @@ export function resolveLeagueAttachedHost(
       components: [],
     };
   }
-  const terms = leagueAttachedTerms({ ...input, rules: input.rules, abilityBase: input.base });
+  const terms = resolveLeagueAttachedTerms({
+    ...input,
+    rules: input.rules,
+    abilityBase: input.base,
+  });
   const composed = calculateHitWithAttached(
     { ...input, provenance, context },
     terms.map(({ id, amount }) => ({ id, amount })),
@@ -346,7 +352,7 @@ export function resolveLeagueAttachedRawHost(
       components: [],
     };
   }
-  const terms = leagueAttachedTerms({ ...input, rules: input.rules });
+  const terms = resolveLeagueAttachedTerms({ ...input, rules: input.rules });
   const composed = calculateRawHitBandWithAttached(
     { ...input, provenance, context },
     terms.map(({ id, amount }) => ({ id, amount })),
@@ -425,7 +431,7 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
   const infernoCrit: CritLayers = { ...input.crit, eligible: true };
 
   const hitSpec = input.ability.hits[input.hitIndex];
-  if (hitSpec && (eligible.rider || eligible.cinders)) {
+  if (input.includeAttachedHost !== false && hitSpec && (eligible.rider || eligible.cinders)) {
     const attachedHost = resolveLeagueAttachedHost({
       rules: input.rules,
       source: parentProvenance,
@@ -442,7 +448,7 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
       preciseRank: input.preciseRank,
     });
     components.push(...attachedHost.components);
-  } else if (eligible.rider || eligible.cinders) {
+  } else if (input.includeAttachedHost !== false && (eligible.rider || eligible.cinders)) {
     const attachedHost = resolveLeagueAttachedRawHost({
       rules: input.rules,
       source: parentProvenance,

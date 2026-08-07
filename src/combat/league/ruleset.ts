@@ -26,6 +26,7 @@ import {
   type IcyenicFaithBonuses,
 } from "./icyenicFaith";
 import { NARAGI_EDICT_RELIC, naragiEdictActive } from "./naragiEdict";
+import { noteBlessingIndexRebuild } from "../profiling/allocation";
 
 /** Blessing damage must not re-apply ability-stage blessing mults (no recursion). */
 function notBlessingDamage(context: CombatContext): boolean {
@@ -206,9 +207,13 @@ export function icyenicFromLoadout(
 export function blessingsIndex(
   rules: ResolvedLeagueRules | undefined,
 ): ReadonlyMap<BlessingId, BlessingChoice> {
-  if (!rules) return new Map();
-  return rules.blessingsById ?? indexActiveBlessings(rules.blessings);
+  if (!rules) return EMPTY_BLESSING_INDEX;
+  if (rules.blessingsById) return rules.blessingsById;
+  noteBlessingIndexRebuild();
+  return indexActiveBlessings(rules.blessings);
 }
+
+const EMPTY_BLESSING_INDEX: ReadonlyMap<BlessingId, BlessingChoice> = new Map();
 
 export function blessingRule(
   rules: ResolvedLeagueRules | undefined,
@@ -246,13 +251,12 @@ export interface AegisArmourBonus {
 }
 
 /**
- * Teragard's Aegis: base ability damage +25% of armour (50% with defender,
- * 75% with shield). Flat share then one floor: floor(armour * 0.75), not
- * floor(armour * 0.25) * 3 (provisional until live-verified).
+ * Teragard's Aegis: base ability damage +25% of Armour rating (50% with
+ * defender, 75% with shield). The flat share is floored once.
  */
 export function aegisArmourBonus(
   rule: BlessingChoice["combat"] | undefined,
-  armour: { totalArmour: number },
+  armour: { blockArmourRating: number },
   offhand: "shield" | "defender" | null,
 ): AegisArmourBonus {
   const multiplier =
@@ -265,7 +269,7 @@ export function aegisArmourBonus(
   return {
     offhand: offhand ?? "none",
     armourPercent,
-    baseAbilityDamageBonus: Math.floor(armour.totalArmour * armourPercent),
+    baseAbilityDamageBonus: mulFloor(armour.blockArmourRating, armourPercent),
   };
 }
 

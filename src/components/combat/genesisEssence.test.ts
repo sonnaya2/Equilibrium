@@ -43,6 +43,7 @@ describe("Genesis Essence combat-tier override", () => {
           ammunitionTier: style === "ranged" ? 120 : loadout.ammunitionTier,
           spellTier: style === "magic" ? 120 : loadout.spellTier,
         }),
+        { blessingPicks: GENESIS_PICKS },
       );
 
       expect(genesis.weaponTierOverride).toBe(120);
@@ -104,7 +105,7 @@ describe("Genesis Essence combat-tier override", () => {
 
     expect(withGenesis.weaponTierOverride).toBe(120);
     expect(withGenesis.mainhandTier).toBe(withoutGenesis.mainhandTier);
-    expect(withGenesis.base).toBe(withoutGenesis.base);
+    expect(withGenesis.rawBase).toBe(withoutGenesis.rawBase);
     expect(withGenesis.accuracyRating).toBe(withoutGenesis.accuracyRating);
   });
 
@@ -156,9 +157,15 @@ describe("Genesis Essence combat-tier override", () => {
     expect(magicStats.mainhandTier).toBe(120);
     expect(magicStats.spellTier).toBe(120);
     expect(rangedStats.base).toBe(
-      loadoutStats({ ...ranged, weaponTier: 120, ammunitionTier: 120 }).base,
+      loadoutStats(
+        { ...ranged, weaponTier: 120, ammunitionTier: 120 },
+        { blessingPicks: GENESIS_PICKS },
+      ).base,
     );
-    expect(magicStats.base).toBe(loadoutStats({ ...magic, weaponTier: 120, spellTier: 120 }).base);
+    expect(magicStats.base).toBe(
+      loadoutStats({ ...magic, weaponTier: 120, spellTier: 120 }, { blessingPicks: GENESIS_PICKS })
+        .base,
+    );
   });
 
   it("keeps zero ammo and spell tiers as the weaponless sentinel", () => {

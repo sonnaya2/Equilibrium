@@ -10,6 +10,7 @@ import {
   type AdrenalineTransaction,
 } from "@/combat/shared/adrenalineTransaction";
 import { RING_OF_VIGOUR_REFUND } from "@/combat/shared/ringOfVigour";
+import { blessingRule } from "@/combat/league/ruleset";
 import type { CalcStats } from "./loadoutStats";
 
 export type AnalysisAdrenRules = Pick<
@@ -99,11 +100,19 @@ export function analysisAdrenalineBreakdownRows(tx: AdrenalineTransaction): Adre
   return rows;
 }
 
-/** FotS / Invig / CoE / RoV / Impatient / Relentless / Herald - loadout assumptions only. */
+/** Loadout assumptions that alter adrenaline or the multi-cast timeline. */
 export function adrenEconomyAssumptionRows(stats: CalcStats): Array<[string, string | number]> {
   const a = stats.adrenaline;
-  if (!a && !stats.equipmentEffects?.vestments.heraldOfChaos) return [];
+  const avernic = blessingRule(stats.league, "avernic-rampage");
+  if (!a && !stats.equipmentEffects?.vestments.heraldOfChaos && !avernic) return [];
   const rows: Array<[string, string | number]> = [];
+
+  if (avernic?.procChance !== undefined && avernic.freeCastDurationTicks !== undefined) {
+    rows.push([
+      "Avernic Rampage",
+      `${formatAdrenPct(avernic.procChance * 100, false)} on damaging attack · later abilities and weapon specials cost 0 for ${avernic.freeCastDurationTicks} ticks (rotation RNG)`,
+    ]);
+  }
 
   if ((a?.basicAdrenalineFlatBonus ?? 0) > 0) {
     rows.push(["Fury of the Small", `+${a!.basicAdrenalineFlatBonus}% on generating basics`]);
@@ -166,5 +175,6 @@ export function adrenEconomyFingerprint(stats: CalcStats): string {
     a?.ringOfVigour ? 1 : 0,
     stats.equipmentEffects?.vestments.heraldOfChaos ? 1 : 0,
     stats.equipmentEffects?.vestments.increasedAdrenalineCap ? 1 : 0,
+    stats.league.blessingIds.has("avernic-rampage") ? 1 : 0,
   ].join("|");
 }

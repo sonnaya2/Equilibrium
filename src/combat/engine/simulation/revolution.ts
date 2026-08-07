@@ -23,6 +23,7 @@ import { firstLegalTickFor } from "../runtime/state";
 import type { CastRecord, RotationSummary, SimulateInput, SimulateOptions } from "./simulate";
 import { combineBranchSummaries } from "./summary";
 import type { ResolvedLeagueRules } from "../../league/ruleset";
+import { runWithHitReuseScope } from "../resolution/hitReuse";
 
 export interface RevolutionInput extends Omit<SimulateInput, "rotation" | "autoWeave"> {
   bar: readonly AbilitySpec[];
@@ -135,6 +136,13 @@ export function simulateRevolution(
   input: RevolutionInput,
   options?: SimulateOptions,
 ): RotationSummary {
+  return runWithHitReuseScope(() => simulateRevolutionScoped(input, options));
+}
+
+function simulateRevolutionScoped(
+  input: RevolutionInput,
+  options?: SimulateOptions,
+): RotationSummary {
   const { maxLive, intermediateMax } = branchCapsFromBudget(options?.branchBudget);
   let branches: Branch[] = [
     {
@@ -183,47 +191,48 @@ export function simulateRevolution(
 
     const carried: Branch[] = [];
     const plans: CastOutcomePlan[] = [];
-    for (const branch of branches) {
-      if (branch.error !== undefined || branch.rt.state.tick >= input.durationTicks) {
-        carried.push(branch);
-        continue;
-      }
-      const state = branch.rt.state;
-      // Base Overpower becomes Igneous when equipped; conjure_* morphs to command_*.
-      let ready: AbilitySpec | undefined;
-      for (const barAbility of input.bar) {
-        const cast = revoReadyCastAbility(barAbility, state, input, branch.rt.byId);
-        if (cast) {
-          ready = cast;
-          break;
+    const advanced = runWithHitReuseScope(() => {
+      for (const branch of branches) {
+        if (branch.error !== undefined || branch.rt.state.tick >= input.durationTicks) {
+          carried.push(branch);
+          continue;
         }
+        const state = branch.rt.state;
+        // Base Overpower becomes Igneous when equipped; conjure_* morphs to command_*.
+        let ready: AbilitySpec | undefined;
+        for (const barAbility of input.bar) {
+          const cast = revoReadyCastAbility(barAbility, state, input, branch.rt.byId);
+          if (cast) {
+            ready = cast;
+            break;
+          }
+        }
+        // Basics fill every empty GCD when the bar has nothing ready/affordable.
+        const basic = ready ? undefined : branch.rt.basicByStyle.get(input.style);
+        const ability = ready ?? basic;
+        if (!ability) {
+          carried.push({
+            ...branch,
+            error: `revolution stalled at tick ${state.tick}: no bar ability ready and no basic for ${input.style}`,
+          });
+          continue;
+        }
+        const planned = planCastOutcomes(
+          branch,
+          ability,
+          state.tick,
+          ready === undefined,
+          maxLive,
+          intermediateMax,
+        );
+        residualWeight += planned.residualWeight;
+        exactness = combineExactness(exactness, planned.exactness);
+        if (planned.plans.length > 1) sawBranching = true;
+        carried.push(...planned.errors);
+        plans.push(...planned.plans);
       }
-      // Basics fill every empty GCD when the bar has nothing ready/affordable.
-      const basic = ready ? undefined : branch.rt.basicByStyle.get(input.style);
-      const ability = ready ?? basic;
-      if (!ability) {
-        carried.push({
-          ...branch,
-          error: `revolution stalled at tick ${state.tick}: no bar ability ready and no basic for ${input.style}`,
-        });
-        continue;
-      }
-      const planned = planCastOutcomes(
-        branch,
-        ability,
-        state.tick,
-        ready === undefined,
-        maxLive,
-        intermediateMax,
-      );
-      residualWeight += planned.residualWeight;
-      exactness = combineExactness(exactness, planned.exactness);
-      if (planned.plans.length > 1) sawBranching = true;
-      carried.push(...planned.errors);
-      plans.push(...planned.plans);
-    }
-
-    const advanced = materializeCastPlans(plans, maxLive, intermediateMax);
+      return materializeCastPlans(plans, maxLive, intermediateMax);
+    });
     residualWeight += advanced.residualWeight;
     exactness = combineExactness(exactness, advanced.exactness);
     sawBranching ||= advanced.branches.length > 1;

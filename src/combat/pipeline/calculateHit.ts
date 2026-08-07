@@ -3,6 +3,7 @@ import { baseCritDamageMultiplier, critProbability, type CritLayers } from "../c
 import { applyDamagePotential, damagePotential } from "../core/damagePotential";
 import { applyHitCap, normalizeHitCapRule, standardHitCap, type HitCapRule } from "../core/hitCaps";
 import { mulFloor } from "../core/rounding";
+import { resolveHostDamageInstance } from "../core/hostDamage";
 import { MODERNISATION_WIKI } from "../data/sources";
 import { contextWithProvenance, type DamageProvenance } from "../shared/damageProvenance";
 import { preciseMinHitAddition } from "../shared/perks";
@@ -223,26 +224,19 @@ export function calculateRawHitBandWithAttached(
   input: RawHitBandInput,
   attached: readonly AttachedRawDamage[],
 ): ComposedHitResult {
-  const baseHit = calculateRawHitBand(input);
-  if (attached.length === 0) return { hit: baseHit, baseHit, attached: [] };
-
-  let previous = baseHit;
-  let min = input.min;
-  let max = input.max;
-  const deltas: AttachedHitDelta[] = [];
-  for (const term of attached) {
-    if (!Number.isFinite(term.amount) || term.amount < 0 || !Number.isInteger(term.amount)) {
-      throw new RangeError(
-        `calculateHitWithAttached: ${term.id} amount must be a non-negative integer`,
-      );
-    }
-    min += term.amount;
-    max += term.amount;
-    const next = calculateRawHitBand({ ...input, min, max });
-    deltas.push({ id: term.id, hit: hitDelta(next, previous) });
-    previous = next;
-  }
-  return { hit: previous, baseHit, attached: deltas };
+  const resolved = resolveHostDamageInstance(
+    { host: { min: input.min, max: input.max }, attached },
+    {
+      add: (host, amount) => ({ min: host.min + amount, max: host.max + amount }),
+      resolve: (host) => calculateRawHitBand({ ...input, ...host }),
+      delta: hitDelta,
+    },
+  );
+  return {
+    hit: resolved.damage,
+    baseHit: resolved.hostDamage,
+    attached: resolved.attached.map(({ term, damage }) => ({ id: term.id, hit: damage })),
+  };
 }
 
 function assertIntegerBandBounds(min: number, max: number): void {

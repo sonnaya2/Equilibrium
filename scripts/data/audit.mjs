@@ -224,6 +224,12 @@ for (const absolute of absoluteFiles) {
 
 const byFile = new Map(inventory.map((entry) => [entry.file, entry]));
 const sourceFiles = new Set(sources.map(({ file }) => file));
+const patchFiles = absoluteFiles
+  .map((absolute) => ({
+    file: slash(relative(ROOT, absolute)),
+    text: readFileSync(absolute, "utf8"),
+  }))
+  .filter(({ file }) => file.startsWith("data/patches/") && file.endsWith(".jsonl"));
 const resolveSourceImport = (sourceFile, literal) => {
   let base;
   if (literal.startsWith("@/")) base = `src/${literal.slice(2)}`;
@@ -336,6 +342,73 @@ const tracked = (...paths) =>
     .split(/\r?\n/)
     .filter(Boolean);
 const architectureFailures = [];
+const BLESSING_FOUNDATION_PATCH = "2026-08-06-zz-blessing-progression-foundation.jsonl";
+const LEGACY_FULL_BLESSING_PATCHES = new Set([
+  "2026-08-01-blessing-revealed-cards.jsonl",
+  "2026-08-02-blessing-combat-rules.jsonl",
+  "2026-08-02-blessing-mechanics-audit.jsonl",
+  "2026-08-02-blessing-mechanics-big-boned.jsonl",
+  "2026-08-03-big-boned-product-default.jsonl",
+  "2026-08-05-basic-attack-semantics.jsonl",
+  "2026-08-05-big-boned-cinders-inferno.jsonl",
+  "2026-08-05-big-boned-inherited-crit.jsonl",
+  "2026-08-05-build-ui-missing-blessings.jsonl",
+  "2026-08-05-cinders-avernic-simulator-corrections.jsonl",
+  "2026-08-05-cinders-recursive-hit-scope.jsonl",
+  "2026-08-05-havoc-born-functional.jsonl",
+  "2026-08-06-envenomed-combat.jsonl",
+  "2026-08-06-genesis-essence-combat.jsonl",
+  "2026-08-06-tempered-heart-lord-of-light.jsonl",
+]);
+for (const { file, text } of patchFiles) {
+  if (LEGACY_FULL_BLESSING_PATCHES.has(file.slice(13))) {
+    continue;
+  }
+  for (const line of text.split(/\r?\n/).filter(Boolean)) {
+    let operation;
+    try {
+      operation = JSON.parse(line);
+    } catch {
+      continue;
+    }
+    if (
+      operation.op === "set-record" &&
+      operation.file === "data/league/blessings.json" &&
+      /^\$\.records\[\d+\]$/.test(operation.path)
+    ) {
+      architectureFailures.push(`${file} replaces a full blessing tier; use set-blessing-choice`);
+    }
+  }
+}
+const blessingFoundation = patchFiles.find(
+  ({ file }) => file === `data/patches/${BLESSING_FOUNDATION_PATCH}`,
+);
+if (!blessingFoundation) {
+  architectureFailures.push(`missing consolidated blessing patch ${BLESSING_FOUNDATION_PATCH}`);
+} else {
+  const operations = blessingFoundation.text
+    .split(/\r?\n/)
+    .filter(Boolean)
+    .map((line) => {
+      try {
+        return JSON.parse(line);
+      } catch {
+        return null;
+      }
+    })
+    .filter(Boolean);
+  const slots = operations
+    .filter((operation) => operation.op === "set-blessing-tier")
+    .map((operation) => operation.progressionSlot)
+    .sort((a, b) => a - b);
+  const choices = operations.filter((operation) => operation.op === "set-blessing-choice");
+  if (slots.length !== 8 || slots.some((slot, index) => slot !== index + 1)) {
+    architectureFailures.push(`${BLESSING_FOUNDATION_PATCH} must consolidate progression slots 1-8`);
+  }
+  if (choices.length !== 24 || new Set(choices.map((operation) => operation.id)).size !== 24) {
+    architectureFailures.push(`${BLESSING_FOUNDATION_PATCH} must consolidate all 24 blessing choices`);
+  }
+}
 const trackedDataJson = tracked("data/**/*.json");
 const trackedFrontend = tracked("public/data/v1/**", "public/data/v2/**");
 // The frontend reads generated shards and documents. A module reaching into a

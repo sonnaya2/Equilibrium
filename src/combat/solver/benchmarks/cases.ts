@@ -99,9 +99,10 @@ function baseLoadout(opts: {
       totalArmour: 0,
       maximumLife: 10_000,
       powerburstUntilTick: 0,
-      targetTiles: 1,
+      targetSize: 1,
+      occupiedTiles: 1,
     },
-    context: opts.context ?? { style: opts.style, ruleset, targetTiles: 1 },
+    context: opts.context ?? { style: opts.style, ruleset, targetSize: 1, occupiedTiles: 1 },
     equipmentIds: [...(opts.equipmentIds ?? [])],
     weaponConfiguration: opts.weaponConfiguration,
     startingAdrenaline: 100,
@@ -194,7 +195,8 @@ function equilibriumLeague(picks: readonly BlessingPath[]) {
       totalArmour: 2_000,
       maximumLife: 12_000,
       powerburstUntilTick: 0,
-      targetTiles: 1,
+      targetSize: 1,
+      occupiedTiles: 1,
     },
   );
   return serializeLeague(live);
@@ -542,7 +544,12 @@ export const BENCH_CASES: readonly BenchCaseDef[] = [
         ruleset: "equilibrium",
         blessingPicks,
         league,
-        context: { style: "melee", ruleset: "equilibrium", targetTiles: 1 },
+        context: {
+          style: "melee",
+          ruleset: "equilibrium",
+          targetSize: 1,
+          occupiedTiles: 1,
+        },
         durationTicks: 80,
         exploreDurationTicks: 30,
       });

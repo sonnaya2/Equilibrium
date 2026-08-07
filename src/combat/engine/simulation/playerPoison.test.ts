@@ -206,18 +206,15 @@ describe("player poison simulation", () => {
       expectedActivations: 0.05,
       occurrenceModel: { kind: "bernoulli", probability: 0.05 },
     });
-    const attached = result.events.filter(
-      (event) =>
-        event.tick === 0 &&
-        (event.abilityId === "abyssal-cinders" || event.abilityId === "big-boned"),
-    );
+    const attached = result.events
+      .filter((event) => event.tick === 0)
+      .flatMap((event) => event.components ?? [])
+      .filter((component) => component.id === "abyssal-cinders" || component.id === "big-boned");
     expect(attached).toHaveLength(3);
-    expect(attached.every((event) => event.attached)).toBe(true);
-    expect(
-      result.events.some(
-        (event) => event.abilityId === "abyssal-cinders" && event.derivedFrom === infernos[0]!.seq,
-      ),
-    ).toBe(false);
+    expect(attached.every((component) => component.attached)).toBe(true);
+    expect(infernos[0]?.components?.some((component) => component.id === "abyssal-cinders")).toBe(
+      false,
+    );
   });
 
   it("adds Big Boned to poison hits without creating another poison roll or hit", () => {
@@ -234,24 +231,23 @@ describe("player poison simulation", () => {
       playerPoison: profile(),
     });
     const poisonHits = result.events.filter((event) => event.abilityId === PLAYER_POISON_EFFECT_ID);
-    const riders = result.events.filter(
-      (event) => event.abilityId === "big-boned" && event.bonusTargetId === PLAYER_POISON_EFFECT_ID,
+    const riders = poisonHits.flatMap((event) =>
+      (event.components ?? []).filter(
+        (component) =>
+          component.id === "big-boned" &&
+          component.analysis?.bonusTargetId === PLAYER_POISON_EFFECT_ID,
+      ),
     );
     expect(riders).toHaveLength(poisonHits.length);
     expect(riders.length).toBeGreaterThan(0);
     expect(
-      riders.every(
-        (event) =>
-          event.attached &&
-          event.expectedSeparateHits === 0 &&
-          !event.procEligible &&
-          event.originKind === "poison" &&
-          poisonHits.some((poison) => poison.seq === event.derivedFrom),
-      ),
+      riders.every((component) => component.attached && component.hitCapPolicy === "shared"),
     ).toBe(true);
     expect(result.playerPoison?.applicationAttempts).toBe(1);
     expect(result.playerPoison?.successfulApplications).toBeCloseTo(0.125, 12);
-    expect(riders.reduce((sum, event) => sum + event.damage.expected, 0)).toBeGreaterThan(0);
+    expect(riders.reduce((sum, component) => sum + component.damage.expected, 0)).toBeGreaterThan(
+      0,
+    );
   });
 
   it("applies poison source and target multipliers to Big Boned poison riders", () => {
@@ -269,11 +265,14 @@ describe("player poison simulation", () => {
         playerPoison: profile({ kwuarmPotency }),
       });
       return result.events
+        .filter((event) => event.abilityId === PLAYER_POISON_EFFECT_ID)
+        .flatMap((event) => event.components ?? [])
         .filter(
-          (event) =>
-            event.abilityId === "big-boned" && event.bonusTargetId === PLAYER_POISON_EFFECT_ID,
+          (component) =>
+            component.id === "big-boned" &&
+            component.analysis?.bonusTargetId === PLAYER_POISON_EFFECT_ID,
         )
-        .reduce((sum, event) => sum + event.damage.expected, 0);
+        .reduce((sum, component) => sum + component.damage.expected, 0);
     };
     const plain = run(0, false);
     expect(run(4, false)).toBeCloseTo(plain * 1.1, 8);

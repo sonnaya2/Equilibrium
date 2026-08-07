@@ -76,8 +76,10 @@ export function reviveRevolutionBase(sim: SerializableRevolutionSimBase): Revive
     playerPoison: sim.playerPoison,
     playerPoisonModifiers: playerPoisonModifiersFromSources(sim.modifierSources, league),
     targetPoisonImmune: sim.targetPoisonImmune === true,
-    // ponytail: naturalInstinctUntilTick / startingResidualSouls / slayerOnTask / slayerLevel
-    // affect scores in-engine but are not on SerializableRevolutionSimBase yet.
+    naturalInstinctUntilTick: sim.naturalInstinctUntilTick,
+    startingResidualSouls: sim.startingResidualSouls,
+    slayerOnTask: sim.slayerOnTask,
+    slayerLevel: sim.slayerLevel,
   };
 }
 

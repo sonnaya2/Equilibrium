@@ -5,7 +5,7 @@ import type { BleedId, CombatContext, DamageOverTimeKind, OutgoingDamageSource }
  * Serializable plain object for branch signatures / IPC.
  *
  * wiki: Full Slayer Helmet / Salve apply to player direct attacks only (not DoT, conjure, procs).
- * Big Boned riders follow blessingRider; Cinders follows direct player attack hits only.
+ * Big Boned follows blessingRider; Cinders follows direct player attacks and direct bounces.
  * Poison, DoT, conjure, proc, reflected, and blessing damage never re-open Cinders.
  * Abyssal Parasite stacks: only player_direct / player_auto (melee+passive gated at land).
  */
@@ -104,7 +104,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
-    blessingRider: false,
+    blessingRider: true,
     cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
@@ -203,7 +203,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
-    blessingRider: false,
+    blessingRider: true,
     cindersOnHit: false,
     blessingOnHit: false,
     canCrit: true,
@@ -253,7 +253,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
-    blessingRider: false,
+    blessingRider: true,
     cindersOnHit: false,
     blessingOnHit: false,
     canCrit: true,
@@ -303,7 +303,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
-    blessingRider: false,
+    blessingRider: true,
     cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,

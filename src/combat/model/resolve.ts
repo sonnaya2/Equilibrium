@@ -111,7 +111,8 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
       totalArmour: input.league.totalArmour,
       maximumLife: input.league.maximumLife,
       powerburstUntilTick: Math.max(0, Math.floor(input.league.powerburstUntilTick ?? 0)),
-      targetTiles: input.league.targetTiles,
+      targetSize: input.league.targetSize,
+      occupiedTiles: input.league.occupiedTiles,
       areaTargets: Math.max(1, Math.floor(input.league.areaTargets ?? 1)),
       prayerBonus: Math.max(0, input.league.prayerBonus ?? 0),
       herbloreLevel: input.league.herbloreLevel,
@@ -121,12 +122,21 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
       : {
           style: input.style,
           ruleset: input.league.ruleset,
-          targetTiles: input.league.targetTiles,
+          targetSize: input.league.targetSize,
+          occupiedTiles: input.league.occupiedTiles,
         },
     cap: input.cap
       ? { cap: input.cap.cap, bypass: input.cap.bypass === true }
       : { cap: STANDARD_HIT_CAP, bypass: false },
     startingAdrenaline: input.startingAdrenaline ?? 0,
+    ...(input.naturalInstinctUntilTick != null
+      ? { naturalInstinctUntilTick: input.naturalInstinctUntilTick }
+      : {}),
+    ...(input.startingResidualSouls != null
+      ? { startingResidualSouls: input.startingResidualSouls }
+      : {}),
+    ...(input.slayerOnTask != null ? { slayerOnTask: input.slayerOnTask } : {}),
+    ...(input.slayerLevel != null ? { slayerLevel: input.slayerLevel } : {}),
     diagnostics: {
       slayerHelmet: diag.slayerHelmet ? { ...diag.slayerHelmet } : null,
       salve: diag.salve ? { ...diag.salve } : null,

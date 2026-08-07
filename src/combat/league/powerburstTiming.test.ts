@@ -65,9 +65,10 @@ describe("Powerburst max-life window for Big Boned", () => {
       context: { style: "melee", ruleset: "equilibrium" },
       rotation: rotationOf("attack"),
     });
-    const earlyBb = early.events.find((e) => e.abilityId === "big-boned");
+    const earlyHost = early.events.find((event) => event.abilityId === "attack");
+    const earlyBb = earlyHost?.components?.find((component) => component.id === "big-boned");
     expect(earlyBb?.damage.expected).toBe(1_000);
-    expect(earlyBb?.tick).toBeLessThan(until);
+    expect(earlyHost?.tick).toBeLessThan(until);
 
     // Hits scheduled well past the 10-tick window (late revo / 300s solver).
     expect(resolveMaximumLife(rules, 100)).toBe(10_000);

@@ -149,6 +149,12 @@ export function TargetPanel({
               On Slayer task (helmet)
             </label>
             <NumberField
+              label="Target size"
+              value={target.size ?? 1}
+              min={1}
+              onChange={(value) => updateTarget({ size: Math.max(1, Math.floor(value)) })}
+            />
+            <NumberField
               label="Occupied tiles"
               value={target.occupiedTiles ?? 1}
               onChange={(value) => updateTarget({ occupiedTiles: Math.max(1, Math.floor(value)) })}

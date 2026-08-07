@@ -8,7 +8,7 @@ import { isNonNegativeFinite, isPositiveFinite } from "../shared/domainValidator
  * https://runescape.wiki/w/Barkscales
  * Outgoing rotations have no attack timeline: needs a scenario (incoming-hit interval).
  * Without one, result is unavailable (not a calculated 0). Provisional: which hits
- * advance the counter, reset vs overflow, per-tile 3x3 hits.
+ * advance the counter, reset vs overflow, and target selection in the 3x3.
  */
 export const BARKSCALES_SOURCE: SourceReference = {
   source: "runescape-wiki",
@@ -20,7 +20,7 @@ export const BARKSCALES_SOURCE: SourceReference = {
 export interface BarkscalesScenario {
   /** Seconds between qualifying incoming hits. Absent/non-positive = no scenario. */
   incomingHitIntervalSeconds?: number;
-  /** Tiles of the 3x3 that actually contain a target; 1 for a lone single-tile enemy. */
+  /** Distinct targets struck in the 3x3; a target's footprint never multiplies hits. */
   targetsStruck?: number;
   /** Poison-immune targets take no Grasp damage. */
   poisonImmune?: boolean;
@@ -143,7 +143,7 @@ export function barkscalesOutcome(
     return unavailable(base, "zero-targets", 0);
   } else {
     targetsStruck = Math.min(
-      rule?.barkscales?.graspAreaTiles ?? Math.floor(rawTargets),
+      rule?.barkscales?.graspMaxTargets ?? Math.floor(rawTargets),
       Math.floor(rawTargets),
     );
   }

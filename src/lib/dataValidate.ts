@@ -182,10 +182,18 @@ export function parseRelicTier(raw: unknown): RelicTierRow | null {
 
 /** Blessing tier envelope row. */
 export type BlessingTierRow = {
-  tier: number;
+  progressionSlot: number;
+  tier: number | null;
   revealed: boolean;
   paths: string[];
-  godTier: boolean;
+  godTier: number | null;
+  passives: Array<{
+    id: string;
+    name: string;
+    description: string;
+    kind: string;
+    effect: Record<string, unknown>;
+  }>;
   choices: Array<{
     /** Order, Balance or Chaos - the card names its own path rather than relying on column order. */
     path: string;
@@ -200,8 +208,12 @@ export type BlessingTierRow = {
 
 export function parseBlessingTier(raw: unknown): BlessingTierRow | null {
   if (!isRecord(raw)) return null;
-  const tier = asNumber(raw.tier);
-  if (tier == null) return null;
+  const progressionSlot = asNumber(raw.progressionSlot);
+  if (progressionSlot == null) return null;
+  const tier = raw.tier === null ? null : (asNumber(raw.tier) ?? null);
+  const godTier = raw.godTier === null ? null : (asNumber(raw.godTier) ?? null);
+  if (raw.tier !== null && tier == null) return null;
+  if (raw.godTier !== null && godTier == null) return null;
   const choicesRaw = Array.isArray(raw.choices) ? raw.choices : [];
   const choices = choicesRaw
     .map((c) => {
@@ -218,11 +230,24 @@ export function parseBlessingTier(raw: unknown): BlessingTierRow | null {
       };
     })
     .filter((c): c is NonNullable<typeof c> => c != null);
+  const passives = (Array.isArray(raw.passives) ? raw.passives : [])
+    .map((passive) => {
+      if (!isRecord(passive)) return null;
+      const id = asString(passive.id);
+      const name = asString(passive.name);
+      const description = asString(passive.description);
+      const kind = asString(passive.kind);
+      if (!id || !name || !description || !kind || !isRecord(passive.effect)) return null;
+      return { id, name, description, kind, effect: passive.effect };
+    })
+    .filter((passive): passive is NonNullable<typeof passive> => passive != null);
   return {
+    progressionSlot,
     tier,
     revealed: asBoolean(raw.revealed) ?? false,
     paths: asStringArray(raw.paths),
-    godTier: asBoolean(raw.godTier) ?? false,
+    godTier,
+    passives,
     choices,
     source: parseSourceRef(raw.source),
     verified: asBoolean(raw.verified),

@@ -1,15 +1,23 @@
 import {
   activeBlessings,
+  activeTierPassives,
   indexActiveBlessings,
   type BlessingChoice,
   type BlessingId,
   type BlessingPath,
+  type ActiveBlessingTierPassive,
 } from "../../league/blessings";
+import {
+  resolveAdrenalineCap,
+  type MaximumAdrenalineResolution,
+  type MaximumAdrenalineSource,
+} from "../shared/adrenalineCap";
 import { mulFloor } from "../core/rounding";
 import { isBasicAttack } from "../shared/adrenalineGain";
 import { resolveCombatProvenance } from "../shared/damageProvenance";
 import { AFFINITY, type AffinityKind } from "../target/genericTarget";
 import type { CombatContext, CombatModifier } from "../types";
+import type { SetPieceContributionModifier } from "../shared/equipment";
 import {
   ICYENIC_FAITH_RELIC,
   icyenicFaithActive,
@@ -33,17 +41,18 @@ export interface LeagueLoadout {
 
 /** Big Boned 5% max-life outgoing rider is always on when picked (no opt-out). */
 export const BIG_BONED_OUTGOING_ASSUMPTIONS = [
-  "Per unique hit (Mod Sponge Discord): flat 5% of maximum life attached to the parent damage and inheriting its critical result",
-  "Also rides separate blessing hits (Light of Saradomin, Inferno of Zamorak), but never the attached Cinders component or Big Boned itself",
+  "Per unique hit (Mod Sponge Discord): flat 5% of maximum life inside the host damage instance",
+  "Inherits the host damage family, modifiers, critical result, Damage Potential, rounding, and shared hit cap",
+  "Creates no separate event or proc roll; composes once beside Cinders and never rides itself",
   "5% of maximum life including Big Boned's own +50% max-life boost; Powerburst is time-bounded",
-  "Rides conjure auto/poison and invention hit splats (Crackling/Aftershock); those sources do not trigger Cinders",
-  "Still unverified vs live: crit eligibility, Reflect, hit-cap treatment, exact formula stage",
+  "Rides represented poison, conjure, proc, reflected, derived, Light, Inferno, and Grasp hosts; those sources do not inherit Cinders eligibility",
 ] as const;
 
 export interface ResolvedLeagueRules {
   ruleset: "base" | "equilibrium";
   /** Ordered active cards for presentation / serialization. */
   blessings: readonly BlessingChoice[];
+  tierPassives: readonly ActiveBlessingTierPassive[];
   /**
    * Runtime lookup keyed by blessing id. Optional for worker-revived payloads
    * that only ship the array; use `blessingsIndex` rather than reading directly.
@@ -64,7 +73,8 @@ export interface ResolvedLeagueRules {
    * start (`landTick < powerburstUntilTick`). 0 = inactive for the whole run.
    */
   powerburstUntilTick: number;
-  targetTiles: number;
+  targetSize: number;
+  occupiedTiles: number;
   areaTargets: number;
   prayerBonus: number;
   herbloreLevel?: number;
@@ -74,7 +84,8 @@ export interface ResolveLeagueRulesDerived {
   totalArmour?: number;
   maximumLife?: number;
   powerburstUntilTick?: number;
-  targetTiles?: number;
+  targetSize?: number;
+  occupiedTiles?: number;
   areaTargets?: number;
   prayerBonus?: number;
   herbloreLevel?: number;
@@ -86,6 +97,8 @@ export function resolveLeagueRules(
 ): ResolvedLeagueRules {
   const ruleset = loadout.ruleset === "equilibrium" ? "equilibrium" : "base";
   const blessings = ruleset === "equilibrium" ? activeBlessings(loadout.blessingPicks ?? []) : [];
+  const tierPassives =
+    ruleset === "equilibrium" ? activeTierPassives(loadout.blessingPicks ?? []) : [];
   const blessingsById = indexActiveBlessings(blessings);
   const trueEquilibriumPrayer =
     (blessingsById.get("true-equilibrium")?.combat.prayerBonusPerUniquePath ?? 0) *
@@ -101,6 +114,7 @@ export function resolveLeagueRules(
   return {
     ruleset,
     blessings,
+    tierPassives,
     blessingsById,
     blessingIds: new Set(blessingsById.keys()),
     relics,
@@ -108,7 +122,8 @@ export function resolveLeagueRules(
     totalArmour: Math.max(0, derived.totalArmour ?? 0),
     maximumLife: Math.max(0, derived.maximumLife ?? 0),
     powerburstUntilTick: Math.max(0, Math.floor(derived.powerburstUntilTick ?? 0)),
-    targetTiles: Math.max(1, Math.floor(derived.targetTiles ?? 1)),
+    targetSize: Math.max(1, Math.floor(derived.targetSize ?? 1)),
+    occupiedTiles: Math.max(1, Math.floor(derived.occupiedTiles ?? 1)),
     areaTargets: Math.max(1, Math.floor(derived.areaTargets ?? 1)),
     prayerBonus: Math.max(0, derived.prayerBonus ?? 0) + trueEquilibriumPrayer,
     herbloreLevel: Math.min(120, Math.max(1, Math.floor(derived.herbloreLevel ?? 1))),
@@ -167,6 +182,19 @@ export function blessingRule(
   id: BlessingId,
 ): BlessingChoice["combat"] | undefined {
   return blessingsIndex(rules).get(id)?.combat;
+}
+
+export function setPieceContributionModifier(
+  rules: ResolvedLeagueRules | undefined,
+): SetPieceContributionModifier {
+  const multiplier = blessingRule(rules, "chaotic-insight")?.setPieceContributionMultiplier;
+  const piecesPerItem =
+    typeof multiplier === "number" && Number.isFinite(multiplier) && multiplier > 0
+      ? Math.floor(multiplier)
+      : 1;
+  return {
+    piecesPerItem,
+  };
 }
 
 /** Resolve tier-changing blessings once; callers apply the result idempotently. */
@@ -239,11 +267,33 @@ export function blessingArmourMultiplier(loadout: LeagueLoadout): number {
 export function resolveMaximumAdrenaline(
   equipmentCap: number,
   rules: ResolvedLeagueRules | undefined,
-): number {
-  return Math.max(
-    equipmentCap,
-    blessingRule(rules, "adrenaline-junkie")?.maximumAdrenaline ?? equipmentCap,
-  );
+  heightenedSensesBonus = 0,
+): MaximumAdrenalineResolution {
+  const sources: MaximumAdrenalineSource[] = [];
+  if (equipmentCap > 100) {
+    sources.push({ id: "vestments-of-havoc", kind: "points", value: equipmentCap - 100 });
+  }
+  const adrenalineJunkie = blessingRule(rules, "adrenaline-junkie")?.maximumAdrenaline;
+  if (adrenalineJunkie != null && adrenalineJunkie > 100) {
+    sources.push({
+      id: "adrenaline-junkie",
+      kind: "percentage",
+      value: ((adrenalineJunkie - 100) / 100) * 100,
+    });
+  }
+  for (const passive of rules?.tierPassives ?? []) {
+    if (passive.effect.type === "maximum-adrenaline") {
+      sources.push({
+        id: passive.id,
+        kind: "percentage",
+        value: passive.effect.bonusPercent,
+      });
+    }
+  }
+  if (heightenedSensesBonus) {
+    sources.push({ id: "heightened-senses", kind: "points", value: heightenedSensesBonus });
+  }
+  return resolveAdrenalineCap(100, sources);
 }
 
 export function blessingAdrenalineGenerationMultiplier(
@@ -343,7 +393,7 @@ export function leagueModifiers(rules: ResolvedLeagueRules | undefined): CombatM
           state.damage,
           1 +
             splash.combat.areaDamageBonus! +
-            (splash.combat.aoePerTileBonus ?? 0) * (context.area === "aoe" ? rules.targetTiles : 0),
+            (splash.combat.aoePerSizeBonus ?? 0) * (context.area === "aoe" ? rules.targetSize : 0),
         ),
       }),
       source: splash.source,

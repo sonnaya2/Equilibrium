@@ -1031,6 +1031,27 @@ describe("loadoutStats", () => {
       ).toBe(150);
     });
 
+    it("stacks Adrenaline Junkie, Tier 4 maximum adrenaline, Vestments, and Heightened Senses", () => {
+      const stacked = loadoutStats(
+        {
+          ...base,
+          archaeology: { selectedIds: ["heightened_senses"], energyCap: 500 },
+          buffs: { ...base.buffs, heightenedSenses: false },
+          equipmentSlots: {
+            helmet: "item:vestments-of-havoc-hood",
+            body: "item:vestments-of-havoc-robe-top",
+            legs: "item:vestments-of-havoc-robe-bottom",
+            boots: "item:vestments-of-havoc-boots",
+          },
+        },
+        { blessingPicks: ["Chaos", "Order", "Order", "Order"] },
+      );
+      expect(stacked.maxAdrenaline).toBe(205);
+      expect(stacked.league.tierPassives).toEqual(
+        expect.arrayContaining([expect.objectContaining({ id: "tier-four-maximum-adrenaline" })]),
+      );
+    });
+
     it("resolves Lord of Light's Prayer, area-target, and League cap inputs", () => {
       const stats = loadoutStats(
         {
@@ -1040,7 +1061,12 @@ describe("loadoutStats", () => {
         },
         { blessingPicks: ["Order", "Balance", "Chaos", "Balance", "Order"] },
       );
-      expect(stats.league).toMatchObject({ prayerBonus: 57, areaTargets: 12, targetTiles: 4 });
+      expect(stats.league).toMatchObject({
+        prayerBonus: 57,
+        areaTargets: 12,
+        targetSize: 1,
+        occupiedTiles: 4,
+      });
       expect(stats.cap).toEqual({ cap: 30_000, bypass: true });
       expect(stats.league.blessingIds.has("lord-of-light")).toBe(true);
     });

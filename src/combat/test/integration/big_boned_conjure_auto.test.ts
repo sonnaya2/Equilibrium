@@ -59,21 +59,22 @@ describe("Big Boned rides conjure auto hits", () => {
       ),
     ).toHaveLength(autos.length);
 
-    const autoSeqs = new Set(autos.map((e) => e.seq));
-    const riders = withBb.events.filter((e) => e.abilityId === "big-boned");
+    const riders = autos.flatMap(
+      (event) => event.components?.filter((component) => component.id === "big-boned") ?? [],
+    );
     expect(riders.length).toBe(autos.length);
     for (const rider of riders) {
       expect(rider.attached).toBe(true);
-      expect(rider.damageTag).toBe("bonus-damage");
-      expect(rider.originKind).toBe("conjure");
-      expect(rider.blessingId).toBe("big-boned");
-      expect(rider.provenance).toEqual({ kind: "blessing", detail: "big-boned" });
-      expect(rider.derivedFrom).toBeDefined();
-      expect(autoSeqs.has(rider.derivedFrom!)).toBe(true);
+      expect(rider.hitCapPolicy).toBe("shared");
+      expect(rider.analysis?.blessingId).toBe("big-boned");
       expect(rider.damage.expected).toBe(BB_PER_HIT);
     }
 
-    expect(without.events.filter((e) => e.abilityId === "big-boned")).toHaveLength(0);
+    expect(
+      without.events.flatMap(
+        (event) => event.components?.filter((component) => component.id === "big-boned") ?? [],
+      ),
+    ).toHaveLength(0);
 
     const bbTotal = riders.reduce((sum, e) => sum + e.damage.expected, 0);
     expect(bbTotal).toBe(autos.length * BB_PER_HIT);

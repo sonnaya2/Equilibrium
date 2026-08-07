@@ -1,6 +1,12 @@
 import blessingsData from "#shard/league/blessings.json";
 import type { SourceReference } from "@/combat/types";
-import { assertBlessingsDocument, collectBlessingIds } from "./blessingSchema";
+import {
+  assertBlessingsDocument,
+  collectBlessingIds,
+  type BlessingChoiceRecord,
+  type BlessingTierRecord,
+  type BlessingTierPassive as BlessingTierPassiveRecord,
+} from "./blessingSchema";
 
 /**
  * Blessing domain over data/league/blessings.json (paths, god tiers, reset count).
@@ -64,6 +70,7 @@ export interface BlessingSupport {
 export interface BlessingCombatRules {
   /** Minimum effective tier for equipped weapon profiles. */
   weaponTierOverride?: number;
+  setPieceContributionMultiplier?: number;
   baseAbilityDamageArmourPercent?: number;
   defenderArmourMultiplier?: number;
   shieldArmourMultiplier?: number;
@@ -90,13 +97,13 @@ export interface BlessingCombatRules {
     armourReductionPercent: number;
     reductionsPerTrigger: number;
     graspAbilityDamageBand: readonly [number, number];
-    graspAreaTiles: number;
+    graspMaxTargets: number;
   };
   procChance?: number;
   freeCastDurationTicks?: number;
   cooldownMultiplier?: number;
   areaDamageBonus?: number;
-  aoePerTileBonus?: number;
+  aoePerSizeBonus?: number;
   useTargetWeakness?: boolean;
   poisonDamageBaseBonus?: number;
   poisonDamagePerHerbloreLevel?: number;
@@ -105,17 +112,33 @@ export interface BlessingCombatRules {
   strikingLightCooldownTicks?: number;
 }
 
-export const GOD_TIERS: readonly number[] = blessingsData.godTiers;
+export type BlessingTierPassive = BlessingTierPassiveRecord;
+
+/** The source root retains this slot list for compatibility; public God numbers live on records. */
+export const GOD_TIER_SLOTS: readonly number[] = blessingsData.godTiers;
+export const GOD_TIERS: readonly number[] = blessingsData.records
+  .filter((record) => record.godTier !== null)
+  .map((record) => record.godTier as number);
 export const BLESSING_RESET_COUNT: number = blessingsData.resetCount;
-export const BLESSING_TIERS: readonly number[] = blessingsData.records.map((r) => r.tier);
+export const PROGRESSION_SLOTS: readonly number[] = blessingsData.records.map(
+  (record) => record.progressionSlot,
+);
+const PATH_RECORDS = blessingsData.records.filter((record) => record.godTier === null);
+export const PATH_PROGRESSION_SLOTS: readonly number[] = PATH_RECORDS.map(
+  (record) => record.progressionSlot,
+);
+export const BLESSING_TIERS: readonly number[] = PATH_RECORDS.map(
+  (record) => record.tier as number,
+);
 
 /** Tiers where a path is picked - god tiers grant, they are not picked. */
-export const PATH_TIERS: readonly number[] = BLESSING_TIERS.filter((t) => !GOD_TIERS.includes(t));
+export const PATH_TIERS: readonly number[] = BLESSING_TIERS;
 
 export interface BlessingChoice {
   id: BlessingId;
   name: string;
   path: BlessingPath;
+  progressionSlot: number;
   tier: number;
   effects: readonly string[];
   verified: boolean;
@@ -126,6 +149,7 @@ export interface BlessingChoice {
 
 /** Stable pick row for persistence / share links (path history + resolved id). */
 export interface StableBlessingSelection {
+  progressionSlot: number;
   tier: number;
   blessingId: BlessingId;
   path?: BlessingPath;
@@ -140,16 +164,21 @@ function isBlessingPath(value: string): value is BlessingPath {
 }
 
 function toChoice(
-  tier: number,
-  choice: (typeof blessingsData.records)[number]["choices"][number],
+  record: Pick<BlessingTierRecord, "progressionSlot" | "tier">,
+  choice: BlessingChoiceRecord,
   source: SourceReference,
 ): BlessingChoice | undefined {
   if (!isBlessingId(choice.id) || !isBlessingPath(choice.path)) return undefined;
   return {
-    ...(choice as Omit<BlessingChoice, "tier" | "source">),
     id: choice.id,
+    name: choice.name,
     path: choice.path,
-    tier,
+    progressionSlot: record.progressionSlot,
+    tier: record.tier as number,
+    effects: choice.effects,
+    verified: choice.verified === true,
+    support: choice.support as BlessingSupport,
+    combat: choice.combat as BlessingCombatRules,
     source,
   };
 }
@@ -160,7 +189,8 @@ export const CHOICES_BY_ID: ReadonlyMap<BlessingId, BlessingChoice> = (() => {
   for (const record of blessingsData.records) {
     const source = record.source as SourceReference;
     for (const choice of record.choices) {
-      const resolved = toChoice(record.tier, choice, source);
+      if (record.tier === null) continue;
+      const resolved = toChoice(record, choice as BlessingChoiceRecord, source);
       if (resolved) map.set(resolved.id, resolved);
     }
   }
@@ -172,11 +202,24 @@ export function blessingById(id: string): BlessingChoice | undefined {
 }
 
 export function blessingChoice(tier: number, path: BlessingPath): BlessingChoice | undefined {
-  const record = blessingsData.records.find((entry) => entry.tier === tier);
-  if (!record) return undefined;
+  const record = PATH_RECORDS.find((entry) => entry.tier === tier);
+  if (!record || record.tier === null) return undefined;
   const choice = record.choices.find((entry) => entry.path === path);
   if (!choice) return undefined;
-  return toChoice(tier, choice, record.source as SourceReference);
+  return toChoice(record, choice as BlessingChoiceRecord, record.source as SourceReference);
+}
+
+export function godTierChoice(godTier: number, path: BlessingPath): BlessingChoice | undefined {
+  const record = blessingsData.records.find((entry) => entry.godTier === godTier);
+  if (!record || record.tier !== null) return undefined;
+  const choice = record.choices.find((entry) => entry.path === path);
+  if (!choice) return undefined;
+  const resolved = toChoice(
+    record,
+    choice as BlessingChoiceRecord,
+    record.source as SourceReference,
+  );
+  return resolved ? { ...resolved, tier: godTier } : undefined;
 }
 
 export function indexActiveBlessings(
@@ -186,7 +229,7 @@ export function indexActiveBlessings(
 }
 
 export function blessingTierRevealed(tier: number): boolean {
-  return blessingsData.records.find((entry) => entry.tier === tier)?.revealed === true;
+  return PATH_RECORDS.find((entry) => entry.tier === tier)?.revealed === true;
 }
 
 /** God for one segment of picks. Null while the picks made so far leave it undecided. */
@@ -225,8 +268,57 @@ export function activeBlessings(picks: readonly BlessingPath[]): BlessingChoice[
     const segment = godTierSegment(picks, godTier);
     if (segment.length < 3) continue;
     const alignment = deriveGodTier(segment);
-    const choice = alignment ? blessingChoice(godTier, alignment) : undefined;
+    const choice = alignment ? godTierChoice(godTier, alignment) : undefined;
     if (choice) active.push(choice);
   }
   return active;
+}
+
+export type ActiveBlessingTierPassive = BlessingTierPassive & {
+  progressionSlot: number;
+  tier: number | null;
+  godTier: number | null;
+};
+
+export function activeTierPassives(picks: readonly BlessingPath[]): ActiveBlessingTierPassive[] {
+  const active: ActiveBlessingTierPassive[] = [];
+  for (const record of blessingsData.records) {
+    const pathCountBefore = blessingsData.records.filter(
+      (candidate) =>
+        candidate.godTier === null && candidate.progressionSlot < record.progressionSlot,
+    ).length;
+    const unlocked =
+      record.godTier === null
+        ? picks.length >= pathCountBefore + 1
+        : picks.length >= pathCountBefore;
+    if (!unlocked) continue;
+    for (const passive of record.passives as readonly BlessingTierPassive[]) {
+      active.push({
+        ...passive,
+        progressionSlot: record.progressionSlot,
+        tier: record.tier,
+        godTier: record.godTier,
+      });
+    }
+  }
+  return active;
+}
+
+export type LeagueEntitlement = "wars-wares";
+
+export function activeLeagueEntitlements(
+  picks: readonly BlessingPath[],
+): readonly LeagueEntitlement[] {
+  return activeTierPassives(picks)
+    .flatMap((passive) =>
+      passive.effect.type === "league-entitlement" ? [passive.effect.entitlement] : [],
+    )
+    .filter((id, index, all) => all.indexOf(id) === index);
+}
+
+export function hasLeagueEntitlement(
+  picks: readonly BlessingPath[],
+  entitlement: LeagueEntitlement,
+): boolean {
+  return activeLeagueEntitlements(picks).includes(entitlement);
 }

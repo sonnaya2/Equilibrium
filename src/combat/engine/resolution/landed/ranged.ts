@@ -17,6 +17,8 @@ import type { ResolvedDamage } from "../types";
 import type { ScheduledEvent } from "../../runtime/events";
 import { scheduleEvent, type SimulationRuntime } from "../../runtime/runtime";
 import { gainAdrenaline, patchRanged } from "../../runtime/state";
+import { attachedResolutionComponent, resolveLeagueAttachedRawHost } from "../../../league/damage";
+import { targetAndPostHitModifiers } from "../modifiers";
 
 function mayApplyPuncture(
   rt: SimulationRuntime,
@@ -64,7 +66,44 @@ function schedulePunctureSequence(
         if (p.generation !== generation || tick >= p.expiresAtTick) {
           return { damage: { min: 0, max: 0, expected: 0 } };
         }
-        return { damage: { min: amount, max: amount, expected: amount } };
+        const provenance = { kind: "equipment_proc" as const, detail: "puncture" };
+        const host = resolveLeagueAttachedRawHost({
+          rules: eventRt.input.league,
+          source: provenance,
+          landTick: tick,
+          abilityBase: eventRt.input.base,
+          min: amount,
+          max: amount,
+          level: eventRt.input.level,
+          accuracy: 1,
+          crit: { chance: 0, eligible: false },
+          modifiers: targetAndPostHitModifiers(eventRt),
+          context: {
+            ...(eventRt.input.context ?? { style: "ranged" }),
+            style: "ranged",
+            damageSource: "proc",
+            provenance,
+          },
+          cap: { cap: eventRt.input.cap?.cap ?? 30_000, bypass: true },
+          bonusTargetId: "puncture",
+        });
+        return {
+          damage: {
+            min: host.hit.min,
+            max: host.hit.max,
+            expected: host.hit.expected,
+            critExpected: host.hit.critExpected,
+            capLoss: host.hit.capLoss,
+          },
+          hitDetail: host.hit,
+          ...(host.components.length > 0
+            ? {
+                components: host.components.map((component) =>
+                  attachedResolutionComponent(component),
+                ),
+              }
+            : {}),
+        };
       },
     });
   }

@@ -3,6 +3,7 @@ import { rotationOf } from "../simulation/contracts";
 import { simulate } from "../simulation/simulate";
 import { magicInput } from "../../test/fixtures/inputs";
 import { createCastContext } from "../simulation/context";
+import { resolveLeagueRules } from "../../league/ruleset";
 
 function delayedMagicHit(tickOffset: number) {
   const attack = magicInput.abilities.find((ability) => ability.id === "magic_attack")!;
@@ -134,5 +135,27 @@ describe("Lightning Surge proc event", () => {
     });
     expect(equilibrium.casts.at(-1)!.result.hits[0].critChance).toBe(0);
     expect(equilibrium.events.some((event) => event.family === "proc")).toBe(false);
+  });
+
+  it("weights its separate hit and attached Big Boned host by the source crit chance", () => {
+    const chance = 0.2;
+    const summary = simulate({
+      ...magicInput,
+      crit: { chance },
+      league: resolveLeagueRules(
+        { ruleset: "equilibrium", blessingPicks: ["Balance"] },
+        { maximumLife: 10_000 },
+      ),
+      context: { style: "magic", ruleset: "equilibrium" },
+      rotation: rotationOf(...Array(6).fill("magic_attack"), "instability", "magic_attack"),
+    });
+    const surge = summary.events.find((event) => event.family === "proc")!;
+    const bigBoned = surge.components?.find((component) => component.id === "big-boned");
+
+    expect(surge.expectedActivations).toBe(chance);
+    expect(surge.expectedSeparateHits).toBe(chance);
+    expect(bigBoned?.analysis?.expectedActivations).toBe(chance);
+    expect(bigBoned?.damage.expected).toBeGreaterThan(0);
+    expect(summary.events.some((event) => event.abilityId === "big-boned")).toBe(false);
   });
 });

@@ -76,7 +76,7 @@ Post–9 Mar 2026 rebalance realigned bonuses to tier across armour, rings, amul
 - Activation mode: **`pre-activated-static-loadout`** — set bonuses are a static loadout calculation until mid-rotation gear switching exists.
 - Effects kinds include `critChancePerPiece`, `damageMult`, `damageMultPerPiece` (optional context gates e.g. Tumeken + Sunshine).
 - Set crit bonuses feed `CritLayers.chance`, not the damage modifier pipeline.
-- Piece counting: `equippedSetCounts` from `setId`; special weights (e.g. Visage of the First Necromancer counts 2) live in `SET_PIECE_WEIGHTS`. Cap at set `maxPieces`.
+- Piece counting: `equippedSetCounts` from `setId`; special weights (e.g. Visage of the First Necromancer counts 2) live in `SET_PIECE_WEIGHTS`. Set effects resolve through the shared effective-piece modifier and do not clamp to `maxPieces` unless their own mechanic defines a cap. UI item totals stay physical.
 
 Example of derived active fields on `ActiveEquipmentEffects`:
 

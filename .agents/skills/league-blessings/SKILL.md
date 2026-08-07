@@ -39,21 +39,17 @@ the mechanic and got zero.
 The existing league domain owns:
 
 - paths: Order, Balance, and Chaos;
-- God Tiers at tiers 4 and 8;
+- progression slots 1-8, with path slots 1, 2, 3, 5, 6, 7;
+- public path tiers 1-6 and public God Tiers One and Two at progression slots 4 and 8;
 - ordered path history;
 - God Tier derivation;
 - blessing resets;
 - the generated blessing data shard.
 
-The effective named blessing is derived from tier plus chosen path. Combat code should consume stable derived blessing IDs rather than interpret arbitrary display strings.
-
-Tier 5, tier 6, tier 7, and God Tier Two must exist as explicit empty placeholders with:
-
-```json
-{
-  "revealed": false
-}
-```
+The data record keeps `progressionSlot`, public `tier`, and public `godTier` separate. Path selections
+persist both the progression slot and public path tier. Legacy rows whose `tier` held a progression
+slot are normalized by stable blessing ID; persisted paths and share links must not be renumbered in
+place.
 
 Do not invent names, descriptions, effects, values, or icons for unrevealed tiers.
 
@@ -67,6 +63,22 @@ Author factual changes through the repository's normal JSONL patch workflow. Nev
 | 2     | **Abyssal Cinders** — attacks deal 15% of ability damage as bonus damage; 5% on-hit chance to trigger Inferno of Zamorak for 100-200% ability damage to one target | **Barkscales** — incoming damage is reduced by 10% of armour value; after five reductions, trigger Grasp of Guthix for 80-120% ability damage as poison in a 3×3 area | **Striking Light** — basic attack damage +40%; basic attacks trigger Light of Saradomin on a 9-second cooldown for 40-60% ability damage plus 250% of armour value                                                  |
 | 3     | **Avernic Rampage** — 5% on-attack chance to activate a 7.2-second window where abilities and special attacks cost 0% adrenaline                                   | **Eternal Sustenance** — food is not consumed when eaten; eating no longer drains adrenaline                                                                          | **Steadfast Will** — empowers Bash, Preparation, Reflect, and Revenge                                                                                                                                               |
 | God 1 | **Demon's Mark** — accuracy is always calculated using the target's weakness                                                                                       | **Splash Zone** — AoE and multi-target attacks deal 30% more damage; AoE abilities deal 5% more damage per tile occupied by the target                                | **Sacred Fervor** — ability and special-attack cooldowns are reduced by 30% for all four combat styles                                                                                                              |
+| 4     | **Havoc Born**                                                                                                                                                    | **True Equilibrium**                                                                                                                                                 | **Higher Power**                                                                                                                                                                                                      |
+| 5     | **Unholy Critual**                                                                                                                                                 | **Lord of Light**                                                                                                                                                    | **Tearing Thorns**                                                                                                                                                                                                    |
+| 6     | **Perfidious**                                                                                                                                                     | **Envenomed**                                                                                                                                                        | **Tempered Heart**                                                                                                                                                                                                    |
+| God 2 | **Chaotic Insight**                                                                                                                                                 | **Power Archive**                                                                                                                                                    | **Genesis Essence**                                                                                                                                                                                                   |
+
+### Tier-level progression passives
+
+Tier-level passives are typed data, not card combat records. The current documented passives are:
+
+- God Tier One: choose the Araxxor, Rise of the Six, or Vorago rotation; this is a non-combat progression effect.
+- Tier 4: unlock all War's Wares rewards as the League entitlement `wars-wares`; increase maximum adrenaline by 25%.
+- Tier 5: preserve charges for god books, scriptures, grimoires, and scrimshaws; prevent equipment degradation.
+
+Only Tier 4 maximum adrenaline enters combat totals in this phase. The cap uses one source-aware
+resolver shared by loadout resolution and runtime creation. It stacks with Adrenaline Junkie,
+Vestments, and Heightened Senses; the other passives remain displayed and excluded from combat.
 
 ## Implementation routing
 
@@ -87,7 +99,7 @@ Nothing league-specific goes into a base formula, an unconditional engine branch
 
 Use shared combat or loadout context, not hardcoded blessing-local values.
 
-- Adrenaline Junkie maximum adrenaline.
+- Adrenaline Junkie maximum adrenaline and Tier 4 maximum adrenaline through the shared cap resolver.
 - Big Boned maximum life points.
 - Teragard's Aegis armour contribution to base ability damage.
 - Demon's Mark accuracy or affinity resolution.
@@ -156,7 +168,7 @@ Provisional implementation:
 
 - normal maximum adrenaline becomes 150%;
 - adrenaline generation is multiplied by 1.5;
-- no other known maximum-adrenaline increase currently needs stacking rules.
+- the source-aware cap resolver also accounts for Vestments and Heightened Senses.
 
 The multiplier applies to the ability's **listed** generation only. Flat grants and refunds are added
 after it, so Impatient's sourced +3 stays +3 rather than becoming +4.5, and Jaws of the Abyss, the

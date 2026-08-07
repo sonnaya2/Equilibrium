@@ -88,7 +88,8 @@ function baseLoadout(
       totalArmour: 0,
       maximumLife: 10_000,
       powerburstUntilTick: 0,
-      targetTiles: 1,
+      targetSize: 1,
+      occupiedTiles: 1,
     },
     equipmentIds: ["abyssal_whip"],
     weaponConfiguration: "dualwield",
@@ -223,6 +224,15 @@ describe("fingerprint changes one field at a time", () => {
     await expectDiff("startingAdrenaline", (r) =>
       withSim(r, (s) => ({ ...s, startingAdrenaline: 50 })),
     );
+  });
+
+  it.each([
+    ["naturalInstinctUntilTick", { naturalInstinctUntilTick: 20 }],
+    ["startingResidualSouls", { startingResidualSouls: 3 }],
+    ["slayerOnTask", { slayerOnTask: true }],
+    ["slayerLevel", { slayerLevel: 120 }],
+  ] as const)("%s", async (label, field) => {
+    await expectDiff(label, (r) => withSim(r, (s) => ({ ...s, ...field })));
   });
 
   it("Crackling", async () => {

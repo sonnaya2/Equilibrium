@@ -232,7 +232,7 @@ export function tumekensSunshineCritChance(
   tick: number,
   sourceCast: number,
 ): number {
-  const n = Math.max(0, Math.min(5, Math.floor(pieces)));
+  const n = Math.max(0, Math.floor(pieces));
   return n >= 3 && state.grantedByCast !== sourceCast && sunshineActive(state, tick)
     ? n * 0.015
     : 0;

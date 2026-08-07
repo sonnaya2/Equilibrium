@@ -5,22 +5,22 @@ import { validateBlessingsDocument } from "./blessingSchema";
 import blessingsData from "#shard/league/blessings.json";
 
 describe("stable blessing selection persistence", () => {
-  it("migrates legacy path arrays to tier + blessingId selections", () => {
+  it("migrates legacy path arrays to progression slot + public tier selections", () => {
     const state = normalizeBuild({
       blessingPicks: ["Balance", "Chaos", "Chaos"],
     });
     expect(state.blessingPicks).toEqual(["Balance", "Chaos", "Chaos"]);
     expect(state.blessingSelections).toEqual([
-      { tier: 1, blessingId: "big-boned" },
-      { tier: 2, blessingId: "abyssal-cinders" },
-      { tier: 3, blessingId: "avernic-rampage" },
+      { progressionSlot: 1, tier: 1, blessingId: "big-boned" },
+      { progressionSlot: 2, tier: 2, blessingId: "abyssal-cinders" },
+      { progressionSlot: 3, tier: 3, blessingId: "avernic-rampage" },
     ]);
   });
 
   it("round-trips stable selections without depending on path-array order alone", () => {
     const selections = [
-      { tier: 1, blessingId: "teragards-aegis" as const },
-      { tier: 2, blessingId: "striking-light" as const },
+      { progressionSlot: 1, tier: 1, blessingId: "teragards-aegis" as const },
+      { progressionSlot: 2, tier: 2, blessingId: "striking-light" as const },
     ];
     const state = normalizeBuild({ blessingSelections: selections });
     expect(state.blessingPicks).toEqual(["Order", "Order"]);
@@ -42,7 +42,14 @@ describe("stable blessing selection persistence", () => {
     ];
     const state = normalizeBuild({ blessingSelections: selections });
     expect(state.blessingPicks).toEqual(["Order", "Balance", "Chaos", "Balance", "Order", "Order"]);
-    expect(state.blessingSelections).toEqual(selections);
+    expect(state.blessingSelections).toEqual([
+      { progressionSlot: 1, tier: 1, blessingId: "teragards-aegis" },
+      { progressionSlot: 2, tier: 2, blessingId: "barkscales" },
+      { progressionSlot: 3, tier: 3, blessingId: "avernic-rampage" },
+      { progressionSlot: 5, tier: 4, blessingId: "true-equilibrium" },
+      { progressionSlot: 6, tier: 5, blessingId: "lord-of-light" },
+      { progressionSlot: 7, tier: 6, blessingId: "tempered-heart" },
+    ]);
     expect(activeBlessings(state.blessingPicks).map((choice) => choice.id)).toEqual(
       expect.arrayContaining(["lord-of-light", "tempered-heart"]),
     );
@@ -65,6 +72,14 @@ describe("stable blessing selection persistence", () => {
     expect(state.blessingSelections).toHaveLength(6);
   });
 
+  it("persists the Chaos path that grants Chaotic Insight", () => {
+    const state = normalizeBuild({ blessingPicks: Array(6).fill("Chaos") });
+    expect(state.blessingPicks).toEqual(Array(6).fill("Chaos"));
+    expect(activeBlessings(state.blessingPicks).map((choice) => choice.id)).toContain(
+      "chaotic-insight",
+    );
+  });
+
   it("prunes invalid, duplicate, and tier-mismatched blessing ids", () => {
     const state = normalizeBuild({
       blessingSelections: [
@@ -76,8 +91,8 @@ describe("stable blessing selection persistence", () => {
       ],
     });
     expect(state.blessingSelections).toEqual([
-      { tier: 1, blessingId: "teragards-aegis" },
-      { tier: 2, blessingId: "barkscales" },
+      { progressionSlot: 1, tier: 1, blessingId: "teragards-aegis" },
+      { progressionSlot: 2, tier: 2, blessingId: "barkscales" },
     ]);
     expect(state.blessingPicks).toEqual(["Order", "Balance"]);
   });
@@ -91,7 +106,9 @@ describe("stable blessing selection persistence", () => {
     });
     // Tier 2 gap ends the prefix; tier 3 alone is not contiguous.
     expect(state.blessingPicks).toEqual(["Balance"]);
-    expect(state.blessingSelections).toEqual([{ tier: 1, blessingId: "big-boned" }]);
+    expect(state.blessingSelections).toEqual([
+      { progressionSlot: 1, tier: 1, blessingId: "big-boned" },
+    ]);
   });
 
   it("pickBlessing keeps selections in sync with paths", () => {
@@ -99,8 +116,8 @@ describe("stable blessing selection persistence", () => {
     state = pickBlessing(state, 1, "Order");
     state = pickBlessing(state, 2, "Balance");
     expect(state.blessingSelections).toEqual([
-      { tier: 1, blessingId: "teragards-aegis" },
-      { tier: 2, blessingId: "barkscales" },
+      { progressionSlot: 1, tier: 1, blessingId: "teragards-aegis" },
+      { progressionSlot: 2, tier: 2, blessingId: "barkscales" },
     ]);
   });
 
@@ -120,6 +137,31 @@ describe("stable blessing selection persistence", () => {
 describe("blessing schema validation", () => {
   it("accepts the generated blessings document", () => {
     expect(validateBlessingsDocument(blessingsData)).toEqual([]);
+  });
+
+  it("rejects an untyped tier passive effect", () => {
+    const bad = {
+      ...blessingsData,
+      records: blessingsData.records.map((record, index) =>
+        index === 4
+          ? {
+              ...record,
+              passives: [
+                {
+                  id: "bad-passive",
+                  name: "Bad passive",
+                  description: "Missing a discriminated effect.",
+                  kind: "combat",
+                  effect: { type: "maximum-adrenaline", bonusPercent: "25" },
+                },
+              ],
+            }
+          : record,
+      ),
+    };
+    expect(
+      validateBlessingsDocument(bad).some((issue) => /bonusPercent/i.test(issue.message)),
+    ).toBe(true);
   });
 
   it("fails on duplicate ids, NaN combat values, and inverted bands", () => {

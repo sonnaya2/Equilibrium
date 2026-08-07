@@ -392,9 +392,72 @@ function setRecord(db, operation, source) {
   return [entityId];
 }
 
+function setBlessingChoice(db, operation, source) {
+  const file = "data/league/blessings.json";
+  const matches = db
+    .prepare("SELECT record_path, raw_json FROM source_records WHERE source_file = ?")
+    .all(file)
+    .filter(({ record_path }) => /^\$\.records\[\d+\]$/.test(record_path))
+    .flatMap(({ record_path, raw_json }) => {
+      const record = JSON.parse(raw_json);
+      return (record.choices ?? [])
+        .map((choice, index) => ({ choice, index, record_path }))
+        .filter(({ choice }) => choice?.id === operation.id);
+    });
+  if (matches.length !== 1) {
+    throw new Error(`set-blessing-choice expected one ${operation.id} choice, found ${matches.length}`);
+  }
+  const [{ choice, index, record_path: recordPath }] = matches;
+  if (choice.path !== operation.body.path) {
+    throw new Error(`set-blessing-choice cannot change ${operation.id} path`);
+  }
+  return setRecord(
+    db,
+    {
+      file,
+      path: `${recordPath}.choices[${index}]`,
+      body: operation.body,
+      entity: null,
+    },
+    source,
+  );
+}
+
+function setBlessingTier(db, operation, source) {
+  const file = "data/league/blessings.json";
+  const matches = db
+    .prepare("SELECT record_path, raw_json FROM source_records WHERE source_file = ?")
+    .all(file)
+    .filter(({ record_path }) => /^\$\.records\[\d+\]$/.test(record_path))
+    .filter(({ record_path, raw_json }) => {
+      const record = JSON.parse(raw_json);
+      const index = Number(record_path.match(/\[(\d+)\]$/)?.[1]);
+      return record.progressionSlot === operation.progressionSlot || index + 1 === operation.progressionSlot;
+    });
+  if (matches.length !== 1) {
+    throw new Error(
+      `set-blessing-tier expected one progression slot ${operation.progressionSlot}, found ${matches.length}`,
+    );
+  }
+  const [{ record_path: recordPath, raw_json: rawJson }] = matches;
+  const record = JSON.parse(rawJson);
+  return setRecord(
+    db,
+    {
+      file,
+      path: recordPath,
+      body: { ...record, ...operation.body },
+      entity: null,
+    },
+    source,
+  );
+}
+
 export const HANDLERS = new Map([
   ["upsert", upsertEntity],
   ["set-record", setRecord],
+  ["set-blessing-choice", setBlessingChoice],
+  ["set-blessing-tier", setBlessingTier],
   ["upsert-source", upsertSource],
   ["link-region", regionLink],
   ["unlink-region", regionLink],

@@ -3,7 +3,11 @@ import { createCastContext } from "../engine/simulation/simulate";
 import { MELEE_ABILITIES } from "../styles/melee/abilities";
 import { IMPATIENT_EXTRA_ADRENALINE } from "../shared/perks";
 import { baseInput } from "../test/fixtures/inputs";
-import { blessingAdrenalineGenerationMultiplier, resolveLeagueRules } from "./ruleset";
+import {
+  blessingAdrenalineGenerationMultiplier,
+  resolveLeagueRules,
+  resolveMaximumAdrenaline,
+} from "./ruleset";
 
 /**
  * Adrenaline Junkie multiplies ability generation after Invigorating.
@@ -121,5 +125,28 @@ describe("Adrenaline Junkie generation", () => {
     });
     expect(context.performCast(attack, 0, false, { "avernic-rampage": false }).ok).toBe(true);
     expect(context.getState().adrenaline).toBe(150);
+  });
+});
+
+describe("source-aware maximum adrenaline", () => {
+  it("stacks Adrenaline Junkie, Tier 4, Vestments, and Heightened Senses", () => {
+    const tierFour = resolveLeagueRules({
+      ruleset: "equilibrium",
+      blessingPicks: ["Chaos", "Order", "Order", "Order"],
+    });
+    const tierFourOnly = resolveLeagueRules({
+      ruleset: "equilibrium",
+      blessingPicks: ["Order", "Order", "Order", "Order"],
+    });
+
+    expect(resolveMaximumAdrenaline(100, tierFourOnly).cap).toBe(125);
+    const allSources = resolveMaximumAdrenaline(120, tierFour, 10);
+    expect(allSources.cap).toBe(205);
+    expect(allSources.sources.map((source) => source.id)).toEqual([
+      "vestments-of-havoc",
+      "adrenaline-junkie",
+      "tier-four-maximum-adrenaline",
+      "heightened-senses",
+    ]);
   });
 });

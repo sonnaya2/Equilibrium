@@ -5,7 +5,13 @@ import {
   type AbilityResult,
   type AbilitySpec,
 } from "../pipeline/calculateAbility";
-import { calculateHit, calculateRawHitBand, type HitResult } from "../pipeline/calculateHit";
+import {
+  calculateHitWithAttached,
+  calculateRawHitBandWithAttached,
+  type HitInput,
+  type HitResult,
+  type RawHitBandInput,
+} from "../pipeline/calculateHit";
 import type { CombatContext, CombatModifier } from "../types";
 import {
   netAdrenalineDeltaFromTransaction,
@@ -13,13 +19,18 @@ import {
 } from "../shared/adrenalineTransaction";
 import {
   capabilitiesOf,
+  outgoingSourceOf,
   provenanceFromLegacy,
   type DamageProvenance,
 } from "../shared/damageProvenance";
 import { COMMAND_REQUIRES_CONJURE } from "../styles/necromancy/conjures";
 import { blessingRule, resolveMaximumLife, type ResolvedLeagueRules } from "./ruleset";
 import type { BlessingId } from "../../league/blessings";
-import { packageCritical, type ResolvedDamage } from "../engine/resolution/types";
+import {
+  packageCritical,
+  type AttachedDamageComponent,
+  type ResolvedDamage,
+} from "../engine/resolution/types";
 import { isBasicAttack } from "../shared/adrenalineGain";
 import { mulFloor } from "../core/rounding";
 import type { StatefulOccurrenceModel } from "../engine/runtime/events";
@@ -46,6 +57,7 @@ export interface LeagueDamageComponent {
   occurrenceModel?: StatefulOccurrenceModel;
   damage: ResolvedDamage;
   hitDetail?: HitResult;
+  components?: readonly AttachedDamageComponent[];
 }
 
 /**
@@ -68,7 +80,7 @@ export type BlessingDamageSource =
 export interface BlessingHitEligibility {
   /** Big Boned 5% max-life attached rider (not a unique hit). */
   rider: boolean;
-  /** Cinders rider and Inferno roll; direct player attack hits qualify. */
+  /** Cinders rider and Inferno roll; direct player attacks and direct derived bounces qualify. */
   cinders: boolean;
   /** Direct on-hit effects such as Light of Saradomin. */
   onHit: boolean;
@@ -79,14 +91,6 @@ const NO_BLESSING_DAMAGE: BlessingHitEligibility = {
   cinders: false,
   onHit: false,
 };
-
-/**
- * Separate blessing hits that host Big Boned without re-opening Cinders.
- */
-export const SEPARATE_BLESSING_RIDER_HOSTS: ReadonlySet<string> = new Set([
-  "light-of-saradomin",
-  "inferno-of-zamorak",
-]);
 
 /**
  * Blessing eligibility from DamageCapabilities.
@@ -105,9 +109,7 @@ export function blessingHitEligibility(
   }
   const caps = capabilitiesOf(p);
   return {
-    rider:
-      caps.blessingRider ||
-      (p.kind === "blessing" && p.detail != null && SEPARATE_BLESSING_RIDER_HOSTS.has(p.detail)),
+    rider: caps.blessingRider,
     cinders: caps.cindersOnHit,
     onHit: caps.blessingOnHit,
   };
@@ -132,6 +134,7 @@ export interface LeagueDamageInput {
   modifiers: readonly CombatModifier[];
   context: CombatContext;
   cap?: HitCapRule;
+  preciseRank?: number;
   strikingLightReady?: boolean;
   lordOfLightReady?: boolean;
 }
@@ -205,6 +208,180 @@ function weightedDamage(
   };
 }
 
+export interface LeagueAttachedHostInput extends HitInput {
+  rules?: ResolvedLeagueRules;
+  source: BlessingDamageSource | DamageProvenance;
+  context: CombatContext;
+  attached?: boolean;
+  landTick?: number;
+  bonusTargetId?: string;
+}
+
+export interface LeagueAttachedHostResult {
+  hit: HitResult;
+  baseHit: HitResult;
+  components: readonly LeagueDamageComponent[];
+}
+
+type LeagueAttachedTerm = {
+  id: "big-boned" | "abyssal-cinders";
+  blessingId: "big-boned" | "abyssal-cinders";
+  amount: number;
+};
+
+function leagueAttachedTerms(input: {
+  rules: ResolvedLeagueRules;
+  source: BlessingDamageSource | DamageProvenance;
+  attached?: boolean;
+  landTick?: number;
+  abilityBase: number;
+}): LeagueAttachedTerm[] {
+  const provenance =
+    typeof input.source === "string"
+      ? provenanceFromLegacy({ damageSource: input.source })
+      : input.source;
+  const eligible = blessingHitEligibility(provenance, input.attached === true);
+  const terms: LeagueAttachedTerm[] = [];
+  const bigBoned = blessingRule(input.rules, "big-boned");
+  if (eligible.rider && bigBoned?.maxLifeDamagePercent !== undefined) {
+    terms.push({
+      id: "big-boned",
+      blessingId: "big-boned",
+      amount: Math.floor(
+        resolveMaximumLife(input.rules, input.landTick ?? 0) * bigBoned.maxLifeDamagePercent,
+      ),
+    });
+  }
+  const cinders = blessingRule(input.rules, "abyssal-cinders");
+  if (eligible.cinders && cinders?.perHitAbilityDamagePercent !== undefined) {
+    terms.push({
+      id: "abyssal-cinders",
+      blessingId: "abyssal-cinders",
+      amount: Math.floor(input.abilityBase * cinders.perHitAbilityDamagePercent),
+    });
+  }
+  return terms;
+}
+
+function leagueAttachedComponents(
+  deltas: readonly { id: string; hit: HitResult }[],
+  terms: readonly LeagueAttachedTerm[],
+  bonusTargetId?: string,
+): LeagueDamageComponent[] {
+  return deltas.map((delta, index) => {
+    const term = terms[index]!;
+    return {
+      effectId: term.id,
+      blessingId: term.blessingId,
+      attached: true,
+      damageTag: "bonus-damage",
+      ...(bonusTargetId ? { bonusTargetId } : {}),
+      expectedOccurrences: 1,
+      expectedTriggerRolls: 0,
+      expectedActivations: 1,
+      expectedSeparateHits: 0,
+      damage: damageOf(delta.hit),
+      hitDetail: delta.hit,
+    };
+  });
+}
+
+/** Resolve Big Boned and Cinders inside the host hit's own pipeline and cap. */
+export function resolveLeagueAttachedHost(
+  input: LeagueAttachedHostInput,
+): LeagueAttachedHostResult {
+  const provenance =
+    typeof input.source === "string"
+      ? provenanceFromLegacy({ damageSource: input.source })
+      : input.source;
+  const context = {
+    ...input.context,
+    damageSource: outgoingSourceOf(provenance),
+    provenance,
+  };
+  if (!input.rules) {
+    const composed = calculateHitWithAttached({ ...input, provenance, context }, []);
+    return {
+      hit: composed.hit,
+      baseHit: composed.baseHit,
+      components: [],
+    };
+  }
+  const terms = leagueAttachedTerms({ ...input, rules: input.rules, abilityBase: input.base });
+  const composed = calculateHitWithAttached(
+    { ...input, provenance, context },
+    terms.map(({ id, amount }) => ({ id, amount })),
+  );
+  const components = leagueAttachedComponents(composed.attached, terms, input.bonusTargetId);
+  return { hit: composed.hit, baseHit: composed.baseHit, components };
+}
+
+export interface LeagueAttachedRawHostInput extends RawHitBandInput {
+  rules?: ResolvedLeagueRules;
+  source: BlessingDamageSource | DamageProvenance;
+  context: CombatContext;
+  abilityBase: number;
+  attached?: boolean;
+  landTick?: number;
+  bonusTargetId?: string;
+}
+
+export function resolveLeagueAttachedRawHost(
+  input: LeagueAttachedRawHostInput,
+): LeagueAttachedHostResult {
+  const provenance =
+    typeof input.source === "string"
+      ? provenanceFromLegacy({ damageSource: input.source })
+      : input.source;
+  const context = {
+    ...input.context,
+    damageSource: outgoingSourceOf(provenance),
+    provenance,
+  };
+  if (!input.rules) {
+    const composed = calculateRawHitBandWithAttached({ ...input, provenance, context }, []);
+    return {
+      hit: composed.hit,
+      baseHit: composed.baseHit,
+      components: [],
+    };
+  }
+  const terms = leagueAttachedTerms({ ...input, rules: input.rules });
+  const composed = calculateRawHitBandWithAttached(
+    { ...input, provenance, context },
+    terms.map(({ id, amount }) => ({ id, amount })),
+  );
+  return {
+    hit: composed.hit,
+    baseHit: composed.baseHit,
+    components: leagueAttachedComponents(composed.attached, terms, input.bonusTargetId),
+  };
+}
+
+export function attachedResolutionComponent(
+  component: LeagueDamageComponent,
+  expectedActivations = component.expectedActivations,
+  minActivations = expectedActivations,
+  maxActivations = expectedActivations,
+): AttachedDamageComponent {
+  const damage = component.hitDetail
+    ? weightedDamage(component.hitDetail, expectedActivations, minActivations, maxActivations, true)
+    : component.damage;
+  return {
+    id: component.effectId,
+    damage,
+    ...(component.hitDetail ? { hitDetail: component.hitDetail } : {}),
+    attached: true,
+    hitCapPolicy: "shared",
+    analysis: {
+      kind: "league-blessing",
+      blessingId: component.blessingId,
+      ...(component.bonusTargetId ? { bonusTargetId: component.bonusTargetId } : {}),
+      expectedActivations,
+    },
+  };
+}
+
 /** Damage generated by one original hit; returned as explicit analysis/event components. */
 export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageComponent[] {
   if (input.rules.ruleset !== "equilibrium") return [];
@@ -213,12 +390,11 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
   const targetModifiers = input.modifiers.filter(
     (modifier) => modifier.stage === "target" || modifier.stage === "postHit",
   );
-  // Provenance kind "blessing" is canonical for recursion gates; ruleset uses resolveCombatProvenance.
   const blessingProv = (detail: string): DamageProvenance => ({
     kind: "blessing",
     detail,
   });
-  const shared = {
+  const separateShared = {
     level: input.level,
     accuracy: input.accuracy,
     modifiers: targetModifiers,
@@ -229,7 +405,6 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
     },
     cap: input.cap,
   };
-  const noCrit: CritLayers = { chance: 0, eligible: false };
   const components: LeagueDamageComponent[] = [];
 
   const cinders = blessingRule(input.rules, "abyssal-cinders");
@@ -237,10 +412,6 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
   if (infernoChance < 0 || infernoChance > 1) {
     throw new RangeError(`Abyssal Cinders chance ${infernoChance} must be in [0, 1]`);
   }
-  const infernoActivations = infernoChance;
-  const cindersRiderActivations =
-    eligible.cinders && cinders?.perHitAbilityDamagePercent !== undefined ? 1 : 0;
-
   const parentProvenance =
     typeof input.source === "string"
       ? provenanceFromLegacy({ damageSource: input.source })
@@ -253,87 +424,49 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
   };
   const infernoCrit: CritLayers = { ...input.crit, eligible: true };
 
-  // Split by parent so menu attribution and inherited crit state stay exact.
-  const bigBoned = blessingRule(input.rules, "big-boned");
-  const bigBonedPercent = bigBoned?.maxLifeDamagePercent;
-  const rootBigBonedActivations = eligible.rider ? 1 : 0;
-  if (bigBonedPercent !== undefined) {
-    const pushBigBoned = (
-      activations: number,
-      minActivations: number,
-      maxActivations: number,
-      crit: CritLayers,
-      bonusTargetId?: string,
-    ) => {
-      if (activations <= 0) return;
-      const prov = blessingProv("big-boned");
-      const hit = calculateHit({
-        ...shared,
-        provenance: prov,
-        context: { ...shared.context, provenance: prov },
-        base: resolveMaximumLife(input.rules, input.landTick ?? 0),
-        band: {
-          minPct: bigBonedPercent * 100,
-          maxPct: bigBonedPercent * 100,
-        },
-        crit,
-      });
-      components.push({
-        effectId: "big-boned",
-        blessingId: "big-boned",
-        attached: true,
-        damageTag: "bonus-damage",
-        ...(bonusTargetId ? { bonusTargetId } : {}),
-        expectedOccurrences: activations,
-        expectedTriggerRolls: 0,
-        expectedActivations: activations,
-        expectedSeparateHits: 0,
-        damage: weightedDamage(hit, activations, minActivations, maxActivations, true),
-        hitDetail: hit,
-      });
-    };
-
-    pushBigBoned(
-      rootBigBonedActivations,
-      rootBigBonedActivations,
-      rootBigBonedActivations,
-      parentCrit,
-    );
-  }
-
-  // Cinders is attached to the root attack hit; it is not a new hit.
-  if (eligible.cinders && cinders?.perHitAbilityDamagePercent !== undefined) {
-    const prov = blessingProv("abyssal-cinders");
-    const hit = calculateHit({
-      ...shared,
-      provenance: prov,
-      context: { ...shared.context, provenance: prov },
+  const hitSpec = input.ability.hits[input.hitIndex];
+  if (hitSpec && (eligible.rider || eligible.cinders)) {
+    const attachedHost = resolveLeagueAttachedHost({
+      rules: input.rules,
+      source: parentProvenance,
+      attached: input.attached,
+      landTick: input.landTick,
       base: input.base,
-      band: {
-        minPct: cinders.perHitAbilityDamagePercent * 100,
-        maxPct: cinders.perHitAbilityDamagePercent * 100,
-      },
-      crit: noCrit,
+      band: hitSpec.band,
+      level: input.level,
+      accuracy: input.accuracy,
+      crit: parentCrit,
+      modifiers: [...input.modifiers],
+      context: input.context,
+      cap: input.cap,
+      preciseRank: input.preciseRank,
     });
-    components.push({
-      effectId: "abyssal-cinders",
-      blessingId: "abyssal-cinders",
-      attached: true,
-      damageTag: "bonus-damage",
-      expectedOccurrences: cindersRiderActivations,
-      expectedTriggerRolls: 0,
-      expectedActivations: cindersRiderActivations,
-      expectedSeparateHits: 0,
-      damage: weightedDamage(hit, cindersRiderActivations, 1, 1),
-      hitDetail: hit,
+    components.push(...attachedHost.components);
+  } else if (eligible.rider || eligible.cinders) {
+    const attachedHost = resolveLeagueAttachedRawHost({
+      rules: input.rules,
+      source: parentProvenance,
+      attached: input.attached,
+      landTick: input.landTick,
+      abilityBase: input.base,
+      min: 0,
+      max: 0,
+      level: input.level,
+      accuracy: input.accuracy,
+      crit: parentCrit,
+      modifiers: [...input.modifiers],
+      context: input.context,
+      cap: input.cap,
     });
+    components.push(...attachedHost.components);
   }
   if (eligible.cinders && cinders?.inferno) {
     const prov = blessingProv("inferno-of-zamorak");
-    const hit = calculateHit({
-      ...shared,
-      provenance: prov,
-      context: { ...shared.context, provenance: prov },
+    const inferno = resolveLeagueAttachedHost({
+      ...separateShared,
+      rules: input.rules,
+      source: prov,
+      bonusTargetId: "inferno-of-zamorak",
       base: input.base,
       band: {
         minPct: cinders.inferno.abilityDamageBand[0],
@@ -345,15 +478,19 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
       effectId: "inferno-of-zamorak",
       blessingId: "abyssal-cinders",
       attached: false,
-      expectedOccurrences: infernoActivations,
+      expectedOccurrences: infernoChance,
       expectedTriggerRolls: 1,
-      expectedActivations: infernoActivations,
-      expectedSeparateHits: infernoActivations,
+      expectedActivations: infernoChance,
+      expectedSeparateHits: infernoChance,
       occurrenceModel: {
         kind: "bernoulli",
         probability: infernoChance,
       },
-      damage: weightedDamage(hit, infernoActivations, 0, 1),
+      damage: weightedDamage(inferno.hit, infernoChance, 0, 1),
+      hitDetail: inferno.hit,
+      components: inferno.components.map((component) =>
+        attachedResolutionComponent(component, infernoChance, 0, 1),
+      ),
     });
   }
 
@@ -361,6 +498,9 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
   const lordLight = blessingRule(input.rules, "lord-of-light")?.light;
   if (eligible.onHit && isBasicAttack(input.ability)) {
     const prayerMultiplier = 1 + input.rules.prayerBonus * (lordLight?.prayerDamagePerBonus ?? 0);
+    const prayerSource = input.rules.blessings.find(
+      (choice) => choice.id === "lord-of-light",
+    )?.source;
     const pushLights = (
       light: NonNullable<typeof strikingLight>,
       blessingId: "striking-light" | "lord-of-light",
@@ -370,13 +510,27 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
       const rawMin = Math.floor(input.base * (light.abilityDamageBand[0] / 100)) + armour;
       const rawMax = Math.floor(input.base * (light.abilityDamageBand[1] / 100)) + armour;
       const prov = blessingProv("light-of-saradomin");
-      const hit = calculateRawHitBand({
-        ...shared,
-        provenance: prov,
-        context: { ...shared.context, provenance: prov },
-        min: mulFloor(rawMin, prayerMultiplier),
-        max: mulFloor(rawMax, prayerMultiplier),
+      const prayerModifier: CombatModifier | null =
+        prayerMultiplier === 1 || !prayerSource
+          ? null
+          : {
+              id: "blessing:lord-of-light-prayer",
+              stage: "ability",
+              priority: 0,
+              applies: () => true,
+              apply: (state) => ({ ...state, damage: mulFloor(state.damage, prayerMultiplier) }),
+              source: prayerSource,
+            };
+      const resolved = resolveLeagueAttachedRawHost({
+        ...separateShared,
+        rules: input.rules,
+        source: prov,
+        abilityBase: input.base,
+        bonusTargetId: "light-of-saradomin",
+        min: rawMin,
+        max: rawMax,
         crit: { ...input.crit, eligible: true },
+        modifiers: prayerModifier ? [prayerModifier, ...targetModifiers] : targetModifiers,
       });
       for (let i = 0; i < count; i++) {
         components.push({
@@ -387,8 +541,11 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
           expectedTriggerRolls: 0,
           expectedActivations: 1,
           expectedSeparateHits: 1,
-          damage: damageOf(hit),
-          hitDetail: hit,
+          damage: damageOf(resolved.hit),
+          hitDetail: resolved.hit,
+          components: resolved.components.map((component) =>
+            attachedResolutionComponent(component),
+          ),
         });
       }
     };
@@ -411,7 +568,7 @@ export interface GraspOfGuthixInput {
   rules: ResolvedLeagueRules;
   /** Grasp triggers over the measured window, from the Barkscales scenario. */
   triggers: number;
-  /** Tiles of the 3x3 holding a target; 0 when the target is poison-immune. */
+  /** Distinct targets struck in the 3x3; 0 when no target can be poisoned. */
   targetsStruck: number;
   base: number;
   level: number;
@@ -431,7 +588,10 @@ export function graspOfGuthixComponent(
   if (!barkscales || input.triggers <= 0 || input.targetsStruck <= 0) return undefined;
   const applications = input.triggers * input.targetsStruck;
   const provenance: DamageProvenance = { kind: "blessing", detail: "grasp-of-guthix" };
-  const hit = calculateHit({
+  const resolved = resolveLeagueAttachedHost({
+    rules: input.rules,
+    source: provenance,
+    bonusTargetId: "grasp-of-guthix",
     base: input.base,
     band: {
       minPct: barkscales.graspAbilityDamageBand[0],
@@ -452,7 +612,6 @@ export function graspOfGuthixComponent(
     },
     cap: input.cap,
   });
-  const damage = damageOf(hit);
   return {
     effectId: "grasp-of-guthix",
     blessingId: "barkscales",
@@ -461,14 +620,11 @@ export function graspOfGuthixComponent(
     expectedTriggerRolls: 0,
     expectedActivations: applications,
     expectedSeparateHits: applications,
-    damage: {
-      ...damage,
-      min: damage.min * applications,
-      max: damage.max * applications,
-      expected: damage.expected * applications,
-      capLoss: (damage.capLoss ?? 0) * applications,
-    },
-    hitDetail: hit,
+    damage: weightedDamage(resolved.hit, applications, applications, applications),
+    hitDetail: resolved.hit,
+    components: resolved.components.map((component) =>
+      attachedResolutionComponent(component, applications, applications, applications),
+    ),
   };
 }
 
@@ -490,6 +646,7 @@ export function calculateLeagueAbility(
       : isCommand
         ? { kind: "conjure_command" }
         : { kind: "player_direct" };
+    const crit = input.critByHit?.[hitIndex] ?? input.crit;
     const sharedInput = {
       rules,
       ability,
@@ -497,7 +654,8 @@ export function calculateLeagueAbility(
       base: input.base,
       level: input.level,
       accuracy: input.accuracy,
-      crit: input.crit,
+      crit,
+      parentCrit: { ...crit, eligible: hit.critEligible ?? true },
       modifiers: input.modifiers ?? [],
       context: {
         ...input.context,
@@ -509,6 +667,7 @@ export function calculateLeagueAbility(
         provenance,
       },
       cap: input.cap,
+      preciseRank: input.preciseRank,
     };
     const components = leagueDamageComponents({
       ...sharedInput,
@@ -522,22 +681,7 @@ export function calculateLeagueAbility(
     if (components.some((component) => component.blessingId === "lord-of-light")) {
       lordOfLightAvailable = false;
     }
-    // Mirror land-time: separate blessing hits can host Big Boned, never Cinders.
-    const ridersOnSeparate: LeagueDamageComponent[] = [];
-    for (const component of components) {
-      if (component.attached || !SEPARATE_BLESSING_RIDER_HOSTS.has(component.effectId)) {
-        continue;
-      }
-      const nested = leagueDamageComponents({
-        ...sharedInput,
-        source: { kind: "blessing", detail: component.effectId },
-        attached: false,
-        strikingLightReady: false,
-        lordOfLightReady: false,
-      });
-      ridersOnSeparate.push(...nested);
-    }
-    return [...components, ...ridersOnSeparate];
+    return components;
   });
   return {
     ...ordinary,

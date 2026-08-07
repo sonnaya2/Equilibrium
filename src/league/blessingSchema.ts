@@ -14,14 +14,52 @@ export type BlessingsDocument = {
 };
 
 export type BlessingTierRecord = {
-  tier: number;
+  progressionSlot: number;
+  tier: number | null;
   revealed: boolean;
-  godTier: boolean;
+  godTier: number | null;
   paths: readonly string[];
+  passives: readonly BlessingTierPassive[];
   choices: readonly BlessingChoiceRecord[];
   source: SourceRefShape;
   verified?: boolean;
 };
+
+export type BlessingTierPassive =
+  | {
+      id: string;
+      name: string;
+      description: string;
+      kind: "combat";
+      effect: { type: "maximum-adrenaline"; bonusPercent: number };
+    }
+  | {
+      id: string;
+      name: string;
+      description: string;
+      kind: "entitlement";
+      effect: {
+        type: "league-entitlement";
+        entitlement: "wars-wares";
+        availability: "league-blessing";
+      };
+    }
+  | {
+      id: string;
+      name: string;
+      description: string;
+      kind: "progression";
+      effect: { type: "rotation-selection"; encounters: readonly string[] };
+    }
+  | {
+      id: string;
+      name: string;
+      description: string;
+      kind: "utility";
+      effect:
+        | { type: "charge-preservation"; itemGroups: readonly string[] }
+        | { type: "degradation-immunity" };
+    };
 
 export type BlessingChoiceRecord = {
   id: string;
@@ -47,6 +85,7 @@ export type SourceRefShape = {
 };
 
 export type NormalizedBlessingSelection = {
+  progressionSlot: number;
   tier: number;
   blessingId: string;
   path?: string;
@@ -116,23 +155,97 @@ function assertChoice(value: unknown, scope: string): BlessingChoiceRecord {
   };
 }
 
+function assertPassive(value: unknown, scope: string): BlessingTierPassive {
+  if (!isRecord(value)) fail(`${scope} not an object`);
+  const id = value.id;
+  const name = value.name;
+  const description = value.description;
+  const kind = value.kind;
+  const effect = value.effect;
+  if (typeof id !== "string" || id.length === 0) fail(`${scope}.id`);
+  if (typeof name !== "string" || name.length === 0) fail(`${scope}.name`);
+  if (typeof description !== "string" || description.length === 0) fail(`${scope}.description`);
+  if (typeof kind !== "string" || !isRecord(effect) || typeof effect.type !== "string") {
+    fail(`${scope}.effect`);
+  }
+  if (kind === "combat" && effect.type === "maximum-adrenaline") {
+    if (typeof effect.bonusPercent !== "number" || !Number.isFinite(effect.bonusPercent)) {
+      fail(`${scope}.effect.bonusPercent`);
+    }
+    return { id, name, description, kind, effect } as BlessingTierPassive;
+  }
+  if (kind === "entitlement" && effect.type === "league-entitlement") {
+    if (effect.entitlement !== "wars-wares" || effect.availability !== "league-blessing") {
+      fail(`${scope}.effect`);
+    }
+    return { id, name, description, kind, effect } as BlessingTierPassive;
+  }
+  if (kind === "progression" && effect.type === "rotation-selection") {
+    if (
+      !Array.isArray(effect.encounters) ||
+      effect.encounters.length === 0 ||
+      effect.encounters.some((encounter) => typeof encounter !== "string" || encounter.length === 0)
+    ) {
+      fail(`${scope}.effect.encounters`);
+    }
+    return { id, name, description, kind, effect } as BlessingTierPassive;
+  }
+  if (kind === "utility" && effect.type === "degradation-immunity") {
+    return { id, name, description, kind, effect } as BlessingTierPassive;
+  }
+  if (kind === "utility" && effect.type === "charge-preservation") {
+    if (
+      !Array.isArray(effect.itemGroups) ||
+      effect.itemGroups.length === 0 ||
+      effect.itemGroups.some((group) => typeof group !== "string" || group.length === 0)
+    ) {
+      fail(`${scope}.effect.itemGroups`);
+    }
+    return { id, name, description, kind, effect } as BlessingTierPassive;
+  }
+  fail(`${scope}.kind and effect.type`);
+}
+
 function assertRecord(value: unknown, index: number): BlessingTierRecord {
   const scope = `records[${index}]`;
   if (!isRecord(value)) fail(`${scope} not an object`);
+  const progressionSlot = value.progressionSlot;
   const tier = value.tier;
-  if (typeof tier !== "number" || !Number.isFinite(tier)) fail(`${scope}.tier`);
+  const godTier = value.godTier;
+  if (
+    typeof progressionSlot !== "number" ||
+    !Number.isInteger(progressionSlot) ||
+    progressionSlot < 1
+  ) {
+    fail(`${scope}.progressionSlot`);
+  }
+  if (tier !== null && (typeof tier !== "number" || !Number.isFinite(tier))) {
+    fail(`${scope}.tier`);
+  }
   if (typeof value.revealed !== "boolean") fail(`${scope}.revealed`);
-  if (typeof value.godTier !== "boolean") fail(`${scope}.godTier`);
+  if (
+    godTier !== null &&
+    (typeof godTier !== "number" || !Number.isInteger(godTier) || godTier < 1)
+  ) {
+    fail(`${scope}.godTier`);
+  }
+  if ((tier === null) === (godTier === null)) fail(`${scope} must have tier or godTier, not both`);
   const paths = Array.isArray(value.paths)
     ? value.paths.filter((item): item is string => typeof item === "string")
     : fail(`${scope}.paths`);
+  const passivesRaw = Array.isArray(value.passives) ? value.passives : fail(`${scope}.passives`);
+  const passives = passivesRaw.map((passive, i) =>
+    assertPassive(passive, `${scope}.passives[${i}]`),
+  );
   const choicesRaw = Array.isArray(value.choices) ? value.choices : fail(`${scope}.choices`);
   const choices = choicesRaw.map((choice, i) => assertChoice(choice, `${scope}.choices[${i}]`));
   return {
+    progressionSlot,
     tier,
     revealed: value.revealed,
-    godTier: value.godTier,
+    godTier,
     paths,
+    passives,
     choices,
     source: assertSource(value.source, scope),
     verified: value.verified === true,
@@ -152,8 +265,23 @@ export function assertBlessingsDocument(value: unknown): asserts value is Blessi
     fail("resetCount");
   }
   if (!Array.isArray(value.records)) fail("records");
-  // Walk every record so a corrupt choice fails at module load, not mid-pick.
-  for (let i = 0; i < value.records.length; i++) assertRecord(value.records[i], i);
+  const records = value.records.map((record, i) => assertRecord(record, i));
+  const progressionSlots = new Set<number>();
+  const pathTiers = new Set<number>();
+  const godTiers = new Set<number>();
+  for (const record of records) {
+    if (progressionSlots.has(record.progressionSlot))
+      fail(`duplicate progressionSlot ${record.progressionSlot}`);
+    progressionSlots.add(record.progressionSlot);
+    if (record.tier !== null) {
+      if (pathTiers.has(record.tier)) fail(`duplicate path tier ${record.tier}`);
+      pathTiers.add(record.tier);
+    }
+    if (record.godTier !== null) {
+      if (godTiers.has(record.godTier)) fail(`duplicate god tier ${record.godTier}`);
+      godTiers.add(record.godTier);
+    }
+  }
 }
 
 /** Stable ids in document order (tier, then choice order). */
@@ -163,27 +291,43 @@ export function collectBlessingIds(doc: BlessingsDocument): string[] {
 
 /**
  * Normalize persisted blessing selections.
- * Accepts legacy path arrays or stable { tier, blessingId } / { tier, id } rows.
+ * Accepts legacy path arrays or stable rows from either persistence schema.
  */
 export function normalizeBlessingSelections(
   raw: unknown,
   resolve: {
     pathTiers: readonly number[];
-    choiceAt: (tier: number, path: string) => { id: string; path: string } | undefined;
-    choiceById: (id: string) => { id: string; path: string; tier: number } | undefined;
+    choiceAt: (
+      tier: number,
+      path: string,
+    ) => { id: string; path: string; progressionSlot: number; tier: number } | undefined;
+    choiceById: (
+      id: string,
+    ) => { id: string; path: string; progressionSlot: number; tier: number } | undefined;
     isPath: (value: unknown) => value is string;
   },
 ): { selections: NormalizedBlessingSelection[]; paths: string[] } {
   const selections: NormalizedBlessingSelection[] = [];
   const usedIds = new Set<string>();
-  const usedTiers = new Set<number>();
-  const push = (tier: number, blessingId: string): void => {
-    if (usedTiers.has(tier) || usedIds.has(blessingId)) return;
+  const usedProgressionSlots = new Set<number>();
+  const push = (rawTier: number, blessingId: string): void => {
+    if (usedIds.has(blessingId)) return;
     const choice = resolve.choiceById(blessingId);
-    if (!choice || choice.tier !== tier) return;
-    usedTiers.add(tier);
+    if (
+      !choice ||
+      (choice.progressionSlot !== rawTier && choice.tier !== rawTier) ||
+      usedProgressionSlots.has(choice.progressionSlot)
+    ) {
+      return;
+    }
+    usedProgressionSlots.add(choice.progressionSlot);
     usedIds.add(blessingId);
-    selections.push({ tier, blessingId, path: choice.path });
+    selections.push({
+      progressionSlot: choice.progressionSlot,
+      tier: choice.tier,
+      blessingId,
+      path: choice.path,
+    });
   };
   if (Array.isArray(raw)) {
     const looksLikeSelections =
@@ -194,8 +338,19 @@ export function normalizeBlessingSelections(
     if (looksLikeSelections) {
       for (const entry of raw) {
         if (entry == null || typeof entry !== "object") continue;
-        const row = entry as { tier?: unknown; blessingId?: unknown; id?: unknown };
-        if (typeof row.tier !== "number" || !Number.isFinite(row.tier)) continue;
+        const row = entry as {
+          tier?: unknown;
+          progressionSlot?: unknown;
+          blessingId?: unknown;
+          id?: unknown;
+        };
+        const rawIdentity =
+          typeof row.progressionSlot === "number" && Number.isFinite(row.progressionSlot)
+            ? row.progressionSlot
+            : typeof row.tier === "number" && Number.isFinite(row.tier)
+              ? row.tier
+              : null;
+        if (rawIdentity === null) continue;
         const id =
           typeof row.blessingId === "string"
             ? row.blessingId
@@ -203,7 +358,7 @@ export function normalizeBlessingSelections(
               ? row.id
               : null;
         if (!id) continue;
-        push(Math.trunc(row.tier), id);
+        push(Math.trunc(rawIdentity), id);
       }
     } else {
       const paths = raw.filter(resolve.isPath).slice(0, resolve.pathTiers.length);

@@ -21,6 +21,7 @@ function strikingPlate(overrides: Partial<BlessingChoice["combat"]> = {}): Bless
     id: "striking-light",
     name: "Striking Light",
     path: "Order",
+    progressionSlot: 2,
     tier: 2,
     effects: [],
     verified: true,

@@ -28,6 +28,9 @@ export function recordEventAccounting(
   resolution: EventResolution,
 ): void {
   const { damage, hitDetail } = resolution;
+  const blessingComponents = (resolution.components ?? []).filter(
+    (component) => component.analysis?.kind === "league-blessing",
+  );
   if (hitDetail && shouldRetainHitDetail(rt, event)) {
     rt.hitDetails.set(event.seq, hitDetail);
   }
@@ -52,7 +55,15 @@ export function recordEventAccounting(
   if (expectedHeal > 0) rt.totalHealed += expectedHeal;
 
   if (keepsPerAbilityMap(rt.detailLevel)) {
-    rt.perAbility[event.abilityId] = (rt.perAbility[event.abilityId] ?? 0) + damage.expected;
+    const attachedExpected = blessingComponents.reduce(
+      (total, component) => total + component.damage.expected,
+      0,
+    );
+    rt.perAbility[event.abilityId] =
+      (rt.perAbility[event.abilityId] ?? 0) + damage.expected - attachedExpected;
+    for (const component of blessingComponents) {
+      rt.perAbility[component.id] = (rt.perAbility[component.id] ?? 0) + component.damage.expected;
+    }
   }
 
   if (keepsAnalysisLedgers(rt.detailLevel)) {
@@ -104,6 +115,9 @@ export function recordEventAccounting(
   rt.events.push({
     ...provenance,
     damage,
+    ...(resolution.components && resolution.components.length > 0
+      ? { components: resolution.components }
+      : {}),
     ...(event.abilityId === "abyssal_parasite" ? { stackCount: parasite.stacks } : {}),
     ...(remainingTicks !== undefined ? { remainingTicks } : {}),
   });

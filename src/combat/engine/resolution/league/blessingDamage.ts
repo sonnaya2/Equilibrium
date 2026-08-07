@@ -1,25 +1,22 @@
-import type { DamageOriginKind, ScheduledEvent } from "../../runtime/events";
+import type { ScheduledEvent } from "../../runtime/events";
 import { scheduleEvent, type SimulationRuntime } from "../../runtime/runtime";
 import {
+  attachedResolutionComponent,
   blessingHitEligibility,
   leagueDamageComponents,
   type BlessingDamageSource,
 } from "../../../league/damage";
-import { outgoingSourceOf, type DamageProvenance } from "../../../shared/damageProvenance";
-import { blessingRule, resolveMaximumLife } from "../../../league/ruleset";
+import type { DamageProvenance } from "../../../shared/damageProvenance";
+import { blessingRule } from "../../../league/ruleset";
 import { patchLeague } from "../../runtime/state";
-import type { ResolvedDamage } from "../types";
+import {
+  appendAttachedComponents,
+  type AttachedDamageComponent,
+  type EventResolution,
+  type ResolvedDamage,
+} from "../types";
 import { isBasicAttack } from "../../../shared/adrenalineGain";
 import { statefulOccurrenceProbability } from "../../analysis/multiplicity";
-
-const componentCache = new WeakMap<
-  object,
-  Map<string, ReturnType<typeof leagueDamageComponents>>
->();
-
-function sourceKey(source: BlessingDamageSource | DamageProvenance): string {
-  return typeof source === "string" ? source : `${source.kind}:${source.detail ?? ""}`;
-}
 
 /**
  * Prefer scheduled DamageProvenance (keeps blessing detail for rider carve-out);
@@ -39,19 +36,6 @@ function blessingSourceOf(
   return event.family === "dot" ? "dot" : "direct";
 }
 
-/**
- * Parent origin for derived blessing riders. Big Boned on a bleed stays "dot"
- * so analysis attributes the rider with the bleed, not as a free-standing hit.
- */
-function parentOriginKind(
-  event: ScheduledEvent<SimulationRuntime>,
-  source: BlessingDamageSource | DamageProvenance,
-): DamageOriginKind {
-  if (event.originKind) return event.originKind;
-  if (typeof source === "string") return source;
-  return outgoingSourceOf(source);
-}
-
 /** Scale EV-packed damage when riders attach to chance-weighted parents (Inferno 5%). */
 function scaleResolvedDamage(damage: ResolvedDamage, weight: number): ResolvedDamage {
   if (weight === 1) return damage;
@@ -67,24 +51,44 @@ function scaleResolvedDamage(damage: ResolvedDamage, weight: number): ResolvedDa
   };
 }
 
+function scaleAttachedComponent(
+  component: AttachedDamageComponent,
+  weight: number,
+): AttachedDamageComponent {
+  if (weight === 1) return component;
+  return {
+    ...component,
+    damage: scaleResolvedDamage(component.damage, weight),
+    ...(component.analysis
+      ? {
+          analysis: {
+            ...component.analysis,
+            expectedActivations: component.analysis.expectedActivations * weight,
+          },
+        }
+      : {}),
+  };
+}
+
 /**
- * Schedule league blessing damage components for a landed event and advance
+ * Compose league blessing damage components for a landed event and advance
  * Striking Light readiness when Light of Saradomin contributes.
  * Chance-weighted Inferno is one separate hit and may host attached Big Boned damage.
  */
-export function scheduleBlessingDamage(
+export function applyBlessingDamage(
   rt: SimulationRuntime,
   event: ScheduledEvent<SimulationRuntime>,
-  damage: ResolvedDamage,
-): void {
-  if (!rt.input.league || damage.max <= 0) return;
+  resolution: EventResolution,
+): EventResolution {
+  const damage = resolution.damage;
+  if (!rt.input.league || damage.max <= 0) return resolution;
   const source = blessingSourceOf(event);
   const eligible = blessingHitEligibility(source, event.attached);
-  if (!eligible.rider && !eligible.cinders && !eligible.onHit) return;
+  if (!eligible.rider && !eligible.cinders && !eligible.onHit) return resolution;
   const ability = rt.byId.get(event.abilityId);
   // Spirit auto/poison ledger ids are not bar AbilitySpecs; rider path uses a stub.
   // Blessing separate hits (Light/Inferno) also lack bar specs; rider path uses a stub.
-  if (!ability && !eligible.rider && !eligible.cinders) return;
+  if (!ability && !eligible.rider && !eligible.cinders) return resolution;
   const style = ability?.style ?? rt.input.context?.style ?? "necromancy";
   const resolvedAbility = ability ?? {
     id: event.abilityId,
@@ -102,55 +106,35 @@ export function scheduleBlessingDamage(
     chance: damage.critical?.chance ?? 0,
     guaranteed: damage.critical?.mode === "guaranteed",
     eligible: damage.critical?.mode !== "none",
+    damageBonus: resolution.hitDetail?.critDamageBonus ?? rt.input.crit.damageBonus,
   };
   const strikingLightReady = event.tick >= (rt.state.league?.strikingLightReadyTick ?? Infinity);
   const lordOfLightReady = event.tick >= (rt.state.league?.lordOfLightReadyTick ?? Infinity);
-  // Input identity is shared by every branch; land-time fields remain in the key.
-  let cache = componentCache.get(rt.input);
-  if (!cache) {
-    cache = new Map();
-    componentCache.set(rt.input, cache);
-  }
-  const key = [
-    resolvedAbility.id,
-    event.hitIndex,
-    resolveMaximumLife(rt.input.league, event.tick),
-    event.attached ? 1 : 0,
-    sourceKey(source),
-    parentCrit.chance,
-    parentCrit.guaranteed ? 1 : 0,
-    ability != null && strikingLightReady ? 1 : 0,
-    ability != null && lordOfLightReady ? 1 : 0,
-  ].join("\x1f");
-  let components = cache.get(key);
-  if (!components) {
-    components = leagueDamageComponents({
-      rules: rt.input.league,
-      ability: resolvedAbility,
-      hitIndex: event.hitIndex,
-      source,
-      attached: event.attached,
-      landTick: event.tick,
-      base: rt.input.base,
-      level: rt.input.level,
-      accuracy: rt.input.accuracy,
-      crit: rt.input.crit,
-      parentCrit,
-      modifiers,
-      context: {
-        ...rt.input.context,
-        style,
-        abilityCategory: resolvedAbility.category,
-        basicAttack: isBasicAttack(resolvedAbility),
-        area: resolvedAbility.area,
-      },
-      cap: rt.input.cap,
-      // Light needs a real bar Basic ability; stubs never open the gate.
-      strikingLightReady: ability != null && strikingLightReady,
-      lordOfLightReady: ability != null && lordOfLightReady,
-    });
-    cache.set(key, components);
-  }
+  const components = leagueDamageComponents({
+    rules: rt.input.league,
+    ability: resolvedAbility,
+    hitIndex: event.hitIndex,
+    source,
+    attached: event.attached,
+    landTick: event.tick,
+    base: rt.input.base,
+    level: rt.input.level,
+    accuracy: rt.input.accuracy,
+    crit: rt.input.crit,
+    parentCrit,
+    modifiers,
+    context: {
+      ...rt.input.context,
+      style,
+      abilityCategory: resolvedAbility.category,
+      basicAttack: isBasicAttack(resolvedAbility),
+      area: resolvedAbility.area,
+    },
+    cap: rt.input.cap,
+    preciseRank: rt.input.preciseRank,
+    strikingLightReady: ability != null && strikingLightReady,
+    lordOfLightReady: ability != null && lordOfLightReady,
+  });
   if (components.some((component) => component.blessingId === "striking-light")) {
     const cooldown =
       blessingRule(rt.input.league, "perfidious")?.strikingLightCooldownTicks ??
@@ -168,27 +152,39 @@ export function scheduleBlessingDamage(
   // Chance-weighted parents pass their activation mass into attached components.
   const parentWeight = event.expectedActivations ?? event.expectedOccurrences ?? 1;
   const parentOccurrenceProbability = statefulOccurrenceProbability(event);
-  const originKind = parentOriginKind(event, source);
+  const includedAttached = new Set(resolution.components?.map((component) => component.id) ?? []);
+  let composed = resolution;
   for (const component of components) {
     const scaledDamage = scaleResolvedDamage(component.damage, parentWeight);
-    const componentOrigin =
-      !component.attached || component.bonusTargetId === "inferno-of-zamorak"
-        ? "blessing"
-        : originKind;
+    if (component.attached) {
+      if (includedAttached.has(component.effectId)) continue;
+      composed = appendAttachedComponents(composed, [
+        attachedResolutionComponent(
+          component,
+          component.expectedActivations * parentWeight,
+          component.expectedActivations * parentWeight,
+          component.expectedActivations * parentWeight,
+        ),
+      ]);
+      continue;
+    }
+    const nested = component.components?.map((child) =>
+      scaleAttachedComponent(child, parentWeight),
+    );
     scheduleEvent(rt, {
       tick: event.tick,
       family: "blessing",
       abilityId: component.effectId,
       sourceCast: event.sourceCast,
       hitIndex: event.hitIndex,
-      attached: component.attached,
+      attached: false,
       procEligible: false,
       recursionAllowed: false,
       derivedFrom: event.seq,
       blessingId: component.blessingId,
       ...(component.damageTag ? { damageTag: component.damageTag } : {}),
       ...(component.bonusTargetId ? { bonusTargetId: component.bonusTargetId } : {}),
-      originKind: componentOrigin,
+      originKind: "blessing",
       provenance: { kind: "blessing", detail: component.effectId },
       expectedOccurrences: component.expectedOccurrences * parentWeight,
       expectedTriggerRolls: component.expectedTriggerRolls * parentWeight,
@@ -213,7 +209,9 @@ export function scheduleBlessingDamage(
       resolve: () => ({
         damage: scaledDamage,
         hitDetail: parentWeight === 1 ? component.hitDetail : undefined,
+        ...(nested && nested.length > 0 ? { components: nested } : {}),
       }),
     });
   }
+  return composed;
 }

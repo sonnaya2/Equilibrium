@@ -289,7 +289,10 @@ describe("item passive timelines", () => {
     });
     expect(
       bleeds.events.find((event) => event.abilityId === "abyssal_parasite")?.damage,
-    ).toMatchObject({ min: 22, max: 38, expected: 30 });
+    ).toMatchObject({ min: 22, max: 38 });
+    expect(
+      bleeds.events.find((event) => event.abilityId === "abyssal_parasite")?.damage.expected,
+    ).toBeCloseTo(30.214285714285715, 12);
     expect(bleeds.events.find((event) => event.abilityId === "dismember")?.damage).toMatchObject({
       min: 312,
       max: 437,

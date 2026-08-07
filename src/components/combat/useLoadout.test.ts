@@ -218,9 +218,15 @@ describe("normalizeLoadout", () => {
   it("normalizes the area-target scenario for persisted loadouts", () => {
     expect(
       normalizeLoadout({
-        target: { defenceLevel: 80, affinity: "same", occupiedTiles: 4, areaTargets: 7.9 },
+        target: {
+          defenceLevel: 80,
+          affinity: "same",
+          size: 3.8,
+          occupiedTiles: 4,
+          areaTargets: 7.9,
+        },
       }).target,
-    ).toMatchObject({ occupiedTiles: 4, areaTargets: 7 });
+    ).toMatchObject({ size: 3, occupiedTiles: 4, areaTargets: 7 });
     expect(
       normalizeLoadout({
         target: { defenceLevel: 80, affinity: "same", areaTargets: 0 },

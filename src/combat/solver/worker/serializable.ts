@@ -9,7 +9,12 @@ import {
 import type { AdrenalineRules, ProcRules } from "../../engine/simulation/contracts";
 import type { HitCapRule } from "../../core/hitCaps";
 import type { ActiveEquipmentEffects } from "../../shared/equipment";
-import type { BlessingChoice, BlessingId, BlessingPath } from "@/league/blessings";
+import type {
+  ActiveBlessingTierPassive,
+  BlessingChoice,
+  BlessingId,
+  BlessingPath,
+} from "@/league/blessings";
 import type { RegionId } from "@/league";
 import type { CombatContext, CombatStyle } from "../../types";
 import type { PlayerPoisonProfile } from "../../poison/mechanics";
@@ -73,6 +78,7 @@ export interface SerializableModifierSources {
 export interface SerializableLeagueRules {
   ruleset: "base" | "equilibrium";
   blessings: readonly BlessingChoice[];
+  tierPassives?: readonly ActiveBlessingTierPassive[];
   blessingIds: readonly BlessingId[];
   /** Active relic display names. */
   relics?: readonly string[];
@@ -80,7 +86,8 @@ export interface SerializableLeagueRules {
   maximumLife: number;
   /** Frozen remaining Powerburst until-tick (half-open); 0 = inactive. */
   powerburstUntilTick: number;
-  targetTiles: number;
+  targetSize: number;
+  occupiedTiles: number;
   areaTargets?: number;
   prayerBonus?: number;
   herbloreLevel?: number;
@@ -127,6 +134,10 @@ export interface SerializableRevolutionSimBase {
   targetPoisonImmune?: boolean;
   cap?: HitCapRule;
   startingAdrenaline?: number;
+  naturalInstinctUntilTick?: number;
+  startingResidualSouls?: number;
+  slayerOnTask?: boolean;
+  slayerLevel?: number;
   equipmentIds: readonly string[];
   weaponConfiguration: "twohand" | "dualwield" | "mainhand" | "shield" | "defender" | "necromancy";
   modifierSources: SerializableModifierSources;

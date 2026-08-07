@@ -37,12 +37,61 @@ export interface AttachedDamageComponent {
   hitDetail?: HitResult;
   attached: true;
   hitCapPolicy: "separate" | "shared";
+  analysis?: {
+    kind: "league-blessing";
+    blessingId: string;
+    bonusTargetId?: string;
+    expectedActivations: number;
+  };
 }
 
 export interface EventResolution {
   damage: ResolvedDamage;
   hitDetail?: HitResult;
   components?: readonly AttachedDamageComponent[];
+}
+
+export function appendAttachedComponents(
+  resolution: EventResolution,
+  components: readonly AttachedDamageComponent[],
+): EventResolution {
+  if (components.length === 0) return resolution;
+  const extra = components.reduce(
+    (total, component) => ({
+      min: total.min + component.damage.min,
+      max: total.max + component.damage.max,
+      expected: total.expected + component.damage.expected,
+      critExpected:
+        total.critExpected + (component.damage.critExpected ?? component.damage.expected),
+      capLoss: total.capLoss + (component.damage.capLoss ?? 0),
+      criticalContribution:
+        total.criticalContribution + (component.damage.critical?.contribution ?? 0),
+    }),
+    { min: 0, max: 0, expected: 0, critExpected: 0, capLoss: 0, criticalContribution: 0 },
+  );
+  const damage = resolution.damage;
+  return {
+    ...resolution,
+    damage: {
+      ...damage,
+      min: damage.min + extra.min,
+      max: damage.max + extra.max,
+      expected: damage.expected + extra.expected,
+      ...("critExpected" in damage || extra.critExpected > 0
+        ? { critExpected: (damage.critExpected ?? damage.expected) + extra.critExpected }
+        : {}),
+      capLoss: (damage.capLoss ?? 0) + extra.capLoss,
+      ...(damage.critical
+        ? {
+            critical: {
+              ...damage.critical,
+              contribution: damage.critical.contribution + extra.criticalContribution,
+            },
+          }
+        : {}),
+    },
+    components: [...(resolution.components ?? []), ...components],
+  };
 }
 
 function freezeDamage(damage: ResolvedDamage): ResolvedDamage {

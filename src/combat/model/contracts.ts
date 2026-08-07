@@ -88,6 +88,10 @@ export interface ResolvedCombatModel {
   readonly context: CombatContext;
   readonly cap: HitCapRule;
   readonly startingAdrenaline: number;
+  readonly naturalInstinctUntilTick?: number;
+  readonly startingResidualSouls?: number;
+  readonly slayerOnTask?: boolean;
+  readonly slayerLevel?: number;
 
   readonly diagnostics: ResolvedCombatDiagnostics;
 }
@@ -122,6 +126,10 @@ export interface HostCombatResolveInput {
   readonly targetHpPercent?: number;
   readonly cap?: HitCapRule;
   readonly startingAdrenaline?: number;
+  readonly naturalInstinctUntilTick?: number;
+  readonly startingResidualSouls?: number;
+  readonly slayerOnTask?: boolean;
+  readonly slayerLevel?: number;
   readonly equipmentIds: readonly string[];
   readonly weaponConfiguration: ResolvedWeaponConfiguration;
   /** Slot map used to derive set piece counts when setCounts is omitted. */

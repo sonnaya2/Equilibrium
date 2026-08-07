@@ -1,4 +1,4 @@
-import type { EventResolution, ResolvedDamage } from "../resolution/types";
+import type { AttachedDamageComponent, EventResolution, ResolvedDamage } from "../resolution/types";
 import type { BleedId, DamageOverTimeKind } from "../../types";
 import type { BlessingId } from "../../../league/blessings";
 import type { BlessingDamageTag } from "../../league/damage";
@@ -283,6 +283,7 @@ export interface ScheduledEvent<RT = unknown> {
 
 export interface ResolvedEvent<RT = unknown> extends Omit<ScheduledEvent<RT>, "resolve"> {
   damage: ResolvedDamage;
+  components?: readonly AttachedDamageComponent[];
   stackCount?: number;
   remainingTicks?: number;
 }

@@ -1,5 +1,4 @@
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
-import { calculateHit } from "../../pipeline/calculateHit";
 import { mulFloor } from "../../core/rounding";
 import {
   COMMAND_SKELETON_LAST_HIT_OFFSET,
@@ -44,6 +43,7 @@ import { scheduleEvent, type SimulationRuntime } from "../runtime/runtime";
 import { patchConjures, patchTarget } from "../runtime/state";
 import { recordConditionalPoisonDamage, refreshPlayerPoisonImmunity } from "./playerPoison";
 import { envenomedPoisonImmunityDisableTicks } from "../../league/ruleset";
+import { attachedResolutionComponent, resolveLeagueAttachedHost } from "../../league/damage";
 
 /**
  * Spirit track schedulers: one pending auto and (zombie) poison event per summon.
@@ -142,7 +142,10 @@ function scheduleSpiritAuto(rt: SimulationRuntime, spirit: AutoAttackingConjure)
         kind: "conjure_auto" as const,
         detail: spirit.id,
       };
-      const hit = calculateHit({
+      const host = resolveLeagueAttachedHost({
+        rules: input.league,
+        source: provenance,
+        landTick: spirit.auto.nextTick,
         base: input.base,
         band: { minPct: profile.band.minPct * mult, maxPct: profile.band.maxPct * mult },
         level: input.level,
@@ -160,12 +163,19 @@ function scheduleSpiritAuto(rt: SimulationRuntime, spirit: AutoAttackingConjure)
       });
       return {
         damage: {
-          min: hit.min,
-          max: hit.max,
-          expected: hit.expected,
-          capLoss: hit.capLoss,
+          min: host.hit.min,
+          max: host.hit.max,
+          expected: host.hit.expected,
+          capLoss: host.hit.capLoss,
         },
-        hitDetail: hit,
+        hitDetail: host.hit,
+        ...(host.components.length > 0
+          ? {
+              components: host.components.map((component) =>
+                attachedResolutionComponent(component),
+              ),
+            }
+          : {}),
       };
     },
   });
@@ -201,7 +211,10 @@ function scheduleSpiritPoison(rt: SimulationRuntime, spirit: ActivePutridZombie)
           ? evolvingToxinPoisonModifier(stacks)
           : null,
       ].filter((modifier): modifier is CombatModifier => modifier !== null);
-      const hit = calculateHit({
+      const host = resolveLeagueAttachedHost({
+        rules: input.league,
+        source: provenance,
+        landTick: spirit.poison.nextTick,
         base: input.base,
         band: { minPct: ZOMBIE_POISON_BAND.minPct, maxPct: ZOMBIE_POISON_BAND.maxPct },
         level: input.level,
@@ -219,8 +232,20 @@ function scheduleSpiritPoison(rt: SimulationRuntime, spirit: ActivePutridZombie)
         cap: input.cap,
       });
       return {
-        damage: { min: hit.min, max: hit.max, expected: hit.expected, capLoss: hit.capLoss },
-        hitDetail: hit,
+        damage: {
+          min: host.hit.min,
+          max: host.hit.max,
+          expected: host.hit.expected,
+          capLoss: host.hit.capLoss,
+        },
+        hitDetail: host.hit,
+        ...(host.components.length > 0
+          ? {
+              components: host.components.map((component) =>
+                attachedResolutionComponent(component),
+              ),
+            }
+          : {}),
       };
     },
   });

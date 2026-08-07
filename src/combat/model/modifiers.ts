@@ -6,7 +6,7 @@
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 import type { CombatModifier } from "../types";
 import type { ResolvedLeagueRules } from "../league/ruleset";
-import { leagueModifiers } from "../league/ruleset";
+import { leagueModifiers, setPieceContributionModifier } from "../league/ruleset";
 import { additiveMeleeDamageModifier, amZiModifier, setDamageModifiers } from "../shared/equipment";
 import {
   lungingPerkModifier,
@@ -37,7 +37,11 @@ export function buildGlobalModifiersFromSources(
   league: ResolvedLeagueRules,
 ): CombatModifier[] {
   const global: CombatModifier[] = [];
-  global.push(...setDamageModifiers(setCountsMap(sources)));
+  global.push(
+    ...setDamageModifiers(setCountsMap(sources), {
+      pieceContribution: setPieceContributionModifier(league),
+    }),
+  );
   if (sources.vulnerability) global.push(vulnerabilityModifier());
   if (sources.styleCurseId && sources.styleCurseId !== "none") {
     const curse = styleCurseById(sources.styleCurseId);

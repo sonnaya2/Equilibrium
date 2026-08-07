@@ -16,13 +16,15 @@ export function reviveLeague(league: SerializableLeagueRules): ResolvedLeagueRul
   return {
     ruleset: league.ruleset,
     blessings: league.blessings,
+    tierPassives: league.tierPassives ?? [],
     blessingIds: new Set<BlessingId>(league.blessingIds),
     relics,
     relicNames: new Set(relics),
     totalArmour: league.totalArmour,
     maximumLife: league.maximumLife,
     powerburstUntilTick: Math.max(0, Math.floor(league.powerburstUntilTick ?? 0)),
-    targetTiles: league.targetTiles,
+    targetSize: league.targetSize,
+    occupiedTiles: league.occupiedTiles,
     areaTargets: Math.max(1, Math.floor(league.areaTargets ?? 1)),
     prayerBonus: Math.max(0, league.prayerBonus ?? 0),
     herbloreLevel: league.herbloreLevel,
@@ -34,12 +36,14 @@ export function serializeLeague(league: ResolvedLeagueRules): SerializableLeague
   return {
     ruleset: league.ruleset,
     blessings: league.blessings,
+    tierPassives: league.tierPassives,
     blessingIds: [...league.blessingIds],
     relics: [...league.relics],
     totalArmour: league.totalArmour,
     maximumLife: league.maximumLife,
     powerburstUntilTick: Math.max(0, Math.floor(league.powerburstUntilTick ?? 0)),
-    targetTiles: league.targetTiles,
+    targetSize: league.targetSize,
+    occupiedTiles: league.occupiedTiles,
     areaTargets: league.areaTargets,
     prayerBonus: league.prayerBonus,
     herbloreLevel: league.herbloreLevel,
@@ -89,6 +93,14 @@ export function projectSerializableSimBase(
     targetPoisonImmune: model.target.poisonImmune === true,
     cap: model.cap ?? { cap: STANDARD_HIT_CAP, bypass: false },
     startingAdrenaline: model.startingAdrenaline,
+    ...(model.naturalInstinctUntilTick != null
+      ? { naturalInstinctUntilTick: model.naturalInstinctUntilTick }
+      : {}),
+    ...(model.startingResidualSouls != null
+      ? { startingResidualSouls: model.startingResidualSouls }
+      : {}),
+    ...(model.slayerOnTask != null ? { slayerOnTask: model.slayerOnTask } : {}),
+    ...(model.slayerLevel != null ? { slayerLevel: model.slayerLevel } : {}),
     equipmentIds: [...model.equipmentIds],
     weaponConfiguration: model.weaponConfiguration,
     modifierSources: {

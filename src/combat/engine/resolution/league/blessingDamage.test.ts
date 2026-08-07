@@ -1,27 +1,37 @@
 import { describe, expect, it } from "vitest";
 import { resolveLeagueRules } from "../../../league/ruleset";
-import {
-  resetHitPipelineCounters,
-  setHitPipelineProfiling,
-  snapshotHitPipelineCounters,
-} from "../../../profiling/hitPipeline";
 import { MELEE_ABILITIES } from "../../../styles/melee/abilities";
 import type { ScheduledEvent } from "../../runtime/events";
 import { createRuntime, type SimulationRuntime } from "../../runtime/runtime";
-import { scheduleBlessingDamage } from "./blessingDamage";
+import type { AttachedDamageComponent, EventResolution } from "../types";
+import { applyBlessingDamage } from "./blessingDamage";
 
-describe("blessing damage component reuse", () => {
-  it("calculates identical land-time components once per simulation input", () => {
+function attached(id: "big-boned" | "abyssal-cinders", damage: number): AttachedDamageComponent {
+  return {
+    id,
+    attached: true,
+    hitCapPolicy: "shared",
+    damage: { min: damage, max: damage, expected: damage },
+    analysis: {
+      kind: "league-blessing",
+      blessingId: id,
+      expectedActivations: 1,
+    },
+  };
+}
+
+describe("blessing damage event composition", () => {
+  it("keeps attached terms on the host and schedules only the separate Inferno hit", () => {
     const rt = createRuntime({
-      base: 1000,
+      base: 1_000,
       level: 99,
       accuracy: 1,
       crit: { chance: 0 },
       abilities: MELEE_ABILITIES,
-      league: resolveLeagueRules({
-        ruleset: "equilibrium",
-        blessingPicks: ["Chaos", "Chaos"],
-      }),
+      league: resolveLeagueRules(
+        { ruleset: "equilibrium", blessingPicks: ["Balance", "Chaos"] },
+        { maximumLife: 10_000 },
+      ),
       context: { style: "melee", ruleset: "equilibrium" },
     });
     const event: ScheduledEvent<SimulationRuntime> = {
@@ -34,27 +44,22 @@ describe("blessing damage component reuse", () => {
       attached: false,
       procEligible: true,
       recursionAllowed: false,
-      expectedActivations: 0.25,
       provenance: { kind: "player_direct" },
       resolve: () => ({ damage: { min: 0, max: 0, expected: 0 } }),
     };
-    const damage = { min: 500, max: 1000, expected: 750 };
+    const resolution: EventResolution = {
+      damage: { min: 1_650, max: 1_650, expected: 1_650 },
+      components: [attached("big-boned", 500), attached("abyssal-cinders", 150)],
+    };
 
-    setHitPipelineProfiling(true);
-    try {
-      resetHitPipelineCounters();
-      scheduleBlessingDamage(rt, event, damage);
-      expect(snapshotHitPipelineCounters().hitExpectationCalls).toBeGreaterThan(0);
-      expect(
-        rt.queue.pending().find((pending) => pending.abilityId === "inferno-of-zamorak")
-          ?.expectedTriggerRolls,
-      ).toBeCloseTo(0.25, 10);
+    const composed = applyBlessingDamage(rt, event, resolution);
 
-      resetHitPipelineCounters();
-      scheduleBlessingDamage(rt, event, damage);
-      expect(snapshotHitPipelineCounters().hitExpectationCalls).toBe(0);
-    } finally {
-      setHitPipelineProfiling(false);
-    }
+    expect(composed).toEqual(resolution);
+    expect(rt.queue.pending().map((pending) => pending.abilityId)).toEqual(["inferno-of-zamorak"]);
+    const inferno = rt.queue.pending()[0]!;
+    expect(inferno.expectedTriggerRolls).toBe(1);
+    expect(inferno.expectedActivations).toBeCloseTo(0.05, 12);
+    const infernoResolution = inferno.resolve(rt, inferno.tick);
+    expect(infernoResolution.components?.map((component) => component.id)).toEqual(["big-boned"]);
   });
 });

@@ -66,10 +66,18 @@ export type BlessingChoice = {
 };
 
 export type BlessingTier = {
-  tier: number;
+  progressionSlot: number;
+  tier: number | null;
   revealed: boolean;
   paths: string[];
-  godTier: boolean;
+  godTier: number | null;
+  passives: Array<{
+    id: string;
+    name: string;
+    description: string;
+    kind: string;
+    effect: Record<string, unknown>;
+  }>;
   choices: BlessingChoice[];
   sourceUrl?: string;
   verified?: boolean;
@@ -540,11 +548,13 @@ export function BuildPlanner({
                     <span className="build-board__lat-corner" aria-hidden />
                     {blessingTiers.map((t) => (
                       <span
-                        key={t.tier}
-                        className={`build-board__lat-head${t.godTier ? " is-god" : ""}`}
+                        key={t.progressionSlot}
+                        className={`build-board__lat-head${t.godTier !== null ? " is-god" : ""}`}
+                        title={
+                          t.passives.map((passive) => passive.description).join(" ") || undefined
+                        }
                       >
-                        T{t.tier}
-                        {t.godTier ? "?" : ""}
+                        {t.godTier !== null ? `G${t.godTier}` : `T${t.tier}`}
                       </span>
                     ))}
 
@@ -579,18 +589,18 @@ export function BuildPlanner({
                         </div>
                         {blessingTiers.map((tier) => {
                           const tipBelow = path === "Order";
-                          if (tier.godTier) {
-                            const god = alignments[tier.tier];
+                          if (tier.godTier !== null) {
+                            const god = alignments[tier.godTier];
                             const lit = god === path;
                             const card = blessingFor(tier, path);
                             return (
                               <div
-                                key={`${path}-${tier.tier}`}
+                                key={`${path}-${tier.progressionSlot}`}
                                 className={`build-board__lat-cell is-god${lit ? " is-on" : ""}${tipBelow ? " is-tip-below" : ""}`}
                                 role="img"
                                 aria-label={blessingAria(
                                   card,
-                                  `${path}, god tier ${tier.tier}${lit ? ", active" : ", open"}`,
+                                  `${path}, god tier ${tier.godTier}${lit ? ", active" : ", open"}`,
                                 )}
                               >
                                 {card ? (
@@ -602,11 +612,20 @@ export function BuildPlanner({
                               </div>
                             );
                           }
+                          if (tier.tier === null) {
+                            return (
+                              <div
+                                key={`${path}-${tier.progressionSlot}`}
+                                className="build-board__lat-cell"
+                                aria-hidden
+                              />
+                            );
+                          }
                           const pickIndex = PATH_TIERS.indexOf(tier.tier);
                           if (pickIndex < 0) {
                             return (
                               <div
-                                key={`${path}-${tier.tier}`}
+                                key={`${path}-${tier.progressionSlot}`}
                                 className="build-board__lat-cell"
                                 aria-hidden
                               />
@@ -615,9 +634,10 @@ export function BuildPlanner({
                           const locked = pickIndex > build.blessingPicks.length;
                           const selected = build.blessingPicks[pickIndex] === path;
                           const card = blessingFor(tier, path);
+                          const publicTier = tier.tier;
                           return (
                             <button
-                              key={`${path}-${tier.tier}`}
+                              key={`${path}-${tier.progressionSlot}`}
                               type="button"
                               disabled={locked}
                               aria-pressed={selected}
@@ -626,7 +646,7 @@ export function BuildPlanner({
                                 `${path}, tier ${tier.tier}${selected ? ", selected" : locked ? ", locked" : ""}`,
                               )}
                               className={`build-board__lat-cell${selected ? " is-on" : ""}${locked ? " is-locked" : ""}${tipBelow ? " is-tip-below" : ""}`}
-                              onClick={() => pickBlessing(tier.tier, path as BlessingPath)}
+                              onClick={() => pickBlessing(publicTier, path as BlessingPath)}
                             >
                               {card ? (
                                 <GameIcon src={blessingIconPath(card.name)} size={26} />
@@ -640,6 +660,26 @@ export function BuildPlanner({
                       </div>
                     ))}
                   </div>
+                  {blessingTiers.some((tier) => tier.passives.length > 0) ? (
+                    <div
+                      className="mt-2 space-y-1 text-[11px] text-parch-300"
+                      aria-label="Blessing progression passives"
+                    >
+                      {blessingTiers
+                        .filter((tier) => tier.passives.length > 0)
+                        .map((tier) => (
+                          <div key={`passives-${tier.progressionSlot}`}>
+                            <strong className="text-parch-100">
+                              {tier.godTier !== null
+                                ? `God Tier ${tier.godTier}`
+                                : `Tier ${tier.tier}`}
+                            </strong>
+                            {": "}
+                            {tier.passives.map((passive) => passive.description).join(" ")}
+                          </div>
+                        ))}
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </section>

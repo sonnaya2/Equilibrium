@@ -78,8 +78,8 @@ export interface BuildState {
    */
   blessingPicks: BlessingPath[];
   /**
-   * Stable persistence form: tier + blessing id. Survives record reorder; invalid /
-   * duplicate / tier-mismatched ids are pruned on normalize.
+   * Stable persistence form: progression slot + public path tier + blessing id.
+   * Legacy rows with only tier are normalized by card id.
    */
   blessingSelections: StableBlessingSelection[];
   blessingResetsUsed: number;
@@ -115,12 +115,24 @@ export function resolveBlessingPersistence(raw: {
     choiceAt: (tier: number, path: string) => {
       if (!isBlessingPath(path)) return undefined;
       const choice = blessingChoice(tier, path);
-      return choice ? { id: choice.id as string, path: choice.path as string } : undefined;
+      return choice
+        ? {
+            id: choice.id as string,
+            path: choice.path as string,
+            progressionSlot: choice.progressionSlot,
+            tier: choice.tier,
+          }
+        : undefined;
     },
     choiceById: (id: string) => {
       const choice = blessingById(id);
       return choice
-        ? { id: choice.id as string, path: choice.path as string, tier: choice.tier }
+        ? {
+            id: choice.id as string,
+            path: choice.path as string,
+            progressionSlot: choice.progressionSlot,
+            tier: choice.tier,
+          }
         : undefined;
     },
     isPath: (value: unknown): value is string => isBlessingPath(value),
@@ -144,7 +156,13 @@ export function resolveBlessingPersistence(raw: {
     const tier = PATH_TIERS[index];
     if (tier === undefined) return;
     const choice = blessingChoice(tier, path);
-    if (choice) blessingSelections.push({ tier, blessingId: choice.id });
+    if (choice) {
+      blessingSelections.push({
+        progressionSlot: choice.progressionSlot,
+        tier: choice.tier,
+        blessingId: choice.id,
+      });
+    }
   });
   return { blessingPicks, blessingSelections };
 }

@@ -185,6 +185,23 @@ describe("patch validation", () => {
     });
   });
 
+  it("validates the blessing-tier consolidation operation", () => {
+    expect(
+      validate({
+        op: "set-blessing-tier",
+        progressionSlot: 5,
+        body: { progressionSlot: 5, tier: 4, godTier: null, passives: [] },
+      }),
+    ).toMatchObject({ progressionSlot: 5 });
+    expect(() =>
+      validate({
+        op: "set-blessing-tier",
+        progressionSlot: 5,
+        body: { progressionSlot: 6, tier: 5, godTier: null, passives: [] },
+      }),
+    ).toThrow(/body\.progressionSlot must match/);
+  });
+
   it("rejects an unknown operation and an unknown field", () => {
     expect(() => validate({ op: "merge", entity: "item:x" })).toThrow(/unsupported operation/);
     expect(() => validate({ op: "remove", entity: "item:x", reason: "r", extra: 1 })).toThrow(

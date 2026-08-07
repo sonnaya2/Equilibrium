@@ -23,7 +23,12 @@ import type { CombatModifier } from "../../types";
 import { keepsAnalysisLedgers } from "../simulation/contracts";
 import { recordResolved } from "../resolution";
 import { abilityDamageAt } from "../resolution/castHit";
-import { NO_DAMAGE, type EventResolution, type ResolvedDamage } from "../resolution/types";
+import {
+  NO_DAMAGE,
+  type AttachedDamageComponent,
+  type EventResolution,
+  type ResolvedDamage,
+} from "../resolution/types";
 import type { ScheduledEvent } from "../runtime/events";
 import type { SimulationRuntime } from "../runtime/runtime";
 import {
@@ -493,6 +498,14 @@ export function recordConditionalPoisonDamage(
           components: resolution.components.map((component) => ({
             ...component,
             damage: scaleDamage(component.damage, probability),
+            ...(component.analysis
+              ? {
+                  analysis: {
+                    ...component.analysis,
+                    expectedActivations: component.analysis.expectedActivations * probability,
+                  },
+                }
+              : {}),
           })),
         }
       : {}),
@@ -1197,34 +1210,29 @@ function recordPlayerPoisonGroup(
     provenance: { kind: "player_poison" },
     resolve: () => NO_DAMAGE,
   };
-  recordResolved(rt, event, { damage: { min, expected, max } });
-  if (bigBonedExpected > 0) {
-    const rider: ScheduledEvent<SimulationRuntime> = {
-      tick: order.tick,
-      seq: rt.nextSeq++,
-      family: "blessing",
-      abilityId: "big-boned",
-      sourceCast: -1,
-      hitIndex: event.hitIndex,
-      attached: true,
-      procEligible: false,
-      recursionAllowed: false,
-      blessingId: "big-boned",
-      damageTag: "bonus-damage",
-      bonusTargetId: PLAYER_POISON_EFFECT_ID,
-      expectedOccurrences: probability,
-      expectedTriggerRolls: 0,
-      expectedActivations: probability,
-      expectedSeparateHits: 0,
-      originKind: "poison",
-      provenance: { kind: "blessing", detail: "big-boned" },
-      derivedFrom: event.seq,
-      resolve: () => NO_DAMAGE,
-    };
-    recordResolved(rt, rider, {
-      damage: { min: bigBonedMin, expected: bigBonedExpected, max: bigBonedMax },
-    });
-  }
+  const bigBonedComponent: AttachedDamageComponent | undefined =
+    bigBonedExpected > 0
+      ? {
+          id: "big-boned",
+          damage: { min: bigBonedMin, expected: bigBonedExpected, max: bigBonedMax },
+          attached: true,
+          hitCapPolicy: "shared",
+          analysis: {
+            kind: "league-blessing",
+            blessingId: "big-boned",
+            bonusTargetId: PLAYER_POISON_EFFECT_ID,
+            expectedActivations: probability,
+          },
+        }
+      : undefined;
+  recordResolved(rt, event, {
+    damage: {
+      min: min + bigBonedMin,
+      expected: expected + bigBonedExpected,
+      max: max + bigBonedMax,
+    },
+    ...(bigBonedComponent ? { components: [bigBonedComponent] } : {}),
+  });
   refreshPlayerPoisonImmunity(
     rt,
     order.tick,

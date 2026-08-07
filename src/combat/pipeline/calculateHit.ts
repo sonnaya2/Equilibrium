@@ -39,6 +39,7 @@ export interface HitResult {
   critMin: number;
   critMax: number;
   critChance: number;
+  critDamageBonus?: number;
   nonCritExpected: number;
   critExpected: number;
   /** Chance-weighted mean across crit and non-crit, Damage-Potential-scaled and capped. */
@@ -51,6 +52,22 @@ export interface HitResult {
 export interface RawHitBandInput extends Omit<HitInput, "base" | "band"> {
   min: number;
   max: number;
+}
+
+export interface AttachedRawDamage {
+  id: string;
+  amount: number;
+}
+
+export interface AttachedHitDelta {
+  id: string;
+  hit: HitResult;
+}
+
+export interface ComposedHitResult {
+  hit: HitResult;
+  baseHit: HitResult;
+  attached: readonly AttachedHitDelta[];
 }
 
 type SharedHitInput = Omit<HitInput, "base" | "band">;
@@ -156,6 +173,11 @@ function exactMean(
  * the inclusive uniform integer band, preserving every floor and partial cap exactly.
  */
 export function calculateHit(input: HitInput): HitResult {
+  const { min, max } = rawHitBand(input);
+  return calculateRawHitBand({ ...input, min, max });
+}
+
+function rawHitBand(input: HitInput): { min: number; max: number } {
   const band = bandOf(input.base, input.band);
   let min = band.min;
   const max = band.max;
@@ -163,7 +185,64 @@ export function calculateHit(input: HitInput): HitResult {
   if (precise > 0) {
     min = Math.min(max, Math.floor(min + preciseMinHitAddition(max, precise)));
   }
-  return calculateRawHitBand({ ...input, min, max });
+  return { min, max };
+}
+
+function hitDelta(after: HitResult, before: HitResult): HitResult {
+  return {
+    potential: after.potential,
+    min: after.min - before.min,
+    max: after.max - before.max,
+    critMin: after.critMin - before.critMin,
+    critMax: after.critMax - before.critMax,
+    critChance: after.critChance,
+    critDamageBonus: after.critDamageBonus,
+    nonCritExpected: after.nonCritExpected - before.nonCritExpected,
+    critExpected: after.critExpected - before.critExpected,
+    expected: after.expected - before.expected,
+    uncappedExpected: after.uncappedExpected - before.uncappedExpected,
+    capLoss: after.capLoss - before.capLoss,
+  };
+}
+
+/**
+ * Resolve deterministic attached terms inside one host hit. Each marginal delta
+ * uses the same modifier, crit, Damage Potential, floor, and hit-cap program.
+ */
+export function calculateHitWithAttached(
+  input: HitInput,
+  attached: readonly AttachedRawDamage[],
+): ComposedHitResult {
+  const raw = rawHitBand(input);
+  const shared: RawHitBandInput = { ...input, min: raw.min, max: raw.max };
+  delete (shared as Partial<HitInput>).preciseRank;
+  return calculateRawHitBandWithAttached(shared, attached);
+}
+
+export function calculateRawHitBandWithAttached(
+  input: RawHitBandInput,
+  attached: readonly AttachedRawDamage[],
+): ComposedHitResult {
+  const baseHit = calculateRawHitBand(input);
+  if (attached.length === 0) return { hit: baseHit, baseHit, attached: [] };
+
+  let previous = baseHit;
+  let min = input.min;
+  let max = input.max;
+  const deltas: AttachedHitDelta[] = [];
+  for (const term of attached) {
+    if (!Number.isFinite(term.amount) || term.amount < 0 || !Number.isInteger(term.amount)) {
+      throw new RangeError(
+        `calculateHitWithAttached: ${term.id} amount must be a non-negative integer`,
+      );
+    }
+    min += term.amount;
+    max += term.amount;
+    const next = calculateRawHitBand({ ...input, min, max });
+    deltas.push({ id: term.id, hit: hitDelta(next, previous) });
+    previous = next;
+  }
+  return { hit: previous, baseHit, attached: deltas };
 }
 
 function assertIntegerBandBounds(min: number, max: number): void {
@@ -233,6 +312,7 @@ export function calculateRawHitBand(input: RawHitBandInput): HitResult {
     critMin,
     critMax,
     critChance: p,
+    critDamageBonus: input.crit.damageBonus ?? 0,
     nonCritExpected,
     critExpected,
     expected,

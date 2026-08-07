@@ -8,6 +8,7 @@ import { rotationOf } from "../../simulation/contracts";
 import { simulate } from "../../simulation/simulate";
 import type { ResolvedDamage } from "../types";
 import { applyInventionProcs } from "./invention";
+import { leagueModifiers, resolveLeagueRules } from "../../../league/ruleset";
 
 const flat = (n: number): ResolvedDamage => ({ min: n, max: n, expected: n });
 
@@ -235,6 +236,26 @@ describe("Invention procs - Aftershock charge eligibility", () => {
  * conjure_command can; conjureAuto family fails the family gate.
  */
 describe("Invention procs - Crackling eligibility", () => {
+  it("applies global target modifiers to the proc and its Big Boned term once", () => {
+    const league = resolveLeagueRules(
+      { ruleset: "equilibrium", blessingPicks: ["Balance", "Balance", "Balance", "Chaos"] },
+      { maximumLife: 10_000 },
+    );
+    const summary = simulate({
+      ...baseInput,
+      league,
+      modifiers: leagueModifiers(league),
+      context: { style: "melee", ruleset: "equilibrium" },
+      procs: { cracklingRank: 4 },
+      rotation: rotationOf("attack"),
+    });
+    const crackling = summary.events.find((event) => event.abilityId === "crackling")!;
+    const rider = crackling.components?.find((component) => component.id === "big-boned");
+
+    expect(crackling.damage.expected).toBe(3_000);
+    expect(rider?.damage.expected).toBe(600);
+  });
+
   it("schedules Crackling from command family with canTriggerProcs true", () => {
     const rt = createRuntime({
       ...baseInput,

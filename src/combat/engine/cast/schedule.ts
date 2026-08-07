@@ -136,6 +136,9 @@ export function scheduleCastEvents(
     const sourceSeq = hitSeqs[0]!;
     for (let i = 0; i < derived.count; i++) {
       const pct = derived.fractionPcts != null ? derived.fractionPcts[i]! : derived.fractionPct;
+      const provenance = derived.dot
+        ? { kind: "derived_tail" as const, detail: ability.id }
+        : { kind: "derived_bounce" as const, detail: ability.id };
       scheduleEvent(rt, {
         tick: candidate + derived.firstOffset + i * derived.intervalTicks,
         family: derived.dot ? "dot" : "hit",
@@ -146,12 +149,11 @@ export function scheduleCastEvents(
         procEligible: !derived.dot,
         recursionAllowed: false,
         originKind: derived.dot ? "dot" : "direct",
-        provenance: derived.dot
-          ? { kind: "derived_tail" as const, detail: ability.id }
-          : { kind: "derived_bounce" as const, detail: ability.id },
+        provenance,
         cancelOwner: castSeq,
         derivedFrom: sourceSeq,
-        resolve: (eventRt, landTick) => resolveDerivedHit(eventRt, sourceSeq, pct, landTick),
+        resolve: (eventRt, landTick) =>
+          resolveDerivedHit(eventRt, sourceSeq, pct, landTick, provenance),
       });
     }
   }

@@ -12,6 +12,7 @@ import {
   blessingLifeMultiplier,
   leagueModifiers,
   resolveLeagueRules,
+  setPieceContributionModifier,
 } from "./ruleset";
 import { runPipeline } from "../pipeline/modifierPipeline";
 
@@ -20,13 +21,26 @@ const rules = (
   derived: {
     totalArmour?: number;
     maximumLife?: number;
-    targetTiles?: number;
+    targetSize?: number;
+    occupiedTiles?: number;
     areaTargets?: number;
     prayerBonus?: number;
   } = {},
 ) => resolveLeagueRules({ ruleset: "equilibrium", blessingPicks }, derived);
 
 describe("Equilibrium blessing combat rules", () => {
+  it("routes Chaotic Insight through the shared set-piece contribution seam", () => {
+    const active = rules(["Chaos", "Chaos", "Chaos", "Chaos", "Chaos", "Chaos"]);
+    expect(active.blessingIds.has("chaotic-insight")).toBe(true);
+    expect(setPieceContributionModifier(active)).toEqual({ piecesPerItem: 3 });
+    expect(setPieceContributionModifier(rules(["Chaos", "Chaos"]))).toEqual({
+      piecesPerItem: 1,
+    });
+    expect(setPieceContributionModifier(resolveLeagueRules({ ruleset: "base" }))).toEqual({
+      piecesPerItem: 1,
+    });
+  });
+
   it("keeps root bonus riders separate from one Bernoulli Inferno hit", () => {
     const league = rules(["Balance", "Chaos"], { maximumLife: 15_000 });
     const result = simulate({
@@ -38,22 +52,27 @@ describe("Equilibrium blessing combat rules", () => {
     expect(result.totalExpected).toBeCloseTo(1_200 + 750 + 150 + 0.05 * (1_500 + 750), 6);
     expect(
       result.events.filter((event) => event.blessingId).map((event) => event.abilityId),
-    ).toEqual(["big-boned", "abyssal-cinders", "inferno-of-zamorak", "big-boned"]);
-    const cindersOnAttack = result.events.find((e) => e.abilityId === "abyssal-cinders")!;
-    expect(cindersOnAttack).toMatchObject({
-      attached: true,
-      damageTag: "bonus-damage",
-      expectedSeparateHits: 0,
-    });
-    expect(cindersOnAttack.expectedActivations).toBe(1);
-    expect(cindersOnAttack.damage.expected).toBe(150);
-    const bigBoned = result.events.filter((event) => event.abilityId === "big-boned");
-    expect(bigBoned).toHaveLength(2);
-    expect(bigBoned.reduce((sum, event) => sum + event.expectedActivations!, 0)).toBeCloseTo(
-      1.05,
-      10,
+    ).toEqual(["inferno-of-zamorak"]);
+    const attack = result.events.find((event) => event.abilityId === "attack")!;
+    const cindersOnAttack = attack.components?.find(
+      (component) => component.id === "abyssal-cinders",
     );
-    expect(bigBoned.reduce((sum, event) => sum + event.damage.expected, 0)).toBeCloseTo(787.5, 6);
+    expect(cindersOnAttack).toBeDefined();
+    if (!cindersOnAttack) throw new Error("missing Cinders component on attack");
+    expect(cindersOnAttack).toMatchObject({ attached: true, hitCapPolicy: "shared" });
+    expect(cindersOnAttack.analysis?.expectedActivations).toBe(1);
+    expect(cindersOnAttack.damage.expected).toBe(150);
+    const bigBoned = result.events.flatMap((event) =>
+      (event.components ?? []).filter((component) => component.id === "big-boned"),
+    );
+    expect(bigBoned).toHaveLength(2);
+    expect(
+      bigBoned.reduce((sum, component) => sum + (component.analysis?.expectedActivations ?? 0), 0),
+    ).toBeCloseTo(1.05, 10);
+    expect(bigBoned.reduce((sum, component) => sum + component.damage.expected, 0)).toBeCloseTo(
+      787.5,
+      6,
+    );
     expect(
       result.analysis.byEffect.find((effect) => effect.id === "abyssal-cinders")?.bonusDamage,
     ).toBe(0);
@@ -70,8 +89,8 @@ describe("Equilibrium blessing combat rules", () => {
     expect(inferno.expectedTriggerRolls).toBe(1);
     expect(inferno.expectedActivations).toBeCloseTo(0.05, 10);
     expect(inferno.expectedSeparateHits).toBeCloseTo(0.05, 10);
-    expect(inferno.damage.max).toBe(2_000);
-    expect(inferno.damage.expected).toBe(75);
+    expect(inferno.damage.max).toBe(2_750);
+    expect(inferno.damage.expected).toBe(112.5);
     const infernoAnalysis = result.analysis.byEffect.find(
       (effect) => effect.id === "inferno-of-zamorak",
     )!;
@@ -88,12 +107,19 @@ describe("Equilibrium blessing combat rules", () => {
       context: { style: "melee", ruleset: "equilibrium" },
       rotation: rotationOf("attack"),
     });
-    const bigBoned = result.events.filter((event) => event.abilityId === "big-boned");
     const infernoHit = result.events.find((event) => event.abilityId === "inferno-of-zamorak")!;
-    const root = bigBoned.find((event) => event.derivedFrom !== infernoHit.seq)!;
-    const inferno = bigBoned.find((event) => event.derivedFrom === infernoHit.seq)!;
+    const root = result.events
+      .find((event) => event.abilityId === "attack")
+      ?.components?.find((component) => component.id === "big-boned");
+    const inferno = infernoHit.components?.find((component) => component.id === "big-boned");
+    expect(root).toBeDefined();
+    expect(inferno).toBeDefined();
+    if (!root || !inferno) throw new Error("missing Big Boned host component");
+    const bigBoned = [root, inferno];
     expect(bigBoned).toHaveLength(2);
-    expect(bigBoned.some((event) => event.bonusTargetId === "abyssal-cinders")).toBe(false);
+    expect(
+      bigBoned.some((component) => component.analysis?.bonusTargetId === "abyssal-cinders"),
+    ).toBe(false);
     expect(root.damage.critical).toMatchObject({ chance: 0.2, inherited: true });
     expect(inferno.damage.critical).toMatchObject({ chance: 0.2, inherited: true });
   });
@@ -110,10 +136,14 @@ describe("Equilibrium blessing combat rules", () => {
       rotation: rotationOf("attack"),
     });
     expect(result.totalExpected).toBeCloseTo(1_200 + 750 + 150 + 0.05 * (1_500 + 750), 6);
-    expect(result.events.filter((event) => event.abilityId === "big-boned")).toHaveLength(2);
+    expect(
+      result.events.flatMap((event) =>
+        (event.components ?? []).filter((component) => component.id === "big-boned"),
+      ),
+    ).toHaveLength(2);
     expect(
       result.events.filter((event) => event.blessingId).map((event) => event.abilityId),
-    ).toEqual(["big-boned", "abyssal-cinders", "inferno-of-zamorak", "big-boned"]);
+    ).toEqual(["inferno-of-zamorak"]);
   });
 
   it("rides Big Boned onto Light of Saradomin without infinite cascade", () => {
@@ -133,28 +163,18 @@ describe("Equilibrium blessing combat rules", () => {
     });
     const light = withBb.events.find((event) => event.abilityId === "light-of-saradomin");
     expect(light).toBeDefined();
-    const bbOnLight = withBb.events.filter(
-      (event) => event.abilityId === "big-boned" && event.derivedFrom === light!.seq,
-    );
+    const bbOnLight = light!.components?.filter((component) => component.id === "big-boned") ?? [];
     expect(bbOnLight).toHaveLength(1);
     expect(bbOnLight[0]).toMatchObject({
       attached: true,
-      damageTag: "bonus-damage",
-      blessingId: "big-boned",
-      expectedActivations: 1,
+      hitCapPolicy: "shared",
+      analysis: { blessingId: "big-boned", expectedActivations: 1 },
     });
     // Flat 5% of 15k max life on Light (and parent).
     expect(bbOnLight[0]!.damage.expected).toBe(750);
     expect(withBb.totalExpected).toBeGreaterThan(withoutBb.totalExpected);
     // No BB-on-BB: attached riders never host further blessing events.
-    const bbSeqs = new Set(
-      withBb.events.filter((e) => e.abilityId === "big-boned").map((e) => e.seq),
-    );
-    for (const event of withBb.events) {
-      if (event.derivedFrom != null) {
-        expect(bbSeqs.has(event.derivedFrom)).toBe(false);
-      }
-    }
+    expect(withBb.events.some((event) => event.abilityId === "big-boned")).toBe(false);
     // Light never re-rolls on-hit blessings from itself.
     expect(withBb.events.filter((e) => e.abilityId === "light-of-saradomin")).toHaveLength(1);
   });
@@ -228,9 +248,11 @@ describe("Equilibrium blessing combat rules", () => {
     expect(lights).toHaveLength(10);
     expect(lights.every((event) => event.blessingId === "lord-of-light")).toBe(true);
     expect(lights.every((event) => event.tick === 0)).toBe(true);
-    expect(lights.map((event) => event.damage.expected)).toEqual(Array(10).fill(3_600));
-    expect(result.totalExpected).toBe(37_200);
-    expect(result.totalHealed).toBe(1_800);
+    expect(
+      lights.every((event) => Math.abs(event.damage.expected - 3_599.6019900497513) < 1e-9),
+    ).toBe(true);
+    expect(result.totalExpected).toBeCloseTo(37_196.01990049751, 9);
+    expect(result.totalHealed).toBe(1_790);
 
     const withBigBoned = simulate({
       ...baseInput,
@@ -245,11 +267,10 @@ describe("Equilibrium blessing combat rules", () => {
     const lordLights = withBigBoned.events.filter(
       (event) => event.abilityId === "light-of-saradomin" && event.blessingId === "lord-of-light",
     );
-    const lordLightSeqs = new Set(lordLights.map((event) => event.seq));
     expect(lordLights).toHaveLength(10);
     expect(
-      withBigBoned.events.filter(
-        (event) => event.abilityId === "big-boned" && lordLightSeqs.has(event.derivedFrom ?? -1),
+      lordLights.flatMap((event) =>
+        (event.components ?? []).filter((component) => component.id === "big-boned"),
       ),
     ).toHaveLength(10);
 
@@ -323,7 +344,10 @@ describe("Equilibrium blessing combat rules", () => {
   });
 
   it("applies Splash Zone only to tagged attacks and Adrenaline Junkie only to ability gains", () => {
-    const league = rules(["Chaos", "Balance", "Balance"], { targetTiles: 4 });
+    const league = rules(["Chaos", "Balance", "Balance"], {
+      targetSize: 4,
+      occupiedTiles: 4,
+    });
     const dragonBreath = MAGIC_ABILITIES.find((ability) => ability.id === "dragon_breath")!;
     const result = calculateLeagueAbility(dragonBreath, {
       base: 1_000,
@@ -403,8 +427,8 @@ describe("Equilibrium blessing combat rules", () => {
 describe("Havoc Born", () => {
   const picks = ["Order", "Balance", "Balance", "Chaos"] as const;
 
-  it("is the Chaos tier-5 choice with sourced combat parameters", () => {
-    expect(blessingChoice(5, "Chaos")).toMatchObject({
+  it("is the Chaos public tier-4 choice with sourced combat parameters", () => {
+    expect(blessingChoice(4, "Chaos")).toMatchObject({
       id: "havoc-born",
       name: "Havoc Born",
       path: "Chaos",
@@ -440,7 +464,10 @@ describe("Havoc Born", () => {
   });
 
   it("stacks with another outgoing modifier in pipeline order", () => {
-    const league = rules(["Balance", "Balance", "Chaos", "Chaos"], { targetTiles: 2 });
+    const league = rules(["Balance", "Balance", "Chaos", "Chaos"], {
+      targetSize: 2,
+      occupiedTiles: 2,
+    });
     const result = runPipeline({ damage: 1_000 }, leagueModifiers(league), {
       style: "magic",
       ruleset: "equilibrium",

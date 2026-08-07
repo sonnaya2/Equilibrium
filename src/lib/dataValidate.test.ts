@@ -61,10 +61,12 @@ describe("dataValidate — league", () => {
     expect(relic?.choices[0]?.name).toBe("Survivalist");
 
     const blessing = parseBlessingTier({
+      progressionSlot: 1,
       tier: 1,
       revealed: false,
       paths: ["order"],
-      godTier: false,
+      godTier: null,
+      passives: [],
       choices: [],
     });
     expect(blessing?.paths).toEqual(["order"]);
@@ -88,10 +90,12 @@ describe("dataValidate — league", () => {
 
     // A blessing card names its own path, so a transposed column cannot mis-file it.
     const blessing = parseBlessingTier({
+      progressionSlot: 1,
       tier: 1,
       revealed: true,
       paths: ["Order", "Balance", "Chaos"],
-      godTier: false,
+      godTier: null,
+      passives: [],
       choices: [
         { path: "Chaos", name: "Adrenaline Junkie", effects: ["Maximum adrenaline +50%."] },
         { name: "No path" },

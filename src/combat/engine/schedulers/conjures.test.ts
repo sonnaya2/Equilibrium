@@ -229,19 +229,17 @@ describe("blessing riders on conjure auto and poison", () => {
     expect(s.ok).toBe(true);
     const autos = s.events.filter((e) => e.family === "conjureAuto");
     expect(autos.length).toBeGreaterThan(0);
-    const ridersOnAutos = s.events.filter(
-      (e) =>
-        e.abilityId === "big-boned" &&
-        e.derivedFrom !== undefined &&
-        autos.some((a) => a.seq === e.derivedFrom),
+    const ridersOnAutos = autos.flatMap(
+      (event) => event.components?.filter((component) => component.id === "big-boned") ?? [],
     );
     expect(ridersOnAutos).toHaveLength(autos.length);
     for (const rider of ridersOnAutos) {
       expect(rider.attached).toBe(true);
-      expect(rider.damageTag).toBe("bonus-damage");
       expect(rider.damage.expected).toBe(bbExpected);
-      expect(rider.originKind).toBe("conjure");
+      expect(rider.hitCapPolicy).toBe("shared");
+      expect(rider.analysis?.blessingId).toBe("big-boned");
     }
+    expect(autos.every((event) => event.originKind === "conjure")).toBe(true);
   });
 
   it("Big Boned rides putrid zombie poison ticks", () => {
@@ -255,18 +253,17 @@ describe("blessing riders on conjure auto and poison", () => {
     expect(s.ok).toBe(true);
     const poisons = s.events.filter((e) => e.family === "poison");
     expect(poisons.length).toBeGreaterThan(0);
-    const ridersOnPoison = s.events.filter(
-      (e) =>
-        e.abilityId === "big-boned" &&
-        e.derivedFrom !== undefined &&
-        poisons.some((p) => p.seq === e.derivedFrom),
+    const ridersOnPoison = poisons.flatMap(
+      (event) => event.components?.filter((component) => component.id === "big-boned") ?? [],
     );
     expect(ridersOnPoison).toHaveLength(poisons.length);
     for (const rider of ridersOnPoison) {
       expect(rider.attached).toBe(true);
       expect(rider.damage.expected).toBe(bbExpected);
-      expect(rider.originKind).toBe("conjure");
+      expect(rider.hitCapPolicy).toBe("shared");
+      expect(rider.analysis?.blessingId).toBe("big-boned");
     }
+    expect(poisons.every((event) => event.originKind === "conjure")).toBe(true);
   });
 
   it("conjure autos do not trigger Cinders or Inferno", () => {

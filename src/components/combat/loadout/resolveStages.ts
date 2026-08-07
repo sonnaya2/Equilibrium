@@ -111,6 +111,7 @@ import {
   leagueModifiers,
   resolveLeagueRules,
   resolveMaximumAdrenaline,
+  setPieceContributionModifier,
   weaponTierOverride,
   type AegisArmourBonus,
   type ResolvedLeagueRules,
@@ -320,6 +321,7 @@ export function resolveEquipment(
     blessingPicks: options.blessingPicks,
     relics: options.relics,
   });
+  const setPieceContribution = setPieceContributionModifier(league);
   const resolvedWeaponTierOverride = weaponTierOverride(league);
   const weaponTierOverrides: WeaponTierOverrides =
     resolvedWeaponTierOverride == null ? [] : [resolvedWeaponTierOverride];
@@ -327,11 +329,12 @@ export function resolveEquipment(
     style: loadout.style,
     equipmentSlots: loadout.equipmentSlots,
     enchantments: loadout.enchantments,
+    pieceContribution: setPieceContribution,
     effectiveAttackLevel: levels.visibleAttackLevel,
     effectiveStrengthLevel: levels.effectiveDamageLevel,
   });
   const setCounts = equippedSetCounts({ equipmentSlots: loadout.equipmentSlots });
-  const tumekensPieces = effectiveTumekenPieces(setCounts);
+  const tumekensPieces = effectiveTumekenPieces(setCounts, setPieceContribution);
   const styleContributions = equipmentStyleDamageContributions(loadout);
   const styleGearDamage = equipmentStyleDamageBonus(loadout);
   const weaponConfig = loadoutWeaponConfig(loadout, weaponTierOverrides);
@@ -506,7 +509,8 @@ export function resolveLeagueBundle(
     totalArmour: defenceLife.defence.totalArmour,
     maximumLife: defenceLife.maximumLifeForLeague,
     powerburstUntilTick: defenceLife.powerburstUntilTick,
-    targetTiles: loadout.target?.occupiedTiles,
+    targetSize: loadout.target?.size,
+    occupiedTiles: loadout.target?.occupiedTiles,
     areaTargets: loadout.target?.areaTargets,
     prayerBonus: equipmentPrayer,
     herbloreLevel: loadout.buffs.herbloreLevel,
@@ -800,7 +804,10 @@ export function resolveCrit(
     loadout.perks.biting > 0
       ? bitingCritChanceBonus(loadout.perks.biting, loadout.perks.bitingLevel20)
       : 0;
-  const setCrit = loadoutSetCritChance({ equipmentSlots: loadout.equipmentSlots });
+  const setCrit = loadoutSetCritChance({
+    equipmentSlots: loadout.equipmentSlots,
+    pieceContribution: setPieceContributionModifier(leagueBundle?.league),
+  });
   const configuredCrit = loadout.critChance / 100;
   const critSubtotal = configuredCrit + biting + setCrit + equipmentCrit.chance + icyenicCrit;
   // Invention perk Equilibrium zeros crit - not the League.
@@ -868,7 +875,10 @@ export function resolveCombatRules(
 ): ResolvedCombatRules {
   const globalModifiers: CombatModifier[] = [];
   // Catalogue damageMult sets (none sourced yet - structure ready).
-  globalModifiers.push(...setDamageModifiers(equipment.setCounts));
+  const setPieceContribution = setPieceContributionModifier(leagueBundle.league);
+  globalModifiers.push(
+    ...setDamageModifiers(equipment.setCounts, { pieceContribution: setPieceContribution }),
+  );
   if (loadout.buffs?.vulnerability) globalModifiers.push(vulnerabilityModifier());
   if (levels.curse) globalModifiers.push(prayerDamageModifier(levels.curse));
   if (equipment.equipmentEffects.amZiFlatDamage > 0) {
@@ -970,9 +980,11 @@ export function resolveCombatRules(
   const equipmentAdrenalineCap = equipment.equipmentEffects.vestments.increasedAdrenalineCap
     ? 120
     : 100;
-  const maxAdrenaline =
-    resolveMaximumAdrenaline(equipmentAdrenalineCap, leagueBundle.league) +
-    (adrenaline.maxAdrenalineBonus ?? 0);
+  const maxAdrenaline = resolveMaximumAdrenaline(
+    equipmentAdrenalineCap,
+    leagueBundle.league,
+    adrenaline.maxAdrenalineBonus ?? 0,
+  ).cap;
 
   return {
     globalModifiers,
@@ -991,9 +1003,11 @@ export function resolveCombatRules(
     preciseRank: loadout.perks.precise > 0 ? loadout.perks.precise : 0,
     conjureBasicDamageMult: loadoutFirstNecromancerConjureDamageMult({
       equipmentSlots: loadout.equipmentSlots,
+      pieceContribution: setPieceContribution,
     }),
     conjureDurationMult: loadoutFirstNecromancerConjureDurationMult({
       equipmentSlots: loadout.equipmentSlots,
+      pieceContribution: setPieceContribution,
     }),
     maxAdrenaline,
     startingAdrenaline: Math.min(maxAdrenaline, loadout.startingAdrenaline),
@@ -1026,7 +1040,8 @@ export function resolveCombatRules(
     combatContext: {
       style: loadout.style,
       ruleset: leagueBundle.league.ruleset,
-      targetTiles: leagueBundle.league.targetTiles,
+      targetSize: leagueBundle.league.targetSize,
+      occupiedTiles: leagueBundle.league.occupiedTiles,
     },
     berserkersFury,
     slayerHelmet: slayerSalve.slayerHelmet,

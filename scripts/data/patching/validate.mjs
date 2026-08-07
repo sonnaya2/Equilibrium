@@ -49,6 +49,8 @@ const SCHEMA = new Map([
     { keys: ["entity", "region", "section", "reason"], required: ["entity", "region", "section", "reason"] },
   ],
   ["set-record", { keys: ["file", "path", "body", "entity", "reason"], required: ["file", "path", "body"] }],
+  ["set-blessing-choice", { keys: ["id", "body", "reason"], required: ["id", "body"] }],
+  ["set-blessing-tier", { keys: ["progressionSlot", "body", "reason"], required: ["progressionSlot", "body"] }],
   [
     "add-requirement",
     { keys: ["entity", "description", "kind", "skill", "level", "target"], required: ["entity", "description"] },
@@ -180,6 +182,29 @@ const SHAPE = {
       operation.entity == null ? null : identifier(operation, "entity", context);
     return { file, path, body: operation.body, entity, reason: scalar(operation.reason) };
   },
+  "set-blessing-choice": (operation, context) => {
+    const id = identifier(operation, "id", context);
+    if (operation.body == null || typeof operation.body !== "object" || Array.isArray(operation.body)) {
+      fail(context, "set-blessing-choice body must be an object");
+    }
+    if (operation.body.id !== id) {
+      fail(context, "set-blessing-choice body.id must match id");
+    }
+    return { id, body: operation.body, reason: scalar(operation.reason) };
+  },
+  "set-blessing-tier": (operation, context) => {
+    const progressionSlot = operation.progressionSlot;
+    if (!Number.isInteger(progressionSlot) || progressionSlot < 1) {
+      fail(context, "progressionSlot must be a positive integer");
+    }
+    if (operation.body == null || typeof operation.body !== "object" || Array.isArray(operation.body)) {
+      fail(context, "set-blessing-tier body must be an object");
+    }
+    if (operation.body.progressionSlot !== progressionSlot) {
+      fail(context, "set-blessing-tier body.progressionSlot must match progressionSlot");
+    }
+    return { progressionSlot, body: operation.body, reason: scalar(operation.reason) };
+  },
   // A requirement is keyed by (entity, kind, description), so those three are
   // the whole identity - the ordinal is the database's, and the handler picks it.
   requirement: (operation, context) => {
@@ -220,6 +245,8 @@ const SHAPE_OF = new Map([
   ["remove", SHAPE.remove],
   ["unlink-research-entry", SHAPE["unlink-research-entry"]],
   ["set-record", SHAPE["set-record"]],
+  ["set-blessing-choice", SHAPE["set-blessing-choice"]],
+  ["set-blessing-tier", SHAPE["set-blessing-tier"]],
   ["add-requirement", SHAPE.requirement],
   ["remove-requirement", SHAPE.requirement],
   ["add-effect", SHAPE.effect],

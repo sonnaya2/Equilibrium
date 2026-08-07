@@ -18,8 +18,10 @@ import type { CombatStyle } from "@/combat/types";
 import {
   BLESSING_PATHS,
   PATH_TIERS,
+  activeTierPassives,
   activeBlessings,
   blessingChoice,
+  godTierChoice,
   blessingTierRevealed,
   deriveGodTier,
   type BlessingPath,
@@ -287,8 +289,9 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
     setLoadout((prev) => withLoadoutBuffs(prev, patch, unlockedRegions));
   const revealedBlessingTiers = PATH_TIERS.filter(blessingTierRevealed);
   const godAlignment = deriveGodTier(build.blessingPicks.slice(0, 3));
-  const godBlessing = godAlignment ? blessingChoice(4, godAlignment) : undefined;
+  const godBlessing = godAlignment ? godTierChoice(1, godAlignment) : undefined;
   const selectedBlessings = activeBlessings(build.blessingPicks);
+  const selectedTierPassives = activeTierPassives(build.blessingPicks);
   const t7Picked = build.relics[String(T7_RELIC_TIER)] ?? null;
   const icyenicPicked = t7Picked === ICYENIC_FAITH_RELIC;
   const naragiPicked = t7Picked === NARAGI_EDICT_RELIC;
@@ -762,6 +765,15 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
               <p className="mt-1.5 text-xs text-gem-300">
                 God Tier One · {godBlessing.name} ({godAlignment})
               </p>
+            ) : null}
+            {selectedTierPassives.length > 0 ? (
+              <ul className="mt-1.5 space-y-0.5 text-[11px] text-parch-300">
+                {selectedTierPassives.map((passive) => (
+                  <li key={passive.id}>
+                    <span className="text-parch-100">{passive.name}</span> · {passive.description}
+                  </li>
+                ))}
+              </ul>
             ) : null}
             {selectedBlessings.length > 0 ? (
               <ul className="mt-1.5 space-y-0.5 text-[11px] text-parch-300">

@@ -23,12 +23,13 @@ export function onMagicHitLanded(
   damage?: ResolvedDamage,
 ): void {
   const snap = event.castSnap;
+  const lightningSurgeChance = rt.hitDetails.get(event.seq)?.critChance ?? 0;
   if (
     event.lightningSurge &&
     snap &&
     event.sourceCast !== rt.state.magic.instability.grantedByCast &&
     instabilityActive(rt.state.magic.instability, event.tick) &&
-    (rt.hitDetails.get(event.seq)?.critChance ?? 0) > 0
+    lightningSurgeChance > 0
   ) {
     scheduleEvent(rt, {
       tick: event.tick + LIGHTNING_SURGE_TICK_DELAY,
@@ -39,6 +40,10 @@ export function onMagicHitLanded(
       attached: false,
       procEligible: false,
       recursionAllowed: false,
+      expectedOccurrences: lightningSurgeChance,
+      expectedTriggerRolls: 0,
+      expectedActivations: lightningSurgeChance,
+      expectedSeparateHits: lightningSurgeChance,
       originKind: "proc",
       provenance: { kind: "equipment_proc", detail: "lightning_surge" },
       derivedFrom: event.seq,

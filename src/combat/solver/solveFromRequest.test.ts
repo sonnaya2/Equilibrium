@@ -56,7 +56,8 @@ function nakedRequest() {
         totalArmour: 0,
         maximumLife: 10_000,
         powerburstUntilTick: 0,
-        targetTiles: 1,
+        targetSize: 1,
+        occupiedTiles: 1,
       },
       equipmentIds: [],
       weaponConfiguration: "dualwield",
@@ -92,7 +93,8 @@ function complicatedRequest() {
       totalArmour: 2_400,
       maximumLife: 15_000,
       powerburstUntilTick: 50,
-      targetTiles: 3,
+      targetSize: 3,
+      occupiedTiles: 3,
     },
   );
 
@@ -124,7 +126,7 @@ function complicatedRequest() {
         },
       },
       league: serializeLeague(leagueLive),
-      context: { style: "melee", ruleset: "equilibrium", targetTiles: 3 },
+      context: { style: "melee", ruleset: "equilibrium", targetSize: 3, occupiedTiles: 3 },
       targetHpPercent: 100,
       cap: { cap: 30_000, bypass: false },
       equipmentIds: ["item:vestments", "item:mainhand", "item:offhand"],

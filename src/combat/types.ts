@@ -33,7 +33,8 @@ export interface CombatContext {
   /** @deprecated Read compatibility for pre-modernisation contexts. */
   autoAttack?: boolean;
   area?: "aoe" | "multi-target";
-  targetTiles?: number;
+  targetSize?: number;
+  occupiedTiles?: number;
   /** Legacy projection; prefer provenance. Omit or "direct" for player on-hit gear. */
   damageSource?: OutgoingDamageSource;
   /** Capability-derived provenance; required on scheduled/resolved hit paths. */

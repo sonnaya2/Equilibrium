@@ -38,8 +38,32 @@ describe("encodeBuild / decodeBuild", () => {
       elective: ["desert"],
       relics: {},
       blessingPicks: ["Order"],
-      blessingSelections: [{ tier: 1, blessingId: "teragards-aegis" }],
+      blessingSelections: [{ progressionSlot: 1, tier: 1, blessingId: "teragards-aegis" }],
       blessingResetsUsed: 3,
     });
+  });
+
+  it("migrates old interspersed-slot share selections without renumbering the picked cards", () => {
+    const legacy = btoa(
+      JSON.stringify({
+        blessingPicks: ["Order", "Balance", "Chaos", "Balance", "Order", "Order"],
+        blessingSelections: [
+          { tier: 1, blessingId: "teragards-aegis" },
+          { tier: 2, blessingId: "barkscales" },
+          { tier: 3, blessingId: "avernic-rampage" },
+          { tier: 5, blessingId: "true-equilibrium" },
+          { tier: 6, blessingId: "lord-of-light" },
+          { tier: 7, blessingId: "tempered-heart" },
+        ],
+      }),
+    );
+    expect(decodeBuild(legacy)?.blessingSelections).toEqual([
+      { progressionSlot: 1, tier: 1, blessingId: "teragards-aegis" },
+      { progressionSlot: 2, tier: 2, blessingId: "barkscales" },
+      { progressionSlot: 3, tier: 3, blessingId: "avernic-rampage" },
+      { progressionSlot: 5, tier: 4, blessingId: "true-equilibrium" },
+      { progressionSlot: 6, tier: 5, blessingId: "lord-of-light" },
+      { progressionSlot: 7, tier: 6, blessingId: "tempered-heart" },
+    ]);
   });
 });

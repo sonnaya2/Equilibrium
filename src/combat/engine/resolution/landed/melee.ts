@@ -9,11 +9,16 @@ import {
 } from "../../../styles/melee/effects";
 import { capabilitiesOf } from "../../../shared/damageProvenance";
 import { hasPassive } from "../../../shared/equipment";
+import { attachedResolutionComponent, resolveLeagueAttachedRawHost } from "../../../league/damage";
+import { mulFloor } from "../../../core/rounding";
+import { ENDURING_RUIN_SOURCE } from "../../../shared/equipment";
+import type { CombatModifier } from "../../../types";
 import type { ResolvedDamage } from "../types";
 import type { ScheduledEvent } from "../../runtime/events";
 import { scheduleEvent, type SimulationRuntime } from "../../runtime/runtime";
 import { patchMelee, patchTarget } from "../../runtime/state";
 import { reduceCooldown } from "../../cast/effects/cooldowns";
+import { targetAndPostHitModifiers } from "../modifiers";
 
 /** Wiki Hurricane: -3s (5 ticks) per affected target per cast. */
 const HURRICANE_CDR_TICKS = secondsToTicks(3);
@@ -23,13 +28,58 @@ function resolveParasiteDamage(rt: SimulationRuntime, at: number) {
   if (parasite.stacks <= 0 || at >= parasite.expiresAtTick) {
     return { damage: { min: 0, max: 0, expected: 0 } };
   }
-  let { min, max } = abyssalParasiteDamage(parasite.stacks);
+  const { min, max } = abyssalParasiteDamage(parasite.stacks);
+  const modifiers = targetAndPostHitModifiers(rt);
   const enduringRuin = rt.state.target.melee.enduringRuin;
   if (enduringRuin.bleedVulnerability > 0 && at < enduringRuin.untilTick) {
-    min = Math.floor(min * (1 + enduringRuin.bleedVulnerability));
-    max = Math.floor(max * (1 + enduringRuin.bleedVulnerability));
+    const modifier: CombatModifier = {
+      id: "item:enduring-ruin-bleed",
+      stage: "target",
+      priority: 50,
+      applies: () => true,
+      apply: (damage) => ({
+        ...damage,
+        damage: mulFloor(damage.damage, 1 + enduringRuin.bleedVulnerability),
+      }),
+      source: ENDURING_RUIN_SOURCE,
+    };
+    modifiers.push(modifier);
   }
-  return { damage: { min, max, expected: (min + max) / 2 } };
+  const provenance = { kind: "equipment_proc" as const, detail: "abyssal_parasite" };
+  const host = resolveLeagueAttachedRawHost({
+    rules: rt.input.league,
+    source: provenance,
+    landTick: at,
+    abilityBase: rt.input.base,
+    min,
+    max,
+    level: rt.input.level,
+    accuracy: 1,
+    crit: { chance: 0, eligible: false },
+    modifiers,
+    context: {
+      ...(rt.input.context ?? { style: "melee" }),
+      style: "melee",
+      damageSource: "proc",
+      dotKind: "bleed",
+      provenance,
+    },
+    cap: { cap: rt.input.cap?.cap ?? 30_000, bypass: true },
+    bonusTargetId: "abyssal_parasite",
+  });
+  return {
+    damage: {
+      min: host.hit.min,
+      max: host.hit.max,
+      expected: host.hit.expected,
+      critExpected: host.hit.critExpected,
+      capLoss: host.hit.capLoss,
+    },
+    hitDetail: host.hit,
+    ...(host.components.length > 0
+      ? { components: host.components.map((component) => attachedResolutionComponent(component)) }
+      : {}),
+  };
 }
 
 function addParasiteStack(rt: SimulationRuntime, event: ScheduledEvent<SimulationRuntime>): void {

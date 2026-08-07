@@ -172,7 +172,7 @@ describe("Barkscales with a bounded incoming scenario", () => {
     expect(single.damage.expected).toBeCloseTo(2_000, 0);
     expect(area.expectedOccurrences).toBe(8);
     expect(area.damage.expected).toBeCloseTo(4 * single.damage.expected, 0);
-    // The per-application figure is unchanged by how many tiles were occupied.
+    // The per-application figure is unchanged by how many targets were struck.
     expect(area.damage.expected / area.expectedOccurrences).toBeCloseTo(
       single.damage.expected / single.expectedOccurrences,
       6,
@@ -194,6 +194,33 @@ describe("Barkscales with a bounded incoming scenario", () => {
     expect(grasp.attached).toBe(false);
     expect(grasp.damage.critical?.mode ?? "none").toBe("none");
     expect(grasp.damage.critical?.contribution ?? 0).toBe(0);
+  });
+
+  it("lets each Grasp host Big Boned once", () => {
+    const combined = resolveLeagueRules(
+      { ruleset: "equilibrium", blessingPicks: ["Balance", "Balance"] },
+      { totalArmour: 1_000, maximumLife: 10_000 },
+    );
+    const grasp = graspOfGuthixComponent({
+      rules: combined,
+      triggers: 1,
+      targetsStruck: 1,
+      base: 1_000,
+      level: 99,
+      accuracy: 1,
+      modifiers: [],
+      context: { style: "melee", ruleset: "equilibrium" },
+    })!;
+
+    expect(grasp.damage.expected).toBe(1_500);
+    expect(grasp.components).toHaveLength(1);
+    expect(grasp.components?.[0]).toMatchObject({
+      id: "big-boned",
+      attached: true,
+      hitCapPolicy: "shared",
+      analysis: { blessingId: "big-boned", expectedActivations: 1 },
+    });
+    expect(grasp.components?.some((component) => component.id === "abyssal-cinders")).toBe(false);
   });
 
   it("reports nothing at all without the blessing picked", () => {

@@ -13,6 +13,9 @@ import {
   cracklingDamageFraction,
 } from "../../../shared/perks";
 import type { ResolvedDamage } from "../types";
+import type { AttachedDamageComponent, EventResolution } from "../types";
+import { blessingRule, resolveMaximumLife } from "../../../league/ruleset";
+import { targetAndPostHitModifiers } from "../modifiers";
 
 function procRank(value: number | undefined, max: number): number {
   return typeof value === "number" && Number.isInteger(value) && value >= 1 && value <= max
@@ -27,13 +30,7 @@ function applyProcModifiers(
   damage: number,
 ): number {
   const ability = rt.byId.get(event.abilityId) ?? rt.byId.values().next().value;
-  const configured =
-    typeof rt.input.modifiers === "function"
-      ? ability
-        ? rt.input.modifiers(ability)
-        : []
-      : (rt.input.modifiers ?? []);
-  const modifiers = configured.filter((modifier) => modifier.id === "vulnerability");
+  const modifiers = targetAndPostHitModifiers(rt, ability);
   if (modifiers.length === 0) return damage;
   const provenance = {
     kind: "invention_proc" as const,
@@ -46,25 +43,66 @@ function applyProcModifiers(
   }).damage;
 }
 
+function bigBonedFlat(rt: SimulationRuntime, atTick: number): number {
+  if (!rt.input.league) return 0;
+  const rule = blessingRule(rt.input.league, "big-boned");
+  return rule?.maxLifeDamagePercent === undefined
+    ? 0
+    : Math.floor(resolveMaximumLife(rt.input.league, atTick) * rule.maxLifeDamagePercent);
+}
+
+function procResolution(
+  effectId: "crackling" | "aftershock",
+  damage: ResolvedDamage,
+  bigBoned: ResolvedDamage | undefined,
+): EventResolution {
+  const component: AttachedDamageComponent | undefined = bigBoned
+    ? {
+        id: "big-boned",
+        damage: bigBoned,
+        attached: true,
+        hitCapPolicy: "shared",
+        analysis: {
+          kind: "league-blessing",
+          blessingId: "big-boned",
+          bonusTargetId: effectId,
+          expectedActivations: 1,
+        },
+      }
+    : undefined;
+  return {
+    damage,
+    ...(component ? { components: [component] } : {}),
+  };
+}
+
 function cracklingDamage(
   rt: SimulationRuntime,
   event: ScheduledEvent<SimulationRuntime>,
   rank: number,
-): ResolvedDamage {
-  const hit = applyProcModifiers(
-    rt,
-    event,
-    Math.floor(rt.input.base * cracklingDamageFraction(rank)),
+): EventResolution {
+  const raw = Math.floor(rt.input.base * cracklingDamageFraction(rank));
+  const base = applyProcModifiers(rt, event, raw);
+  const flat = bigBonedFlat(rt, event.tick);
+  const combined = flat > 0 ? applyProcModifiers(rt, event, raw + flat) : base;
+  return procResolution(
+    "crackling",
+    { min: combined, max: combined, expected: combined },
+    flat > 0
+      ? { min: combined - base, max: combined - base, expected: combined - base }
+      : undefined,
   );
-  return { min: hit, max: hit, expected: hit };
 }
 
 function aftershockDamage(
   rt: SimulationRuntime,
   event: ScheduledEvent<SimulationRuntime>,
   rank: number,
-): ResolvedDamage {
+  atTick: number,
+): EventResolution {
   const hits: number[] = [];
+  const combinedHits: number[] = [];
+  const flat = bigBonedFlat(rt, atTick);
   const steps = Math.round(
     (AFTERSHOCK_MAX_AD_FRACTION_PER_RANK - AFTERSHOCK_MIN_AD_FRACTION_PER_RANK) /
       AFTERSHOCK_DAMAGE_STEP_PER_RANK,
@@ -74,12 +112,29 @@ function aftershockDamage(
   for (let step = 0; step <= steps; step++) {
     const raw = Math.floor((rt.input.base * (minimumUnits + step * stepUnits) * rank) / 1000);
     hits.push(applyProcModifiers(rt, event, raw));
+    combinedHits.push(applyProcModifiers(rt, event, raw + flat));
   }
-  return {
+  const base: ResolvedDamage = {
     min: hits[0]!,
     max: hits.at(-1)!,
     expected: hits.reduce((total, hit) => total + hit, 0) / hits.length,
   };
+  const combined: ResolvedDamage = {
+    min: combinedHits[0]!,
+    max: combinedHits.at(-1)!,
+    expected: combinedHits.reduce((total, hit) => total + hit, 0) / combinedHits.length,
+  };
+  return procResolution(
+    "aftershock",
+    combined,
+    flat > 0
+      ? {
+          min: combined.min - base.min,
+          max: combined.max - base.max,
+          expected: combined.expected - base.expected,
+        }
+      : undefined,
+  );
 }
 
 /**
@@ -111,7 +166,7 @@ export function applyInventionProcs(
     damage.max > 0 &&
     event.tick >= rt.state.invention.cracklingReadyTick
   ) {
-    const procDamage = cracklingDamage(rt, event, cracklingRank);
+    const procResolution = cracklingDamage(rt, event, cracklingRank);
     rt.state = {
       ...rt.state,
       invention: {
@@ -130,7 +185,7 @@ export function applyInventionProcs(
       recursionAllowed: false,
       originKind: "proc",
       provenance: { kind: "invention_proc", detail: "crackling" },
-      resolve: () => ({ damage: procDamage }),
+      resolve: () => procResolution,
     });
   }
 
@@ -166,8 +221,8 @@ export function applyInventionProcs(
     return;
   }
 
-  const procDamage = aftershockDamage(rt, event, aftershockRank);
   const tick = Math.max(event.tick, invention.aftershockReadyTick);
+  const procResolution = aftershockDamage(rt, event, aftershockRank, tick);
   rt.state = {
     ...rt.state,
     invention: { ...invention, aftershockCharge, aftershockPending: true },
@@ -183,6 +238,6 @@ export function applyInventionProcs(
     recursionAllowed: false,
     originKind: "proc",
     provenance: { kind: "invention_proc", detail: "aftershock" },
-    resolve: () => ({ damage: procDamage }),
+    resolve: () => procResolution,
   });
 }

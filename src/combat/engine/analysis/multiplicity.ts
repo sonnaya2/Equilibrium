@@ -4,6 +4,10 @@
  */
 export interface MultiplicityFields {
   attached: boolean;
+  components?: readonly {
+    attached: true;
+    analysis?: { expectedActivations: number };
+  }[];
   expectedOccurrences?: number;
   expectedTriggerRolls?: number;
   expectedActivations?: number;
@@ -28,6 +32,13 @@ export interface ResolvedMultiplicity {
   expectedAttachedComponents: number;
 }
 
+function attachedComponentActivations(event: MultiplicityFields): number {
+  return (event.components ?? []).reduce(
+    (total, component) => total + (component.analysis?.expectedActivations ?? 1),
+    0,
+  );
+}
+
 export function resolveEventMultiplicity(event: MultiplicityFields): ResolvedMultiplicity {
   if (event.attached) {
     const activations = event.expectedActivations ?? event.expectedOccurrences ?? 1;
@@ -45,7 +56,7 @@ export function resolveEventMultiplicity(event: MultiplicityFields): ResolvedMul
       expectedTriggerRolls: event.expectedTriggerRolls ?? 0,
       expectedActivations: activations,
       expectedSeparateHits: event.expectedSeparateHits ?? activations,
-      expectedAttachedComponents: 0,
+      expectedAttachedComponents: attachedComponentActivations(event),
     };
   }
 
@@ -55,17 +66,17 @@ export function resolveEventMultiplicity(event: MultiplicityFields): ResolvedMul
       expectedTriggerRolls: 1,
       expectedActivations: event.expectedOccurrences,
       expectedSeparateHits: event.expectedOccurrences,
-      expectedAttachedComponents: 0,
+      expectedAttachedComponents: attachedComponentActivations(event),
     };
   }
 
-  // Legacy: expectedOccurrences > 1 is multi-application (e.g. Grasp tiles).
+  // Legacy: expectedOccurrences > 1 is multi-application (e.g. Grasp targets).
   if (event.expectedOccurrences !== undefined && event.expectedOccurrences !== 1) {
     return {
       expectedTriggerRolls: 0,
       expectedActivations: event.expectedOccurrences,
       expectedSeparateHits: event.expectedOccurrences,
-      expectedAttachedComponents: 0,
+      expectedAttachedComponents: attachedComponentActivations(event),
     };
   }
 
@@ -73,7 +84,7 @@ export function resolveEventMultiplicity(event: MultiplicityFields): ResolvedMul
     expectedTriggerRolls: 0,
     expectedActivations: 1,
     expectedSeparateHits: 1,
-    expectedAttachedComponents: 0,
+    expectedAttachedComponents: attachedComponentActivations(event),
   };
 }
 

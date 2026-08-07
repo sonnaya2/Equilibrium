@@ -55,13 +55,18 @@ function sampleSimBase(): SerializableRevolutionSimBase {
       totalArmour: 1000,
       maximumLife: 10000,
       powerburstUntilTick: 0,
-      targetTiles: 1,
+      targetSize: 1,
+      occupiedTiles: 1,
       areaTargets: 6,
       prayerBonus: 24,
     },
-    context: { style: "melee", ruleset: "equilibrium", targetTiles: 1 },
+    context: { style: "melee", ruleset: "equilibrium", targetSize: 1, occupiedTiles: 1 },
     cap: { cap: 30000, bypass: false },
     startingAdrenaline: 100,
+    naturalInstinctUntilTick: 20,
+    startingResidualSouls: 3,
+    slayerOnTask: true,
+    slayerLevel: 120,
     equipmentIds: ["item:example"],
     weaponConfiguration: "dualwield",
     modifierSources: {
@@ -202,6 +207,30 @@ describe("solver worker serializable boundary", () => {
       abilities: [basicAbility],
     });
     expect(input.activateNaragiAtStart).toBe(true);
+  });
+
+  it("preserves state-changing simulation inputs across the worker boundary", () => {
+    const cloned = structuredClone(sampleSimBase());
+    const base = reviveRevolutionBase(cloned);
+    expect(base).toMatchObject({
+      naturalInstinctUntilTick: 20,
+      startingResidualSouls: 3,
+      slayerOnTask: true,
+      slayerLevel: 120,
+    });
+
+    const input = buildRevolutionInput(cloned, {
+      bar: [basicAbility],
+      style: "melee",
+      durationTicks: 50,
+      abilities: [basicAbility],
+    });
+    expect(input).toMatchObject({
+      naturalInstinctUntilTick: 20,
+      startingResidualSouls: 3,
+      slayerOnTask: true,
+      slayerLevel: 120,
+    });
   });
 
   it("rejects plain loadout snapshots in requireSimBase", () => {

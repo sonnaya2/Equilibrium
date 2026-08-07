@@ -5,9 +5,12 @@ import {
   BLESSING_IDS,
   BLESSING_RESET_COUNT,
   activeBlessings,
+  activeTierPassives,
   deriveGodTier,
   GOD_TIERS,
+  GOD_TIER_SLOTS,
   godTierAlignments,
+  hasLeagueEntitlement,
   type BlessingChoice,
   type BlessingPath,
 } from "./blessings";
@@ -32,18 +35,50 @@ function orderings(picks: Triple): Triple[] {
 
 describe("canonical blessings data contract", () => {
   it("pins god tiers and reset count to confirmed Equilibrium structure", () => {
-    expect(GOD_TIERS).toEqual([4, 8]);
+    expect(GOD_TIERS).toEqual([1, 2]);
+    expect(GOD_TIER_SLOTS).toEqual([4, 8]);
     expect(BLESSING_RESET_COUNT).toBe(3);
   });
 
   it("keeps the compile-time path union in step with data/league/blessings.json", () => {
     expect([...BLESSING_PATHS].sort()).toEqual([...blessingsData.paths].sort());
-    expect(GOD_TIERS).toEqual(blessingsData.godTiers);
+    expect(GOD_TIER_SLOTS).toEqual(blessingsData.godTiers);
     expect(BLESSING_RESET_COUNT).toBe(blessingsData.resetCount);
   });
 
-  it("marks exactly tiers 4 and 8 as god tiers in the records", () => {
-    expect(blessingsData.records.filter((r) => r.godTier).map((r) => r.tier)).toEqual([4, 8]);
+  it("keeps progression slots separate from public path and God tier numbers", () => {
+    expect(blessingsData.records.map((record) => record.progressionSlot)).toEqual([
+      1, 2, 3, 4, 5, 6, 7, 8,
+    ]);
+    expect(blessingsData.records.filter((r) => r.godTier !== null).map((r) => r.godTier)).toEqual([
+      1, 2,
+    ]);
+    expect(blessingsData.records.filter((r) => r.tier !== null).map((r) => r.tier)).toEqual([
+      1, 2, 3, 4, 5, 6,
+    ]);
+  });
+
+  it("stores Tier 4, God Tier One, and Tier 5 passives as typed data", () => {
+    expect(blessingsData.records.find((record) => record.tier === 4)?.passives).toMatchObject([
+      { kind: "entitlement", effect: { type: "league-entitlement", entitlement: "wars-wares" } },
+      { kind: "combat", effect: { type: "maximum-adrenaline", bonusPercent: 25 } },
+    ]);
+    expect(blessingsData.records.find((record) => record.godTier === 1)?.passives).toMatchObject([
+      {
+        kind: "progression",
+        effect: {
+          type: "rotation-selection",
+          encounters: ["araxxor", "rise-of-the-six", "vorago"],
+        },
+      },
+    ]);
+    expect(blessingsData.records.find((record) => record.tier === 5)?.passives).toHaveLength(2);
+    expect(activeTierPassives([O, O, O, B]).map((passive) => passive.id)).toEqual([
+      "god-tier-one-rotation-selection",
+      "wars-wares-entitlement",
+      "tier-four-maximum-adrenaline",
+    ]);
+    expect(hasLeagueEntitlement([O, O, O, B], "wars-wares")).toBe(true);
   });
 
   it("contains every revealed card through God Tier 2", () => {
@@ -65,7 +100,8 @@ describe("canonical blessings data contract", () => {
         choice.id === "tempered-heart" ||
         choice.id === "envenomed" ||
         choice.id === "perfidious" ||
-        choice.id === "genesis-essence"
+        choice.id === "genesis-essence" ||
+        choice.id === "chaotic-insight"
       ) {
         continue;
       }
@@ -115,6 +151,10 @@ describe("canonical blessings data contract", () => {
       support: { status: "modeled", mechanicsUnverified: true },
       combat: { weaponTierOverride: 120 },
     });
+    expect(lateChoices.find((choice) => choice.id === "chaotic-insight")).toMatchObject({
+      support: { status: "modeled", mechanicsUnverified: true, excluded: [] },
+      combat: { setPieceContributionMultiplier: 3 },
+    });
   });
 
   it("emits stable ids, support status, and the granted God Tier from Build picks", () => {
@@ -137,6 +177,9 @@ describe("canonical blessings data contract", () => {
       "splash-zone",
       "power-archive",
     ]);
+    expect(activeBlessings([C, C, C, C, C, C]).map((choice) => choice.id)).toContain(
+      "chaotic-insight",
+    );
     expect(
       activeBlessings([O, O, O]).find((choice) => choice.id === "steadfast-will")?.support,
     ).toMatchObject({
@@ -186,15 +229,15 @@ describe("deriveGodTier — partial picks stay honest", () => {
 });
 
 describe("godTierAlignments", () => {
-  it("derives each god from its own segment: tier 4 <- picks 1-3, tier 8 <- picks 4-6", () => {
-    expect(godTierAlignments([O, O, O, C, C, C])).toEqual({ 4: O, 8: C });
-    expect(godTierAlignments([B, B, B, O, B, C])).toEqual({ 4: B, 8: B });
-    expect(godTierAlignments([C, C, O, O, O, B])).toEqual({ 4: C, 8: O });
+  it("derives each God tier from its own progression segment", () => {
+    expect(godTierAlignments([O, O, O, C, C, C])).toEqual({ 1: O, 2: C });
+    expect(godTierAlignments([B, B, B, O, B, C])).toEqual({ 1: B, 2: B });
+    expect(godTierAlignments([C, C, O, O, O, B])).toEqual({ 1: C, 2: O });
   });
 
   it("reports undecided gods independently per segment", () => {
-    expect(godTierAlignments([O, O, B, C])).toEqual({ 4: O, 8: null });
-    expect(godTierAlignments([O, C])).toEqual({ 4: null, 8: null });
-    expect(godTierAlignments([])).toEqual({ 4: null, 8: null });
+    expect(godTierAlignments([O, O, B, C])).toEqual({ 1: O, 2: null });
+    expect(godTierAlignments([O, C])).toEqual({ 1: null, 2: null });
+    expect(godTierAlignments([])).toEqual({ 1: null, 2: null });
   });
 });

@@ -77,7 +77,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
-    blessingRider: false,
+    blessingRider: true,
     cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
@@ -173,7 +173,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
-    blessingRider: false,
+    blessingRider: true,
     cindersOnHit: false,
     blessingOnHit: false,
     canCrit: true,
@@ -221,7 +221,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
-    blessingRider: false,
+    blessingRider: true,
     cindersOnHit: false,
     blessingOnHit: false,
     canCrit: true,
@@ -269,7 +269,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
-    blessingRider: false,
+    blessingRider: true,
     cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
@@ -318,12 +318,12 @@ describe("blessingHitEligibility from capabilities", () => {
       onHit: false,
     });
     expect(blessingHitEligibility("proc", false)).toEqual({
-      rider: false,
+      rider: true,
       cinders: false,
       onHit: false,
     });
     expect(blessingHitEligibility("blessing", false)).toEqual({
-      rider: false,
+      rider: true,
       cinders: false,
       onHit: false,
     });
@@ -346,7 +346,7 @@ describe("blessingHitEligibility from capabilities", () => {
       onHit: true,
     });
     expect(blessingHitEligibility({ kind: "equipment_proc" }, false)).toEqual({
-      rider: false,
+      rider: true,
       cinders: false,
       onHit: false,
     });
@@ -365,7 +365,7 @@ describe("blessingHitEligibility from capabilities", () => {
       onHit: false,
     });
     expect(blessingHitEligibility({ kind: "blessing", detail: "grasp-of-guthix" }, false)).toEqual({
-      rider: false,
+      rider: true,
       cinders: false,
       onHit: false,
     });

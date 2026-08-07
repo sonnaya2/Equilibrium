@@ -1,6 +1,6 @@
 import type { CritLayers } from "../../core/critical";
 import type { AbilityHit, AbilitySpec } from "../../pipeline/calculateAbility";
-import { calculateHit, calculateRawHitBand, type HitResult } from "../../pipeline/calculateHit";
+import { calculateHit, type HitResult } from "../../pipeline/calculateHit";
 import { TUSKAS_EMPOWERED_HIT_CAP } from "../../styles/shared/constitutionAbilities";
 import { FURY_CRIT_CHANCE_BONUS } from "../../styles/melee/effects";
 import {
@@ -43,6 +43,11 @@ import { hitReuseGet, hitReuseSet, isHitReuseActive } from "./hitReuse";
 import { landHitIdentity } from "./landHitIdentity";
 import { resolveEffectiveCombatLevel } from "../../core/effectiveLevel";
 import { NARAGI_LEVEL_OVERRIDE } from "../../league/naragiEdict";
+import {
+  attachedResolutionComponent,
+  resolveLeagueAttachedHost,
+  resolveLeagueAttachedRawHost,
+} from "../../league/damage";
 
 /** Style level at land tick: temporary override (e.g. Naragi 255) wins when active. */
 function combatLevelAt(rt: SimulationRuntime, landTick: number): number {
@@ -80,6 +85,7 @@ function mixHit(a: HitResult, b: HitResult, weight: number): HitResult {
     critMin: mix(a.critMin, b.critMin, weight),
     critMax: mix(a.critMax, b.critMax, weight),
     critChance: a.critChance,
+    critDamageBonus: mix(a.critDamageBonus ?? 0, b.critDamageBonus ?? 0, weight),
     nonCritExpected: mix(a.nonCritExpected, b.nonCritExpected, weight),
     critExpected: mix(a.critExpected, b.critExpected, weight),
     expected: mix(a.expected, b.expected, weight),
@@ -308,33 +314,41 @@ function resolveCastHitUncached(
   const base = combatBaseAt(rt, at, level);
   // Tuska on-task: flat 100x Slayer (15k cap); not AD-based; no AD modifiers.
   // https://runescape.wiki/w/Tuska%27s_Wrath
-  const hit =
+  const host =
     snap.tuskasEmpoweredDamage != null
-      ? calculateRawHitBand({
+      ? resolveLeagueAttachedRawHost({
+          rules: input.league,
+          source: provenance,
+          landTick: at,
+          abilityBase: base,
           min: snap.tuskasEmpoweredDamage,
           max: snap.tuskasEmpoweredDamage,
           level,
           accuracy: 1,
           crit: { chance: 0, eligible: false },
           modifiers: [],
-          provenance,
           context: hitContext,
           cap: { cap: TUSKAS_EMPOWERED_HIT_CAP },
         })
-      : calculateHit({
+      : resolveLeagueAttachedHost({
+          rules: input.league,
+          source: provenance,
+          landTick: at,
           base,
           band,
           level,
           accuracy: isCommand ? CONJURE_DAMAGE_POTENTIAL : input.accuracy,
           crit,
           modifiers: isCommand ? conjureEligibleModifiers(modifiers) : modifiers,
-          provenance,
           context: hitContext,
           cap: input.cap,
           preciseRank: input.preciseRank,
         });
+  const hit = host.baseHit;
 
-  const components: AttachedDamageComponent[] = [];
+  const components: AttachedDamageComponent[] = host.components.map((component) =>
+    attachedResolutionComponent(component),
+  );
   if (snap.searingWindsAtCast) {
     // Attached kind: canTriggerProcs false. On-hit gear only when parent is direct-hit
     // family (Corruption Shot DoT ticks must not gain Slayer/Salve via SW).
@@ -393,12 +407,13 @@ function resolveCastHitUncached(
     }
   }
 
-  let min = hit.min;
-  let max = hit.max;
-  let expected = hit.expected;
-  let capLoss = hit.capLoss;
-  let critExpected = hit.critExpected;
+  let min = host.hit.min;
+  let max = host.hit.max;
+  let expected = host.hit.expected;
+  let capLoss = host.hit.capLoss;
+  let critExpected = host.hit.critExpected;
   for (const c of components) {
+    if (c.hitCapPolicy === "shared") continue;
     min += c.damage.min;
     max += c.damage.max;
     expected += c.damage.expected;
@@ -413,7 +428,11 @@ function resolveCastHitUncached(
       expected,
       critExpected,
       capLoss,
-      critical: packageCritical(hit.critChance, hit.critExpected, hit.nonCritExpected),
+      critical: packageCritical(
+        host.hit.critChance,
+        host.hit.critExpected,
+        host.hit.nonCritExpected,
+      ),
     },
     hitDetail: hit,
     ...(components.length > 0 ? { components } : {}),

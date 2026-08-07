@@ -62,6 +62,10 @@ export interface SolverPackSnapshot {
   targetPoisonImmune?: boolean;
   cap?: HitCapRule;
   startingAdrenaline?: number;
+  naturalInstinctUntilTick?: number;
+  startingResidualSouls?: number;
+  slayerOnTask?: boolean;
+  slayerLevel?: number;
   equipmentIds: readonly string[];
   weaponConfiguration: SerializableRevolutionSimBase["weaponConfiguration"];
   /** Slot map used to derive set piece counts when setCounts is omitted. */
@@ -169,6 +173,10 @@ export function packSimBase(snapshot: SolverPackSnapshot): SerializableRevolutio
     targetPoisonImmune: snapshot.targetPoisonImmune === true,
     cap: snapshot.cap,
     startingAdrenaline: snapshot.startingAdrenaline,
+    naturalInstinctUntilTick: snapshot.naturalInstinctUntilTick,
+    startingResidualSouls: snapshot.startingResidualSouls,
+    slayerOnTask: snapshot.slayerOnTask,
+    slayerLevel: snapshot.slayerLevel,
     equipmentIds: snapshot.equipmentIds,
     weaponConfiguration: snapshot.weaponConfiguration,
     modifierSources: modifierSourcesFrom(snapshot),

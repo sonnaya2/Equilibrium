@@ -194,9 +194,12 @@ describe("player poison distribution integration", () => {
       const poisonHits = blessedCinderbane.events.filter(
         (event) => event.abilityId === PLAYER_POISON_EFFECT_ID,
       );
-      const bigBoned = blessedCinderbane.events.filter(
-        (event) =>
-          event.abilityId === "big-boned" && event.bonusTargetId === PLAYER_POISON_EFFECT_ID,
+      const bigBoned = poisonHits.flatMap((event) =>
+        (event.components ?? []).filter(
+          (component) =>
+            component.id === "big-boned" &&
+            component.analysis?.bonusTargetId === PLAYER_POISON_EFFECT_ID,
+        ),
       );
       const poisonRow = blessedCinderbane.analysis.byEffect.find(
         (effect) => effect.id === PLAYER_POISON_EFFECT_ID,
@@ -206,17 +209,13 @@ describe("player poison distribution integration", () => {
       expect(bigBoned).toHaveLength(poisonHits.length);
       expect(poisonHits.length).toBeGreaterThan(0);
       expect(
-        bigBoned.every(
-          (event) =>
-            event.attached &&
-            event.expectedSeparateHits === 0 &&
-            !event.procEligible &&
-            event.originKind === "poison" &&
-            poisonHits.some((poisonHit) => poisonHit.seq === event.derivedFrom),
-        ),
+        bigBoned.every((component) => component.attached && component.hitCapPolicy === "shared"),
       ).toBe(true);
       expect(
-        bigBoned.reduce((sum, event) => sum + (event.expectedActivations ?? 0), 0),
+        bigBoned.reduce(
+          (sum, component) => sum + (component.analysis?.expectedActivations ?? 0),
+          0,
+        ),
       ).toBeCloseTo(blessedCinderbane.playerPoison!.separateHits, 12);
       expect(blessed.playerPoison!.applicationAttempts).toBeCloseTo(
         ordinary.playerPoison!.applicationAttempts,

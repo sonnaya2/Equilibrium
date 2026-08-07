@@ -1,5 +1,4 @@
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
-import { calculateHit } from "../../pipeline/calculateHit";
 import {
   LIGHTNING_SURGE_BAND,
   lightningSurgeExpected,
@@ -9,6 +8,7 @@ import type { CastSnapshot } from "../cast/snapshot";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { landTimeModifiers } from "./modifiers";
 import { NO_DAMAGE, type EventResolution } from "./types";
+import { attachedResolutionComponent, resolveLeagueAttachedHost } from "../../league/damage";
 
 /**
  * Resolve an Instability Lightning Surge proc at its own land tick: EV = the
@@ -34,7 +34,10 @@ export function resolveLightningSurge(
   const { critLayers } = snap;
   // Equipment proc: never onHitGear (Slayer/Salve). Not recursive proc-eligible.
   const provenance = { kind: "equipment_proc" as const, detail: "lightning_surge" };
-  const surgeHit = calculateHit({
+  const host = resolveLeagueAttachedHost({
+    rules: input.league,
+    source: provenance,
+    landTick: at,
     base: input.base,
     band: LIGHTNING_SURGE_BAND,
     level: input.level,
@@ -67,8 +70,15 @@ export function resolveLightningSurge(
     damage: {
       min: 0,
       max: 0,
-      expected: lightningSurgeExpected(sourceCritChance, surgeHit.expected),
-      capLoss: lightningSurgeExpected(sourceCritChance, surgeHit.capLoss),
+      expected: lightningSurgeExpected(sourceCritChance, host.hit.expected),
+      capLoss: lightningSurgeExpected(sourceCritChance, host.hit.capLoss),
     },
+    ...(host.components.length > 0
+      ? {
+          components: host.components.map((component) =>
+            attachedResolutionComponent(component, sourceCritChance, 0, 0),
+          ),
+        }
+      : {}),
   };
 }

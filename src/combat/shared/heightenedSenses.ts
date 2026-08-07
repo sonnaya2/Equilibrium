@@ -1,4 +1,5 @@
 import type { SourceReference } from "../types";
+import { resolveAdrenalineCap } from "./adrenalineCap";
 
 /**
  * Heightened Senses (Archaeology monolith relic).
@@ -19,5 +20,16 @@ export const HEIGHTENED_SENSES_SOURCE: SourceReference = {
 
 export function applyHeightenedSensesCap(baseCap: number, active: boolean): number {
   if (!Number.isFinite(baseCap)) return baseCap;
-  return active ? baseCap + HEIGHTENED_SENSES_ADRENALINE_BONUS : baseCap;
+  return resolveAdrenalineCap(
+    baseCap,
+    active
+      ? [
+          {
+            id: HEIGHTENED_SENSES_ID,
+            kind: "points",
+            value: HEIGHTENED_SENSES_ADRENALINE_BONUS,
+          },
+        ]
+      : [],
+  ).cap;
 }

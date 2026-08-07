@@ -48,9 +48,10 @@ function baseInput(patch: Partial<HostCombatResolveInput> = {}): HostCombatResol
       totalArmour: 100,
       maximumLife: 10000,
       powerburstUntilTick: 12,
-      targetTiles: 1,
+      targetSize: 1,
+      occupiedTiles: 1,
     },
-    context: { style: "melee", ruleset: "base", targetTiles: 1 },
+    context: { style: "melee", ruleset: "base", targetSize: 1, occupiedTiles: 1 },
     targetHpPercent: 55,
     cap: { cap: 30_000, bypass: false },
     startingAdrenaline: 100,
@@ -123,7 +124,7 @@ describe("ResolvedCombatModel equality", () => {
       baseInput({
         style,
         weaponConfiguration,
-        context: { style, ruleset: "base", targetTiles: 1 },
+        context: { style, ruleset: "base", targetSize: 1, occupiedTiles: 1 },
       }),
     );
     expect(model.style).toBe(style);

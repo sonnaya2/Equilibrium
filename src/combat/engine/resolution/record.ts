@@ -5,7 +5,7 @@ import type { EventResolution } from "./types";
 import { recordEventAccounting } from "./accounting";
 import { releaseScoreOnlyHitDetails } from "./hitDetailsRetention";
 import { applyInventionProcs } from "./procs/invention";
-import { scheduleBlessingDamage } from "./league/blessingDamage";
+import { applyBlessingDamage } from "./league/blessingDamage";
 
 /**
  * Sole ledger-write step for a landed event (resolvers only calculate).
@@ -20,10 +20,10 @@ export function recordResolved(
   event: ScheduledEvent<SimulationRuntime>,
   resolution: EventResolution,
 ): void {
-  recordEventAccounting(rt, event, resolution);
+  const composed = applyBlessingDamage(rt, event, resolution);
+  recordEventAccounting(rt, event, composed);
 
-  const { damage } = resolution;
-  scheduleBlessingDamage(rt, event, damage);
+  const { damage } = composed;
   if (!event.blessingId) applyInventionProcs(rt, event, damage);
 
   // Endless Assault damage is not proc-eligible, but it is still the original

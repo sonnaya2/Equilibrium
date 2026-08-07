@@ -159,19 +159,25 @@ describe("scheduled hit multiplicity and origin provenance", () => {
       context: { style: "ranged", ruleset: "equilibrium" },
       rotation: rotationOf("greater_ricochet"),
     });
-    const riders = summary.events.filter((e) => e.abilityId === "big-boned");
-    expect(riders).toHaveLength(7);
-    for (const rider of riders) {
-      expect(rider.attached).toBe(true);
-      expect(rider.damageTag).toBe("bonus-damage");
-      expect(rider.originKind).toBe("direct");
-      expect(rider.expectedSeparateHits).toBe(0);
-      expect(rider.expectedTriggerRolls).toBe(0);
-      expect(rider.expectedActivations).toBe(1);
-      expect(resolveEventMultiplicity(rider)).toEqual({
+    const hosts = summary.events.filter((e) => e.abilityId === "greater_ricochet");
+    expect(hosts).toHaveLength(7);
+    for (const host of hosts) {
+      const riders = host.components?.filter((component) => component.id === "big-boned");
+      expect(riders).toHaveLength(1);
+      expect(riders?.[0]).toMatchObject({
+        attached: true,
+        hitCapPolicy: "shared",
+        analysis: {
+          kind: "league-blessing",
+          blessingId: "big-boned",
+          expectedActivations: 1,
+        },
+      });
+      expect(host.originKind).toBe("direct");
+      expect(resolveEventMultiplicity(host)).toEqual({
         expectedTriggerRolls: 0,
         expectedActivations: 1,
-        expectedSeparateHits: 0,
+        expectedSeparateHits: 1,
         expectedAttachedComponents: 1,
       });
     }
@@ -192,7 +198,10 @@ describe("scheduled hit multiplicity and origin provenance", () => {
       context: { style: "ranged", ruleset: "equilibrium" },
       rotation: rotationOf("greater_ricochet"),
     });
-    const riders = summary.events.filter((e) => e.abilityId === "abyssal-cinders");
+    const hosts = summary.events.filter((e) => e.abilityId === "greater_ricochet");
+    const riders = hosts.flatMap(
+      (host) => host.components?.filter((component) => component.id === "abyssal-cinders") ?? [],
+    );
     const infernos = summary.events.filter((e) => e.abilityId === "inferno-of-zamorak");
     expect(riders).toHaveLength(7);
     expect(infernos).toHaveLength(7);
@@ -219,17 +228,18 @@ describe("scheduled hit multiplicity and origin provenance", () => {
     expect(activations).toBeCloseTo(7 * 0.05, 10);
     expect(separateHits).toBeCloseTo(7 * 0.05, 10);
 
-    const infernoSeqs = new Set(infernos.map((e) => e.seq));
     for (const rider of riders) {
       expect(rider.attached).toBe(true);
-      expect(rider.damageTag).toBe("bonus-damage");
-      expect(resolveEventMultiplicity(rider)).toMatchObject({
+      expect(rider.hitCapPolicy).toBe("shared");
+      expect(rider.analysis).toMatchObject({
+        kind: "league-blessing",
+        blessingId: "abyssal-cinders",
         expectedActivations: 1,
-        expectedSeparateHits: 0,
-        expectedAttachedComponents: 1,
       });
-      expect(infernoSeqs.has(rider.derivedFrom ?? -1)).toBe(false);
     }
+    expect(
+      hosts.every((host) => resolveEventMultiplicity(host).expectedAttachedComponents === 1),
+    ).toBe(true);
     const cindersRow = summary.analysis.byEffect.find((row) => row.id === "abyssal-cinders");
     const gr = summary.analysis.byEffect.find((row) => row.id === "greater_ricochet");
     expect(cindersRow?.bonusDamage).toBe(0);
@@ -254,19 +264,19 @@ describe("scheduled hit multiplicity and origin provenance", () => {
       expect(tick.originKind).toBe("dot");
     }
 
-    const ridersOnDots = summary.events.filter(
-      (e) =>
-        e.abilityId === "big-boned" &&
-        e.derivedFrom !== undefined &&
-        dots.some((d) => d.seq === e.derivedFrom),
+    const ridersOnDots = dots.flatMap(
+      (event) => event.components?.filter((component) => component.id === "big-boned") ?? [],
     );
     expect(ridersOnDots.length).toBe(dotTicks);
     for (const rider of ridersOnDots) {
-      expect(rider.originKind).toBe("dot");
-      expect(rider.damageTag).toBe("bonus-damage");
       expect(rider.attached).toBe(true);
-      expect(resolveEventMultiplicity(rider).expectedSeparateHits).toBe(0);
+      expect(rider.hitCapPolicy).toBe("shared");
+      expect(rider.analysis?.expectedActivations).toBe(1);
     }
+    expect(dots.every((event) => event.originKind === "dot")).toBe(true);
+    expect(dots.every((event) => resolveEventMultiplicity(event).expectedSeparateHits === 1)).toBe(
+      true,
+    );
     // BB row: Total holds the damage; Bonus column is 0 (not self-tagged).
     // Global DoT total still includes riders on bleed ticks.
     const bb = summary.analysis.byEffect.find((row) => row.id === "big-boned");

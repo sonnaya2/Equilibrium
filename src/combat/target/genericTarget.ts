@@ -32,6 +32,8 @@ export interface GenericTarget {
   hpPercent?: number;
   /** Explicitly declared applicable weakness; never inferred from the target name. */
   hasApplicableWeakness?: boolean;
+  /** NPC size dimension used by size-scaled damage mechanics. */
+  size?: number;
   /** Full target footprint used by area mechanics. */
   occupiedTiles?: number;
   vulnerability?: boolean;

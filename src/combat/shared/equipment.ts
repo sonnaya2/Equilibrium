@@ -85,9 +85,30 @@ export function equipmentSetById(id: string): EquipmentSetDef | undefined {
   return setsById.get(id);
 }
 
+export interface SetPieceContributionModifier {
+  piecesPerItem: number;
+}
+
+export const DEFAULT_SET_PIECE_CONTRIBUTION: SetPieceContributionModifier = {
+  piecesPerItem: 1,
+};
+
+export function effectiveSetPieces(
+  physicalPieces: number,
+  contribution: SetPieceContributionModifier = DEFAULT_SET_PIECE_CONTRIBUTION,
+): number {
+  const pieces = Number.isFinite(physicalPieces) ? Math.max(0, Math.floor(physicalPieces)) : 0;
+  const piecesPerItem =
+    Number.isFinite(contribution.piecesPerItem) && contribution.piecesPerItem > 0
+      ? contribution.piecesPerItem
+      : DEFAULT_SET_PIECE_CONTRIBUTION.piecesPerItem;
+  return pieces * piecesPerItem;
+}
+
 export type LoadoutEquipmentView = {
   equipmentSlots?: Partial<Record<string, string | null | undefined>>;
   equipmentIds?: readonly string[] | null;
+  pieceContribution?: SetPieceContributionModifier;
 };
 
 /** Slots a two-handed weapon overrides: when twohand is occupied, both hands are locked. */
@@ -143,8 +164,22 @@ export function equippedSetCounts(loadout: LoadoutEquipmentView): Map<string, nu
     seen.add(id);
     const setId = equipmentById(id)?.setId;
     if (!setId) return;
-    const max = equipmentSetById(setId)?.maxPieces ?? Number.POSITIVE_INFINITY;
-    counts.set(setId, Math.min(max, (counts.get(setId) ?? 0) + (SET_PIECE_WEIGHTS[id] ?? 1)));
+    counts.set(setId, (counts.get(setId) ?? 0) + (SET_PIECE_WEIGHTS[id] ?? 1));
+  };
+  for (const id of Object.values(resolvedEquipmentSlots(loadout))) add(id);
+  for (const id of loadout.equipmentIds ?? []) add(id);
+  return counts;
+}
+
+export function equippedSetItemCounts(loadout: LoadoutEquipmentView): Map<string, number> {
+  const counts = new Map<string, number>();
+  const seen = new Set<string>();
+  const add = (id: string | null | undefined) => {
+    if (typeof id !== "string" || seen.has(id)) return;
+    seen.add(id);
+    const setId = equipmentById(id)?.setId;
+    if (!setId) return;
+    counts.set(setId, (counts.get(setId) ?? 0) + 1);
   };
   for (const id of Object.values(resolvedEquipmentSlots(loadout))) add(id);
   for (const id of loadout.equipmentIds ?? []) add(id);
@@ -185,7 +220,10 @@ export function activeEquipmentEffects(
     effectiveStrengthLevel?: number;
   },
 ): ActiveEquipmentEffects {
-  const pieces = Math.min(4, equippedSetCounts(loadout).get("vestments-of-havoc") ?? 0);
+  const pieces = effectiveSetPieces(
+    equippedSetCounts(loadout).get("vestments-of-havoc") ?? 0,
+    loadout.pieceContribution,
+  );
   const slots = resolvedEquipmentSlots(loadout);
   const weaponId = slots.twohand ?? slots.mainhand;
   const weapon = weaponId ? equipmentById(weaponId) : undefined;
@@ -509,6 +547,8 @@ export function vestmentsUltimateEligible(
 export type SetEffectSummary = {
   setId: string;
   pieces: number;
+  effectivePieces: number;
+  piecesPerItem: number;
   label: string;
   support: SetEffectSupport;
 };
@@ -522,6 +562,7 @@ export { setEffectSupport };
  */
 export function setEffectsSummary(loadout: LoadoutEquipmentView): SetEffectSummary[] {
   const counts = equippedSetCounts(loadout);
+  const itemCounts = equippedSetItemCounts(loadout);
   const out: SetEffectSummary[] = [];
   for (const [setId, pieces] of counts) {
     if (pieces <= 0) continue;
@@ -529,7 +570,9 @@ export function setEffectsSummary(loadout: LoadoutEquipmentView): SetEffectSumma
     if (!def) continue;
     out.push({
       setId,
-      pieces: Math.min(def.maxPieces, pieces),
+      pieces: itemCounts.get(setId) ?? 0,
+      effectivePieces: effectiveSetPieces(pieces, loadout.pieceContribution),
+      piecesPerItem: loadout.pieceContribution?.piecesPerItem ?? 1,
       label: def.label,
       support: setEffectSupport(def),
     });
@@ -540,6 +583,7 @@ export function setEffectsSummary(loadout: LoadoutEquipmentView): SetEffectSumma
 
 export type SetCritContext = {
   insideSunshine?: boolean;
+  pieceContribution?: SetPieceContributionModifier;
 };
 
 /** Effective tectonic piece count comes only from equipped catalogue records. */
@@ -553,8 +597,11 @@ export function effectiveTectonicPieces(counts: Map<string, number>): {
 }
 
 /** Effective Tumeken piece count comes only from equipped catalogue records. */
-export function effectiveTumekenPieces(counts: Map<string, number>): number {
-  return counts.get("tumekens-resplendence") ?? 0;
+export function effectiveTumekenPieces(
+  counts: Map<string, number>,
+  contribution: SetPieceContributionModifier = DEFAULT_SET_PIECE_CONTRIBUTION,
+): number {
+  return effectiveSetPieces(counts.get("tumekens-resplendence") ?? 0, contribution);
 }
 
 function effectActive(effect: EquipmentSetEffectDef, pieces: number, ctx: SetCritContext): boolean {
@@ -572,7 +619,7 @@ export function setCritChanceFromDef(
   pieces: number,
   ctx: SetCritContext = {},
 ): number {
-  const n = Math.max(0, Math.min(def.maxPieces, Math.floor(pieces)));
+  const n = effectiveSetPieces(pieces, ctx.pieceContribution);
   let bonus = 0;
   for (const effect of def.effects) {
     if (effect.kind !== "critChancePerPiece") continue;
@@ -588,12 +635,14 @@ export function setCritChanceFromDef(
  */
 export function loadoutSetCritChance(loadout: LoadoutEquipmentView & SetCritContext): number {
   const counts = equippedSetCounts(loadout);
-  const { pieces: tecPieces, elite } = effectiveTectonicPieces(counts);
-  const tumPieces = effectiveTumekenPieces(counts);
+  const { pieces: tecPhysicalPieces, elite } = effectiveTectonicPieces(counts);
+  const contribution = loadout.pieceContribution;
+  const tecPieces = effectiveSetPieces(tecPhysicalPieces, contribution);
+  const tumPieces = effectiveSetPieces(counts.get("tumekens-resplendence") ?? 0, contribution);
 
   let bonus = 0;
   const tecDef = equipmentSetById(elite ? "elite-tectonic" : "tectonic");
-  if (tecDef) bonus += setCritChanceFromDef(tecDef, tecPieces, loadout);
+  if (tecDef) bonus += setCritChanceFromDef(tecDef, tecPieces);
 
   const tumDef = equipmentSetById("tumekens-resplendence");
   if (tumDef) {
@@ -614,10 +663,11 @@ export function loadoutSetCritChance(loadout: LoadoutEquipmentView & SetCritCont
 export function setDamageModifiers(
   counts: Map<string, number>,
   ctx: SetCritContext = {},
+  definitions: readonly EquipmentSetDef[] = EQUIPMENT_SETS,
 ): CombatModifier[] {
   const mods: CombatModifier[] = [];
-  for (const def of EQUIPMENT_SETS) {
-    const pieces = Math.max(0, Math.min(def.maxPieces, counts.get(def.id) ?? 0));
+  for (const def of definitions) {
+    const pieces = effectiveSetPieces(counts.get(def.id) ?? 0, ctx.pieceContribution);
     if (pieces <= 0) continue;
     for (const effect of def.effects) {
       if (effect.kind !== "damageMult" && effect.kind !== "damageMultPerPiece") continue;
@@ -660,13 +710,19 @@ export function firstNecromancerConjureDurationMult(pieces: number): number {
 /** Equipped first-necromancer piece count → conjure basic mult (1 if none / <2). */
 export function loadoutFirstNecromancerConjureDamageMult(loadout: LoadoutEquipmentView): number {
   return firstNecromancerConjureDamageMult(
-    equippedSetCounts(loadout).get("first-necromancer") ?? 0,
+    effectiveSetPieces(
+      equippedSetCounts(loadout).get("first-necromancer") ?? 0,
+      loadout.pieceContribution,
+    ),
   );
 }
 
 export function loadoutFirstNecromancerConjureDurationMult(loadout: LoadoutEquipmentView): number {
   return firstNecromancerConjureDurationMult(
-    equippedSetCounts(loadout).get("first-necromancer") ?? 0,
+    effectiveSetPieces(
+      equippedSetCounts(loadout).get("first-necromancer") ?? 0,
+      loadout.pieceContribution,
+    ),
   );
 }
 

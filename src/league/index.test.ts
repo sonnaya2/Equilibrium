@@ -135,8 +135,8 @@ describe("normalizeBuild", () => {
       relics: { "1": "Survivalist" },
       blessingPicks: ["Order", "Chaos"],
       blessingSelections: [
-        { tier: 1, blessingId: "teragards-aegis" },
-        { tier: 2, blessingId: "abyssal-cinders" },
+        { progressionSlot: 1, tier: 1, blessingId: "teragards-aegis" },
+        { progressionSlot: 2, tier: 2, blessingId: "abyssal-cinders" },
       ],
       blessingResetsUsed: 2,
     });

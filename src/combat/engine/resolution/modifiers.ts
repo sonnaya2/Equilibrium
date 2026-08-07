@@ -41,6 +41,22 @@ export function buffMultiplier(
   };
 }
 
+export function targetAndPostHitModifiers(
+  rt: SimulationRuntime,
+  ability?: AbilitySpec,
+): CombatModifier[] {
+  const representative = ability ?? rt.byId.values().next().value;
+  const configured =
+    typeof rt.input.modifiers === "function"
+      ? representative
+        ? rt.input.modifiers(representative)
+        : []
+      : (rt.input.modifiers ?? []);
+  return configured.filter(
+    (modifier) => modifier.stage === "target" || modifier.stage === "postHit",
+  );
+}
+
 /**
  * DoT ignores damage-boosting prayers and Berserk / Death's Swiftness / Sunshine
  * (wiki: Dismember / Slaughter / Massacre, verified 2026-07-31). Chaos Roar bleed

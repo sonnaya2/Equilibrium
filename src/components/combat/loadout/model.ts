@@ -72,6 +72,9 @@ export interface LoadoutTarget {
   /** Optional target life-points % (0-100) for HP-dependent mechanics; absent = unavailable. */
   hpPercent?: number;
   hasApplicableWeakness?: boolean;
+  /** NPC size config used by mechanics such as Splash Zone. */
+  size?: number;
+  /** Spatial footprint reserved for mechanics that inspect occupied coverage. */
   occupiedTiles?: number;
   /** Targets expected in one area hit, including the selected target. */
   areaTargets?: number;
@@ -1197,6 +1200,9 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
               ? { hpPercent: Math.min(100, Math.max(0, Number(rawTarget.hpPercent))) }
               : {}),
             ...(rawTarget.hasApplicableWeakness === true ? { hasApplicableWeakness: true } : {}),
+            ...(Number.isFinite(rawTarget.size)
+              ? { size: Math.max(1, Math.floor(Number(rawTarget.size))) }
+              : {}),
             ...(Number.isFinite(rawTarget.occupiedTiles)
               ? { occupiedTiles: Math.max(1, Math.floor(Number(rawTarget.occupiedTiles))) }
               : {}),

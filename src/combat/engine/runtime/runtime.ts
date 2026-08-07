@@ -117,11 +117,11 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
   noteRuntimeCreated();
   const ammo = resolveStyleAmmo(input.ammo, input.equipmentIds, input.context?.style);
   const runtimeInput = ammo === input.ammo ? input : { ...input, ammo };
-  const base = resolveMaximumAdrenaline(
+  const adrenalineCap = resolveMaximumAdrenaline(
     input.equipmentEffects?.vestments.increasedAdrenalineCap ? 120 : ADRENALINE_CAP,
     input.league,
-  );
-  const adrenalineCap = base + (input.adrenaline?.maxAdrenalineBonus ?? 0);
+    input.adrenaline?.maxAdrenalineBonus ?? 0,
+  ).cap;
   if (
     input.startingAdrenaline != null &&
     (!Number.isFinite(input.startingAdrenaline) ||

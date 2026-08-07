@@ -5,6 +5,7 @@ import {
   equipmentSetById,
   resolvedEquipmentSlots,
   setEffectsSummary,
+  type SetPieceContributionModifier,
   type EquipmentSetEffectDef,
   type LoadoutEquipmentView,
   type SetEffectSupport,
@@ -35,6 +36,10 @@ function setEffectText(effect: EquipmentSetEffectDef): string {
   return `${percent} damage${context}`;
 }
 
+export function setEffectCountLabel(summary: { pieces: number; effectivePieces: number }): string {
+  return `${summary.pieces} equipped · ${summary.effectivePieces} effective pieces`;
+}
+
 /** Equipped item ids per setId (deduped). Visage still one icon while counting 2 pieces. */
 function equippedSetPieceIds(loadout: LoadoutEquipmentView): Map<string, string[]> {
   const bySet = new Map<string, string[]>();
@@ -54,10 +59,17 @@ function equippedSetPieceIds(loadout: LoadoutEquipmentView): Map<string, string[
 }
 
 /** Equipped set progress and thresholds - Gear owns this; it is not a buff toggle. */
-export function SetEffectsList({ loadout }: { loadout: Loadout }) {
+export function SetEffectsList({
+  loadout,
+  pieceContribution,
+}: {
+  loadout: Loadout;
+  pieceContribution?: SetPieceContributionModifier;
+}) {
   const view: LoadoutEquipmentView = {
     equipmentSlots: loadout.equipmentSlots,
     equipmentIds: loadout.equipmentIds,
+    pieceContribution,
   };
   const sets = setEffectsSummary(view);
   const piecesBySet = equippedSetPieceIds(view);
@@ -77,7 +89,7 @@ export function SetEffectsList({ loadout }: { loadout: Loadout }) {
           ...(def?.facts?.map(setFactThreshold).filter((value): value is number => value != null) ??
             []),
         ];
-        const activeThresholds = thresholds.filter((value) => value <= s.pieces).length;
+        const activeThresholds = thresholds.filter((value) => value <= s.effectivePieces).length;
         const state =
           s.support === "not-modeled"
             ? "Unmodeled"
@@ -95,7 +107,8 @@ export function SetEffectsList({ loadout }: { loadout: Loadout }) {
               <span className="text-parch-50">{s.label}</span>
               <span className="set-effect-state">{state}</span>
               <span className="ml-auto font-mono text-parch-300">
-                {s.pieces}/{def?.maxPieces ?? s.pieces}
+                {setEffectCountLabel(s)}
+                {s.piecesPerItem !== 1 ? ` · ${s.piecesPerItem} effective each` : null}
               </span>
             </div>
             {pieceIds.length > 0 ? (
@@ -112,7 +125,7 @@ export function SetEffectsList({ loadout }: { loadout: Loadout }) {
             ) : null}
             <ul className="set-threshold-list">
               {def?.effects.map((effect) => {
-                const met = s.pieces >= effect.minPieces;
+                const met = s.effectivePieces >= effect.minPieces;
                 return (
                   <li key={`${effect.kind}-${effect.minPieces}`} className={met ? "is-met" : ""}>
                     <span className="set-threshold-badge">
@@ -124,7 +137,7 @@ export function SetEffectsList({ loadout }: { loadout: Loadout }) {
               })}
               {def?.facts?.map((fact) => {
                 const required = setFactThreshold(fact);
-                const met = required == null || s.pieces >= required;
+                const met = required == null || s.effectivePieces >= required;
                 return (
                   <li key={fact} className={met ? "is-met" : ""}>
                     <span className="set-threshold-badge">

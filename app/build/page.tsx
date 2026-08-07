@@ -69,10 +69,12 @@ export default function BuildPage() {
 
   const blessingTiers = readDatasetRecords(blessingsData, parseBlessingTier, "blessings").map(
     (tier) => ({
+      progressionSlot: tier.progressionSlot,
       tier: tier.tier,
       revealed: tier.revealed,
       paths: tier.paths,
       godTier: tier.godTier,
+      passives: tier.passives,
       choices: tier.choices,
       sourceUrl: tier.source?.url,
       verified: tier.verified,

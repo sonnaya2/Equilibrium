@@ -127,8 +127,8 @@ describe("Sacred Fervor cooldown reduction", () => {
 });
 
 describe("Splash Zone", () => {
-  const splashModifier = (targetTiles: number) =>
-    leagueModifiers(rules(["Chaos", "Balance", "Balance"], { targetTiles })).find(
+  const splashModifier = (targetSize: number, occupiedTiles = 1) =>
+    leagueModifiers(rules(["Chaos", "Balance", "Balance"], { targetSize, occupiedTiles })).find(
       (modifier) => modifier.id === "blessing:splash-zone",
     )!;
 
@@ -139,12 +139,18 @@ describe("Splash Zone", () => {
     expect(modifier.apply({ damage: 1_000 }, context).damage).toBe(1_300);
   });
 
-  it("adds 30% plus 5% per occupied tile to AoE, additively", () => {
+  it("adds 30% plus 5% per target size dimension to AoE, additively", () => {
     const context = { style: "magic", ruleset: "equilibrium", area: "aoe" } as const;
     // 1 + 0.30 + 5 x 0.05 = 1.55
     expect(splashModifier(5).apply({ damage: 1_000 }, context).damage).toBe(1_550);
-    // A single-tile target still occupies one tile: 1 + 0.30 + 0.05 = 1.35
+    // A size-1 target grants one step: 1 + 0.30 + 0.05 = 1.35
     expect(splashModifier(1).apply({ damage: 1_000 }, context).damage).toBe(1_350);
+  });
+
+  it("does not use occupied footprint tiles as target size", () => {
+    const context = { style: "magic", ruleset: "equilibrium", area: "aoe" } as const;
+    expect(splashModifier(2, 25).apply({ damage: 1_000 }, context).damage).toBe(1_400);
+    expect(splashModifier(5, 1).apply({ damage: 1_000 }, context).damage).toBe(1_550);
   });
 
   it("ignores untagged attacks and blessing-generated damage", () => {
@@ -247,25 +253,29 @@ describe("Envenomed", () => {
 
 describe("Big Boned maximum-life basis", () => {
   it("takes 5% of the maximum life the loadout resolves, not a fixed figure", () => {
-    const summary = (maximumLife: number) =>
-      simulate({
+    const summary = (maximumLife: number) => {
+      const result = simulate({
         ...baseInput,
         league: rules(["Balance"], { maximumLife }),
         context: { style: "melee", ruleset: "equilibrium" },
         rotation: rotationOf("attack"),
-      }).events.find((event) => event.abilityId === "big-boned")!.damage.expected;
+      });
+      return result.events[0]?.components?.find((component) => component.id === "big-boned")?.damage
+        .expected;
+    };
     expect(summary(15_000)).toBe(750);
     expect(summary(20_000)).toBe(1_000);
   });
 
-  it("default rules emit Big Boned damage events when the blessing is active", () => {
+  it("default rules attach Big Boned without emitting another event", () => {
     const summary = simulate({
       ...baseInput,
       league: rules(["Balance"], { maximumLife: 15_000 }),
       context: { style: "melee", ruleset: "equilibrium" },
       rotation: rotationOf("attack"),
     });
-    expect(summary.events.filter((event) => event.abilityId === "big-boned")).toHaveLength(1);
+    expect(summary.events.filter((event) => event.abilityId === "big-boned")).toHaveLength(0);
+    expect(summary.events[0]?.components?.map((component) => component.id)).toEqual(["big-boned"]);
     // Base 1200 + BB 750.
     expect(summary.totalExpected).toBe(1_950);
   });

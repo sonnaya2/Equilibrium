@@ -6,6 +6,7 @@ import { combatEquipment, equipmentById, type EquipmentRecord } from "@/combat/d
 import type { EquipmentSlot } from "@/combat/data/records";
 import type { CombatStyle } from "@/combat/types";
 import { filterRelicGrantedRecords } from "@/combat/league/relicGrantedItems";
+import { resolveLeagueRules, setPieceContributionModifier } from "@/combat/league/ruleset";
 import { equippedPassiveSummaries, type PassiveSupport } from "@/combat/shared/equipment";
 import type { RegionId } from "@/league";
 import { unlockedRegions } from "@/league";
@@ -490,7 +491,12 @@ export function GearPanel({
           >
             Set effects
           </h4>
-          <SetEffectsList loadout={loadout} />
+          <SetEffectsList
+            loadout={loadout}
+            pieceContribution={setPieceContributionModifier(
+              resolveLeagueRules({ ruleset: "equilibrium", blessingPicks: build.blessingPicks }),
+            )}
+          />
         </section>
       </div>
 

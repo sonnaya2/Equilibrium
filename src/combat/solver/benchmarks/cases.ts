@@ -17,6 +17,8 @@ import {
 import type { BlessingPath } from "@/league/blessings";
 import type { CombatStyle } from "../../types";
 import { OBJECTIVE_HORIZON_TICKS } from "../objective";
+import type { PlayerPoisonProfile } from "../../poison/mechanics";
+import type { ResolveLeagueRulesDerived } from "../../league/ruleset";
 
 export type BenchCaseId =
   | "melee-2h-4slot"
@@ -38,6 +40,11 @@ export type BenchCaseId =
   | "impatient-relentless"
   | "equipment-procs"
   | "league-blessings"
+  | "league-blessings-control"
+  | "league-poison-melee"
+  | "league-poison-melee-control"
+  | "league-necro-conjures"
+  | "league-necro-conjures-control"
   | "unhinged-300s";
 
 export interface BenchCaseDef {
@@ -83,6 +90,7 @@ function baseLoadout(opts: {
   crit?: SerializableRevolutionSimBase["crit"];
   league?: SerializableRevolutionSimBase["league"];
   context?: SerializableRevolutionSimBase["context"];
+  playerPoison?: PlayerPoisonProfile;
   ruleset?: "base" | "equilibrium";
 }): SerializableRevolutionSimBase {
   const ruleset = opts.ruleset ?? "base";
@@ -108,6 +116,7 @@ function baseLoadout(opts: {
     startingAdrenaline: 100,
     adrenaline: opts.adrenaline,
     procs: opts.procs,
+    playerPoison: opts.playerPoison,
     plantedFeet: opts.plantedFeet,
     preciseRank: opts.preciseRank,
     conjureBasicDamageMult: opts.conjureBasicDamageMult,
@@ -148,6 +157,8 @@ function makeRequest(opts: {
   authoredSeedBars?: readonly AuthoredSeedBar[];
   /** Include partially-modeled catalogue abilities (e.g. necromancy conjures). */
   includePartial?: boolean;
+  unlockedRegions?: SerializableSolverRequest["unlockedRegions"];
+  playerPoison?: PlayerPoisonProfile;
   /** Short horizons keep real evals cheap in CI. */
   durationTicks?: number;
   exploreDurationTicks?: number;
@@ -162,7 +173,7 @@ function makeRequest(opts: {
     maxBarSize: opts.maxBarSize,
     durationTicks: opts.durationTicks ?? 50,
     exploreDurationTicks: opts.exploreDurationTicks ?? 24,
-    unlockedRegions: ["misthalin", "havenhythe", "karamja", "asgarnia"],
+    unlockedRegions: opts.unlockedRegions ?? ["misthalin", "havenhythe", "karamja", "asgarnia"],
     includeUnknownAvailability: true,
     includePartial: opts.includePartial === true,
     ruleset,
@@ -182,13 +193,17 @@ function makeRequest(opts: {
       crit: opts.crit,
       league: opts.league,
       context: opts.context,
+      playerPoison: opts.playerPoison,
       ruleset,
     }),
   });
 }
 
 /** Equilibrium league payload for blessing-context fixtures (deterministic picks). */
-function equilibriumLeague(picks: readonly BlessingPath[]) {
+function equilibriumLeague(
+  picks: readonly BlessingPath[],
+  derived: ResolveLeagueRulesDerived = {},
+) {
   const live = resolveLeagueRules(
     { ruleset: "equilibrium", blessingPicks: picks },
     {
@@ -197,9 +212,218 @@ function equilibriumLeague(picks: readonly BlessingPath[]) {
       powerburstUntilTick: 0,
       targetSize: 1,
       occupiedTiles: 1,
+      ...derived,
     },
   );
   return serializeLeague(live);
+}
+
+const LEAGUE_LENG_PICKS = [
+  "Balance",
+  "Chaos",
+  "Chaos",
+  "Chaos",
+  "Order",
+  "Balance",
+  "Balance",
+  "Order",
+] as const satisfies readonly BlessingPath[];
+
+const LEAGUE_POISON_PICKS = [
+  "Chaos",
+  "Chaos",
+  "Chaos",
+  "Chaos",
+  "Balance",
+  "Balance",
+  "Order",
+  "Balance",
+] as const satisfies readonly BlessingPath[];
+
+const LEAGUE_NECRO_PICKS = [
+  "Balance",
+  "Chaos",
+  "Chaos",
+  "Balance",
+  "Balance",
+  "Order",
+  "Chaos",
+  "Balance",
+] as const satisfies readonly BlessingPath[];
+
+function leagueLengRequest(seed: number, leagueEnabled: boolean): SerializableSolverRequest {
+  const league = leagueEnabled ? equilibriumLeague(LEAGUE_LENG_PICKS) : undefined;
+  return makeRequest({
+    style: "melee",
+    seed,
+    minBarSize: 6,
+    maxBarSize: 6,
+    weaponConfiguration: "dualwield",
+    equipmentIds: ["item:dark-shard-of-leng", "item:dark-sliver-of-leng"],
+    passiveIds: ["leng-endless-frost", "leng-boundless-chill"],
+    adrenaline: {
+      impatientRank: 4,
+      impatientLevel20: true,
+      relentlessRank: 5,
+      relentlessLevel20: true,
+    },
+    ...(leagueEnabled
+      ? {
+          ruleset: "equilibrium" as const,
+          blessingPicks: LEAGUE_LENG_PICKS,
+          league,
+          context: {
+            style: "melee" as const,
+            ruleset: "equilibrium" as const,
+            targetSize: 1,
+            occupiedTiles: 1,
+          },
+        }
+      : {}),
+    durationTicks: 100,
+    exploreDurationTicks: 30,
+    authoredSeedBars: [
+      seedBar("league-leng", [
+        "icy_tempest",
+        "destroy",
+        "assault",
+        "hurricane",
+        "dismember",
+        "fury",
+      ]),
+    ],
+  });
+}
+
+function leaguePoisonRequest(seed: number, leagueEnabled: boolean): SerializableSolverRequest {
+  const playerPoison: PlayerPoisonProfile = {
+    potion: "weapon-plus-plus-plus",
+    potionUntilTick: 1_200,
+    kwuarmPotency: 4,
+    cinderbane: true,
+    blowpipe: false,
+    laniakea: true,
+  };
+  const league = leagueEnabled
+    ? equilibriumLeague(LEAGUE_POISON_PICKS, {
+        targetSize: 3,
+        occupiedTiles: 9,
+        areaTargets: 3,
+        herbloreLevel: 120,
+      })
+    : undefined;
+  return makeRequest({
+    style: "melee",
+    seed,
+    minBarSize: 6,
+    maxBarSize: 6,
+    weaponConfiguration: "twohand",
+    equipmentIds: ["item:laniakeas-spear", "item:cinderbane-gloves"],
+    passiveIds: ["laniakea-weapon-poison", "cinderbane-weapon-poison"],
+    playerPoison,
+    unlockedRegions: ["misthalin", "havenhythe", "karamja", "asgarnia", "tirannwn", "anachronia"],
+    adrenaline: {
+      impatientRank: 4,
+      impatientLevel20: true,
+      relentlessRank: 5,
+      relentlessLevel20: true,
+    },
+    ...(leagueEnabled
+      ? {
+          ruleset: "equilibrium" as const,
+          blessingPicks: LEAGUE_POISON_PICKS,
+          league,
+          context: {
+            style: "melee" as const,
+            ruleset: "equilibrium" as const,
+            targetSize: 3,
+            occupiedTiles: 9,
+          },
+        }
+      : {
+          context: {
+            style: "melee" as const,
+            ruleset: "base" as const,
+            targetSize: 3,
+            occupiedTiles: 9,
+          },
+        }),
+    durationTicks: 100,
+    exploreDurationTicks: 30,
+    authoredSeedBars: [
+      seedBar("league-poison", [
+        "berserk",
+        "hurricane",
+        "dismember",
+        "assault",
+        "cleave",
+        "punish",
+      ]),
+    ],
+  });
+}
+
+function leagueNecroRequest(seed: number, leagueEnabled: boolean): SerializableSolverRequest {
+  const league = leagueEnabled
+    ? equilibriumLeague(LEAGUE_NECRO_PICKS, { targetSize: 2, occupiedTiles: 4 })
+    : undefined;
+  return makeRequest({
+    style: "necromancy",
+    seed,
+    minBarSize: 6,
+    maxBarSize: 6,
+    weaponConfiguration: "necromancy",
+    equipmentIds: [
+      "item:omni-guard",
+      "item:soulbound-lantern",
+      "item:first-necromancer-helm",
+      "item:first-necromancer-body",
+      "item:first-necromancer-legs",
+      "item:first-necromancer-gloves",
+      "item:first-necromancer-boots",
+    ],
+    conjureBasicDamageMult: 1.12,
+    conjureDurationMult: 1.25,
+    includePartial: true,
+    adrenaline: {
+      impatientRank: 4,
+      impatientLevel20: true,
+      relentlessRank: 5,
+      relentlessLevel20: true,
+    },
+    ...(leagueEnabled
+      ? {
+          ruleset: "equilibrium" as const,
+          blessingPicks: LEAGUE_NECRO_PICKS,
+          league,
+          context: {
+            style: "necromancy" as const,
+            ruleset: "equilibrium" as const,
+            targetSize: 2,
+            occupiedTiles: 4,
+          },
+        }
+      : {
+          context: {
+            style: "necromancy" as const,
+            ruleset: "base" as const,
+            targetSize: 2,
+            occupiedTiles: 4,
+          },
+        }),
+    durationTicks: 100,
+    exploreDurationTicks: 30,
+    authoredSeedBars: [
+      seedBar("league-necro", [
+        "conjure_skeleton_warrior",
+        "conjure_vengeful_ghost",
+        "conjure_putrid_zombie",
+        "touch_of_death",
+        "soul_sap",
+        "finger_of_death",
+      ]),
+    ],
+  });
 }
 
 export const BENCH_CASES: readonly BenchCaseDef[] = [
@@ -514,50 +738,46 @@ export const BENCH_CASES: readonly BenchCaseDef[] = [
       }),
   },
 
-  /**
-   * 7. League blessings - Equilibrium ruleset with deterministic path picks.
-   * Picks Balance→Chaos→Chaos grant big-boned / abyssal-cinders / avernic-rampage
-   * (same pattern as solveFromRequest complicated fixture).
-   */
+  /** League Leng build: valid path history plus global and Leng state RNG. */
   {
     id: "league-blessings",
     quick: false,
     seed: 207,
-    build: () => {
-      const blessingPicks = [
-        "Balance",
-        "Chaos",
-        "Chaos",
-        "Order",
-        "Order",
-        "Chaos",
-        "Balance",
-        "Order",
-      ] as const satisfies readonly BlessingPath[];
-      const league = equilibriumLeague(blessingPicks);
-      return makeRequest({
-        style: "melee",
-        seed: 207,
-        minBarSize: 6,
-        maxBarSize: 6,
-        weaponConfiguration: "dualwield",
-        ruleset: "equilibrium",
-        blessingPicks,
-        league,
-        context: {
-          style: "melee",
-          ruleset: "equilibrium",
-          targetSize: 1,
-          occupiedTiles: 1,
-        },
-        durationTicks: 80,
-        exploreDurationTicks: 30,
-      });
-    },
+    build: () => leagueLengRequest(207, true),
+  },
+  {
+    id: "league-blessings-control",
+    quick: false,
+    seed: 207,
+    build: () => leagueLengRequest(207, false),
+  },
+  {
+    id: "league-poison-melee",
+    quick: false,
+    seed: 218,
+    build: () => leaguePoisonRequest(218, true),
+  },
+  {
+    id: "league-poison-melee-control",
+    quick: false,
+    seed: 218,
+    build: () => leaguePoisonRequest(218, false),
+  },
+  {
+    id: "league-necro-conjures",
+    quick: false,
+    seed: 220,
+    build: () => leagueNecroRequest(220, true),
+  },
+  {
+    id: "league-necro-conjures-control",
+    quick: false,
+    seed: 220,
+    build: () => leagueNecroRequest(220, false),
   },
 
   /**
-   * 8. Long 300s unhinged - full mode only. Canonical research horizon (500 ticks).
+   * Long 300s unhinged - full mode only. Canonical research horizon (500 ticks).
    * Production unhinged budgets apply via solveFromRequest; do not mark quick.
    */
   {

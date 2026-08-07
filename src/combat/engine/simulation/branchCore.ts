@@ -4,7 +4,11 @@ import { keepsAnalysisLedgers, keepsPerAbilityMap, keepsPresentationHistory } fr
 import type { SimulationRuntime } from "../runtime/runtime";
 import { mergeSupportOffsets } from "./stats";
 import { buildBranchKey } from "./branchKey";
-import { mergeTargetWeaponPoisonHistories, patchTarget } from "../runtime/state";
+import {
+  mergeTargetWeaponPoisonHistories,
+  patchTarget,
+  type RotationState,
+} from "../runtime/state";
 
 /**
  * Probability-weighted branch for state-changing RNG (Impatient, Relentless,
@@ -62,6 +66,10 @@ export interface BranchProfile {
   snapshotFieldsCloned: number;
   /** Order-of-magnitude bytes cloned (not exact heap). */
   snapshotBytesEstimate: number;
+  /** Immutable poison distributions shared instead of deep-cloned. */
+  poisonDistributionsShared: number;
+  /** Poison atoms covered by those shared distributions. */
+  poisonAtomsShared: number;
   /** branchKey builds (merge equivalence keys). */
   branchKeySerializations: number;
   /** Sum of serialized key string lengths (UTF-16 code units). */
@@ -90,6 +98,8 @@ const EMPTY_BRANCH_PROFILE: BranchProfile = {
   branchSnapshots: 0,
   snapshotFieldsCloned: 0,
   snapshotBytesEstimate: 0,
+  poisonDistributionsShared: 0,
+  poisonAtomsShared: 0,
   branchKeySerializations: 0,
   branchKeyChars: 0,
   branchKeyConstructionMs: 0,
@@ -157,7 +167,7 @@ export function noteResidualMass(weight: number): void {
 /**
  * Cheap structural cost of one snapshotRuntime (not a heap walk).
  * Score-only omits presentation history / analysis / perAbility / cast hit arrays.
- * Deep targets: state only. Map shells for hitDetails/spirit meta (values shared).
+ * Deep targets: state except the immutable poison distribution. Map shells share values.
  */
 function estimateSnapshotCost(rt: SimulationRuntime): { fields: number; bytes: number } {
   const scoreOnly = rt.detailLevel === "score-only";
@@ -187,7 +197,7 @@ function estimateSnapshotCost(rt: SimulationRuntime): { fields: number; bytes: n
   // One unit per container clone + per entry walk (maps/arrays).
   const fields =
     1 + // queue.clone
-    1 + // structuredClone(state) — always, never shared by ref
+    1 + // structuredClone(state except immutable poison distribution)
     casts +
     castHits +
     (scoreOnly ? 0 : 1 + perAbility) + // perAbility spread only when kept
@@ -204,7 +214,7 @@ function estimateSnapshotCost(rt: SimulationRuntime): { fields: number; bytes: n
   // Order-of-magnitude payload (tuned for relative A/B, not allocator truth).
   const bytes =
     queueLen * 160 +
-    900 + // RotationState deep clone ballpark
+    900 + // RotationState clone excluding poison-local atoms
     casts * (scoreOnly ? 200 : 280) +
     castHits * 24 +
     perAbility * 32 +
@@ -253,6 +263,8 @@ export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
     const est = estimateSnapshotCost(rt);
     branchProf.snapshotFieldsCloned += est.fields;
     branchProf.snapshotBytesEstimate += est.bytes;
+    branchProf.poisonDistributionsShared += 1;
+    branchProf.poisonAtomsShared += rt.state.target.weaponPoison.atoms.length;
   }
 
   const scoreOnly = rt.detailLevel === "score-only";
@@ -300,11 +312,21 @@ export function snapshotRuntime(rt: SimulationRuntime): SimulationRuntime {
   // Score-only never writes perAbility; skip shallow-copy of the empty map.
   const perAbility = scoreOnly ? ({} as Record<string, number>) : { ...rt.perAbility };
 
+  const weaponPoison = rt.state.target.weaponPoison;
+  const stateWithoutPoison = {
+    ...rt.state,
+    target: { ...rt.state.target, weaponPoison: undefined },
+  };
+  const clonedState = structuredClone(stateWithoutPoison);
+  const state = {
+    ...clonedState,
+    target: { ...clonedState.target, weaponPoison },
+  } as RotationState;
+
   return {
     ...rt,
     queue: rt.queue.clone(),
-    // Runtime state is mutable; structuredClone preserves branch isolation.
-    state: structuredClone(rt.state),
+    state,
     casts,
     perAbility,
     damageByTick: { ...rt.damageByTick },

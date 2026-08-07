@@ -65,6 +65,36 @@ const event = (over: Partial<ScheduledEvent>): ScheduledEvent => ({
   ...over,
 });
 
+describe("event queue", () => {
+  it("pops out-of-order inserts by tick and sequence", () => {
+    const queue = new EventQueue();
+    queue.push(event({ tick: 4, seq: 9 }));
+    queue.push(event({ tick: 1, seq: 7 }));
+    queue.push(event({ tick: 4, seq: 3 }));
+    queue.push(event({ tick: 2, seq: 8 }));
+
+    expect(queue.pending().map(({ tick, seq }) => [tick, seq])).toEqual([
+      [1, 7],
+      [2, 8],
+      [4, 3],
+      [4, 9],
+    ]);
+    expect(Array.from({ length: 4 }, () => queue.shift()?.seq)).toEqual([7, 8, 3, 9]);
+  });
+
+  it("preserves order after cancellation and keeps clones independent", () => {
+    const queue = new EventQueue();
+    queue.push(event({ tick: 3, seq: 4, cancelOwner: 1 }));
+    queue.push(event({ tick: 1, seq: 2, cancelOwner: 2 }));
+    queue.push(event({ tick: 2, seq: 3, cancelOwner: 1 }));
+    const clone = queue.clone();
+
+    expect(clone.cancelByOwner(1)).toBe(2);
+    expect(clone.pending().map(({ seq }) => seq)).toEqual([2]);
+    expect(queue.pending().map(({ seq }) => seq)).toEqual([2, 3, 4]);
+  });
+});
+
 describe("branch equivalence signature", () => {
   it("distinguishes tails derived from different relative source hits", () => {
     // Single historical derivedFrom refs rank to the same h0 slot; absolute

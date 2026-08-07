@@ -259,11 +259,7 @@ export async function runUiRevolution(
     maxLiveBranches: firstLive,
     residualWeight: firstFull.meta.residualWeight,
   });
-  if (
-    !firstFull.summary.ok ||
-    firstFull.meta.complete ||
-    caps.length === 1
-  ) {
+  if (!firstFull.summary.ok || firstFull.meta.complete || caps.length === 1) {
     return firstFull;
   }
 

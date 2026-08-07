@@ -288,75 +288,121 @@ export interface ResolvedEvent<RT = unknown> extends Omit<ScheduledEvent<RT>, "r
   remainingTicks?: number;
 }
 
+function compareEvents<RT>(a: ScheduledEvent<RT>, b: ScheduledEvent<RT>): number {
+  return a.tick - b.tick || a.seq - b.seq;
+}
+
 /** Ordered by (tick, seq). Cancel via cancelOwner / cancelBySeq. */
 export class EventQueue<RT = unknown> {
-  private items: ScheduledEvent<RT>[] = [];
+  private heap: ScheduledEvent<RT>[] = [];
+  private ordered: readonly ScheduledEvent<RT>[] | null = null;
+
+  private invalidateOrdered(): void {
+    this.ordered = null;
+  }
+
+  private siftUp(index: number): void {
+    const event = this.heap[index]!;
+    while (index > 0) {
+      const parent = (index - 1) >> 1;
+      if (compareEvents(this.heap[parent]!, event) <= 0) break;
+      this.heap[index] = this.heap[parent]!;
+      index = parent;
+    }
+    this.heap[index] = event;
+  }
+
+  private siftDown(index: number): void {
+    const length = this.heap.length;
+    const event = this.heap[index]!;
+    for (;;) {
+      const left = index * 2 + 1;
+      if (left >= length) break;
+      const right = left + 1;
+      const child =
+        right < length && compareEvents(this.heap[right]!, this.heap[left]!) < 0 ? right : left;
+      if (compareEvents(this.heap[child]!, event) >= 0) break;
+      this.heap[index] = this.heap[child]!;
+      index = child;
+    }
+    this.heap[index] = event;
+  }
+
+  private heapify(): void {
+    for (let i = (this.heap.length >> 1) - 1; i >= 0; i--) this.siftDown(i);
+  }
+
+  private cancelMatching(pred: (event: ScheduledEvent<RT>) => boolean): number {
+    const before = this.heap.length;
+    this.heap = this.heap.filter((event) => !pred(event));
+    const removed = before - this.heap.length;
+    if (removed > 0) {
+      this.heapify();
+      this.invalidateOrdered();
+    }
+    noteEventQueueCancel(removed);
+    return removed;
+  }
 
   push(event: ScheduledEvent<RT>): void {
     noteEventQueuePush();
-    let i = this.items.length;
-    while (i > 0) {
-      const prev = this.items[i - 1]!;
-      if (prev.tick < event.tick || (prev.tick === event.tick && prev.seq < event.seq)) break;
-      i--;
-    }
-    this.items.splice(i, 0, event);
+    this.heap.push(event);
+    this.siftUp(this.heap.length - 1);
+    this.invalidateOrdered();
   }
 
   /** Next event in (tick, seq) order, without removing it. */
   peek(): ScheduledEvent<RT> | undefined {
-    return this.items[0];
+    return this.heap[0];
   }
 
   /** Remove and return the next event in (tick, seq) order. */
   shift(): ScheduledEvent<RT> | undefined {
     noteEventQueueShift();
-    return this.items.shift();
+    const first = this.heap[0];
+    if (first === undefined) return undefined;
+    const last = this.heap.pop()!;
+    if (this.heap.length > 0) {
+      this.heap[0] = last;
+      this.siftDown(0);
+    }
+    this.invalidateOrdered();
+    return first;
   }
 
   /** Largest scheduled tick in the queue (-1 when empty). */
   maxTick(): number {
     let max = -1;
-    for (const e of this.items) if (e.tick > max) max = e.tick;
+    for (const e of this.heap) if (e.tick > max) max = e.tick;
     return max;
   }
 
   /** Remove every pending event owned by `cancelOwner`; returns the count. */
   cancelByOwner(owner: number): number {
-    const before = this.items.length;
-    this.items = this.items.filter((e) => e.cancelOwner !== owner);
-    const removed = before - this.items.length;
-    noteEventQueueCancel(removed);
-    return removed;
+    return this.cancelMatching((event) => event.cancelOwner === owner);
   }
 
   /** Remove one pending event by seq; returns true when it was present. */
   cancelBySeq(seq: number): boolean {
-    const before = this.items.length;
-    this.items = this.items.filter((e) => e.seq !== seq);
-    const removed = before - this.items.length;
-    noteEventQueueCancel(removed);
-    return removed > 0;
+    return this.cancelMatching((event) => event.seq === seq) > 0;
   }
 
   /** Remove every pending event matching `pred`; returns the count. */
   cancelWhere(pred: (event: ScheduledEvent<RT>) => boolean): number {
-    const before = this.items.length;
-    this.items = this.items.filter((e) => !pred(e));
-    const removed = before - this.items.length;
-    noteEventQueueCancel(removed);
-    return removed;
+    return this.cancelMatching(pred);
   }
 
   /** Still-pending events, in order. */
   pending(): readonly ScheduledEvent<RT>[] {
-    return this.items;
+    this.ordered ??= [...this.heap].sort(compareEvents);
+    return this.ordered;
   }
 
   /** Shallow copy sharing the (immutable) events - used by branch snapshots. */
   clone(): EventQueue<RT> {
     const next = new EventQueue<RT>();
-    next.items = [...this.items];
+    next.heap = [...this.heap];
+    next.ordered = this.ordered;
     return next;
   }
 
@@ -368,7 +414,7 @@ export class EventQueue<RT = unknown> {
    * Relative graphs (shared owners, derived edges) still distinguish.
    */
   signature(): string {
-    const items = this.items;
+    const items = this.pending();
     if (items.length === 0) return "";
     const ranks = pendingKeyRanks(items);
     let out = eventSig(items[0]!, 0, ranks);
@@ -379,6 +425,6 @@ export class EventQueue<RT = unknown> {
   }
 
   get length(): number {
-    return this.items.length;
+    return this.heap.length;
   }
 }

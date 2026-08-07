@@ -105,20 +105,20 @@ export interface TargetRuntimeState {
 }
 
 export interface TargetWeaponPoisonState {
-  active: boolean;
-  expiresAtTick: number;
-  effectiveTier: PoisonTier;
+  readonly active: boolean;
+  readonly expiresAtTick: number;
+  readonly effectiveTier: PoisonTier;
   /** Conditional probability mass for decay indices 0..44; 44 also holds larger zero-damage indices. */
-  decayMass: number[];
-  decayIndex: number;
-  remainingHits: number;
-  cadenceTicks: 8 | 16;
-  nextHitTick: number;
-  pendingEventSeq: number;
-  sourceDamageMultiplier: number;
-  cinderbaneContinuation: boolean;
-  sourceLabel: string;
-  pendingApplicationHits: TargetWeaponPoisonPendingHit[];
+  readonly decayMass: readonly number[];
+  readonly decayIndex: number;
+  readonly remainingHits: number;
+  readonly cadenceTicks: 8 | 16;
+  readonly nextHitTick: number;
+  readonly pendingEventSeq: number;
+  readonly sourceDamageMultiplier: number;
+  readonly cinderbaneContinuation: boolean;
+  readonly sourceLabel: string;
+  readonly pendingApplicationHits: readonly TargetWeaponPoisonPendingHit[];
 }
 
 export type TargetWeaponPoisonHitMultiplicity =
@@ -134,23 +134,23 @@ export type TargetWeaponPoisonHitMultiplicity =
     };
 
 export interface TargetWeaponPoisonPendingHit {
-  tick: number;
-  seq: number;
-  multiplicity: TargetWeaponPoisonHitMultiplicity;
+  readonly tick: number;
+  readonly seq: number;
+  readonly multiplicity: TargetWeaponPoisonHitMultiplicity;
 }
 
 export interface TargetWeaponPoisonAtom {
-  id: number;
-  probability: number;
-  poison: TargetWeaponPoisonState;
-  immunityDisabledUntilTick: number;
-  supportMin: number;
-  supportMax: number;
+  readonly id: number;
+  readonly probability: number;
+  readonly poison: TargetWeaponPoisonState;
+  readonly immunityDisabledUntilTick: number;
+  readonly supportMin: number;
+  readonly supportMax: number;
 }
 
 export interface TargetWeaponPoisonDistribution {
-  atoms: TargetWeaponPoisonAtom[];
-  nextAtomId: number;
+  readonly atoms: readonly TargetWeaponPoisonAtom[];
+  readonly nextAtomId: number;
 }
 
 export interface EvolvingToxinState {

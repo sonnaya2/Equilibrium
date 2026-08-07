@@ -61,8 +61,8 @@ const castSnap = (over: Partial<CastSnapshot> = {}): CastSnapshot => ({
 
 const noopResolve = () => ({ damage: { min: 0, max: 0, expected: 0 } });
 
-describe("snapshotRuntime shares no mutable collection", () => {
-  it("ledgers, queue and lookup maps are independent copies", () => {
+describe("snapshotRuntime isolates mutable runtime state", () => {
+  it("copies mutable ledgers and shares the immutable poison distribution", () => {
     const rt = createRuntime(meleeInput);
     for (let i = 0; i < 3; i++) {
       const attempt = prepareSimulationCast(rt, rt.byId.get("attack")!, rt.state.tick);
@@ -87,6 +87,7 @@ describe("snapshotRuntime shares no mutable collection", () => {
     expect(clone.analysis.effects).not.toBe(rt.analysis.effects);
     expect(clone.analysis.sources).not.toBe(rt.analysis.sources);
     expect(clone.analysis.castKeys).not.toBe(rt.analysis.castKeys);
+    expect(clone.state.target.weaponPoison).toBe(rt.state.target.weaponPoison);
     // Cast records are cloned, not aliased - a branch's totals must not leak.
     expect(clone.casts[0]).not.toBe(rt.casts[0]);
     expect(clone.casts[0]!.result.hits).not.toBe(rt.casts[0]!.result.hits);
@@ -724,6 +725,8 @@ describe("capBranches", () => {
     expect(p.branchSnapshots).toBe(100);
     expect(p.snapshotFieldsCloned).toBeGreaterThan(0);
     expect(p.snapshotBytesEstimate).toBeGreaterThan(0);
+    expect(p.poisonDistributionsShared).toBe(100);
+    expect(p.poisonAtomsShared).toBe(100);
     expect(p.branchKeySerializations).toBe(100);
     expect(p.branchKeyChars).toBeGreaterThan(0);
     expect(p.mergeAndCapCalls).toBe(1);

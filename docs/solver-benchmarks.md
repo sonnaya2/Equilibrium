@@ -54,16 +54,21 @@ Single case (programmatic / vitest harness): import `runBenchmark` from
 
 ### Phase 0 representative fixtures (performance baseline)
 
-| ID                         | Quick? | Notes                                                                 |
-| -------------------------- | ------ | --------------------------------------------------------------------- |
-| `melee-norng-4slot`        | yes    | No-RNG melee: `crit.disabled`, no Impatient/Relentless, fixed 4       |
-| `sunshine-magic`           | no     | Magic DW + Planted Feet; authored seed includes engine id `sunshine`  |
-| `deaths-swiftness-ranged`  | no     | Ranged 2H + Planted Feet; seed includes `deaths_swiftness`            |
-| `necro-conjures`           | no     | Necro conduit pool with `includePartial`; conjure mults + conjure seed |
-| `impatient-relentless`     | no     | Melee DW 4–6 with Impatient 4 + Relentless 5 (state-branching RNG)    |
-| `equipment-procs`          | yes    | Crackling 4 + Aftershock 4 invention procs, fixed 4                   |
-| `league-blessings`         | no     | Equilibrium ruleset; big-boned / abyssal-cinders / avernic-rampage    |
-| `unhinged-300s`            | no     | **Full-only long case**: tier `unhinged`, 500 ticks (300s research)   |
+| ID                              | Quick? | Notes                                                                  |
+| ------------------------------- | ------ | ---------------------------------------------------------------------- |
+| `melee-norng-4slot`             | yes    | No-RNG melee: `crit.disabled`, no Impatient/Relentless, fixed 4        |
+| `sunshine-magic`                | no     | Magic DW + Planted Feet; authored seed includes engine id `sunshine`   |
+| `deaths-swiftness-ranged`       | no     | Ranged 2H + Planted Feet; seed includes `deaths_swiftness`             |
+| `necro-conjures`                | no     | Necro conduit pool with `includePartial`; conjure mults + conjure seed |
+| `impatient-relentless`          | no     | Melee DW 4–6 with Impatient 4 + Relentless 5 (state-branching RNG)     |
+| `equipment-procs`               | yes    | Crackling 4 + Aftershock 4 invention procs, fixed 4                    |
+| `league-blessings`              | no     | Valid League Leng build; global + Leng state RNG                       |
+| `league-blessings-control`      | no     | Same Leng/perk build with League effects off                           |
+| `league-poison-melee`           | no     | Valid Cinderbane/Laniakea/Envenomed League poison build                |
+| `league-poison-melee-control`   | no     | Same poison/perk build with League effects off                         |
+| `league-necro-conjures`         | no     | Valid First Necromancer conjure League build                           |
+| `league-necro-conjures-control` | no     | Same conjure/perk build with League effects off                        |
+| `unhinged-300s`                 | no     | **Full-only long case**: tier `unhinged`, 500 ticks (300s research)    |
 
 ## Modes
 

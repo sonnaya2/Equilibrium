@@ -310,8 +310,11 @@ function compactPendingHits(
     const key = `${hit.tick}\x1f${orderClass(hit.tick, hit.seq)}`;
     const current = fixed.get(key);
     if (current) {
-      current.count += count;
-      current.seq = Math.min(current.seq, hit.seq);
+      fixed.set(key, {
+        ...current,
+        count: current.count + count,
+        seq: Math.min(current.seq, hit.seq),
+      });
     } else {
       fixed.set(key, { ...hit, count });
     }
@@ -1119,7 +1122,7 @@ function recordPlayerPoisonGroup(
   let bigBonedMax = 0;
   let probability = 0;
   const availableContinuation = resolvePoisonApplication(rt.input.playerPoison, order.tick);
-  const resolvedCache = new WeakMap<number[], Map<string, ResolvedPlayerPoisonHit>>();
+  const resolvedCache = new WeakMap<readonly number[], Map<string, ResolvedPlayerPoisonHit>>();
   const decayBandCache = new Map<string, ResolvedPlayerPoisonHit>();
   distribution = {
     ...distribution,
@@ -1277,7 +1280,7 @@ export function processNextPlayerPoisonEvent(
   let advancesCadence = false;
   let hasSuccess = false;
   const availableContinuation = resolvePoisonApplication(rt.input.playerPoison, next.tick);
-  const outcomeCache = new WeakMap<number[], Map<string, ContinuationOutcome[]>>();
+  const outcomeCache = new WeakMap<readonly number[], Map<string, ContinuationOutcome[]>>();
 
   for (const dueHit of due) {
     const before = dueHit.atom;

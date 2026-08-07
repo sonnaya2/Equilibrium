@@ -1533,15 +1533,34 @@ describe("branchKey structural vs JSON partitions", () => {
     expect(branchKeyJson(live)).not.toBe(branchKeyJson(clean));
 
     const differentDecay = snapshotRuntime(live);
-    differentDecay.state.target.weaponPoison.atoms[0]!.poison.decayMass = Array.from(
-      { length: 45 },
-      (_, index) => (index === 4 ? 1 : 0),
-    );
+    differentDecay.state = patchTarget(differentDecay.state, {
+      weaponPoison: {
+        ...differentDecay.state.target.weaponPoison,
+        atoms: differentDecay.state.target.weaponPoison.atoms.map((atom, index) =>
+          index === 0
+            ? {
+                ...atom,
+                poison: {
+                  ...atom.poison,
+                  decayMass: Array.from({ length: 45 }, (_, i) => (i === 4 ? 1 : 0)),
+                },
+              }
+            : atom,
+        ),
+      },
+    });
     expect(branchKeyStructural(differentDecay)).not.toBe(branchKeyStructural(live));
     expect(branchKeyJson(differentDecay)).not.toBe(branchKeyJson(live));
 
     const derivedMeanOnly = snapshotRuntime(live);
-    derivedMeanOnly.state.target.weaponPoison.atoms[0]!.poison.decayIndex = 99;
+    derivedMeanOnly.state = patchTarget(derivedMeanOnly.state, {
+      weaponPoison: {
+        ...derivedMeanOnly.state.target.weaponPoison,
+        atoms: derivedMeanOnly.state.target.weaponPoison.atoms.map((atom, index) =>
+          index === 0 ? { ...atom, poison: { ...atom.poison, decayIndex: 99 } } : atom,
+        ),
+      },
+    });
     expect(branchKeyStructural(derivedMeanOnly)).toBe(branchKeyStructural(live));
     expect(branchKeyJson(derivedMeanOnly)).toBe(branchKeyJson(live));
 

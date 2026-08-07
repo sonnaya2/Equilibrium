@@ -369,12 +369,12 @@ describe("toResolvedCombatModel", () => {
       blowpipe: false,
       laniakea: true,
     });
-    expect(model.ammo).toBe("bik");
+    expect(model.ammo).toBeUndefined();
     expect(model.modifierSources.vulnerability).toBe(true);
     expect(model.target.poisonImmune).toBe(true);
     expect(model.league.herbloreLevel).toBe(120);
+    expect(projectSerializableSimBase(model).ammo).toBeUndefined();
     expect(projectSerializableSimBase(model)).toMatchObject({
-      ammo: "bik",
       playerPoison: model.playerPoison,
       targetPoisonImmune: true,
     });

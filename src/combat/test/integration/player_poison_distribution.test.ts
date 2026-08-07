@@ -97,7 +97,7 @@ describe("player poison distribution integration", () => {
   });
 
   it("keeps 60-second Cinderbane score-only and full-analysis totals identical", () => {
-    const input = { ...base, ammo: "bik" as const, playerPoison: poison({ cinderbane: true }) };
+    const input = { ...base, playerPoison: poison({ cinderbane: true }) };
     const full = simulateRevolution(input, { detailLevel: "full-analysis" });
     const score = simulateRevolution(input, { detailLevel: "score-only" });
     expect(score.totalExpected).toBe(full.totalExpected);
@@ -271,7 +271,6 @@ describe("player poison distribution integration", () => {
       const evaluated = simulateWithAdaptiveBranchFidelity(
         {
           ...base,
-          ammo: "bik",
           league,
           modifiers: leagueModifiers(league),
           context: { style: "melee", ruleset: "equilibrium" },

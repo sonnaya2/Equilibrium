@@ -30,6 +30,7 @@ const rangedInput: Omit<SimulateInput, "rotation"> = {
   crit: { chance: 0 },
   abilities: RANGED_ABILITIES,
   context: { style: "ranged" },
+  equipmentIds: ["item:noxious-longbow"],
 };
 
 const castSnap = (over: Partial<CastSnapshot> = {}): CastSnapshot => ({

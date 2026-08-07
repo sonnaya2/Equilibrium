@@ -21,7 +21,7 @@ import {
 } from "./puncture";
 import { applyCaromingToRicochetHits } from "./caroming";
 import { darkfangBasicHits, hasDarkfangWeapon } from "./darkfang";
-import { styleAmmoFromEquipmentIds } from "./ammoModel";
+import { hasRangedWeapon, resolveStyleAmmo, styleAmmoFromEquipmentIds } from "./ammoModel";
 import { caromingRicochetBonus } from "../../shared/perks";
 import {
   buildSimulationInputBase,
@@ -72,7 +72,7 @@ function hostScaffold(overrides: Partial<HostCombatResolveInput> = {}): HostComb
       powerburstUntilTick: 0,
       targetTiles: 1,
     },
-    equipmentIds: [],
+    equipmentIds: ["item:noxious-longbow"],
     weaponConfiguration: "twohand",
     diagnostics: {
       slayerHelmet: null,
@@ -580,6 +580,14 @@ describe("ammo packing Manual / Revolution / identity", () => {
     expect(styleAmmoFromEquipmentIds(["item:splintering-arrows"])).toBe("splintering");
   });
 
+  it("only resolves ranged ammo for an equipped ranged weapon", () => {
+    expect(hasRangedWeapon(["item:dark-bow"])).toBe(true);
+    expect(hasRangedWeapon(["item:splintering-arrows"])).toBe(false);
+    expect(resolveStyleAmmo("bik", ["item:dark-bow"], "ranged")).toBe("bik");
+    expect(resolveStyleAmmo("bik", ["item:dark-bow"], "melee")).toBeUndefined();
+    expect(resolveStyleAmmo("bik", ["item:splintering-arrows"], "ranged")).toBeUndefined();
+  });
+
   it("equip id item:splintering-arrows resolves in catalogue and style ammo", () => {
     const record = equipmentById("item:splintering-arrows");
     expect(record, "item:splintering-arrows missing from combat equipment").toBeDefined();
@@ -588,9 +596,16 @@ describe("ammo packing Manual / Revolution / identity", () => {
     expect(record!.tier).toBe(95);
     expect(styleAmmoFromEquipmentIds([record!.id])).toBe("splintering");
     const model = buildResolvedCombatModel(
-      hostScaffold({ equipmentIds: ["item:splintering-arrows"] }),
+      hostScaffold({ equipmentIds: ["item:noxious-longbow", "item:splintering-arrows"] }),
     );
     expect(model.ammo).toBe("splintering");
+  });
+
+  it("drops explicit ranged ammo when the loadout has no ranged weapon", () => {
+    const model = buildResolvedCombatModel(
+      hostScaffold({ equipmentIds: ["item:splintering-arrows"], ammo: "bik" }),
+    );
+    expect(model.ammo).toBeUndefined();
   });
 
   it("resolved model carries ammo and caroming into sim base + identity", () => {
@@ -598,7 +613,7 @@ describe("ammo packing Manual / Revolution / identity", () => {
       hostScaffold({
         ammo: "splintering",
         caroming: 3,
-        equipmentIds: ["item:dark-bow"],
+        equipmentIds: ["item:noxious-longbow"],
       }),
     );
     expect(model.ammo).toBe("splintering");
@@ -624,7 +639,7 @@ describe("ammo packing Manual / Revolution / identity", () => {
       hostScaffold({
         ammo: "deathspore",
         caroming: 2,
-        equipmentIds: ["item:deathspore-arrows"],
+        equipmentIds: ["item:noxious-longbow", "item:deathspore-arrows"],
       }),
     );
     const byId = new Map(RANGED_ABILITIES.map((a) => [a.id, a]));
@@ -663,7 +678,10 @@ describe("ammo packing Manual / Revolution / identity", () => {
 
   it("Manual ammo null clears model-packed ammo; override sets; omit keeps", () => {
     const model = buildResolvedCombatModel(
-      hostScaffold({ ammo: "deathspore", equipmentIds: ["item:deathspore-arrows"] }),
+      hostScaffold({
+        ammo: "deathspore",
+        equipmentIds: ["item:noxious-longbow", "item:deathspore-arrows"],
+      }),
     );
     const byId = new Map(RANGED_ABILITIES.map((a) => [a.id, a]));
     const catalogue = {

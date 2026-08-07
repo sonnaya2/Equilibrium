@@ -25,6 +25,7 @@ export const rangedInput: Omit<SimulateInput, "rotation"> = {
   ...baseInput,
   abilities: RANGED_ABILITIES,
   context: { style: "ranged" },
+  equipmentIds: ["item:noxious-longbow"],
 };
 
 export const magicInput: Omit<SimulateInput, "rotation"> = {

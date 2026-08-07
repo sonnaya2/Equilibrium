@@ -29,6 +29,7 @@ const rangedInput: Omit<SimulateInput, "rotation"> = {
   ...meleeInput,
   abilities: RANGED_ABILITIES,
   context: { style: "ranged" },
+  equipmentIds: ["item:noxious-longbow"],
 };
 
 describe("cast boundary — candidate-tick evaluation", () => {

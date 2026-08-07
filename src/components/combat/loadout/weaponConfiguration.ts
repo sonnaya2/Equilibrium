@@ -188,9 +188,14 @@ export function loadoutWeaponConfig(
   }
   const caps =
     loadout.style === "ranged"
-      ? { ammunitionTier: slotWeaponTier(loadout, "ammo", []) ?? loadout.ammunitionTier }
+      ? {
+          ammunitionTier: effectiveWeaponProfileTier(
+            slotWeaponTier(loadout, "ammo", []) ?? loadout.ammunitionTier,
+            overrides,
+          ),
+        }
       : loadout.style === "magic"
-        ? { spellTier: loadout.spellTier }
+        ? { spellTier: effectiveWeaponProfileTier(loadout.spellTier, overrides) }
         : {};
   if (twohandTier != null) {
     return {

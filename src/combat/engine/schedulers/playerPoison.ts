@@ -11,6 +11,7 @@ import {
   type PoisonApplicationSnapshot,
   type PoisonDamageBand,
 } from "../../poison/mechanics";
+import { isRangedAmmoActive } from "../../styles/ranged/ammoModel";
 import {
   blessingRule,
   envenomedPoisonImmunityDisableTicks,
@@ -899,7 +900,13 @@ function resolvePlayerPoison(
   const modifiers: CombatModifier[] = configured.filter(
     (modifier) => modifier.appliesToPlayerPoison === true,
   );
-  const toxinModifier = evolvingToxinPoisonModifier(stacks);
+  const toxinModifier = isRangedAmmoActive(
+    rt.input.ammo,
+    rt.input.context?.style,
+    rt.input.equipmentIds,
+  )
+    ? evolvingToxinPoisonModifier(stacks)
+    : null;
   if (toxinModifier) modifiers.push(toxinModifier);
   const provenance = { kind: "player_poison" as const };
   const context = contextWithProvenance(

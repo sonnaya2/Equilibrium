@@ -78,7 +78,7 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
     plantedFeet: input.plantedFeet === true,
     strengthCape99: input.strengthCape99 === true,
     preciseRank: input.preciseRank ?? 0,
-    ammo: resolveStyleAmmo(input.ammo, input.equipmentIds),
+    ammo: resolveStyleAmmo(input.ammo, input.equipmentIds, input.style),
     caromingRank: Math.max(0, Math.min(4, Math.floor(input.caromingRank ?? input.caroming ?? 0))),
     conjureBasicDamageMult: input.conjureBasicDamageMult ?? 1,
     conjureDurationMult: input.conjureDurationMult ?? 1,

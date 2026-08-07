@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { baseInput } from "../../test/fixtures/inputs";
+import { baseInput, rangedInput } from "../../test/fixtures/inputs";
 import type { PlayerPoisonProfile } from "../../poison/mechanics";
 import { PLAYER_POISON_EFFECT_ID } from "../../poison/mechanics";
 import { rotationOf } from "./contracts";
@@ -67,13 +67,13 @@ describe("player poison simulation", () => {
 
   it("applies Bik before the delayed poison hit and blocks all output on immunity", () => {
     const ordinary = simulate({
-      ...baseInput,
-      rotation: rotationOf("attack"),
+      ...rangedInput,
+      rotation: rotationOf("ranged_attack"),
       playerPoison: profile(),
     });
     const bik = simulate({
-      ...baseInput,
-      rotation: rotationOf("attack"),
+      ...rangedInput,
+      rotation: rotationOf("ranged_attack"),
       ammo: "bik",
       playerPoison: profile(),
     });
@@ -92,6 +92,22 @@ describe("player poison simulation", () => {
     });
     expect(immune.playerPoison).toBeUndefined();
     expect(immune.perAbility[PLAYER_POISON_EFFECT_ID]).toBeUndefined();
+  });
+
+  it("ignores explicit Bik ammo without a ranged weapon", () => {
+    const ordinary = simulate({
+      ...baseInput,
+      rotation: rotationOf("attack"),
+      playerPoison: profile(),
+    });
+    const bik = simulate({
+      ...baseInput,
+      rotation: rotationOf("attack"),
+      ammo: "bik",
+      playerPoison: profile(),
+    });
+    expect(bik.playerPoison?.expectedDamage).toBe(ordinary.playerPoison?.expectedDamage);
+    expect(bik.playerPoison?.bikStacks).toBe(0);
   });
 
   it("makes one application attempt per independent Hurricane hit", () => {
@@ -388,14 +404,13 @@ describe("player poison simulation", () => {
     expect(result.playerPoison?.probabilityMass).toBeCloseTo(1, 12);
   });
 
-  it("keeps full-analysis and score-only totals aligned for multi-hit Cinderbane plus Bik", () => {
+  it("keeps full-analysis and score-only totals aligned for multi-hit Cinderbane", () => {
     const run = (detailLevel: "full-analysis" | "score-only") => {
       const ctx = createCastContext({
         ...baseInput,
         horizonTicks: 40,
         detailLevel,
         startingAdrenaline: 100,
-        ammo: "bik",
         playerPoison: profile({
           potion: "weapon-plus-plus-plus",
           potionUntilTick: 1_200,
@@ -417,7 +432,6 @@ describe("player poison simulation", () => {
         ...baseInput,
         horizonTicks: 20,
         startingAdrenaline: 100,
-        ammo: "bik",
         playerPoison: profile({ cinderbane: true }),
       },
       { maxLiveBranches: 1, maxIntermediateBranches: 1, maximumResidualWeight: 0 },

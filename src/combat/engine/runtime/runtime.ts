@@ -20,6 +20,7 @@ import { lengLandTableFor, type CompiledLengLandTable } from "../../styles/melee
 import { MAX_SOULS } from "../../styles/necromancy/abilities";
 import { residualSoulCapFor } from "../../styles/necromancy/effects";
 import { normalizeKwuarmPotency, normalizeWeaponPoisonChoice } from "../../poison/mechanics";
+import { resolveStyleAmmo } from "../../styles/ranged/ammoModel";
 
 /** Spirit event identity: a pending auto/poison event is live only for its summon instance. */
 export interface SpiritEventMeta {
@@ -114,6 +115,8 @@ function mapBasicsByStyle(
 
 export function createRuntime(input: CastContextInput): SimulationRuntime {
   noteRuntimeCreated();
+  const ammo = resolveStyleAmmo(input.ammo, input.equipmentIds, input.context?.style);
+  const runtimeInput = ammo === input.ammo ? input : { ...input, ammo };
   const base = resolveMaximumAdrenaline(
     input.equipmentEffects?.vestments.increasedAdrenalineCap ? 120 : ADRENALINE_CAP,
     input.league,
@@ -199,7 +202,7 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
     };
   }
   const rt: SimulationRuntime = {
-    input,
+    input: runtimeInput,
     detailLevel: resolveDetailLevel(input.detailLevel),
     horizon: input.horizonTicks,
     byId,

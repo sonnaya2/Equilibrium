@@ -7,6 +7,7 @@ import {
   statefulProcSuccessProbability,
 } from "../analysis/multiplicity";
 import { accountPlayerPoisonHits } from "../analysis";
+import { isRangedAmmoActive } from "../../styles/ranged/ammoModel";
 import type { ResolvedDamage } from "../resolution/types";
 import type { ScheduledEvent } from "../runtime/events";
 import type { SimulationRuntime } from "../runtime/runtime";
@@ -39,7 +40,7 @@ export function applyEvolvingToxinOnLand(
   damage: ResolvedDamage,
 ): void {
   if (
-    rt.input.ammo !== "bik" ||
+    !isRangedAmmoActive(rt.input.ammo, rt.input.context?.style, rt.input.equipmentIds) ||
     damage.expected <= 0 ||
     event.attached ||
     capabilitiesOf(event.provenance).canApplyEvolvingToxin !== true

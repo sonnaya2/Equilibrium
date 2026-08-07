@@ -17,7 +17,7 @@ function withLoadout(patch: Partial<Loadout>): Loadout {
   };
 }
 
-describe("Genesis Essence weapon-tier override", () => {
+describe("Genesis Essence combat-tier override", () => {
   it.each([
     ["melee", "twohand", 90, 0],
     ["ranged", "dualwield", 90, 80],
@@ -40,6 +40,8 @@ describe("Genesis Essence weapon-tier override", () => {
           ...loadout,
           weaponTier: 120,
           offhandTier: offhand > 0 ? 120 : 0,
+          ammunitionTier: style === "ranged" ? 120 : loadout.ammunitionTier,
+          spellTier: style === "magic" ? 120 : loadout.spellTier,
         }),
       );
 
@@ -49,6 +51,8 @@ describe("Genesis Essence weapon-tier override", () => {
       expect(genesis.accuracyRating).toBe(explicit.accuracyRating);
       expect(genesis.weaponConfiguration).toBe(explicit.weaponConfiguration);
       if (offhand > 0) expect(genesis.offhandTier).toBe(explicit.offhandTier);
+      if (style === "ranged") expect(genesis.ammunitionTier).toBe(120);
+      if (style === "magic") expect(genesis.spellTier).toBe(120);
     },
   );
 
@@ -131,7 +135,7 @@ describe("Genesis Essence weapon-tier override", () => {
     expect(model.league.blessingIds).toContain("genesis-essence");
   });
 
-  it("keeps the existing style caps and ammo behavior on the effective tier", () => {
+  it("raises ranged ammo and magic spell tiers without changing resource behavior", () => {
     const ranged = withLoadout({
       style: "ranged",
       weaponConfiguration: "twohand",
@@ -148,10 +152,20 @@ describe("Genesis Essence weapon-tier override", () => {
     const magicStats = loadoutStats(magic, { blessingPicks: GENESIS_PICKS });
 
     expect(rangedStats.mainhandTier).toBe(120);
-    expect(rangedStats.ammunitionTier).toBe(80);
+    expect(rangedStats.ammunitionTier).toBe(120);
     expect(magicStats.mainhandTier).toBe(120);
-    expect(magicStats.spellTier).toBe(80);
-    expect(rangedStats.base).toBe(loadoutStats({ ...ranged, weaponTier: 120 }).base);
-    expect(magicStats.base).toBe(loadoutStats({ ...magic, weaponTier: 120 }).base);
+    expect(magicStats.spellTier).toBe(120);
+    expect(rangedStats.base).toBe(
+      loadoutStats({ ...ranged, weaponTier: 120, ammunitionTier: 120 }).base,
+    );
+    expect(magicStats.base).toBe(loadoutStats({ ...magic, weaponTier: 120, spellTier: 120 }).base);
+  });
+
+  it("keeps zero ammo and spell tiers as the weaponless sentinel", () => {
+    const ranged = withLoadout({ style: "ranged", ammunitionTier: 0 });
+    const magic = withLoadout({ style: "magic", spellTier: 0 });
+
+    expect(loadoutWeaponConfig(ranged, [120])).toMatchObject({ ammunitionTier: 0 });
+    expect(loadoutWeaponConfig(magic, [120])).toMatchObject({ spellTier: 0 });
   });
 });

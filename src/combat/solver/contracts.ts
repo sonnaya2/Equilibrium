@@ -1,5 +1,6 @@
 /** Revolution-bar solver contracts. Pure types for evaluate/search layers. */
 import type { AdrenalineRules } from "../engine/simulation/contracts";
+import type { ResolvedLeagueRules } from "../league/ruleset";
 
 /** Bumped when evaluation inputs change shape (e.g. Basic Attack subtype). */
 export const SOLVER_SCHEMA_VERSION = 8 as const;
@@ -389,6 +390,7 @@ export type ExclusionCode =
   | "partial-support"
   | "not-modeled"
   | "mechanics-unverified"
+  | "league-restriction"
   | "not-in-pool"
   | "sim-failed"
   | "score-failed";
@@ -414,6 +416,7 @@ export interface CandidatePoolOptions {
   equipmentIds?: readonly string[];
   /** Active equipment passives (capability gates for Igneous upgrades, etc.). */
   passiveIds?: readonly string[];
+  league?: ResolvedLeagueRules;
 }
 
 export interface CandidatePool {
@@ -445,6 +448,7 @@ export interface RevolutionEvalSimBase {
   abilities: readonly PoolAbility[];
   equipmentIds?: readonly string[];
   weaponConfiguration?: CandidatePoolOptions["weaponConfiguration"];
+  league?: ResolvedLeagueRules;
   startingAdrenaline?: number;
   adrenaline?: AdrenalineRules;
   // Additional SimulateInput fields are allowed by structural typing at the call site.

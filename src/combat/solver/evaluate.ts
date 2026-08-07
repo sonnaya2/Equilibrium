@@ -244,6 +244,7 @@ export function evaluateRevolutionBar(
   const equipmentIds = simFields.equipmentIds;
   const passiveIds = (simFields as { equipmentEffects?: { passiveIds?: readonly string[] } })
     .equipmentEffects?.passiveIds;
+  const league = simFields.league;
 
   if (pool.style !== style) {
     reasons.push({
@@ -276,6 +277,7 @@ export function evaluateRevolutionBar(
       weaponConfiguration,
       equipmentIds,
       passiveIds,
+      league,
       memo: incumbentBaseline ? undefined : eligibilityMemo,
       skipSizeBounds: incumbentBaseline,
       outsidePoolById: incumbentBaseline

@@ -157,6 +157,7 @@ export function SetupTab({ loadout, setLoadout }: { loadout: Loadout; setLoadout
     { label: "Elidinis Statuette", value: life.elidinisStatuette },
     { label: "Bonfire", value: life.bonfire },
     { label: "Totem of Vitality", value: life.totemOfVitality },
+    { label: "True Equilibrium", value: life.leagueMaximumFlat },
     { label: "Big Boned", value: life.leagueMaximumNormal + life.leagueMaximumTemporary },
     { label: "Havoc Born", value: life.finalMaximumNormal + life.finalMaximumTemporary },
     { label: "Powerburst of vitality", value: life.powerburst },
@@ -248,14 +249,11 @@ export function SetupTab({ loadout, setLoadout }: { loadout: Loadout; setLoadout
                     { label: "Biting", value: stats.critChanceBreakdown.biting },
                     { label: "Set effects", value: stats.critChanceBreakdown.sets },
                     ...stats.critChanceSources,
-                    ...(stats.critChanceSources.length === 0
-                      ? [
-                          {
-                            label: "Equipment",
-                            value: stats.critChanceBreakdown.equipment,
-                          },
-                        ]
-                      : []),
+                    { label: "Equipment", value: stats.critChanceBreakdown.equipment },
+                    {
+                      label: "True Equilibrium",
+                      value: stats.critChanceBreakdown.trueEquilibrium ?? 0,
+                    },
                     {
                       label: stats.critsDisabled ? "Equilibrium" : "Cap adjustment",
                       value: stats.critChanceBreakdown.adjustment,
@@ -279,7 +277,7 @@ export function SetupTab({ loadout, setLoadout }: { loadout: Loadout; setLoadout
                   total={stats.totalCritDamageBonus}
                   items={[
                     { label: "Level", value: stats.baseCritDamageBonus },
-                    { label: "Equipment", value: stats.critDamageBonus },
+                    ...stats.critDamageSources,
                   ]}
                 />
               </SummaryMetric>
@@ -330,7 +328,15 @@ export function SetupTab({ loadout, setLoadout }: { loadout: Loadout; setLoadout
               {stats.life.overhealCeiling > stats.life.temporaryMaxLife ? (
                 <SummaryMetric label="Overheal cap" value={formatNum(stats.life.overhealCeiling)} />
               ) : null}
-              <SummaryMetric label="Prayer bonus" value={formatNum(stats.equipment.prayer)} />
+              <SummaryMetric label="Prayer bonus" value={formatNum(stats.league.prayerBonus)}>
+                <Breakdown
+                  total={stats.league.prayerBonus}
+                  items={[
+                    { label: "Equipment", value: stats.equipment.prayer },
+                    { label: "True Equilibrium", value: stats.league.trueEquilibrium.prayerBonus },
+                  ]}
+                />
+              </SummaryMetric>
               <SummaryMetric label="Starting adrenaline" value={`${stats.startingAdrenaline}%`} />
               <SummaryMetric
                 label="Maximum adrenaline"

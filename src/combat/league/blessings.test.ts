@@ -437,10 +437,8 @@ describe("Havoc Born", () => {
     });
   });
 
-  it("uses one shared damage modifier across outgoing provenance kinds", () => {
+  it("uses one shared damage pipeline across outgoing provenance kinds", () => {
     const league = rules(picks);
-    const modifier = leagueModifiers(league).find((entry) => entry.id === "blessing:havoc-born")!;
-    expect(modifier.stage).toBe("postHit");
     const applicable = [
       "player_direct",
       "player_dot",
@@ -454,13 +452,13 @@ describe("Havoc Born", () => {
       "blessing",
     ] as const;
     for (const kind of applicable) {
-      expect(
-        modifier.applies({ style: "melee", ruleset: "equilibrium", provenance: { kind } }),
-      ).toBe(true);
+      const result = runPipeline({ damage: 1_000 }, leagueModifiers(league), {
+        style: "melee",
+        ruleset: "equilibrium",
+        provenance: { kind },
+      });
+      expect(result.damage, kind).toBe(1_200);
     }
-    expect(
-      modifier.apply({ damage: 1_000 }, { style: "melee", ruleset: "equilibrium" }).damage,
-    ).toBe(1_200);
   });
 
   it("stacks with another outgoing modifier in pipeline order", () => {

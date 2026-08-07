@@ -279,13 +279,35 @@ export function RotationPlanner({
         weaponConfiguration: setupStats.weaponConfiguration,
         equipmentIds: setupStats.equipmentIds,
         passiveIds: setupStats.equipmentEffects.passiveIds,
+        league: setupStats.league,
       })
     : stylePool;
-  const loadoutGateOpts = {
-    weaponConfiguration: setupStats.weaponConfiguration,
-    equipmentIds: setupStats.equipmentIds,
-    passiveIds: setupStats.equipmentEffects.passiveIds,
-  };
+  const loadoutGateOpts = useMemo(
+    () => ({
+      weaponConfiguration: setupStats.weaponConfiguration,
+      equipmentIds: setupStats.equipmentIds,
+      passiveIds: setupStats.equipmentEffects.passiveIds,
+      league: setupStats.league,
+    }),
+    [setupStats],
+  );
+  useEffect(() => {
+    if (!useBuild) return;
+    setQueue((current) => {
+      const legal = current.filter((id) => {
+        const raw = abilityById(id);
+        if (!raw) return false;
+        const resolved = equipAbilityForLoadout(raw, DISPLAY_CATALOGUE.byId, loadoutGateOpts);
+        return resolveAbilityCastAvailability(resolved, {
+          ...loadoutGateOpts,
+          groupPeers: DISPLAY_CATALOGUE.catalogue,
+        }).available;
+      });
+      if (legal.length === current.length) return current;
+      saveState(STORAGE_KEY, legal);
+      return legal;
+    });
+  }, [loadoutGateOpts, useBuild]);
   // Map exclusive groups to the loadout-resolved id so a stale base queue entry
   // (pre-cape) does not block the Igneous row as "Replaced by Overpower".
   const selectedVariants = new Map<string, string>();

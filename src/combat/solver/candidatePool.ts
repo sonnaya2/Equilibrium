@@ -122,6 +122,7 @@ export function buildCandidatePool(
       weaponConfiguration: options.weaponConfiguration,
       equipmentIds: options.equipmentIds,
       passiveIds: asPassiveIds(options.passiveIds),
+      league: options.league,
       groupPeers: peers,
     });
     if (!availability.available) continue;

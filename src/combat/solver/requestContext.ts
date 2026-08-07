@@ -23,6 +23,7 @@ import type {
   SerializableRevolutionSimBase,
   SerializableSolverRequest,
 } from "./worker/serializable";
+import { reviveLeague } from "../model/simulationInput";
 import {
   dualVersionDenyIds,
   ensureRequiredAbilityIds,
@@ -114,11 +115,13 @@ export function buildCandidatePoolForRequest(
 ) {
   const catalogue = allEngineSpecs();
   const passiveIds = simBase.equipmentEffects?.passiveIds;
+  const league = reviveLeague(simBase.league);
   const poolOpts = {
     includePartial: request.includePartial === true,
     weaponConfiguration: simBase.weaponConfiguration,
     equipmentIds: simBase.equipmentIds,
     passiveIds,
+    league,
   } as const;
 
   let pool = buildCandidatePool(catalogue, request.style, {
@@ -250,6 +253,7 @@ export function fitIncumbentBar(
   if (!request.userBar?.length) return null;
   const loadout = request.loadout as SerializableRevolutionSimBase;
   const passiveIds = loadout.equipmentEffects?.passiveIds as readonly ItemPassiveId[] | undefined;
+  const league = reviveLeague(loadout.league);
   const lookup = catalogueById ?? engineSpecs;
   const upgraded = request.userBar.map((id) =>
     resolveEquippedAbilityId(id, lookup, {
@@ -267,6 +271,7 @@ export function fitIncumbentBar(
       weaponConfiguration: loadout.weaponConfiguration,
       equipmentIds: loadout.equipmentIds,
       passiveIds,
+      league,
     });
     if (!availability.available) continue;
     cleaned.push(id);

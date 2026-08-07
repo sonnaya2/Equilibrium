@@ -32,8 +32,10 @@ export {
   passiveIdsFromEquipmentIds,
   permanentAvailabilityBlock,
   resolveAbilityCastAvailability,
+  resolveLeagueAbilityAvailability,
   type AbilityAvailabilityOptions,
   type AbilityCastAvailability,
+  type LeagueAbilityAvailability,
 } from "./shared/abilityAvailability";
 export * from "./shared/prayers";
 export * from "./shared/vulnerability";

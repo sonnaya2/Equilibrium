@@ -154,6 +154,7 @@ async function solveWithBudget(
   const denySet = new Set(deny);
   const catalogue = allEngineSpecs();
   const passiveIds = simBase.equipmentEffects?.passiveIds;
+  const league = reviveLeague(simBase.league);
 
   let pool = buildCandidatePool(catalogue, request.style, {
     includePartial: request.includePartial === true,
@@ -161,6 +162,7 @@ async function solveWithBudget(
     weaponConfiguration: simBase.weaponConfiguration,
     equipmentIds: simBase.equipmentIds,
     passiveIds,
+    league,
   });
 
   if (request.permittedCategories?.length) {
@@ -175,6 +177,7 @@ async function solveWithBudget(
       weaponConfiguration: simBase.weaponConfiguration,
       equipmentIds: simBase.equipmentIds,
       passiveIds,
+      league,
     });
   }
 
@@ -189,7 +192,6 @@ async function solveWithBudget(
     request.durationTicks > 0 ? request.durationTicks : MIN_RANKABLE_HORIZON_TICKS,
   );
 
-  const league = reviveLeague(simBase.league);
   const modifiers = reviveModifiers(simBase.modifierSources, league);
   const simCommon = {
     base: simBase.base,

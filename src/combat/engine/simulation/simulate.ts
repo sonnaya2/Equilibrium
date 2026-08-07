@@ -99,6 +99,8 @@ function stepManualAction(
       branch.rt.input.weaponConfiguration,
       branch.rt.input.equipmentIds,
       branch.rt.input.equipmentEffects?.passiveIds,
+      branch.rt.byId,
+      branch.rt.input.league,
     );
     if (permanent !== null) {
       return {
@@ -128,6 +130,7 @@ function stepManualAction(
           weaponConfiguration: current.rt.input.weaponConfiguration,
           equipmentIds: current.rt.input.equipmentIds,
           passiveIds: current.rt.input.equipmentEffects?.passiveIds,
+          league: current.rt.input.league,
         });
         const castable =
           firstLegalTickFor(current.rt.state, castAbility, current.rt.input.level) <=
@@ -140,6 +143,7 @@ function stepManualAction(
             current.rt.input.equipmentIds,
             current.rt.input.equipmentEffects?.passiveIds,
             current.rt.byId,
+            current.rt.input.league,
           ) === null;
         if (castable || !basic) {
           done.push(current);

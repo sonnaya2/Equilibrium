@@ -1112,6 +1112,120 @@ describe("loadoutStats", () => {
       expect(bigHavoc.life.breakdown.finalMaximumNormal).toBe(-3_713);
     });
 
+    it("resolves True Equilibrium once for one, two, and three unique paths", () => {
+      const fixtures = [
+        {
+          picks: ["Balance", "Balance", "Balance", "Balance"] as const,
+          count: 1,
+          base: 1_836,
+          armour: 50,
+          life: 15_600,
+          crit: 0.15,
+          prayer: 5,
+          critDamage: 0.075,
+        },
+        {
+          picks: ["Order", "Order", "Order", "Balance"] as const,
+          count: 2,
+          base: 1_936,
+          armour: 100,
+          life: 10_900,
+          crit: 0.2,
+          prayer: 10,
+          critDamage: 0.15,
+        },
+        {
+          picks: ["Order", "Balance", "Chaos", "Balance"] as const,
+          count: 3,
+          base: 2_023,
+          armour: 150,
+          life: 11_400,
+          crit: 0.25,
+          prayer: 15,
+          critDamage: 0.225,
+        },
+      ];
+
+      for (const fixture of fixtures) {
+        const stats = loadoutStats(base, { blessingPicks: fixture.picks });
+        expect(stats.base).toBe(fixture.base);
+        expect(stats.defence.totalArmour).toBe(fixture.armour);
+        expect(stats.life.normalMaxLife).toBe(fixture.life);
+        expect(stats.critChance).toBeCloseTo(fixture.crit, 10);
+        expect(stats.critDamageBonus).toBeCloseTo(fixture.critDamage, 10);
+        expect(stats.league.prayerBonus).toBe(fixture.prayer);
+        expect(stats.league.trueEquilibrium).toEqual({
+          uniquePathCount: fixture.count,
+          baseAbilityDamage: 75 * fixture.count,
+          armour: 50 * fixture.count,
+          maximumLife: 500 * fixture.count,
+          critChance: 0.05 * fixture.count,
+          critDamage: 0.075 * fixture.count,
+          prayerBonus: 5 * fixture.count,
+        });
+      }
+    });
+
+    it("keeps True Equilibrium ahead of Big Boned and temporary maximum-life stages", () => {
+      const stats = loadoutStats(
+        {
+          ...base,
+          buffs: { ...base.buffs, fortitude: true, bonfireFiremakingLevel: 110 },
+        },
+        { blessingPicks: ["Balance", "Balance", "Balance", "Balance"] },
+      );
+      expect(stats.life.normalMaxLife).toBe(15_600);
+      expect(stats.life.temporaryMaxLife).toBe(17_931);
+      expect(stats.life.breakdown.leagueMaximumFlat).toBe(500);
+      expect(stats.life.breakdown.leagueMaximumNormal).toBe(5_200);
+      expect(stats.life.breakdown.leagueMaximumTemporary).toBe(777);
+      expect(stats.life.breakdown.finalMaximumNormal).toBe(0);
+    });
+
+    it("feeds True Equilibrium into Aegis, Icyenic Faith, and named stat rows", () => {
+      const stats = loadoutStats(base, {
+        blessingPicks: ["Order", "Order", "Order", "Balance"],
+        relics: ["Icyenic Faith"],
+      });
+      expect(stats.base).toBe(1_936);
+      expect(stats.defence.totalArmour).toBe(100);
+      expect(stats.league.prayerBonus).toBe(10);
+      expect(stats.icyenic.totalPrayerBonus).toBe(0);
+
+      const withTome = loadoutStats(
+        { ...base, equipmentSlots: { pocket: "item:tome-of-the-icyene" } },
+        {
+          blessingPicks: ["Order", "Order", "Order", "Balance"],
+          relics: ["Icyenic Faith"],
+        },
+      );
+      expect(withTome.base).toBe(2_168);
+      expect(withTome.league.prayerBonus).toBe(60);
+      expect(withTome.icyenic.totalPrayerBonus).toBe(60);
+      expect(withTome.critChance).toBeCloseTo(0.32, 10);
+      expect(withTome.baseAbilityDamageBreakdown).toEqual(
+        expect.arrayContaining([
+          { label: "True Equilibrium", value: 150 },
+          { label: "Icyenic Faith", value: 232 },
+        ]),
+      );
+      expect(withTome.critDamageSources).toEqual(
+        expect.arrayContaining([{ label: "True Equilibrium", value: 0.15 }]),
+      );
+    });
+
+    it("applies Higher Power at base ability damage and exposes its restriction", () => {
+      const stats = loadoutStats(base, {
+        blessingPicks: ["Order", "Order", "Order", "Order"],
+      });
+      expect(stats.base).toBe(2_289);
+      expect(stats.leagueBaseAbilityDamageMultiplier).toBe(1.3);
+      expect(stats.league.blessingIds.has("higher-power")).toBe(true);
+      expect(stats.baseAbilityDamageBreakdown).toEqual(
+        expect.arrayContaining([{ label: "Higher Power", value: 528 }]),
+      );
+    });
+
     it("boosts Defence through the overload formula", () => {
       const stats = loadoutStats({
         ...base,

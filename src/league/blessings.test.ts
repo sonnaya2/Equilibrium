@@ -82,6 +82,7 @@ describe("canonical blessings data contract", () => {
     for (const choice of lateChoices) {
       if (
         choice.id === "havoc-born" ||
+        choice.id === "higher-power" ||
         choice.id === "true-equilibrium" ||
         choice.id === "lord-of-light" ||
         choice.id === "tempered-heart" ||
@@ -127,8 +128,15 @@ describe("canonical blessings data contract", () => {
       combat: { passiveAdrenaline: { intervalTicks: 2, amount: 6 } },
     });
     expect(lateChoices.find((choice) => choice.id === "true-equilibrium")).toMatchObject({
-      support: { status: "partially-modeled" },
-      combat: { prayerBonusPerUniquePath: 5 },
+      support: { status: "modeled", excluded: [] },
+      combat: {
+        baseAbilityDamagePerUniquePath: 75,
+        armourPerUniquePath: 50,
+        maximumLifePerUniquePath: 500,
+        critChancePerUniquePath: 0.05,
+        critDamagePerUniquePath: 0.075,
+        prayerBonusPerUniquePath: 5,
+      },
     });
     expect(lateChoices.find((choice) => choice.id === "perfidious")).toMatchObject({
       support: { status: "partially-modeled" },

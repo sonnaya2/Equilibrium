@@ -1,6 +1,11 @@
 import { equipmentById } from "../data";
 import type { EquipmentRecord, ItemPassiveId } from "../data/records";
 import type { AbilitySpec } from "../pipeline/calculateAbility";
+import {
+  resolveLeagueAbilityAvailability,
+  type LeagueAbilityAvailability,
+} from "../league/abilityAvailability";
+import type { ResolvedLeagueRules } from "../league/ruleset";
 
 export type WeaponConfiguration =
   "twohand" | "dualwield" | "mainhand" | "shield" | "defender" | "necromancy";
@@ -19,6 +24,7 @@ export type AbilityCastAvailability =
         | "weapon-requirement"
         | "missing-equipment"
         | "missing-special-access"
+        | "league-restriction"
         | "other";
       message: string;
     };
@@ -235,6 +241,7 @@ export type AbilityAvailabilityOptions = {
     AbilitySpec,
     "id" | "name" | "replacementGroup" | "requiredPassiveAnyOf"
   >[];
+  league?: ResolvedLeagueRules;
 };
 
 /**
@@ -313,6 +320,17 @@ export function resolveAbilityCastAvailability(
   ability: AbilitySpec,
   options: AbilityAvailabilityOptions = {},
 ): AbilityCastAvailability {
+  const leagueAvailability: LeagueAbilityAvailability = resolveLeagueAbilityAvailability(
+    ability,
+    options.league,
+  );
+  if (!leagueAvailability.available) {
+    return {
+      available: false,
+      reason: "league-restriction",
+      message: leagueAvailability.message,
+    };
+  }
   if (!meetsWeaponRequirement(ability, options.weaponConfiguration)) {
     return {
       available: false,

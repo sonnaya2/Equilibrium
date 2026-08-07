@@ -226,6 +226,17 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
       occupiedTiles: loadout.league.occupiedTiles,
       areaTargets: loadout.league.areaTargets ?? 1,
       prayerBonus: loadout.league.prayerBonus ?? 0,
+      trueEquilibrium: loadout.league.trueEquilibrium
+        ? {
+            uniquePathCount: loadout.league.trueEquilibrium.uniquePathCount,
+            baseAbilityDamage: loadout.league.trueEquilibrium.baseAbilityDamage,
+            armour: loadout.league.trueEquilibrium.armour,
+            maximumLife: loadout.league.trueEquilibrium.maximumLife,
+            critChance: roundN(loadout.league.trueEquilibrium.critChance, 6),
+            critDamage: roundN(loadout.league.trueEquilibrium.critDamage, 6),
+            prayerBonus: loadout.league.trueEquilibrium.prayerBonus,
+          }
+        : null,
       herbloreLevel: loadout.league.herbloreLevel ?? 1,
     },
     modifierSources: normalizeModifierSources(loadout.modifierSources),

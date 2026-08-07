@@ -108,6 +108,12 @@ export interface BlessingCombatRules {
   poisonDamageBaseBonus?: number;
   poisonDamagePerHerbloreLevel?: number;
   poisonImmunityDisableTicks?: number;
+  baseAbilityDamageMultiplier?: number;
+  baseAbilityDamagePerUniquePath?: number;
+  armourPerUniquePath?: number;
+  maximumLifePerUniquePath?: number;
+  critChancePerUniquePath?: number;
+  critDamagePerUniquePath?: number;
   prayerBonusPerUniquePath?: number;
   strikingLightCooldownTicks?: number;
 }
@@ -272,6 +278,11 @@ export function activeBlessings(picks: readonly BlessingPath[]): BlessingChoice[
     if (choice) active.push(choice);
   }
   return active;
+}
+
+/** True Equilibrium counts distinct paths from the six path tiers only. */
+export function uniqueBlessingPathCount(picks: readonly BlessingPath[]): number {
+  return new Set(picks.slice(0, PATH_TIERS.length)).size;
 }
 
 export type ActiveBlessingTierPassive = BlessingTierPassive & {

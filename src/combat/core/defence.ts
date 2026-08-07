@@ -55,6 +55,8 @@ export interface DefenceInput {
   equipmentArmour?: number;
   /** Final Total Armor Value multiplier; raw equipment data stays unchanged. */
   armourMultiplier?: number;
+  /** Flat Armour added before the final Total Armour multiplier. */
+  armourBonus?: number;
 }
 
 export interface DefenceStats {
@@ -68,6 +70,7 @@ export interface DefenceStats {
   /** Visible level plus prayer block levels (or Fortitude's ×1.15) - feeds f(x). */
   blockLevel: number;
   equipmentArmour: number;
+  armourBonus: number;
   /** Shared Total Armor Value; armour-% effects read this, never block-only boosts. */
   totalArmour: number;
   /** f(blockLevel), unfloored; the floor belongs to the rating. */
@@ -84,6 +87,7 @@ export function defenceStats(input: DefenceInput): DefenceStats {
     fortitude = false,
     equipmentArmour = 0,
     armourMultiplier = 1,
+    armourBonus = 0,
   } = input;
   if (!Number.isFinite(baseLevel) || baseLevel < 1 || baseLevel > MAX_DEFENCE_LEVEL) {
     throw new RangeError(`defenceStats: bad base level ${baseLevel}`);
@@ -97,6 +101,9 @@ export function defenceStats(input: DefenceInput): DefenceStats {
   if (!Number.isFinite(armourMultiplier) || armourMultiplier <= 0) {
     throw new RangeError(`defenceStats: bad armour multiplier ${armourMultiplier}`);
   }
+  if (!Number.isFinite(armourBonus) || armourBonus < 0) {
+    throw new RangeError(`defenceStats: bad armour bonus ${armourBonus}`);
+  }
   if (fortitude && prayerBlockLevels > 0) {
     throw new RangeError("defenceStats: Fortitude and stat-boosting curses are incompatible");
   }
@@ -106,8 +113,9 @@ export function defenceStats(input: DefenceInput): DefenceStats {
     ? visibleLevel * FORTITUDE_BLOCK_MULTIPLIER
     : visibleLevel + prayerBlockLevels;
   const blockLevelArmour = accuracyCurve(blockLevel);
+  const preMultiplierArmour = equipmentArmour + armourBonus;
   const resolvedTotalArmour =
-    equipmentArmour + Math.floor(equipmentArmour * (armourMultiplier - 1));
+    preMultiplierArmour + Math.floor(preMultiplierArmour * (armourMultiplier - 1));
   return {
     baseLevel,
     potionBoost,
@@ -116,6 +124,7 @@ export function defenceStats(input: DefenceInput): DefenceStats {
     fortitude,
     blockLevel,
     equipmentArmour,
+    armourBonus,
     totalArmour: resolvedTotalArmour,
     blockLevelArmour,
     blockArmourRating: Math.floor(resolvedTotalArmour + blockLevelArmour),

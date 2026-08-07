@@ -65,6 +65,8 @@ export interface LifePointInput {
   maximumLifeMultiplier?: number;
   /** Final derived maximum-life stage (1 when no final reduction is active). */
   finalMaximumLifeMultiplier?: number;
+  /** Flat life added before maximum-life and final maximum-life stages. */
+  maximumLifeBonus?: number;
   /** Defaults to the (temporary) maximum - a fully healed loadout. */
   currentLife?: number;
 }
@@ -103,6 +105,7 @@ export interface LifePointStats {
     leagueMaximumTemporary: number;
     finalMaximumNormal: number;
     finalMaximumTemporary: number;
+    leagueMaximumFlat: number;
   };
 }
 
@@ -115,6 +118,7 @@ export function lifePointStats(input: LifePointInput): LifePointStats {
     currentLife,
     maximumLifeMultiplier = 1,
     finalMaximumLifeMultiplier = 1,
+    maximumLifeBonus = 0,
   } = input;
   if (
     !Number.isFinite(constitutionLevel) ||
@@ -133,6 +137,9 @@ export function lifePointStats(input: LifePointInput): LifePointStats {
     throw new RangeError(
       `lifePointStats: bad final maximum-life multiplier ${finalMaximumLifeMultiplier}`,
     );
+  }
+  if (!Number.isFinite(maximumLifeBonus) || maximumLifeBonus < 0) {
+    throw new RangeError(`lifePointStats: bad maximum life bonus ${maximumLifeBonus}`);
   }
   if (bonfireFiremakingLevel != null && input.totemOfVitality) {
     throw new RangeError("lifePointStats: bonfire and Totem of Vitality do not stack");
@@ -173,7 +180,7 @@ export function lifePointStats(input: LifePointInput): LifePointStats {
     : 0;
 
   const permanentLife = reaperCrewLife + boonOfHetLife + fontOfLife + totemOfVitalityLife;
-  const baseNormalMaxLife = constitutionLife + equipmentLife + permanentLife;
+  const baseNormalMaxLife = constitutionLife + equipmentLife + permanentLife + maximumLifeBonus;
   const leagueMaximumNormal = Math.floor(baseNormalMaxLife * (maximumLifeMultiplier - 1));
   const normalBeforeFinal = baseNormalMaxLife + leagueMaximumNormal;
   const finalMaximumNormal = Math.floor(normalBeforeFinal * (finalMaximumLifeMultiplier - 1));
@@ -237,6 +244,7 @@ export function lifePointStats(input: LifePointInput): LifePointStats {
       leagueMaximumTemporary,
       finalMaximumNormal,
       finalMaximumTemporary,
+      leagueMaximumFlat: maximumLifeBonus,
     },
   };
 }

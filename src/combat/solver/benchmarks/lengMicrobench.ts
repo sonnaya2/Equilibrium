@@ -126,6 +126,7 @@ function runArm(
     weaponConfiguration: sim.weaponConfiguration,
     equipmentIds: sim.equipmentIds,
     passiveIds: sim.equipmentEffects?.passiveIds,
+    league: sim.league,
   });
   const resolved = resolveBar(bar);
 

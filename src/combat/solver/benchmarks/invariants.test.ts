@@ -66,6 +66,7 @@ async function solveTiny(request: SerializableSolverRequest, budget = 20) {
   const denySet = new Set(deny);
   const catalogue = allEngineSpecs();
   const passiveIds = simBase.equipmentEffects?.passiveIds;
+  const league = reviveLeague(simBase.league);
 
   const pool = buildCandidatePool(catalogue, request.style, {
     includePartial: request.includePartial === true,
@@ -73,6 +74,7 @@ async function solveTiny(request: SerializableSolverRequest, budget = 20) {
     weaponConfiguration: simBase.weaponConfiguration,
     equipmentIds: simBase.equipmentIds,
     passiveIds,
+    league,
   });
 
   const poolSpecs = poolAsSpecs(pool.ids, pool.byId);
@@ -86,7 +88,6 @@ async function solveTiny(request: SerializableSolverRequest, budget = 20) {
     request.durationTicks > 0 ? request.durationTicks : MIN_RANKABLE_HORIZON_TICKS,
   );
 
-  const league = reviveLeague(simBase.league);
   const modifiers = reviveModifiers(simBase.modifierSources, league);
   const simCommon = {
     base: simBase.base,

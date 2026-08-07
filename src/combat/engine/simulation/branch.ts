@@ -96,6 +96,7 @@ export function planCastOutcomes(
     weaponConfiguration: branch.rt.input.weaponConfiguration,
     equipmentIds: branch.rt.input.equipmentIds,
     passiveIds: branch.rt.input.equipmentEffects?.passiveIds,
+    league: branch.rt.input.league,
   });
 
   const candidate = Math.max(
@@ -119,6 +120,7 @@ export function planCastOutcomes(
       at.rt.input.equipmentIds,
       at.rt.input.equipmentEffects?.passiveIds,
       at.rt.byId,
+      at.rt.input.league,
     );
     if (rejection) {
       errors.push({ ...at, error: rejection });

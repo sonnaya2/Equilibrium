@@ -142,6 +142,7 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
         weaponConfiguration: setup.weaponConfiguration,
         equipmentIds: setup.equipmentIds,
         passiveIds: setup.equipmentEffects.passiveIds as readonly ItemPassiveId[],
+        league: setup.league,
       }
     : undefined;
   const fullStylePalette = paletteForStyle(activeStyle, souls);

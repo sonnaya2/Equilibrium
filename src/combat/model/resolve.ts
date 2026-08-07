@@ -115,6 +115,15 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
       occupiedTiles: input.league.occupiedTiles,
       areaTargets: Math.max(1, Math.floor(input.league.areaTargets ?? 1)),
       prayerBonus: Math.max(0, input.league.prayerBonus ?? 0),
+      trueEquilibrium: input.league.trueEquilibrium ?? {
+        uniquePathCount: 0,
+        baseAbilityDamage: 0,
+        armour: 0,
+        maximumLife: 0,
+        critChance: 0,
+        critDamage: 0,
+        prayerBonus: 0,
+      },
       herbloreLevel: input.league.herbloreLevel,
     },
     context: input.context

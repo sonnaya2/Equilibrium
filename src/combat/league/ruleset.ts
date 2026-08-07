@@ -6,6 +6,7 @@ import {
   type BlessingId,
   type BlessingPath,
   type ActiveBlessingTierPassive,
+  uniqueBlessingPathCount,
 } from "../../league/blessings";
 import {
   resolveAdrenalineCap,
@@ -77,7 +78,18 @@ export interface ResolvedLeagueRules {
   occupiedTiles: number;
   areaTargets: number;
   prayerBonus: number;
+  trueEquilibrium: TrueEquilibriumResolution;
   herbloreLevel?: number;
+}
+
+export interface TrueEquilibriumResolution {
+  uniquePathCount: number;
+  baseAbilityDamage: number;
+  armour: number;
+  maximumLife: number;
+  critChance: number;
+  critDamage: number;
+  prayerBonus: number;
 }
 
 export interface ResolveLeagueRulesDerived {
@@ -94,15 +106,26 @@ export interface ResolveLeagueRulesDerived {
 export function resolveLeagueRules(
   loadout: LeagueLoadout,
   derived: ResolveLeagueRulesDerived = {},
+  resolvedTrueEquilibrium?: TrueEquilibriumResolution,
 ): ResolvedLeagueRules {
   const ruleset = loadout.ruleset === "equilibrium" ? "equilibrium" : "base";
   const blessings = ruleset === "equilibrium" ? activeBlessings(loadout.blessingPicks ?? []) : [];
   const tierPassives =
     ruleset === "equilibrium" ? activeTierPassives(loadout.blessingPicks ?? []) : [];
   const blessingsById = indexActiveBlessings(blessings);
-  const trueEquilibriumPrayer =
-    (blessingsById.get("true-equilibrium")?.combat.prayerBonusPerUniquePath ?? 0) *
-    new Set(loadout.blessingPicks ?? []).size;
+  const trueEquilibriumRule = blessingsById.get("true-equilibrium")?.combat;
+  const uniquePathCount =
+    ruleset === "equilibrium" ? uniqueBlessingPathCount(loadout.blessingPicks ?? []) : 0;
+  const computedTrueEquilibrium: TrueEquilibriumResolution = {
+    uniquePathCount,
+    baseAbilityDamage: uniquePathCount * (trueEquilibriumRule?.baseAbilityDamagePerUniquePath ?? 0),
+    armour: uniquePathCount * (trueEquilibriumRule?.armourPerUniquePath ?? 0),
+    maximumLife: uniquePathCount * (trueEquilibriumRule?.maximumLifePerUniquePath ?? 0),
+    critChance: uniquePathCount * (trueEquilibriumRule?.critChancePerUniquePath ?? 0),
+    critDamage: uniquePathCount * (trueEquilibriumRule?.critDamagePerUniquePath ?? 0),
+    prayerBonus: uniquePathCount * (trueEquilibriumRule?.prayerBonusPerUniquePath ?? 0),
+  };
+  const trueEquilibrium = resolvedTrueEquilibrium ?? computedTrueEquilibrium;
   const relics =
     ruleset === "equilibrium"
       ? [
@@ -125,9 +148,19 @@ export function resolveLeagueRules(
     targetSize: Math.max(1, Math.floor(derived.targetSize ?? 1)),
     occupiedTiles: Math.max(1, Math.floor(derived.occupiedTiles ?? 1)),
     areaTargets: Math.max(1, Math.floor(derived.areaTargets ?? 1)),
-    prayerBonus: Math.max(0, derived.prayerBonus ?? 0) + trueEquilibriumPrayer,
+    prayerBonus: Math.max(0, derived.prayerBonus ?? 0) + trueEquilibrium.prayerBonus,
+    trueEquilibrium,
     herbloreLevel: Math.min(120, Math.max(1, Math.floor(derived.herbloreLevel ?? 1))),
   };
+}
+
+export function higherPowerBaseAbilityDamageMultiplier(
+  rules: ResolvedLeagueRules | undefined,
+): number {
+  const multiplier = blessingRule(rules, "higher-power")?.baseAbilityDamageMultiplier;
+  return typeof multiplier === "number" && Number.isFinite(multiplier) && multiplier > 0
+    ? multiplier
+    : 1;
 }
 
 /** Powerburst doubles maximum life after all other layers, only while active. */
@@ -425,12 +458,7 @@ export function leagueModifiers(rules: ResolvedLeagueRules | undefined): CombatM
       applies: (context) => context.ruleset === "equilibrium",
       apply: (state) => ({
         ...state,
-        damage:
-          state.damage +
-          Math.floor(
-            state.damage * (havoc.combat.damageMultiplier! - 1) +
-              Number.EPSILON * Math.max(1, Math.abs(state.damage)),
-          ),
+        damage: mulFloor(state.damage, havoc.combat.damageMultiplier!),
       }),
       source: havoc.source,
     });

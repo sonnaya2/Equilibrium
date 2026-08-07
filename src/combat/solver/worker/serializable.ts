@@ -19,6 +19,7 @@ import type { RegionId } from "@/league";
 import type { CombatContext, CombatStyle } from "../../types";
 import type { PlayerPoisonProfile } from "../../poison/mechanics";
 import type { StyleAmmoId } from "../../styles/ranged/ammoModel";
+import type { TrueEquilibriumResolution } from "../../league/ruleset";
 
 export { SOLVER_SCHEMA_VERSION };
 export type { AbilityCategory };
@@ -90,6 +91,7 @@ export interface SerializableLeagueRules {
   occupiedTiles: number;
   areaTargets?: number;
   prayerBonus?: number;
+  trueEquilibrium?: TrueEquilibriumResolution;
   herbloreLevel?: number;
 }
 

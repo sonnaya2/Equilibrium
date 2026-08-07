@@ -29,6 +29,7 @@ export interface EligibilityOptions {
   weaponConfiguration?: CandidatePool["options"]["weaponConfiguration"];
   equipmentIds?: readonly string[];
   passiveIds?: readonly string[];
+  league?: CandidatePool["options"]["league"];
   /**
    * Optional per-solve memo. Only used when `memo.pool === pool` and the call's
    * resolved options match `memo.optionKey`; otherwise validation runs uncached.
@@ -70,6 +71,11 @@ export function eligibilityOptionKey(
     weaponConfiguration ?? "",
     equipmentIds?.join(",") ?? "",
     passiveIds?.join(",") ?? "",
+    options.league?.ruleset ?? pool.options.league?.ruleset ?? "",
+    [...(options.league?.blessingIds ?? pool.options.league?.blessingIds ?? [])]
+      .map(String)
+      .sort()
+      .join(","),
   ].join("|");
 }
 
@@ -170,6 +176,7 @@ function validateBarEligibilityUncached(
   const weaponConfiguration = options.weaponConfiguration ?? pool.options.weaponConfiguration;
   const equipmentIds = options.equipmentIds ?? pool.options.equipmentIds;
   const passiveIds = options.passiveIds ?? pool.options.passiveIds;
+  const league = options.league ?? pool.options.league;
 
   if (!options.skipSizeBounds) {
     if (bar.length < size.min) {
@@ -250,6 +257,7 @@ function validateBarEligibilityUncached(
       weaponConfiguration,
       equipmentIds,
       passiveIds: passiveIds as readonly ItemPassiveId[] | undefined,
+      league,
       groupPeers: peers.map((peer) => ({
         id: peer.id,
         name: peer.name ?? peer.id,
@@ -261,11 +269,13 @@ function validateBarEligibilityUncached(
       const code =
         availability.reason === "weapon-requirement"
           ? "weapon-requirement"
-          : availability.reason === "missing-equipment" ||
-              availability.reason === "missing-passive" ||
-              availability.reason === "superseded"
-            ? "equipment-requirement"
-            : "equipment-requirement";
+          : availability.reason === "league-restriction"
+            ? "league-restriction"
+            : availability.reason === "missing-equipment" ||
+                availability.reason === "missing-passive" ||
+                availability.reason === "superseded"
+              ? "equipment-requirement"
+              : "equipment-requirement";
       issues.push({
         code,
         abilityId: id,

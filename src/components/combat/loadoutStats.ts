@@ -44,6 +44,7 @@ import {
   resolveDefenceLife,
   resolveEquipment,
   resolveLeagueBundle,
+  resolveLeagueSelection,
   resolveLevels,
   resolveSlayerSalve,
   type BerserkersFuryResolved,
@@ -122,10 +123,12 @@ export interface CalcStats {
     sets: number;
     equipment: number;
     icyenic?: number;
+    trueEquilibrium?: number;
     adjustment: number;
   };
   /** Named static crit sources (rings/sets) for the Setup breakdown. */
   critChanceSources: readonly { label: string; value: number }[];
+  critDamageSources: readonly { label: string; value: number }[];
   /**
    * Situational crit that is modelled at land/cast time but not in the static
    * total - Channeller's channel stacking, Champion's bleed window, etc.
@@ -191,6 +194,7 @@ export interface CalcStats {
   league: ResolvedLeagueRules;
   combatContext: CombatContext;
   leagueBaseAbilityDamageBonus: number;
+  leagueBaseAbilityDamageMultiplier: number;
   /** Diagnostic breakdown of the Aegis armour conversion; zeroed without the blessing. */
   aegis: AegisArmourBonus;
   /** Barkscales resolved against the stated incoming scenario, or marked unavailable. */
@@ -231,14 +235,27 @@ export function nonWeaponAccuracyBonus(loadout: Loadout): number {
 export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}): CalcStats {
   const now = options.now ?? Date.now();
   const levels = resolveLevels(loadout);
-  const equipment = resolveEquipment(loadout, levels, options);
-  const defenceLife = resolveDefenceLife(loadout, levels, equipment, {
-    now,
-    blessingPicks: options.blessingPicks,
-    relics: options.relics,
-    ruleset: options.ruleset,
-  });
-  const leagueBundle = resolveLeagueBundle(loadout, defenceLife, { ...options, now }, equipment);
+  const leagueSelection = resolveLeagueSelection(options);
+  const equipment = resolveEquipment(loadout, levels, options, leagueSelection);
+  const defenceLife = resolveDefenceLife(
+    loadout,
+    levels,
+    equipment,
+    {
+      now,
+      blessingPicks: options.blessingPicks,
+      relics: options.relics,
+      ruleset: options.ruleset,
+    },
+    leagueSelection,
+  );
+  const leagueBundle = resolveLeagueBundle(
+    loadout,
+    defenceLife,
+    { ...options, now },
+    equipment,
+    leagueSelection,
+  );
   // Helmet + salve once: accuracy mults, damage mods, and snapshot descriptors share this.
   const slayerSalve = resolveSlayerSalve(loadout, options);
   const accuracyDp = resolveAccuracyDp(loadout, levels, equipment, leagueBundle, slayerSalve);
@@ -272,6 +289,7 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     critChance: crit.critChance,
     critChanceBreakdown: crit.critChanceBreakdown,
     critChanceSources: crit.critChanceSources,
+    critDamageSources: crit.critDamageSources,
     critConditionalNotes: crit.critConditionalNotes,
     styleMismatchNotes: baseDamage.styleMismatchNotes,
     critsDisabled: crit.critsDisabled,
@@ -315,6 +333,7 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     league: leagueBundle.league,
     combatContext: combat.combatContext,
     leagueBaseAbilityDamageBonus: leagueBundle.leagueBaseAbilityDamageBonus,
+    leagueBaseAbilityDamageMultiplier: leagueBundle.leagueBaseAbilityDamageMultiplier,
     aegis: leagueBundle.aegis,
     barkscales: leagueBundle.barkscales,
     icyenic: leagueBundle.icyenic,

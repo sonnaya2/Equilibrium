@@ -19,3 +19,7 @@ export {
   type AbilityCastAvailability,
   type WeaponConfiguration,
 } from "./requirements";
+export {
+  resolveLeagueAbilityAvailability,
+  type LeagueAbilityAvailability,
+} from "../league/abilityAvailability";

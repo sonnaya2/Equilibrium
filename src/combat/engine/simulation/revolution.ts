@@ -22,6 +22,7 @@ import type { RotationState } from "../runtime/state";
 import { firstLegalTickFor } from "../runtime/state";
 import type { CastRecord, RotationSummary, SimulateInput, SimulateOptions } from "./simulate";
 import { combineBranchSummaries } from "./summary";
+import type { ResolvedLeagueRules } from "../../league/ruleset";
 
 export interface RevolutionInput extends Omit<SimulateInput, "rotation" | "autoWeave"> {
   bar: readonly AbilitySpec[];
@@ -38,6 +39,7 @@ function revoAbilityLegal(
   equipmentIds: readonly string[] | undefined,
   passiveIds: readonly ItemPassiveId[] | undefined,
   byId: ReadonlyMap<string, AbilitySpec>,
+  league: ResolvedLeagueRules | undefined,
 ): boolean {
   return (
     firstLegalTickFor(state, ability, level) <= state.tick &&
@@ -49,6 +51,7 @@ function revoAbilityLegal(
       equipmentIds,
       passiveIds,
       byId,
+      league,
     ) === null
   );
 }
@@ -76,6 +79,7 @@ function revoReadyCastAbility(
     weaponConfiguration: input.weaponConfiguration,
     equipmentIds: input.equipmentIds,
     passiveIds: input.equipmentEffects?.passiveIds,
+    league: input.league,
   });
   const legal = (ability: AbilitySpec) =>
     revoAbilityLegal(
@@ -86,6 +90,7 @@ function revoReadyCastAbility(
       input.equipmentIds,
       input.equipmentEffects?.passiveIds,
       byId,
+      input.league,
     );
 
   const morphIds = REVO_CONJURE_COMMAND_MORPH[castAbility.id];

@@ -27,6 +27,15 @@ export function reviveLeague(league: SerializableLeagueRules): ResolvedLeagueRul
     occupiedTiles: league.occupiedTiles,
     areaTargets: Math.max(1, Math.floor(league.areaTargets ?? 1)),
     prayerBonus: Math.max(0, league.prayerBonus ?? 0),
+    trueEquilibrium: league.trueEquilibrium ?? {
+      uniquePathCount: 0,
+      baseAbilityDamage: 0,
+      armour: 0,
+      maximumLife: 0,
+      critChance: 0,
+      critDamage: 0,
+      prayerBonus: 0,
+    },
     herbloreLevel: league.herbloreLevel,
   };
 }
@@ -46,6 +55,7 @@ export function serializeLeague(league: ResolvedLeagueRules): SerializableLeague
     occupiedTiles: league.occupiedTiles,
     areaTargets: league.areaTargets,
     prayerBonus: league.prayerBonus,
+    trueEquilibrium: league.trueEquilibrium,
     herbloreLevel: league.herbloreLevel,
   };
 }

@@ -70,15 +70,9 @@ Author factual changes through the repository's normal JSONL patch workflow. Nev
 
 ### Tier-level progression passives
 
-Tier-level passives are typed data, not card combat records. The current documented passives are:
-
-- God Tier One: choose the Araxxor, Rise of the Six, or Vorago rotation; this is a non-combat progression effect.
-- Tier 4: unlock all War's Wares rewards as the League entitlement `wars-wares`; increase maximum adrenaline by 25%.
-- Tier 5: preserve charges for god books, scriptures, grimoires, and scrimshaws; prevent equipment degradation.
-
-Only Tier 4 maximum adrenaline enters combat totals in this phase. The cap uses one source-aware
-resolver shared by loadout resolution and runtime creation. It stacks with Adrenaline Junkie,
-Vestments, and Heightened Senses; the other passives remain displayed and excluded from combat.
+Tier-level passives are typed data, not card combat records. The current documented passive is Tier
+4's 25% maximum-adrenaline increase. The cap uses one source-aware resolver shared by loadout
+resolution and runtime creation. It stacks with Adrenaline Junkie, Vestments, and Heightened Senses.
 
 ## Implementation routing
 
@@ -156,7 +150,7 @@ Display these effects, but do not assign estimated damage value to them.
 - Barkscales incoming-damage reduction and automatic five-hit trigger timing.
 - Reflect without incoming-attack simulation.
 - Revenge without incoming-attack simulation.
-- Mobility, ammo conservation, rune conservation, degradation removal, and other non-damage tier passives.
+- Mobility, ammo conservation, and rune conservation.
 
 ## Current support rulings
 

@@ -303,22 +303,3 @@ export function activeTierPassives(picks: readonly BlessingPath[]): ActiveBlessi
   }
   return active;
 }
-
-export type LeagueEntitlement = "wars-wares";
-
-export function activeLeagueEntitlements(
-  picks: readonly BlessingPath[],
-): readonly LeagueEntitlement[] {
-  return activeTierPassives(picks)
-    .flatMap((passive) =>
-      passive.effect.type === "league-entitlement" ? [passive.effect.entitlement] : [],
-    )
-    .filter((id, index, all) => all.indexOf(id) === index);
-}
-
-export function hasLeagueEntitlement(
-  picks: readonly BlessingPath[],
-  entitlement: LeagueEntitlement,
-): boolean {
-  return activeLeagueEntitlements(picks).includes(entitlement);
-}

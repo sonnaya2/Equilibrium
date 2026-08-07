@@ -25,41 +25,13 @@ export type BlessingTierRecord = {
   verified?: boolean;
 };
 
-export type BlessingTierPassive =
-  | {
-      id: string;
-      name: string;
-      description: string;
-      kind: "combat";
-      effect: { type: "maximum-adrenaline"; bonusPercent: number };
-    }
-  | {
-      id: string;
-      name: string;
-      description: string;
-      kind: "entitlement";
-      effect: {
-        type: "league-entitlement";
-        entitlement: "wars-wares";
-        availability: "league-blessing";
-      };
-    }
-  | {
-      id: string;
-      name: string;
-      description: string;
-      kind: "progression";
-      effect: { type: "rotation-selection"; encounters: readonly string[] };
-    }
-  | {
-      id: string;
-      name: string;
-      description: string;
-      kind: "utility";
-      effect:
-        | { type: "charge-preservation"; itemGroups: readonly string[] }
-        | { type: "degradation-immunity" };
-    };
+export type BlessingTierPassive = {
+  id: string;
+  name: string;
+  description: string;
+  kind: "combat";
+  effect: { type: "maximum-adrenaline"; bonusPercent: number };
+};
 
 export type BlessingChoiceRecord = {
   id: string;
@@ -171,35 +143,6 @@ function assertPassive(value: unknown, scope: string): BlessingTierPassive {
   if (kind === "combat" && effect.type === "maximum-adrenaline") {
     if (typeof effect.bonusPercent !== "number" || !Number.isFinite(effect.bonusPercent)) {
       fail(`${scope}.effect.bonusPercent`);
-    }
-    return { id, name, description, kind, effect } as BlessingTierPassive;
-  }
-  if (kind === "entitlement" && effect.type === "league-entitlement") {
-    if (effect.entitlement !== "wars-wares" || effect.availability !== "league-blessing") {
-      fail(`${scope}.effect`);
-    }
-    return { id, name, description, kind, effect } as BlessingTierPassive;
-  }
-  if (kind === "progression" && effect.type === "rotation-selection") {
-    if (
-      !Array.isArray(effect.encounters) ||
-      effect.encounters.length === 0 ||
-      effect.encounters.some((encounter) => typeof encounter !== "string" || encounter.length === 0)
-    ) {
-      fail(`${scope}.effect.encounters`);
-    }
-    return { id, name, description, kind, effect } as BlessingTierPassive;
-  }
-  if (kind === "utility" && effect.type === "degradation-immunity") {
-    return { id, name, description, kind, effect } as BlessingTierPassive;
-  }
-  if (kind === "utility" && effect.type === "charge-preservation") {
-    if (
-      !Array.isArray(effect.itemGroups) ||
-      effect.itemGroups.length === 0 ||
-      effect.itemGroups.some((group) => typeof group !== "string" || group.length === 0)
-    ) {
-      fail(`${scope}.effect.itemGroups`);
     }
     return { id, name, description, kind, effect } as BlessingTierPassive;
   }

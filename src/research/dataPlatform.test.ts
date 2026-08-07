@@ -124,7 +124,7 @@ describe("generated data platform", () => {
     expect(existsSync(join(root, "public/data/v2/documents"))).toBe(false);
   });
 
-  it("rebuilds the blessing progression contract and tier passives", () => {
+  it("rebuilds blessing progression with only the adrenaline passive", () => {
     const blessings = readJson<{
       godTiers: number[];
       records: Array<{
@@ -143,15 +143,11 @@ describe("generated data platform", () => {
       blessings.records.filter((record) => record.tier !== null).map((record) => record.tier),
     ).toEqual([1, 2, 3, 4, 5, 6]);
     expect(blessings.records.flatMap((record) => record.choices)).toHaveLength(24);
-    expect(blessings.records[3]?.passives[0]?.effect.type).toBe("rotation-selection");
+    expect(blessings.records[3]?.passives).toEqual([]);
     expect(blessings.records[4]?.passives.map((passive) => passive.effect.type)).toEqual([
-      "league-entitlement",
       "maximum-adrenaline",
     ]);
-    expect(blessings.records[5]?.passives.map((passive) => passive.effect.type)).toEqual([
-      "charge-preservation",
-      "degradation-immunity",
-    ]);
+    expect(blessings.records[5]?.passives).toEqual([]);
   });
 
   it("exports source documents without a materialized compatibility tree", () => {

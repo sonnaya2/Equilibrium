@@ -10,7 +10,6 @@ import {
   GOD_TIERS,
   GOD_TIER_SLOTS,
   godTierAlignments,
-  hasLeagueEntitlement,
   type BlessingChoice,
   type BlessingPath,
 } from "./blessings";
@@ -58,27 +57,15 @@ describe("canonical blessings data contract", () => {
     ]);
   });
 
-  it("stores Tier 4, God Tier One, and Tier 5 passives as typed data", () => {
+  it("stores only the Tier 4 maximum-adrenaline passive", () => {
     expect(blessingsData.records.find((record) => record.tier === 4)?.passives).toMatchObject([
-      { kind: "entitlement", effect: { type: "league-entitlement", entitlement: "wars-wares" } },
       { kind: "combat", effect: { type: "maximum-adrenaline", bonusPercent: 25 } },
     ]);
-    expect(blessingsData.records.find((record) => record.godTier === 1)?.passives).toMatchObject([
-      {
-        kind: "progression",
-        effect: {
-          type: "rotation-selection",
-          encounters: ["araxxor", "rise-of-the-six", "vorago"],
-        },
-      },
-    ]);
-    expect(blessingsData.records.find((record) => record.tier === 5)?.passives).toHaveLength(2);
+    expect(blessingsData.records.find((record) => record.godTier === 1)?.passives).toEqual([]);
+    expect(blessingsData.records.find((record) => record.tier === 5)?.passives).toEqual([]);
     expect(activeTierPassives([O, O, O, B]).map((passive) => passive.id)).toEqual([
-      "god-tier-one-rotation-selection",
-      "wars-wares-entitlement",
       "tier-four-maximum-adrenaline",
     ]);
-    expect(hasLeagueEntitlement([O, O, O, B], "wars-wares")).toBe(true);
   });
 
   it("contains every revealed card through God Tier 2", () => {

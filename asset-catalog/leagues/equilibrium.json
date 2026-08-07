@@ -480,5 +480,15 @@
     "fileTitle": "Survivalist.png",
     "search": "Survivalist inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Survivalist"
+  },
+  {
+    "id": "equilibrium-relic-infernal-fire",
+    "label": "Infernal Fire",
+    "category": "leagues/equilibrium/relics/site",
+    "path": "public/game/relics/infernal-fire",
+    "fileTitle": "Infernal Fire.png",
+    "canonicalPage": "https://runescape.wiki/w/Infernal_Fire",
+    "provenance": "wiki-file",
+    "attribution": "Jagex Ltd. / RuneScape Wiki (CC BY-NC-SA)"
   }
 ]

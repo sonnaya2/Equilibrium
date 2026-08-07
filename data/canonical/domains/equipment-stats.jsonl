@@ -124,6 +124,8 @@
 {"entityId":"item:attuned-crystal-orb","stat":"accuracy","value":1924}
 {"entityId":"item:attuned-crystal-staff","stat":"accuracy","value":1924}
 {"entityId":"item:attuned-crystal-wand","stat":"accuracy","value":1924}
+{"entityId":"item:avernic-star","stat":"damage","value":18.7}
+{"entityId":"item:avernic-star","stat":"prayer","value":15}
 {"entityId":"item:bandos-boots","stat":"armour","value":64.9}
 {"entityId":"item:bandos-boots","stat":"damage","value":10.9}
 {"entityId":"item:bandos-boots","stat":"prayer","value":1}

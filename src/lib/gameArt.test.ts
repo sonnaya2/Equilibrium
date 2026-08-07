@@ -12,6 +12,7 @@ import {
   isSceneryActivityPath,
   isSceneryPermanentUnlock,
   regionCrestPath,
+  relicIconPath,
   skillIconPath,
   STYLE_ICON,
   styleIconPath,
@@ -32,6 +33,12 @@ describe("gameArt", () => {
     expect(abilityCategoryLabel("enhanced")).toBe("threshold");
     expect(abilityCategoryLabel("basic")).toBe("basic");
     expect(abilityCategoryLabel("ultimate")).toBe("ultimate");
+  });
+
+  it("maps Infernal Fire to its locally published relic icon", () => {
+    const path = relicIconPath("Infernal Fire");
+    expect(path).toBe("/game/relics/infernal-fire.webp");
+    expect(existsSync(join(PUBLIC, path!))).toBe(true);
   });
 
   it("maps igneous equipment variants to base ability icons that exist on disk", () => {

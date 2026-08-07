@@ -98,6 +98,19 @@ describe("canonical combat datasets", () => {
     expect(abilityById("ranged:ricochet")?.adrenaline).toEqual({ kind: "gain", percent: 9 });
     expect(abilityById("magic:runic-charge")?.adrenaline).toBeUndefined();
   });
+
+  it("keeps the Infernal Fire grant as Avernic Star data only", () => {
+    const star = combatEquipment.records.find((record) => record.id === "item:avernic-star");
+    expect(star).toMatchObject({
+      name: "Avernic Star",
+      slot: "pocket",
+      style: "hybrid",
+      bonuses: { damage: 18.7, prayer: 15 },
+    });
+    expect(star?.passiveId).toBeUndefined();
+    expect(star?.passiveIds).toBeUndefined();
+    expect(star?.mechanicalImplementation).toBeUndefined();
+  });
 });
 
 describe("combat data accessors", () => {

@@ -311,6 +311,7 @@
 {"entityId":"item:attuned-crystal-orb","slot":"offhand","style":"magic","tier":80}
 {"entityId":"item:attuned-crystal-staff","slot":"twohand","style":"magic","tier":80}
 {"entityId":"item:attuned-crystal-wand","slot":"mainhand","style":"magic","tier":80}
+{"entityId":"item:avernic-star","slot":"pocket","style":"hybrid"}
 {"entityId":"item:bandos-boots","slot":"boots","style":"melee","tier":70}
 {"entityId":"item:bandos-chestplate","slot":"body","style":"melee","tier":70}
 {"entityId":"item:bandos-gloves","slot":"gloves","style":"melee","tier":70}

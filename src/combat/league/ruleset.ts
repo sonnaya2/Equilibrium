@@ -34,9 +34,9 @@ export interface LeagueLoadout {
 /** Big Boned 5% max-life outgoing rider is always on when picked (no opt-out). */
 export const BIG_BONED_OUTGOING_ASSUMPTIONS = [
   "Per unique hit (Mod Sponge Discord): flat 5% of maximum life attached to the parent damage and inheriting its critical result",
-  "Also rides Cinders and separate blessing hits (Light of Saradomin, Inferno of Zamorak); each rider inherits that parent's crit state and never rides Big Boned itself",
+  "Also rides separate blessing hits (Light of Saradomin, Inferno of Zamorak), but never the attached Cinders component or Big Boned itself",
   "5% of maximum life including Big Boned's own +50% max-life boost; Powerburst is time-bounded",
-  "Rides conjure auto/poison and invention hit splats (Crackling/Aftershock); Cinders rolls follow the shared Cinders hit gate",
+  "Rides conjure auto/poison and invention hit splats (Crackling/Aftershock); those sources do not trigger Cinders",
   "Still unverified vs live: crit eligibility, Reflect, hit-cap treatment, exact formula stage",
 ] as const;
 
@@ -353,6 +353,7 @@ export function leagueModifiers(rules: ResolvedLeagueRules | undefined): CombatM
       id: "blessing:envenomed",
       stage: "postHit",
       priority: 915,
+      appliesToPlayerPoison: true,
       applies: (context) => context.ruleset === "equilibrium" && context.dotKind === "poison",
       apply: (state) => ({ ...state, damage: mulFloor(state.damage, multiplier) }),
       source: envenomed.source,
@@ -363,6 +364,7 @@ export function leagueModifiers(rules: ResolvedLeagueRules | undefined): CombatM
       id: "blessing:havoc-born",
       stage: "postHit",
       priority: 920,
+      appliesToPlayerPoison: true,
       applies: (context) => context.ruleset === "equilibrium",
       apply: (state) => ({
         ...state,

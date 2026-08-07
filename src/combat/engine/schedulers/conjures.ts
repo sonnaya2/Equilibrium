@@ -30,12 +30,19 @@ import {
   hauntedParentDamage,
 } from "../../styles/necromancy/haunted";
 import type { CombatModifier, SourceReference } from "../../types";
-import { isTargetPoisonImmune } from "../../poison/mechanics";
+import {
+  activeEvolvingToxinStacks,
+  evolvingToxinPoisonModifier,
+  isTargetPoisonImmune,
+  poisonProfileDamageModifier,
+} from "../../poison/mechanics";
 import type { ScheduledEvent } from "../runtime/events";
 import { NO_DAMAGE, recordResolved } from "../resolution";
 import type { AttachedDamageComponent, EventResolution } from "../resolution/types";
 import { scheduleEvent, type SimulationRuntime } from "../runtime/runtime";
 import { patchConjures, patchTarget } from "../runtime/state";
+import { recordConditionalPoisonDamage, refreshPlayerPoisonImmunity } from "./playerPoison";
+import { envenomedPoisonImmunityDisableTicks } from "../../league/ruleset";
 
 /**
  * Spirit track schedulers: one pending auto and (zombie) poison event per summon.
@@ -179,24 +186,25 @@ function scheduleSpiritPoison(rt: SimulationRuntime, spirit: ActivePutridZombie)
     recursionAllowed: false,
     originKind: "conjure",
     provenance: { kind: "conjure_poison", detail: "putrid_zombie" },
-    resolve: (eventRt, atTick) => {
-      if (
-        isTargetPoisonImmune(
-          eventRt.input.playerPoison,
-          eventRt.state.target.poisonImmunityDisabledUntilTick,
-          atTick,
-        )
-      ) {
-        return NO_DAMAGE;
-      }
+    resolve: (eventRt) => {
       const provenance = { kind: "conjure_poison" as const, detail: "putrid_zombie" };
+      const toxin = eventRt.state.target.evolvingToxin;
+      const stacks = activeEvolvingToxinStacks(
+        toxin.stacks,
+        toxin.expiresAtTick,
+        spirit.poison.nextTick,
+      );
+      const poisonModifiers = [
+        poisonProfileDamageModifier(input.playerPoison, spirit.poison.nextTick),
+        evolvingToxinPoisonModifier(stacks),
+      ].filter((modifier): modifier is CombatModifier => modifier !== null);
       const hit = calculateHit({
         base: input.base,
         band: { minPct: ZOMBIE_POISON_BAND.minPct, maxPct: ZOMBIE_POISON_BAND.maxPct },
         level: input.level,
         accuracy: CONJURE_DAMAGE_POTENTIAL,
         crit: { chance: 0, eligible: false },
-        modifiers: conjureModifiers(eventRt),
+        modifiers: [...conjureModifiers(eventRt), ...poisonModifiers],
         provenance,
         context: {
           style: input.context?.style ?? "necromancy",
@@ -328,7 +336,39 @@ export function processSpiritEvent(
       haunted: applyHaunted(event.tick, rt.input.base),
     });
   }
-  recordResolved(rt, event, resolution);
+  let eligiblePoisonAtomIds: readonly number[] | undefined;
+  if (live.kind === "poison" && rt.input.targetPoisonImmune === true) {
+    const eligibleAtoms = rt.state.target.weaponPoison.atoms.filter(
+      (atom) =>
+        !isTargetPoisonImmune(
+          rt.input.targetPoisonImmune,
+          atom.immunityDisabledUntilTick,
+          event.tick,
+        ),
+    );
+    const atomIds = eligibleAtoms.map((atom) => atom.id);
+    eligiblePoisonAtomIds = atomIds;
+    const probability = eligibleAtoms.reduce((sum, atom) => sum + atom.probability, 0);
+    recordConditionalPoisonDamage(
+      rt,
+      {
+        ...event,
+        expectedActivations: probability,
+        expectedSeparateHits: probability,
+      },
+      resolution,
+      atomIds,
+    );
+  } else {
+    recordResolved(rt, event, resolution);
+  }
+  refreshPlayerPoisonImmunity(
+    rt,
+    event.tick,
+    event.tick + envenomedPoisonImmunityDisableTicks(rt.input.league),
+    1,
+    eligiblePoisonAtomIds,
+  );
   rt.spiritEventMeta.delete(event.seq);
   if (live.kind === "poison") {
     // Only the zombie has a poison track, and the type says so.

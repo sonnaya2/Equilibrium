@@ -100,16 +100,16 @@ export interface TargetRuntimeState {
   melee: MeleeTargetEffects;
   /** Haunted debuff from Command Vengeful Ghost autos. */
   haunted: HauntedState;
-  weaponPoison: TargetWeaponPoisonState;
+  weaponPoison: TargetWeaponPoisonDistribution;
   evolvingToxin: EvolvingToxinState;
-  poisonImmunityDisabledUntilTick: number;
 }
 
 export interface TargetWeaponPoisonState {
   active: boolean;
-  appliedAtTick: number;
   expiresAtTick: number;
   effectiveTier: PoisonTier;
+  /** Conditional probability mass for decay indices 0..44; 44 also holds larger zero-damage indices. */
+  decayMass: number[];
   decayIndex: number;
   remainingHits: number;
   cadenceTicks: 8 | 16;
@@ -117,8 +117,40 @@ export interface TargetWeaponPoisonState {
   pendingEventSeq: number;
   sourceDamageMultiplier: number;
   cinderbaneContinuation: boolean;
-  continuationChance: number;
   sourceLabel: string;
+  pendingApplicationHits: TargetWeaponPoisonPendingHit[];
+}
+
+export type TargetWeaponPoisonHitMultiplicity =
+  | { readonly kind: "single" }
+  | {
+      readonly kind: "positive-binomial";
+      readonly trials: number;
+      readonly probability: number;
+    }
+  | {
+      readonly kind: "positive-geometric";
+      readonly continuationProbability: number;
+    };
+
+export interface TargetWeaponPoisonPendingHit {
+  tick: number;
+  seq: number;
+  multiplicity: TargetWeaponPoisonHitMultiplicity;
+}
+
+export interface TargetWeaponPoisonAtom {
+  id: number;
+  probability: number;
+  poison: TargetWeaponPoisonState;
+  immunityDisabledUntilTick: number;
+  supportMin: number;
+  supportMax: number;
+}
+
+export interface TargetWeaponPoisonDistribution {
+  atoms: TargetWeaponPoisonAtom[];
+  nextAtomId: number;
 }
 
 export interface EvolvingToxinState {
@@ -126,12 +158,12 @@ export interface EvolvingToxinState {
   expiresAtTick: number;
 }
 
-export function inactiveTargetWeaponPoison(): TargetWeaponPoisonState {
+export function inactiveTargetWeaponPoisonState(): TargetWeaponPoisonState {
   return {
     active: false,
-    appliedAtTick: -1,
     expiresAtTick: 0,
     effectiveTier: 1,
+    decayMass: [1],
     decayIndex: 0,
     remainingHits: 0,
     cadenceTicks: 16,
@@ -139,8 +171,24 @@ export function inactiveTargetWeaponPoison(): TargetWeaponPoisonState {
     pendingEventSeq: -1,
     sourceDamageMultiplier: 1,
     cinderbaneContinuation: false,
-    continuationChance: 0,
     sourceLabel: "",
+    pendingApplicationHits: [],
+  };
+}
+
+export function inactiveTargetWeaponPoison(): TargetWeaponPoisonDistribution {
+  return {
+    atoms: [
+      {
+        id: 0,
+        probability: 1,
+        poison: inactiveTargetWeaponPoisonState(),
+        immunityDisabledUntilTick: 0,
+        supportMin: 0,
+        supportMax: 0,
+      },
+    ],
+    nextAtomId: 1,
   };
 }
 
@@ -256,8 +304,25 @@ export function newRotationState(
       haunted: newHaunted(),
       weaponPoison: inactiveTargetWeaponPoison(),
       evolvingToxin: inactiveEvolvingToxin(),
-      poisonImmunityDisabledUntilTick: 0,
     },
+  };
+}
+
+export function mergeTargetWeaponPoisonHistories(
+  left: TargetWeaponPoisonDistribution,
+  right: TargetWeaponPoisonDistribution,
+): TargetWeaponPoisonDistribution {
+  if (left.atoms.length !== right.atoms.length) return left;
+  return {
+    nextAtomId: Math.max(left.nextAtomId, right.nextAtomId),
+    atoms: left.atoms.map((atom, index) => {
+      const other = right.atoms[index]!;
+      return {
+        ...atom,
+        supportMin: Math.min(atom.supportMin, other.supportMin),
+        supportMax: Math.max(atom.supportMax, other.supportMax),
+      };
+    }),
   };
 }
 

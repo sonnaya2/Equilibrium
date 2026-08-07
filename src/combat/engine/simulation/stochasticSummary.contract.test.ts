@@ -45,6 +45,7 @@ function seedRuntime(damage: {
     expectedActivations: 1,
     expectedSeparateHits: 1,
     expectedAttachedComponents: 0,
+    expectedPlayerPoisonHits: 0,
     bonusDamage: 0,
   });
   if (damage.supportMinOffset !== undefined) {
@@ -344,6 +345,7 @@ describe("stochastic summary contract", () => {
       expectedActivations: 1,
       expectedSeparateHits: 1,
       expectedAttachedComponents: 0,
+      expectedPlayerPoisonHits: 0,
       bonusDamage: 0,
     });
     rt.analysis.effects.set("bleed", {
@@ -359,6 +361,7 @@ describe("stochastic summary contract", () => {
       expectedActivations: 4,
       expectedSeparateHits: 4,
       expectedAttachedComponents: 0,
+      expectedPlayerPoisonHits: 0,
       bonusDamage: 0,
     });
     const s = combineBranchSummaries([{ weight: 1, rt }], undefined, undefined, false);

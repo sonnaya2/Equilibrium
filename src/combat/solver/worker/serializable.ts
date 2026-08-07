@@ -124,6 +124,7 @@ export interface SerializableRevolutionSimBase {
   context?: CombatContext;
   targetHpPercent?: number;
   playerPoison?: PlayerPoisonProfile;
+  targetPoisonImmune?: boolean;
   cap?: HitCapRule;
   startingAdrenaline?: number;
   equipmentIds: readonly string[];

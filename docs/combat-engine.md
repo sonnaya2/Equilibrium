@@ -169,6 +169,8 @@ Do not flatten all randomness into expected damage.
 
 Current cast RNG points include `impatient`, `relentless`, `avernic-rampage` (`CastRng` in `simulation/contracts.ts`). Missing flag = no proc (deterministic single-branch runs never proc).
 
+Player poison is exact but does not fork the whole runtime. `RotationState.target.weaponPoison` carries conditional poison states, distinct earned delayed-hit carriers, and a finite decay PMF; application, ordinary refresh, Cinderbane extra hits, recursive continuation, decay, and atom-specific Envenomed immunity advance inside that compact distribution. Poison events retain shared `(tick, seq)` ordering, while global branch identity includes only the distribution's future state. Global branch caps never discard poison probability mass. One explicit provenance capability decides eligibility per hitsplat: player attacks, player DoTs, and verified separate player auxiliary/blessing hits are eligible; attached riders, familiar/conjure damage, Putrid Zombie pulses, and Blood Reaver passive damage are not. Big Boned is an attached component on each poison occurrence; it uses the same poison source and target modifiers without creating another application or Cinderbane roll. Poison is status damage and never triggers Abyssal Cinders or Inferno. Cinders and Big Boned attach independently to their actual host hit, so Big Boned is not added to Cinders' attached 15% component. Analysis attributes expected poison hits back to the eligible source row.
+
 ### Branching (`simulation/branch.ts`)
 
 - Each branch owns an independent runtime via `snapshotRuntime`.
@@ -240,7 +242,7 @@ Support labels match the honesty model in [`combat-model.md`](./combat-model.md)
 
 ## Drivers and contracts
 
-- **Manual rotation** — `simulation/simulate.ts`: queued `RotationAction[]`, optional automatic Basic Attacks, branching on state-changing RNG.
+- **Manual rotation** — `simulation/simulate.ts`: queued `RotationAction[]`, optional automatic Basic Attacks, branching on state-changing RNG. The combat UI supplies a 100-tick fixed window so recursive Cinderbane support is finite and directly comparable with a 60-second Revolution bar; engine callers may still request natural completion by omitting `horizonTicks`.
 - **Revolution** — `simulation/revolution.ts`: bar-driven selection; shares prepare/commit and clock.
 - **Contracts** — `simulation/contracts.ts` (`SimulateInput`, adrenaline/proc rules, equipment effects, league rules, horizon options).
 

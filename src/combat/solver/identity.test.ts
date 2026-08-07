@@ -272,9 +272,6 @@ describe("fingerprint changes one field at a time", () => {
       cinderbane: false,
       blowpipe: false,
       laniakea: false,
-      bik: false,
-      targetPoisonImmune: false,
-      vulnerability: false,
     };
     const changes = [
       { potion: "weapon" as const },
@@ -283,9 +280,6 @@ describe("fingerprint changes one field at a time", () => {
       { cinderbane: true },
       { blowpipe: true },
       { laniakea: true },
-      { bik: true },
-      { targetPoisonImmune: true },
-      { vulnerability: true },
     ];
     for (const change of changes) {
       await expectDiff(Object.keys(change)[0]!, (request) =>
@@ -295,6 +289,10 @@ describe("fingerprint changes one field at a time", () => {
         })),
       );
     }
+    await expectDiff("bik", (request) => withSim(request, (sim) => ({ ...sim, ammo: "bik" })));
+    await expectDiff("targetPoisonImmune", (request) =>
+      withSim(request, (sim) => ({ ...sim, targetPoisonImmune: true })),
+    );
   });
 
   it("Herblore level", async () => {

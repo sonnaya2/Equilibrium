@@ -42,6 +42,7 @@ import { uiRunFingerprint } from "./uiSimFingerprint";
 import { equipAbilityForLoadout, filterAbilitiesForLoadout } from "./abilityLoadoutFilter";
 
 const STORAGE_KEY = "eq:rotation:v1";
+const MANUAL_HORIZON_TICKS = 100;
 
 /** Display/palette catalogue without Strength Cape (cape applied per-run for use-build). */
 const DISPLAY_CATALOGUE = resolveAbilityCatalogue();
@@ -242,6 +243,7 @@ export function RotationPlanner({
             rotation,
             autoWeave: weave,
             ammo: ammoOpt,
+            horizonTicks: MANUAL_HORIZON_TICKS,
           }),
         ),
       );
@@ -263,6 +265,7 @@ export function RotationPlanner({
           rotation,
           autoWeave: weave,
           ammo: ammoOpt,
+          horizonTicks: MANUAL_HORIZON_TICKS,
         }),
       ),
     );
@@ -546,7 +549,9 @@ export function RotationPlanner({
         <div className="combat-frame rotation-workbench rotation-manual">
           <CombatFrameCorners />
           <div className="flex flex-wrap items-baseline justify-between gap-3">
-            <h2 className="text-sm font-medium text-parch-50">Queue · {queue.length} casts</h2>
+            <h2 className="text-sm font-medium text-parch-50">
+              Queue · {queue.length} casts · 60s fixed window
+            </h2>
             <div className="flex gap-2">
               <button
                 type="button"

@@ -94,7 +94,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: true,
-    cindersOnHit: true,
+    cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -103,13 +103,14 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     prayerMods: false,
     canApplyAbyssalParasite: false,
     canApplyWeaponPoison: true,
+    canApplyEvolvingToxin: false,
   },
   player_converted_channel: {
     playerAttack: true,
     directHit: false,
     onHitGear: false,
     blessingRider: true,
-    cindersOnHit: true,
+    cindersOnHit: false,
     blessingOnHit: false,
     canCrit: true,
     canGenerateResources: false,
@@ -118,13 +119,14 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     prayerMods: true,
     canApplyAbyssalParasite: false,
     canApplyWeaponPoison: true,
+    canApplyEvolvingToxin: false,
   },
   conjure_auto: {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
     blessingRider: true,
-    cindersOnHit: true,
+    cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -132,13 +134,15 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: false,
     prayerMods: false,
     canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: false,
+    canApplyEvolvingToxin: false,
   },
   conjure_poison: {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
     blessingRider: true,
-    cindersOnHit: true,
+    cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -146,13 +150,15 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: false,
     prayerMods: false,
     canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: false,
+    canApplyEvolvingToxin: false,
   },
   conjure_command: {
     playerAttack: true,
     directHit: false,
     onHitGear: false,
     blessingRider: true,
-    cindersOnHit: true,
+    cindersOnHit: false,
     blessingOnHit: false,
     canCrit: true,
     canGenerateResources: true,
@@ -160,13 +166,15 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: false,
     prayerMods: false,
     canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: false,
+    canApplyEvolvingToxin: false,
   },
   equipment_proc: {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
     blessingRider: false,
-    cindersOnHit: true,
+    cindersOnHit: false,
     blessingOnHit: false,
     canCrit: true,
     canGenerateResources: false,
@@ -175,13 +183,14 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     prayerMods: true,
     canApplyAbyssalParasite: false,
     canApplyWeaponPoison: true,
+    canApplyEvolvingToxin: false,
   },
   invention_proc: {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
     blessingRider: true,
-    cindersOnHit: true,
+    cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -190,6 +199,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     prayerMods: false,
     canApplyAbyssalParasite: false,
     canApplyWeaponPoison: true,
+    canApplyEvolvingToxin: false,
   },
   attached: {
     playerAttack: true,
@@ -204,13 +214,15 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: false,
     prayerMods: true,
     canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: false,
+    canApplyEvolvingToxin: false,
   },
   blessing: {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
     blessingRider: false,
-    cindersOnHit: true,
+    cindersOnHit: false,
     blessingOnHit: false,
     canCrit: true,
     canGenerateResources: false,
@@ -219,6 +231,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     prayerMods: false,
     canApplyAbyssalParasite: false,
     canApplyWeaponPoison: true,
+    canApplyEvolvingToxin: false,
   },
   derived_bounce: {
     playerAttack: true,
@@ -234,13 +247,14 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     prayerMods: false,
     canApplyAbyssalParasite: false,
     canApplyWeaponPoison: true,
+    canApplyEvolvingToxin: false,
   },
   derived_tail: {
     playerAttack: true,
     directHit: false,
     onHitGear: false,
     blessingRider: true,
-    cindersOnHit: true,
+    cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -249,13 +263,14 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     prayerMods: false,
     canApplyAbyssalParasite: false,
     canApplyWeaponPoison: true,
+    canApplyEvolvingToxin: false,
   },
   reflected: {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
     blessingRider: false,
-    cindersOnHit: true,
+    cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -264,6 +279,7 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     prayerMods: false,
     canApplyAbyssalParasite: false,
     canApplyWeaponPoison: true,
+    canApplyEvolvingToxin: false,
   },
 };
 
@@ -288,27 +304,27 @@ describe("blessingHitEligibility from capabilities", () => {
     });
     expect(blessingHitEligibility("dot", false)).toEqual({
       rider: true,
-      cinders: true,
+      cinders: false,
       onHit: false,
     });
     expect(blessingHitEligibility("command", false)).toEqual({
       rider: true,
-      cinders: true,
+      cinders: false,
       onHit: false,
     });
     expect(blessingHitEligibility("conjure", false)).toEqual({
       rider: true,
-      cinders: true,
+      cinders: false,
       onHit: false,
     });
     expect(blessingHitEligibility("proc", false)).toEqual({
       rider: false,
-      cinders: true,
+      cinders: false,
       onHit: false,
     });
     expect(blessingHitEligibility("blessing", false)).toEqual({
       rider: false,
-      cinders: true,
+      cinders: false,
       onHit: false,
     });
   });
@@ -331,18 +347,18 @@ describe("blessingHitEligibility from capabilities", () => {
     });
     expect(blessingHitEligibility({ kind: "equipment_proc" }, false)).toEqual({
       rider: false,
-      cinders: true,
+      cinders: false,
       onHit: false,
     });
   });
 
-  it("Light and Inferno host Big Boned plus Cinders", () => {
+  it("Light and Inferno host Big Boned without Cinders", () => {
     expect(
       blessingHitEligibility({ kind: "blessing", detail: "light-of-saradomin" }, false),
-    ).toEqual({ rider: true, cinders: true, onHit: false });
+    ).toEqual({ rider: true, cinders: false, onHit: false });
     expect(
       blessingHitEligibility({ kind: "blessing", detail: "inferno-of-zamorak" }, false),
-    ).toEqual({ rider: true, cinders: true, onHit: false });
+    ).toEqual({ rider: true, cinders: false, onHit: false });
     expect(blessingHitEligibility({ kind: "blessing", detail: "big-boned" }, false)).toEqual({
       rider: false,
       cinders: false,
@@ -350,7 +366,7 @@ describe("blessingHitEligibility from capabilities", () => {
     });
     expect(blessingHitEligibility({ kind: "blessing", detail: "grasp-of-guthix" }, false)).toEqual({
       rider: false,
-      cinders: true,
+      cinders: false,
       onHit: false,
     });
   });
@@ -424,7 +440,7 @@ describe("command analysis parity", () => {
     expect(c.blessingOnHit).toBe(false);
     expect(blessingHitEligibility({ kind: "conjure_command" }, false)).toEqual({
       rider: true,
-      cinders: true,
+      cinders: false,
       onHit: false,
     });
   });

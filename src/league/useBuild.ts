@@ -103,8 +103,8 @@ export function useBuild() {
   // that render is a hydration pass or a fresh client mount, which is the only
   // version of this that does not depend on subtree timing.
   //
-  // Anything whose markup depends on `build` must gate on this, or it will
-  // paint real localStorage state over server HTML that had none.
+  // Keep the server snapshot visible until this consumer mounts; the shared
+  // store may already hold localStorage state from an earlier sibling effect.
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -113,7 +113,7 @@ export function useBuild() {
   }, []);
 
   return {
-    build,
+    build: loaded ? build : SERVER_SNAPSHOT,
     loaded,
     toggleRegion: (id: RegionId) => setState(toggleElective(state, id)),
     toggleRelic: (tier: number, name: string) => setState(toggleRelic(state, tier, name)),

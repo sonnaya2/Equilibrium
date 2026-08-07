@@ -21,6 +21,7 @@ export {
   buildGlobalModifiersFromSources,
   modifiersForResolvedModel,
   modifiersFromSources,
+  playerPoisonModifiersFromSources,
 } from "./modifiers";
 
 export { buildResolvedCombatModel, isResolvedCombatModel } from "./resolve";

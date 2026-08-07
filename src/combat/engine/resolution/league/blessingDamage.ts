@@ -10,6 +10,7 @@ import { blessingRule, resolveMaximumLife } from "../../../league/ruleset";
 import { patchLeague } from "../../runtime/state";
 import type { ResolvedDamage } from "../types";
 import { isBasicAttack } from "../../../shared/adrenalineGain";
+import { statefulOccurrenceProbability } from "../../analysis/multiplicity";
 
 const componentCache = new WeakMap<
   object,
@@ -69,7 +70,7 @@ function scaleResolvedDamage(damage: ResolvedDamage, weight: number): ResolvedDa
 /**
  * Schedule league blessing damage components for a landed event and advance
  * Striking Light readiness when Light of Saradomin contributes.
- * Inferno descendants are folded into their parent's geometric EV components.
+ * Chance-weighted Inferno is one separate hit and may host attached Big Boned damage.
  */
 export function scheduleBlessingDamage(
   rt: SimulationRuntime,
@@ -77,7 +78,6 @@ export function scheduleBlessingDamage(
   damage: ResolvedDamage,
 ): void {
   if (!rt.input.league || damage.max <= 0) return;
-  if (event.abilityId === "inferno-of-zamorak") return;
   const source = blessingSourceOf(event);
   const eligible = blessingHitEligibility(source, event.attached);
   if (!eligible.rider && !eligible.cinders && !eligible.onHit) return;
@@ -167,6 +167,7 @@ export function scheduleBlessingDamage(
   }
   // Chance-weighted parents pass their activation mass into attached components.
   const parentWeight = event.expectedActivations ?? event.expectedOccurrences ?? 1;
+  const parentOccurrenceProbability = statefulOccurrenceProbability(event);
   const originKind = parentOriginKind(event, source);
   for (const component of components) {
     const scaledDamage = scaleResolvedDamage(component.damage, parentWeight);
@@ -193,6 +194,22 @@ export function scheduleBlessingDamage(
       expectedTriggerRolls: component.expectedTriggerRolls * parentWeight,
       expectedActivations: component.expectedActivations * parentWeight,
       expectedSeparateHits: component.expectedSeparateHits * parentWeight,
+      ...(component.occurrenceModel?.kind === "geometric"
+        ? {
+            occurrenceModel: {
+              ...component.occurrenceModel,
+              startProbability:
+                component.occurrenceModel.startProbability * parentOccurrenceProbability,
+            },
+          }
+        : component.occurrenceModel?.kind === "bernoulli"
+          ? {
+              occurrenceModel: {
+                ...component.occurrenceModel,
+                probability: component.occurrenceModel.probability * parentOccurrenceProbability,
+              },
+            }
+          : {}),
       resolve: () => ({
         damage: scaledDamage,
         hitDetail: parentWeight === 1 ? component.hitDetail : undefined,

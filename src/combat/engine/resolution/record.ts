@@ -6,8 +6,6 @@ import { recordEventAccounting } from "./accounting";
 import { releaseScoreOnlyHitDetails } from "./hitDetailsRetention";
 import { applyInventionProcs } from "./procs/invention";
 import { scheduleBlessingDamage } from "./league/blessingDamage";
-import { envenomedPoisonImmunityDisableTicks } from "../../league/ruleset";
-import { patchTarget } from "../runtime/state";
 
 /**
  * Sole ledger-write step for a landed event (resolvers only calculate).
@@ -25,15 +23,6 @@ export function recordResolved(
   recordEventAccounting(rt, event, resolution);
 
   const { damage } = resolution;
-  const immunityDisableTicks = envenomedPoisonImmunityDisableTicks(rt.input.league);
-  if (damage.expected > 0 && immunityDisableTicks > 0) {
-    rt.state = patchTarget(rt.state, {
-      poisonImmunityDisabledUntilTick: Math.max(
-        rt.state.target.poisonImmunityDisabledUntilTick,
-        event.tick + immunityDisableTicks,
-      ),
-    });
-  }
   scheduleBlessingDamage(rt, event, damage);
   if (!event.blessingId) applyInventionProcs(rt, event, damage);
 

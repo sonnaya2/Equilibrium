@@ -35,7 +35,6 @@ export interface GenericTarget {
   /** Full target footprint used by area mechanics. */
   occupiedTiles?: number;
   vulnerability?: boolean;
-  poisonable?: boolean;
   slayerCategory?: string;
   undead?: boolean;
   dragon?: boolean;

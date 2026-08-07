@@ -69,6 +69,9 @@ function stepManualAction(
   if (branch.error !== undefined) {
     return { branches: [branch], branched: false, residualWeight: 0, exactness: "exact" };
   }
+  if (branch.rt.horizon !== undefined && branch.rt.state.tick >= branch.rt.horizon) {
+    return { branches: [branch], branched: false, residualWeight: 0, exactness: "exact" };
+  }
   if (ability.stateEffect === "runic_charge") {
     if (!runicChargeReady(branch.rt.state.magic.runicCharge, branch.rt.state.tick)) {
       return {
@@ -112,6 +115,10 @@ function stepManualAction(
       const plans: CastOutcomePlan[] = [];
       for (const current of pending) {
         if (current.error !== undefined) {
+          done.push(current);
+          continue;
+        }
+        if (current.rt.horizon !== undefined && current.rt.state.tick >= current.rt.horizon) {
           done.push(current);
           continue;
         }
@@ -181,14 +188,12 @@ function stepManualAction(
       carried.push(woven);
       continue;
     }
-    const planned = planCastOutcomes(
-      woven,
-      ability,
-      firstLegalTickFor(woven.rt.state, ability, woven.rt.input.level),
-      false,
-      maxLive,
-      intermediateMax,
-    );
+    const castTick = firstLegalTickFor(woven.rt.state, ability, woven.rt.input.level);
+    if (woven.rt.horizon !== undefined && castTick >= woven.rt.horizon) {
+      carried.push(woven);
+      continue;
+    }
+    const planned = planCastOutcomes(woven, ability, castTick, false, maxLive, intermediateMax);
     residualWeight += planned.residualWeight;
     exactness = combineExactness(exactness, planned.exactness);
     if (planned.plans.length > 1) branched = true;
@@ -225,7 +230,7 @@ export function simulate(input: SimulateInput, options?: SimulateOptions): Rotat
     const existing = selectedGroups.get(ability.replacementGroup);
     if (existing && existing !== ability.id) {
       branches[0]!.error = `${existing} and ${ability.id} are mutually exclusive variants`;
-      return combineBranchSummaries(branches, undefined, options, false, residualWeight);
+      return combineBranchSummaries(branches, input.horizonTicks, options, false, residualWeight);
     }
     selectedGroups.set(ability.replacementGroup, ability.id);
   }
@@ -250,10 +255,15 @@ export function simulate(input: SimulateInput, options?: SimulateOptions): Rotat
           carried.push(branch);
           continue;
         }
+        const castTick = firstLegalTickFor(branch.rt.state, ability, branch.rt.input.level);
+        if (branch.rt.horizon !== undefined && castTick >= branch.rt.horizon) {
+          carried.push(branch);
+          continue;
+        }
         const planned = planCastOutcomes(
           branch,
           ability,
-          firstLegalTickFor(branch.rt.state, ability, branch.rt.input.level),
+          castTick,
           false,
           maxLive,
           intermediateMax,
@@ -292,7 +302,7 @@ export function simulate(input: SimulateInput, options?: SimulateOptions): Rotat
 
   return combineBranchSummaries(
     branches,
-    undefined,
+    input.horizonTicks,
     options,
     sawBranching,
     residualWeight,

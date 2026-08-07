@@ -11,9 +11,6 @@ export interface PlayerPoisonProfile {
   readonly cinderbane: boolean;
   readonly blowpipe: boolean;
   readonly laniakea: boolean;
-  readonly bik: boolean;
-  readonly targetPoisonImmune: boolean;
-  readonly vulnerability: boolean;
 }
 
 export interface PoisonApplicationSnapshot {
@@ -36,10 +33,27 @@ export interface PoisonDamageBand {
 export const PLAYER_POISON_EFFECT_ID = "player_weapon_poison";
 export const PLAYER_POISON_STATUS_TICKS = 300;
 export const PLAYER_POISON_FIRST_HIT_DELAY = 2;
+export const PLAYER_POISON_ZERO_DAMAGE_DECAY_INDEX = 44;
 export const EVOLVING_TOXIN_MAX_STACKS = 150;
 export const EVOLVING_TOXIN_DURATION_TICKS = 50;
 export const CINDERBANE_SUPPORT_NOTE =
-  "The Wiki's rare guaranteed activation after 16 ticks is excluded because its start point and conditions are marked unclear.";
+  "Recursive poison-hit refreshes are modeled as successive 1/8 rolls.";
+export const PLAYER_POISON_SUPPORT_NOTE =
+  "Integer rounding and ability-damage snapshot timing remain mechanically unverified.";
+
+const BIK_ARROW_SOURCE: SourceReference = {
+  source: "runescape-wiki",
+  url: "https://runescape.wiki/w/Bik_arrow",
+  title: "Bik arrow",
+  verifiedAt: "2026-08-06",
+};
+
+const PLAYER_POISON_SOURCE: SourceReference = {
+  source: "runescape-wiki",
+  url: "https://runescape.wiki/w/Poison#Player_poison",
+  title: "Poison - Player poison",
+  verifiedAt: "2026-08-06",
+};
 
 const POTION_TIER: Readonly<Record<WeaponPoisonChoice, 0 | 1 | 2 | 3 | 4>> = {
   none: 0,
@@ -76,9 +90,6 @@ export const NO_PLAYER_POISON: PlayerPoisonProfile = {
   cinderbane: false,
   blowpipe: false,
   laniakea: false,
-  bik: false,
-  targetPoisonImmune: false,
-  vulnerability: false,
 };
 
 export function normalizeWeaponPoisonChoice(value: unknown): WeaponPoisonChoice {
@@ -109,6 +120,52 @@ export function evolvingToxinMultiplier(stacks: number): number {
   return 1 + 0.03 * Math.max(0, Math.min(EVOLVING_TOXIN_MAX_STACKS, Math.floor(stacks)));
 }
 
+export function evolvingToxinPoisonModifier(stacks: number): CombatModifier | null {
+  const multiplier = evolvingToxinMultiplier(stacks);
+  if (multiplier === 1) return null;
+  return {
+    id: "ammo:bik-evolving-toxin",
+    stage: "target",
+    priority: -10,
+    appliesToPlayerPoison: true,
+    applies: (context) => context.dotKind === "poison",
+    apply: (state) => ({ ...state, damage: mulFloor(state.damage, multiplier) }),
+    source: BIK_ARROW_SOURCE,
+  };
+}
+
+export function poisonProfileDamageMultiplier(
+  profile: PlayerPoisonProfile | undefined,
+  atTick: number,
+): number {
+  if (!profile) return 1;
+  const application = resolvePoisonApplication(profile, atTick);
+  if (!application) {
+    return kwuarmPoisonMultiplier(profile.kwuarmPotency) * (profile.laniakea ? 1.05 : 1);
+  }
+  return (
+    (poisonTierCoefficient(application.effectiveTier) / poisonTierCoefficient(1)) *
+    application.sourceDamageMultiplier
+  );
+}
+
+export function poisonProfileDamageModifier(
+  profile: PlayerPoisonProfile | undefined,
+  atTick: number,
+): CombatModifier | null {
+  const multiplier = poisonProfileDamageMultiplier(profile, atTick);
+  if (multiplier === 1) return null;
+  return {
+    id: "poison:active-profile",
+    stage: "target",
+    priority: -20,
+    appliesToPlayerPoison: true,
+    applies: (context) => context.dotKind === "poison",
+    apply: (state) => ({ ...state, damage: mulFloor(state.damage, multiplier) }),
+    source: PLAYER_POISON_SOURCE,
+  };
+}
+
 export function activeEvolvingToxinStacks(
   stacks: number,
   expiresAtTick: number,
@@ -134,11 +191,11 @@ export function nextEvolvingToxin(
 }
 
 export function isTargetPoisonImmune(
-  profile: PlayerPoisonProfile | undefined,
+  targetPoisonImmune: boolean | undefined,
   immunityDisabledUntilTick: number,
   atTick: number,
 ): boolean {
-  return profile?.targetPoisonImmune === true && atTick >= immunityDisabledUntilTick;
+  return targetPoisonImmune === true && atTick >= immunityDisabledUntilTick;
 }
 
 function labelFor(profile: PlayerPoisonProfile, tier: PoisonTier): string {
@@ -181,16 +238,15 @@ export function playerPoisonDamage(
   tier: PoisonTier,
   decayIndex: number,
   sourceDamageMultiplier: number,
-  targetDamageMultiplier: number,
 ): PoisonDamageBand {
-  const i = Math.floor(decayIndex);
-  const minFactor = 0.65 - 0.015 * i;
-  const maxFactor = 1.3 - 0.03 * i;
-  const base =
-    abilityDamage * poisonTierCoefficient(tier) * sourceDamageMultiplier * targetDamageMultiplier;
+  const minFactor = Math.max(0, 0.65 - 0.015 * decayIndex);
+  const maxFactor = Math.max(0, 1.3 - 0.03 * decayIndex);
+  const base = abilityDamage * poisonTierCoefficient(tier) * sourceDamageMultiplier;
   return {
     min: base * minFactor,
     expected: base * ((minFactor + maxFactor) / 2),
     max: base * maxFactor,
   };
 }
+import { mulFloor } from "../core/rounding";
+import type { CombatModifier, SourceReference } from "../types";

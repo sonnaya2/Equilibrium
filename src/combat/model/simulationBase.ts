@@ -16,7 +16,7 @@ import type { ResolvedAbilityCatalogue } from "../abilities/catalogue";
 import { mapSpecsThroughCatalogue, resolveAbilitySpecsFromCatalogue } from "../abilities/catalogue";
 import type { HostCombatResolveInput, ResolvedCombatModel } from "./contracts";
 import { buildResolvedCombatModel } from "./resolve";
-import { modifiersFromSources } from "./modifiers";
+import { modifiersFromSources, playerPoisonModifiersFromSources } from "./modifiers";
 import { reviveLeague } from "./simulationInput";
 
 /** Shared fields for Manual simulate() and Revolution simulateRevolution(). */
@@ -70,6 +70,8 @@ export function buildSimulationInputBase(
     conjureDurationMult: model.conjureDurationMult,
     targetHpPercent: model.target.hpPercent,
     playerPoison: model.playerPoison,
+    playerPoisonModifiers: playerPoisonModifiersFromSources(model.modifierSources, league),
+    targetPoisonImmune: model.target.poisonImmune === true,
   };
 }
 
@@ -153,7 +155,7 @@ export function toHybridManualCombatModel(
     league: scaffold.league,
     context: { ...scaffold.context, style: scaffold.style },
     targetHpPercent: scaffold.target.hpPercent,
-    playerPoison: { ...scaffold.playerPoison, vulnerability: false },
+    playerPoison: scaffold.playerPoison,
     cap: scaffold.cap,
     startingAdrenaline: scaffold.startingAdrenaline,
     // Preserve equipmentIds and weaponConfiguration from scaffold (Leng / passives).
@@ -170,6 +172,7 @@ export function toHybridManualCombatModel(
       demon: false,
       dragon: false,
       undead: false,
+      poisonImmune: scaffold.target.poisonImmune,
     },
     slayerHelmet: null,
     salve: null,
@@ -196,6 +199,7 @@ export function toManualSimulateInput(
   parts: {
     rotation: SimulateInput["rotation"];
     autoWeave?: boolean;
+    horizonTicks?: number;
     /**
      * Manual UI ammo override over model-packed base.ammo:
      * - undefined: keep base.ammo (Revolution / omit path)
@@ -210,19 +214,17 @@ export function toManualSimulateInput(
     const { ammo: _cleared, ...withoutAmmo } = base;
     return {
       ...withoutAmmo,
-      ...(base.playerPoison ? { playerPoison: { ...base.playerPoison, bik: false } } : {}),
       rotation: parts.rotation,
       autoWeave: parts.autoWeave,
+      ...(parts.horizonTicks !== undefined ? { horizonTicks: parts.horizonTicks } : {}),
     };
   }
   return {
     ...base,
     rotation: parts.rotation,
     autoWeave: parts.autoWeave,
+    ...(parts.horizonTicks !== undefined ? { horizonTicks: parts.horizonTicks } : {}),
     ...(parts.ammo !== undefined ? { ammo: parts.ammo } : {}),
-    ...(base.playerPoison && parts.ammo !== undefined
-      ? { playerPoison: { ...base.playerPoison, bik: parts.ammo === "bik" } }
-      : {}),
   };
 }
 

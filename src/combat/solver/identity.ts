@@ -185,10 +185,8 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
       cinderbane: loadout.playerPoison?.cinderbane === true,
       blowpipe: loadout.playerPoison?.blowpipe === true,
       laniakea: loadout.playerPoison?.laniakea === true,
-      bik: loadout.playerPoison?.bik === true,
-      targetPoisonImmune: loadout.playerPoison?.targetPoisonImmune === true,
-      vulnerability: loadout.playerPoison?.vulnerability === true,
     },
+    targetPoisonImmune: loadout.targetPoisonImmune === true,
     cap: normalizeHitCap(loadout.cap),
     adrenaline: loadout.adrenaline
       ? {

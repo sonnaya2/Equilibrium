@@ -242,6 +242,7 @@ describe("summary finalization", () => {
       expectedActivations: 2,
       expectedSeparateHits: 2,
       expectedAttachedComponents: 0,
+      expectedPlayerPoisonHits: 0,
       bonusDamage: 0,
     });
     // Event log deliberately disagrees with the ledger.

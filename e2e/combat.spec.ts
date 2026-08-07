@@ -52,7 +52,7 @@ test("rotation planner queues, simulates, and persists", async ({ page }) => {
   await expect(page.getByText("Queue · 2 casts")).toBeVisible();
 
   await page.getByRole("button", { name: "Run", exact: true }).click();
-  await expect(page.getByText("Natural DPS", { exact: true })).toBeVisible();
+  await expect(page.getByText("Fixed-window DPS", { exact: true })).toBeVisible();
   await expect(page.getByText("6 ticks · 3.6s").first()).toBeVisible();
   await expect(page.getByText("18%")).toBeVisible();
 
@@ -83,7 +83,7 @@ test("auto-weave fills basics to afford a queued ultimate", async ({ page }) => 
 
   await page.getByRole("button", { name: "Overpower ultimate 60%", exact: true }).click();
   await page.getByRole("button", { name: "Run", exact: true }).click();
-  await expect(page.getByText("Natural DPS", { exact: true })).toBeVisible();
+  await expect(page.getByText("Fixed-window DPS", { exact: true })).toBeVisible();
   await expect(page.getByText("25 ticks · 15.0s").first()).toBeVisible();
   await expect(page.getByText("auto").first()).toBeVisible();
 });
@@ -115,11 +115,28 @@ test("the main-hand picker accepts two-handed weapons and locks off-hand", async
 });
 
 test("analysis tab compares two stat lines", async ({ page }) => {
+  const duplicateKeyWarnings: string[] = [];
+  page.on("console", (message) => {
+    if (message.type() === "error" && /same key, `(sacrifice|tuskas_wrath)`/.test(message.text())) {
+      duplicateKeyWarnings.push(message.text());
+    }
+  });
+
   await page.getByRole("tab", { name: "Analysis", exact: true }).click();
   await expect(page.getByText("A · Loadout")).toBeVisible();
   await expect(page.getByText("B · Comparison")).toBeVisible();
   await expect(page.getByText("B − A")).toBeVisible();
   await expect(page.getByRole("columnheader", { name: "Damage Potential" })).toBeVisible();
+
+  const sacrificeRows = page.locator(".analysis-ability").filter({ hasText: "Sacrifice" });
+  const tuskaRows = page.locator(".analysis-ability").filter({ hasText: "Tuska's Wrath" });
+  await expect(sacrificeRows).toHaveCount(3);
+  await expect(tuskaRows).toHaveCount(3);
+
+  await sacrificeRows.nth(1).click();
+  await expect(sacrificeRows.nth(1)).toHaveAttribute("aria-pressed", "true");
+  await expect(sacrificeRows.nth(2)).toHaveAttribute("aria-pressed", "false");
+  expect(duplicateKeyWarnings).toEqual([]);
 });
 
 test("quick tab offers necromancy's sourced volley", async ({ page }) => {
@@ -141,7 +158,7 @@ test("rotation defaults to the shared setup loadout", async ({ page }) => {
   await page.getByRole("button", { name: /^Attack.*\+9%$/ }).click();
   await page.getByRole("button", { name: /^Attack.*\+9%$/ }).click();
   await page.getByRole("button", { name: "Run", exact: true }).click();
-  await expect(page.getByText("Natural DPS", { exact: true })).toBeVisible();
+  await expect(page.getByText("Fixed-window DPS", { exact: true })).toBeVisible();
   await expect(page.getByText("6 ticks · 3.6s").first()).toBeVisible();
 });
 
@@ -272,6 +289,79 @@ test("poison buffs expose every potion tier and persist Herblore", async ({ page
     "weapon-plus-plus-plus",
   );
   await expect(page.getByRole("spinbutton", { name: "Herblore level" })).toHaveValue("120");
+});
+
+test("Cinderbanes add recursive poison hits to a rendered 60-second bar", async ({
+  page,
+}, testInfo) => {
+  const runAndReadPoison = async () => {
+    await page.getByRole("tab", { name: "Rotation", exact: true }).click();
+    await page.getByRole("button", { name: "Run bar" }).click();
+    await expect(page.getByRole("heading", { name: "Resolved events" })).toBeVisible();
+    await page.getByRole("button", { name: "Analyze damage" }).click();
+    const dialog = page.getByRole("dialog", { name: "Damage analysis" });
+    const poison = dialog.getByTestId("player-poison-analysis");
+    await expect(poison).toBeVisible();
+    const separateHits = Number(
+      await poison
+        .getByText("Expected poison hits", { exact: true })
+        .locator("..")
+        .locator("dd")
+        .innerText(),
+    );
+    const totalDamage = Number(
+      (
+        await dialog
+          .getByText("Expected damage", { exact: true })
+          .locator("..")
+          .locator("dd")
+          .innerText()
+      ).replaceAll(",", ""),
+    );
+    return { dialog, poison, separateHits, totalDamage };
+  };
+
+  await page.getByRole("button", { name: "Buffs", exact: true }).click();
+  await page
+    .getByRole("combobox", { name: "Weapon poison potion" })
+    .selectOption("weapon-plus-plus-plus");
+  const without = await runAndReadPoison();
+  await expect(without.poison.getByText(/tier 4/)).toBeVisible();
+  await expect(without.poison.getByText(/Cinderbane chain:/)).toHaveCount(0);
+  await without.dialog.getByRole("button", { name: "Close" }).click();
+
+  await page.getByRole("tab", { name: "Loadout", exact: true }).click();
+  await page.getByRole("button", { name: "Gear", exact: true }).click();
+  await page.getByRole("button", { name: /^Gloves/ }).click();
+  await page.getByRole("searchbox", { name: "Search" }).fill("Cinderbane gloves");
+  await page.getByRole("button", { name: /Cinderbane gloves/ }).click();
+
+  const withCinderbanes = await runAndReadPoison();
+  await expect(withCinderbanes.poison.getByText(/tier 5/)).toBeVisible();
+  const chain = withCinderbanes.poison.getByText(/Cinderbane chain: .*expected extra hits/);
+  await expect(chain).toBeVisible();
+  expect(Number((await chain.innerText()).match(/chain: ([\d.]+)/)?.[1] ?? 0)).toBeGreaterThan(0);
+  expect(withCinderbanes.separateHits).toBeGreaterThan(without.separateHits);
+  expect(withCinderbanes.totalDamage).toBeGreaterThan(without.totalDamage);
+  const sourcePoisonHits = withCinderbanes.dialog.locator("[data-player-poison-hits]");
+  await expect(sourcePoisonHits.first()).toBeVisible();
+  expect(await sourcePoisonHits.count()).toBeGreaterThan(1);
+  expect((await sourcePoisonHits.allInnerTexts()).every((text) => /\+\d/.test(text))).toBe(true);
+  const poisonTimeline = withCinderbanes.dialog
+    .getByRole("heading", { name: "Resolved timeline" })
+    .locator("..");
+  const poisonEventRows = poisonTimeline
+    .getByRole("row")
+    .filter({ hasText: "Player weapon poison" });
+  const poisonEventText = await poisonEventRows.allInnerTexts();
+  await testInfo.attach("cinderbane-timeline.txt", {
+    body: poisonEventText.join("\n"),
+    contentType: "text/plain",
+  });
+  expect(poisonEventText.some((row) => /0\.\d+ expected occurrences?/.test(row))).toBe(true);
+  expect(poisonEventText.some((row) => /\b0 expected occurrences?/.test(row))).toBe(false);
+  await withCinderbanes.dialog.screenshot({ path: testInfo.outputPath("cinderbane-analysis.png") });
+  await poisonTimeline.screenshot({ path: testInfo.outputPath("cinderbane-timeline.png") });
 });
 
 test("summary breakdowns reconcile and open from the keyboard", async ({ page }) => {

@@ -714,7 +714,8 @@ describe("revolution — conjure post-summon management", () => {
       ...necroRevo,
       bar: [abilitySpec("conjure_undead_army")],
       durationTicks: 40,
-      playerPoison: { ...NO_PLAYER_POISON, targetPoisonImmune: true },
+      playerPoison: NO_PLAYER_POISON,
+      targetPoisonImmune: true,
     };
     const blocked = simulateRevolution(immune);
     expect(blocked.perAbility["spirit_putrid_zombie"]).toBeGreaterThan(0);

@@ -48,7 +48,7 @@ describe("blessing damage component reuse", () => {
       expect(
         rt.queue.pending().find((pending) => pending.abilityId === "inferno-of-zamorak")
           ?.expectedTriggerRolls,
-      ).toBeCloseTo(5 / 19, 10);
+      ).toBeCloseTo(0.25, 10);
 
       resetHitPipelineCounters();
       scheduleBlessingDamage(rt, event, damage);

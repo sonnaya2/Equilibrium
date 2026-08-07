@@ -1,0 +1,4 @@
+interface:
+  display_name: "RS3 Equilibrium Poison"
+  short_description: "Plan sourced player-applied poison mechanics"
+  default_prompt: "Use $equilibrium-poison to research, plan, implement, or review player-applied poison in RS3 Equilibrium."

@@ -22,6 +22,7 @@ import type { BlessingId } from "../../league/blessings";
 import { packageCritical, type ResolvedDamage } from "../engine/resolution/types";
 import { isBasicAttack } from "../shared/adrenalineGain";
 import { mulFloor } from "../core/rounding";
+import type { StatefulOccurrenceModel } from "../engine/runtime/events";
 
 /** Tag for blessing-generated damage instances shown in analysis. */
 export type BlessingDamageTag = "bonus-damage";
@@ -42,6 +43,7 @@ export interface LeagueDamageComponent {
   expectedActivations: number;
   /** Expected separate hits; 0 when attached. */
   expectedSeparateHits: number;
+  occurrenceModel?: StatefulOccurrenceModel;
   damage: ResolvedDamage;
   hitDetail?: HitResult;
 }
@@ -66,7 +68,7 @@ export type BlessingDamageSource =
 export interface BlessingHitEligibility {
   /** Big Boned 5% max-life attached rider (not a unique hit). */
   rider: boolean;
-  /** Cinders rider and Inferno roll; every independent damage hit qualifies. */
+  /** Cinders rider and Inferno roll; direct player attack hits qualify. */
   cinders: boolean;
   /** Direct on-hit effects such as Light of Saradomin. */
   onHit: boolean;
@@ -79,7 +81,7 @@ const NO_BLESSING_DAMAGE: BlessingHitEligibility = {
 };
 
 /**
- * Separate blessing hits that host Big Boned. Cinders has its own broader hit gate.
+ * Separate blessing hits that host Big Boned without re-opening Cinders.
  */
 export const SEPARATE_BLESSING_RIDER_HOSTS: ReadonlySet<string> = new Set([
   "light-of-saradomin",
@@ -232,14 +234,12 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
 
   const cinders = blessingRule(input.rules, "abyssal-cinders");
   const infernoChance = eligible.cinders ? (cinders?.inferno?.chance ?? 0) : 0;
-  if (infernoChance < 0 || infernoChance >= 1) {
-    throw new RangeError(`Abyssal Cinders chance ${infernoChance} must be in [0, 1)`);
+  if (infernoChance < 0 || infernoChance > 1) {
+    throw new RangeError(`Abyssal Cinders chance ${infernoChance} must be in [0, 1]`);
   }
-  // E[recursive Infernos] = p + p^2 + ... = p / (1 - p).
-  const recursiveFactor = 1 / (1 - infernoChance);
-  const infernoActivations = infernoChance * recursiveFactor;
+  const infernoActivations = infernoChance;
   const cindersRiderActivations =
-    eligible.cinders && cinders?.perHitAbilityDamagePercent !== undefined ? recursiveFactor : 0;
+    eligible.cinders && cinders?.perHitAbilityDamagePercent !== undefined ? 1 : 0;
 
   const parentProvenance =
     typeof input.source === "string"
@@ -299,17 +299,9 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
       rootBigBonedActivations,
       parentCrit,
     );
-    pushBigBoned(
-      cindersRiderActivations,
-      1,
-      1 + (infernoChance > 0 ? recursiveFactor : 0),
-      noCrit,
-      "abyssal-cinders",
-    );
-    pushBigBoned(infernoActivations, 0, recursiveFactor, infernoCrit, "inferno-of-zamorak");
   }
 
-  // Cinders rides the root hit and every recursive Inferno; attached bonus is not itself a hit.
+  // Cinders is attached to the root attack hit; it is not a new hit.
   if (eligible.cinders && cinders?.perHitAbilityDamagePercent !== undefined) {
     const prov = blessingProv("abyssal-cinders");
     const hit = calculateHit({
@@ -332,12 +324,7 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
       expectedTriggerRolls: 0,
       expectedActivations: cindersRiderActivations,
       expectedSeparateHits: 0,
-      damage: weightedDamage(
-        hit,
-        cindersRiderActivations,
-        1,
-        1 + (infernoChance > 0 ? recursiveFactor : 0),
-      ),
+      damage: weightedDamage(hit, cindersRiderActivations, 1, 1),
       hitDetail: hit,
     });
   }
@@ -359,10 +346,14 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
       blessingId: "abyssal-cinders",
       attached: false,
       expectedOccurrences: infernoActivations,
-      expectedTriggerRolls: recursiveFactor,
+      expectedTriggerRolls: 1,
       expectedActivations: infernoActivations,
       expectedSeparateHits: infernoActivations,
-      damage: weightedDamage(hit, infernoActivations, 0, recursiveFactor),
+      occurrenceModel: {
+        kind: "bernoulli",
+        probability: infernoChance,
+      },
+      damage: weightedDamage(hit, infernoActivations, 0, 1),
     });
   }
 
@@ -531,10 +522,10 @@ export function calculateLeagueAbility(
     if (components.some((component) => component.blessingId === "lord-of-light")) {
       lordOfLightAvailable = false;
     }
-    // Mirror land-time: Light is a separate hit and hosts its own packed Cinders chain.
+    // Mirror land-time: separate blessing hits can host Big Boned, never Cinders.
     const ridersOnSeparate: LeagueDamageComponent[] = [];
     for (const component of components) {
-      if (component.attached || component.effectId !== "light-of-saradomin") {
+      if (component.attached || !SEPARATE_BLESSING_RIDER_HOSTS.has(component.effectId)) {
         continue;
       }
       const nested = leagueDamageComponents({

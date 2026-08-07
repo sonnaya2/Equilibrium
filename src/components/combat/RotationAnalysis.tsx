@@ -50,6 +50,8 @@ const formatNumber = (value: number) =>
 /** Expected activations/hits; keep fractional weight (never round 0.35 → 0). */
 const formatExpected = (value: number) =>
   new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(value);
+const formatExpectedOccurrence = (value: number) =>
+  value > 0 && value < 0.01 ? "<0.01" : formatExpected(value);
 const formatPercent = (value: number) => `${(value * 100).toFixed(1)}%`;
 
 function effectName(id: string, nameForId: (id: string) => string): string {
@@ -63,8 +65,8 @@ function effectName(id: string, nameForId: (id: string) => string): string {
 
 /** Probability weight carried by an EV-scheduled event, when present. */
 function eventExpectedWeight(event: ResolvedEvent): number | undefined {
-  if (event.expectedActivations !== undefined) return event.expectedActivations;
   if (event.expectedOccurrences !== undefined) return event.expectedOccurrences;
+  if (event.expectedActivations !== undefined) return event.expectedActivations;
   return undefined;
 }
 
@@ -246,7 +248,7 @@ function EventTable({
                 </td>
                 <td className="whitespace-nowrap py-1.5 pr-3 text-parch-300">{eventType(event)}</td>
                 <td className="whitespace-nowrap py-1.5 pr-3 text-right font-mono tabular-nums text-parch-300">
-                  {event.attached ? "–" : event.hitIndex + 1}
+                  {event.attached || event.hitIndex < 0 ? "–" : event.hitIndex + 1}
                 </td>
                 <td className="whitespace-nowrap py-1.5 pr-3 text-right font-mono tabular-nums text-parch-50">
                   {formatNumber(event.damage.expected)}
@@ -259,7 +261,7 @@ function EventTable({
                 <td className="py-1.5 text-parch-300">
                   {isExpectedProcEvent(event) && weight !== undefined ? (
                     <span className="mr-2">
-                      {formatExpected(weight)} expected occurrence
+                      {formatExpectedOccurrence(weight)} expected occurrence
                       {weight === 1 ? "" : "s"}
                     </span>
                   ) : null}
@@ -398,13 +400,19 @@ export function RotationAnalysisModal({
               <span className="text-[11px] text-parch-300">
                 {result.playerPoison.supportStatus} · probability mass{" "}
                 {formatPercent(result.playerPoison.probabilityMass)}
-                {result.playerPoison.residualMass > 0
-                  ? ` · residual ${formatPercent(result.playerPoison.residualMass)}`
-                  : ""}
               </span>
             </div>
             {result.playerPoison.supportNote ? (
               <p className="mt-1 text-[11px] text-parch-300">{result.playerPoison.supportNote}</p>
+            ) : null}
+            {result.playerPoison.cinderbaneContinuationChance > 0 ? (
+              <p className="mt-1 font-mono text-[11px] text-parch-200">
+                Cinderbane chain:{" "}
+                {formatExpected(result.playerPoison.successfulCinderbaneContinuations)}
+                {" expected extra hits / "}
+                {formatExpected(result.playerPoison.cinderbaneContinuationAttempts)} poison-hit
+                rolls · {formatPercent(result.playerPoison.cinderbaneContinuationChance)} each
+              </p>
             ) : null}
             <dl className="mt-2 grid grid-cols-2 gap-2 text-xs md:grid-cols-4">
               <div className="combat-subpanel p-2">
@@ -415,7 +423,7 @@ export function RotationAnalysisModal({
                 </dd>
               </div>
               <div className="combat-subpanel p-2">
-                <dt className="text-parch-300">Separate hits</dt>
+                <dt className="text-parch-300">Expected poison hits</dt>
                 <dd className="mt-1 font-mono text-parch-50">
                   {formatExpected(result.playerPoison.separateHits)}
                 </dd>
@@ -528,6 +536,16 @@ export function RotationAnalysisModal({
                       <td className="py-1.5 pr-3 text-parch-50">
                         <span className="inline-flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
                           <span>{effectName(effect.id, nameForId)}</span>
+                          {effect.expectedPlayerPoisonHits > 0 ? (
+                            <span
+                              className="whitespace-nowrap font-mono text-[10px] text-emerald-300"
+                              data-player-poison-hits=""
+                              title="Expected delayed player-poison hits earned by this effect"
+                            >
+                              +{formatExpectedOccurrence(effect.expectedPlayerPoisonHits)} poison
+                              hits
+                            </span>
+                          ) : null}
                           {isBlessingEffectRow(effect.id, effect.kind) ? (
                             <AbilityCategoryChip category="blessing" />
                           ) : isConjureEffectRow(effect.id, effect.kind) ? (

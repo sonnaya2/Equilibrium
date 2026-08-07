@@ -269,7 +269,7 @@ describe("blessing riders on conjure auto and poison", () => {
     }
   });
 
-  it("Cinders and recursive Inferno include conjure autos", () => {
+  it("conjure autos do not trigger Cinders or Inferno", () => {
     const s = simulate({
       ...necroFixtureInput,
       league: cinders,
@@ -286,23 +286,17 @@ describe("blessing riders on conjure auto and poison", () => {
         e.derivedFrom !== undefined &&
         autos.some((a) => a.seq === e.derivedFrom),
     );
-    expect(cindersOnAutos).toHaveLength(autos.length);
-    expect(
-      cindersOnAutos.reduce((sum, event) => sum + (event.expectedActivations ?? 1), 0),
-    ).toBeCloseTo(autos.length / 0.95, 10);
+    expect(cindersOnAutos).toHaveLength(0);
     const infernoOnAutos = s.events.filter(
       (e) =>
         e.abilityId === "inferno-of-zamorak" &&
         e.derivedFrom !== undefined &&
         autos.some((a) => a.seq === e.derivedFrom),
     );
-    expect(infernoOnAutos).toHaveLength(autos.length);
-    expect(
-      infernoOnAutos.reduce((sum, event) => sum + (event.expectedActivations ?? 1), 0),
-    ).toBeCloseTo((autos.length * 0.05) / 0.95, 10);
+    expect(infernoOnAutos).toHaveLength(0);
   });
 
-  it("Cinders and recursive Inferno include conjure poison ticks", () => {
+  it("conjure poison ticks do not trigger Cinders or Inferno", () => {
     const s = simulate({
       ...necroFixtureInput,
       league: cinders,
@@ -319,7 +313,7 @@ describe("blessing riders on conjure auto and poison", () => {
           event.derivedFrom !== undefined &&
           poisons.some((poison) => poison.seq === event.derivedFrom),
       );
-      expect(derived).toHaveLength(poisons.length);
+      expect(derived).toHaveLength(0);
     }
   });
 });
@@ -363,6 +357,56 @@ describe("conjure summoning and auto contribution", () => {
     const autoBoost = zBoost.perAbility["spirit_putrid_zombie"] ?? 0;
     expect(autoBase).toBeGreaterThan(0);
     expect(autoBoost / autoBase).toBeCloseTo(1.35, 2);
+  });
+
+  it("boosts zombie poison without giving zombie hits weapon-poison rolls", () => {
+    const rotation = rotationOf("conjure_putrid_zombie", ...Array(12).fill("necromancy_basic"));
+    const run = (playerPoison: SimulateInput["playerPoison"]) =>
+      simulate({ ...necroFixtureInput, rotation, playerPoison, horizonTicks: 100 });
+    const none = run({
+      potion: "none",
+      potionUntilTick: 0,
+      kwuarmPotency: 0,
+      cinderbane: false,
+      blowpipe: false,
+      laniakea: false,
+    });
+    const potion = run({
+      potion: "weapon-plus-plus-plus",
+      potionUntilTick: 1_200,
+      kwuarmPotency: 0,
+      cinderbane: false,
+      blowpipe: false,
+      laniakea: false,
+    });
+    const cinderbane = run({
+      potion: "weapon-plus-plus-plus",
+      potionUntilTick: 1_200,
+      kwuarmPotency: 0,
+      cinderbane: true,
+      blowpipe: false,
+      laniakea: false,
+    });
+    const kwuarm = run({
+      potion: "weapon-plus-plus-plus",
+      potionUntilTick: 1_200,
+      kwuarmPotency: 4,
+      cinderbane: false,
+      blowpipe: false,
+      laniakea: false,
+    });
+    const zombieDamage = (summary: RotationSummary) =>
+      summary.perAbility[SPIRIT_POISON_ABILITY_ID] ?? 0;
+
+    expect(zombieDamage(potion) / zombieDamage(none)).toBeCloseTo(1.75, 1);
+    expect(zombieDamage(cinderbane) / zombieDamage(none)).toBeCloseTo(2, 1);
+    expect(zombieDamage(kwuarm) / zombieDamage(potion)).toBeCloseTo(1.1, 1);
+    for (const summary of [potion, cinderbane, kwuarm]) {
+      expect(
+        summary.analysis.byEffect.find((row) => row.id === SPIRIT_POISON_ABILITY_ID)
+          ?.expectedPlayerPoisonHits ?? 0,
+      ).toBe(0);
+    }
   });
 
   it("First Necromancer set(5) extends the Spirit Pact lifetime by 25%", () => {

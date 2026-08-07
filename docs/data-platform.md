@@ -345,7 +345,7 @@ also uses `cache: "no-store"`. No browser fetch goes to `public/data/`.
 Regional majors on `/data` are catalog `content[]` faces authored via `data/patches/*.jsonl`
 (`set-record` is single-home per entity; dual-region sites need two entity IDs; put
 `· Unlocks: …` on the face for reward chips). Agent procedure: `AGENTS.md` section
-**/data majors**, skill `.grok/skills/equilibrium-data-majors/` (gotchas under
+**/data majors**, skill `.agents/skills/equilibrium-data-majors/` (gotchas under
 `references/gotchas.md`). Examples: `data/patches/2026-08-05` … `2026-08-10` majors patches.
 
 A small set of whole source documents is still needed as module imports. Export rebuilds only the

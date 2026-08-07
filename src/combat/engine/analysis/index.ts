@@ -5,6 +5,6 @@ export {
   type EffectAnalysisLedger,
   type RuntimeAnalysisState,
 } from "./contracts";
-export { accountAnalysisEvent, sourceKindOf } from "./accounting";
+export { accountAnalysisEvent, accountPlayerPoisonHits, sourceKindOf } from "./accounting";
 export { resolveEventMultiplicity, type ResolvedMultiplicity } from "./multiplicity";
 export { analysisReconciles, finalizeAnalysis } from "./finalize";

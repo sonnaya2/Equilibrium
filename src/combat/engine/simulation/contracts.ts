@@ -126,6 +126,11 @@ export interface SimulateInput {
   /** Target LP% (0-100) for HP-gated mechanics (Bloodlust Flurry, Punish, Spectral Scythe); absent = no HP scale. */
   targetHpPercent?: number;
   playerPoison?: PlayerPoisonProfile;
+  /** Canonical target/global modifiers explicitly eligible for player poison. */
+  playerPoisonModifiers?: readonly CombatModifier[];
+  targetPoisonImmune?: boolean;
+  /** Optional fixed manual window; landed damage uses the half-open [0, horizonTicks) interval. */
+  horizonTicks?: number;
   /** Optional pre-active Natural Instinct window for Jaws adrenaline. */
   naturalInstinctUntilTick?: number;
   /**
@@ -205,7 +210,6 @@ export interface SimulateOptions {
 
 /** createCastContext input: rotation/autoWeave belong to the manual driver only. */
 export type CastContextInput = Omit<SimulateInput, "rotation" | "autoWeave"> & {
-  horizonTicks?: number;
   /** Stored on runtime for hot-path accounting; default full-analysis. */
   detailLevel?: SimulationDetailLevel;
 };
@@ -279,6 +283,8 @@ export interface DamageEffectBreakdown {
   expectedSeparateHits: number;
   /** Probability-weighted attached bonus components riding another hit. */
   expectedAttachedComponents: number;
+  /** Delayed player-poison hits earned by this effect's landed hits. */
+  expectedPlayerPoisonHits: number;
   /** Bonus-damage riders on parent skill; 0 on the rider row. Do not sum with Total across rows. */
   bonusDamage: number;
   /** totalDamage / expectedActivations when activations > 0. */
@@ -307,6 +313,9 @@ export interface PlayerPoisonAnalysis {
   applicationAttempts: number;
   successfulApplications: number;
   separateHits: number;
+  cinderbaneContinuationChance: number;
+  cinderbaneContinuationAttempts: number;
+  successfulCinderbaneContinuations: number;
   minimumDamage: number;
   expectedDamage: number;
   maximumDamage: number;
@@ -315,7 +324,6 @@ export interface PlayerPoisonAnalysis {
   bikStacks: number;
   bikRemainingTicks: number;
   probabilityMass: number;
-  residualMass: number;
   supportStatus: "modeled" | "partially-modeled";
   supportNote?: string;
 }

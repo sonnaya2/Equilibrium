@@ -1,15 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import {
   analyzeSingleCast,
   overlayAnalysisStatLine,
   type AnalysisStatLine,
   type SingleCastAnalysis,
 } from "@/combat/model";
-import type { CombatStyle } from "@/combat/types";
-import { engineSpecsForStyle } from "@/combat/abilities/registry";
 import { MAX_SOULS, VOLLEY_MIN_SOULS, volleyOfSouls } from "@/combat/styles/necromancy/abilities";
 import { abilityIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
@@ -22,23 +19,11 @@ import {
 import { CalculationAssumptions } from "./CalculationAssumptions";
 import { CombatFrameCorners } from "./CombatFrameCorners";
 import { NumberField } from "./NumberField";
+import { ANALYSIS_ABILITY_ENTRIES, ANALYSIS_ABILITY_ENTRY_BY_ID } from "./analysisAbilityCatalogue";
 import { resolveLoadoutCombat } from "./toResolvedCombatModel";
 import type { Loadout } from "./useLoadout";
 import { unlockedRegions } from "@/league";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
-
-/** Damaging melee/ranged/magic from engine registry; necro is Volley-only (+ residual souls). */
-const DAMAGING: Array<{ style: CombatStyle; ability: AbilitySpec }> = (
-  ["melee", "ranged", "magic"] as const
-).flatMap((style) =>
-  engineSpecsForStyle(style)
-    .filter((ability) => ability.hits.length > 0)
-    .map((ability) => ({ style, ability })),
-);
-
-const VOLLEY_ENTRY = { style: "necromancy" as CombatStyle, ability: volleyOfSouls(3) };
-const ALL_ENTRIES = [...DAMAGING, VOLLEY_ENTRY];
-const ENTRY_BY_ID = new Map(ALL_ENTRIES.map((entry) => [entry.ability.id, entry]));
 
 function formatNumber(value: number): string {
   return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(value);
@@ -95,7 +80,7 @@ function castResultCell(
  *  target model included) against an editable comparison line (B). */
 export function AnalysisTab({ loadout }: { loadout: Loadout }) {
   const { build } = useLeagueBuild();
-  const [abilityId, setAbilityId] = useState(ALL_ENTRIES[0].ability.id);
+  const [entryId, setEntryId] = useState(ANALYSIS_ABILITY_ENTRIES[0].id);
   const [souls, setSouls] = useState(VOLLEY_MIN_SOULS + 1);
 
   const leagueOptions = useMemo(
@@ -129,7 +114,7 @@ export function AnalysisTab({ loadout }: { loadout: Loadout }) {
     Math.max(VOLLEY_MIN_SOULS, Number.isFinite(souls) ? Math.floor(souls) : VOLLEY_MIN_SOULS),
   );
 
-  const entry = ENTRY_BY_ID.get(abilityId) ?? ALL_ENTRIES[0];
+  const entry = ANALYSIS_ABILITY_ENTRY_BY_ID.get(entryId) ?? ANALYSIS_ABILITY_ENTRIES[0];
   const ability =
     entry.ability.id === "volley_of_souls" ? volleyOfSouls(clampedSouls) : entry.ability;
 
@@ -181,12 +166,12 @@ export function AnalysisTab({ loadout }: { loadout: Loadout }) {
         <CombatFrameCorners />
         <h2 className="combat-page-title text-sm font-medium text-parch-50">Analysis</h2>
         <div className="analysis-ability-list mt-3">
-          {ALL_ENTRIES.map(({ style, ability: candidate }) => (
+          {ANALYSIS_ABILITY_ENTRIES.map(({ id, style, ability: candidate }) => (
             <button
-              key={candidate.id}
+              key={id}
               type="button"
-              onClick={() => setAbilityId(candidate.id)}
-              aria-pressed={candidate.id === entry.ability.id}
+              onClick={() => setEntryId(id)}
+              aria-pressed={id === entry.id}
               className="analysis-ability"
             >
               <GameIcon src={abilityIconPath(candidate.id, style)} size={24} className="shrink-0" />

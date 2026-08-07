@@ -12,6 +12,7 @@ import { resolveLeagueRules } from "./ruleset";
  * damage. On hit: Your attacks have a 5% chance to trigger an Inferno of
  * Zamorak, which deals 100-200% ability damage to a single target."
  * (RuneScape Wiki, Equilibrium League/Blessings, verified 2026-08-02.)
+ * Pre-release interpretation: poison, DoT, conjure, proc, and blessing damage are not attacks.
 
  * The "On hit" prefix is what makes the roll per landed hit rather than per
  * cast; every expected-application count below follows from that reading alone.
@@ -20,8 +21,8 @@ const cinders = (derived: { maximumLife?: number } = {}) =>
   resolveLeagueRules({ ruleset: "equilibrium", blessingPicks: ["Chaos", "Chaos"] }, derived);
 
 const INFERNO_CHANCE = 0.05;
-const INFERNOS_PER_HIT = INFERNO_CHANCE / (1 - INFERNO_CHANCE);
-const CINDERS_RIDERS_PER_HIT = 1 / (1 - INFERNO_CHANCE);
+const INFERNOS_PER_HIT = INFERNO_CHANCE;
+const CINDERS_RIDERS_PER_HIT = 1;
 
 const infernoApplications = (summary: ReturnType<typeof simulate>) =>
   summary.events
@@ -36,8 +37,7 @@ const cindersRiders = (summary: ReturnType<typeof simulate>) =>
 const ranged = (id: string) => RANGED_ABILITIES.find((ability) => ability.id === id)!;
 
 const closed = { rider: false, cinders: false, onHit: false } as const;
-const cindersOnly = { rider: false, cinders: true, onHit: false } as const;
-const broadRider = { rider: true, cinders: true, onHit: false } as const;
+const broadRider = { rider: true, cinders: false, onHit: false } as const;
 const directOnHit = { rider: true, cinders: true, onHit: true } as const;
 
 describe("Abyssal Cinders eligibility policy", () => {
@@ -45,21 +45,21 @@ describe("Abyssal Cinders eligibility policy", () => {
     expect(blessingHitEligibility("direct", false)).toEqual(directOnHit);
   });
 
-  it("gives damage-over-time ticks Big Boned and Cinders", () => {
+  it("gives damage-over-time ticks Big Boned but not Cinders", () => {
     expect(blessingHitEligibility("dot", false)).toEqual(broadRider);
   });
 
-  it("gives conjure commands Big Boned and Cinders", () => {
+  it("gives conjure commands Big Boned but not Cinders", () => {
     expect(blessingHitEligibility("command", false)).toEqual(broadRider);
   });
 
-  it("gives conjure auto and poison hits Big Boned and Cinders", () => {
+  it("gives conjure auto and poison hits Big Boned but not Cinders", () => {
     expect(blessingHitEligibility("conjure", false)).toEqual(broadRider);
     expect(blessingHitEligibility({ kind: "conjure_auto" }, false)).toEqual(broadRider);
     expect(blessingHitEligibility({ kind: "conjure_poison" }, false)).toEqual(broadRider);
   });
 
-  it("gives invention procs Big Boned and Cinders", () => {
+  it("gives invention procs Big Boned but not Cinders", () => {
     expect(blessingHitEligibility({ kind: "invention_proc" }, false)).toEqual(broadRider);
     expect(blessingHitEligibility({ kind: "invention_proc", detail: "crackling" }, false)).toEqual(
       broadRider,
@@ -69,8 +69,8 @@ describe("Abyssal Cinders eligibility policy", () => {
     );
   });
 
-  it.each(["proc", "blessing"] as const)("gives %s hits Cinders", (source) => {
-    expect(blessingHitEligibility(source, false)).toEqual(cindersOnly);
+  it.each(["proc", "blessing"] as const)("keeps %s hits out of Cinders", (source) => {
+    expect(blessingHitEligibility(source, false)).toEqual(closed);
   });
 
   it("excludes attached components whatever their source, so hit counts stay honest", () => {
@@ -79,8 +79,8 @@ describe("Abyssal Cinders eligibility policy", () => {
     }
   });
 
-  it("keeps attached riders closed while separate blessing hits qualify", () => {
-    expect(blessingHitEligibility("blessing", false)).toEqual(cindersOnly);
+  it("keeps attached riders and generic blessing hits closed", () => {
+    expect(blessingHitEligibility("blessing", false)).toEqual(closed);
     expect(blessingHitEligibility("blessing", true)).toEqual(closed);
     expect(blessingHitEligibility({ kind: "blessing", detail: "big-boned" }, false)).toEqual(
       closed,
@@ -93,7 +93,7 @@ describe("Abyssal Cinders eligibility policy", () => {
     ).toEqual(closed);
   });
 
-  it("Light and Inferno hits host Big Boned and Cinders", () => {
+  it("Light and Inferno hits host Big Boned without re-opening Cinders", () => {
     expect(
       blessingHitEligibility({ kind: "blessing", detail: "light-of-saradomin" }, false),
     ).toEqual(broadRider);
@@ -103,8 +103,8 @@ describe("Abyssal Cinders eligibility policy", () => {
   });
 });
 
-describe("Inferno of Zamorak recursively rolls from every landed hit", () => {
-  it("uses the geometric expectation for a one-hit attack", () => {
+describe("Inferno of Zamorak rolls once from each direct attack hit", () => {
+  it("uses one Bernoulli roll for a one-hit attack", () => {
     const summary = simulate({
       ...baseInput,
       league: cinders(),
@@ -115,7 +115,7 @@ describe("Inferno of Zamorak recursively rolls from every landed hit", () => {
     expect(cindersRiders(summary)).toBeCloseTo(CINDERS_RIDERS_PER_HIT, 10);
   });
 
-  it("scales the geometric expectation per hit", () => {
+  it("scales the Bernoulli expectation per hit", () => {
     const twoHit = MELEE_ABILITIES.find((ability) => ability.hits.length === 2)!;
     const summary = simulate({
       ...baseInput,
@@ -153,7 +153,7 @@ describe("Inferno of Zamorak recursively rolls from every landed hit", () => {
     expect(cindersRiders(summary)).toBeCloseTo(8 * CINDERS_RIDERS_PER_HIT, 10);
   });
 
-  it("includes every bleed tick", () => {
+  it("excludes bleed ticks", () => {
     const dismember = MELEE_ABILITIES.find((ability) => ability.id === "dismember")!;
     const dotTicks = dismember.hits.filter((hit) => hit.dot).length;
     expect(dotTicks).toBeGreaterThan(0);
@@ -164,28 +164,13 @@ describe("Inferno of Zamorak recursively rolls from every landed hit", () => {
       context: { style: "melee", ruleset: "equilibrium" },
       rotation: rotationOf("dismember"),
     });
-    expect(infernoApplications(summary)).toBeCloseTo(dismember.hits.length * INFERNOS_PER_HIT, 10);
-    expect(cindersRiders(summary)).toBeCloseTo(dismember.hits.length * CINDERS_RIDERS_PER_HIT, 10);
+    expect(infernoApplications(summary)).toBe(0);
+    expect(cindersRiders(summary)).toBe(0);
     const infernos = summary.events.filter((event) => event.abilityId === "inferno-of-zamorak");
-    expect(infernos).toHaveLength(dismember.hits.length);
-    for (const inferno of infernos) {
-      expect(inferno).toMatchObject({
-        family: "blessing",
-        attached: false,
-        originKind: "blessing",
-        damage: { critical: { mode: "expected", chance: 0.2 } },
-      });
-      expect(inferno.expectedSeparateHits).toBeCloseTo(INFERNOS_PER_HIT, 10);
-      expect(inferno.expectedActivations).toBeCloseTo(INFERNOS_PER_HIT, 10);
-    }
-    const infernoRow = summary.analysis.byEffect.find(
-      (effect) => effect.id === "inferno-of-zamorak",
-    )!;
-    expect(infernoRow.dotDamage).toBe(0);
-    expect(infernoRow.directDamage).toBeCloseTo(infernoRow.totalDamage, 6);
+    expect(infernos).toHaveLength(0);
   });
 
-  it("includes Crackling and Aftershock hits", () => {
+  it("excludes Crackling and Aftershock hits", () => {
     const summary = simulate({
       ...baseInput,
       league: cinders(),
@@ -207,11 +192,11 @@ describe("Inferno of Zamorak recursively rolls from every landed hit", () => {
           event.derivedFrom !== undefined &&
           procs.some((proc) => proc.seq === event.derivedFrom),
       );
-      expect(derived).toHaveLength(procs.length);
+      expect(derived).toHaveLength(0);
     }
   });
 
-  it("folds Inferno recursion into bounded expected-value events", () => {
+  it("keeps each Inferno as one bounded Bernoulli event", () => {
     const summary = simulate({
       ...rangedInput,
       league: cinders(),
@@ -236,6 +221,7 @@ describe("Inferno of Zamorak recursively rolls from every landed hit", () => {
     for (const inf of infernos) {
       expect(inf.attached).toBe(false);
       expect(inf.expectedSeparateHits).toBeGreaterThan(0);
+      expect(inf.occurrenceModel).toEqual({ kind: "bernoulli", probability: 0.05 });
     }
     expect(infernoApplications(summary)).toBeCloseTo(7 * INFERNOS_PER_HIT, 10);
     expect(cindersRiders(summary)).toBeCloseTo(7 * CINDERS_RIDERS_PER_HIT, 10);
@@ -306,6 +292,29 @@ describe("Inferno of Zamorak recursively rolls from every landed hit", () => {
       inferno.expectedActivations * inferno.averagePerActivation,
       6,
     );
+  });
+
+  it("keeps Big Boned and Cinders attached independently to the root hit", () => {
+    const league = resolveLeagueRules(
+      { ruleset: "equilibrium", blessingPicks: ["Balance", "Chaos"] },
+      { maximumLife: 15_000 },
+    );
+    const summary = simulate({
+      ...baseInput,
+      league,
+      crit: { chance: 0 },
+      context: { style: "melee", ruleset: "equilibrium" },
+      rotation: rotationOf("attack"),
+    });
+    const attack = summary.analysis.byEffect.find((row) => row.id === "attack")!;
+    const cinders = summary.analysis.byEffect.find((row) => row.id === "abyssal-cinders")!;
+    const inferno = summary.analysis.byEffect.find((row) => row.id === "inferno-of-zamorak")!;
+    const bigBoned = summary.events.filter((event) => event.abilityId === "big-boned");
+    expect(bigBoned).toHaveLength(2);
+    expect(bigBoned.some((event) => event.bonusTargetId === "abyssal-cinders")).toBe(false);
+    expect(attack.bonusDamage).toBeCloseTo(750 + 150, 6);
+    expect(cinders.bonusDamage).toBe(0);
+    expect(inferno.bonusDamage).toBeCloseTo(750 * INFERNO_CHANCE, 6);
   });
 });
 

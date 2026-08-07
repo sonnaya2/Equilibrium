@@ -34,6 +34,7 @@ import {
   clearActiveSolverProfile,
   snapshotProfile,
 } from "./profiling/counters";
+import { playerPoisonModifiersFromSources } from "../model";
 
 /**
  * Production entry: serializable request → real engine evaluations → ranked bars.
@@ -107,6 +108,8 @@ export const solveFromRequest: SolveFn = async (
     context: simBase.context,
     targetHpPercent: simBase.targetHpPercent,
     playerPoison: simBase.playerPoison,
+    playerPoisonModifiers: playerPoisonModifiersFromSources(simBase.modifierSources, league),
+    targetPoisonImmune: simBase.targetPoisonImmune === true,
     cap: simBase.cap,
     modifiers,
   };

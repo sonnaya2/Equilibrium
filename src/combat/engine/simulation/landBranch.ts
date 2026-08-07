@@ -29,12 +29,13 @@ import {
   isTsunamiCritAdrenEligibleLand,
   tsunamiCritChanceFromDamage,
 } from "./tsunamiCritBranch";
+import { applyPoisonLandEffects } from "./poisonLand";
 import {
-  applyEvolvingToxinOnLand,
-  expandCinderbaneContinuation,
-  expandPlayerPoisonOnLand,
-} from "./poisonLandBranch";
-import { isPlayerPoisonEvent, processPlayerPoisonEvent } from "../schedulers/playerPoison";
+  lastPlayerPoisonTick,
+  nextPlayerPoisonEvent,
+  playerPoisonPrecedes,
+  processNextPlayerPoisonEvent,
+} from "../schedulers/playerPoison";
 import { temperedHeartAdrenalineGain } from "../../league/ruleset";
 
 /**
@@ -43,6 +44,13 @@ import { temperedHeartAdrenalineGain } from "../../league/ruleset";
  * Keeps peak below ~maxLive * outcomeFanout without residual-chipping twice.
  */
 export const MAX_LENG_INTERMEDIATE_BRANCHES = MAX_LIVE_BRANCHES * 2;
+
+function nextRuntimeEvent(rt: SimulationRuntime): { tick: number; poison: boolean } | undefined {
+  const event = rt.queue.peek();
+  const poison = nextPlayerPoisonEvent(rt);
+  if (playerPoisonPrecedes(poison, event)) return { tick: poison!.tick, poison: true };
+  return event ? { tick: event.tick, poison: false } : undefined;
+}
 
 function normalizeLengOnBranches(branches: readonly Branch[], atTick: number): boolean {
   let cleared = false;
@@ -249,14 +257,14 @@ function advanceToBranchesInner(
 
   for (;;) {
     const withEvents = live.filter((b) => {
-      const peek = b.rt.queue.peek();
-      return peek != null && peek.tick <= bound;
+      const next = nextRuntimeEvent(b.rt);
+      return next != null && next.tick <= bound;
     });
     if (withEvents.length === 0) break;
 
     let minTick = Infinity;
     for (const b of withEvents) {
-      const t = b.rt.queue.peek()!.tick;
+      const t = nextRuntimeEvent(b.rt)!.tick;
       if (t < minTick) minTick = t;
     }
 
@@ -267,8 +275,8 @@ function advanceToBranchesInner(
     let expandedAny = false;
 
     for (const b of ordered) {
-      const peek = b.rt.queue.peek();
-      if (!peek || peek.tick > bound || peek.tick !== minTick) {
+      const nextEvent = nextRuntimeEvent(b.rt);
+      if (!nextEvent || nextEvent.tick > bound || nextEvent.tick !== minTick) {
         next.push(b);
         if (next.length > intermediateMax) {
           const boundSet = softBound(next, intermediateMax);
@@ -279,17 +287,18 @@ function advanceToBranchesInner(
         continue;
       }
 
-      const event = b.rt.queue.shift()!;
-      if (event.family === "poison" && isPlayerPoisonEvent(event)) {
-        const continuation = processPlayerPoisonEvent(b.rt, event);
-        const expanded = expandCinderbaneContinuation(b, event.tick, continuation);
-        if (expanded.branches.length > 1) expandedAny = true;
-        const folded = foldAfterExpand(next, expanded.branches, maxLive, intermediateMax);
-        residualWeight += folded.residualWeight;
-        exactness = combineExactness(exactness, folded.exactness);
-        next = folded.branches;
+      if (nextEvent.poison) {
+        processNextPlayerPoisonEvent(b.rt, bound);
+        next.push(b);
+        if (next.length > intermediateMax) {
+          const boundSet = softBound(next, intermediateMax);
+          residualWeight += boundSet.residualWeight;
+          exactness = combineExactness(exactness, boundSet.exactness);
+          next = boundSet.branches;
+        }
         continue;
       }
+      const event = b.rt.queue.shift()!;
       if (event.family === "conjureAuto" || event.family === "poison") {
         processSpiritEvent(b.rt, event);
         next.push(b);
@@ -304,9 +313,7 @@ function advanceToBranchesInner(
 
       const resolution = event.resolve(b.rt, event.tick);
       recordResolved(b.rt, event, resolution);
-      if (b.rt.input.playerPoison?.bik) {
-        applyEvolvingToxinOnLand(b.rt, event, resolution.damage);
-      }
+      applyPoisonLandEffects(b.rt, event, resolution.damage);
 
       const ability = b.rt.byId.get(event.abilityId);
       // Failed residual banks still Leng-expand (error preserved): frostblades /
@@ -338,18 +345,6 @@ function advanceToBranchesInner(
         }
       }
       working = afterTsunami;
-
-      if (b.rt.input.playerPoison) {
-        const afterPoison: Branch[] = [];
-        for (const w of working) {
-          const pset = expandPlayerPoisonOnLand(w, event, resolution.damage);
-          residualWeight += pset.residualWeight;
-          exactness = combineExactness(exactness, pset.exactness);
-          if (pset.branches.length > 1) landExpanded = true;
-          afterPoison.push(...pset.branches);
-        }
-        working = afterPoison;
-      }
 
       if (landExpanded) {
         expandedAny = true;
@@ -519,11 +514,17 @@ function drainBranchToEndInner(
     let exactness = live.exactness;
     let needsFinalCap = false;
     for (const b of ordered) {
-      if (b.rt.queue.length === 0) {
+      const poisonTick = lastPlayerPoisonTick(b.rt);
+      if (b.rt.queue.length === 0 && poisonTick < 0) {
         next.push(b);
         continue;
       }
-      const step = advanceToBranches(b, b.rt.queue.maxTick(), maxLive, intermediateMax);
+      const step = advanceToBranches(
+        b,
+        Math.max(b.rt.queue.maxTick(), poisonTick),
+        maxLive,
+        intermediateMax,
+      );
       residualWeight += step.residualWeight;
       exactness = combineExactness(exactness, step.exactness);
       next.push(...step.branches);

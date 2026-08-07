@@ -22,6 +22,8 @@ export interface EffectAnalysisLedger {
   expectedSeparateHits: number;
   /** Probability-weighted attached bonus components (Big Boned, Cinders rider, etc.). */
   expectedAttachedComponents: number;
+  /** Delayed player-poison hits earned by this effect's landed hits. */
+  expectedPlayerPoisonHits: number;
   /**
    * Bonus-damage riders attributed onto this parent effect (how much Big Boned
    * added to its damage). Always 0 on the rider's own row - rider Total is the
@@ -35,6 +37,8 @@ export interface EffectAnalysisLedger {
 export interface RuntimeAnalysisState {
   effects: Map<string, EffectAnalysisLedger>;
   sources: Map<DamageSourceKind, number>;
+  playerPoisonContinuationAttempts: number;
+  playerPoisonContinuationActivations: number;
   directDamage: number;
   dotDamage: number;
   criticalContribution: number;
@@ -59,6 +63,8 @@ export function emptyAnalysisState(): RuntimeAnalysisState {
   return {
     effects: new Map(),
     sources: new Map(),
+    playerPoisonContinuationAttempts: 0,
+    playerPoisonContinuationActivations: 0,
     directDamage: 0,
     dotDamage: 0,
     criticalContribution: 0,
@@ -73,6 +79,8 @@ export function cloneAnalysisState(state: RuntimeAnalysisState): RuntimeAnalysis
   return {
     effects: new Map([...state.effects].map(([id, ledger]) => [id, { ...ledger }])),
     sources: new Map(state.sources),
+    playerPoisonContinuationAttempts: state.playerPoisonContinuationAttempts,
+    playerPoisonContinuationActivations: state.playerPoisonContinuationActivations,
     directDamage: state.directDamage,
     dotDamage: state.dotDamage,
     criticalContribution: state.criticalContribution,
@@ -114,6 +122,10 @@ export function mixAnalysisStates(
         left?.expectedAttachedComponents ?? 0,
         right?.expectedAttachedComponents ?? 0,
       ),
+      expectedPlayerPoisonHits: mix(
+        left?.expectedPlayerPoisonHits ?? 0,
+        right?.expectedPlayerPoisonHits ?? 0,
+      ),
       bonusDamage: mix(left?.bonusDamage ?? 0, right?.bonusDamage ?? 0),
       ...(left?.minimumDamage !== undefined || right?.minimumDamage !== undefined
         ? { minimumDamage: mix(left?.minimumDamage ?? 0, right?.minimumDamage ?? 0) }
@@ -131,6 +143,14 @@ export function mixAnalysisStates(
   return {
     effects,
     sources,
+    playerPoisonContinuationAttempts: mix(
+      a.playerPoisonContinuationAttempts,
+      b.playerPoisonContinuationAttempts,
+    ),
+    playerPoisonContinuationActivations: mix(
+      a.playerPoisonContinuationActivations,
+      b.playerPoisonContinuationActivations,
+    ),
     directDamage: mix(a.directDamage, b.directDamage),
     dotDamage: mix(a.dotDamage, b.dotDamage),
     criticalContribution: mix(a.criticalContribution, b.criticalContribution),

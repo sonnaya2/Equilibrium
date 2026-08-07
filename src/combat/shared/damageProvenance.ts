@@ -5,8 +5,8 @@ import type { BleedId, CombatContext, DamageOverTimeKind, OutgoingDamageSource }
  * Serializable plain object for branch signatures / IPC.
  *
  * wiki: Full Slayer Helmet / Salve apply to player direct attacks only (not DoT, conjure, procs).
- * Big Boned riders follow blessingRider; Cinders follows every independent damage hit.
- * Light and direct-hit gates remain narrower than Cinders.
+ * Big Boned riders follow blessingRider; Cinders follows direct player attack hits only.
+ * Poison, DoT, conjure, proc, reflected, and blessing damage never re-open Cinders.
  * Abyssal Parasite stacks: only player_direct / player_auto (melee+passive gated at land).
  */
 
@@ -63,8 +63,8 @@ export interface DamageCapabilities {
   prayerMods: boolean;
   /** Stack Abyssal Parasite when melee + passive + damage (land-time). Matches directHit by product law. */
   canApplyAbyssalParasite: boolean;
-  canApplyWeaponPoison?: boolean;
-  canApplyEvolvingToxin?: boolean;
+  canApplyWeaponPoison: boolean;
+  canApplyEvolvingToxin: boolean;
 }
 
 const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
@@ -121,7 +121,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: true,
-    cindersOnHit: true,
+    cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -131,6 +131,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     prayerMods: false,
     canApplyAbyssalParasite: false,
     canApplyWeaponPoison: true,
+    canApplyEvolvingToxin: false,
   },
   // Endless Assault converted channel: DoT family for gear, keeps prayer/window mods + crit.
   player_converted_channel: {
@@ -138,7 +139,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: true,
-    cindersOnHit: true,
+    cindersOnHit: false,
     blessingOnHit: false,
     canCrit: true,
     canGenerateResources: false,
@@ -147,13 +148,14 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     prayerMods: true,
     canApplyAbyssalParasite: false,
     canApplyWeaponPoison: true,
+    canApplyEvolvingToxin: false,
   },
   conjure_auto: {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
     blessingRider: true,
-    cindersOnHit: true,
+    cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -161,6 +163,8 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: false,
     prayerMods: false,
     canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: false,
+    canApplyEvolvingToxin: false,
   },
   // DoT-like: riders yes, on-hit rolls no (mirrors player_dot).
   conjure_poison: {
@@ -168,7 +172,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: true,
-    cindersOnHit: true,
+    cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -176,13 +180,15 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: false,
     prayerMods: false,
     canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: false,
+    canApplyEvolvingToxin: false,
   },
   conjure_command: {
     playerAttack: true,
     directHit: false,
     onHitGear: false,
     blessingRider: true,
-    cindersOnHit: true,
+    cindersOnHit: false,
     blessingOnHit: false,
     canCrit: true,
     canGenerateResources: true,
@@ -190,13 +196,15 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: false,
     prayerMods: false,
     canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: false,
+    canApplyEvolvingToxin: false,
   },
   equipment_proc: {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
     blessingRider: false,
-    cindersOnHit: true,
+    cindersOnHit: false,
     blessingOnHit: false,
     canCrit: true,
     canGenerateResources: false,
@@ -205,14 +213,15 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     prayerMods: true,
     canApplyAbyssalParasite: false,
     canApplyWeaponPoison: true,
+    canApplyEvolvingToxin: false,
   },
   invention_proc: {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
-    // Crackling/Aftershock hit splats take Big Boned and Cinders.
+    // Crackling/Aftershock hit splats take Big Boned but are not attack hits.
     blessingRider: true,
-    cindersOnHit: true,
+    cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -221,6 +230,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     prayerMods: false,
     canApplyAbyssalParasite: false,
     canApplyWeaponPoison: true,
+    canApplyEvolvingToxin: false,
   },
   // Parent mods already in list; canTriggerProcs false so attached never inflate proc rolls.
   attached: {
@@ -236,13 +246,15 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     recursiveDamage: false,
     prayerMods: true,
     canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: false,
+    canApplyEvolvingToxin: false,
   },
   blessing: {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
     blessingRider: false,
-    cindersOnHit: true,
+    cindersOnHit: false,
     blessingOnHit: false,
     canCrit: true,
     canGenerateResources: false,
@@ -251,6 +263,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     prayerMods: false,
     canApplyAbyssalParasite: false,
     canApplyWeaponPoison: true,
+    canApplyEvolvingToxin: false,
   },
   // Death Skulls bounce: separate hit counter / blessings; damage not re-modified.
   derived_bounce: {
@@ -267,6 +280,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     prayerMods: false,
     canApplyAbyssalParasite: false,
     canApplyWeaponPoison: true,
+    canApplyEvolvingToxin: false,
   },
   // Bloat-style DoT tail: rider only; no on-hit re-roll.
   derived_tail: {
@@ -274,7 +288,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     directHit: false,
     onHitGear: false,
     blessingRider: true,
-    cindersOnHit: true,
+    cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -283,13 +297,14 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     prayerMods: false,
     canApplyAbyssalParasite: false,
     canApplyWeaponPoison: true,
+    canApplyEvolvingToxin: false,
   },
   reflected: {
     playerAttack: false,
     directHit: false,
     onHitGear: false,
     blessingRider: false,
-    cindersOnHit: true,
+    cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
     canGenerateResources: false,
@@ -298,6 +313,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     prayerMods: false,
     canApplyAbyssalParasite: false,
     canApplyWeaponPoison: true,
+    canApplyEvolvingToxin: false,
   },
 };
 

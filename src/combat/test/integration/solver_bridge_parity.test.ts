@@ -107,16 +107,64 @@ describe("solver bridge: model projection identity", () => {
 
 describe("solver bridge: multi-path evaluation parity", () => {
   const barIds = ["dismember", "assault", "fury", "hurricane"];
-  const durationTicks = 40;
+  const durationTicks = 100;
 
   function loadoutCase(): Loadout {
     return withLoadout({
       style: "melee",
       startingAdrenaline: 100,
-      buffs: { ...DEFAULT_LOADOUT.buffs, strengthCape99: true },
+      buffs: {
+        ...DEFAULT_LOADOUT.buffs,
+        strengthCape99: true,
+        weaponPoison: "weapon-plus-plus-plus",
+        kwuarmPotency: 4,
+      },
       perks: { ...DEFAULT_LOADOUT.perks, precise: 2 },
+      equipmentSlots: { gloves: "item:cinderbane-gloves" },
     });
   }
+
+  it("equipped Cinderbanes materially increase resolved-loadout poison damage", () => {
+    const run = (cinderbane: boolean) => {
+      const loadout = withLoadout({
+        style: "melee",
+        startingAdrenaline: 100,
+        buffs: {
+          ...DEFAULT_LOADOUT.buffs,
+          weaponPoison: "weapon-plus-plus-plus",
+        },
+        ...(cinderbane ? { equipmentSlots: { gloves: "item:cinderbane-gloves" } } : {}),
+      });
+      const model = toResolvedCombatModel(loadout, { now: NOW });
+      const catalogue = resolveAbilityCatalogue();
+      const bar = barIds.map((id) => catalogue.byId.get(id)!).filter(Boolean);
+      return {
+        model,
+        result: simulateRevolution(
+          toRevolutionInput(buildSimulationInputBase(model, catalogue), {
+            bar,
+            style: "melee",
+            durationTicks,
+          }),
+        ),
+      };
+    };
+
+    const without = run(false);
+    const withCinderbanes = run(true);
+    expect(without.model.playerPoison.cinderbane).toBe(false);
+    expect(withCinderbanes.model.playerPoison.cinderbane).toBe(true);
+    expect(withCinderbanes.result.playerPoison!.successfulCinderbaneContinuations).toBeGreaterThan(
+      0,
+    );
+    expect(withCinderbanes.result.playerPoison!.separateHits).toBeGreaterThan(
+      without.result.playerPoison!.separateHits,
+    );
+    expect(withCinderbanes.result.playerPoison!.expectedDamage).toBeGreaterThan(
+      without.result.playerPoison!.expectedDamage * 1.2,
+    );
+    expect(withCinderbanes.result.totalExpected).toBeGreaterThan(without.result.totalExpected);
+  });
 
   it("direct Revolution vs worker-revived Revolution totals match", () => {
     const loadout = loadoutCase();
@@ -149,6 +197,16 @@ describe("solver bridge: multi-path evaluation parity", () => {
     expect(fromWorker.totalExpected).toBeCloseTo(direct.totalExpected, 6);
     expect(fromWorker.ticks).toBe(direct.ticks);
     expect(fromWorker.damageByTick).toEqual(direct.damageByTick);
+    expect(model.playerPoison).toMatchObject({
+      potion: "weapon-plus-plus-plus",
+      kwuarmPotency: 4,
+      cinderbane: true,
+    });
+    expect(direct.playerPoison?.probabilityMass).toBeCloseTo(1, 12);
+    expect(fromWorker.playerPoison?.expectedDamage).toBeCloseTo(
+      direct.playerPoison?.expectedDamage ?? 0,
+      8,
+    );
   });
 
   it("score-only and full-analysis agree on totalExpected for same inputs", () => {

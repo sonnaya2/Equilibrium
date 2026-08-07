@@ -177,6 +177,14 @@ function eventSig<T>(e: ScheduledEvent<T>, seqKey: number, ranks: PendingKeyRank
     US +
     (e.expectedSeparateHits ?? "") +
     US +
+    (e.occurrenceModel?.kind ?? "") +
+    US +
+    (e.occurrenceModel?.kind === "bernoulli"
+      ? e.occurrenceModel.probability
+      : e.occurrenceModel?.kind === "geometric"
+        ? `${e.occurrenceModel.startProbability},${e.occurrenceModel.continuationProbability}`
+        : "") +
+    US +
     (e.damageTag ?? "") +
     US +
     (e.bonusTargetId ?? "") +
@@ -206,6 +214,14 @@ export type EventFamily =
   | "poison"
   /** Player-side meta (heals, buff expire). Resolvers may mutate player state. */
   | "player";
+
+export type StatefulOccurrenceModel =
+  | { readonly kind: "bernoulli"; readonly probability: number }
+  | {
+      readonly kind: "geometric";
+      readonly startProbability: number;
+      readonly continuationProbability: number;
+    };
 
 /** Analysis damage origin. Derived/attached keep parent origin (e.g. Big Boned on bleed stays "dot"). */
 export type DamageOriginKind =
@@ -241,6 +257,8 @@ export interface ScheduledEvent<RT = unknown> {
   expectedActivations?: number;
   /** Expected separate hits represented; 0 when attached. */
   expectedSeparateHits?: number;
+  /** Distribution of EV-packed hit occurrences when later state can observe them. */
+  occurrenceModel?: StatefulOccurrenceModel;
   /** Damage-origin provenance for analysis (direct vs DoT vs proc…). */
   originKind?: DamageOriginKind;
   /** Capability-derived provenance for gear/blessing gates (serializable). */

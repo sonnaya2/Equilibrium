@@ -4,6 +4,7 @@ import { keepsAnalysisLedgers, keepsPerAbilityMap, keepsPresentationHistory } fr
 import type { SimulationRuntime } from "../runtime/runtime";
 import { mergeSupportOffsets } from "./stats";
 import { buildBranchKey } from "./branchKey";
+import { mergeTargetWeaponPoisonHistories, patchTarget } from "../runtime/state";
 
 /**
  * Probability-weighted branch for state-changing RNG (Impatient, Relentless,
@@ -378,6 +379,12 @@ function mergePair(a: Branch, b: Branch): Branch {
     keep.rt.analysis.supportMinOffset = bounds.supportMinOffset;
     keep.rt.analysis.supportMaxOffset = bounds.supportMaxOffset;
   }
+  keep.rt.state = patchTarget(keep.rt.state, {
+    weaponPoison: mergeTargetWeaponPoisonHistories(
+      a.rt.state.target.weaponPoison,
+      b.rt.state.target.weaponPoison,
+    ),
+  });
   keep.weight = weight;
   // Never invent success: if either arm failed, survivor stays failed.
   if (a.error !== undefined || b.error !== undefined) {

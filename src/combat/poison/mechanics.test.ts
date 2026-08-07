@@ -7,6 +7,7 @@ import {
   nextEvolvingToxin,
   normalizeKwuarmPotency,
   playerPoisonDamage,
+  poisonProfileDamageMultiplier,
   poisonTierCoefficient,
   resolvePoisonApplication,
   weaponPoisonDurationTicks,
@@ -20,9 +21,6 @@ const profile = (patch: Partial<PlayerPoisonProfile> = {}): PlayerPoisonProfile 
   cinderbane: false,
   blowpipe: false,
   laniakea: false,
-  bik: false,
-  targetPoisonImmune: false,
-  vulnerability: false,
   ...patch,
 });
 
@@ -39,17 +37,19 @@ describe("player poison mechanics", () => {
       [26, 39, 52],
     ];
     for (let tier = 1; tier <= 5; tier++) {
-      const band = playerPoisonDamage(100, tier as 1 | 2 | 3 | 4 | 5, 0, 1, 1);
+      const band = playerPoisonDamage(100, tier as 1 | 2 | 3 | 4 | 5, 0, 1);
       expect(band.min).toBeCloseTo(expected[tier - 1]![0]!, 10);
       expect(band.expected).toBeCloseTo(expected[tier - 1]![1]!, 10);
       expect(band.max).toBeCloseTo(expected[tier - 1]![2]!, 10);
     }
-    expect(playerPoisonDamage(100, 4, 1, 1, 1)).toEqual({
+    expect(playerPoisonDamage(100, 4, 1, 1)).toEqual({
       min: 22.225,
       expected: 33.3375,
       max: 44.45,
     });
-    const hit18 = playerPoisonDamage(100, 4, 17, 1, 1);
+    const halfDecay = playerPoisonDamage(100, 4, 0.5, 1);
+    expect(halfDecay.expected).toBeCloseTo((34.125 + 33.3375) / 2, 12);
+    const hit18 = playerPoisonDamage(100, 4, 17, 1);
     expect(hit18.min).toBeCloseTo(13.825, 10);
     expect(hit18.expected).toBeCloseTo(20.7375, 10);
     expect(hit18.max).toBeCloseTo(27.65, 10);
@@ -91,6 +91,37 @@ describe("player poison mechanics", () => {
     ).toMatchObject({ procChance: 0.175, sourceDamageMultiplier: 1.05 });
   });
 
+  it("exposes the active poison profile multiplier for other poison damage", () => {
+    expect(poisonProfileDamageMultiplier(profile(), 0)).toBe(1);
+    expect(poisonProfileDamageMultiplier(profile({ cinderbane: true }), 0)).toBe(1.25);
+    expect(
+      poisonProfileDamageMultiplier(
+        profile({ potion: "weapon-plus-plus-plus", potionUntilTick: 1_200 }),
+        0,
+      ),
+    ).toBeCloseTo(1.75, 12);
+    expect(
+      poisonProfileDamageMultiplier(
+        profile({
+          potion: "weapon-plus-plus-plus",
+          potionUntilTick: 1_200,
+          cinderbane: true,
+        }),
+        0,
+      ),
+    ).toBe(2);
+    expect(
+      poisonProfileDamageMultiplier(
+        profile({
+          potion: "weapon-plus-plus-plus",
+          potionUntilTick: 1_200,
+          kwuarmPotency: 4,
+        }),
+        0,
+      ),
+    ).toBeCloseTo(1.925, 12);
+  });
+
   it("honors potion expiry, Kwuarm potency, and poison immunity windows", () => {
     expect(weaponPoisonDurationTicks("weapon")).toBe(250);
     expect(weaponPoisonDurationTicks("weapon-plus")).toBe(500);
@@ -108,11 +139,11 @@ describe("player poison mechanics", () => {
     expect(normalizeKwuarmPotency(-1)).toBe(0);
     expect(normalizeKwuarmPotency(2.5)).toBe(0);
     expect(normalizeKwuarmPotency(5)).toBe(0);
-    const immune = profile({ potion: "weapon", potionUntilTick: 250, targetPoisonImmune: true });
+    const immune = profile({ potion: "weapon", potionUntilTick: 250 });
     expect(resolvePoisonApplication(immune, 0)).not.toBeNull();
-    expect(isTargetPoisonImmune(immune, 0, 0)).toBe(true);
-    expect(isTargetPoisonImmune(immune, 50, 49)).toBe(false);
-    expect(isTargetPoisonImmune(immune, 50, 50)).toBe(true);
+    expect(isTargetPoisonImmune(true, 0, 0)).toBe(true);
+    expect(isTargetPoisonImmune(true, 50, 49)).toBe(false);
+    expect(isTargetPoisonImmune(true, 50, 50)).toBe(true);
   });
 
   it("caps and expires Evolving Toxin at the half-open boundary", () => {

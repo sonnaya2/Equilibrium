@@ -4,7 +4,15 @@ Status: implemented and verified on 2026-08-06
 Research baseline: 2026-08-06
 Scope: player-applied weapon poison, Cinderbane gloves, upgraded bone blowpipe, Laniakea's spear, Kwuarm incense, Bik arrows, poison susceptibility, and Envenomed
 
-This is the implementation record and original design handoff. Production wiring now covers the resolved model, worker identity, exact state-changing branches, analysis UI, all four potion tiers, Envenomed, and target poison immunity. Cinderbane's Wiki-marked unclear 16-tick guarantee remains the only equipment support exclusion.
+This is the implementation record and original design handoff. Production wiring now covers the resolved model, worker identity, an exact target-owned poison probability distribution, analysis UI, all four potion tiers, Envenomed, and target poison immunity. Cinderbane's Wiki-marked unclear 16-tick guarantee remains the only equipment support exclusion.
+
+## 2026-08-06 architecture correction
+
+The committed global branch design proved too expensive for normal rotations. Every application and Cinderbane continuation cloned and keyed the entire runtime, which made poison-heavy rotations slow and allowed branch caps to preferentially discard poison paths. A first compact refactor preserved unit mass but stored only one pending poison hit, so later Hurricane, Assault, and recursive applications overwrote hits already earned. It also treated ordinary active refreshes like Cinderbane reapplications, masking most of Cinderbane's extra-hit benefit.
+
+Player poison now owns a compact conditional distribution under `RotationState.target`. Its atoms contain only poison state, poison-immunity timing, probability, and poison damage support; distinct delayed-hit carriers preserve every earned application hit in shared `(tick, seq)` order. A bounded conditional decay PMF preserves floor-sensitive damage exactly while equivalent poison futures merge locally. Applications, refreshes, decay, and Cinderbane continuations never clone unrelated combat state or consume the global branch budget. Ordinary state-changing RNG continues to use the global branch engine, whose key includes the poison distribution's future state.
+
+Phase D below records the superseded design. The current implementation is `src/combat/engine/simulation/poisonLand.ts` plus `src/combat/engine/schedulers/playerPoison.ts`.
 
 ## Ownership
 
@@ -14,7 +22,7 @@ This is the implementation record and original design handoff. Production wiring
 
 ## Start here in the new chat
 
-1. Read `AGENTS.md` and `.grok/skills/equilibrium-poison/SKILL.md` completely. The skill requires `.grok/skills/equilibrium-poison/references/mechanics.md` as well.
+1. Read `AGENTS.md` and `.agents/skills/equilibrium-poison/SKILL.md` completely. The skill requires `.agents/skills/equilibrium-poison/references/mechanics.md` as well.
 2. Run `git status --short` and `git worktree list --porcelain`. This is a shared `main` checkout and had concurrent edits in `damageProvenance.ts`, `branchKey.ts`, and League combat files when this plan was written. Preserve them.
 3. Recheck the current Jagex combat-modernisation notes, RuneScape Wiki pages, and PVME page listed below before changing mechanics. Current official values outrank stale Wiki calculators or guides.
 4. Implement one phase at a time. Do not expose a UI control as modeled until its value reaches the resolved model, main-thread simulation, worker simulation, identity, and analysis output.
@@ -66,7 +74,7 @@ The potion duration is the player's opportunity to make poison-application rolls
 - A successful application schedules the first poison hit two ticks later.
 - That delayed application hit is hit 1 of the total 18-hit sequence. It is not a nineteenth hit.
 - Standard poison schedules the remaining hits every 16 ticks, or 9.6 seconds. With an application at tick 0, uninterrupted hits land at ticks `2, 18, 34, ..., 274`.
-- Reapplication while poisoned schedules its additional hit two ticks later, renews the 300-tick status, cancels and replaces the pending ordinary poison event, resets the hit budget, and resets the decay index to zero.
+- An ordinary reapplication while poisoned refreshes the 300-tick status and decay without earning another hit. A Cinderbane reapplication earns an additional hit two ticks later and resets the ordinary cadence. Neither path may erase delayed hits already earned by another hitsplat.
 - Standard poison has 18 total hits after each application. Blowpipe poison has 36 over the same status, at an 8-tick cadence.
 - Schedule only the next poison event. Do not enqueue an entire three-minute tail.
 
@@ -110,7 +118,18 @@ Damage-range RNG is damage-only and stays expected-value. Keep min and max for a
 - A Cinderbane poison hit can itself make the continuation roll. This can repeat through further two-tick application hits.
 - For continuation chance `p`, the expected number of extra continuation hits is `p / (1 - p)`: `1/7` at 12.5%, or `7/33` at 17.5%. This is a test oracle only. It cannot replace stateful branching because every success resets timing, hit budget, and decay.
 
-The Wiki's reported guaranteed activation after 16 ticks is marked as needing clarification and does not define the clock anchor, qualifying activity, or reset. Do not implement bad-luck protection until a live fixture resolves those semantics.
+#### Big Boned
+
+- Every landed player-poison hit receives the 5% maximum-life Big Boned component when the blessing is active.
+- The component is attached to that poison occurrence. It is not a separate hit and does not make another poison-application or Cinderbane-continuation roll.
+- Cinderbane continuation successes create additional poison hits, so each successful chain hit receives its own Big Boned component.
+- The flat component uses the poison source multiplier and the same land-time poison modifier pipeline as the base poison damage, including Kwuarm, Evolving Toxin, Vulnerability, Havoc Born, and Envenomed.
+
+#### Abyssal Cinders
+
+- Player poison is status damage and never receives the attached 15% Cinders bonus or rolls Inferno.
+- On a qualifying direct attack, Big Boned and Cinders are independent attached components on the original hit. Big Boned is not added to the Cinders component.
+- Inferno is one separate 5% Bernoulli hit. It may roll weapon poison and host Big Boned, but it does not trigger another Cinders bonus or Inferno roll.
 
 #### Upgraded bone blowpipe
 
@@ -160,12 +179,13 @@ Use this order for a poison hit, without inventing intermediate floors:
 1. Ability damage at the poison land tick.
 2. Effective tier coefficient.
 3. Decaying min, expected, or max factor.
-4. Blowpipe `0.5x` if the applying profile used it.
-5. Laniakea `1.05x` if active on the applying profile.
-6. Kwuarm `1 + 0.025 * potency`.
-7. Target-global poison multipliers at land time: Evolving Toxin and Vulnerability.
+4. Add the flat Big Boned component when active.
+5. Blowpipe `0.5x` if the applying profile used it.
+6. Laniakea `1.05x` if active on the applying profile.
+7. Kwuarm `1 + 0.025 * potency`.
+8. Target-global poison multipliers at land time: Evolving Toxin and Vulnerability.
 
-Do not apply Accuracy or Damage Potential again. Poison does not crit or miss and does not use ordinary prayers, ability windows, hit caps, life steal, resource generation, invention procs, blessing on-hit rolls, or generic recursive damage. Add only a sourced exception.
+Do not apply Accuracy or Damage Potential again. Poison does not crit or miss and does not use ordinary prayers, ability windows, hit caps, life steal, resource generation, invention procs, blessing on-hit rolls, or generic recursive damage. Big Boned is the attached damage exception above; it does not reopen those trigger gates.
 
 ### Source conflicts and open gates
 
@@ -194,11 +214,11 @@ Do not apply Accuracy or Damage Potential again. Poison does not crit or miss an
 | Main/worker payload    | `src/combat/model/simulationInput.ts`, `simulationBase.ts`, `src/components/combat/solverSnapshot.ts`, `src/combat/solver/packRequest.ts`, `identity.ts`, `worker/serializable.ts` | Carry every poison field, include it in canonical identity, and bump `SOLVER_SCHEMA_VERSION`.                                                         |
 | Damage classification  | `src/combat/shared/damageProvenance.ts` and eligibility matrices                                                                                                                   | Add `player_poison`, `canApplyWeaponPoison`, and `canApplyEvolvingToxin`. Keep `conjure_poison` unchanged.                                            |
 | Target state           | `src/combat/engine/runtime/state.ts`                                                                                                                                               | Add target weapon-poison and Evolving Toxin state with inactive constructors.                                                                         |
-| Event queue            | `src/combat/engine/runtime/events.ts`                                                                                                                                              | Reuse `(tick, seq)`, cloning, `cancelBySeq`, and `cancelWhere`. Add player-poison origin/metadata only where analysis needs it.                       |
-| Current poison routing | `runtime/clock.ts` and `simulation/lengLandBranch.ts` route every `family === "poison"` to `processSpiritEvent`                                                                    | Dispatch by provenance. `conjure_poison` goes to the zombie scheduler; `player_poison` goes to the player-poison scheduler.                           |
-| Recurring effects      | `src/combat/engine/schedulers/conjures.ts`                                                                                                                                         | Reuse the one-next-event scheduling pattern, not zombie damage values or spirit identity. Add a separate player-poison scheduler.                     |
-| Stateful land RNG      | `src/combat/engine/simulation/lengLandBranch.ts`, `branchCore.ts`, `branch.ts`                                                                                                     | Add poison success/failure expansion after the parent event is recorded. This is already the branch-aware event clock despite the legacy filename.    |
-| Branch equivalence     | `src/combat/engine/simulation/branchKey.ts`                                                                                                                                        | Include live poison profile/state, pending poison future, and live Bik stacks/expiry. Normalize expired states to inactive.                           |
+| Event queue            | `src/combat/engine/runtime/events.ts`                                                                                                                                              | Reuse `(tick, seq)` for landed events. Poison-local delayed-hit carriers retain their order without adding global queued branches.                    |
+| Current poison routing | `runtime/clock.ts`, `simulation/poisonLand.ts`, and `schedulers/playerPoison.ts`                                                                                                   | `conjure_poison` stays in the zombie scheduler; `player_poison` uses its target-owned distribution and scheduler.                                     |
+| Recurring effects      | `src/combat/engine/schedulers/playerPoison.ts`                                                                                                                                     | Advance ordinary cadence and distinct earned application hits independently; do not reuse zombie identity or damage.                                  |
+| Stateful land RNG      | `src/combat/engine/simulation/poisonLand.ts` and `schedulers/playerPoison.ts`                                                                                                      | Split and merge the poison-only distribution after the common parent hit; never snapshot the whole runtime for poison.                                |
+| Branch equivalence     | poison-local atom keys plus `src/combat/engine/simulation/branchKey.ts`                                                                                                            | Merge equivalent poison futures locally; encode the exact poison distribution only when unrelated global RNG branches need identity.                  |
 | Land-time base AD      | private helpers in `src/combat/engine/resolution/castHit.ts`                                                                                                                       | Extract or expose the existing Naragi-aware base-at-land helper; do not duplicate temporary-level logic.                                              |
 | Accounting and output  | `src/combat/engine/analysis/`, `simulation/summary.ts`, `src/components/combat/RotationAnalysis.tsx`, timeline/source presentation                                                 | Attribute player poison separately and expose weighted applications, hits, damage, current decay, tier, proc chance, Bik stacks, and remaining ticks. |
 
@@ -210,10 +230,10 @@ Loadout buffs + resolved equipment/ammo + target
   -> serializable simulation base + canonical identity
   -> landed eligible event
   -> record parent damage and ordinary landed effects
-  -> exact poison application branch
-  -> target poison state + one queued +2 event
+  -> exact poison-local application split
+  -> target poison state + distinct earned +2 hit carriers
   -> player-poison scheduler resolves expected min/average/max at land
-  -> advance or refresh target state, then optional Cinderbane continuation branch
+  -> advance or refresh target state, then optional poison-local Cinderbane continuation
   -> accounting, source breakdown, event timeline, solver weighted summary
 ```
 
@@ -229,7 +249,7 @@ Loadout buffs + resolved equipment/ammo + target
 - The resolved-model and worker projection tests already enforce main-thread/worker parity.
 - The target UI already has a poison-immunity control.
 
-### Missing pieces
+### Historical missing pieces
 
 - No player-poison source/profile contract.
 - No player-poison provenance or poison/Bik eligibility capabilities.
@@ -241,14 +261,14 @@ Loadout buffs + resolved equipment/ammo + target
 
 ### Highest risks
 
-1. **Branch explosion:** every eligible hit can refresh future state, and Cinderbane poison can continue recursively. Do not flatten this to expected DPS. Exact-merge after every land, use the existing branch budget, and expose residual mass.
-2. **Wrong refresh ordering:** a refresh must replace the pending ordinary hit. Leaving both queued creates duplicate tails and more than 18 or 36 hits per sequence.
+1. **Branch explosion:** every eligible hit can refresh future state, and Cinderbane poison can continue recursively. Keep these transitions exact inside the poison-only distribution; never spend or raise the global branch budget for poison.
+2. **Lost earned hits:** ordinary cadence may reset on a Cinderbane refresh, but every application hit already earned by a hitsplat remains pending. A single `nextHitTick` cannot represent multi-hit or recursive applications.
 3. **Conjure contamination:** routing all `family: poison` events through the zombie handler would corrupt player-poison state and attribution.
 4. **Main/worker drift:** omitting one field from packing or identity can make the solver reuse a result for a different poison setup.
 5. **Same-tick ordering:** multi-hit casts and a poison event can share a tick. Preserve `(tick, seq)` order and test reapplications on the same tick.
 6. **Dynamic versus snapshotted modifiers:** target-global Bik/Vulnerability must resolve at poison land. Source tier, cadence, and gear modifiers belong to the applying profile. Ability-damage snapshot and integer floors remain provisional until fixtures settle them.
 7. **Eligibility overreach:** `procEligible` includes mechanics poison must not inherit. Use dedicated capabilities and an audited matrix.
-8. **Analysis dishonesty:** branch-capped runs must not present a representative timeline as the full probability distribution. Preserve current proof/residual labels.
+8. **Analysis invisibility:** source rows must expose expected poison hits attributed to that source so Cinderbane and multi-hit behavior can be checked without inferring it from total damage.
 9. **Concurrent work:** `damageProvenance.ts` and `branchKey.ts` were already dirty. Re-read their current state before editing and integrate rather than overwrite.
 
 ## 4. Recommended design
@@ -304,9 +324,9 @@ Store under `RotationState.target`:
 ```ts
 interface TargetWeaponPoisonState {
   active: boolean;
-  appliedAtTick: number;
   expiresAtTick: number;
   effectiveTier: PoisonTier;
+  decayMass: number[];
   decayIndex: number;
   remainingHits: number;
   cadenceTicks: 8 | 16;
@@ -314,8 +334,22 @@ interface TargetWeaponPoisonState {
   pendingEventSeq: number;
   sourceDamageMultiplier: number;
   cinderbaneContinuation: boolean;
-  continuationChance: number;
   sourceLabel: string;
+  pendingApplicationHits: TargetWeaponPoisonPendingHit[];
+}
+
+interface TargetWeaponPoisonAtom {
+  id: number;
+  probability: number;
+  poison: TargetWeaponPoisonState;
+  immunityDisabledUntilTick: number;
+  supportMin: number;
+  supportMax: number;
+}
+
+interface TargetWeaponPoisonDistribution {
+  atoms: TargetWeaponPoisonAtom[];
+  nextAtomId: number;
 }
 
 interface EvolvingToxinState {
@@ -331,22 +365,22 @@ Use an inactive constructor rather than optional partially-initialized objects. 
 1. Resolve and record a qualifying parent damage event.
 2. Apply Bik stack state for that landed ability hit when eligible.
 3. Resolve whether an active poison source exists at this tick.
-4. Fork failure/success branches with weights `1 - p` and `p`.
-5. On success, cancel the target state's `pendingEventSeq` if present, replace the target poison state, and queue one `player_weapon_poison` event at `landTick + 2`.
+4. Split failure/success mass inside the target poison distribution with weights `1 - p` and `p`.
+5. An initial success earns one +2-tick hit. An ordinary active success refreshes without an extra hit. A Cinderbane active success earns one +2-tick hit per successful hitsplat; append those carriers without replacing siblings.
 6. The poison event resolves ability-damage range at its land tick, applies source-local and target-global poison multipliers, and records with `family: "poison"`, `provenance.kind: "player_poison"`, and a distinct analysis origin.
 7. On a normal poison continuation, decrement `remainingHits`, increment `decayIndex`, and queue the next event at `landTick + cadenceTicks` while hits remain.
-8. If Cinderbane continuation is active, the landed poison hit also forks on its single continuation chance. The failure branch keeps the ordinary next event; the success branch cancels it, refreshes the state, and queues a new application hit at `landTick + 2`.
+8. If Cinderbane continuation is active, every landed poison hit uses the same single continuation chance. Failure advances decay; success refreshes state and earns another +2-tick hit. Recursive packed hit counts and decay remain exact inside the local distribution.
 
 This order makes the current hit common to both branches and prevents double-recording it.
 
 ### Branching and deterministic behavior
 
 - Keep damage-range RNG as min/expected/max arithmetic.
-- Branch only application and continuation success because they change future timing and state.
-- Add the poison/Bik future to both structural and JSON branch keys, including pending event identity where it affects ordering.
-- Reuse runtime snapshot and queue clone behavior; do not place mutable poison state in module globals or closures.
+- Split only the poison-local distribution for application and continuation success because they change future poison timing and state.
+- Add the poison/Bik future to structural and JSON global branch keys only so unrelated stateful RNG can distinguish its carried target future.
+- Do not snapshot or clone the runtime for poison. Pure lookup caches may be module-local; mutable run state stays under `RotationState.target`.
 - Rename `lengLandBranch.ts` to the generic `landBranch.ts` when adding the poison expansion, provided the file is not concurrently modified. Keep Leng and poison expansion helpers in focused modules rather than growing one poison switchboard.
-- Use the existing `MAX_LIVE_BRANCHES`, merge, cap, exactness, and residual-mass policy. No arbitrary Cinderbane recursion limit is needed because the simulation horizon and branch budget are already finite.
+- Require an explicit finite horizon for Cinderbane recursion. Preserve unit poison mass without global caps or an arbitrary chain limit.
 - Combat scores are probability-weighted and deterministic. Solver seeds control search, not a sampled poison outcome. Identical rotations and inputs must produce identical poison totals across seeds and worker/main execution.
 
 ### Analysis contract
@@ -433,48 +467,51 @@ Work:
 - Implement tier, source, chance, cadence, hit-budget, decay, and multiplier helpers as pure functions.
 - Add inactive target poison and Evolving Toxin state.
 - Add player-poison event provenance and dispatch it separately from `processSpiritEvent`.
-- Implement forced application/refresh scheduling: first hit at +2, one pending event, 18/36 budget, cancel-and-replace refresh.
+- Implement first-hit +2 timing, 18/36 ordinary cadence, ordinary refreshes, and multiple independently earned Cinderbane delayed hits.
 - Resolve poison min/expected/max without crit, accuracy, cap, prayer, resources, invention, or generic riders.
 
 Checks before stopping:
 
 - all numeric fixtures in this document
 - tick lists `2..274` for standard and `2..282` for blowpipe
-- refresh cancellation and decay reset
+- ordinary refresh versus Cinderbane extra-hit behavior, sibling delayed-hit preservation, and decay reset
 - poison immunity creates no target state or queued event
-- Putrid Zombie behavior and tests remain unchanged
+- Putrid Zombie keeps its separate poison scheduler and never rolls weapon poison. Its own poison band receives the active weapon-poison tier, Cinderbane, Kwuarm, Laniakea/blowpipe, Evolving Toxin, and target poison modifiers.
 
-### Phase D: exact application and Cinderbane branching
+### Phase D: exact compact poison distribution
 
-Goal: connect eligible landed hits to state-changing probability branches.
+Goal: connect eligible landed hits to stateful poison probability without cloning unrelated combat state.
 
 Likely files:
 
 - `src/combat/shared/damageProvenance.ts` and eligibility matrix tests
 - mechanical rename `src/combat/engine/simulation/lengLandBranch.ts` to `landBranch.ts`
-- new focused `src/combat/engine/simulation/poisonLandBranch.ts`
-- `src/combat/engine/simulation/branchKey.ts`, `branchCore.ts` only if an existing helper is insufficient
-- branch, manual, Revolution, score-only, and residual-exactness tests
+- `src/combat/engine/simulation/poisonLand.ts`
+- `src/combat/engine/schedulers/playerPoison.ts`
+- `src/combat/engine/simulation/branchKey.ts` for global RNG futures that contain poison state
+- manual, Revolution, score-only, worker, identity, and probability-mass tests
 
 Work:
 
 - Add explicit poison and Bik eligibility capabilities.
-- Expand a qualifying landed hit into fail/success branches after recording the common parent hit.
+- Split and merge only the target-owned poison atoms after recording the common parent hit.
 - Apply one 12.5% or 17.5% roll per qualifying hit.
-- Add Cinderbane continuation branching after a player-poison hit, with the ordinary next event retained only on failure.
-- Include every live poison future in branch equivalence and normalize expiry.
-- Merge after every land and use the existing cap/residual disclosure.
+- Split Cinderbane continuations after every player-poison hit, earning one delayed hit per success and preserving exact recursive multiplicity.
+- Represent EV-packed Bernoulli and recursive geometric hits explicitly when poison observes them.
+- Normalize expired poison and immunity clocks before atom and global branch identity.
+- Keep poison mass independent from global branch caps and residual disclosure.
 
 Checks before stopping:
 
-- branch weights for 12.5% and 17.5%
+- unit poison mass for 12.5% and 17.5%
 - Cinderbane continuation oracle approaches `1/7` and `7/33` over a long enough fixed horizon
 - no second parallel Cinderbane roll with a potion
+- zero poison-caused runtime snapshots and branch-key builds on a normal 60-second bar
 - multi-hit per-hit application attempts
 - same-tick `(tick, seq)` determinism
-- branch clone isolation and exact merging
+- zero poison-caused runtime clones plus exact poison-local merging
 - long-rotation `concreteMass + residualWeight` conservation
-- main/manual/Revolution parity
+- fixed-window manual/Revolution parity
 
 ### Phase E: equipment, consumable, and target integrations
 
@@ -529,7 +566,7 @@ Work:
 
 - Add weapon-poison selection and Kwuarm potency `0-4` in Buffs.
 - Keep the existing poison-immunity checkbox and wire its resolved value.
-- Show engine-produced source, effective tier, poison proc chance, damage band, applications, separate hits, decay, remaining duration, Bik stacks, and support/residual status.
+- Show engine-produced source, effective tier, poison proc chance, damage band, applications, separate hits, decay, remaining duration, Bik stacks, and support status. Show each source's attributed expected poison hits beside that source.
 - Keep player poison distinct from Putrid Zombie poison in per-source totals and timeline labels.
 - Hide poison analysis when no source is active; do not print fake zeroes.
 
@@ -539,7 +576,7 @@ Checks before stopping:
 - component tests for potency and source selection
 - model-to-visible-output integration test
 - main-thread and worker results match for the same visible setup
-- focused browser QA after reading `.claude/skills/playwright-e2e/SKILL.md`
+- focused browser QA after reading `.agents/skills/playwright-e2e/SKILL.md`
 
 ### Phase H: full verification and performance gate
 
@@ -572,10 +609,10 @@ Stop only when poison-off behavior is unchanged and every supported poison path 
 - Application at tick 0 lands poison at tick 2.
 - Standard sequence has exactly 18 hits through tick 274.
 - Blowpipe sequence has exactly 36 hits through tick 282.
-- Refresh before the pending hit cancels and replaces it.
+- Ordinary refresh before a pending hit preserves that earned hit but adds no second hit.
 - Refresh after decay resets hit index to zero and renews 300 ticks.
 - Potion expiry prevents new potion applications without deleting an existing target status.
-- Cinderbane continuation lands at two-tick steps and does not leave the ordinary cadence event behind on success.
+- Cinderbane reapplications and self-continuations land at two-tick steps, preserve sibling delayed hits, and reset ordinary cadence on success.
 - Same-tick multi-hit ordering is stable by `seq`.
 
 ### Eligibility tests
@@ -583,18 +620,19 @@ Stop only when poison-off behavior is unchanged and every supported poison path 
 - One roll for each supported independent player hit.
 - No extra roll for attached damage.
 - Player poison can roll only the Cinderbane continuation path.
-- Putrid Zombie passive poison never applies Cinderbane poison.
-- Conjure, invention, and blessing-generated damage remain ineligible unless a sourced exception is added.
+- Putrid Zombie passive poison never applies Cinderbane poison; Cinderbane and other poison modifiers may still increase the zombie's existing poison damage.
+- Familiar attacks/scrolls, conjure autos/commands, Putrid Zombie pulses, Blood Reaver passive damage, and attached blessing riders remain ineligible.
+- Separate player-attributed blessing hits are eligible through provenance without blessing-ID special cases.
 - Bik qualifies each supported ability hit but not removed legacy autos.
 
 ### Branch and solver tests
 
-- Exact branch weights for base and Laniakea chance.
+- Exact poison-local weights for base and Laniakea chance.
 - Cinderbane geometric expectation as a bounded-horizon oracle.
-- Runtime snapshots isolate target poison, queue, counters, and Bik state.
+- Poison creates zero runtime snapshots; existing non-poison runtime snapshots still isolate target poison, counters, and Bik state.
 - Structural and JSON keys partition all different live futures identically.
 - Expired poison/Bik states merge with clean inactive states.
-- Low branch caps disclose residual mass and conserve total probability.
+- A one-branch global cap still retains unit poison mass with zero residual weight.
 - Score-only and full-analysis totals agree within existing parity tolerances.
 - Solver seed changes search only, not the score of a fixed rotation.
 - Main-thread, packed worker, checkpoint, and canonical identity distinguish every poison input.
@@ -602,8 +640,9 @@ Stop only when poison-off behavior is unchanged and every supported poison path 
 ### Accounting and UI tests
 
 - Player poison has its own source and does not merge into Putrid Zombie.
-- Applications, expected successes, separate hits, and damage totals reconcile under branch weights.
+- Applications, expected successes, separate hits, and damage totals reconcile under poison-local weights.
 - Damage band and timeline ticks match engine events.
+- Each source row exposes its attributed expected poison hits, including Cinderbane continuations on the poison row.
 - Buff controls persist `none`, `weapon`, `weapon+`, `weapon++`, `weapon+++`, and Kwuarm `0-4` safely.
 - Poison immunity suppresses modeled output rather than showing misleading damage.
 - The UI says `poison proc chance`; Accuracy and Damage Potential labels remain unchanged.
@@ -632,14 +671,8 @@ npm run data:show -- --id item:bik-arrows
 npm run audit:data
 ```
 
-Run the repository's current lint, format, build, and browser commands after inspecting their definitions. Before every Playwright command, read `.claude/skills/playwright-e2e/SKILL.md`; report a flaky or hung harness honestly.
+Run the repository's current lint, format, build, and browser commands after inspecting their definitions. Before every Playwright command, read `.agents/skills/playwright-e2e/SKILL.md`; report a flaky or hung harness honestly.
 
-## 8. Codex implementation handoff prompt
+## 8. Current maintenance rule
 
-```text
-Continue this goal by implementing player-applied poison in C:\Users\Sonnaya\Rs3Equilibrium using docs/player-applied-poison-implementation-plan.md and the equilibrium-poison skill. Sol owns design review; you, Codex, own every implementation change and verification step. Read AGENTS.md, .grok/skills/equilibrium-poison/SKILL.md, and its mechanics reference completely first. Work directly on the existing shared main checkout, inspect and preserve all concurrent changes, and do not create a branch or PR unless I ask.
-
-Implement the phases in order, using the current event-driven target-state, provenance, queue, exact branch, resolved-model, worker, identity, analysis, and loadout architecture. Do not use flat expected DPS, parallel potion/Cinderbane rolls, React-side calculations, item-ID switchboards, arbitrary recursion caps, or Putrid Zombie state. The +2-tick application hit is hit 1 of 18; blowpipe uses 36 hits at 8-tick cadence and half damage; Kwuarm is 2.5% per selected potency 0-4; current Bik is 150 stacks at +3% each with 50-tick full expiry.
-
-Keep the Cinderbane 16-tick guarantee, integer floor order, and ambiguous Bik hit classes explicitly provisional until the plan's live-fixture gates are satisfied. Verify each phase with its focused tests, then run the full affected gates and report exact files, results, residual-mass behavior, and any unresolved support labels.
-```
+Use the target-owned poison distribution and explicit provenance capability for future poison work. Do not restore `poisonLandBranch.ts`, add a second spreadsheet-style damage path, convert Cinderbane recursion to a flat damage scalar, or make branch caps responsible for poison accuracy. Any new trigger source needs a source-backed `canApplyWeaponPoison` decision, source-attribution coverage, a normal 60-second integration fixture, worker/full-score parity, and a zero-global-poison-branch performance assertion.

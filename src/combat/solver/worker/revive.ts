@@ -4,6 +4,7 @@ import type { CombatModifier } from "../../types";
 import type { ResolvedLeagueRules } from "../../league/ruleset";
 import {
   modifiersFromSources,
+  playerPoisonModifiersFromSources,
   reviveLeague as reviveLeagueFromModel,
   serializeLeague as serializeLeagueFromModel,
 } from "../../model";
@@ -73,6 +74,8 @@ export function reviveRevolutionBase(sim: SerializableRevolutionSimBase): Revive
     conjureDurationMult: sim.conjureDurationMult,
     targetHpPercent: sim.targetHpPercent,
     playerPoison: sim.playerPoison,
+    playerPoisonModifiers: playerPoisonModifiersFromSources(sim.modifierSources, league),
+    targetPoisonImmune: sim.targetPoisonImmune === true,
     // ponytail: naturalInstinctUntilTick / startingResidualSouls / slayerOnTask / slayerLevel
     // affect scores in-engine but are not on SerializableRevolutionSimBase yet.
   };

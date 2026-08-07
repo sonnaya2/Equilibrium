@@ -131,7 +131,12 @@ export interface HostCombatResolveInput {
   readonly amZiFlatDamage?: number;
   readonly amHejDamageBonus?: number;
   readonly slayer?: { demon: number; dragon: number; undead: number };
-  readonly target?: { demon?: boolean; dragon?: boolean; undead?: boolean };
+  readonly target?: {
+    demon?: boolean;
+    dragon?: boolean;
+    undead?: boolean;
+    poisonImmune?: boolean;
+  };
   readonly playerPoison?: PlayerPoisonProfile;
   readonly slayerHelmet?: SerializableModifierSources["slayerHelmet"];
   readonly salve?: SerializableModifierSources["salve"];

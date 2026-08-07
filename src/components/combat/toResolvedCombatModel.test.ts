@@ -344,7 +344,7 @@ describe("toResolvedCombatModel", () => {
     expect(fromSnap).toEqual(fromModel);
   });
 
-  it("resolves equipment, consumable, Bik, vulnerability, and immunity into one poison profile", () => {
+  it("keeps poison sources separate from canonical ammo, modifier, and target inputs", () => {
     const loadout = withLoadout({
       buffs: {
         ...DEFAULT_LOADOUT.buffs,
@@ -368,13 +368,16 @@ describe("toResolvedCombatModel", () => {
       cinderbane: true,
       blowpipe: false,
       laniakea: true,
-      bik: true,
-      targetPoisonImmune: true,
-      vulnerability: true,
     });
+    expect(model.ammo).toBe("bik");
+    expect(model.modifierSources.vulnerability).toBe(true);
     expect(model.target.poisonImmune).toBe(true);
     expect(model.league.herbloreLevel).toBe(120);
-    expect(projectSerializableSimBase(model).playerPoison).toEqual(model.playerPoison);
+    expect(projectSerializableSimBase(model)).toMatchObject({
+      ammo: "bik",
+      playerPoison: model.playerPoison,
+      targetPoisonImmune: true,
+    });
 
     const blowpipe = toResolvedCombatModel(
       withLoadout({

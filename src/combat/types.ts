@@ -48,6 +48,8 @@ export interface CombatModifier {
   id: string;
   stage: ModifierStage;
   priority: number;
+  /** Explicitly sourced target/global modifier for player-applied poison. */
+  appliesToPlayerPoison?: boolean;
   applies(context: CombatContext): boolean;
   apply(state: DamageState, context: CombatContext): DamageState;
   source: SourceReference;

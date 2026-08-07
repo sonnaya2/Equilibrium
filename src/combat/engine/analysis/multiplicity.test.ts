@@ -4,7 +4,12 @@ import { rotationOf } from "../simulation/contracts";
 import { MELEE_ABILITIES } from "../../styles/melee/abilities";
 import { baseInput, rangedInput } from "../../test/fixtures/inputs";
 import { resolveLeagueRules } from "../../league/ruleset";
-import { resolveEventMultiplicity } from "./multiplicity";
+import {
+  expectedStatefulOccurrences,
+  resolveEventMultiplicity,
+  statefulOccurrenceProbability,
+  statefulProcSuccessProbability,
+} from "./multiplicity";
 import type { ScheduledEvent } from "../runtime/events";
 
 /** Minimal event shell for pure multiplicity resolution. */
@@ -65,12 +70,12 @@ describe("resolveEventMultiplicity defaults", () => {
     });
   });
 
-  it("maps a recursive 5% Inferno chain to its geometric multiplicity", () => {
+  it("maps a generic recursive proc to its geometric multiplicity", () => {
     expect(
       resolveEventMultiplicity(
         event({
           family: "blessing",
-          abilityId: "inferno-of-zamorak",
+          abilityId: "recursive-proc",
           expectedOccurrences: 0.05 / 0.95,
           expectedTriggerRolls: 1 / 0.95,
           expectedActivations: 0.05 / 0.95,
@@ -92,6 +97,24 @@ describe("resolveEventMultiplicity defaults", () => {
       expectedSeparateHits: 0.05,
       expectedAttachedComponents: 0,
     });
+  });
+});
+
+describe("stateful occurrence models", () => {
+  it("preserves exact event and proc probabilities for a recursive geometric hit", () => {
+    const recursiveProc = event({
+      occurrenceModel: {
+        kind: "geometric",
+        startProbability: 0.05,
+        continuationProbability: 0.05,
+      },
+    });
+    expect(expectedStatefulOccurrences(recursiveProc)).toBeCloseTo(0.05 / 0.95, 12);
+    expect(statefulOccurrenceProbability(recursiveProc)).toBe(0.05);
+    expect(statefulProcSuccessProbability(recursiveProc, 0.125)).toBeCloseTo(
+      (0.05 * 0.125) / (1 - 0.05 * 0.875),
+      12,
+    );
   });
 });
 
@@ -162,7 +185,7 @@ describe("scheduled hit multiplicity and origin provenance", () => {
     expect(gr?.bonusDamage).toBeGreaterThan(0);
   });
 
-  it("Cinders on GR packs recursive riders and Inferno hits", () => {
+  it("Cinders on GR keeps attached riders and Bernoulli Inferno hits distinct", () => {
     const summary = simulate({
       ...rangedInput,
       league: cinders(),
@@ -179,27 +202,31 @@ describe("scheduled hit multiplicity and origin provenance", () => {
     let separateHits = 0;
     for (const inferno of infernos) {
       expect(inferno.attached).toBe(false);
-      expect(inferno.expectedTriggerRolls).toBeCloseTo(1 / 0.95, 10);
-      expect(inferno.expectedActivations).toBeCloseTo(0.05 / 0.95, 10);
-      expect(inferno.expectedSeparateHits).toBeCloseTo(0.05 / 0.95, 10);
+      expect(inferno.expectedTriggerRolls).toBe(1);
+      expect(inferno.expectedActivations).toBeCloseTo(0.05, 10);
+      expect(inferno.expectedSeparateHits).toBeCloseTo(0.05, 10);
+      expect(inferno.occurrenceModel).toEqual({
+        kind: "bernoulli",
+        probability: 0.05,
+      });
       expect(inferno.originKind).toBe("blessing");
       const mult = resolveEventMultiplicity(inferno);
       expectedTriggerRolls += mult.expectedTriggerRolls;
       activations += mult.expectedActivations;
       separateHits += mult.expectedSeparateHits;
     }
-    expect(expectedTriggerRolls).toBeCloseTo(7 / 0.95, 10);
-    expect(activations).toBeCloseTo((7 * 0.05) / 0.95, 10);
-    expect(separateHits).toBeCloseTo((7 * 0.05) / 0.95, 10);
+    expect(expectedTriggerRolls).toBe(7);
+    expect(activations).toBeCloseTo(7 * 0.05, 10);
+    expect(separateHits).toBeCloseTo(7 * 0.05, 10);
 
     const infernoSeqs = new Set(infernos.map((e) => e.seq));
     for (const rider of riders) {
       expect(rider.attached).toBe(true);
       expect(rider.damageTag).toBe("bonus-damage");
       expect(resolveEventMultiplicity(rider)).toMatchObject({
-        expectedActivations: 1 / 0.95,
+        expectedActivations: 1,
         expectedSeparateHits: 0,
-        expectedAttachedComponents: 1 / 0.95,
+        expectedAttachedComponents: 1,
       });
       expect(infernoSeqs.has(rider.derivedFrom ?? -1)).toBe(false);
     }

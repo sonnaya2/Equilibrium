@@ -4,9 +4,14 @@ import { spiritPoisonPending } from "../../styles/necromancy/conjures";
 import { endBerserk } from "../../styles/melee/bloodlust";
 import { expirePrimordialIce } from "../../styles/melee/primordialIce";
 import { activePuncture } from "../../styles/ranged/puncture";
-import { mapEventRefForKey, pendingKeyRanks, type PendingKeyRanks } from "../runtime/events";
+import {
+  mapEventRefForKey,
+  pendingKeyRanks,
+  type PendingKeyRanks,
+  type ScheduledEvent,
+} from "../runtime/events";
 import type { SimulationRuntime, SpiritEventMeta } from "../runtime/runtime";
-import type { RotationState } from "../runtime/state";
+import type { RotationState, TargetWeaponPoisonDistribution } from "../runtime/state";
 import { liveDerivedSourceSeqs } from "../resolution/hitDetailsRetention";
 
 /**
@@ -182,7 +187,117 @@ function encodeConjure(c: ActiveConjure, tick: number): string {
   }
 }
 
-function encodeState(state: RotationState, ranks: PendingKeyRanks): string {
+function poisonStateLive(
+  poison: TargetWeaponPoisonDistribution["atoms"][number]["poison"],
+  tick: number,
+): boolean {
+  return (poison.active && tick < poison.expiresAtTick) || poison.pendingApplicationHits.length > 0;
+}
+
+function encodePendingPoisonHits(
+  poison: TargetWeaponPoisonDistribution["atoms"][number]["poison"],
+  pending: readonly ScheduledEvent<SimulationRuntime>[],
+): string {
+  return poison.pendingApplicationHits
+    .map((hit) => {
+      const multiplicity = hit.multiplicity;
+      const model =
+        multiplicity.kind === "positive-binomial"
+          ? `b:${n(multiplicity.trials)}:${n(multiplicity.probability)}`
+          : multiplicity.kind === "positive-geometric"
+            ? `g:${n(multiplicity.continuationProbability)}`
+            : "s";
+      return `${n(hit.tick)}:${n(poisonPendingOrder(pending, hit.tick, hit.seq))}:${model}`;
+    })
+    .join(",");
+}
+
+function encodeWeaponPoison(
+  distribution: TargetWeaponPoisonDistribution,
+  tick: number,
+  pending: readonly ScheduledEvent<SimulationRuntime>[],
+): string {
+  let out = String(distribution.atoms.length);
+  for (const atom of distribution.atoms) {
+    const poison = atom.poison;
+    out += FS + n(atom.probability) + US + n(halfOpenUntil(atom.immunityDisabledUntilTick, tick));
+    if (!poisonStateLive(poison, tick)) {
+      out += US + "0";
+      continue;
+    }
+    out +=
+      US +
+      "1" +
+      US +
+      n(poison.expiresAtTick) +
+      US +
+      n(poison.effectiveTier) +
+      US +
+      poison.decayMass.map(n).join(",") +
+      US +
+      n(poison.remainingHits) +
+      US +
+      n(poison.cadenceTicks) +
+      US +
+      n(poison.nextHitTick) +
+      US +
+      n(poisonPendingOrder(pending, poison.nextHitTick, poison.pendingEventSeq)) +
+      US +
+      n(poison.sourceDamageMultiplier) +
+      US +
+      b(poison.cinderbaneContinuation) +
+      US +
+      s(poison.sourceLabel) +
+      US +
+      encodePendingPoisonHits(poison, pending);
+  }
+  return out;
+}
+
+function weaponPoisonJson(
+  distribution: TargetWeaponPoisonDistribution,
+  tick: number,
+  pending: readonly ScheduledEvent<SimulationRuntime>[],
+) {
+  return distribution.atoms.map((atom) => ({
+    probability: atom.probability,
+    immunityDisabledUntilTick: halfOpenUntil(atom.immunityDisabledUntilTick, tick),
+    poison: poisonStateLive(atom.poison, tick)
+      ? {
+          ...atom.poison,
+          decayIndex: undefined,
+          pendingEventSeq: poisonPendingOrder(
+            pending,
+            atom.poison.nextHitTick,
+            atom.poison.pendingEventSeq,
+          ),
+          pendingApplicationHits: atom.poison.pendingApplicationHits.map((hit) => ({
+            ...hit,
+            seq: poisonPendingOrder(pending, hit.tick, hit.seq),
+          })),
+        }
+      : { active: false },
+  }));
+}
+
+function poisonPendingOrder(
+  pending: readonly ScheduledEvent<SimulationRuntime>[],
+  tick: number,
+  seq: number,
+): number {
+  let order = 0;
+  for (const event of pending) {
+    if (event.tick > tick) break;
+    if (event.tick === tick && event.seq < seq) order++;
+  }
+  return order;
+}
+
+function encodeState(
+  state: RotationState,
+  ranks: PendingKeyRanks,
+  pending: readonly ScheduledEvent<SimulationRuntime>[],
+): string {
   const inv = state.invention;
   const m = state.melee;
   const r = state.ranged;
@@ -336,13 +451,8 @@ function encodeState(state: RotationState, ranks: PendingKeyRanks): string {
   // Expired Haunted ≡ newHaunted() (zero until and cap).
   const hauntedUntil =
     t.haunted.untilTick > 0 && t.haunted.untilTick <= tick ? 0 : t.haunted.untilTick;
-  const poisonLive =
-    t.weaponPoison.active &&
-    tick < t.weaponPoison.expiresAtTick &&
-    t.weaponPoison.remainingHits > 0;
   const toxinStacks =
     tick < t.evolvingToxin.expiresAtTick ? Math.max(0, t.evolvingToxin.stacks) : 0;
-  const poisonImmunityDisabledUntil = halfOpenUntil(t.poisonImmunityDisabledUntilTick, tick);
   parts.push(
     // target
     n(t.lastAttackTick),
@@ -360,27 +470,8 @@ function encodeState(state: RotationState, ranks: PendingKeyRanks): string {
     n(targetErUntil),
     n(hauntedUntil),
     n(hauntedUntil === 0 ? 0 : t.haunted.capAbilityDamage),
-    n(poisonImmunityDisabledUntil),
+    encodeWeaponPoison(t.weaponPoison, tick, pending),
   );
-  if (poisonLive) {
-    parts.push(
-      "1",
-      n(t.weaponPoison.appliedAtTick),
-      n(t.weaponPoison.expiresAtTick),
-      n(t.weaponPoison.effectiveTier),
-      n(t.weaponPoison.decayIndex),
-      n(t.weaponPoison.remainingHits),
-      n(t.weaponPoison.cadenceTicks),
-      n(t.weaponPoison.nextHitTick),
-      n(mapEventRefForKey(t.weaponPoison.pendingEventSeq, ranks)),
-      n(t.weaponPoison.sourceDamageMultiplier),
-      b(t.weaponPoison.cinderbaneContinuation),
-      n(t.weaponPoison.continuationChance),
-      s(t.weaponPoison.sourceLabel),
-    );
-  } else {
-    parts.push("0");
-  }
   parts.push(toxinStacks > 0 ? "1" : "0");
   if (toxinStacks > 0) {
     parts.push(n(toxinStacks), n(t.evolvingToxin.expiresAtTick));
@@ -503,6 +594,8 @@ function encodeSpiritHits(map: ReadonlyMap<string, number>): string {
 /** Historical JSON key (debug / oracle). Expensive - not the hot path. */
 export function branchKeyJson(rt: SimulationRuntime): string {
   const tick = rt.state.tick;
+  const pending = rt.queue.pending();
+  const ranks = pendingKeyRanks(pending);
   const hauntedUntil =
     rt.state.target.haunted.untilTick > 0 && rt.state.target.haunted.untilTick <= tick
       ? 0
@@ -601,10 +694,6 @@ export function branchKeyJson(rt: SimulationRuntime): string {
     },
     target: {
       ...rt.state.target,
-      poisonImmunityDisabledUntilTick: halfOpenUntil(
-        rt.state.target.poisonImmunityDisabledUntilTick,
-        tick,
-      ),
       burns: {
         active: liveClocksForKey(rt.state.target.burns.active as Record<string, number>, tick),
       },
@@ -620,32 +709,7 @@ export function branchKeyJson(rt: SimulationRuntime): string {
         untilTick: hauntedUntil,
         capAbilityDamage: hauntedUntil === 0 ? 0 : rt.state.target.haunted.capAbilityDamage,
       },
-      weaponPoison:
-        rt.state.target.weaponPoison.active &&
-        tick < rt.state.target.weaponPoison.expiresAtTick &&
-        rt.state.target.weaponPoison.remainingHits > 0
-          ? {
-              ...rt.state.target.weaponPoison,
-              pendingEventSeq: mapEventRefForKey(
-                rt.state.target.weaponPoison.pendingEventSeq,
-                pendingKeyRanks(rt.queue.pending()),
-              ),
-            }
-          : {
-              active: false,
-              appliedAtTick: -1,
-              expiresAtTick: 0,
-              effectiveTier: 1,
-              decayIndex: 0,
-              remainingHits: 0,
-              cadenceTicks: 16,
-              nextHitTick: 0,
-              pendingEventSeq: -1,
-              sourceDamageMultiplier: 1,
-              cinderbaneContinuation: false,
-              continuationChance: 0,
-              sourceLabel: "",
-            },
+      weaponPoison: weaponPoisonJson(rt.state.target.weaponPoison, tick, pending),
       evolvingToxin:
         tick < rt.state.target.evolvingToxin.expiresAtTick &&
         rt.state.target.evolvingToxin.stacks > 0
@@ -654,7 +718,6 @@ export function branchKeyJson(rt: SimulationRuntime): string {
     },
   };
   // Natural completion keeps endTick distinct; fixed-window duration is request-owned.
-  const ranks = pendingKeyRanks(rt.queue.pending());
   return JSON.stringify([
     stateForKey,
     rt.queue.signature(),
@@ -670,9 +733,10 @@ export function branchKeyJson(rt: SimulationRuntime): string {
 
 /** Compact structural key used by merge. */
 export function branchKeyStructural(rt: SimulationRuntime): string {
-  const ranks = pendingKeyRanks(rt.queue.pending());
+  const pending = rt.queue.pending();
+  const ranks = pendingKeyRanks(pending);
   return (
-    encodeState(rt.state, ranks) +
+    encodeState(rt.state, ranks, pending) +
     RS +
     rt.queue.signature() +
     RS +

@@ -8,6 +8,13 @@ export interface MultiplicityFields {
   expectedTriggerRolls?: number;
   expectedActivations?: number;
   expectedSeparateHits?: number;
+  occurrenceModel?:
+    | { readonly kind: "bernoulli"; readonly probability: number }
+    | {
+        readonly kind: "geometric";
+        readonly startProbability: number;
+        readonly continuationProbability: number;
+      };
 }
 
 /**
@@ -68,4 +75,54 @@ export function resolveEventMultiplicity(event: MultiplicityFields): ResolvedMul
     expectedSeparateHits: 1,
     expectedAttachedComponents: 0,
   };
+}
+
+function unitProbability(value: number, label: string): number {
+  if (!Number.isFinite(value) || value < 0 || value > 1) {
+    throw new RangeError(`${label} outside 0-1: ${value}`);
+  }
+  return value;
+}
+
+export function expectedStatefulOccurrences(event: MultiplicityFields): number {
+  const model = event.occurrenceModel;
+  if (model?.kind === "bernoulli") return unitProbability(model.probability, "probability");
+  if (model?.kind === "geometric") {
+    const start = unitProbability(model.startProbability, "startProbability");
+    const continuation = unitProbability(model.continuationProbability, "continuationProbability");
+    if (continuation >= 1) throw new RangeError("geometric continuationProbability must be < 1");
+    return start / (1 - continuation);
+  }
+  return resolveEventMultiplicity(event).expectedActivations;
+}
+
+export function statefulOccurrenceProbability(event: MultiplicityFields): number {
+  const model = event.occurrenceModel;
+  if (model?.kind === "bernoulli") return unitProbability(model.probability, "probability");
+  if (model?.kind === "geometric") {
+    return unitProbability(model.startProbability, "startProbability");
+  }
+  const count = expectedStatefulOccurrences(event);
+  if (count >= 1) return 1;
+  return unitProbability(count, "expectedActivations");
+}
+
+export function statefulProcSuccessProbability(
+  event: MultiplicityFields,
+  chancePerOccurrence: number,
+): number {
+  const chance = unitProbability(chancePerOccurrence, "chancePerOccurrence");
+  const model = event.occurrenceModel;
+  if (model?.kind === "geometric") {
+    const start = unitProbability(model.startProbability, "startProbability");
+    const continuation = unitProbability(model.continuationProbability, "continuationProbability");
+    if (continuation >= 1) throw new RangeError("geometric continuationProbability must be < 1");
+    return (start * chance) / (1 - continuation * (1 - chance));
+  }
+  const count = expectedStatefulOccurrences(event);
+  if (model?.kind === "bernoulli" || count < 1) return count * chance;
+  if (!Number.isInteger(count)) {
+    throw new RangeError(`stateful event requires an occurrence model for count ${count}`);
+  }
+  return 1 - (1 - chance) ** count;
 }

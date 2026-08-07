@@ -69,8 +69,8 @@ test("manual rotation casts Death's Swiftness with CoE + FotS at 100 start adren
 
   await page.getByRole("button", { name: "Run", exact: true }).click();
 
-  // Success: Natural DPS metrics and DS row in the cast table.
-  await expect(page.getByText("Natural DPS", { exact: true })).toBeVisible({ timeout: 15_000 });
+  // Success: fixed-window DPS metrics and DS row in the cast table.
+  await expect(page.getByText("Fixed-window DPS", { exact: true })).toBeVisible({ timeout: 15_000 });
   const dsRow = page
     .locator("tbody tr")
     .filter({ hasText: /Death's Swiftness/i })

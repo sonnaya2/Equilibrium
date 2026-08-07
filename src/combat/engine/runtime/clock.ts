@@ -4,7 +4,12 @@ import { processSpiritEvent } from "../schedulers/conjures";
 import { recordResolved } from "../resolution";
 import { gainAdrenaline, patchMelee } from "./state";
 import type { SimulationRuntime } from "./runtime";
-import { isPlayerPoisonEvent, processPlayerPoisonEvent } from "../schedulers/playerPoison";
+import {
+  nextPlayerPoisonEvent,
+  playerPoisonPrecedes,
+  processNextPlayerPoisonEvent,
+} from "../schedulers/playerPoison";
+import { applyPoisonLandEffects } from "../simulation/poisonLand";
 import { temperedHeartAdrenalineGain } from "../../league/ruleset";
 
 /**
@@ -17,12 +22,14 @@ import { temperedHeartAdrenalineGain } from "../../league/ruleset";
 function processDueEvents(rt: SimulationRuntime, bound: number): void {
   for (;;) {
     const event = rt.queue.peek();
-    if (!event || event.tick > bound) return;
-    rt.queue.shift();
-    if (event.family === "poison" && isPlayerPoisonEvent(event)) {
-      processPlayerPoisonEvent(rt, event);
+    const poison = nextPlayerPoisonEvent(rt);
+    if (playerPoisonPrecedes(poison, event)) {
+      if (!poison || poison.tick > bound) return;
+      processNextPlayerPoisonEvent(rt, bound);
       continue;
     }
+    if (!event || event.tick > bound) return;
+    rt.queue.shift();
     if (event.family === "conjureAuto" || event.family === "poison") {
       processSpiritEvent(rt, event);
       continue;
@@ -34,7 +41,9 @@ function processDueEvents(rt: SimulationRuntime, bound: number): void {
       recordResolved(rt, event, resolution);
       continue;
     }
-    recordResolved(rt, event, event.resolve(rt, event.tick));
+    const resolution = event.resolve(rt, event.tick);
+    recordResolved(rt, event, resolution);
+    applyPoisonLandEffects(rt, event, resolution.damage);
   }
 }
 

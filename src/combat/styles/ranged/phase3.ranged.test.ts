@@ -681,8 +681,10 @@ describe("ammo packing Manual / Revolution / identity", () => {
     const cleared = toManualSimulateInput(base, {
       rotation: rotationOf("ranged_attack"),
       ammo: null,
+      horizonTicks: 100,
     });
     expect(cleared.ammo).toBeUndefined();
+    expect(cleared.horizonTicks).toBe(100);
 
     const override = toManualSimulateInput(base, {
       rotation: rotationOf("ranged_attack"),

@@ -22,6 +22,7 @@ import { CURRENT_BAR_REMAINS_BEST_NOTE, type SolverResultDTO } from "./worker/se
 import type { SerializableSolverRequest } from "./worker/serializable";
 import { isSerializableSimBase } from "./worker/serializable";
 import { reviveLeague, reviveModifiers } from "./worker/revive";
+import { playerPoisonModifiersFromSources } from "../model";
 
 export type HostIncumbentBaseline = {
   /** Normalized user bar (order preserved; only illegal ids dropped). */
@@ -92,6 +93,8 @@ export function evaluateHostIncumbentBaseline(
     context: simBase.context,
     targetHpPercent: simBase.targetHpPercent,
     playerPoison: simBase.playerPoison,
+    playerPoisonModifiers: playerPoisonModifiersFromSources(simBase.modifierSources, league),
+    targetPoisonImmune: simBase.targetPoisonImmune === true,
     cap: simBase.cap,
     modifiers,
   };

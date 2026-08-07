@@ -59,7 +59,9 @@ certificates/
 /.claude/
 /skills/
 /.mcp.json
-/.agents/
+/.agents/*
+!/.agents/skills/
+!/.agents/skills/**
 /.grok/
 /.kimi-code/
 /.codex/

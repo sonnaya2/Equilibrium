@@ -26,6 +26,7 @@ import type {
   TailMetrics,
 } from "./contracts";
 import {
+  PLAYER_POISON_SUPPORT_NOTE,
   CINDERBANE_SUPPORT_NOTE,
   PLAYER_POISON_EFFECT_ID,
   resolvePoisonApplication,
@@ -39,6 +40,11 @@ import {
 } from "./contracts";
 import { advanceTo } from "../runtime/clock";
 import type { SimulationRuntime } from "../runtime/runtime";
+import {
+  lastPlayerPoisonTick,
+  modalTargetWeaponPoison,
+  playerPoisonProbabilityMass,
+} from "../schedulers/playerPoison";
 import { TICK_SECONDS } from "../../core/ticks";
 import {
   finiteOrZero,
@@ -85,12 +91,14 @@ function buildPlayerPoisonAnalysis(
   const source = resolvePoisonApplication(rt.input.playerPoison, 0);
   if (!source) return undefined;
   const row = analysis.byEffect.find((effect) => effect.id === PLAYER_POISON_EFFECT_ID);
-  const poison = rt.state.target.weaponPoison;
+  const distribution = rt.state.target.weaponPoison;
+  const atom = modalTargetWeaponPoison(distribution);
+  const poison = atom.poison;
   const toxin = rt.state.target.evolvingToxin;
   const poisonLive = poison.active && rt.state.tick < poison.expiresAtTick;
   const toxinLive = rt.state.tick < toxin.expiresAtTick;
   if (
-    rt.input.playerPoison?.targetPoisonImmune === true &&
+    rt.input.targetPoisonImmune === true &&
     !hasBlessing(rt.input.league, "envenomed") &&
     !poisonLive &&
     !row
@@ -105,17 +113,21 @@ function buildPlayerPoisonAnalysis(
     applicationAttempts: row?.expectedTriggerRolls ?? 0,
     successfulApplications: row?.expectedActivations ?? 0,
     separateHits: row?.expectedSeparateHits ?? 0,
-    minimumDamage: row?.minimumDamage ?? 0,
-    expectedDamage: row?.totalDamage ?? 0,
-    maximumDamage: row?.maximumDamage ?? 0,
+    cinderbaneContinuationChance: cinderbane ? source.continuationChance : 0,
+    cinderbaneContinuationAttempts: rt.analysis.playerPoisonContinuationAttempts,
+    successfulCinderbaneContinuations: rt.analysis.playerPoisonContinuationActivations,
+    minimumDamage: (row?.minimumDamage ?? 0) + (row?.bonusDamage ?? 0),
+    expectedDamage: (row?.totalDamage ?? 0) + (row?.bonusDamage ?? 0),
+    maximumDamage: (row?.maximumDamage ?? 0) + (row?.bonusDamage ?? 0),
     decayIndex: poisonLive ? poison.decayIndex : 0,
     remainingTargetPoisonTicks: poisonLive ? Math.max(0, poison.expiresAtTick - rt.state.tick) : 0,
     bikStacks: toxinLive ? toxin.stacks : 0,
     bikRemainingTicks: toxinLive ? toxin.expiresAtTick - rt.state.tick : 0,
-    probabilityMass: 1,
-    residualMass: 0,
-    supportStatus: cinderbane ? "partially-modeled" : "modeled",
-    ...(cinderbane ? { supportNote: CINDERBANE_SUPPORT_NOTE } : {}),
+    probabilityMass: playerPoisonProbabilityMass(distribution),
+    supportStatus: "partially-modeled",
+    supportNote: cinderbane
+      ? `${PLAYER_POISON_SUPPORT_NOTE} ${CINDERBANE_SUPPORT_NOTE}`
+      : PLAYER_POISON_SUPPORT_NOTE,
   };
 }
 
@@ -190,7 +202,11 @@ export function finish(
     advanceTo(rt, effectiveHorizon - 1);
     if (rt.state.tick < effectiveHorizon) rt.state = { ...rt.state, tick: effectiveHorizon };
   } else {
-    while (rt.queue.length > 0) advanceTo(rt, rt.queue.maxTick());
+    for (;;) {
+      const poisonTick = lastPlayerPoisonTick(rt);
+      if (rt.queue.length === 0 && poisonTick < 0) break;
+      advanceTo(rt, Math.max(rt.queue.maxTick(), poisonTick));
+    }
   }
 
   const pathTicks = rt.endTick;
@@ -212,7 +228,11 @@ export function finish(
       horizon: undefined,
       finalized: false,
     });
-    while (preview.queue.length > 0) advanceTo(preview, preview.queue.maxTick());
+    for (;;) {
+      const poisonTick = lastPlayerPoisonTick(preview);
+      if (preview.queue.length === 0 && poisonTick < 0) break;
+      advanceTo(preview, Math.max(preview.queue.maxTick(), poisonTick));
+    }
     const totalIncludingTails = finiteOrZero(preview.totalExpected);
     tails = {
       inWindowExpectedDamage: expectedDamage,
@@ -552,6 +572,7 @@ export function combineBranchSummaries(
     | "expectedActivations"
     | "expectedSeparateHits"
     | "expectedAttachedComponents"
+    | "expectedPlayerPoisonHits"
     | "bonusDamage"
     | "directDamage"
     | "dotDamage"
@@ -602,6 +623,7 @@ export function combineBranchSummaries(
               expectedActivations,
               expectedSeparateHits: value("expectedSeparateHits"),
               expectedAttachedComponents: value("expectedAttachedComponents"),
+              expectedPlayerPoisonHits: value("expectedPlayerPoisonHits"),
               bonusDamage: value("bonusDamage"),
               // Per-activation stays on conditional scale (mass does not change hit size).
               averagePerActivation:
@@ -731,11 +753,10 @@ export function combineBranchSummaries(
           applicationAttempts: poisonRow?.expectedTriggerRolls ?? 0,
           successfulApplications: poisonRow?.expectedActivations ?? 0,
           separateHits: poisonRow?.expectedSeparateHits ?? 0,
-          minimumDamage: poisonRow?.minimumDamage ?? 0,
-          expectedDamage: poisonRow?.totalDamage ?? 0,
-          maximumDamage: poisonRow?.maximumDamage ?? 0,
-          probabilityMass: rawMass,
-          residualMass: safeResidual,
+          minimumDamage: (poisonRow?.minimumDamage ?? 0) + (poisonRow?.bonusDamage ?? 0),
+          expectedDamage: (poisonRow?.totalDamage ?? 0) + (poisonRow?.bonusDamage ?? 0),
+          maximumDamage: (poisonRow?.maximumDamage ?? 0) + (poisonRow?.bonusDamage ?? 0),
+          probabilityMass: modal.playerPoison.probabilityMass,
         }
       : undefined;
 

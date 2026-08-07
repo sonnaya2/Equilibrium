@@ -99,6 +99,15 @@ export function buildGlobalModifiersFromSources(
   return global;
 }
 
+export function playerPoisonModifiersFromSources(
+  sources: ResolvedModifierSources,
+  league: ResolvedLeagueRules,
+): CombatModifier[] {
+  return buildGlobalModifiersFromSources(sources, league).filter(
+    (modifier) => modifier.appliesToPlayerPoison === true,
+  );
+}
+
 /**
  * Rebuild the cast-modifier factory used by simulate / simulateRevolution / worker.
  * Uses the historical reviveModifiers factories without React.

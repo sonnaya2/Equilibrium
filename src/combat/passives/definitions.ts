@@ -339,7 +339,7 @@ export const PASSIVE_DEFINITIONS: readonly PassiveDefinition[] = [
     effects: [
       "Acts as weapon poison+ when no other poison is active.",
       "Raises another poison source by one tier and lets poison hits refresh poison.",
-      "The rare guaranteed activation after 16 ticks is excluded because the Wiki marks its start point and conditions unclear.",
+      "Each successful poison-hit refresh deals another delayed hit that can roll the same 1/8 continuation again.",
     ],
     source: PASSIVE_SOURCE.cinderbanePoison,
   },
@@ -359,7 +359,7 @@ export const PASSIVE_DEFINITIONS: readonly PassiveDefinition[] = [
     support: "modeled",
     duplicatePolicy: "collapse",
     lifecycle: ["loadout-static", "landed-hit"],
-    implementationOwners: ["poison/mechanics.ts", "engine/simulation/poisonLandBranch.ts"],
+    implementationOwners: ["poison/mechanics.ts", "engine/simulation/poisonLand.ts"],
     effects: ["Adds 5 percentage points to poison proc chance and 5% poison damage."],
     source: PASSIVE_SOURCE.laniakeaPoison,
   },

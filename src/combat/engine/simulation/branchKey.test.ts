@@ -1153,13 +1153,30 @@ describe("branchKey structural vs JSON partitions", () => {
     const expired = snapshotRuntime(base);
     const clean = snapshotRuntime(base);
     live.state = { ...live.state, tick: 10 };
-    live.state = patchTarget(live.state, { poisonImmunityDisabledUntilTick: 50 });
+    live.state = patchTarget(live.state, {
+      weaponPoison: {
+        ...live.state.target.weaponPoison,
+        atoms: live.state.target.weaponPoison.atoms.map((atom) => ({
+          ...atom,
+          immunityDisabledUntilTick: 50,
+        })),
+      },
+    });
     expired.state = { ...expired.state, tick: 50 };
-    expired.state = patchTarget(expired.state, { poisonImmunityDisabledUntilTick: 50 });
+    expired.state = patchTarget(expired.state, {
+      weaponPoison: {
+        ...expired.state.target.weaponPoison,
+        atoms: expired.state.target.weaponPoison.atoms.map((atom) => ({
+          ...atom,
+          immunityDisabledUntilTick: 50,
+        })),
+      },
+    });
     clean.state = { ...clean.state, tick: 50 };
 
     expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
     expect(branchKeyJson(live)).not.toBe(branchKeyJson(clean));
+
     expect(branchKeyStructural(expired)).toBe(branchKeyStructural(clean));
     expect(branchKeyJson(expired)).toBe(branchKeyJson(clean));
   });
@@ -1490,24 +1507,59 @@ describe("branchKey structural vs JSON partitions", () => {
     const live = snapshotRuntime(clean);
     live.state = patchTarget(live.state, {
       weaponPoison: {
-        active: true,
-        appliedAtTick: 0,
-        expiresAtTick: 300,
-        effectiveTier: 2,
-        decayIndex: 3,
-        remainingHits: 15,
-        cadenceTicks: 16,
-        nextHitTick: 50,
-        pendingEventSeq: -1,
-        sourceDamageMultiplier: 1,
-        cinderbaneContinuation: true,
-        continuationChance: 0.125,
-        sourceLabel: "Cinderbane (tier 2)",
+        ...live.state.target.weaponPoison,
+        atoms: live.state.target.weaponPoison.atoms.map((atom) => ({
+          ...atom,
+          poison: {
+            active: true,
+            expiresAtTick: 300,
+            effectiveTier: 2,
+            decayMass: Array.from({ length: 45 }, (_, index) => (index === 3 ? 1 : 0)),
+            decayIndex: 3,
+            remainingHits: 15,
+            cadenceTicks: 16,
+            nextHitTick: 50,
+            pendingEventSeq: -1,
+            sourceDamageMultiplier: 1,
+            cinderbaneContinuation: true,
+            sourceLabel: "Cinderbane (tier 2)",
+            pendingApplicationHits: [],
+          },
+        })),
       },
       evolvingToxin: { stacks: 20, expiresAtTick: 50 },
     });
     expect(branchKeyStructural(live)).not.toBe(branchKeyStructural(clean));
     expect(branchKeyJson(live)).not.toBe(branchKeyJson(clean));
+
+    const differentDecay = snapshotRuntime(live);
+    differentDecay.state.target.weaponPoison.atoms[0]!.poison.decayMass = Array.from(
+      { length: 45 },
+      (_, index) => (index === 4 ? 1 : 0),
+    );
+    expect(branchKeyStructural(differentDecay)).not.toBe(branchKeyStructural(live));
+    expect(branchKeyJson(differentDecay)).not.toBe(branchKeyJson(live));
+
+    const derivedMeanOnly = snapshotRuntime(live);
+    derivedMeanOnly.state.target.weaponPoison.atoms[0]!.poison.decayIndex = 99;
+    expect(branchKeyStructural(derivedMeanOnly)).toBe(branchKeyStructural(live));
+    expect(branchKeyJson(derivedMeanOnly)).toBe(branchKeyJson(live));
+
+    const renumbered = snapshotRuntime(live);
+    renumbered.state = patchTarget(renumbered.state, {
+      weaponPoison: {
+        atoms: renumbered.state.target.weaponPoison.atoms.map((atom) => ({ ...atom, id: 99 })),
+        nextAtomId: 100,
+      },
+    });
+    expect(branchKeyStructural(renumbered)).toBe(branchKeyStructural(live));
+    expect(branchKeyJson(renumbered)).toBe(branchKeyJson(live));
+    expect(
+      mergeBranches([
+        { weight: 0.5, rt: live },
+        { weight: 0.5, rt: renumbered },
+      ]),
+    ).toHaveLength(1);
 
     const expired = snapshotRuntime(live);
     expired.state = { ...expired.state, tick: 300 };

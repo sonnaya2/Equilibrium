@@ -90,7 +90,7 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
       demon: input.target?.demon,
       dragon: input.target?.dragon,
       undead: input.target?.undead,
-      poisonImmune: poison.targetPoisonImmune === true,
+      poisonImmune: input.target?.poisonImmune === true,
     },
     playerPoison: {
       potion: normalizeWeaponPoisonChoice(poison.potion),
@@ -102,9 +102,6 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
       cinderbane: poison.cinderbane === true,
       blowpipe: poison.blowpipe === true,
       laniakea: poison.laniakea === true,
-      bik: poison.bik === true,
-      targetPoisonImmune: poison.targetPoisonImmune === true,
-      vulnerability: poison.vulnerability === true,
     },
     league: {
       ruleset: input.league.ruleset,

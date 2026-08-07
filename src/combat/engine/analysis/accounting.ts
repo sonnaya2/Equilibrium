@@ -46,8 +46,20 @@ function emptyLedger(id: string, kind: DamageSourceKind): EffectAnalysisLedger {
     expectedActivations: 0,
     expectedSeparateHits: 0,
     expectedAttachedComponents: 0,
+    expectedPlayerPoisonHits: 0,
     bonusDamage: 0,
   };
+}
+
+export function accountPlayerPoisonHits(
+  analysis: RuntimeAnalysisState,
+  event: ScheduledEvent<SimulationRuntime>,
+  expectedHits: number,
+): void {
+  if (!(expectedHits > 0)) return;
+  const ledger = analysis.effects.get(event.abilityId);
+  if (!ledger) return;
+  ledger.expectedPlayerPoisonHits += expectedHits;
 }
 
 /** Parent ability that a bonus-damage rider attached to (already in the event log). */

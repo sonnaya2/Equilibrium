@@ -3,6 +3,8 @@ import {
   budgetForLiveCap,
   DEFAULT_BRANCH_FIDELITY_LADDERS,
   UI_RUN_BRANCH_FIDELITY_LADDER,
+  UI_RUN_INITIAL_LIVE_BRANCH_CAP,
+  UI_RUN_MAX_LIVE_BRANCH_CAP,
   meetsBranchCompleteness,
   resolveBranchFidelityLadder,
   simulateWithAdaptiveBranchFidelity,
@@ -314,10 +316,18 @@ describe("simulateWithAdaptiveBranchFidelity", () => {
 });
 
 describe("UI_RUN_BRANCH_FIDELITY_LADDER", () => {
-  it("starts above default maxLive 64 and escalates", () => {
+  it("scales from 128 to the temporary 4096 ceiling", () => {
     expect(MAX_LIVE_BRANCHES).toBe(64);
-    expect(UI_RUN_BRANCH_FIDELITY_LADDER.liveCaps[0]).toBeGreaterThan(64);
-    expect(UI_RUN_BRANCH_FIDELITY_LADDER.liveCaps).toEqual([128, 256, 512, 1024]);
+    expect(UI_RUN_INITIAL_LIVE_BRANCH_CAP).toBe(128);
+    expect(UI_RUN_MAX_LIVE_BRANCH_CAP).toBe(4096);
+    expect(UI_RUN_BRANCH_FIDELITY_LADDER.liveCaps).toEqual([
+      128, 256, 512, 1024, 2048, 4096,
+    ]);
+    expect(budgetForLiveCap(UI_RUN_MAX_LIVE_BRANCH_CAP, 1e-12)).toEqual({
+      maxLiveBranches: 4096,
+      maxIntermediateBranches: 8192,
+      maximumResidualWeight: 1e-12,
+    });
     expect(UI_RUN_BRANCH_FIDELITY_LADDER.mode).toBe("medium");
     expect(UI_RUN_BRANCH_FIDELITY_LADDER.exactness).toBe("any");
     expect(UI_RUN_BRANCH_FIDELITY_LADDER.maximumResidualWeight).toBe(1e-12);

@@ -236,14 +236,13 @@ export function branchFidelityLadderMemoToken(ladder: BranchFidelityLadder): str
   return `bfL=${ladder.mode}:caps=${ladder.liveCaps.join(",")}:r${ladder.maximumResidualWeight}:x${ladder.exactness}`;
 }
 
-/**
- * Interactive UI Run: escalate live caps; stop early when residual-free.
- * Starts above default MAX_LIVE_BRANCHES (64); exactness any so UI can show
- * known-mass under residual with honest notes (no ranking launder).
- */
+export const UI_RUN_INITIAL_LIVE_BRANCH_CAP = 128;
+export const UI_RUN_MAX_LIVE_BRANCH_CAP = 4096;
+
+/** Interactive UI Run branch budget. */
 export const UI_RUN_BRANCH_FIDELITY_LADDER: BranchFidelityLadder = {
   mode: "medium",
-  liveCaps: [128, 256, 512, 1024],
+  liveCaps: [128, 256, 512, 1024, 2048, UI_RUN_MAX_LIVE_BRANCH_CAP],
   maximumResidualWeight: 1e-12,
   exactness: "any",
 };

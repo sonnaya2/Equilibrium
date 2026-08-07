@@ -3,7 +3,11 @@
  * Isolated from Optimize pool cancel/dispose.
  */
 import type { AdaptiveBranchFidelityResult } from "../branchFidelity";
-import { UI_RUN_BRANCH_FIDELITY_LADDER } from "../branchFidelity";
+import {
+  UI_RUN_BRANCH_FIDELITY_LADDER,
+  UI_RUN_INITIAL_LIVE_BRANCH_CAP,
+  UI_RUN_MAX_LIVE_BRANCH_CAP,
+} from "../branchFidelity";
 import {
   preferredUiRunWorkerCount,
   simulateRevolutionForUiHybrid,
@@ -41,7 +45,6 @@ export type UiRunHostOptions = {
 };
 
 let nextRequestId = 1;
-const UI_RUN_INITIAL_FULL_BUDGET_MS = 1_500;
 
 function allocId(): number {
   const id = nextRequestId;
@@ -246,11 +249,9 @@ export async function runUiRevolution(
     durationTicks: request.durationTicks,
   };
 
-  const firstLive = caps[0] ?? 128;
+  const firstLive = caps[0] ?? UI_RUN_INITIAL_LIVE_BRANCH_CAP;
   options?.onProgress?.({ phase: "full", done: 0, total: 1, maxLiveBranches: firstLive });
-  const firstStarted = performance.now();
   const firstFull = await runFullOnSlot(pool[0]!, base, firstLive, options?.isCancelled);
-  const firstElapsed = performance.now() - firstStarted;
   options?.onProgress?.({
     phase: "full",
     done: 1,
@@ -261,7 +262,6 @@ export async function runUiRevolution(
   if (
     !firstFull.summary.ok ||
     firstFull.meta.complete ||
-    firstElapsed >= UI_RUN_INITIAL_FULL_BUDGET_MS ||
     caps.length === 1
   ) {
     return firstFull;
@@ -312,7 +312,7 @@ export async function runUiRevolution(
   throwIfCancelled(options?.isCancelled);
 
   const bestLive = pickBestUiRunProbe(filled)?.maxLiveBranches;
-  const live = bestLive ?? caps[caps.length - 1] ?? 128;
+  const live = bestLive ?? caps[caps.length - 1] ?? UI_RUN_MAX_LIVE_BRANCH_CAP;
 
   if (live === firstLive) {
     return {

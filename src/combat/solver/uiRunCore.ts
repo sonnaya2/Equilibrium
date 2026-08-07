@@ -7,6 +7,8 @@ import { simulateRevolution } from "../engine/simulation/revolution";
 import type { RotationSummary, SimulateOptions } from "../engine/simulation/simulate";
 import {
   UI_RUN_BRANCH_FIDELITY_LADDER,
+  UI_RUN_INITIAL_LIVE_BRANCH_CAP,
+  UI_RUN_MAX_LIVE_BRANCH_CAP,
   RESIDUAL_FREE_TOLERANCE,
   budgetForLiveCap,
   meetsBranchCompleteness,
@@ -152,7 +154,7 @@ export function simulateRevolutionForUiHybrid(
   ladder: BranchFidelityLadder = UI_RUN_BRANCH_FIDELITY_LADDER,
 ): AdaptiveBranchFidelityResult {
   let attempts = 0;
-  let chosenLive = ladder.liveCaps[0] ?? 128;
+  let chosenLive = ladder.liveCaps[0] ?? UI_RUN_INITIAL_LIVE_BRANCH_CAP;
 
   for (let i = 0; i < ladder.liveCaps.length; i++) {
     const live = ladder.liveCaps[i]!;
@@ -186,7 +188,10 @@ export function finishUiRunFromProbes(
   options?: SimulateOptions,
 ): AdaptiveBranchFidelityResult {
   const best = pickBestUiRunProbe(probes);
-  const live = best?.maxLiveBranches ?? ladder.liveCaps[ladder.liveCaps.length - 1] ?? 128;
+  const live =
+    best?.maxLiveBranches ??
+    ladder.liveCaps[ladder.liveCaps.length - 1] ??
+    UI_RUN_MAX_LIVE_BRANCH_CAP;
   const full = simulateUiRunFullAnalysis(input, live, ladder, options);
   return {
     summary: full.summary,

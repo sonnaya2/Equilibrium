@@ -1,0 +1,520 @@
+/*
+ * Combat visual layer: keep the production Equilibrium workbench layout and
+ * interaction model, but shift its material language toward the darker
+ * ClankerScape reference. Scoped to /combat via .combat-screen so no other
+ * route inherits the palette or frame treatment.
+ */
+
+body:has(.combat-screen) {
+  --combat-void: #050b0c;
+  --combat-shell: #071011;
+  --combat-panel: #091415;
+  --combat-raised: #0d1b1c;
+  --combat-inset: #061011;
+  --combat-gold-bright: #d2b26a;
+  --combat-gold: #a0824d;
+  --combat-gold-mid: #665332;
+  --combat-gold-dim: #332c21;
+  --combat-text: #e5dfd0;
+  --combat-muted: #8f9890;
+  --combat-gem: #4d9d94;
+  --combat-gem-bright: #6dbbb1;
+  --combat-gem-dark: #1b514b;
+
+  background-color: var(--combat-void);
+  background-image:
+    linear-gradient(rgb(210 178 106 / 2.5%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(210 178 106 / 1.8%) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Global chrome while the combat route is mounted. The structure remains the
+   real Equilibrium shell; only its material treatment changes. */
+body:has(.combat-screen) .site-head {
+  min-height: 3.15rem;
+  border-top: 1px solid #6f5a32;
+  border-bottom-color: #665332;
+  background: #070c0c;
+  box-shadow:
+    inset 0 1px 0 rgb(210 178 106 / 16%),
+    inset 0 -1px 0 rgb(0 0 0 / 75%);
+}
+
+body:has(.combat-screen) .site-brand {
+  color: var(--combat-gold-bright);
+  text-shadow: 0 1px 0 #000;
+}
+
+body:has(.combat-screen) .site-nav__btn {
+  color: #c9c4b7;
+}
+
+body:has(.combat-screen) .site-nav__btn:hover {
+  background: #0b1718;
+  color: var(--combat-gold-bright);
+}
+
+body:has(.combat-screen) .site-nav__btn.is-active {
+  border-bottom-color: var(--combat-gem-bright);
+  background: #0a1717;
+  color: var(--combat-gem-bright);
+  box-shadow: inset 0 -1px 0 rgb(109 187 177 / 28%);
+}
+
+body:has(.combat-screen) .site-source {
+  border-color: #4d432d;
+  background: #071011;
+  color: #a99d84;
+}
+
+body:has(.combat-screen) .site-source:hover,
+body:has(.combat-screen) .site-source:focus-visible {
+  border-color: var(--combat-gold-bright);
+  color: var(--combat-gold-bright);
+}
+
+.combat-screen {
+  background: #050b0c;
+}
+
+/* Top workbench strip — same geometry as the attachment, with a darker teal
+   black shell and brass framing. */
+.combat-toolbar {
+  position: relative;
+  margin: 0.72rem 0.85rem 0;
+  min-height: 3.45rem;
+  border-color: var(--combat-gold-mid);
+  background: var(--combat-shell);
+  box-shadow:
+    inset 0 0 0 1px #020606,
+    inset 0 0 0 4px rgb(102 83 50 / 8%),
+    inset 0 1px 0 rgb(210 178 106 / 15%);
+}
+
+.combat-toolbar::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border: 1px solid rgb(160 130 77 / 18%);
+  pointer-events: none;
+}
+
+.combat-toolbar > :not(.combat-frame-corners) {
+  position: relative;
+  z-index: 2;
+}
+
+.combat-toolbar__title {
+  min-width: 9.25rem;
+  border-right-color: var(--combat-gold-mid);
+  background: #081213;
+  color: var(--combat-gold-bright);
+  font-size: 0.82rem;
+  letter-spacing: 0.09em;
+}
+
+.combat-toolbar > .ui-seg .ui-seg__btn {
+  min-width: 6.9rem;
+  border-right-color: #332c21;
+  color: #d8d1c1;
+}
+
+.combat-toolbar > .ui-seg .ui-seg__btn:hover {
+  background: #0b1718;
+  color: var(--combat-gold-bright);
+}
+
+.combat-toolbar > .ui-seg .ui-seg__btn.is-active {
+  border-bottom-color: var(--combat-gem-bright);
+  background: #0b1a1a;
+  box-shadow:
+    inset 0 -3px 0 rgb(77 157 148 / 18%),
+    inset 0 1px 0 rgb(109 187 177 / 12%);
+  color: var(--combat-gem-bright);
+}
+
+.combat-tab-stage {
+  padding-top: 0.18rem;
+}
+
+/* Frame language: less brown/fantasy texture, more dark editorial stone with
+   the existing React corner brackets as the ornament. */
+.combat-frame {
+  border-color: var(--combat-gold-mid);
+  background: var(--combat-panel);
+  box-shadow:
+    inset 0 0 0 1px #020606,
+    inset 0 0 0 4px rgb(102 83 50 / 7%),
+    inset 0 1px 0 rgb(210 178 106 / 12%),
+    0 2px 5px rgb(0 0 0 / 36%);
+}
+
+.combat-frame::before {
+  border-color: rgb(160 130 77 / 18%);
+}
+
+.combat-frame-corner::before,
+.combat-frame-corner::after {
+  background: var(--combat-gold-bright);
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 58%);
+}
+
+.combat-section-title,
+.combat-page-title,
+.quick-table th,
+.summary-section h4 {
+  color: var(--combat-gold-bright);
+  text-shadow: 0 1px 0 rgb(0 0 0 / 85%);
+}
+
+/* Narrow rail: preserve the exact left-nav layout in the attachment, but make
+   the active section read like a selected RuneScape interface tab. */
+.setup-nav {
+  background: #071011;
+}
+
+.setup-nav-button {
+  border-color: #4a3f2b;
+  background: #081112;
+  box-shadow: inset 0 1px 0 rgb(210 178 106 / 7%);
+  color: #c9c2b2;
+}
+
+.setup-nav-button:hover:not(:disabled) {
+  border-color: var(--combat-gold-mid);
+  background: #0b1718;
+  color: var(--combat-gold-bright);
+}
+
+.setup-nav-button[aria-pressed="true"] {
+  border-color: var(--combat-gem);
+  background: #0b2522;
+  box-shadow:
+    inset 3px 0 0 var(--combat-gem-bright),
+    inset 0 1px 0 rgb(109 187 177 / 18%),
+    inset 0 0 0 1px rgb(27 81 75 / 48%);
+  color: var(--combat-gem-bright);
+}
+
+/* Forms and ordinary controls. */
+.combat-screen input:not([type="checkbox"]):not([type="radio"]),
+.combat-screen select {
+  border-color: #51442d;
+  background: #050d0e;
+  box-shadow:
+    inset 0 0 0 1px rgb(0 0 0 / 58%),
+    inset 0 1px 4px rgb(0 0 0 / 56%);
+  color: #e2dccd;
+}
+
+.combat-screen input:not([type="checkbox"]):not([type="radio"]):focus,
+.combat-screen select:focus {
+  border-color: var(--combat-gem-bright);
+  outline-color: rgb(109 187 177 / 38%);
+}
+
+.combat-button,
+.wearables-browser .facet-chip {
+  border-color: #51442d;
+  background: #071011;
+  box-shadow: inset 0 1px 0 rgb(210 178 106 / 7%);
+  color: #d8d1c1;
+}
+
+.combat-button:hover:not(:disabled),
+.wearables-browser .facet-chip:hover {
+  border-color: var(--combat-gold-bright);
+  background: #0b1718;
+  color: var(--combat-gold-bright);
+}
+
+.combat-button[aria-pressed="true"],
+.wearables-browser .facet-chip[aria-pressed="true"] {
+  border-color: var(--combat-gem);
+  background: #0b2422;
+  box-shadow:
+    inset 0 0 0 1px rgb(77 157 148 / 28%),
+    inset 0 -2px 0 rgb(109 187 177 / 16%);
+  color: var(--combat-gem-bright);
+}
+
+/* Paper doll: keep the production slot geometry, make it feel more like a
+   physical RuneScape equipment panel than a matrix of generic cards. */
+.paper-doll {
+  background: #071011;
+}
+
+.paper-doll > h2 {
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid rgb(102 83 50 / 48%);
+}
+
+.paper-doll-grid {
+  gap: 0.28rem;
+}
+
+.weapon-slot-block {
+  outline-color: #5d4c30;
+}
+
+.equipment-slot {
+  border-color: #51442d;
+  background: #071011;
+  box-shadow:
+    inset 0 0 0 2px #020606,
+    inset 0 0 0 3px rgb(102 83 50 / 10%);
+}
+
+.equipment-slot:hover {
+  border-color: var(--combat-gold-bright);
+  background: #0b1718;
+}
+
+.equipment-slot.is-selected {
+  border-color: var(--combat-gem-bright);
+  background: #0a1d1c;
+  box-shadow:
+    inset 0 0 0 2px #020606,
+    inset 3px 0 0 var(--combat-gem),
+    inset 0 0 0 3px rgb(77 157 148 / 15%);
+}
+
+.equipment-slot__label {
+  color: var(--combat-gold-bright);
+  font-size: 0.64rem;
+}
+
+.equipment-slot__well {
+  border-color: #3d3527;
+  background: #030809;
+  box-shadow: inset 0 0 8px rgb(0 0 0 / 72%);
+}
+
+.equipment-slot-mark {
+  stroke: rgb(210 178 106 / 18%);
+}
+
+.equipment-slot__name {
+  color: #e4ddcd;
+}
+
+/* Passive blocks retain their compact hierarchy but get stronger source-like
+   separation, matching the attached layout. */
+.gear-passives {
+  border-top-color: #58482e;
+}
+
+.gear-passive-row,
+.set-effect-card,
+.blessing-settings,
+.combat-subpanel,
+.loadout-fields,
+.stats-group,
+.buff-group,
+.arch-panel .arch-relic-group,
+.arch-panel .arch-fury-detail,
+.arch-panel .arch-energy {
+  border-color: #403728;
+  background: #071112;
+  box-shadow: inset 0 1px 0 rgb(210 178 106 / 5%);
+}
+
+.passive-status,
+.set-effect-state {
+  border-color: var(--combat-gem-dark);
+  background: #081717;
+  color: var(--combat-gem-bright);
+}
+
+.passive-status.is-not-modeled,
+.passive-status.is-partially-modeled {
+  border-color: #6a5531;
+  background: #12140f;
+  color: var(--combat-gold-bright);
+}
+
+/* Equipment catalogue: this is the visual center of the attached screen.
+   Keep it deliberately list-like and dense, not card-like. */
+.wearables-browser {
+  background: #071011;
+}
+
+.gear-filterbar {
+  border-color: #4a3e29;
+  background: #071112;
+  box-shadow: inset 0 1px 0 rgb(210 178 106 / 7%);
+}
+
+.wearables-heading {
+  color: var(--combat-gold-bright);
+}
+
+.wearables-list {
+  border-color: #58482e;
+  background: #050d0e;
+  scrollbar-color: #665332 #050b0c;
+}
+
+.wearable-row {
+  border-color: rgb(102 83 50 / 35%);
+  background: #081213;
+}
+
+.wearable-row:nth-child(even) {
+  background: #091516;
+}
+
+.wearable-row:hover {
+  background: #0d2020;
+  box-shadow: inset 3px 0 0 rgb(77 157 148 / 72%);
+}
+
+/* Right stat rail. Keep the attachment's narrow numeric scan pattern and use
+   brass only for hierarchy, teal for affordance/state. */
+.setup-summary {
+  background: #071011;
+  scrollbar-color: #665332 #050b0c;
+}
+
+.setup-summary__header {
+  border-bottom-color: #665332;
+}
+
+.setup-summary__header p {
+  color: #9ea29a;
+}
+
+.summary-section + .summary-section {
+  border-color: #3c3427;
+}
+
+.summary-section > div {
+  border-top-color: rgb(102 83 50 / 38%);
+}
+
+.summary-metric,
+.summary-metric--expandable,
+.summary-metric--expandable > summary {
+  border-color: rgb(102 83 50 / 30%);
+}
+
+.summary-metric:hover,
+.summary-metric--expandable > summary:hover {
+  background: rgb(77 157 148 / 3%);
+}
+
+.summary-metric--expandable > summary::before {
+  color: var(--combat-gem-bright);
+}
+
+.summary-metric__label {
+  color: #c4bdaa;
+}
+
+.summary-metric__label small {
+  color: #8f9188;
+}
+
+.summary-metric__result strong,
+.summary-breakdown dd {
+  color: #f0eadc;
+}
+
+.summary-breakdown {
+  border-left: 1px solid #3d3527;
+  background: #050d0e;
+}
+
+.summary-breakdown dt {
+  color: #a8aa9f;
+}
+
+/* The other tabs inherit the same material treatment without changing their
+   grid or engine-facing behavior. */
+.rotation-settings,
+.rotation-workbench,
+.analysis-library,
+.analysis-workbench,
+.combat-detail,
+.quick-table,
+.analysis-results,
+.rotation-facts,
+.analysis-ability-list,
+.ability-bar,
+[data-testid="revo-empty"] {
+  background-color: var(--combat-panel);
+  border-color: #4a3e29;
+}
+
+.quick-table th,
+.analysis-results th {
+  background: #071011;
+  border-color: #5b4a2f;
+}
+
+.quick-table td,
+.analysis-results td,
+.analysis-stat-rows > div,
+.analysis-ability,
+.revo-contribution-row {
+  border-color: rgb(102 83 50 / 30%);
+}
+
+.quick-table tbody tr:nth-child(even) td {
+  background: #0a1617;
+}
+
+.quick-table tbody tr:hover td,
+.analysis-ability:hover {
+  background: #0d2020;
+}
+
+.analysis-ability[aria-pressed="true"] {
+  background: #0b2422;
+  box-shadow: inset 3px 0 0 var(--combat-gem-bright);
+  color: var(--combat-gem-bright);
+}
+
+.ability-bar-slot,
+.icon-tile,
+.arch-relic-tile {
+  background: #071011;
+  box-shadow:
+    inset 0 0 0 1px #020606,
+    inset 0 1px 0 rgb(210 178 106 / 8%);
+}
+
+.ability-bar-slot:hover,
+.icon-tile:hover,
+.arch-relic-tile:hover:not(:disabled) {
+  background: #0b1718;
+}
+
+/* Small finishing details. */
+.combat-screen ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.combat-screen ::-webkit-scrollbar-track {
+  background: #050b0c;
+}
+
+.combat-screen ::-webkit-scrollbar-thumb {
+  border: 2px solid #050b0c;
+  background: #4e432d;
+}
+
+.combat-screen ::-webkit-scrollbar-thumb:hover {
+  background: #6d5a35;
+}
+
+@media (max-width: 720px) {
+  .combat-toolbar {
+    margin-inline: 0;
+  }
+
+  .combat-toolbar::before {
+    inset-inline: 4px;
+  }
+}

@@ -5,10 +5,12 @@ import { styleIconPath } from "@/lib/gameArt";
 import { WorkbenchPanel, SectionTabs } from "@/components/SectionTabs";
 import { GameIcon } from "../GameIcon";
 import { AnalysisTab } from "./AnalysisTab";
+import { CombatFrameCorners } from "./CombatFrameCorners";
 import { RotationPlanner } from "./RotationPlanner";
 import { SetupTab } from "./SetupTab";
 import { useLoadout } from "./useLoadout";
 import "./combat.css";
+import "./combat-hybrid.css";
 
 const COMBAT_TABS = [
   { id: "Setup", label: "Loadout" },
@@ -25,6 +27,7 @@ export function CombatTabs() {
   return (
     <div className="combat-screen">
       <header className="combat-toolbar">
+        <CombatFrameCorners />
         {/* The equipped weapon sets the style, so this icon is the only readout. */}
         <div className="combat-toolbar__title">
           <GameIcon src={styleIconPath(loadout.style)} size={30} />

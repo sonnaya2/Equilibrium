@@ -12,6 +12,9 @@ import type { WinnerPresentation } from "./evaluate";
 import { SCORE_ANALYSIS_PARITY_TOLERANCE } from "./scoreAnalysisParity";
 import { buildSolverResultHonesty } from "./solverDtoHonesty";
 
+export const AFTERSHOCK_SOLVER_ASSUMPTION =
+  "Aftershock charge threshold timing uses expected landed damage; exact damage-roll charge modeling is not yet implemented.";
+
 export function buildSolverResultDto(args: {
   request: SerializableSolverRequest;
   result: SolveResult;
@@ -28,6 +31,7 @@ export function buildSolverResultDto(args: {
   presentation?: WinnerPresentation | null;
   /** Bars rejected by score-only vs full-analysis parity (proof note). */
   parityRejectCount?: number;
+  aftershockRank?: number;
 }): SolverResultDTO {
   const {
     request,
@@ -40,10 +44,16 @@ export function buildSolverResultDto(args: {
     options,
     presentation,
     parityRejectCount = 0,
+    aftershockRank = 0,
   } = args;
 
   const hasBigBoned = blessingIds.includes("big-boned");
-  const bigBonedAssumptions = hasBigBoned ? [...BIG_BONED_OUTGOING_ASSUMPTIONS] : undefined;
+  const hasAftershock = aftershockRank > 0;
+  const solverAssumptions = [
+    ...(hasBigBoned ? BIG_BONED_OUTGOING_ASSUMPTIONS : []),
+    ...(hasAftershock ? [AFTERSHOCK_SOLVER_ASSUMPTION] : []),
+  ];
+  const assumptions = solverAssumptions.length > 0 ? solverAssumptions : undefined;
   const bigBonedNotes = hasBigBoned ? ([...BIG_BONED_OUTGOING_ASSUMPTIONS] as const) : [];
 
   // Full-horizon validated bar required (Phase 4). Phase 5 may keep incumbent best.
@@ -97,6 +107,7 @@ export function buildSolverResultDto(args: {
     `validFullCandidates ${result.validFullCandidateCount}`,
     `seed best exploratory ${result.seedBestScore}`,
     ...bigBonedNotes,
+    ...(hasAftershock ? [AFTERSHOCK_SOLVER_ASSUMPTION] : []),
   ];
 
   if (presentation) {
@@ -204,7 +215,7 @@ export function buildSolverResultDto(args: {
     openingDpm: hasRealWindows ? winner.openingDpm : undefined,
     developedDpm: hasRealWindows ? winner.developedDpm : undefined,
     steadyDpm: hasRealWindows ? winner.steadyDpm : undefined,
-    assumptions: bigBonedAssumptions,
+    assumptions,
     baselineBar,
     baselineScore: currentBarScore,
     winnerScore: score,

@@ -18,7 +18,7 @@ import type { ProgressState } from "./progressReporter";
 import { emitProgress } from "./progressReporter";
 import { noteEval, noteUniqueBar } from "./profiling/counters";
 import { compileEvaluationContext, type CompiledEvaluationContext } from "./compiledContext";
-import { summaryEligibleForObjectiveScore, summaryObjectiveIneligibilityReason } from "./objective";
+import { summaryObjectiveIneligibilityReason } from "./objective";
 import {
   branchFidelityLadderMemoToken,
   branchFidelityModeForEval,
@@ -79,6 +79,8 @@ export function createEvaluateFn(args: {
     ...simCommon,
     abilities: compiled.catalogue,
   };
+  const allowExpectedDamageApproximation =
+    ((simWithCatalogue as { procs?: { aftershockRank?: number } }).procs?.aftershockRank ?? 0) > 0;
 
   const weaponConfiguration = simCommon.weaponConfiguration;
   const equipmentIds = simCommon.equipmentIds;
@@ -247,20 +249,27 @@ export function createEvaluateFn(args: {
       incumbentBaseline: isIncumbentBaseline,
       detailLevel: "score-only",
       branchFidelityMode,
+      allowExpectedDamageApproximation,
     });
     if (useFull) fullEvaluations?.set(key, evaluation);
 
     // Residual / known-mass / non-exact short evals must not promote (finite:false).
     // evaluate returns ok:false for those; re-check summary so search archive stays honest.
     const summary = evaluation.summary as ScoreableSummary | undefined;
-    const nonRankableSummary = summary !== undefined && !summaryEligibleForObjectiveScore(summary);
+    const nonRankableReason =
+      summary === undefined
+        ? null
+        : summaryObjectiveIneligibilityReason(summary, {
+            allowExpectedDamageApproximation,
+          });
+    const nonRankableSummary = summary !== undefined && nonRankableReason !== null;
     if (!evaluation.ok || nonRankableSummary) {
       state.noImprovement += 1;
       emitProgress(options, state, false, activeChanged);
       const failureReason =
         evaluation.failureReason ??
         evaluation.reasons[0]?.message ??
-        (summary ? summaryObjectiveIneligibilityReason(summary) : null) ??
+        nonRankableReason ??
         "evaluation failed";
       return {
         score: Number.NEGATIVE_INFINITY,

@@ -52,11 +52,6 @@ export const solveFromRequest: SolveFn = async (
   const profile = createProfileCounters(isSolverProfileEnabled(options?.profile));
 
   const simBase = requireSimBase(request.loadout);
-  if ((simBase.procs?.aftershockRank ?? 0) > 0) {
-    throw new Error(
-      "Aftershock is not available for verified solving: its damage-roll charge threshold is currently approximate",
-    );
-  }
   const disabled = new Set(request.disabledAbilityIds ?? []);
   const deny = regionDenyList(
     request.style,
@@ -249,6 +244,7 @@ export const solveFromRequest: SolveFn = async (
         profileId: request.profileId,
         customWeights: request.customWeights,
         includePartial: request.includePartial,
+        allowExpectedDamageApproximation: (simBase.procs?.aftershockRank ?? 0) > 0,
         size: { min: request.minBarSize, max: request.maxBarSize },
       },
       fullTicks,
@@ -290,6 +286,7 @@ export const solveFromRequest: SolveFn = async (
     fullTicks,
     evaluationBudget,
     blessingIds: simBase.league.blessingIds,
+    aftershockRank: simBase.procs?.aftershockRank ?? 0,
     options,
     presentation,
     parityRejectCount,

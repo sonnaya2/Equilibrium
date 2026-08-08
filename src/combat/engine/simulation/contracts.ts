@@ -268,6 +268,23 @@ export interface DamageSourceBreakdown {
   damage: number;
 }
 
+export interface DamageEffectSourceBreakdown {
+  blessingId: string;
+  totalDamage: number;
+  directDamage: number;
+  dotDamage: number;
+  criticalContribution: number;
+  capLoss: number;
+  expectedCasts: number;
+  expectedTriggerRolls: number;
+  expectedActivations: number;
+  expectedSeparateHits: number;
+  expectedAttachedComponents: number;
+  expectedPlayerPoisonHits: number;
+  bonusDamage: number;
+  averagePerActivation: number;
+}
+
 export interface DamageEffectBreakdown {
   id: string;
   kind: DamageSourceKind;
@@ -289,6 +306,8 @@ export interface DamageEffectBreakdown {
   bonusDamage: number;
   /** totalDamage / expectedActivations when activations > 0. */
   averagePerActivation: number;
+  /** Same effect id split by originating league blessing. */
+  sourceBreakdown?: DamageEffectSourceBreakdown[];
   directDamage: number;
   dotDamage: number;
   criticalContribution: number;

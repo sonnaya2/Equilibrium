@@ -13,6 +13,7 @@ import type {
   BranchExactness,
   BranchFailureSummary,
   DamageEffectBreakdown,
+  DamageEffectSourceBreakdown,
   DamageSourceKind,
   DamageTotalsBasis,
   DurationSummary,
@@ -613,6 +614,52 @@ export function combineBranchSummaries(
             );
             const totalDamage = toKnownMass(conditionalTotal);
             const expectedActivations = value("expectedActivations");
+            const sourceIds = new Set(
+              mixPool.flatMap(
+                (p) =>
+                  p.summary.analysis.byEffect
+                    .find((effect) => effect.id === id)
+                    ?.sourceBreakdown?.map((source) => source.blessingId) ?? [],
+              ),
+            );
+            const sourceBreakdown = [...sourceIds]
+              .map((blessingId): DamageEffectSourceBreakdown => {
+                const sourceValue = (
+                  field: keyof Omit<
+                    DamageEffectSourceBreakdown,
+                    "blessingId" | "averagePerActivation"
+                  >,
+                ) =>
+                  mix(
+                    (summary) =>
+                      summary.analysis.byEffect
+                        .find((effect) => effect.id === id)
+                        ?.sourceBreakdown?.find((source) => source.blessingId === blessingId)?.[
+                        field
+                      ] ?? 0,
+                  );
+                const sourceTotalConditional = sourceValue("totalDamage");
+                const sourceActivations = sourceValue("expectedActivations");
+                return {
+                  blessingId,
+                  totalDamage: toKnownMass(sourceTotalConditional),
+                  directDamage: toKnownMass(sourceValue("directDamage")),
+                  dotDamage: toKnownMass(sourceValue("dotDamage")),
+                  criticalContribution: toKnownMass(sourceValue("criticalContribution")),
+                  capLoss: toKnownMass(sourceValue("capLoss")),
+                  expectedCasts: sourceValue("expectedCasts"),
+                  expectedTriggerRolls: sourceValue("expectedTriggerRolls"),
+                  expectedActivations: sourceActivations,
+                  expectedSeparateHits: sourceValue("expectedSeparateHits"),
+                  expectedAttachedComponents: sourceValue("expectedAttachedComponents"),
+                  expectedPlayerPoisonHits: sourceValue("expectedPlayerPoisonHits"),
+                  bonusDamage: toKnownMass(sourceValue("bonusDamage")),
+                  averagePerActivation:
+                    sourceActivations > 0 ? sourceTotalConditional / sourceActivations : 0,
+                };
+              })
+              .filter((source) => source.totalDamage !== 0 || source.expectedActivations !== 0)
+              .sort((a, b) => b.totalDamage - a.totalDamage);
             return {
               id,
               kind: sample.kind,
@@ -628,6 +675,7 @@ export function combineBranchSummaries(
               // Per-activation stays on conditional scale (mass does not change hit size).
               averagePerActivation:
                 expectedActivations > 0 ? conditionalTotal / expectedActivations : 0,
+              ...(sourceBreakdown.length > 0 ? { sourceBreakdown } : {}),
               directDamage: value("directDamage"),
               dotDamage: value("dotDamage"),
               criticalContribution: value("criticalContribution"),

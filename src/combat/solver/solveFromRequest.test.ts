@@ -13,6 +13,9 @@ import { evaluateRevolutionBar } from "./evaluate";
 import { buildCandidatePool } from "./candidatePool";
 import { allEngineSpecs } from "../abilities/registry";
 import { fingerprintSolveContext, solveContextPayload } from "./solutionStore";
+import { rotationOf } from "../engine/simulation/contracts";
+import { simulate } from "../engine/simulation/simulate";
+import { baseInput } from "../test/fixtures/inputs";
 
 const emptyEffects: ActiveEquipmentEffects = {
   activation: EQUIPMENT_SET_ACTIVATION,
@@ -188,16 +191,55 @@ function assertLegalResult(
 }
 
 describe("solveFromRequest", () => {
-  it("rejects approximate Aftershock threshold state before searching", async () => {
+  it("solves Aftershock requests with an honest expected-charge assumption", async () => {
     const request = nakedRequest();
     const loadout = request.loadout as SerializableRevolutionSimBase;
-    await expect(
-      solveFromRequest({
-        ...request,
-        loadout: { ...loadout, procs: { aftershockRank: 4, cracklingRank: 0 } },
-      }),
-    ).rejects.toThrow(/Aftershock is not available for verified solving/);
-  });
+    const aftershockRequest = {
+      ...request,
+      exploreDurationTicks: 50,
+      loadout: { ...loadout, procs: { aftershockRank: 4, cracklingRank: 0 } },
+    };
+    const result = await solveFromRequest(aftershockRequest);
+    const clonedResult = await solveFromRequest(structuredClone(aftershockRequest));
+    assertLegalResult(result, { min: 3, max: 6 });
+    expect(result.bar).toEqual(clonedResult.bar);
+    expect(result.score).toBe(clonedResult.score);
+    const pool = buildCandidatePool(allEngineSpecs(), "melee", {
+      deny: [],
+      weaponConfiguration: loadout.weaponConfiguration,
+      equipmentIds: loadout.equipmentIds,
+    });
+    const league = reviveLeague(loadout.league);
+    const evaluated = evaluateRevolutionBar({
+      bar: result.bar,
+      style: "melee",
+      durationTicks: 500,
+      pool,
+      sim: {
+        ...loadout,
+        abilities: allEngineSpecs(),
+        league,
+      },
+      profileId: "balanced",
+      size: { min: 3, max: 6 },
+      detailLevel: "full-analysis",
+      branchFidelityMode: "full",
+      allowExpectedDamageApproximation: true,
+    });
+    expect(evaluated.ok).toBe(true);
+    const aftershockSimulation = simulate({
+      ...baseInput,
+      procs: { aftershockRank: 4, cracklingRank: 0 },
+      rotation: rotationOf(...Array(84).fill("attack")),
+    });
+    expect(aftershockSimulation.perAbility.aftershock).toBeGreaterThan(0);
+    expect(result.assumptions).toContain(
+      "Aftershock charge threshold timing uses expected landed damage; exact damage-roll charge modeling is not yet implemented.",
+    );
+    expect(result.proof?.notes).toContain(
+      "Aftershock charge threshold timing uses expected landed damage; exact damage-roll charge modeling is not yet implemented.",
+    );
+  }, 120_000);
 
   it("returns a legal bar under naked base rules (simple path)", async () => {
     const result = await solveFromRequest(nakedRequest());

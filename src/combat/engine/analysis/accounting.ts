@@ -2,7 +2,11 @@ import type { ScheduledEvent } from "../runtime/events";
 import type { SimulationRuntime } from "../runtime/runtime";
 import type { EventResolution } from "../resolution/types";
 import type { DamageSourceKind } from "../simulation/contracts";
-import type { EffectAnalysisLedger, RuntimeAnalysisState } from "./contracts";
+import type {
+  EffectAnalysisLedger,
+  EffectAnalysisSourceLedger,
+  RuntimeAnalysisState,
+} from "./contracts";
 import { resolveEventMultiplicity } from "./multiplicity";
 import { isBasicAttack } from "../../shared/adrenalineGain";
 
@@ -48,7 +52,36 @@ function emptyLedger(id: string, kind: DamageSourceKind): EffectAnalysisLedger {
     expectedAttachedComponents: 0,
     expectedPlayerPoisonHits: 0,
     bonusDamage: 0,
+    sources: new Map(),
   };
+}
+
+function emptySourceLedger(blessingId: string): EffectAnalysisSourceLedger {
+  return {
+    blessingId,
+    totalDamage: 0,
+    directDamage: 0,
+    dotDamage: 0,
+    criticalContribution: 0,
+    capLoss: 0,
+    expectedCasts: 0,
+    expectedTriggerRolls: 0,
+    expectedActivations: 0,
+    expectedSeparateHits: 0,
+    expectedAttachedComponents: 0,
+    expectedPlayerPoisonHits: 0,
+    bonusDamage: 0,
+  };
+}
+
+function sourceLedger(
+  ledger: EffectAnalysisLedger,
+  blessingId: string,
+): EffectAnalysisSourceLedger {
+  const sources = (ledger.sources ??= new Map());
+  const source = sources.get(blessingId) ?? emptySourceLedger(blessingId);
+  sources.set(blessingId, source);
+  return source;
 }
 
 export function accountPlayerPoisonHits(
@@ -142,6 +175,18 @@ export function accountAnalysisEvent(
   ledger.expectedActivations += mult.expectedActivations;
   ledger.expectedSeparateHits += mult.expectedSeparateHits;
   ledger.expectedAttachedComponents += mult.expectedAttachedComponents;
+  if (event.blessingId) {
+    const source = sourceLedger(ledger, event.blessingId);
+    source.totalDamage += hostExpected;
+    source.directDamage += asDotLedger ? 0 : hostExpected;
+    source.dotDamage += asDotLedger ? hostExpected : 0;
+    source.criticalContribution += hostCrit;
+    source.capLoss += hostCap;
+    source.expectedTriggerRolls += mult.expectedTriggerRolls;
+    source.expectedActivations += mult.expectedActivations;
+    source.expectedSeparateHits += mult.expectedSeparateHits;
+    source.expectedAttachedComponents += mult.expectedAttachedComponents;
+  }
   // Attribute bonus damage to its parent effect; packed blessing chains name it explicitly.
   if (event.damageTag === "bonus-damage") {
     const parentId = event.bonusTargetId ?? parentAbilityId(rt, event);
@@ -165,6 +210,13 @@ export function accountAnalysisEvent(
     componentLedger.capLoss += component.damage.capLoss ?? 0;
     componentLedger.expectedActivations += attribution.expectedActivations;
     componentLedger.expectedAttachedComponents += attribution.expectedActivations;
+    const source = sourceLedger(componentLedger, attribution.blessingId);
+    source.totalDamage += component.damage.expected;
+    source.directDamage += component.damage.expected;
+    source.criticalContribution += component.damage.critical?.contribution ?? 0;
+    source.capLoss += component.damage.capLoss ?? 0;
+    source.expectedActivations += attribution.expectedActivations;
+    source.expectedAttachedComponents += attribution.expectedActivations;
     analysis.effects.set(component.id, componentLedger);
 
     const parentId = attribution.bonusTargetId ?? event.abilityId;

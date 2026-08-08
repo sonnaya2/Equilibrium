@@ -34,6 +34,11 @@ import {
   type HostIncumbentBaseline,
 } from "../hostIncumbent";
 import { PoolCoordHost } from "./coord";
+import {
+  isInfrastructureFailure,
+  SolverExecutionError,
+  solverFailureFromWorkerMessage,
+} from "./failure";
 
 const MAX_POOL = SAFE_GLOBAL_AGENT_CEILING;
 
@@ -657,7 +662,10 @@ export class SolverAgentPool {
     const want = plan.agentCount;
     const n = this.ensure(want);
     if (n === 0) {
-      throw new Error("revolution solver pool: no workers available");
+      throw new SolverExecutionError(
+        "infrastructure",
+        "revolution solver pool: no workers available",
+      );
     }
     const agentCount = Math.min(want, n);
     const assignments: readonly WorkerAssignment[] = plan.assignments.slice(0, agentCount);
@@ -888,12 +896,23 @@ export class SolverAgentPool {
 
         const onError = (event: ErrorEvent) => {
           this.replaceDeadWorker(slot, requestId);
-          settle(() => reject(new Error(event.message || `solver agent ${index} failed`)));
+          settle(() =>
+            reject(
+              new SolverExecutionError(
+                "infrastructure",
+                event.message || `solver agent ${index} failed`,
+              ),
+            ),
+          );
         };
 
         const onMessageError = () => {
           this.replaceDeadWorker(slot, requestId);
-          settle(() => reject(new Error(`solver agent ${index} messageerror`)));
+          settle(() =>
+            reject(
+              new SolverExecutionError("infrastructure", `solver agent ${index} messageerror`),
+            ),
+          );
         };
 
         const onMessage = (event: MessageEvent<unknown>) => {
@@ -994,7 +1013,7 @@ export class SolverAgentPool {
               break;
             }
             case "error":
-              settle(() => reject(new Error(msg.error)));
+              settle(() => reject(solverFailureFromWorkerMessage(msg.error, msg.failureKind)));
               break;
             case "cancelled":
               settle(() => reject(new DOMException("revolution solver cancelled", "AbortError")));
@@ -1008,7 +1027,12 @@ export class SolverAgentPool {
           if (settled || acknowledged) return;
           this.replaceDeadWorker(slot, requestId);
           settle(() =>
-            reject(new Error(`solver agent ${index} did not acknowledge start within ${ackMs}ms`)),
+            reject(
+              new SolverExecutionError(
+                "infrastructure",
+                `solver agent ${index} did not acknowledge start within ${ackMs}ms`,
+              ),
+            ),
           );
         }, ackMs);
 
@@ -1033,7 +1057,15 @@ export class SolverAgentPool {
           });
         } catch (err) {
           this.replaceDeadWorker(slot, requestId);
-          settle(() => reject(err instanceof Error ? err : new Error(String(err))));
+          settle(() =>
+            reject(
+              new SolverExecutionError(
+                "infrastructure",
+                err instanceof Error ? err.message : String(err),
+                { cause: err },
+              ),
+            ),
+          );
         }
 
         if (cancelled()) onAbort();
@@ -1052,7 +1084,7 @@ export class SolverAgentPool {
       }
 
       const ok: SolverResultDTO[] = [];
-      const errors: string[] = [];
+      const errors: unknown[] = [];
       let sawAbort = false;
       for (const s of settled) {
         if (s.status === "fulfilled") {
@@ -1060,21 +1092,22 @@ export class SolverAgentPool {
           continue;
         }
         const reason = s.reason;
-        const message = reason instanceof Error ? reason.message : String(reason);
         if (isAbortError(reason)) {
           sawAbort = true;
           if (cancelled()) throw reason;
-          errors.push(message);
+          errors.push(reason);
           continue;
         }
-        errors.push(message);
+        errors.push(reason);
       }
 
       if (ok.length === 0) {
         if (sawAbort && cancelled()) {
           throw new DOMException("revolution solver cancelled", "AbortError");
         }
-        throw new Error(errors[0] ?? "revolution solver pool: all agents failed");
+        const failure = errors.find(isInfrastructureFailure) ?? errors[0];
+        if (failure instanceof Error) throw failure;
+        throw new Error(String(failure ?? "revolution solver pool: all agents failed"));
       }
 
       const poolMetrics = buildPoolMetrics(progressParts, agentCount, baseBudget, liveMetrics());

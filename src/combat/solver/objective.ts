@@ -271,7 +271,10 @@ export { RESIDUAL_FREE_TOLERANCE };
  * Conditional concrete mean / known-mass ledgers never rank.
  * null when eligible for unit-mass scoring.
  */
-export function summaryObjectiveIneligibilityReason(summary: ScoreableSummary): string | null {
+export function summaryObjectiveIneligibilityReason(
+  summary: ScoreableSummary,
+  options?: { allowExpectedDamageApproximation?: boolean },
+): string | null {
   if (!summary.ok) return summary.error ?? "simulation failed";
   const failedWeight = summary.rng?.failedWeight ?? 0;
   if (failedWeight > 0) return `simulation failedWeight=${failedWeight}`;
@@ -285,7 +288,13 @@ export function summaryObjectiveIneligibilityReason(summary: ScoreableSummary): 
     return `simulation totalsBasis=${totalsBasis}`;
   }
   const exactness = summary.rng?.exactness;
-  if (isNonExactBranchExactness(exactness)) {
+  if (
+    isNonExactBranchExactness(exactness) &&
+    !(
+      options?.allowExpectedDamageApproximation === true &&
+      (exactness === "bounded-approximation" || exactness === "approximated")
+    )
+  ) {
     return `simulation exactness=${exactness}`;
   }
   return null;
@@ -318,8 +327,9 @@ export function scoreSummary(
   summary: ScoreableSummary,
   profileId: ObjectiveProfileId,
   customWeights?: ObjectiveWeights,
+  options?: { allowExpectedDamageApproximation?: boolean },
 ): ObjectiveScore {
-  const reason = summaryObjectiveIneligibilityReason(summary);
+  const reason = summaryObjectiveIneligibilityReason(summary, options);
   if (reason !== null) {
     return fail(profileId, reason);
   }

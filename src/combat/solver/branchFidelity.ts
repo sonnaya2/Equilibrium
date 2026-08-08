@@ -119,6 +119,7 @@ export function budgetForLiveCap(
 export function meetsBranchCompleteness(
   summary: Pick<ScoreableSummary, "ok" | "rng"> | RotationSummary,
   ladder: BranchFidelityLadder,
+  options?: { allowExpectedDamageApproximation?: boolean },
 ): boolean {
   if (!summary.ok) return false;
   const residual = typeof summary.rng?.residualWeight === "number" ? summary.rng.residualWeight : 0;
@@ -126,7 +127,15 @@ export function meetsBranchCompleteness(
   if (ladder.exactness === "exact-or-merged") {
     const ex = typeof summary.rng?.exactness === "string" ? summary.rng.exactness : undefined;
     // Missing exactness treated as exact (legacy). Non-exact lattice fails.
-    if (!exactnessEligibleForExactProof(ex)) return false;
+    if (
+      !exactnessEligibleForExactProof(ex) &&
+      !(
+        options?.allowExpectedDamageApproximation === true &&
+        (ex === "bounded-approximation" || ex === "approximated")
+      )
+    ) {
+      return false;
+    }
   }
   return true;
 }
@@ -145,8 +154,9 @@ export function shouldStopAdaptiveAttempt(
   summary: Pick<ScoreableSummary, "ok" | "rng"> | RotationSummary,
   ladder: BranchFidelityLadder,
   attemptIndex: number,
+  options?: { allowExpectedDamageApproximation?: boolean },
 ): boolean {
-  if (!meetsBranchCompleteness(summary, ladder)) return false;
+  if (!meetsBranchCompleteness(summary, ladder, options)) return false;
   const residual = residualWeightOf(summary);
   const isLast = attemptIndex >= ladder.liveCaps.length - 1;
   if (residual <= RESIDUAL_FREE_TOLERANCE) return true;
@@ -161,6 +171,7 @@ export function simulateWithAdaptiveBranchFidelity(
   input: RevolutionInput,
   options: SimulateOptions | undefined,
   ladder: BranchFidelityLadder,
+  fidelityOptions?: { allowExpectedDamageApproximation?: boolean },
 ): AdaptiveBranchFidelityResult {
   let lastSummary: RotationSummary | undefined;
   let lastBudget: BranchBudget | undefined;
@@ -180,8 +191,8 @@ export function simulateWithAdaptiveBranchFidelity(
     }
     lastSummary = summary;
     lastBudget = budget;
-    if (shouldStopAdaptiveAttempt(summary, ladder, i)) {
-      const complete = meetsBranchCompleteness(summary, ladder);
+    if (shouldStopAdaptiveAttempt(summary, ladder, i, fidelityOptions)) {
+      const complete = meetsBranchCompleteness(summary, ladder, fidelityOptions);
       return {
         summary,
         meta: {
@@ -205,7 +216,7 @@ export function simulateWithAdaptiveBranchFidelity(
       mode: ladder.mode,
       attempts,
       finalBudget: lastBudget,
-      complete: meetsBranchCompleteness(lastSummary, ladder),
+      complete: meetsBranchCompleteness(lastSummary, ladder, fidelityOptions),
       residualWeight: residualWeightOf(lastSummary),
       exactness:
         typeof lastSummary.rng?.exactness === "string" ? lastSummary.rng.exactness : undefined,

@@ -491,6 +491,8 @@ export interface RevolutionEvalRequest {
       }
     >
   >;
+  /** Internal solver allowance for the engine's expected-charge Aftershock model. */
+  allowExpectedDamageApproximation?: boolean;
 }
 
 /**

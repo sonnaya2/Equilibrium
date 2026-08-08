@@ -329,6 +329,7 @@ export function evaluateRevolutionBar(
   };
   const simOpts =
     request.detailLevel !== undefined ? { detailLevel: request.detailLevel } : undefined;
+  const allowExpectedDamageApproximation = request.allowExpectedDamageApproximation === true;
 
   let branchFidelity: BranchFidelityAttemptMeta | undefined;
   let summary;
@@ -337,7 +338,9 @@ export function evaluateRevolutionBar(
       request.branchFidelityMode,
       request.branchFidelityOverrides,
     );
-    const adaptive = simulateWithAdaptiveBranchFidelity(revInput, simOpts, ladder);
+    const adaptive = simulateWithAdaptiveBranchFidelity(revInput, simOpts, ladder, {
+      allowExpectedDamageApproximation,
+    });
     summary = adaptive.summary;
     branchFidelity = adaptive.meta;
   } else {
@@ -379,7 +382,9 @@ export function evaluateRevolutionBar(
   // Short horizon: exploratory single-window DPM only when unit-mass eligible.
   // Conditional concrete mean (totalExpected with residual) must not rank.
   if (durationTicks < MIN_RANKABLE_HORIZON_TICKS) {
-    const ineligible = summaryObjectiveIneligibilityReason(summary);
+    const ineligible = summaryObjectiveIneligibilityReason(summary, {
+      allowExpectedDamageApproximation,
+    });
     if (ineligible !== null) {
       reasons.push({
         code: "score-failed",
@@ -428,7 +433,9 @@ export function evaluateRevolutionBar(
     };
   }
 
-  const scored = scoreSummary(summary, profileId, customWeights);
+  const scored = scoreSummary(summary, profileId, customWeights, {
+    allowExpectedDamageApproximation,
+  });
   if (!scored.ok) {
     // Sim succeeded but robust scoring failed - keep failure visible.
     // Do not copy scalar DPM into synthetic opening/developed/steady windows.

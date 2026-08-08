@@ -10,6 +10,7 @@ import {
   GOD_TIERS,
   GOD_TIER_SLOTS,
   godTierAlignments,
+  uniqueBlessingPathCount,
   type BlessingChoice,
   type BlessingPath,
 } from "./blessings";
@@ -247,5 +248,33 @@ describe("godTierAlignments", () => {
     expect(godTierAlignments([O, O, B, C])).toEqual({ 1: O, 2: null });
     expect(godTierAlignments([O, C])).toEqual({ 1: null, 2: null });
     expect(godTierAlignments([])).toEqual({ 1: null, 2: null });
+  });
+});
+
+describe("uniqueBlessingPathCount", () => {
+  it("counts valid T1-T6 paths, including True Equilibrium and excluding blanks", () => {
+    expect(uniqueBlessingPathCount([C, C, C, B])).toBe(2);
+    expect(
+      uniqueBlessingPathCount([
+        C,
+        "" as BlessingPath,
+        "" as BlessingPath,
+        B,
+        "" as BlessingPath,
+        "" as BlessingPath,
+      ]),
+    ).toBe(2);
+    expect(
+      uniqueBlessingPathCount([
+        C,
+        O,
+        "" as BlessingPath,
+        B,
+        "" as BlessingPath,
+        "" as BlessingPath,
+      ]),
+    ).toBe(3);
+    expect(uniqueBlessingPathCount([O, B, C, B, O, C])).toBe(3);
+    expect(uniqueBlessingPathCount([O, B, C, B, O, C, "" as BlessingPath])).toBe(3);
   });
 });

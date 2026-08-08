@@ -298,9 +298,14 @@ export function activeBlessings(picks: readonly BlessingPath[]): BlessingChoice[
   return active;
 }
 
-/** True Equilibrium counts distinct paths from the six path tiers only. */
+/** True Equilibrium counts valid T1-T6 paths; its own T4 Balance path counts. */
 export function uniqueBlessingPathCount(picks: readonly BlessingPath[]): number {
-  return new Set(picks.slice(0, PATH_TIERS.length)).size;
+  const paths = new Set<BlessingPath>();
+  for (const [index, path] of picks.slice(0, PATH_TIERS.length).entries()) {
+    if (PATH_TIERS[index] === undefined || !isBlessingPath(path)) continue;
+    paths.add(path);
+  }
+  return Math.min(BLESSING_PATHS.length, paths.size);
 }
 
 export type ActiveBlessingTierPassive = BlessingTierPassive & {

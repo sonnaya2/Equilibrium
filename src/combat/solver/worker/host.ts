@@ -23,6 +23,11 @@ import {
   getFirstAckMs,
   resetWorkerCreateForTests,
 } from "./workerCreate";
+import {
+  isInfrastructureFailure,
+  SolverExecutionError,
+  solverFailureFromWorkerMessage,
+} from "./failure";
 
 export type { SolveFn, SolveProgressHandler, SolveRuntimeOptions } from "./solveTypes";
 export { solverPoolSize } from "./pool";
@@ -232,6 +237,7 @@ export async function runOptimize(
       if (cancelled() || isAbortError(err)) {
         throw isAbortError(err) ? err : abortError();
       }
+      if (!isInfrastructureFailure(err)) throw err;
       if (typeof console !== "undefined") {
         console.warn("[revo-solver] agent pool failed, trying single worker", err);
       }
@@ -343,11 +349,21 @@ export class RevolutionSolverClient {
     this.onWorkerMessage(event.data);
   };
   private readonly boundError = (event: ErrorEvent) => {
-    this.failActive(new Error(event.message || "revolution solver worker failed"));
+    this.failActive(
+      new SolverExecutionError(
+        "infrastructure",
+        event.message || "revolution solver worker failed",
+      ),
+    );
     this.dropWorker();
   };
   private readonly boundMessageError = () => {
-    this.failActive(new Error("revolution solver worker messageerror (clone failed)"));
+    this.failActive(
+      new SolverExecutionError(
+        "infrastructure",
+        "revolution solver worker messageerror (clone failed)",
+      ),
+    );
     this.dropWorker();
   };
 
@@ -446,7 +462,11 @@ export class RevolutionSolverClient {
         break;
       case "error":
         this.dropWorker();
-        this.settleActive(run, "reject", new Error(msg.error));
+        this.settleActive(
+          run,
+          "reject",
+          solverFailureFromWorkerMessage(msg.error, msg.failureKind),
+        );
         break;
       case "cancelled":
         this.settleActive(run, "reject", abortError());
@@ -627,7 +647,10 @@ export class RevolutionSolverClient {
         this.settleActive(
           run,
           "reject",
-          new Error(`revolution solver worker did not acknowledge start within ${ackMs}ms`),
+          new SolverExecutionError(
+            "infrastructure",
+            `revolution solver worker did not acknowledge start within ${ackMs}ms`,
+          ),
         );
       }, ackMs);
 
@@ -640,7 +663,15 @@ export class RevolutionSolverClient {
         });
       } catch (err) {
         this.dropWorker();
-        this.settleActive(run, "reject", err instanceof Error ? err : new Error(String(err)));
+        this.settleActive(
+          run,
+          "reject",
+          new SolverExecutionError(
+            "infrastructure",
+            err instanceof Error ? err.message : String(err),
+            { cause: err },
+          ),
+        );
         return;
       }
 

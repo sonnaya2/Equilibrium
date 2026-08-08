@@ -1,6 +1,7 @@
 import type { SerializableSolverRequest, SolverProofDTO, SolverResultDTO } from "./serializable";
 import type { HostCoordBatch, WorkerCoordReport } from "./coord";
 import type { SolverProfileSnapshot } from "../profiling/counters";
+import type { SolverFailureKind } from "./failure";
 
 export type { SolverResultDTO, SolverProofDTO };
 export type { HostCoordBatch, WorkerCoordReport };
@@ -241,6 +242,7 @@ export interface ErrorSolverMessage {
   type: "error";
   requestId: number;
   error: string;
+  failureKind?: SolverFailureKind;
 }
 
 export interface CancelledSolverMessage {

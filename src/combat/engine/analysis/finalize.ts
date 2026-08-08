@@ -1,5 +1,6 @@
 import type {
   DamageEffectBreakdown,
+  DamageEffectSourceBreakdown,
   DamageSourceKind,
   RotationDamageAnalysis,
 } from "../simulation/contracts";
@@ -31,6 +32,30 @@ export function finalizeAnalysis(
     byEffect: [...analysis.effects.values()]
       .map((ledger): DamageEffectBreakdown => {
         const activations = ledger.expectedActivations;
+        const sourceBreakdown = ledger.sources
+          ? [...ledger.sources.values()]
+              .filter((source) => source.totalDamage !== 0 || source.expectedActivations !== 0)
+              .map((source): DamageEffectSourceBreakdown => ({
+                blessingId: source.blessingId,
+                totalDamage: source.totalDamage,
+                directDamage: source.directDamage,
+                dotDamage: source.dotDamage,
+                criticalContribution: source.criticalContribution,
+                capLoss: source.capLoss,
+                expectedCasts: source.expectedCasts,
+                expectedTriggerRolls: source.expectedTriggerRolls,
+                expectedActivations: source.expectedActivations,
+                expectedSeparateHits: source.expectedSeparateHits,
+                expectedAttachedComponents: source.expectedAttachedComponents,
+                expectedPlayerPoisonHits: source.expectedPlayerPoisonHits,
+                bonusDamage: source.bonusDamage,
+                averagePerActivation:
+                  source.expectedActivations > 0
+                    ? source.totalDamage / source.expectedActivations
+                    : 0,
+              }))
+              .sort((a, b) => b.totalDamage - a.totalDamage)
+          : undefined;
         return {
           id: ledger.id,
           kind: ledger.kind,
@@ -44,6 +69,7 @@ export function finalizeAnalysis(
           expectedPlayerPoisonHits: ledger.expectedPlayerPoisonHits,
           bonusDamage: ledger.bonusDamage,
           averagePerActivation: activations > 0 ? ledger.totalDamage / activations : 0,
+          ...(sourceBreakdown && sourceBreakdown.length > 0 ? { sourceBreakdown } : {}),
           directDamage: ledger.directDamage,
           dotDamage: ledger.dotDamage,
           criticalContribution: ledger.criticalContribution,

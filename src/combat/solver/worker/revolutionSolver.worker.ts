@@ -4,6 +4,7 @@ import type { SerializableSolverRequest } from "./serializable";
 import type { HostToWorkerMessage, SolverProgress, WorkerToHostMessage } from "./protocol";
 import { WorkerCoordState } from "./coord";
 import { executeWorkerSolve } from "./workerExecution";
+import { SolverExecutionError } from "./failure";
 
 declare const self: DedicatedWorkerGlobalScope;
 
@@ -196,6 +197,7 @@ async function runStart(
       post({
         type: "error",
         requestId,
+        failureKind: "infrastructure",
         error:
           cloneErr instanceof Error
             ? `result post failed: ${cloneErr.message}`
@@ -214,7 +216,12 @@ async function runStart(
       post({ type: "cancelled", requestId });
       return;
     }
-    post({ type: "error", requestId, error: message });
+    post({
+      type: "error",
+      requestId,
+      error: message,
+      failureKind: err instanceof SolverExecutionError ? err.failureKind : "domain",
+    });
   } finally {
     clearRequestState(requestId);
     if (runningId === requestId) {

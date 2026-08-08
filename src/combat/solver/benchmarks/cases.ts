@@ -956,7 +956,6 @@ export const BENCH_CASES: readonly BenchCaseDef[] = [
     id: "equipment-procs",
     quick: true,
     seed: 206,
-    expectedFullError: "Aftershock is not available for verified solving",
     build: () =>
       makeRequest({
         style: "melee",

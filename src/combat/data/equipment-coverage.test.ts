@@ -95,6 +95,15 @@ describe("equipment corpus coverage (expanded combat gear)", () => {
     expect(equipmentById("item:eldritch-crossbow")?.weaponClass).not.toBe("bow");
   });
 
+  it("classifies Cinderbane gloves as hybrid poison gear", () => {
+    expect(equipmentById("item:cinderbane-gloves")).toMatchObject({
+      slot: "gloves",
+      style: "hybrid",
+      armourClass: "hybrid",
+      passiveIds: ["cinderbane-weapon-poison"],
+    });
+  });
+
   // Retired cross-region twin is status=removed and no longer exported into the
   // equipment shard; the Anachronia survivor keeps the passive.
   it("keeps the passive on the surviving Channeller's ring", () => {

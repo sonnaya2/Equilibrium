@@ -1,5 +1,21 @@
 import type { DamageSourceKind } from "../simulation/contracts";
 
+export interface EffectAnalysisSourceLedger {
+  blessingId: string;
+  totalDamage: number;
+  directDamage: number;
+  dotDamage: number;
+  criticalContribution: number;
+  capLoss: number;
+  expectedCasts: number;
+  expectedTriggerRolls: number;
+  expectedActivations: number;
+  expectedSeparateHits: number;
+  expectedAttachedComponents: number;
+  expectedPlayerPoisonHits: number;
+  bonusDamage: number;
+}
+
 /**
  * Engine-owned weighted analysis ledgers. Updated during event accounting and
  * merged with branch history - never reconstructed from representative events.
@@ -30,6 +46,8 @@ export interface EffectAnalysisLedger {
    * bonus amount. Do not sum Bonus across rows with Total (would double-count).
    */
   bonusDamage: number;
+  /** Same-effect blessing rows retained by their originating blessing. */
+  sources?: Map<string, EffectAnalysisSourceLedger>;
   minimumDamage?: number;
   maximumDamage?: number;
 }
@@ -77,7 +95,21 @@ export function emptyAnalysisState(): RuntimeAnalysisState {
 
 export function cloneAnalysisState(state: RuntimeAnalysisState): RuntimeAnalysisState {
   return {
-    effects: new Map([...state.effects].map(([id, ledger]) => [id, { ...ledger }])),
+    effects: new Map(
+      [...state.effects].map(([id, ledger]) => [
+        id,
+        {
+          ...ledger,
+          ...(ledger.sources
+            ? {
+                sources: new Map(
+                  [...ledger.sources].map(([sourceId, source]) => [sourceId, { ...source }]),
+                ),
+              }
+            : {}),
+        },
+      ]),
+    ),
     sources: new Map(state.sources),
     playerPoisonContinuationAttempts: state.playerPoisonContinuationAttempts,
     playerPoisonContinuationActivations: state.playerPoisonContinuationActivations,
@@ -106,6 +138,49 @@ export function mixAnalysisStates(
     const left = a.effects.get(id);
     const right = b.effects.get(id);
     const sample = left ?? right!;
+    const sourceIds = new Set([
+      ...(left?.sources?.keys() ?? []),
+      ...(right?.sources?.keys() ?? []),
+    ]);
+    const sources = new Map<string, EffectAnalysisSourceLedger>();
+    for (const sourceId of sourceIds) {
+      const sourceLeft = left?.sources?.get(sourceId);
+      const sourceRight = right?.sources?.get(sourceId);
+      const sourceSample = sourceLeft ?? sourceRight!;
+      sources.set(sourceId, {
+        blessingId: sourceSample.blessingId,
+        totalDamage: mix(sourceLeft?.totalDamage ?? 0, sourceRight?.totalDamage ?? 0),
+        directDamage: mix(sourceLeft?.directDamage ?? 0, sourceRight?.directDamage ?? 0),
+        dotDamage: mix(sourceLeft?.dotDamage ?? 0, sourceRight?.dotDamage ?? 0),
+        criticalContribution: mix(
+          sourceLeft?.criticalContribution ?? 0,
+          sourceRight?.criticalContribution ?? 0,
+        ),
+        capLoss: mix(sourceLeft?.capLoss ?? 0, sourceRight?.capLoss ?? 0),
+        expectedCasts: mix(sourceLeft?.expectedCasts ?? 0, sourceRight?.expectedCasts ?? 0),
+        expectedTriggerRolls: mix(
+          sourceLeft?.expectedTriggerRolls ?? 0,
+          sourceRight?.expectedTriggerRolls ?? 0,
+        ),
+        expectedActivations: mix(
+          sourceLeft?.expectedActivations ?? 0,
+          sourceRight?.expectedActivations ?? 0,
+        ),
+        expectedSeparateHits: mix(
+          sourceLeft?.expectedSeparateHits ?? 0,
+          sourceRight?.expectedSeparateHits ?? 0,
+        ),
+        expectedAttachedComponents: mix(
+          sourceLeft?.expectedAttachedComponents ?? 0,
+          sourceRight?.expectedAttachedComponents ?? 0,
+        ),
+        expectedPlayerPoisonHits: mix(
+          sourceLeft?.expectedPlayerPoisonHits ?? 0,
+          sourceRight?.expectedPlayerPoisonHits ?? 0,
+        ),
+        bonusDamage: mix(sourceLeft?.bonusDamage ?? 0, sourceRight?.bonusDamage ?? 0),
+      });
+    }
     effects.set(id, {
       id,
       kind: sample.kind,
@@ -127,6 +202,7 @@ export function mixAnalysisStates(
         right?.expectedPlayerPoisonHits ?? 0,
       ),
       bonusDamage: mix(left?.bonusDamage ?? 0, right?.bonusDamage ?? 0),
+      ...(sources.size > 0 ? { sources } : {}),
       ...(left?.minimumDamage !== undefined || right?.minimumDamage !== undefined
         ? { minimumDamage: mix(left?.minimumDamage ?? 0, right?.minimumDamage ?? 0) }
         : {}),

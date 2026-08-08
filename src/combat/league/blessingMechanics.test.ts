@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { rngPointsFor } from "../engine/cast/rules";
 import { createCastContext, simulate } from "../engine/simulation/simulate";
 import { rotationOf } from "../engine/simulation/contracts";
 import type { AbilitySpec } from "../pipeline/calculateAbility";
@@ -95,6 +96,23 @@ describe("Avernic Rampage window boundary", () => {
     context.performCast(attack, 0, false, { "avernic-rampage": true });
     context.performCast(attack, 3, false, { "avernic-rampage": true });
     expect(context.getState().league?.avernicRampageUntilTick).toBe(12);
+  });
+
+  it("rolls Avernic Rampage once per damaging attack, not once per hit", () => {
+    const attack = MELEE_ABILITIES.find((ability) => ability.id === "attack")!;
+    const multiHitAttack: AbilitySpec = {
+      ...attack,
+      id: "multi_hit_attack",
+      hits: [attack.hits[0]!, attack.hits[0]!],
+    };
+    const context = createCastContext({
+      ...baseInput,
+      league: avernic,
+      context: { style: "melee", ruleset: "equilibrium" },
+    });
+    expect(rngPointsFor(context.getState(), multiHitAttack, 0, 0, undefined, avernic)).toEqual([
+      { id: "avernic-rampage", chance: 0.05 },
+    ]);
   });
 
   it("changes expected damage when only a proc-funded follow-up is affordable", () => {

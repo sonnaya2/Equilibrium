@@ -405,7 +405,7 @@ describe("solver host lifecycle", () => {
       const id = (w.lastStart as { requestId: number } | null)?.requestId;
       if (id != null) {
         w.emit({ type: "started", requestId: id });
-        w.emit({ type: "error", requestId: id, error: "boom" });
+        w.emit({ type: "error", requestId: id, error: "boom", failureKind: "infrastructure" });
       }
     }
     await vi.advanceTimersByTimeAsync(0);
@@ -414,7 +414,7 @@ describe("solver host lifecycle", () => {
       const id = (w.lastStart as { requestId: number } | null)?.requestId;
       if (id != null) {
         w.emit({ type: "started", requestId: id });
-        w.emit({ type: "error", requestId: id, error: "boom2" });
+        w.emit({ type: "error", requestId: id, error: "boom2", failureKind: "infrastructure" });
       }
     }
     await vi.advanceTimersByTimeAsync(50);
@@ -685,7 +685,12 @@ describe("solver host lifecycle", () => {
       const id = (w.lastStart as { requestId: number } | null)?.requestId;
       if (id != null) {
         w.emit({ type: "started", requestId: id });
-        w.emit({ type: "error", requestId: id, error: "pool-boom" });
+        w.emit({
+          type: "error",
+          requestId: id,
+          error: "pool-boom",
+          failureKind: "infrastructure",
+        });
       }
     }
     await vi.advanceTimersByTimeAsync(0);
@@ -699,12 +704,37 @@ describe("solver host lifecycle", () => {
       const id = (w.lastStart as { requestId: number } | null)?.requestId;
       if (id != null) {
         w.emit({ type: "started", requestId: id });
-        w.emit({ type: "error", requestId: id, error: "single-boom" });
+        w.emit({
+          type: "error",
+          requestId: id,
+          error: "single-boom",
+          failureKind: "infrastructure",
+        });
       }
     }
     await vi.advanceTimersByTimeAsync(50);
     await expect(p).rejects.toThrow(/worker failed: single-boom/);
     expect(mainCalls).toBe(0);
+  });
+
+  it("does not retry a deterministic solver-domain error", async () => {
+    FakeWorker.autoStarted = false;
+    const p = runOptimize(sampleRequest(), undefined, { agents: 1 });
+    void p.catch(() => undefined);
+    await vi.advanceTimersByTimeAsync(0);
+    const workers = [...FakeWorker.instances];
+    expect(workers).toHaveLength(1);
+    const worker = workers[0]!;
+    const requestId = (worker.lastStart as { requestId: number }).requestId;
+    worker.emit({ type: "started", requestId });
+    worker.emit({
+      type: "error",
+      requestId,
+      error: "deterministic solver-domain failure",
+      failureKind: "domain",
+    });
+    await expect(p).rejects.toThrow(/deterministic solver-domain failure/);
+    expect(FakeWorker.instances).toHaveLength(1);
   });
 
   it("runSolverOnMainThread is cooperative with isCancelled", async () => {

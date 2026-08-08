@@ -346,7 +346,7 @@
 {"entityId":"item:chaotic-rapier","slot":"mainhand","style":"melee","tier":80}
 {"entityId":"item:chaotic-spear","slot":"twohand","style":"melee","tier":80}
 {"entityId":"item:chaotic-staff","slot":"twohand","style":"magic","tier":80}
-{"entityId":"item:cinderbane-gloves","slot":"gloves","style":"melee","tier":85}
+{"entityId":"item:cinderbane-gloves","slot":"gloves","style":"hybrid","tier":85}
 {"entityId":"item:corrupted-defender","slot":"offhand","style":"melee","tier":70}
 {"entityId":"item:corrupted-slayer-helmet","slot":"helmet","style":"hybrid","tier":70}
 {"entityId":"item:cryptbloom-body","slot":"body","style":"magic","tier":90}

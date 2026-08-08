@@ -2,7 +2,6 @@ import {
   PLAYER_POISON_EFFECT_ID,
   PLAYER_POISON_FIRST_HIT_DELAY,
   PLAYER_POISON_STATUS_TICKS,
-  PLAYER_POISON_ZERO_DAMAGE_DECAY_INDEX,
   activeEvolvingToxinStacks,
   evolvingToxinPoisonModifier,
   isTargetPoisonImmune,
@@ -45,6 +44,20 @@ import {
   type TargetWeaponPoisonPendingHit,
   type TargetWeaponPoisonState,
 } from "../runtime/state";
+import {
+  DECAY_OVERFLOW,
+  choose,
+  decayMean,
+  failedDecayMass,
+  finiteCountMass,
+  geometricShiftDecayMass,
+  geometricZeroDecayMass,
+  normalizedDecayMass,
+  pointDecayMass,
+  shiftDecayMass,
+  trailingDecayMass,
+  mixDecayMass,
+} from "./playerPoisonDistribution";
 
 type PoisonAtomWithHistory = TargetWeaponPoisonAtom & {
   readonly supportMin: number;
@@ -100,149 +113,6 @@ export interface PlayerPoisonLandResult {
   expectedAttempts: number;
   expectedSuccesses: number;
   expectedApplicationHits: number;
-}
-
-const DECAY_OVERFLOW = PLAYER_POISON_ZERO_DAMAGE_DECAY_INDEX;
-const ZERO_DECAY_MASS = Array.from({ length: DECAY_OVERFLOW + 1 }, (_, index) =>
-  index === 0 ? 1 : 0,
-);
-const SINGLE_COUNT_MASS = [0, 1];
-const trailingDecayMassCache = new Map<string, number[]>();
-const finiteCountMassCache = new Map<string, number[]>();
-const geometricZeroDecayMassCache = new Map<number, number[]>();
-
-function normalizedDecayMass(mass: readonly number[]): number[] {
-  if (mass.length === DECAY_OVERFLOW + 1) return mass as number[];
-  const normalized = Array.from({ length: DECAY_OVERFLOW + 1 }, () => 0);
-  for (let index = 0; index < mass.length; index++) {
-    normalized[Math.min(index, DECAY_OVERFLOW)]! += mass[index] ?? 0;
-  }
-  return normalized;
-}
-
-function pointDecayMass(index = 0): number[] {
-  if (index === 0) return ZERO_DECAY_MASS;
-  const mass = Array.from({ length: DECAY_OVERFLOW + 1 }, () => 0);
-  mass[Math.min(Math.max(0, Math.floor(index)), DECAY_OVERFLOW)] = 1;
-  return mass;
-}
-
-function decayMean(mass: readonly number[]): number {
-  return mass.reduce((sum, probability, index) => sum + probability * index, 0);
-}
-
-function mixDecayMass(
-  left: readonly number[],
-  right: readonly number[],
-  leftWeight: number,
-  rightWeight: number,
-): number[] {
-  const total = leftWeight + rightWeight;
-  const a = normalizedDecayMass(left);
-  const b = normalizedDecayMass(right);
-  return a.map((value, index) => (leftWeight * value + rightWeight * b[index]!) / total);
-}
-
-function shiftDecayMass(mass: readonly number[], steps: number): number[] {
-  const source = normalizedDecayMass(mass);
-  const shifted = new Array<number>(DECAY_OVERFLOW + 1).fill(0);
-  const overflowStart = Math.max(0, DECAY_OVERFLOW - steps);
-  for (let index = 0; index < overflowStart; index++) {
-    shifted[index + steps] = source[index]!;
-  }
-  for (let index = overflowStart; index <= DECAY_OVERFLOW; index++) {
-    shifted[DECAY_OVERFLOW]! += source[index]!;
-  }
-  return shifted;
-}
-
-function geometricZeroDecayMass(continuation: number): number[] {
-  const cached = geometricZeroDecayMassCache.get(continuation);
-  if (cached) return cached;
-  const mass = Array.from({ length: DECAY_OVERFLOW + 1 }, () => 0);
-  for (let index = 0; index < DECAY_OVERFLOW; index++) {
-    mass[index] = (1 - continuation) * continuation ** index;
-  }
-  mass[DECAY_OVERFLOW] = continuation ** DECAY_OVERFLOW;
-  geometricZeroDecayMassCache.set(continuation, mass);
-  return mass;
-}
-
-function geometricShiftDecayMass(initial: readonly number[], continuation: number): number[] {
-  const shifted = Array.from({ length: DECAY_OVERFLOW + 1 }, () => 0);
-  const source = normalizedDecayMass(initial);
-  for (let start = 0; start <= DECAY_OVERFLOW; start++) {
-    const sourceMass = source[start]!;
-    if (!(sourceMass > 0)) continue;
-    const room = DECAY_OVERFLOW - start;
-    for (let steps = 1; steps < room; steps++) {
-      shifted[start + steps]! += sourceMass * (1 - continuation) * continuation ** (steps - 1);
-    }
-    shifted[DECAY_OVERFLOW]! += sourceMass * continuation ** Math.max(0, room - 1);
-  }
-  return shifted;
-}
-
-function choose(n: number, k: number): number {
-  const count = Math.min(k, n - k);
-  let value = 1;
-  for (let index = 1; index <= count; index++) {
-    value = (value * (n - count + index)) / index;
-  }
-  return value;
-}
-
-function trailingDecayMass(hitCount: number, successes: number): number[] {
-  const key = `${hitCount}:${successes}`;
-  const cached = trailingDecayMassCache.get(key);
-  if (cached) return cached;
-  const mass = Array.from({ length: DECAY_OVERFLOW + 1 }, () => 0);
-  const denominator = choose(hitCount, successes);
-  for (let trailing = 0; trailing <= hitCount - successes; trailing++) {
-    mass[Math.min(trailing, DECAY_OVERFLOW)]! +=
-      choose(hitCount - trailing - 1, successes - 1) / denominator;
-  }
-  trailingDecayMassCache.set(key, mass);
-  return mass;
-}
-
-function finiteCountMass(multiplicity: TargetWeaponPoisonHitMultiplicity): number[] | undefined {
-  if (multiplicity.kind === "positive-geometric") return undefined;
-  if (multiplicity.kind === "single") return SINGLE_COUNT_MASS;
-  const { trials, probability } = multiplicity;
-  const key = `${trials}:${probability}`;
-  const cached = finiteCountMassCache.get(key);
-  if (cached) return cached;
-  const positive = 1 - (1 - probability) ** trials;
-  const mass = Array.from({ length: trials + 1 }, () => 0);
-  for (let count = 1; count <= trials; count++) {
-    mass[count] =
-      (choose(trials, count) * probability ** count * (1 - probability) ** (trials - count)) /
-      positive;
-  }
-  finiteCountMassCache.set(key, mass);
-  return mass;
-}
-
-function failedDecayMass(
-  initial: readonly number[],
-  multiplicity: TargetWeaponPoisonHitMultiplicity,
-): number[] {
-  const finite = finiteCountMass(multiplicity);
-  if (!finite) {
-    if (multiplicity.kind !== "positive-geometric") {
-      throw new Error("unsupported poison hit multiplicity");
-    }
-    return geometricShiftDecayMass(initial, multiplicity.continuationProbability);
-  }
-  let combined = Array.from({ length: DECAY_OVERFLOW + 1 }, () => 0);
-  for (let count = 1; count < finite.length; count++) {
-    const probability = finite[count]!;
-    if (!(probability > 0)) continue;
-    const shifted = shiftDecayMass(initial, count);
-    combined = combined.map((value, index) => value + probability * shifted[index]!);
-  }
-  return combined;
 }
 
 function pendingOrderClasses(rt: SimulationRuntime): (tick: number, seq: number) => number {

@@ -1,4 +1,4 @@
-import { finalizeAnalysis } from "../analysis";
+import { finalizeAnalysis, graspGroupFromEffects } from "../analysis";
 import {
   appendWithIntermediateCap,
   branchCapsFromBudget,
@@ -72,6 +72,7 @@ const SOURCE_KINDS: readonly DamageSourceKind[] = [
 const EMPTY_ANALYSIS = {
   bySource: [] as { kind: DamageSourceKind; damage: number }[],
   byEffect: [] as DamageEffectBreakdown[],
+  groups: [],
   directDamage: 0,
   dotDamage: 0,
   criticalContribution: 0,
@@ -580,7 +581,8 @@ export function combineBranchSummaries(
     | "criticalContribution"
     | "capLoss"
     | "minimumDamage"
-    | "maximumDamage";
+    | "maximumDamage"
+    | "analysisGroupActivations";
   // Count fields stay conditional means; damage fields use known-mass scale with residual.
   const DAMAGE_EFFECT_FIELDS = new Set<EffectNumericField>([
     "totalDamage",
@@ -685,6 +687,10 @@ export function combineBranchSummaries(
                 : {}),
               ...(sample.maximumDamage !== undefined
                 ? { maximumDamage: value("maximumDamage") }
+                : {}),
+              ...(sample.analysisGroupId ? { analysisGroupId: sample.analysisGroupId } : {}),
+              ...(sample.analysisGroupActivations !== undefined
+                ? { analysisGroupActivations: value("analysisGroupActivations") }
                 : {}),
             };
           })
@@ -855,6 +861,7 @@ export function combineBranchSummaries(
       ? {
           bySource,
           byEffect,
+          groups: graspGroupFromEffects(byEffect, safeExpected),
           directDamage: toKnownMass(mix((s) => s.analysis.directDamage)),
           dotDamage: toKnownMass(mix((s) => s.analysis.dotDamage)),
           criticalContribution: toKnownMass(mix((s) => s.analysis.criticalContribution)),

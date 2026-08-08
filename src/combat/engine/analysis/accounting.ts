@@ -175,6 +175,12 @@ export function accountAnalysisEvent(
   ledger.expectedActivations += mult.expectedActivations;
   ledger.expectedSeparateHits += mult.expectedSeparateHits;
   ledger.expectedAttachedComponents += mult.expectedAttachedComponents;
+  if (event.analysisGroupId) {
+    ledger.analysisGroupId = event.analysisGroupId;
+    ledger.analysisGroupActivations =
+      (ledger.analysisGroupActivations ?? 0) +
+      (event.analysisGroupActivations ?? mult.expectedActivations);
+  }
   if (event.blessingId) {
     const source = sourceLedger(ledger, event.blessingId);
     source.totalDamage += hostExpected;

@@ -3,7 +3,7 @@
  * No React; safe to unit-test without the solver host.
  */
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
-import type { RotationSummary } from "@/combat/engine/simulation/simulate";
+import type { CastRecord, RotationSummary } from "@/combat/engine/simulation/simulate";
 import { ticksToSeconds } from "@/combat/core/ticks";
 import {
   clampSolverBarSizes,
@@ -32,6 +32,19 @@ export type SolverStoppedPreview = {
   profileId: ObjectiveProfileId;
   tier: SolverSearchTier;
 };
+
+function formatAdrenalineValue(value: number): string {
+  return `${Math.round(value * 10) / 10}%`;
+}
+
+/** Ability resources before occupancy passives, then the end-of-occupancy total. */
+export function formatAdrenalineTimeline(
+  cast: Pick<CastRecord, "adrenalineAfter" | "adrenalineAfterResources">,
+): string {
+  const end = formatAdrenalineValue(cast.adrenalineAfter);
+  if (typeof cast.adrenalineAfterResources !== "number") return end;
+  return `${formatAdrenalineValue(cast.adrenalineAfterResources)} → ${end}`;
+}
 
 /** Fixed length n, or a min..max search window. */
 export type BarSizePresetId =

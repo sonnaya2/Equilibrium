@@ -7,6 +7,7 @@ import {
   barsMatch,
   clampedBarBoundsFromPreset,
   formatNumber,
+  formatAdrenalineTimeline,
   formatProofLabel,
   formatTime,
   APPLY_FINAL_STAMP_REJECT_MESSAGE,
@@ -43,6 +44,13 @@ import { toResolvedCombatModel } from "./toResolvedCombatModel";
 import { packSolverRequestFromUi } from "./useRevolutionSolver";
 
 describe("revoPanelFormat", () => {
+  it("labels ability resources separately from end-of-occupancy adrenaline", () => {
+    expect(formatAdrenalineTimeline({ adrenalineAfterResources: 12, adrenalineAfter: 18 })).toBe(
+      "12% → 18%",
+    );
+    expect(formatAdrenalineTimeline({ adrenalineAfter: 18 })).toBe("18%");
+  });
+
   it("labels solver phases for status chrome", () => {
     expect(solverPhaseLabel("seed")).toBe("Seeding");
     expect(solverPhaseLabel("finalize")).toBe("Scoring");

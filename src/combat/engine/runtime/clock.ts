@@ -11,6 +11,7 @@ import {
 } from "../schedulers/playerPoison";
 import { applyPoisonLandEffects } from "../simulation/poisonLand";
 import { temperedHeartAdrenalineGain } from "../../league/ruleset";
+import { clockAdvanceBounds } from "./clockBounds";
 
 /**
  * The canonical simulation clock. Time moves only through advanceTo: it lands
@@ -76,19 +77,20 @@ function grantVestmentsPassive(
 function grantTemperedHeart(
   rt: SimulationRuntime,
   fromTick: number,
-  toTickExclusive: number,
+  toTickInclusive: number,
 ): void {
-  const gain = temperedHeartAdrenalineGain(rt.input.league, fromTick, toTickExclusive);
+  const gain = temperedHeartAdrenalineGain(rt.input.league, fromTick, toTickInclusive);
   if (gain > 0) rt.state = gainAdrenaline(rt.state, gain);
 }
 
 export function advanceTo(rt: SimulationRuntime, targetTick: number): void {
   if (targetTick < rt.state.tick) return;
+  const bounds = clockAdvanceBounds(targetTick, rt.horizon);
   // A horizon run never lands events at or after the horizon (half-open).
-  processDueEvents(rt, rt.horizon != null ? Math.min(targetTick, rt.horizon - 1) : targetTick);
-  grantMeteorPassive(rt, rt.state.tick, targetTick);
-  grantVestmentsPassive(rt, rt.state.tick, targetTick);
-  grantTemperedHeart(rt, rt.state.tick, targetTick);
+  processDueEvents(rt, bounds.eventEndInclusive);
+  grantMeteorPassive(rt, rt.state.tick, bounds.perTickEndExclusive);
+  grantVestmentsPassive(rt, rt.state.tick, bounds.perTickEndExclusive);
+  grantTemperedHeart(rt, rt.state.tick, bounds.eventEndInclusive);
   if (rt.state.melee.bloodlust.berserk && targetTick >= rt.state.melee.berserkUntilTick) {
     rt.state = patchMelee(rt.state, {
       bloodlust: endBerserk(rt.state.melee.bloodlust),

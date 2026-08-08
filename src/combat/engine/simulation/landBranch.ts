@@ -37,6 +37,7 @@ import {
   processNextPlayerPoisonEvent,
 } from "../schedulers/playerPoison";
 import { temperedHeartAdrenalineGain } from "../../league/ruleset";
+import { clockAdvanceBounds } from "../runtime/clockBounds";
 
 /**
  * Soft intermediate budget while folding Leng expands in one event tick.
@@ -121,9 +122,14 @@ function grantVestmentsPassive(
 }
 
 function completeAdvance(rt: SimulationRuntime, fromTick: number, targetTick: number): void {
-  grantMeteorPassive(rt, fromTick, targetTick);
-  grantVestmentsPassive(rt, fromTick, targetTick);
-  const temperedHeartGain = temperedHeartAdrenalineGain(rt.input.league, fromTick, targetTick);
+  const bounds = clockAdvanceBounds(targetTick, rt.horizon);
+  grantMeteorPassive(rt, fromTick, bounds.perTickEndExclusive);
+  grantVestmentsPassive(rt, fromTick, bounds.perTickEndExclusive);
+  const temperedHeartGain = temperedHeartAdrenalineGain(
+    rt.input.league,
+    fromTick,
+    bounds.eventEndInclusive,
+  );
   if (temperedHeartGain > 0) rt.state = gainAdrenaline(rt.state, temperedHeartGain);
   if (rt.state.melee.bloodlust.berserk && targetTick >= rt.state.melee.berserkUntilTick) {
     rt.state = patchMelee(rt.state, {

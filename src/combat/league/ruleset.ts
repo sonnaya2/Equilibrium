@@ -394,12 +394,13 @@ export function blessingAdrenalineGenerationMultiplier(
 export function temperedHeartAdrenalineGain(
   rules: ResolvedLeagueRules | undefined,
   fromTick: number,
-  toTickExclusive: number,
+  toTickInclusive: number,
 ): number {
   const passive = blessingRule(rules, "tempered-heart")?.passiveAdrenaline;
-  if (!passive || passive.intervalTicks <= 0 || toTickExclusive <= fromTick) return 0;
+  if (!passive || passive.intervalTicks <= 0 || toTickInclusive <= fromTick) return 0;
+  // The clock transition is (fromTick, toTickInclusive]; the first pulse is at intervalTicks.
   const pulses =
-    Math.floor(toTickExclusive / passive.intervalTicks) -
+    Math.floor(toTickInclusive / passive.intervalTicks) -
     Math.floor(fromTick / passive.intervalTicks);
   return Math.max(0, pulses) * passive.amount;
 }
@@ -457,8 +458,13 @@ export function leagueModifiers(rules: ResolvedLeagueRules | undefined): CombatM
       id: "blessing:striking-light",
       stage: "ability",
       priority: 900,
+      abilityBaseMultiplier: striking.combat.basicDamageMultiplier,
       applies: (context) =>
-        context.ruleset === "equilibrium" && notBlessingDamage(context) && isBasicAttack(context),
+        context.ruleset === "equilibrium" &&
+        notBlessingDamage(context) &&
+        isBasicAttack(context) &&
+        (resolveCombatProvenance(context).kind === "player_direct" ||
+          resolveCombatProvenance(context).kind === "player_auto"),
       apply: (state) => ({
         ...state,
         damage: mulFloor(state.damage, striking.combat.basicDamageMultiplier!),

@@ -35,6 +35,7 @@ import { isBasicAttack } from "../shared/adrenalineGain";
 import { mulFloor } from "../core/rounding";
 import type { StatefulOccurrenceModel } from "../engine/runtime/events";
 import { extendTearingThornsAbility } from "../shared/dotDurationExtension";
+import { applyAbilityBaseModifiers } from "../pipeline/modifierPipeline";
 
 /** Tag for blessing-generated damage instances shown in analysis. */
 export type BlessingDamageTag = "bonus-damage";
@@ -47,6 +48,10 @@ export interface LeagueDamageComponent {
   damageTag?: BlessingDamageTag;
   /** Effect row that receives this bonus instead of the scheduling parent. */
   bonusTargetId?: string;
+  /** Presentation-only roll-up identity for grouped damage components. */
+  analysisGroupId?: string;
+  /** Trigger activations represented by this component. */
+  analysisGroupActivations?: number;
   /** Legacy application weight; kept for older consumers and EV packing. */
   expectedOccurrences: number;
   /** Expected proc rolls this component represents (Inferno 5% = 1). */
@@ -302,8 +307,12 @@ export function resolveLeagueAttachedHost(
     damageSource: outgoingSourceOf(provenance),
     provenance,
   };
+  const prepared = applyAbilityBaseModifiers(input.base, input.modifiers ?? [], context);
   if (!input.rules) {
-    const composed = calculateHitWithAttached({ ...input, provenance, context }, []);
+    const composed = calculateHitWithAttached(
+      { ...input, base: prepared.base, modifiers: prepared.modifiers, provenance, context },
+      [],
+    );
     return {
       hit: composed.hit,
       baseHit: composed.baseHit,
@@ -313,10 +322,10 @@ export function resolveLeagueAttachedHost(
   const terms = resolveLeagueAttachedTerms({
     ...input,
     rules: input.rules,
-    abilityBase: input.base,
+    abilityBase: prepared.base,
   });
   const composed = calculateHitWithAttached(
-    { ...input, provenance, context },
+    { ...input, base: prepared.base, modifiers: prepared.modifiers, provenance, context },
     terms.map(({ id, amount }) => ({ id, amount })),
   );
   const components = leagueAttachedComponents(composed.attached, terms, input.bonusTargetId);
@@ -688,8 +697,8 @@ export function graspOfGuthixComponents(input: GraspOfGuthixInput): LeagueDamage
       effectId: "grasp-of-guthix-max-life",
       blessingId: "tearing-thorns",
       attached: false,
-      damageTag: "bonus-damage",
-      bonusTargetId: "grasp-of-guthix",
+      analysisGroupId: "grasp-of-guthix",
+      analysisGroupActivations: input.triggers,
       expectedOccurrences: applications,
       expectedTriggerRolls: 0,
       expectedActivations: applications,
@@ -724,8 +733,8 @@ export function graspOfGuthixComponents(input: GraspOfGuthixInput): LeagueDamage
       effectId: "grasp-of-guthix-poison",
       blessingId: tearing ? "tearing-thorns" : "barkscales",
       attached: false,
-      damageTag: "bonus-damage",
-      bonusTargetId: "grasp-of-guthix",
+      analysisGroupId: "grasp-of-guthix",
+      analysisGroupActivations: input.triggers,
       expectedOccurrences: applications,
       expectedTriggerRolls: 0,
       expectedActivations: applications,

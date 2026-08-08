@@ -247,16 +247,30 @@ describe("Striking Light ability mult", () => {
       (modifier) => modifier.id === "blessing:striking-light",
     )!;
 
-  it("applies to Basic Attacks only and ignores blessing provenance damage", () => {
+  it("applies a 1.4x base multiplier to direct Basic Attacks only", () => {
     const modifier = strikingModifier();
+    expect(modifier.abilityBaseMultiplier).toBe(1.4);
     expect(
       modifier.applies({
         style: "magic",
         ruleset: "equilibrium",
         abilityCategory: "basic",
         basicAttack: true,
+        provenance: { kind: "player_direct" },
       }),
     ).toBe(true);
+    expect(
+      modifier.apply(
+        { damage: 1_000 },
+        {
+          style: "magic",
+          ruleset: "equilibrium",
+          abilityCategory: "basic",
+          basicAttack: true,
+          provenance: { kind: "player_direct" },
+        },
+      ).damage,
+    ).toBe(1_400);
     expect(
       modifier.applies({
         style: "magic",
@@ -271,6 +285,15 @@ describe("Striking Light ability mult", () => {
         abilityCategory: "basic",
         basicAttack: true,
         provenance: { kind: "blessing" },
+      }),
+    ).toBe(false);
+    expect(
+      modifier.applies({
+        style: "magic",
+        ruleset: "equilibrium",
+        abilityCategory: "basic",
+        basicAttack: true,
+        provenance: { kind: "attached" },
       }),
     ).toBe(false);
   });

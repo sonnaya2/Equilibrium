@@ -308,6 +308,10 @@ export interface DamageEffectBreakdown {
   averagePerActivation: number;
   /** Same effect id split by originating league blessing. */
   sourceBreakdown?: DamageEffectSourceBreakdown[];
+  /** Presentation-only grouped roll-up identity. */
+  analysisGroupId?: string;
+  /** Probability-weighted unique triggers represented by this group member. */
+  analysisGroupActivations?: number;
   directDamage: number;
   dotDamage: number;
   criticalContribution: number;
@@ -316,9 +320,27 @@ export interface DamageEffectBreakdown {
   maximumDamage?: number;
 }
 
+export interface DamageEffectGroupBreakdown {
+  id: string;
+  kind: DamageSourceKind;
+  totalDamage: number;
+  share: number;
+  expectedActivations: number;
+  expectedSeparateHits: number;
+  expectedAttachedComponents: number;
+  sourceBreakdown?: DamageEffectSourceBreakdown[];
+  directDamage: number;
+  dotDamage: number;
+  criticalContribution: number;
+  capLoss: number;
+  components: DamageEffectBreakdown[];
+}
+
 export interface RotationDamageAnalysis {
   bySource: DamageSourceBreakdown[];
   byEffect: DamageEffectBreakdown[];
+  /** Non-additive public roll-ups; totals are already represented in byEffect. */
+  groups?: DamageEffectGroupBreakdown[];
   directDamage: number;
   dotDamage: number;
   criticalContribution: number;

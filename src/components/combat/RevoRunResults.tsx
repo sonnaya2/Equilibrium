@@ -22,7 +22,13 @@ import {
   isBlessingEffectRow,
   strikingLightBasicRowMark,
 } from "./blessingPresentation";
-import { castCritLabel, formatCount, formatNumber, formatTime } from "./revoPanelFormat";
+import {
+  castCritLabel,
+  formatAdrenalineTimeline,
+  formatCount,
+  formatNumber,
+  formatTime,
+} from "./revoPanelFormat";
 import {
   primaryDamageLabel,
   primaryDpsLabel,
@@ -102,7 +108,9 @@ export function RevoRunResults({
   onCancelRun,
   sliverToggle = null,
 }: RevoRunResultsProps) {
-  const contributions = result?.analysis.byEffect ?? [];
+  const groups = result?.analysis.groups ?? [];
+  const contributions =
+    result?.analysis.byEffect.filter((row) => row.analysisGroupId == null) ?? [];
   const basicCount = result?.casts.filter((c) => c.auto).length ?? 0;
   const horizonTicks = result?.horizonTicks ?? 0;
   const castLog = result ? (showAllCasts ? result.casts : result.casts.slice(0, 40)) : [];
@@ -357,7 +365,12 @@ export function RevoRunResults({
                     <th className="py-1.5 pr-2 font-medium">Tick</th>
                     <th className="py-1.5 pr-2 font-medium">Time</th>
                     <th className="py-1.5 pr-2 font-medium">Ability</th>
-                    <th className="py-1.5 pr-2 font-medium">Adren</th>
+                    <th
+                      className="py-1.5 pr-2 font-medium"
+                      title="Ability resources → end of occupancy"
+                    >
+                      Adren (resources → end)
+                    </th>
                     <th className="py-1.5 font-medium">Damage</th>
                   </tr>
                 </thead>
@@ -429,9 +442,7 @@ export function RevoRunResults({
                         </span>
                       </td>
                       <td className="py-1 pr-2 font-mono text-parch-300">
-                        {typeof cast.adrenalineAfter === "number"
-                          ? `${Math.round(cast.adrenalineAfter * 10) / 10}%`
-                          : `${cast.adrenalineAfter}%`}
+                        {formatAdrenalineTimeline(cast)}
                       </td>
                       <td className="py-1 font-mono text-parch-50">
                         {formatNumber(cast.result.expected)}
@@ -457,6 +468,31 @@ export function RevoRunResults({
               Ability damage
             </h3>
             <div className="revo-contributions mt-2 border-t border-stone-750">
+              {groups.map((group) => (
+                <div
+                  key={group.id}
+                  className="revo-contribution-row grid grid-cols-[1fr_auto_auto] gap-4 border-b border-stone-750/70 py-2 text-xs"
+                  data-effect-group={group.id}
+                >
+                  <span className="flex min-w-0 items-center gap-2 text-parch-50">
+                    <span className="truncate">
+                      {formatBlessingByEffectLabel(group.id, group.kind, effectLabel(group.id))}
+                    </span>
+                    <span
+                      className="shrink-0 font-mono text-[10px] text-gold-300"
+                      title="Unique grouped triggers"
+                    >
+                      ×{formatCount(group.expectedActivations)}
+                    </span>
+                  </span>
+                  <span className="font-mono text-parch-300">
+                    {formatNumber(group.totalDamage)}
+                  </span>
+                  <span className="font-mono text-parch-50">
+                    {Math.round(group.share * 1000) / 10}%
+                  </span>
+                </div>
+              ))}
               {contributions.map((row) => (
                 <div
                   key={row.id}

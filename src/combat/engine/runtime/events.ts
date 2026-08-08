@@ -246,6 +246,10 @@ export interface ScheduledEvent<RT = unknown> {
   damageTag?: BlessingDamageTag;
   /** Effect row that receives this bonus instead of the scheduling parent. */
   bonusTargetId?: string;
+  /** Presentation-only roll-up identity for grouped damage components. */
+  analysisGroupId?: string;
+  /** Trigger activations represented by one grouped event. */
+  analysisGroupActivations?: number;
   /**
    * Legacy application weight for expected-value events. Prefer the explicit
    * multiplicity fields below; kept so older schedulers and tests still work.

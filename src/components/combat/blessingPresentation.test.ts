@@ -57,6 +57,13 @@ describe("blessingPresentation", () => {
     expect(blessingEffectDisplayName("inferno-of-zamorak")).toBe("Inferno");
     expect(blessingEffectDisplayName("light-of-saradomin")).toBe("Light of Saradomin");
     expect(blessingEffectDisplayName("grasp-of-guthix")).toBe("Grasp of Guthix");
+    expect(blessingEffectDisplayName("grasp-of-guthix-max-life")).toBe(
+      "Grasp of Guthix · Max life",
+    );
+    expect(blessingEffectDisplayName("grasp-of-guthix-poison")).toBe("Grasp of Guthix · Poison");
+    expect(blessingEffectDisplayName("grasp-of-guthix-big-boned")).toBe(
+      "Big Boned · attached to Grasp",
+    );
     expect(blessingEffectDisplayName("greater_ricochet")).toBeNull();
   });
 

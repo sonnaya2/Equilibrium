@@ -49,6 +49,8 @@ export interface CombatModifier {
   id: string;
   stage: ModifierStage;
   priority: number;
+  /** Multiplier applied to ability base damage before its percentage band rolls. */
+  abilityBaseMultiplier?: number;
   /** Explicitly sourced target/global modifier for player-applied poison. */
   appliesToPlayerPoison?: boolean;
   applies(context: CombatContext): boolean;

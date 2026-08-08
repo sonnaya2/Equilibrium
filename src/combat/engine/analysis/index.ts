@@ -7,4 +7,4 @@ export {
 } from "./contracts";
 export { accountAnalysisEvent, accountPlayerPoisonHits, sourceKindOf } from "./accounting";
 export { resolveEventMultiplicity, type ResolvedMultiplicity } from "./multiplicity";
-export { analysisReconciles, finalizeAnalysis } from "./finalize";
+export { analysisReconciles, finalizeAnalysis, graspGroupFromEffects } from "./finalize";

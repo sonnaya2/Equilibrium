@@ -55,6 +55,7 @@ export * from "./shared/potions";
 
 export type {
   DamageEffectBreakdown,
+  DamageEffectGroupBreakdown,
   DamageSourceKind,
   RotationSummary,
   CastRecord,

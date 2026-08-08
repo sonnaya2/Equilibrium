@@ -48,6 +48,10 @@ export interface EffectAnalysisLedger {
   bonusDamage: number;
   /** Same-effect blessing rows retained by their originating blessing. */
   sources?: Map<string, EffectAnalysisSourceLedger>;
+  /** Presentation-only grouped roll-up identity. */
+  analysisGroupId?: string;
+  /** Probability-weighted unique triggers represented by this group member. */
+  analysisGroupActivations?: number;
   minimumDamage?: number;
   maximumDamage?: number;
 }
@@ -203,6 +207,18 @@ export function mixAnalysisStates(
       ),
       bonusDamage: mix(left?.bonusDamage ?? 0, right?.bonusDamage ?? 0),
       ...(sources.size > 0 ? { sources } : {}),
+      ...((left?.analysisGroupId ?? right?.analysisGroupId)
+        ? { analysisGroupId: left?.analysisGroupId ?? right?.analysisGroupId }
+        : {}),
+      ...(left?.analysisGroupActivations !== undefined ||
+      right?.analysisGroupActivations !== undefined
+        ? {
+            analysisGroupActivations: mix(
+              left?.analysisGroupActivations ?? 0,
+              right?.analysisGroupActivations ?? 0,
+            ),
+          }
+        : {}),
       ...(left?.minimumDamage !== undefined || right?.minimumDamage !== undefined
         ? { minimumDamage: mix(left?.minimumDamage ?? 0, right?.minimumDamage ?? 0) }
         : {}),

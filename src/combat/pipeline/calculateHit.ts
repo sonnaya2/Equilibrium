@@ -12,7 +12,11 @@ import {
   recordHitExpectationCall,
   recordIntegerBandPoints,
 } from "../profiling/hitPipeline";
-import { compileActiveModifiers, runOrderedPipeline } from "./modifierPipeline";
+import {
+  applyAbilityBaseModifiers,
+  compileActiveModifiers,
+  runOrderedPipeline,
+} from "./modifierPipeline";
 import type { CombatContext, CombatModifier } from "../types";
 
 export interface HitInput {
@@ -174,8 +178,19 @@ function exactMean(
  * the inclusive uniform integer band, preserving every floor and partial cap exactly.
  */
 export function calculateHit(input: HitInput): HitResult {
-  const { min, max } = rawHitBand(input);
-  return calculateRawHitBand({ ...input, min, max });
+  const context = resolvedHitContext(input);
+  const prepared = applyAbilityBaseModifiers(input.base, input.modifiers ?? [], context);
+  const { min, max } = rawHitBand({
+    ...input,
+    base: prepared.base,
+    modifiers: prepared.modifiers,
+  });
+  return calculateRawHitBand({
+    ...input,
+    min,
+    max,
+    modifiers: prepared.modifiers,
+  });
 }
 
 function rawHitBand(input: HitInput): { min: number; max: number } {
@@ -214,8 +229,19 @@ export function calculateHitWithAttached(
   input: HitInput,
   attached: readonly AttachedRawDamage[],
 ): ComposedHitResult {
-  const raw = rawHitBand(input);
-  const shared: RawHitBandInput = { ...input, min: raw.min, max: raw.max };
+  const context = resolvedHitContext(input);
+  const prepared = applyAbilityBaseModifiers(input.base, input.modifiers ?? [], context);
+  const raw = rawHitBand({
+    ...input,
+    base: prepared.base,
+    modifiers: prepared.modifiers,
+  });
+  const shared: RawHitBandInput = {
+    ...input,
+    modifiers: prepared.modifiers,
+    min: raw.min,
+    max: raw.max,
+  };
   delete (shared as Partial<HitInput>).preciseRank;
   return calculateRawHitBandWithAttached(shared, attached);
 }

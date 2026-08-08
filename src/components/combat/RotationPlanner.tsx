@@ -24,6 +24,7 @@ import { AbilityCategoryChip } from "./AbilityCategoryChip";
 import { CombatFrameCorners } from "./CombatFrameCorners";
 import { CalculationAssumptions } from "./CalculationAssumptions";
 import { spiritEffectDisplayName } from "./conjurePresentation";
+import { blessingEffectDisplayName } from "./blessingPresentation";
 import { critDamageStats, type CalcStats } from "./loadoutStats";
 import { resolveLoadoutCombat } from "./toResolvedCombatModel";
 import { RevolutionPanel } from "./RevolutionPanel";
@@ -40,6 +41,7 @@ import { unlockedRegions } from "@/league";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
 import { uiRunFingerprint } from "./uiSimFingerprint";
 import { equipAbilityForLoadout, filterAbilitiesForLoadout } from "./abilityLoadoutFilter";
+import { formatAdrenalineTimeline } from "./revoPanelFormat";
 
 const STORAGE_KEY = "eq:rotation:v1";
 const MANUAL_HORIZON_TICKS = 100;
@@ -67,7 +69,9 @@ function abilityById(id: string): AbilitySpec | undefined {
 }
 
 function abilityName(id: string): string {
-  return abilityById(id)?.name ?? spiritEffectDisplayName(id) ?? id;
+  return (
+    blessingEffectDisplayName(id) ?? abilityById(id)?.name ?? spiritEffectDisplayName(id) ?? id
+  );
 }
 
 function castCritLabel(result: RotationSummary["casts"][number]["result"]): string | null {
@@ -332,7 +336,9 @@ export function RotationPlanner({
         critPct: critChance,
       });
 
-  const contributions = liveResult?.analysis.byEffect ?? [];
+  const groups = liveResult?.analysis.groups ?? [];
+  const contributions =
+    liveResult?.analysis.byEffect.filter((row) => row.analysisGroupId == null) ?? [];
   const scoreBadge = liveResult ? runScoreBadge(liveResult) : null;
   const scoreNote = liveResult ? runDiagnosticsNote(liveResult) : null;
   const expectedLabel = liveResult ? primaryExpectedLabel(liveResult) : "Expected";
@@ -730,7 +736,9 @@ export function RotationPlanner({
                       <th className="py-2 pr-4 font-medium">Tick</th>
                       <th className="py-2 pr-4 font-medium">Ability</th>
                       <th className="py-2 pr-4 font-medium">Expected</th>
-                      <th className="py-2 font-medium">Adrenaline</th>
+                      <th className="py-2 font-medium" title="Ability resources → end of occupancy">
+                        Adren (resources → end)
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -761,7 +769,7 @@ export function RotationPlanner({
                           {formatNumber(cast.result.expected)}
                         </td>
                         <td className="py-2 font-mono text-xs text-parch-300">
-                          {cast.adrenalineAfter}%
+                          {formatAdrenalineTimeline(cast)}
                         </td>
                       </tr>
                     ))}
@@ -770,6 +778,29 @@ export function RotationPlanner({
               </div>
 
               <div className="mt-4 border-t border-stone-750">
+                {groups.map((group) => (
+                  <div
+                    key={group.id}
+                    className="grid grid-cols-[1fr_auto_auto] gap-4 border-b border-stone-750/70 py-2 text-xs"
+                    data-effect-group={group.id}
+                  >
+                    <span className="text-parch-50">
+                      {abilityName(group.id)}
+                      <span
+                        className="ml-1.5 font-mono text-[10px] text-gold-300"
+                        title="Unique grouped triggers"
+                      >
+                        ×{formatTicks(group.expectedActivations)}
+                      </span>
+                    </span>
+                    <span className="font-mono text-parch-300">
+                      {formatNumber(group.totalDamage)}
+                    </span>
+                    <span className="font-mono text-parch-50">
+                      {Math.round(group.share * 1000) / 10}%
+                    </span>
+                  </div>
+                ))}
                 {contributions.map((row) => (
                   <div
                     key={row.id}

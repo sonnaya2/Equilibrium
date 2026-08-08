@@ -72,6 +72,10 @@ export function applyLeagueLandedHitEffects(
       blessingId: component.blessingId,
       ...(component.damageTag ? { damageTag: component.damageTag } : {}),
       ...(component.bonusTargetId ? { bonusTargetId: component.bonusTargetId } : {}),
+      ...(component.analysisGroupId ? { analysisGroupId: component.analysisGroupId } : {}),
+      ...(component.analysisGroupActivations !== undefined
+        ? { analysisGroupActivations: component.analysisGroupActivations }
+        : {}),
       originKind: "blessing",
       provenance: { kind: "blessing", detail: component.effectId },
       expectedOccurrences: component.expectedOccurrences,

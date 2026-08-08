@@ -341,6 +341,7 @@ export function RotationAnalysisModal({
   );
   const afterTotalColumns = visibleColumns.filter((column) => column.afterTotal);
   const trailingColumns = visibleColumns.filter((column) => !column.afterTotal);
+  const effectRows = result.analysis.byEffect.filter((row) => row.analysisGroupId == null);
 
   return (
     <dialog
@@ -491,6 +492,43 @@ export function RotationAnalysisModal({
 
           <section>
             <h3 className="combat-section-title text-xs font-medium text-parch-50">By effect</h3>
+            {result.analysis.groups?.map((group) => (
+              <div
+                key={group.id}
+                className="mt-2 border-t border-stone-750 text-xs"
+                data-effect-group={group.id}
+              >
+                <div className="grid grid-cols-[1fr_auto_auto_auto] gap-3 border-b border-stone-750/70 py-2">
+                  <span className="text-parch-50">
+                    {effectName(group.id, nameForId)}
+                    <span className="ml-1.5 font-mono text-[10px] text-gold-300">grouped</span>
+                  </span>
+                  <span className="font-mono text-parch-50">{formatNumber(group.totalDamage)}</span>
+                  <span className="font-mono text-parch-300">
+                    ×{formatExpected(group.expectedActivations)}
+                  </span>
+                  <span className="font-mono text-parch-300">{formatPercent(group.share)}</span>
+                </div>
+                <p className="border-b border-stone-750/70 py-1.5 text-[10px] text-parch-300">
+                  Roll-up already included in Expected damage; components remain separate below.
+                </p>
+                {group.components.map((component) => (
+                  <div
+                    key={`${group.id}-${component.id}`}
+                    className="grid grid-cols-[1fr_auto_auto] gap-3 border-b border-stone-750/50 py-1.5 pl-3 text-[11px]"
+                    data-effect-component={component.id}
+                  >
+                    <span className="text-parch-300">{effectName(component.id, nameForId)}</span>
+                    <span className="font-mono text-parch-300">
+                      {formatNumber(component.totalDamage)}
+                    </span>
+                    <span className="font-mono text-parch-300">
+                      ×{formatExpected(component.expectedActivations)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ))}
             <div className="mt-2 overflow-auto border-t border-stone-750">
               <table
                 className={`w-full border-collapse text-left text-xs ${
@@ -527,7 +565,7 @@ export function RotationAnalysisModal({
                   </tr>
                 </thead>
                 <tbody>
-                  {result.analysis.byEffect.map((effect) => (
+                  {effectRows.map((effect) => (
                     <tr
                       key={effect.id}
                       className="border-b border-stone-750/70"

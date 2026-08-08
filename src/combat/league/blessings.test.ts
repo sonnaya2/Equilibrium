@@ -3,7 +3,7 @@ import { blessingChoice, type BlessingPath } from "../../league/blessings";
 import { createCastContext, simulate } from "../engine/simulation/simulate";
 import { rotationOf } from "../engine/simulation/contracts";
 import { MAGIC_ABILITIES } from "../styles/magic/abilities";
-import { baseInput } from "../test/fixtures/inputs";
+import { baseInput, rangedInput } from "../test/fixtures/inputs";
 import { calculateLeagueAbility } from "./damage";
 import {
   blessingArmourMultiplier,
@@ -325,6 +325,105 @@ describe("Equilibrium blessing combat rules", () => {
         .map((event) => event.tick);
     expect(perfidiousTicks("striking-light")).toEqual([0, 9, 18]);
     expect(perfidiousTicks("lord-of-light")).toEqual([...Array(5).fill(0), ...Array(5).fill(24)]);
+  });
+
+  it("integrates the areaTargets:1 Lord volley, independent Light crits, healing, cooldown, and multi-hit basics", () => {
+    const league = rules(["Order", "Balance", "Balance", "Order", "Order", "Chaos"], {
+      totalArmour: 1_000,
+      prayerBonus: 10,
+      areaTargets: 1,
+    });
+    const modifiers = leagueModifiers(league);
+    const attack = baseInput.abilities.find((ability) => ability.id === "attack")!;
+    const result = simulate({
+      ...baseInput,
+      crit: { chance: 0.25 },
+      league,
+      modifiers,
+      context: { style: "melee", ruleset: "equilibrium" },
+      rotation: rotationOf("attack"),
+    });
+    const lights = result.events.filter(
+      (event) => event.abilityId === "light-of-saradomin" && event.blessingId === "lord-of-light",
+    );
+    const parent = result.events.find((event) => event.abilityId === "attack");
+    const preview = calculateLeagueAbility(attack, {
+      base: 1_000,
+      level: 99,
+      accuracy: 1,
+      crit: { chance: 0.25 },
+      modifiers,
+      context: { style: "melee", ruleset: "equilibrium" },
+      rules: league,
+    });
+    const previewLight = preview.leagueContributions.find(
+      (component) => component.blessingId === "lord-of-light",
+    )!;
+    expect(lights).toHaveLength(5);
+    expect(parent).toBeDefined();
+    expect(lights.every((event) => event.derivedFrom === parent?.seq)).toBe(true);
+    expect(lights.every((event) => event.tick === 0)).toBe(true);
+    expect(lights.every((event) => event.damage.expected === previewLight.damage.expected)).toBe(
+      true,
+    );
+    expect(lights.every((event) => event.damage.critical?.mode === "expected")).toBe(true);
+    expect(lights.every((event) => event.damage.critical?.chance === 0.25)).toBe(true);
+    expect(lights.every((event) => event.damage.critical?.inherited !== true)).toBe(true);
+    const expectedHealing = lights.reduce(
+      (total, event) => total + Math.floor(event.damage.expected * 0.05),
+      0,
+    );
+    expect(result.totalHealed).toBe(expectedHealing);
+    expect(result.casts.find((cast) => cast.abilityId === "attack")?.expectedHeal).toBe(
+      expectedHealing,
+    );
+
+    const cooldownRun = simulate({
+      ...baseInput,
+      league,
+      modifiers,
+      context: { style: "melee", ruleset: "equilibrium" },
+      rotation: rotationOf(
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+      ),
+    });
+    expect(
+      cooldownRun.events
+        .filter(
+          (event) =>
+            event.abilityId === "light-of-saradomin" && event.blessingId === "lord-of-light",
+        )
+        .map((event) => event.tick),
+    ).toEqual([...Array(5).fill(0), ...Array(5).fill(24)]);
+
+    const rangedBasic = rangedInput.abilities.find((ability) => ability.id === "ranged_attack")!;
+    const multiHitBasic = {
+      ...rangedBasic,
+      id: "ranged_multi_hit_basic",
+      name: "Ranged multi-hit Basic Attack",
+      hits: [...rangedBasic.hits, ...rangedBasic.hits],
+    };
+    const multiHitRun = simulate({
+      ...rangedInput,
+      abilities: [...rangedInput.abilities, multiHitBasic],
+      league,
+      modifiers,
+      context: { style: "ranged", ruleset: "equilibrium" },
+      rotation: rotationOf("ranged_multi_hit_basic"),
+    });
+    expect(
+      multiHitRun.events.filter(
+        (event) => event.abilityId === "light-of-saradomin" && event.blessingId === "lord-of-light",
+      ),
+    ).toHaveLength(5);
   });
 
   it("pulses Tempered Heart on the canonical two-tick clock", () => {

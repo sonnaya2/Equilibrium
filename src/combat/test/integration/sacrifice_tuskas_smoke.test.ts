@@ -1,10 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { entryByEngineId, engineSpecs } from "../../abilities/registry";
 import { secondsToTicks } from "../../core/ticks";
+import { MODERNISATION_WIKI } from "../../data/sources";
 import { abilityStyleForBar } from "../../styles/shared/constitutionAbilities";
 import { rotationOf } from "../../engine/simulation/contracts";
 import { simulate } from "../../engine/simulation/simulate";
 import { baseInput, magicInput, necroInput, rangedInput } from "../fixtures/inputs";
+import { leagueModifiers, resolveLeagueRules } from "../../league/ruleset";
+import type { CombatModifier } from "../../types";
 
 const STYLE_INPUT = {
   melee: baseInput,
@@ -80,5 +83,44 @@ describe("sacrifice / tuskas_wrath engine smoke", () => {
     });
     expect(s.ok, s.error).toBe(true);
     expect(s.perAbility.tuskas_wrath).toBe(12_000);
+  });
+
+  it("keeps the empowered Tuska Slayer-50 case below cap and applies only Havoc's final multiplier", () => {
+    const entry = entryByEngineId("tuskas_wrath")!;
+    const stamped = abilityStyleForBar(entry.spec, "melee");
+    const withoutHavoc = resolveLeagueRules({
+      ruleset: "equilibrium",
+      blessingPicks: ["Order", "Balance", "Balance", "Balance"],
+    });
+    const withHavoc = resolveLeagueRules({
+      ruleset: "equilibrium",
+      blessingPicks: ["Order", "Balance", "Balance", "Chaos"],
+    });
+    const run = (league: typeof withoutHavoc, modifiers = leagueModifiers(league)) =>
+      simulate({
+        ...baseInput,
+        abilities: [...baseInput.abilities, stamped],
+        league,
+        modifiers,
+        context: { style: "melee", ruleset: "equilibrium" },
+        rotation: rotationOf("tuskas_wrath"),
+        slayerOnTask: true,
+        slayerLevel: 50,
+      });
+
+    expect(run(withoutHavoc).perAbility.tuskas_wrath).toBe(5_000);
+    expect(run(withHavoc).perAbility.tuskas_wrath).toBe(6_000);
+    const ordinaryAbilityModifier: CombatModifier = {
+      id: "test:ordinary-ability-stage",
+      stage: "ability",
+      priority: 0,
+      applies: () => true,
+      apply: (state) => ({ ...state, damage: state.damage * 2 }),
+      source: MODERNISATION_WIKI,
+    };
+    expect(
+      run(withHavoc, [...leagueModifiers(withHavoc), ordinaryAbilityModifier]).perAbility
+        .tuskas_wrath,
+    ).toBe(6_000);
   });
 });

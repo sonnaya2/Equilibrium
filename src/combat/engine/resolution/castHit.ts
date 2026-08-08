@@ -319,8 +319,11 @@ function resolveCastHitUncached(
   };
   const level = combatLevelAt(rt, at);
   const base = combatBaseAt(rt, at, level);
-  // Tuska on-task: flat 100x Slayer (15k cap); not AD-based; no AD modifiers.
+  // Tuska on-task: flat 100x Slayer (15k cap); keep only Havoc's global final multiplier.
   // https://runescape.wiki/w/Tuska%27s_Wrath
+  const tuskaFinalModifiers = modifiers.filter(
+    (modifier) => modifier.id === "blessing:havoc-born" && modifier.stage === "postHit",
+  );
   const host =
     snap.tuskasEmpoweredDamage != null
       ? resolveLeagueAttachedRawHost({
@@ -333,7 +336,7 @@ function resolveCastHitUncached(
           level,
           accuracy: 1,
           crit: { chance: 0, eligible: false },
-          modifiers: [],
+          modifiers: tuskaFinalModifiers,
           context: hitContext,
           cap: { cap: TUSKAS_EMPOWERED_HIT_CAP },
         })

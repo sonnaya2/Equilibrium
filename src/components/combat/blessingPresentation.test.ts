@@ -157,7 +157,17 @@ describe("blessingPresentation", () => {
       combat: { passiveAdrenaline: { intervalTicks: 2, amount: 6 } },
     };
     expect(lordOfLightAssumptionRows([lord], 1_000, 10, 12)).toEqual([
-      ["Lord of Light", "5 strikes · 8 targets per strike · 14.4s independent CD"],
+      [
+        "Lord of Light",
+        "5 strikes · 8 targets per strike · multi-target tile overlap approximated by areaTargets · 14.4s independent CD",
+      ],
+      ["Lord Light hit", "40-60% AD + 250% armour (2,500) · Prayer 10 = ×1.20 · 5% heal"],
+    ]);
+    expect(lordOfLightAssumptionRows([lord], 1_000, 10, 1)).toEqual([
+      [
+        "Lord of Light",
+        "5 strikes · 1 target per strike · primary-target overlap is an areaTargets:1 scenario · 14.4s independent CD",
+      ],
       ["Lord Light hit", "40-60% AD + 250% armour (2,500) · Prayer 10 = ×1.20 · 5% heal"],
     ]);
     expect(temperedHeartAssumptionRows([tempered])).toEqual([

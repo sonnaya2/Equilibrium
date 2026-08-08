@@ -133,10 +133,14 @@ export function lordOfLightAssumptionRows(
   const targets = Math.min(light.maxTargetsPerStrike ?? 1, Math.max(1, areaTargets));
   const prayerMultiplier = 1 + prayerBonus * (light.prayerDamagePerBonus ?? 0);
   const armourShare = Math.floor(totalArmour * light.armourPercent);
+  const spatialNote =
+    targets === 1
+      ? "primary-target overlap is an areaTargets:1 scenario"
+      : "multi-target tile overlap approximated by areaTargets";
   return [
     [
       "Lord of Light",
-      `${strikes} strikes · ${targets} target${targets === 1 ? "" : "s"} per strike · ${ticksToSeconds(light.cooldownTicks).toFixed(1)}s independent CD`,
+      `${strikes} strikes · ${targets} target${targets === 1 ? "" : "s"} per strike · ${spatialNote} · ${ticksToSeconds(light.cooldownTicks).toFixed(1)}s independent CD`,
     ],
     [
       "Lord Light hit",

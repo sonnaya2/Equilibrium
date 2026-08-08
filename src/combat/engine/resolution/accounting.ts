@@ -50,6 +50,7 @@ export function recordEventAccounting(
     event.abilityId === "light-of-saradomin"
       ? (blessingRule(rt.input.league, "lord-of-light")?.light?.healFraction ?? 0)
       : 0;
+  // Expected-value convention: floor each Light event's expected heal, not E[floor(actual heal)].
   const lightHeal = Math.floor(damage.expected * lightHealFraction);
   const expectedHeal = sacrificeHeal + lightHeal;
   if (expectedHeal > 0) rt.totalHealed += expectedHeal;

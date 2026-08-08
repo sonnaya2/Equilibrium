@@ -103,7 +103,7 @@ describe("canonical blessings data contract", () => {
       expect(choice.combat).toEqual({});
     }
     expect(lateChoices.find((choice) => choice.id === "havoc-born")).toMatchObject({
-      support: { status: "partially-modeled" },
+      support: { status: "modeled" },
       combat: { armourMultiplier: 0.75, damageMultiplier: 1.2, maximumLifeMultiplier: 0.75 },
     });
     expect(lateChoices.find((choice) => choice.id === "envenomed")).toMatchObject({

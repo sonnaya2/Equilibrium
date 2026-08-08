@@ -27,6 +27,7 @@ import {
 } from "./icyenicFaith";
 import { NARAGI_EDICT_RELIC, naragiEdictActive } from "./naragiEdict";
 import { noteBlessingIndexRebuild } from "../profiling/allocation";
+import type { CritLayers } from "../core/critical";
 
 /** Blessing damage must not re-apply ability-stage blessing mults (no recursion). */
 function notBlessingDamage(context: CombatContext): boolean {
@@ -91,6 +92,57 @@ export interface TrueEquilibriumResolution {
   critChance: number;
   critDamage: number;
   prayerBonus: number;
+}
+
+export interface LeagueCritualStats {
+  uncappedChance: number;
+  effectiveChance: number;
+  convertedChance: number;
+}
+
+export function resolveLeagueCritualStats(
+  rules: ResolvedLeagueRules | undefined,
+  baseChance: number,
+  disabled = false,
+): LeagueCritualStats {
+  const raw = Math.max(0, baseChance);
+  const rule = blessingRule(rules, "unholy-critual")?.unholyCritual;
+  if (!rule) {
+    return {
+      uncappedChance: raw,
+      effectiveChance: disabled ? 0 : Math.min(1, raw),
+      convertedChance: 0,
+    };
+  }
+  const uncappedChance = raw + Math.max(0, rule.chanceBonus);
+  const effectiveChance = disabled
+    ? 0
+    : Math.min(rule.effectiveChanceCap, Math.max(0, uncappedChance));
+  const convertedChance = disabled
+    ? 0
+    : Math.max(0, uncappedChance - rule.effectiveChanceCap) * rule.excessCritDamageRatio;
+  return { uncappedChance, effectiveChance, convertedChance };
+}
+
+export function resolveLeagueCritAtLand(
+  rules: ResolvedLeagueRules | undefined,
+  base: CritLayers,
+  current: CritLayers,
+): CritLayers {
+  const rule = blessingRule(rules, "unholy-critual")?.unholyCritual;
+  if (!rule || current.disabled) return current;
+  const baseEffective = Math.min(rule.effectiveChanceCap, Math.max(0, base.chance));
+  const dynamicChance = Math.max(0, current.chance - base.chance);
+  const effectiveChance = Math.min(rule.effectiveChanceCap, baseEffective + dynamicChance);
+  const convertedDynamic =
+    baseEffective >= rule.effectiveChanceCap
+      ? dynamicChance
+      : Math.max(0, baseEffective + dynamicChance - rule.effectiveChanceCap);
+  return {
+    ...current,
+    chance: effectiveChance,
+    damageBonus: (current.damageBonus ?? 0) + convertedDynamic * rule.excessCritDamageRatio,
+  };
 }
 
 export interface ResolveLeagueRulesDerived {

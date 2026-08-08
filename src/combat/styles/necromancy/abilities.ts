@@ -284,6 +284,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     // re-modified - wiki Bloat, verified 2026-07-31).
     id: "bloat",
     name: "Bloat",
+    tearingThornsEligible: true,
     style: "necromancy",
     category: "enhanced",
     hits: [{ band: { ...BLOAT_INITIAL_BAND } }],

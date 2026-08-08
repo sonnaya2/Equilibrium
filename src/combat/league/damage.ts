@@ -1,5 +1,5 @@
 import type { HitCapRule } from "../core/hitCaps";
-import type { CritLayers } from "../core/critical";
+import { critProbability, type CritLayers } from "../core/critical";
 import {
   calculateAbility,
   type AbilityResult,
@@ -34,6 +34,7 @@ import {
 import { isBasicAttack } from "../shared/adrenalineGain";
 import { mulFloor } from "../core/rounding";
 import type { StatefulOccurrenceModel } from "../engine/runtime/events";
+import { extendTearingThornsAbility } from "../shared/dotDurationExtension";
 
 /** Tag for blessing-generated damage instances shown in analysis. */
 export type BlessingDamageTag = "bonus-damage";
@@ -392,7 +393,8 @@ export function attachedResolutionComponent(
 export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageComponent[] {
   if (input.rules.ruleset !== "equilibrium") return [];
   const eligible = blessingHitEligibility(input.source, input.attached === true);
-  if (!eligible.rider && !eligible.cinders && !eligible.onHit) return [];
+  const unholy = blessingRule(input.rules, "unholy-critual")?.unholyCritual;
+  if (!eligible.rider && !eligible.cinders && !eligible.onHit && !unholy) return [];
   const targetModifiers = input.modifiers.filter(
     (modifier) => modifier.stage === "target" || modifier.stage === "postHit",
   );
@@ -414,7 +416,11 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
   const components: LeagueDamageComponent[] = [];
 
   const cinders = blessingRule(input.rules, "abyssal-cinders");
-  const infernoChance = eligible.cinders ? (cinders?.inferno?.chance ?? 0) : 0;
+  const cindersMultiplier =
+    blessingRule(input.rules, "perfidious")?.perfidious?.cindersChanceMultiplier ?? 1;
+  const infernoChance = eligible.cinders
+    ? Math.min(1, (cinders?.inferno?.chance ?? 0) * cindersMultiplier)
+    : 0;
   if (infernoChance < 0 || infernoChance > 1) {
     throw new RangeError(`Abyssal Cinders chance ${infernoChance} must be in [0, 1]`);
   }
@@ -428,7 +434,23 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
       capabilitiesOf(parentProvenance).canCrit &&
       (input.ability.hits[input.hitIndex]?.critEligible ?? true),
   };
-  const infernoCrit: CritLayers = { ...input.crit, eligible: true };
+  const infernoCrit: CritLayers = {
+    ...input.crit,
+    eligible: true,
+    guaranteed: false,
+    damageBonus: (input.crit.damageBonus ?? 0) + (unholy?.infernoCritDamageBonus ?? 0),
+  };
+  const infernoCritChance = unholy ? critProbability(infernoCrit) : 0;
+  const chainExpected = (start: number) =>
+    unholy ? start / Math.max(Number.EPSILON, 1 - infernoCritChance) : start;
+  const chainModel = (start: number): StatefulOccurrenceModel | undefined =>
+    unholy
+      ? {
+          kind: "geometric",
+          startProbability: start,
+          continuationProbability: infernoCritChance,
+        }
+      : undefined;
 
   const hitSpec = input.ability.hits[input.hitIndex];
   if (input.includeAttachedHost !== false && hitSpec && (eligible.rider || eligible.cinders)) {
@@ -480,22 +502,60 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
       },
       crit: infernoCrit,
     });
+    const expectedActivations = chainExpected(infernoChance);
+    const maxActivations = unholy ? expectedActivations : 1;
     components.push({
       effectId: "inferno-of-zamorak",
       blessingId: "abyssal-cinders",
       attached: false,
-      expectedOccurrences: infernoChance,
+      expectedOccurrences: expectedActivations,
       expectedTriggerRolls: 1,
-      expectedActivations: infernoChance,
-      expectedSeparateHits: infernoChance,
-      occurrenceModel: {
+      expectedActivations,
+      expectedSeparateHits: expectedActivations,
+      occurrenceModel: chainModel(infernoChance) ?? {
         kind: "bernoulli",
         probability: infernoChance,
       },
-      damage: weightedDamage(inferno.hit, infernoChance, 0, 1),
+      damage: weightedDamage(inferno.hit, expectedActivations, 0, maxActivations),
       hitDetail: inferno.hit,
       components: inferno.components.map((component) =>
-        attachedResolutionComponent(component, infernoChance, 0, 1),
+        attachedResolutionComponent(component, expectedActivations, 0, maxActivations),
+      ),
+    });
+  }
+
+  const parentCanCrit = capabilitiesOf(parentProvenance).canCrit;
+  const unholyTriggerChance =
+    unholy && parentCanCrit && parentCrit.eligible !== false ? critProbability(parentCrit) : 0;
+  const unholyBand = unholy?.infernoAbilityDamageBand;
+  if (unholy && unholyTriggerChance > 0 && unholyBand) {
+    const prov = blessingProv("inferno-of-zamorak");
+    const inferno = resolveLeagueAttachedHost({
+      ...separateShared,
+      rules: input.rules,
+      source: prov,
+      bonusTargetId: "inferno-of-zamorak",
+      base: input.base,
+      band: { minPct: unholyBand[0], maxPct: unholyBand[1] },
+      crit: infernoCrit,
+    });
+    const expectedActivations = chainExpected(unholyTriggerChance);
+    components.push({
+      effectId: "inferno-of-zamorak",
+      blessingId: "unholy-critual",
+      attached: false,
+      expectedOccurrences: expectedActivations,
+      expectedTriggerRolls: expectedActivations,
+      expectedActivations,
+      expectedSeparateHits: expectedActivations,
+      occurrenceModel: chainModel(unholyTriggerChance) ?? {
+        kind: "bernoulli",
+        probability: unholyTriggerChance,
+      },
+      damage: weightedDamage(inferno.hit, expectedActivations, 0, expectedActivations),
+      hitDetail: inferno.hit,
+      components: inferno.components.map((component) =>
+        attachedResolutionComponent(component, expectedActivations, 0, expectedActivations),
       ),
     });
   }
@@ -582,6 +642,102 @@ export interface GraspOfGuthixInput {
   modifiers: readonly CombatModifier[];
   context: CombatContext;
   cap?: HitCapRule;
+  landTick?: number;
+  poisonImmune?: boolean;
+}
+
+export function graspOfGuthixComponents(input: GraspOfGuthixInput): LeagueDamageComponent[] {
+  const barkscales = blessingRule(input.rules, "barkscales")?.barkscales;
+  const tearing = blessingRule(input.rules, "tearing-thorns")?.tearingThorns;
+  if ((!barkscales && !tearing) || input.triggers <= 0 || input.targetsStruck <= 0) return [];
+  const applications = input.triggers * input.targetsStruck;
+  const targetModifiers = input.modifiers.filter(
+    (modifier) => modifier.stage === "target" || modifier.stage === "postHit",
+  );
+  const components: LeagueDamageComponent[] = [];
+  const blessingProvenance = (detail: string): DamageProvenance => ({
+    kind: "blessing",
+    detail,
+  });
+  const shared = {
+    level: input.level,
+    accuracy: input.accuracy,
+    modifiers: targetModifiers,
+    cap: input.cap,
+  };
+
+  if (tearing) {
+    const maximumLife = resolveMaximumLife(input.rules, input.landTick ?? 0);
+    const min = Math.floor(maximumLife * tearing.graspMaxLifeDamageBand[0]);
+    const max = Math.floor(maximumLife * tearing.graspMaxLifeDamageBand[1]);
+    const provenance = blessingProvenance("grasp-of-guthix-max-life");
+    const resolved = resolveLeagueAttachedRawHost({
+      ...shared,
+      source: provenance,
+      min,
+      max,
+      abilityBase: input.base,
+      context: {
+        ...input.context,
+        damageSource: "blessing",
+        provenance,
+      },
+      crit: { chance: 0, eligible: false },
+    });
+    components.push({
+      effectId: "grasp-of-guthix-max-life",
+      blessingId: "tearing-thorns",
+      attached: false,
+      damageTag: "bonus-damage",
+      bonusTargetId: "grasp-of-guthix",
+      expectedOccurrences: applications,
+      expectedTriggerRolls: 0,
+      expectedActivations: applications,
+      expectedSeparateHits: applications,
+      damage: weightedDamage(resolved.hit, applications, applications, applications),
+      hitDetail: resolved.hit,
+      components: resolved.components.map((component) =>
+        attachedResolutionComponent(component, applications, applications, applications),
+      ),
+    });
+  }
+
+  const poisonBand = tearing?.graspAbilityDamageBand ?? barkscales?.graspAbilityDamageBand;
+  if (poisonBand && input.targetsStruck > 0 && input.poisonImmune !== true) {
+    const provenance = blessingProvenance("grasp-of-guthix-poison");
+    const resolved = resolveLeagueAttachedRawHost({
+      ...shared,
+      rules: input.rules,
+      source: provenance,
+      min: Math.floor(input.base * (poisonBand[0] / 100)),
+      max: Math.floor(input.base * (poisonBand[1] / 100)),
+      abilityBase: input.base,
+      context: {
+        ...input.context,
+        damageSource: "blessing",
+        dotKind: "poison",
+        provenance,
+      },
+      crit: { chance: 0, eligible: false },
+    });
+    components.push({
+      effectId: "grasp-of-guthix-poison",
+      blessingId: tearing ? "tearing-thorns" : "barkscales",
+      attached: false,
+      damageTag: "bonus-damage",
+      bonusTargetId: "grasp-of-guthix",
+      expectedOccurrences: applications,
+      expectedTriggerRolls: 0,
+      expectedActivations: applications,
+      expectedSeparateHits: applications,
+      damage: weightedDamage(resolved.hit, applications, applications, applications),
+      hitDetail: resolved.hit,
+      components: resolved.components.map((component) =>
+        attachedResolutionComponent(component, applications, applications, applications),
+      ),
+    });
+  }
+  return components;
 }
 
 /**
@@ -640,12 +796,16 @@ export function calculateLeagueAbility(
   input: LeagueAbilityInput,
 ): LeagueAbilityResult {
   const { rules, strikingLightReady, lordOfLightReady, ...baseInput } = input;
-  const ordinary = calculateAbility(ability, baseInput);
+  const working = extendTearingThornsAbility(
+    ability,
+    blessingRule(rules, "tearing-thorns")?.tearingThorns?.durationMultiplier,
+  );
+  const ordinary = calculateAbility(working, baseInput);
   // Light of Saradomin 9s CD: at most first direct hit of this cast can trigger.
   let strikingLightAvailable = strikingLightReady ?? true;
   let lordOfLightAvailable = lordOfLightReady ?? true;
-  const contributions = ability.hits.flatMap((hit, hitIndex) => {
-    const isCommand = COMMAND_REQUIRES_CONJURE[ability.id] !== undefined;
+  const contributions = working.hits.flatMap((hit, hitIndex) => {
+    const isCommand = COMMAND_REQUIRES_CONJURE[working.id] !== undefined;
     const source: BlessingDamageSource = hit.dot ? "dot" : isCommand ? "command" : "direct";
     const provenance: DamageProvenance = hit.dot
       ? { kind: "player_dot", detail: hit.dotKind }
@@ -655,7 +815,7 @@ export function calculateLeagueAbility(
     const crit = input.critByHit?.[hitIndex] ?? input.crit;
     const sharedInput = {
       rules,
-      ability,
+      ability: working,
       hitIndex,
       base: input.base,
       level: input.level,

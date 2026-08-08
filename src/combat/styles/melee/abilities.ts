@@ -258,6 +258,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     // Strength cape (99) adds three extra hits of the same band (see withStrengthCape99).
     id: "dismember",
     name: "Dismember",
+    tearingThornsEligible: true,
     style: "melee",
     category: "enhanced",
     hits: Array.from({ length: 8 }, (_, i) => ({
@@ -276,6 +277,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
   {
     id: "slaughter",
     name: "Slaughter",
+    tearingThornsEligible: true,
     style: "melee",
     category: "enhanced",
     hits: Array.from({ length: 6 }, (_, i) => ({
@@ -295,6 +297,7 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
   {
     id: "massacre",
     name: "Massacre",
+    tearingThornsEligible: true,
     style: "melee",
     category: "enhanced",
     hits: [

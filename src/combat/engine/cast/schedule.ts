@@ -116,7 +116,7 @@ export function scheduleCastEvents(
 
   // Derived hits (Bloat tails, Death Skulls bounces, Corruption): each is a
   // fraction of the resolved first hit, scheduled with provenance back to it.
-  const derived = ability.derivedHits;
+  const derived = working.derivedHits;
   if (derived && hitSeqs.length > 0) {
     if (derived.fractionPcts != null) {
       if (derived.fractionPcts.length !== derived.count) {

@@ -87,6 +87,8 @@ describe("canonical blessings data contract", () => {
         choice.id === "lord-of-light" ||
         choice.id === "tempered-heart" ||
         choice.id === "envenomed" ||
+        choice.id === "tearing-thorns" ||
+        choice.id === "unholy-critual" ||
         choice.id === "perfidious" ||
         choice.id === "genesis-essence" ||
         choice.id === "chaotic-insight"
@@ -110,6 +112,14 @@ describe("canonical blessings data contract", () => {
         poisonDamagePerHerbloreLevel: 0.02,
         poisonImmunityDisableTicks: 50,
       },
+    });
+    expect(lateChoices.find((choice) => choice.id === "tearing-thorns")).toMatchObject({
+      support: { status: "modeled" },
+      combat: { tearingThorns: { durationMultiplier: 2, hitsPerGrasp: 5 } },
+    });
+    expect(lateChoices.find((choice) => choice.id === "unholy-critual")).toMatchObject({
+      support: { status: "modeled" },
+      combat: { unholyCritual: { chanceBonus: 0.15, effectiveChanceCap: 0.5 } },
     });
     expect(lateChoices.find((choice) => choice.id === "lord-of-light")).toMatchObject({
       support: { status: "partially-modeled" },
@@ -139,8 +149,11 @@ describe("canonical blessings data contract", () => {
       },
     });
     expect(lateChoices.find((choice) => choice.id === "perfidious")).toMatchObject({
-      support: { status: "partially-modeled" },
-      combat: { strikingLightCooldownTicks: 8 },
+      support: { status: "modeled", excluded: [] },
+      combat: {
+        strikingLightCooldownTicks: 8,
+        perfidious: { cindersChanceMultiplier: 5, barkscalesHitsPerTrigger: 2 },
+      },
     });
     expect(lateChoices.find((choice) => choice.id === "genesis-essence")).toMatchObject({
       support: { status: "modeled", mechanicsUnverified: true },

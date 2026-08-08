@@ -84,13 +84,15 @@ export function applyBlessingDamage(
 ): EventResolution {
   const damage = resolution.damage;
   if (!rt.input.league || damage.max <= 0) return resolution;
+  if (event.family === "blessing") return resolution;
   const source = blessingSourceOf(event);
   const eligible = blessingHitEligibility(source, event.attached);
-  if (!eligible.rider && !eligible.cinders && !eligible.onHit) return resolution;
+  const unholyActive = blessingRule(rt.input.league, "unholy-critual")?.unholyCritual != null;
+  if (!eligible.rider && !eligible.cinders && !eligible.onHit && !unholyActive) return resolution;
   const ability = rt.byId.get(event.abilityId);
   // Spirit auto/poison ledger ids are not bar AbilitySpecs; rider path uses a stub.
   // Blessing separate hits (Light/Inferno) also lack bar specs; rider path uses a stub.
-  if (!ability && !eligible.rider && !eligible.cinders) return resolution;
+  if (!ability && !eligible.rider && !eligible.cinders && !unholyActive) return resolution;
   const style = ability?.style ?? rt.input.context?.style ?? "necromancy";
   const resolvedAbility = ability ?? {
     id: event.abilityId,
@@ -121,7 +123,9 @@ export function applyBlessingDamage(
     abilityBase: rt.input.base,
   });
   const includeAttachedHost = expectedAttached.some((term) => !includedAttached.has(term.id));
-  if (!includeAttachedHost && !eligible.cinders && !eligible.onHit) return resolution;
+  if (!includeAttachedHost && !eligible.cinders && !eligible.onHit && !unholyActive) {
+    return resolution;
+  }
   const componentCacheKey = [
     event.tick,
     event.abilityId,

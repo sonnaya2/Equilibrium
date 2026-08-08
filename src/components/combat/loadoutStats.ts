@@ -117,6 +117,8 @@ export interface CalcStats {
   armourRatingBreakdown: readonly { label: string; value: number }[];
   defenceBreakdown: readonly { label: string; value: number }[];
   critChance: number;
+  uncappedCritChance: number;
+  convertedCritChance: number;
   critChanceBreakdown: {
     configured: number;
     biting: number;
@@ -124,6 +126,7 @@ export interface CalcStats {
     equipment: number;
     icyenic?: number;
     trueEquilibrium?: number;
+    unholyCritual?: number;
     adjustment: number;
   };
   /** Named static crit sources (rings/sets) for the Setup breakdown. */
@@ -139,6 +142,7 @@ export interface CalcStats {
   critsDisabled: boolean;
   /** Persistent equipment crit-damage bonus (conditional ability/runtime bonuses excluded). */
   critDamageBonus: number;
+  critDamageBonusWithoutUnholy: number;
   /** Level-derived base crit damage multiplier (+50% at level 90). */
   baseCritDamage: number;
   /** baseCritDamage plus the persistent equipment bonus - the static loadout total. */
@@ -287,6 +291,8 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     armourRatingBreakdown: baseDamage.armourRatingBreakdown,
     defenceBreakdown: baseDamage.defenceBreakdown,
     critChance: crit.critChance,
+    uncappedCritChance: crit.uncappedCritChance,
+    convertedCritChance: crit.convertedCritChance,
     critChanceBreakdown: crit.critChanceBreakdown,
     critChanceSources: crit.critChanceSources,
     critDamageSources: crit.critDamageSources,
@@ -294,6 +300,7 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     styleMismatchNotes: baseDamage.styleMismatchNotes,
     critsDisabled: crit.critsDisabled,
     critDamageBonus: crit.critDamageBonus,
+    critDamageBonusWithoutUnholy: crit.critDamageBonusWithoutUnholy,
     baseCritDamage: crit.baseCritDamage,
     totalCritDamage: crit.totalCritDamage,
     baseCritDamageBonus: crit.baseCritDamageBonus,

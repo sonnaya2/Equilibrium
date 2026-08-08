@@ -115,8 +115,10 @@ export function barkscalesOutcome(
   armour: number,
   windowSeconds: number,
   scenario: BarkscalesScenario = {},
+  hitsPerTriggerOverride?: number,
 ): BarkscalesOutcome {
-  const hitsPerTrigger = rule?.barkscales?.reductionsPerTrigger ?? BARKSCALES_HITS_PER_TRIGGER;
+  const hitsPerTrigger =
+    hitsPerTriggerOverride ?? rule?.barkscales?.reductionsPerTrigger ?? BARKSCALES_HITS_PER_TRIGGER;
   const perHit = Math.floor(Math.max(0, armour) * (rule?.barkscales?.armourReductionPercent ?? 0));
   const base: BarkscalesReduction = { perHit, hitsPerTrigger };
 

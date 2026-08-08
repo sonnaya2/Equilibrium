@@ -50,6 +50,7 @@ export interface LeagueRotationState {
   avernicRampageUntilTick: number;
   strikingLightReadyTick: number;
   lordOfLightReadyTick: number;
+  tearingThornsHitCount?: number;
 }
 
 /**
@@ -332,6 +333,7 @@ export function newRotationState(
             avernicRampageUntilTick: 0,
             strikingLightReadyTick: 0,
             lordOfLightReadyTick: 0,
+            tearingThornsHitCount: 0,
           },
         }
       : {}),

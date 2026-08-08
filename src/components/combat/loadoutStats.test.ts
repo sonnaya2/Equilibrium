@@ -226,6 +226,19 @@ describe("loadoutStats", () => {
     expect(melee.totalCritDamage).toBeCloseTo(melee.baseCritDamage + melee.critDamageBonus, 10);
   });
 
+  it("exposes Unholy Critual's uncapped, effective, and converted chance", () => {
+    const stats = loadoutStats(
+      { ...base, critChance: 40 },
+      { blessingPicks: ["Chaos", "Chaos", "Chaos", "Chaos", "Chaos", "Chaos"] },
+    );
+    expect(stats.uncappedCritChance).toBeCloseTo(0.55, 10);
+    expect(stats.critChance).toBeCloseTo(0.5, 10);
+    expect(stats.convertedCritChance).toBeCloseTo(0.05, 10);
+    expect(stats.critChanceSources).toEqual(
+      expect.arrayContaining([{ label: "Unholy Critual", value: 0.15 }]),
+    );
+  });
+
   it("surfaces manual target DP override provenance", () => {
     const stats = loadoutStats({
       ...base,

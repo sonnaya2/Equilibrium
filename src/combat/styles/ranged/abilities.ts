@@ -168,6 +168,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     // Wiki DoT: parent 90-110 at cast; 4 derived tails every 2 ticks at 80/60/40/20% of resolved parent.
     id: "corruption_shot",
     name: "Corruption Shot",
+    tearingThornsEligible: true,
     style: "ranged",
     category: "enhanced",
     hits: [

@@ -6,6 +6,7 @@ import { recordEventAccounting } from "./accounting";
 import { releaseScoreOnlyHitDetails } from "./hitDetailsRetention";
 import { applyInventionProcs } from "./procs/invention";
 import { applyBlessingDamage } from "./league/blessingDamage";
+import { applyLeagueLandedHitEffects } from "./landed/league";
 import { noteAttachedTermsResolved } from "../../profiling/allocation";
 
 /**
@@ -27,6 +28,10 @@ export function recordResolved(
 
   const { damage } = composed;
   if (!event.blessingId) applyInventionProcs(rt, event, damage);
+
+  if (!event.attached && event.family === "dot") {
+    applyLeagueLandedHitEffects(rt, event, damage);
+  }
 
   // Endless Assault damage is not proc-eligible, but it is still the original
   // channel hit for ability-owned landed effects such as Greater Flurry's

@@ -59,6 +59,7 @@ export function CalculationAssumptions({
   const manualInputsOnly = stats.baseDamageMode === "manual" && stats.mainhandTier === 0;
   const barkscalesPicked = stats.league.blessings.some((choice) => choice.id === "barkscales");
   const bigBonedPicked = stats.league.blessings.some((choice) => choice.id === "big-boned");
+  const unholyPicked = stats.league.blessings.some((choice) => choice.id === "unholy-critual");
   const icyenicActive = stats.league.relicNames?.has("Icyenic Faith") === true;
   const naragiActive = stats.league.relicNames?.has(NARAGI_EDICT_RELIC) === true;
   const sliverWorn = stats.equipmentIds?.includes(SLIVER_OF_EDICTS_ID) === true;
@@ -93,6 +94,16 @@ export function CalculationAssumptions({
     ...adrenEconomyAssumptionRows(stats),
     ["Damage Potential", `${PERCENT_FORMAT.format(stats.dp)} · ${stats.damagePotentialSource}`],
     ["Critical chance", PERCENT_FORMAT.format(stats.critChance)],
+    ...(unholyPicked
+      ? ([
+          ["Uncapped critical chance", PERCENT_FORMAT.format(stats.uncappedCritChance)],
+          ["Effective critical chance", PERCENT_FORMAT.format(stats.critChance)],
+          [
+            "Converted critical chance",
+            `+${PERCENT_FORMAT.format(stats.convertedCritChance)} damage`,
+          ],
+        ] as Array<[string, string | number]>)
+      : []),
     ["Critical damage", `+${PERCENT_FORMAT.format(stats.totalCritDamageBonus)}`],
     ["30,000 cap", stats.cap.bypass ? "Off" : "On · effect exceptions"],
     ...(stats.league.blessings.length > 0

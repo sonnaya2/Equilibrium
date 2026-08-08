@@ -93,6 +93,20 @@ export interface BlessingCombatRules {
   passiveAdrenaline?: { intervalTicks: number; amount: number };
   perHitAbilityDamagePercent?: number;
   inferno?: { chance: number; abilityDamageBand: readonly [number, number] };
+  unholyCritual?: {
+    chanceBonus: number;
+    effectiveChanceCap: number;
+    excessCritDamageRatio: number;
+    infernoCritDamageBonus: number;
+    infernoAbilityDamageBand: readonly [number, number];
+  };
+  tearingThorns?: {
+    durationMultiplier: number;
+    hitsPerGrasp: number;
+    graspMaxLifeDamageBand: readonly [number, number];
+    graspAbilityDamageBand: readonly [number, number];
+    graspMaxTargets: number;
+  };
   barkscales?: {
     armourReductionPercent: number;
     reductionsPerTrigger: number;
@@ -116,6 +130,10 @@ export interface BlessingCombatRules {
   critDamagePerUniquePath?: number;
   prayerBonusPerUniquePath?: number;
   strikingLightCooldownTicks?: number;
+  perfidious?: {
+    cindersChanceMultiplier: number;
+    barkscalesHitsPerTrigger: number;
+  };
 }
 
 export type BlessingTierPassive = BlessingTierPassiveRecord;

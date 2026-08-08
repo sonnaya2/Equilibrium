@@ -80,6 +80,8 @@ export interface AbilitySpec {
   style: "melee" | "ranged" | "magic" | "necromancy";
   category: "basic" | "enhanced" | "ultimate" | "utility";
   hits: AbilityHit[];
+  /** Canonical player DoT metadata used by Tearing Thorns. */
+  tearingThornsEligible?: boolean;
   /**
    * Weapon special attack (including Essence of Finality stored specs).
    * Ring of Vigour reduces requirement and spend to 90% of original cost.

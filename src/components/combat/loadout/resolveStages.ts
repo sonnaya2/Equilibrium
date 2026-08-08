@@ -111,6 +111,7 @@ import {
   icyenicFromLoadout,
   leagueModifiers,
   resolveLeagueRules,
+  resolveLeagueCritualStats,
   resolveMaximumAdrenaline,
   setPieceContributionModifier,
   weaponTierOverride,
@@ -555,6 +556,7 @@ export function resolveLeagueBundle(
       targetsStruck: loadout.target?.areaTargets,
       poisonImmune: loadout.target?.poisonImmune === true && !hasBlessing(league, "envenomed"),
     },
+    blessingRule(league, "perfidious")?.perfidious?.barkscalesHitsPerTrigger,
   );
   const tomeOfTheIcyeneWorn = isTomeOfTheIcyeneWorn(equipmentIds);
   const icyenic = icyenicFromLoadout(league, league.prayerBonus, tomeOfTheIcyeneWorn);
@@ -775,6 +777,8 @@ export function resolveBaseDamage(
 
 export interface ResolvedCrit {
   critChance: number;
+  uncappedCritChance: number;
+  convertedCritChance: number;
   critChanceBreakdown: {
     configured: number;
     biting: number;
@@ -782,6 +786,7 @@ export interface ResolvedCrit {
     equipment: number;
     icyenic: number;
     trueEquilibrium: number;
+    unholyCritual: number;
     adjustment: number;
   };
   critChanceSources: readonly BreakdownRow[];
@@ -790,6 +795,7 @@ export interface ResolvedCrit {
   /** Invention Equilibrium perk zeros crit - not the League. */
   critsDisabled: boolean;
   critDamageBonus: number;
+  critDamageBonusWithoutUnholy: number;
   baseCritDamage: number;
   totalCritDamage: number;
   baseCritDamageBonus: number;
@@ -853,9 +859,8 @@ export function resolveCrit(
   ) {
     critConditionalNotes.push("Stalker's ring: equip a bow for its static crit chance");
   }
-  const critDamageBonus =
+  const critDamageBonusWithoutUnholy =
     equipmentCrit.damageBonus + (leagueBundle?.league.trueEquilibrium.critDamage ?? 0);
-  const critDamage = critDamageStats(levels.level, critDamageBonus);
   const biting =
     loadout.perks.biting > 0
       ? bitingCritChanceBonus(loadout.perks.biting, loadout.perks.bitingLevel20)
@@ -869,9 +874,21 @@ export function resolveCrit(
     configuredCrit + biting + setCrit + equipmentCrit.chance + icyenicCrit + trueEquilibriumCrit;
   // Invention perk Equilibrium zeros crit - not the League.
   const critsDisabled = loadout.perks.equilibrium > 0;
-  const critChance = critsDisabled ? 0 : clamp01(critSubtotal);
+  const critual = resolveLeagueCritualStats(leagueBundle?.league, critSubtotal, critsDisabled);
+  const unholyRule = blessingRule(leagueBundle?.league, "unholy-critual")?.unholyCritual;
+  if (unholyRule?.chanceBonus) {
+    critChanceSources.push({ label: "Unholy Critual", value: unholyRule.chanceBonus });
+  }
+  if (critual.convertedChance > 0) {
+    critDamageSources.push({ label: "Unholy Critual excess", value: critual.convertedChance });
+  }
+  const critDamageBonus = critDamageBonusWithoutUnholy + critual.convertedChance;
+  const critDamage = critDamageStats(levels.level, critDamageBonus);
+  const critChance = critual.effectiveChance;
   return {
     critChance,
+    uncappedCritChance: critual.uncappedChance,
+    convertedCritChance: critual.convertedChance,
     critChanceBreakdown: {
       configured: configuredCrit,
       biting,
@@ -879,6 +896,7 @@ export function resolveCrit(
       equipment: equipmentCrit.chance,
       icyenic: icyenicCrit,
       trueEquilibrium: trueEquilibriumCrit,
+      unholyCritual: unholyRule?.chanceBonus ?? 0,
       adjustment: critChance - critSubtotal,
     },
     critChanceSources,
@@ -886,6 +904,7 @@ export function resolveCrit(
     critConditionalNotes,
     critsDisabled,
     critDamageBonus,
+    critDamageBonusWithoutUnholy,
     baseCritDamage: critDamage.baseMultiplier,
     totalCritDamage: critDamage.totalMultiplier,
     baseCritDamageBonus: critDamage.baseBonus,

@@ -209,7 +209,8 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
     league:
       hasBlessing(input.league, "avernic-rampage") ||
       hasBlessing(input.league, "striking-light") ||
-      hasBlessing(input.league, "lord-of-light"),
+      hasBlessing(input.league, "lord-of-light") ||
+      hasBlessing(input.league, "tearing-thorns"),
     ringOfVigour: input.adrenaline?.ringOfVigour === true,
     lantern: soulboundLantern,
   });

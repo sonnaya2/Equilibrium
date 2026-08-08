@@ -33,6 +33,8 @@ import {
 } from "../../styles/necromancy/deathSpark";
 import { spectralScythe3 } from "../../styles/necromancy/abilities";
 import { resolveAbilityWithEquipment } from "../../shared/bleedDurationExtension";
+import { extendTearingThornsAbility } from "../../shared/dotDurationExtension";
+import { blessingRule } from "../../league/ruleset";
 import { hasPassive } from "../../shared/equipment";
 import {
   TUSKAS_EMPOWERED_COOLDOWN_SECONDS,
@@ -148,6 +150,11 @@ export function prepareCast(
   // Bloodlust / other variants so extra hits keep the same bands and cadence.
   // Shared with Quick via resolveAbilityWithEquipment - never mutates catalogues.
   let working: AbilitySpec = resolveAbilityWithEquipment(ability, input.equipmentEffects);
+  const tearingMultiplier = blessingRule(input.league, "tearing-thorns")?.tearingThorns
+    ?.durationMultiplier;
+  if (tearingMultiplier != null) {
+    working = extendTearingThornsAbility(working, tearingMultiplier);
+  }
 
   // Dark bow / Gloomfire: Ranged basic becomes two independent 45-55% hits.
   if (ability.id === "ranged_attack" && hasDarkfangWeapon(input.equipmentIds)) {

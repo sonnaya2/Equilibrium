@@ -49,6 +49,7 @@ import {
   resolveLeagueAttachedRawHost,
 } from "../../league/damage";
 import { recordResolutionCache } from "../../profiling/hitPipeline";
+import { resolveLeagueCritAtLand } from "../../league/ruleset";
 
 /** Style level at land tick: temporary override (e.g. Naragi 255) wins when active. */
 function combatLevelAt(rt: SimulationRuntime, landTick: number): number {
@@ -264,7 +265,7 @@ function resolveCastHitUncached(
     ability.style === "magic" && isConcentratedBlast(ability.id)
       ? (state.magic.concCritStacks * state.magic.concCritPerStackPct) / 100
       : 0;
-  const crit: CritLayers = {
+  const rawCrit: CritLayers = {
     ...snap.critLayers,
     eligible: hitSpec.critEligible ?? true,
     chance:
@@ -286,6 +287,7 @@ function resolveCastHitUncached(
       (ability.style === "magic" ? channelledMightCritBonus(state.magic.channelledMight, at) : 0) +
       equipmentCrit.damageBonus,
   };
+  const crit = resolveLeagueCritAtLand(input.league, snap.critLayers, rawCrit);
 
   // Command abilities are part of the conjure: full Damage Potential, the
   // conjure-eligible modifier set (never prayers), and for the skeleton the

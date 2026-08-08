@@ -178,6 +178,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     // Combust: 10 crit-ineligible burn hits every 3 ticks (1.8s).
     id: "combust",
     name: "Combust",
+    tearingThornsEligible: true,
     style: "magic",
     category: "basic",
     hits: Array.from({ length: 10 }, (_, i) => ({
@@ -269,6 +270,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     // Wiki DoT: parent 90-110 at +2; 4 derived tails every 2 ticks at 80/60/40/20% of resolved parent.
     id: "corruption_blast",
     name: "Corruption Blast",
+    tearingThornsEligible: true,
     style: "magic",
     category: "enhanced",
     hits: [

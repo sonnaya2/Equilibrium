@@ -60,17 +60,22 @@ describe("melee ability data", () => {
   it("Strength cape (99) adds three extra Dismember hits of the same band", () => {
     const base = byId("dismember");
     expect(base.hits).toHaveLength(8);
+    expect(base.flatBleedHitBonus).toBeUndefined();
     const patched = withStrengthCape99Dismember(
       MELEE_ABILITIES,
       STRENGTH_CAPE_DISMEMBER_EXTRA_HITS,
     );
     const dismember = patched.find((a) => a.id === "dismember")!;
     expect(dismember.hits).toHaveLength(11);
+    expect(dismember.flatBleedHitBonus).toBe(STRENGTH_CAPE_DISMEMBER_EXTRA_HITS);
     expect(dismember.hits.slice(8).map((h) => h.tickOffset)).toEqual([18, 20, 22]);
     expect(dismember.hits[10]?.band).toEqual(base.hits[0]!.band);
     // Idempotent.
     const twice = withStrengthCape99Dismember(patched, STRENGTH_CAPE_DISMEMBER_EXTRA_HITS);
     expect(twice.find((a) => a.id === "dismember")!.hits).toHaveLength(11);
+    expect(twice.find((a) => a.id === "dismember")!.flatBleedHitBonus).toBe(
+      STRENGTH_CAPE_DISMEMBER_EXTRA_HITS,
+    );
   });
 
   it("Assault carries its 4-Bloodlust band as data", () => {

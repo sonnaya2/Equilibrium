@@ -577,6 +577,8 @@ export const PUNISH_HP_THRESHOLD = 0.5;
 /**
  * Strength cape (99) / master cape: Dismember deals three additional hits of
  * the same bleed band (wiki). Idempotent if already extended.
+ * Marks the +N as flatBleedHitBonus so spear duration extension still uses the
+ * pre-cape base (8 + floor(8*0.5) + 3 = 15; not floor(11*0.5)).
  */
 export function withStrengthCape99Dismember<T extends AbilitySpec>(
   abilities: readonly T[],
@@ -587,7 +589,9 @@ export function withStrengthCape99Dismember<T extends AbilitySpec>(
     if (ability.id !== "dismember") return ability;
     const baseHits = ability.hits;
     if (baseHits.length === 0) return ability;
-    // Base kit is 8 ticks; skip if already patched.
+    // Skip if already patched (flat bonus and/or hit count).
+    if ((ability.flatBleedHitBonus ?? 0) >= extraHits) return ability;
+    // Base kit is 8 ticks; skip if already patched without the bonus field.
     if (baseHits.length >= 8 + extraHits) return ability;
     const sample = baseHits[baseHits.length - 1]!;
     const step =
@@ -598,6 +602,10 @@ export function withStrengthCape99Dismember<T extends AbilitySpec>(
       ...sample,
       tickOffset: (sample.tickOffset ?? 0) + step * (i + 1),
     }));
-    return { ...ability, hits: [...baseHits, ...extra] };
+    return {
+      ...ability,
+      hits: [...baseHits, ...extra],
+      flatBleedHitBonus: (ability.flatBleedHitBonus ?? 0) + extraHits,
+    };
   });
 }

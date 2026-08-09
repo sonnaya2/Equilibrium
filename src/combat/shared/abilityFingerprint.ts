@@ -75,6 +75,7 @@ export function abilityBehaviorFingerprint(spec: AbilitySpec): string {
     basicAttack: isBasicAttack(spec),
     supportStatus: spec.supportStatus ?? null,
     bleedDurationExtension: spec.bleedDurationExtension ?? null,
+    flatBleedHitBonus: spec.flatBleedHitBonus ?? null,
     styleExtras,
   });
 }

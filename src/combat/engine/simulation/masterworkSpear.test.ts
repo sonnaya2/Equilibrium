@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { MELEE_ABILITIES } from "../../styles/melee/abilities";
+import { MELEE_ABILITIES, withStrengthCape99Dismember } from "../../styles/melee/abilities";
 import { calculateAbility } from "../../pipeline/calculateAbility";
 import { activeBleedCount } from "../../styles/melee/effects";
 import { activeEquipmentEffects, type ActiveEquipmentEffects } from "../../shared/equipment";
 import type { ItemPassiveId } from "../../data/records";
 import { resolveAbilityWithEquipment } from "../../shared/bleedDurationExtension";
+import { STRENGTH_CAPE_DISMEMBER_EXTRA_HITS } from "../../shared/perks";
 import { rotationOf } from "./contracts";
 import { simulate, type SimulateInput } from "./simulate";
 import { createCastContext } from "./context";
@@ -159,5 +160,36 @@ describe("Masterwork spear bleed extension in simulation and Quick parity", () =
     });
     expect(bare.perAbility["dismember"]).toBeCloseTo(empty.perAbility["dismember"]!, 10);
     expect(bare.events.filter((e) => e.abilityId === "dismember")).toHaveLength(8);
+  });
+
+  it("schedules 15 Dismember hits with Strength cape + spear (not 16)", () => {
+    // Wiki: spear 12 + cape +3 = 15; spear base stays 8 (not floor(11*0.5)).
+    const capedAbilities = withStrengthCape99Dismember(
+      MELEE_ABILITIES,
+      STRENGTH_CAPE_DISMEMBER_EXTRA_HITS,
+    );
+    const s = simulate({
+      ...baseInput,
+      abilities: capedAbilities,
+      equipmentEffects: spear,
+      rotation: rotationOf("dismember"),
+    });
+    expect(s.ok).toBe(true);
+    const hits = s.events.filter((e) => e.abilityId === "dismember");
+    expect(hits).toHaveLength(15);
+    expect(hits.map((e) => e.tick)).toEqual([
+      2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30,
+    ]);
+
+    const ability = capedAbilities.find((a) => a.id === "dismember")!;
+    const quick = calculateAbility(resolveAbilityWithEquipment(ability, spear), {
+      base: 1000,
+      level: 99,
+      accuracy: 1,
+      crit: { chance: 0 },
+      context: { style: "melee" },
+    });
+    expect(quick.hits).toHaveLength(15);
+    expect(s.perAbility["dismember"]).toBeCloseTo(quick.expected, 6);
   });
 });

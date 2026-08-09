@@ -158,6 +158,12 @@ export interface AbilitySpec {
     equipmentPassive: "masterwork-spear-bleed-extension";
   };
   /**
+   * Flat extra bleed hits already present in `hits` (Strength cape +3 on Dismember).
+   * Excluded from Masterwork spear floor(base * 0.5) so cape+spear totals 15, not 16.
+   * Wiki: https://runescape.wiki/w/Masterwork_Spear_of_Annihilation
+   */
+  flatBleedHitBonus?: number;
+  /**
    * Hits derived from the resolved first hit at a fraction of it (Bloat tails,
    * Death Skulls bounces, Corruption). They inherit the source hit's crit-
    * boosted damage, never crit themselves, and are never re-modified.

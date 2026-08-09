@@ -87,7 +87,6 @@ export function evaluateHostIncumbentBaseline(
     conjureBasicDamageMult: simBase.conjureBasicDamageMult,
     conjureDurationMult: simBase.conjureDurationMult,
     tumekensPieces: simBase.tumekensPieces,
-    tumekensCritEnabled: simBase.tumekensCritEnabled,
     equipmentEffects: simBase.equipmentEffects,
     league,
     context: simBase.context,
@@ -111,7 +110,6 @@ export function evaluateHostIncumbentBaseline(
     size: { min: bar.length, max: bar.length },
     incumbentBaseline: true,
     detailLevel: "score-only",
-    branchFidelityMode: "full",
   });
 
   const score =
@@ -150,7 +148,7 @@ export function applyHostIncumbentBaseline(
       improvement: 0,
       proofLabel: dto.proofLabel ?? "heuristic-best-found",
       residualMass: dto.honesty?.residualMass ?? dto.rng?.residualWeight ?? 0,
-      branchExactness: dto.honesty?.branchExactness ?? dto.rng?.exactness ?? null,
+      stochasticExactness: dto.honesty?.stochasticExactness ?? dto.rng?.exactness ?? null,
     });
     const notes = [...(dto.proof?.notes ?? [])].filter((n) => n !== CURRENT_BAR_REMAINS_BEST_NOTE);
     notes.push(CURRENT_BAR_REMAINS_BEST_NOTE);
@@ -186,7 +184,7 @@ export function applyHostIncumbentBaseline(
     improvement,
     proofLabel: dto.proofLabel ?? "heuristic-best-found",
     residualMass: dto.honesty?.residualMass ?? dto.rng?.residualWeight ?? 0,
-    branchExactness: dto.honesty?.branchExactness ?? dto.rng?.exactness ?? null,
+    stochasticExactness: dto.honesty?.stochasticExactness ?? dto.rng?.exactness ?? null,
   });
   const notes = [...(dto.proof?.notes ?? [])].filter((n) => n !== CURRENT_BAR_REMAINS_BEST_NOTE);
   notes.push("host incumbent baseline (outside worker length pins)");

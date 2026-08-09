@@ -38,6 +38,7 @@ const UNMAPPED_STABLE_RECORDS = `SELECT source_records.source_file, source_recor
 const EQUIPMENT_RECORDS = `FROM source_records
    WHERE source_file = 'data/combat/equipment.json' AND record_path NOT LIKE '%].%'`;
 const CLASS_GATED = "('helmet','body','legs','gloves','boots')";
+const CLASS_METADATA_SLOTS = "('helmet','body','legs','gloves','boots','cape')";
 
 const DERIVED_WITHOUT_CLASS = `SELECT stable_id, record_path ${EQUIPMENT_RECORDS}
      AND json_extract(raw_json, '$.slot') IN ${CLASS_GATED}
@@ -59,7 +60,7 @@ const INVALID_CLASS_COMBINATION = `SELECT stable_id, record_path ${EQUIPMENT_REC
        (json_extract(raw_json, '$.armourClass') IS NOT NULL
          AND json_extract(raw_json, '$.armourClass') NOT IN ('tank','power','hybrid','pvp'))
        OR (json_extract(raw_json, '$.armourClass') IS NOT NULL
-         AND json_extract(raw_json, '$.slot') NOT IN ${CLASS_GATED})
+         AND json_extract(raw_json, '$.slot') NOT IN ${CLASS_METADATA_SLOTS})
        OR (json_extract(raw_json, '$.shield') IS NOT NULL AND json_extract(raw_json, '$.defender') IS NOT NULL)
        OR ((json_extract(raw_json, '$.shield') IS NOT NULL OR json_extract(raw_json, '$.defender') IS NOT NULL)
          AND json_extract(raw_json, '$.slot') <> 'offhand')

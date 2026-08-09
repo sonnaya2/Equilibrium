@@ -3,20 +3,20 @@ import type { HitResult } from "../../pipeline/calculateHit";
 import type { CombatModifier } from "../../types";
 import type { ConjureId } from "../../styles/necromancy/conjures";
 import type { CastContextInput, CastRecord, SimulationDetailLevel } from "../simulation/contracts";
-import { resolveDetailLevel } from "../simulation/contracts";
+import { keepsAnalysisLedgers, resolveDetailLevel } from "../simulation/contracts";
 import type { AdrenalineTransaction } from "../../shared/adrenalineTransaction";
 import { abilityBehaviorFingerprint } from "../../shared/abilityFingerprint";
 import { isBasicAttack } from "../../shared/adrenalineGain";
 import { isSharedConstitutionAbilityId } from "../../styles/shared/constitutionAbilities";
 import { assertProvenance } from "../../shared/damageProvenance";
-import { emptyAnalysisState, type RuntimeAnalysisState } from "../analysis";
+import { cloneAnalysisState, emptyAnalysisState, type RuntimeAnalysisState } from "../analysis";
 import { EventQueue, type ResolvedEvent, type ScheduledEvent } from "./events";
 import {
   ADRENALINE_CAP,
-  createTargetWeaponPoisonFutureInterner,
+  inactiveTargetWeaponPoison,
   newRotationState,
+  patchTarget,
   type RotationState,
-  type TargetWeaponPoisonFutureInterner,
 } from "./state";
 import { hasBlessing, hasNaragiEdict, resolveMaximumAdrenaline } from "../../league/ruleset";
 import { activateNaragiSliver } from "../../league/naragiActivation";
@@ -28,6 +28,12 @@ import { MAX_SOULS } from "../../styles/necromancy/abilities";
 import { residualSoulCapFor } from "../../styles/necromancy/effects";
 import { normalizeKwuarmPotency, normalizeWeaponPoisonChoice } from "../../poison/mechanics";
 import { resolveStyleAmmo } from "../../styles/ranged/ammoModel";
+import {
+  createStochasticOracle,
+  DEFAULT_STOCHASTIC_LANES,
+  type StochasticOracle,
+  type StochasticOracleConfig,
+} from "./stochastic";
 
 /** Spirit event identity: a pending auto/poison event is live only for its summon instance. */
 export interface SpiritEventMeta {
@@ -51,10 +57,10 @@ export interface SimulationRuntime {
   readonly basicByStyle: ReadonlyMap<AbilitySpec["style"], AbilitySpec>;
   /**
    * Equipment-static Leng land outcome table (null when no Leng passives).
-   * Compiled once in createRuntime; shared across branch snapshots.
+   * Compiled once in createRuntime; shared across stochastic lanes.
    */
   readonly lengLandTable: CompiledLengLandTable | null;
-  readonly poisonFutureInterner: TargetWeaponPoisonFutureInterner;
+  readonly stochastic: StochasticOracle;
   readonly playerPoisonDamageCache: Map<string, unknown>;
   readonly leagueDamageCache: Map<string, unknown>;
   readonly queue: EventQueue<SimulationRuntime>;
@@ -74,11 +80,11 @@ export interface SimulationRuntime {
   totalMin: number;
   totalMax: number;
   totalExpected: number;
-  /** Expected self-heal (Sacrifice 25% of damage dealt). Kill-blow 100% not modeled. */
+  /** Expected self-heal from damage-derived ability and blessing effects. */
   totalHealed: number;
   /**
    * Weighted analysis ledgers - quantitative breakdown lives here, not in the
-   * representative event log. Branch merge weight-averages this state.
+   * representative event log. Lane aggregation weight-averages this state.
    */
   analysis: RuntimeAnalysisState;
   nextSeq: number;
@@ -123,7 +129,10 @@ function mapBasicsByStyle(
   return basicByStyle;
 }
 
-export function createRuntime(input: CastContextInput): SimulationRuntime {
+export function createRuntime(
+  input: CastContextInput,
+  stochastic?: StochasticOracleConfig,
+): SimulationRuntime {
   noteRuntimeCreated();
   const ammo = resolveStyleAmmo(input.ammo, input.equipmentIds, input.context?.style);
   const withAmmo = ammo === input.ammo ? input : { ...input, ammo };
@@ -214,6 +223,7 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
     ringOfVigour: input.adrenaline?.ringOfVigour === true,
     lantern: soulboundLantern,
   });
+  state = patchTarget(state, { weaponPoison: inactiveTargetWeaponPoison() });
   if (input.startingResidualSouls != null) {
     const requested = Math.floor(input.startingResidualSouls);
     const resources = state.necromancy.resources;
@@ -234,7 +244,9 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
     byId,
     basicByStyle,
     lengLandTable,
-    poisonFutureInterner: createTargetWeaponPoisonFutureInterner(),
+    stochastic: createStochasticOracle(
+      stochastic ?? { laneIndex: 0, laneCount: DEFAULT_STOCHASTIC_LANES },
+    ),
     playerPoisonDamageCache: new Map(),
     leagueDamageCache: new Map(),
     queue: new EventQueue<SimulationRuntime>(),
@@ -267,6 +279,45 @@ export function createRuntime(input: CastContextInput): SimulationRuntime {
     });
   }
   return rt;
+}
+
+function cloneCastRecord(
+  record: CastRecord,
+  cache: Map<CastRecord, CastRecord>,
+  scoreOnly: boolean,
+): CastRecord {
+  const existing = cache.get(record);
+  if (existing) return existing;
+  const clone = scoreOnly
+    ? { ...record, result: { ...record.result } }
+    : { ...record, result: { ...record.result, hits: [...record.result.hits] } };
+  cache.set(record, clone);
+  return clone;
+}
+
+export function cloneRuntime(rt: SimulationRuntime): SimulationRuntime {
+  const scoreOnly = rt.detailLevel === "score-only";
+  const records = new Map<CastRecord, CastRecord>();
+  const casts = rt.casts.map((record) => cloneCastRecord(record, records, scoreOnly));
+  const recordBySeq = new Map<number, CastRecord>();
+  for (const [seq, record] of rt.recordBySeq) {
+    recordBySeq.set(seq, cloneCastRecord(record, records, scoreOnly));
+  }
+  return {
+    ...rt,
+    stochastic: rt.stochastic.clone(),
+    queue: rt.queue.clone(),
+    casts,
+    perAbility: { ...rt.perAbility },
+    damageByTick: { ...rt.damageByTick },
+    events: scoreOnly ? [] : [...rt.events],
+    recordBySeq,
+    hitDetails: new Map(rt.hitDetails),
+    spiritEventMeta: new Map(rt.spiritEventMeta),
+    scheduledSpiritTracks: new Set(rt.scheduledSpiritTracks),
+    spiritHitCounts: new Map(rt.spiritHitCounts),
+    analysis: keepsAnalysisLedgers(rt.detailLevel) ? cloneAnalysisState(rt.analysis) : rt.analysis,
+  };
 }
 
 /** Push a fully-sequenced event after asserting provenance. */

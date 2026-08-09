@@ -99,7 +99,6 @@ describe("ability registry single authority", () => {
       "conjure_skeleton_warrior",
       "conjure_vengeful_ghost",
       "conjure_putrid_zombie",
-      "conjure_phantom_guardian",
       "conjure_undead_army",
     ] as const) {
       const e = entryByEngineId(id);
@@ -108,6 +107,10 @@ describe("ability registry single authority", () => {
       expect(e?.spec.supportStatus, id).toBeUndefined();
       expect(e?.support.note, id).toBeTruthy();
     }
+    const phantom = entryByEngineId("conjure_phantom_guardian");
+    expect(phantom?.support.status).toBe("partially-modeled");
+    expect(phantom?.solverEligibleDefault).toBe(false);
+    expect(phantom?.spec.supportStatus).toBe("partially-modeled");
     for (const id of [
       "command_skeleton_warrior",
       "command_phantom_guardian",

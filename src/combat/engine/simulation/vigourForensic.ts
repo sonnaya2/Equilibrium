@@ -22,8 +22,7 @@ export interface GcdTraceRow {
   adrenalineBefore: number;
   actualSpend: number;
   adrenalineAfter: number;
-  /** Representative path weight (1 when no state-changing RNG branching). */
-  branchWeight: number;
+  historyWeight: number;
   /** Running sum of cast.result.expected along the representative cast list. */
   cumulativeExpectedDamage: number;
   auto: boolean;
@@ -120,7 +119,7 @@ function adrenWithVigourFlag(rules: AdrenalineRules | undefined): AdrenalineRule
 }
 
 function pathWeight(summary: RotationSummary): number {
-  const w = summary.history?.classWeight;
+  const w = summary.history?.historyWeight;
   return typeof w === "number" && Number.isFinite(w) && w > 0 ? w : 1;
 }
 
@@ -137,7 +136,7 @@ export function buildCastTrace(summary: RotationSummary): GcdTraceRow[] {
 function rowFromCast(
   cast: CastRecord,
   index: number,
-  branchWeight: number,
+  historyWeight: number,
   cumulativeExpectedDamage: number,
 ): GcdTraceRow {
   const tx = cast.adrenalineTransaction;
@@ -148,7 +147,7 @@ function rowFromCast(
     adrenalineBefore: cast.adrenalineBefore,
     actualSpend: cast.actualSpend,
     adrenalineAfter: cast.adrenalineAfter,
-    branchWeight,
+    historyWeight,
     cumulativeExpectedDamage,
     auto: cast.auto === true,
     listedCost: cast.listedCost,

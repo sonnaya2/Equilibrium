@@ -1,8 +1,4 @@
-/**
- * Labels for stochastic / residual / failure metadata on rotation results.
- * residualWeight + exactness may be absent until branch-cap engine work lands;
- * helpers tolerate missing fields via optional chaining.
- */
+/** Labels for stochastic and failure metadata on rotation results. */
 
 import { formatProofLabel } from "./revoPanelFormat";
 
@@ -66,34 +62,19 @@ export function successfulWeightOf(source: StochasticLabelSource): number {
   return finiteMass(source.failure?.successfulWeight ?? source.rng?.failure?.successfulWeight);
 }
 
-export function branchExactnessOf(source: StochasticLabelSource): string | undefined {
+export function stochasticExactnessOf(source: StochasticLabelSource): string | undefined {
   const ex = source.rng?.exactness;
   return typeof ex === "string" && ex.length > 0 ? ex : undefined;
 }
 
-/** Cap / sample approximations - not exact branch expansion. */
+/** Bounded stochastic models are estimates, not exact state enumeration. */
 export function isApproxExactness(exactness: string | null | undefined): boolean {
-  return (
-    exactness === "approximated" ||
-    exactness === "bounded-approximation" ||
-    exactness === "truncated" ||
-    exactness === "resampled"
-  );
+  return exactness === "approximated" || exactness === "estimated";
 }
 
 export function isApproximatedRun(source: StochasticLabelSource): boolean {
   if (residualWeightOf(source) > 0) return true;
-  return isApproxExactness(branchExactnessOf(source));
-}
-
-/**
- * True only when primary totals were success-renormalized (legacy / never
- * emitted by current engine). Live partial failure uses unconditional-all-mass
- * (concrete success+fail, residual separate) and must not be labeled as success-only.
- */
-export function totalsAreSuccessConditional(source: StochasticLabelSource): boolean {
-  const scope = source.failure?.totalsScope ?? source.rng?.failure?.totalsScope;
-  return scope === "successful-branches-renormalized";
+  return isApproxExactness(stochasticExactnessOf(source));
 }
 
 /** Concrete expanded mass (probabilityMass / concreteMass); 0 when absent. */
@@ -120,11 +101,8 @@ export function totalsBasisOf(source: StochasticLabelSource): TotalsBasisLabel |
 }
 
 /** Short chrome next to primary score; null when ordinary exact EV. */
-export function runScoreBadge(
-  source: StochasticLabelSource,
-): "Approximated" | "Conditional" | null {
+export function runScoreBadge(source: StochasticLabelSource): "Approximated" | null {
   if (isApproximatedRun(source)) return "Approximated";
-  if (totalsAreSuccessConditional(source)) return "Conditional";
   return null;
 }
 
@@ -159,14 +137,8 @@ export function exactnessLabel(exactness: string | null | undefined): string | n
       return "Exact";
     case "approximated":
       return "Approximated";
-    case "merged-exactly":
-      return "Exact merge";
-    case "bounded-approximation":
-      return "Bounded approximation";
-    case "truncated":
-      return "Truncated";
-    case "resampled":
-      return "Resampled";
+    case "estimated":
+      return "Fixed-lane estimate";
     default:
       return exactness
         .split(/[-_\s]+/)
@@ -176,52 +148,15 @@ export function exactnessLabel(exactness: string | null | undefined): string | n
   }
 }
 
-/** Optional live-cap / adaptive ladder bits for residual under-count chrome. */
-export type BranchCapDiagnosticsOpts = {
-  maxLiveBranches?: number;
-  attempts?: number;
-};
-
-/**
- * Compact residual under-count fragment when residual > 0.
- * concrete mass from source; live cap / attempts only when opts provide them.
- * Never invents unit-mass EV.
- */
-export function branchCapDiagnosticsNote(
-  source: StochasticLabelSource,
-  opts?: BranchCapDiagnosticsOpts,
-): string | null {
-  if (residualWeightOf(source) <= 0) return null;
-  const bits: string[] = [];
-  const concrete = concreteMassOf(source);
-  if (concrete > 0) {
-    bits.push(`concrete mass ${formatPercentMass(concrete)}`);
-  }
-  const maxLive = opts?.maxLiveBranches;
-  if (typeof maxLive === "number" && Number.isFinite(maxLive) && maxLive > 0) {
-    bits.push(`live cap ${Math.floor(maxLive)}`);
-  }
-  const attempts = opts?.attempts;
-  if (typeof attempts === "number" && Number.isFinite(attempts) && attempts > 1) {
-    bits.push(`${Math.floor(attempts)} attempts`);
-  }
-  return bits.length > 0 ? bits.join(" · ") : null;
-}
-
 export function residualNote(source: StochasticLabelSource): string | null {
   const residual = residualWeightOf(source);
   if (residual <= 0) return null;
-  return `${formatPercentMass(residual)} of probability mass was discarded by branch caps;`;
+  return `${formatPercentMass(residual)} of probability mass is unrepresented;`;
 }
 
 export function failureNote(source: StochasticLabelSource): string | null {
   const failed = failedWeightOf(source);
   if (failed <= 0) return null;
-  if (totalsAreSuccessConditional(source)) {
-    const success = successfulWeightOf(source);
-    const successBit = success > 0 ? ` (${formatPercentMass(success)} success mass)` : "";
-    return `${formatPercentMass(failed)} of paths failed${successBit}; damage and DPS are renormalized over successful paths only.`;
-  }
   const success = successfulWeightOf(source);
   const scope = source.failure?.totalsScope ?? source.rng?.failure?.totalsScope;
   const reason = source.failure?.primaryReason ?? source.rng?.failure?.primaryReason;
@@ -241,17 +176,10 @@ export function failureNote(source: StochasticLabelSource): string | null {
 
 /**
  * Combined note under the primary stat strip.
- * Optional opts append compact concrete-mass / live-cap under-count bits after residual honesty.
  */
-export function runDiagnosticsNote(
-  source: StochasticLabelSource,
-  opts?: BranchCapDiagnosticsOpts,
-): string | null {
+export function runDiagnosticsNote(source: StochasticLabelSource): string | null {
   const residual = residualNote(source);
-  const cap = branchCapDiagnosticsNote(source, opts);
-  const residualBlock =
-    residual && cap ? `${residual} ${cap}.` : (residual ?? (cap ? `${cap}.` : null));
-  const parts = [residualBlock, failureNote(source)].filter(
+  const parts = [residual, failureNote(source)].filter(
     (part): part is string => part != null && part.length > 0,
   );
   return parts.length > 0 ? parts.join(" ") : null;
@@ -263,20 +191,17 @@ export function runDiagnosticsNote(
  * ordinary unconditional EV.
  */
 export function primaryDamageLabel(source: StochasticLabelSource): string {
-  if (totalsAreSuccessConditional(source)) return "Damage (success paths)";
   if (isApproximatedRun(source)) return "Damage (approx.)";
   return "Damage";
 }
 
 export function primaryDpsLabel(source: StochasticLabelSource): string {
-  if (totalsAreSuccessConditional(source)) return "DPS (success paths)";
   if (isApproximatedRun(source)) return "Fixed-window DPS (approx.)";
   return "Fixed-window DPS";
 }
 
 /** Manual RotationPlanner uses Expected wording instead of Damage. */
 export function primaryExpectedLabel(source: StochasticLabelSource): string {
-  if (totalsAreSuccessConditional(source)) return "Expected (success paths)";
   if (isApproximatedRun(source)) return "Expected (approx.)";
   return "Expected";
 }
@@ -284,7 +209,6 @@ export function primaryExpectedLabel(source: StochasticLabelSource): string {
 /** Manual / natural-completion DPS label (fixed-window still uses primaryDpsLabel). */
 export function primaryManualDpsLabel(source: StochasticLabelSource): string {
   if (source.metric?.type === "fixed-window") return primaryDpsLabel(source);
-  if (totalsAreSuccessConditional(source)) return "Natural DPS (success paths)";
   const core = source.rng ? "Expected natural DPS" : "Natural DPS";
   return isApproximatedRun(source) ? `${core} (approx.)` : core;
 }
@@ -321,15 +245,11 @@ export function formatProofChrome(
 /**
  * Assumption-panel rows for residual / exactness / failure.
  * Empty when there is nothing stochastic to disclose.
- * Optional live-cap opts add a Live branch cap row when residual remains.
  */
-export function stochasticAssumptionRows(
-  source: StochasticLabelSource,
-  opts?: BranchCapDiagnosticsOpts,
-): Array<[string, string]> {
+export function stochasticAssumptionRows(source: StochasticLabelSource): Array<[string, string]> {
   const rows: Array<[string, string]> = [];
-  const exactness = exactnessLabel(branchExactnessOf(source));
-  if (exactness) rows.push(["Branch exactness", exactness]);
+  const exactness = exactnessLabel(stochasticExactnessOf(source));
+  if (exactness) rows.push(["Stochastic model", exactness]);
 
   const residual = residualWeightOf(source);
   if (residual > 0) rows.push(["Residual mass", formatPercentMass(residual)]);
@@ -337,11 +257,6 @@ export function stochasticAssumptionRows(
   const concrete = concreteMassOf(source);
   if (residual > 0 && concrete > 0) {
     rows.push(["Concrete mass", formatPercentMass(concrete)]);
-  }
-
-  const maxLive = opts?.maxLiveBranches;
-  if (residual > 0 && typeof maxLive === "number" && Number.isFinite(maxLive) && maxLive > 0) {
-    rows.push(["Live branch cap", String(Math.floor(maxLive))]);
   }
 
   const basis = totalsBasisOf(source);
@@ -359,9 +274,7 @@ export function stochasticAssumptionRows(
   }
 
   const scope = source.failure?.totalsScope ?? source.rng?.failure?.totalsScope;
-  if (scope === "successful-branches-renormalized") {
-    rows.push(["Totals scope", "Successful paths only (renormalized)"]);
-  } else if (scope === "unconditional-all-mass") {
+  if (scope === "unconditional-all-mass") {
     rows.push([
       "Totals scope",
       residual > 0

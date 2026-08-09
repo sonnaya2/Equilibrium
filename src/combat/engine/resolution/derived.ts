@@ -5,6 +5,7 @@ import {
 } from "../../styles/necromancy/haunted";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { attachedResolutionComponent, resolveLeagueAttachedRawHost } from "../../league/damage";
+import { resolveLeagueCritAtLand } from "../../league/ruleset";
 import type { DamageProvenance } from "../../shared/damageProvenance";
 import { outgoingSourceOf } from "../../shared/damageProvenance";
 import { abilityDamageAt } from "./castHit";
@@ -19,14 +20,14 @@ import {
 
 /**
  * Resolve a derived hit (Bloat tail, Death Skulls bounce): a fraction of the
- * source hit's RESOLVED damage - crit boost included, never re-modified, never
- * crit itself (wiki Bloat / Death Skulls, verified 2026-07-31). min/max span
+ * source hit's RESOLVED damage - crit boost included, never re-modified, and
+ * Death Skulls inherits the source critical outcome. min/max span
  * the source's non-crit min to its crit max; expected is the source's fraction.
  *
  * Haunted is re-evaluated at land tick (wiki: each Bloat/Skulls hit individually).
  * Attached only - never baked into the fraction parent.
  *
- * The source is addressed by its event seq, so provenance survives branching:
+ * The source is addressed by its event seq, so provenance survives delayed resolution:
  * a cloned runtime resolves the tail against its own copy of the source detail.
  */
 export function resolveDerivedHit(
@@ -42,13 +43,18 @@ export function resolveDerivedHit(
   const max = Math.floor((source.critMax * fractionPct) / 100);
   const expected = (source.expected * fractionPct) / 100;
   const capLoss = (source.capLoss * fractionPct) / 100;
+  const inheritedCrit = resolveLeagueCritAtLand(rt.input.league, {
+    chance: source.critChance,
+    damageBonus: source.critDamageBonus,
+    eligible: source.critChance > 0,
+  });
   const damage = {
     min,
     max,
     expected,
     critExpected: (source.critExpected * fractionPct) / 100,
     capLoss,
-    critical: packageCritical(source.critChance, source.critExpected, source.nonCritExpected, {
+    critical: packageCritical(inheritedCrit.chance, source.critExpected, source.nonCritExpected, {
       scale: fractionPct / 100,
       inherited: true,
     }),
@@ -86,11 +92,7 @@ export function resolveDerivedHit(
     max: 0,
     level: rt.input.level,
     accuracy: source.potential,
-    crit: {
-      chance: source.critChance,
-      damageBonus: source.critDamageBonus,
-      eligible: source.critChance > 0,
-    },
+    crit: inheritedCrit,
     modifiers: targetAndPostHitModifiers(rt, ability),
     context: {
       ...(rt.input.context ?? { style: ability?.style ?? "melee" }),

@@ -48,6 +48,7 @@ function hostScaffold(overrides: Partial<HostCombatResolveInput> = {}): HostComb
     crit: { chance: 0 },
     equipmentEffects: {
       activation: EQUIPMENT_SET_ACTIVATION,
+      setCritChance: { unconditional: 0, conditional: {} },
       passiveIds: [],
       enchantments: [],
       weaponClass: "bow",

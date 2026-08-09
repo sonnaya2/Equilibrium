@@ -124,7 +124,7 @@ export interface LoadoutPerks {
   crackling: number;
   /** Aftershock: AoE after 50k damage, avg 31.8% AD × rank, 6s min. Rank 0 = off, max 4. */
   aftershock: number;
-  /** Relentless: branched cost refund with its 30s lockout. Rank 0 = off, max 5. */
+  /** Relentless cost refund with its 30s lockout. Rank 0 = off, max 5. */
   relentless: number;
   relentlessLevel20: boolean;
   /** Precise: raises min hit by 1.5% of max per rank. Rank 0 = off, max 6. */

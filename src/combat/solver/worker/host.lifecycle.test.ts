@@ -13,7 +13,7 @@ import {
   setWorkerHostTimeoutsForTests,
 } from "./host";
 import { isWorkerToHostMessage, type HostToWorkerMessage, type SolverProgress } from "./protocol";
-import { resetUiRunHostForTests, runUiRevolution } from "./uiRunHost";
+import { cancelUiRevolutionWorkers, resetUiRunHostForTests, runUiRevolution } from "./uiRunHost";
 import {
   defaultSerializableRequest,
   emptyModifierSources,
@@ -32,6 +32,7 @@ function sampleSimBase(): SerializableRevolutionSimBase {
     crit: { chance: 0.1, damageBonus: 0 },
     equipmentEffects: {
       activation: EQUIPMENT_SET_ACTIVATION,
+      setCritChance: { unconditional: 0, conditional: {} },
       passiveIds: [],
       enchantments: [],
       weaponClass: null,
@@ -646,6 +647,23 @@ describe("solver host lifecycle", () => {
       }),
     ).rejects.toThrow(/worker could not be started/);
     expect(solveMock).not.toHaveBeenCalled();
+  });
+
+  it("UI Run cancellation rejects the pending worker promise", async () => {
+    const pending = runUiRevolution({
+      loadout: sampleSimBase(),
+      barIds: ["slice"],
+      style: "melee",
+      durationTicks: 100,
+    });
+    const rejected = expect(pending).rejects.toSatisfy(isAbort);
+    await vi.advanceTimersByTimeAsync(0);
+    const worker = FakeWorker.instances.at(-1)!;
+
+    cancelUiRevolutionWorkers();
+
+    await rejected;
+    expect(worker.terminated).toBe(true);
   });
 
   it("plain loadout fails closed without disabling later worker runs", async () => {

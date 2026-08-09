@@ -282,7 +282,7 @@ describe("evaluateRevolutionBar", () => {
     }
   });
 
-  it("adaptive branch fidelity opts in and completes residual-free bars on first rung", () => {
+  it("uses one deterministic fixed-lane evaluation", () => {
     const pool = buildCandidatePool(catalogue, "melee");
     const evaluation = evaluateRevolutionBar({
       bar: ["alpha", "beta"],
@@ -291,17 +291,9 @@ describe("evaluateRevolutionBar", () => {
       pool,
       sim: baseSim,
       profileId: "balanced",
-      branchFidelityMode: "exploratory",
-      branchFidelityOverrides: {
-        exploratory: { liveCaps: [64, 128], maximumResidualWeight: 1e-3 },
-      },
     });
     expect(evaluation.ok).toBe(true);
-    expect(evaluation.branchFidelity?.complete).toBe(true);
-    expect(evaluation.branchFidelity?.attempts).toBe(1);
-    expect(evaluation.branchFidelity?.finalBudget.maxLiveBranches).toBe(64);
     expect(evaluation.summary?.rng?.residualWeight ?? 0).toBeLessThanOrEqual(1e-12);
-    // Short adaptive complete is still exploratory, not final ranking.
     expect(evaluation.validForFinalRanking).toBe(false);
   });
 });

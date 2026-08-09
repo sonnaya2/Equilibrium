@@ -475,7 +475,7 @@ export const MAGIC_EFFECTS = [
     id: "tsunami_crit_adrenaline",
     name: "Tsunami crit adrenaline",
     notes:
-      "After Tsunami deals damage: Magic crits grant +8% adren for 50 ticks (Natural Instinct 16%). Modeled as land-time Bernoulli adren branches (not critChance*8 EV). Own hit eligible. Crit-ineligible DoTs grant nothing. Residual: AoE secondaries, Glacial Embrace cost, Lightning Surge nested crit-adren.",
+      "After Tsunami deals damage: Magic crits grant +8% adren for 50 ticks (Natural Instinct 16%). Modeled as sampled land-time Bernoulli adrenaline state (not critChance*8 EV). Own hit eligible. Crit-ineligible DoTs grant nothing. Residual: AoE secondaries, Glacial Embrace cost, Lightning Surge nested crit-adren.",
     source: wikiAbility("Tsunami"),
   },
   {

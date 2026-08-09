@@ -35,15 +35,15 @@ export interface AdrenalineRules {
    * Ultimate refund is RING_OF_VIGOUR_REFUND when active and the cast qualifies.
    */
   ringOfVigour?: boolean;
-  /** Impatient perk rank (1-4) - state-changing RNG, branched by the drivers. */
+  /** Impatient perk rank (1-4) - sampled because it changes later adrenaline. */
   impatientRank?: number;
   impatientLevel20?: boolean;
-  /** Relentless perk rank (1-5) - state-changing RNG, branched by the drivers. */
+  /** Relentless perk rank (1-5) - sampled because it changes later adrenaline. */
   relentlessRank?: number;
   relentlessLevel20?: boolean;
 }
 
-/** State-changing RNG flags for probability-weighted branches; missing = no proc. */
+/** State-changing RNG outcomes for one stochastic lane; missing = no proc. */
 export type CastRngPointId =
   "impatient" | "relentless" | "avernic-rampage" | "spectral_scythe_soul";
 export type CastRng = Readonly<Partial<Record<CastRngPointId, boolean>>>;
@@ -113,8 +113,6 @@ export interface SimulateInput {
   preciseRank?: number;
   /** Effective Tumeken count; its 5.4s activation is assumed complete before tick 0. */
   tumekensPieces?: number;
-  /** False when another mechanic (Equilibrium) disables all set crit chance. */
-  tumekensCritEnabled?: boolean;
   /** Set bonuses already active before tick 0 for this fixed loadout. */
   equipmentEffects?: ActiveEquipmentEffects;
   league?: ResolvedLeagueRules;
@@ -179,17 +177,6 @@ export function keepsPerAbilityMap(level: SimulationDetailLevel): boolean {
   return level !== "score-only";
 }
 
-/**
- * Live-set width for one sim attempt. Discarded mass stays residual (never reassigned).
- * maximumResidualWeight is an acceptance threshold for adaptive fidelity, not a sim discard control.
- */
-export interface BranchBudget {
-  maxLiveBranches: number;
-  maxIntermediateBranches: number;
-  /** Completeness: residualWeight must be <= this after the attempt. */
-  maximumResidualWeight: number;
-}
-
 export interface SimulateOptions {
   /**
    * Also compute `totalExpectedIncludingTails`: in-horizon damage plus the
@@ -201,11 +188,10 @@ export interface SimulateOptions {
    * Solver search opts into score-only explicitly.
    */
   detailLevel?: SimulationDetailLevel;
-  /**
-   * Branch width for this sim. Omitted -> engine defaults (64 live / 128 intermediate).
-   * Passed through; not a global constant raise.
-   */
-  branchBudget?: BranchBudget;
+  /** Override the automatic 1-or-128 lane selection. */
+  stochasticLanes?: number;
+  /** Counter-based stochastic model seed. */
+  stochasticSeed?: number;
 }
 
 /** createCastContext input: rotation/autoWeave belong to the manual driver only. */
@@ -347,6 +333,13 @@ export interface RotationDamageAnalysis {
   capLoss: number;
 }
 
+export interface PlayerPoisonTargetState {
+  decayIndex: number;
+  remainingTargetPoisonTicks: number;
+  bikStacks: number;
+  bikRemainingTicks: number;
+}
+
 export interface PlayerPoisonAnalysis {
   sourceLabel: string;
   effectiveTier: number;
@@ -360,10 +353,10 @@ export interface PlayerPoisonAnalysis {
   minimumDamage: number;
   expectedDamage: number;
   maximumDamage: number;
-  decayIndex: number;
-  remainingTargetPoisonTicks: number;
-  bikStacks: number;
-  bikRemainingTicks: number;
+  /** Concrete terminal state from the sampled presentation lane. */
+  targetState: PlayerPoisonTargetState;
+  /** Lane-weighted state; may be fractional and is not a concrete state. */
+  expectedTargetState?: PlayerPoisonTargetState;
   probabilityMass: number;
   supportStatus: "modeled" | "partially-modeled";
   supportNote?: string;
@@ -401,7 +394,7 @@ export type DamageTotalsBasis = "unit-mass" | "known-mass-contribution" | "concr
  * residual ~ 0: expectedDamage is unit-mass EV (scope unit-mass).
  * residual > 0: expectedDamage is known-mass contribution sum w_i D_i
  * (scope known-mass-contribution); E[D|concrete] lives on conditionalConcreteMean.
- * Never success-renormalized. expectedConditional* = weighted means of per-branch extrema.
+ * Never success-renormalized. expectedConditional* = weighted means of per-lane extrema.
  */
 export interface DamageBoundsSummary {
   /**
@@ -413,7 +406,7 @@ export interface DamageBoundsSummary {
    */
   expectedDamage: number;
   /**
-   * Machine-readable basis for expectedDamage. Mirrors rng.totalsBasis when branching.
+   * Machine-readable basis for expectedDamage. Mirrors rng.totalsBasis when stochastic.
    * Absent on older payloads - residualWeight > 0 without scope is legacy concrete-terminals
    * (conditional mean); new residual payloads emit known-mass-contribution.
    */
@@ -434,13 +427,13 @@ export interface DamageBoundsSummary {
    * False / absent when residual remains or totals are approximated.
    */
   eligibleForRanking?: boolean;
-  /** True support lower bound (min concrete terminal-branch path-minimum). */
+  /** True support lower bound across sampled lanes. */
   supportMinDamage: number;
-  /** True support upper bound (max concrete terminal-branch path-maximum). */
+  /** True support upper bound across sampled lanes. */
   supportMaxDamage: number;
-  /** Weighted avg of branch conditional minima (not a support bound). */
+  /** Weighted average of lane conditional minima (not a support bound). */
   expectedConditionalMin: number;
-  /** Weighted avg of branch conditional maxima (not a support bound). */
+  /** Weighted average of lane conditional maxima (not a support bound). */
   expectedConditionalMax: number;
 }
 
@@ -454,33 +447,32 @@ export interface DpsSummary {
   /** E[D]/(E[T]*tickSeconds); equals primary for natural-completion. */
   ratioOfExpectations: number;
   /** E[D_i/T_i]; stochastic natural-completion only. */
-  expectedBranchDps?: number;
+  expectedLaneDps?: number;
   representativeDps: number;
 }
 
-export type HistoryKind = "complete" | "representative-terminal-class";
+export type HistoryKind = "complete" | "representative-sample-history";
 
 /**
- * History pick reason. sole-terminal | highest-probability-mass | highest-successful-mass
- * (success-conditional when partial failure). representative-terminal-class is not the weighted ledger.
+ * The representative history is the most common sampled cast/event sequence.
  */
 export type HistorySelectionReason =
-  "sole-terminal" | "highest-probability-mass" | "highest-successful-mass";
+  "sole-terminal" | "most-common-history" | "most-common-successful-history";
 
 export interface HistoryProvenance {
   kind: HistoryKind;
-  /** Absolute probability mass of the class that supplied casts/events. */
-  classWeight: number;
+  /** Combined lane weight of the sampled history. */
+  historyWeight: number;
   ticks: number;
   selectionReason: HistorySelectionReason;
   /**
-   * True only for a single non-branching successful path; else events must not rebuild weighted totals.
+   * True only for a single successful lane; else events must not rebuild aggregate totals.
    */
   eventsReconcileWithWeightedTotals: boolean;
 }
 
 /** exact = residualWeight ~ 0 (concrete mass covers unit measure); approximated = residual remains. */
-export type BranchExactness = "exact" | "approximated";
+export type StochasticExactness = "exact" | "estimated" | "approximated";
 
 /**
  * Primary totals scope over concrete terminals only (residual is never mixed in).
@@ -488,20 +480,19 @@ export type BranchExactness = "exact" | "approximated";
  *   banked). Name keeps the anti-success-renorm wire token; when residualWeight > 0 the
  *   primary damage field is known-mass contribution (see rng.totalsBasis), not unit-mass EV.
  * - "none": no successful mass (all failed / empty); banked E[D] still reported.
- * Engine never emits "successful-branches-renormalized".
  */
-export type BranchTotalsScope = "unconditional-all-mass" | "none";
+export type StochasticTotalsScope = "unconditional-all-mass" | "none";
 
 /**
- * Partial branch failure. Primary totals stay unconditional over concrete success+fail
+ * Partial lane failure. Primary totals stay unconditional over success+fail
  * mass (not success-renormalized). Residual is separate on rng. successfulWeight /
  * conditionalOnSuccess are diagnostics only.
  */
-export interface BranchFailureSummary {
+export interface StochasticFailureSummary {
   failedWeight: number;
   /** Successful path probability; diagnostic, not a primary-totals divisor. */
   successfulWeight: number;
-  totalsScope: BranchTotalsScope;
+  totalsScope: StochasticTotalsScope;
   primaryReason: string;
   reasons: ReadonlyArray<{ reason: string; weight: number }>;
   /** E[D | success]; secondary diagnostic only - never primary DPS numerator. */
@@ -511,24 +502,20 @@ export interface BranchFailureSummary {
 }
 
 export interface StochasticRngSummary {
-  method: "probability-weighted branching";
-  terminalClasses: number;
-  successfulClasses: number;
-  failedClasses: number;
+  method: "deterministic-stratified-ensemble";
+  lanes: number;
+  successfulLanes: number;
+  failedLanes: number;
   /**
-   * Concrete terminal weight sum (success + fail expanded).
-   * concreteMass + residualWeight ~ 1.
+   * Lane weight sum. Fixed ensembles always cover one unit of mass.
    */
   probabilityMass: number;
   /**
-   * Same as probabilityMass - concrete expanded measure.
-   * Prefer this name when distinguishing residual; probabilityMass kept for older readers.
+   * Same as probabilityMass.
    */
   concreteMass: number;
   /**
-   * Unexpanded / dropped mass (branch caps). Not assigned damage.
-   * When > 0, primary expectedDamage is known-mass contribution (not unit-mass EV,
-   * not E[D|concrete] as unit-mass).
+   * Fixed-lane invariant: always zero.
    */
   residualWeight: number;
   /**
@@ -539,28 +526,16 @@ export interface StochasticRngSummary {
    * payloads use known-mass-contribution.
    */
   totalsBasis: DamageTotalsBasis;
-  /** exact when residualWeight ~ 0; approximated when residual mass remains. */
-  exactness: BranchExactness;
+  exactness: StochasticExactness;
   representative: {
-    classWeight: number;
+    historyWeight: number;
     ticks: number;
     selectionReason: Exclude<HistorySelectionReason, "sole-terminal">;
-    historyKind: "representative-terminal-class";
+    historyKind: "representative-sample-history";
     eventsReconcileWithWeightedTotals: boolean;
   };
-  failure?: BranchFailureSummary;
-  /**
-   * @deprecated Use `failure.failedWeight`.
-   */
+  failure?: StochasticFailureSummary;
   failedWeight?: number;
-  /**
-   * @deprecated Use `representative.classWeight`.
-   */
-  representativeClassWeight: number;
-  /**
-   * @deprecated Use `representative.ticks`.
-   */
-  representativeClassTicks: number;
 }
 
 export interface TailMetrics {
@@ -636,11 +611,11 @@ export interface RotationSummary {
   /** @deprecated Use tails.postWindowTailDamage. */
   postWindowTailDamage?: number;
   /**
-   * Present only when state-changing RNG forced probability-weighted branching.
+   * Present when the fixed stochastic ensemble has more than one lane.
    */
   rng?: StochasticRngSummary;
-  /** Present when any terminal class failed (also nested under rng when branching). */
-  failure?: BranchFailureSummary;
+  /** Present when any lane failed. */
+  failure?: StochasticFailureSummary;
 }
 
 export type CastAttempt = { ok: true } | { ok: false; error: string };

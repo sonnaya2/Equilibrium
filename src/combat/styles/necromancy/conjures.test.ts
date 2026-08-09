@@ -38,12 +38,12 @@ import {
 
 /** Walks a spirit's auto track like the event queue would: fire, advance, repeat. */
 function collectAutos(spirit: ActiveConjure, throughTick: number) {
-  const events: { tick: number; mult: number }[] = [];
+  const events: { tick: number; rageStacks: number }[] = [];
   let s = spirit;
   while (hasAutoTrack(s) && spiritAutoPending(s) && s.auto.nextTick <= throughTick) {
     events.push({
       tick: s.auto.nextTick,
-      mult: s.id === "skeleton_warrior" ? skeletonRageMult(s.rageStacks) : 1,
+      rageStacks: s.id === "skeleton_warrior" ? s.rageStacks : 0,
     });
     s = spiritAutoFired(s);
   }
@@ -109,9 +109,10 @@ describe("conjures", () => {
     const state = summonConjure(newConjures(), "skeleton_warrior", 0);
     const { events, state: after } = collectAutos(state.spirits[0]!, 20);
     expect(events.map((e) => e.tick)).toEqual([7, 12, 17]);
-    expect(events[0]!.mult).toBe(1);
-    expect(events[1]!.mult).toBeCloseTo(skeletonRageMult(1));
-    expect(events[2]!.mult).toBeCloseTo(skeletonRageMult(2));
+    expect(events.map((event) => event.rageStacks)).toEqual([0, 1, 2]);
+    expect(skeletonRageMult(0)).toBe(1);
+    expect(skeletonRageMult(1)).toBe(1.03);
+    expect(skeletonRageMult(2)).toBe(1.06);
     expect(after.id).toBe("skeleton_warrior");
     if (after.id !== "skeleton_warrior") return;
     expect(after.rageStacks).toBe(3);
@@ -123,7 +124,9 @@ describe("conjures", () => {
     const { events } = collectAutos(state.spirits[0]!, CONJURE_UNTIL_OFFSET_TICKS);
     expect(events).toHaveLength(20);
     expect(events.at(-1)!.tick).toBe(102);
-    expect(events.at(-1)!.mult).toBeCloseTo(skeletonRageMult(19));
+    expect(events.at(-1)!.rageStacks).toBe(19);
+    expect(skeletonRageMult(25)).toBe(1.75);
+    expect(skeletonRageMult(26)).toBe(1.75);
     expect(skeletonRageMult(SKELETON_RAGE_MAX_STACKS)).toBe(1.75);
   });
 

@@ -37,13 +37,53 @@ function formatAdrenalineValue(value: number): string {
   return `${Math.round(value * 10) / 10}%`;
 }
 
-/** Ability resources before occupancy passives, then the end-of-occupancy total. */
-export function formatAdrenalineTimeline(
-  cast: Pick<CastRecord, "adrenalineAfter" | "adrenalineAfterResources">,
-): string {
+type AdrenalineTimelineCast = Pick<
+  CastRecord,
+  "adrenalineBefore" | "adrenalineAfter" | "adrenalineAfterResources"
+> & {
+  adrenalineTransaction?: { spendPreventedBy?: string };
+};
+
+/** Before resources, after immediate resources, then end of occupancy when it differs. */
+export function formatAdrenalineTimeline(cast: AdrenalineTimelineCast): string {
+  const before = formatAdrenalineValue(cast.adrenalineBefore);
+  const resources =
+    typeof cast.adrenalineAfterResources === "number"
+      ? formatAdrenalineValue(cast.adrenalineAfterResources)
+      : null;
   const end = formatAdrenalineValue(cast.adrenalineAfter);
-  if (typeof cast.adrenalineAfterResources !== "number") return end;
-  return `${formatAdrenalineValue(cast.adrenalineAfterResources)} → ${end}`;
+  const values = [before, ...(resources && resources !== end ? [resources] : []), end];
+  const reason = cast.adrenalineTransaction?.spendPreventedBy;
+  if (reason && reason !== "none") {
+    const label =
+      reason === "deathspore"
+        ? "Deathspore free cast"
+        : reason === "relentless"
+          ? "Relentless free cast"
+          : reason === "avernic-rampage"
+            ? "Avernic Rampage free cast"
+            : `${reason} spend prevented`;
+    return `${values.join(" → ")} (${label})`;
+  }
+  return values.join(" → ");
+}
+
+export function formatCritContext({
+  critChance,
+  uncappedCritChance,
+  convertedCritChance,
+  critualActive,
+}: {
+  critChance: number;
+  uncappedCritChance: number;
+  convertedCritChance: number;
+  critualActive: boolean;
+}): string {
+  const effective = `${(critChance * 100).toFixed(1)}%`;
+  if (!critualActive) return effective;
+  return `${effective} effective · ${(uncappedCritChance * 100).toFixed(1)}% uncapped · +${(
+    convertedCritChance * 100
+  ).toFixed(1)}% Critual damage`;
 }
 
 /** Fixed length n, or a min..max search window. */
@@ -389,12 +429,7 @@ function optsTaintExactProof(opts?: {
     return true;
   }
   const ex = opts?.exactness;
-  return (
-    ex === "approximated" ||
-    ex === "bounded-approximation" ||
-    ex === "truncated" ||
-    ex === "resampled"
-  );
+  return ex === "approximated" || ex === "estimated";
 }
 
 /**

@@ -2,6 +2,7 @@
 
 import { equipmentById } from "@/combat/data";
 import {
+  activeEquipmentEffects,
   equipmentSetById,
   resolvedEquipmentSlots,
   setEffectsSummary,
@@ -10,6 +11,7 @@ import {
   type LoadoutEquipmentView,
   type SetEffectSupport,
 } from "@/combat/shared/equipment";
+import type { DracolichSetSummary } from "@/combat/styles/ranged/dracolich";
 import { equipmentIconPath } from "@/lib/gameArt";
 import { GameIcon } from "@/components/GameIcon";
 import type { Loadout } from "./useLoadout";
@@ -37,7 +39,32 @@ function setEffectText(effect: EquipmentSetEffectDef): string {
 }
 
 export function setEffectCountLabel(summary: { pieces: number; effectivePieces: number }): string {
-  return `${summary.pieces} equipped · ${summary.effectivePieces} effective pieces`;
+  const effectiveUnit = summary.effectivePieces === 1 ? "piece" : "pieces";
+  return `${summary.pieces} equipped · ${summary.effectivePieces} effective ${effectiveUnit}`;
+}
+
+function formatAdrenaline(value: number): string {
+  return Number.isInteger(value)
+    ? String(value)
+    : value.toFixed(2).replace(/0+$/, "").replace(/\.$/, "");
+}
+
+export function dracolichRuntimeLines(summary: DracolichSetSummary): readonly string[] {
+  if (summary.mixed) return ["Mixed normal/Elite Dracolich loadouts are not modeled."];
+  if (!summary.setId) return [];
+  const critPercent = Math.round(summary.infusionCritChance * 100);
+  const thresholdState = [
+    `3-piece ${summary.thresholds.three ? "active" : "inactive"}`,
+    `4-piece ${summary.thresholds.four ? "active" : "inactive"}`,
+    `5-piece ${summary.thresholds.five ? "active" : "inactive"}`,
+  ].join(" · ");
+  return [
+    `Rapid Fire: +${formatAdrenaline(summary.adrenalinePerRapidFireHit)} adrenaline each 0.6s Rapid Fire iteration`,
+    `Infusion thresholds: ${thresholdState}`,
+    summary.bowEligible
+      ? `Bow infusion: +${critPercent}% ranged critical strike chance for ${summary.infusionDurationTicks} ticks from channel completion`
+      : "Bow infusion: unavailable with the current weapon",
+  ];
 }
 
 /** Equipped item ids per setId (deduped). Visage still one icon while counting 2 pieces. */
@@ -73,6 +100,7 @@ export function SetEffectsList({
   };
   const sets = setEffectsSummary(view);
   const piecesBySet = equippedSetPieceIds(view);
+  const resolvedEffects = activeEquipmentEffects({ ...view, style: loadout.style });
 
   if (sets.length === 0) {
     return (
@@ -89,17 +117,33 @@ export function SetEffectsList({
           ...(def?.facts?.map(setFactThreshold).filter((value): value is number => value != null) ??
             []),
         ];
-        const activeThresholds = thresholds.filter((value) => value <= s.effectivePieces).length;
-        const state =
-          s.support === "not-modeled"
+        const isDracolich = s.setId === "dracolich" || s.setId === "elite-dracolich";
+        const dracolich = resolvedEffects.dracolich;
+        const resolvedDracolich =
+          isDracolich && dracolich && (dracolich.mixed || dracolich.setId === s.setId)
+            ? dracolich
+            : undefined;
+        const activeThresholds = resolvedDracolich
+          ? [
+              resolvedDracolich.thresholds.three,
+              resolvedDracolich.thresholds.four,
+              resolvedDracolich.thresholds.five,
+            ].filter(Boolean).length
+          : thresholds.filter((value) => value <= s.effectivePieces).length;
+        const thresholdCount = resolvedDracolich ? 3 : thresholds.length;
+        const state = resolvedDracolich?.mixed
+          ? "Unmodeled"
+          : s.support === "not-modeled"
             ? "Unmodeled"
-            : activeThresholds > 0 && activeThresholds < thresholds.length
+            : s.support === "outgoing-only"
               ? "Partial"
-              : activeThresholds > 0
-                ? "Active"
-                : thresholds.length > 0
-                  ? "Partial"
-                  : "Equipped";
+              : activeThresholds > 0 && activeThresholds < thresholdCount
+                ? "Partial"
+                : activeThresholds > 0
+                  ? "Active"
+                  : thresholdCount > 0
+                    ? "Partial"
+                    : "Equipped";
         const pieceIds = piecesBySet.get(s.setId) ?? [];
         return (
           <li key={s.setId} className="set-effect-card">
@@ -108,7 +152,9 @@ export function SetEffectsList({
               <span className="set-effect-state">{state}</span>
               <span className="ml-auto font-mono text-parch-300">
                 {setEffectCountLabel(s)}
-                {s.piecesPerItem !== 1 ? ` · ${s.piecesPerItem} effective each` : null}
+                {s.additionalPiecesPerItem > 0
+                  ? ` · +${s.additionalPiecesPerItem} additional each`
+                  : null}
               </span>
             </div>
             {pieceIds.length > 0 ? (
@@ -123,6 +169,16 @@ export function SetEffectsList({
                 })}
               </div>
             ) : null}
+            {isDracolich && dracolich && (dracolich.mixed || dracolich.setId === s.setId) ? (
+              <ul className="set-threshold-list">
+                {dracolichRuntimeLines(dracolich).map((line) => (
+                  <li key={line} className="is-met">
+                    <span className="set-threshold-badge">Resolved</span>
+                    <span>{line}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
             <ul className="set-threshold-list">
               {def?.effects.map((effect) => {
                 const met = s.effectivePieces >= effect.minPieces;
@@ -135,19 +191,21 @@ export function SetEffectsList({
                   </li>
                 );
               })}
-              {def?.facts?.map((fact) => {
-                const required = setFactThreshold(fact);
-                const met = required == null || s.effectivePieces >= required;
-                return (
-                  <li key={fact} className={met ? "is-met" : ""}>
-                    <span className="set-threshold-badge">
-                      {required == null ? "Note" : met ? "Active" : `Set ${required}`}
-                    </span>
-                    <span>{fact.replace(/^Set\(\d+\):\s*/i, "")}</span>
-                  </li>
-                );
-              })}
-              {!def?.effects.length && !def?.facts?.length ? (
+              {!isDracolich
+                ? def?.facts?.map((fact) => {
+                    const required = setFactThreshold(fact);
+                    const met = required == null || s.effectivePieces >= required;
+                    return (
+                      <li key={fact} className={met ? "is-met" : ""}>
+                        <span className="set-threshold-badge">
+                          {required == null ? "Note" : met ? "Active" : `Set ${required}`}
+                        </span>
+                        <span>{fact.replace(/^Set\(\d+\):\s*/i, "")}</span>
+                      </li>
+                    );
+                  })
+                : null}
+              {!isDracolich && !def?.effects.length && !def?.facts?.length ? (
                 <li>
                   <span className="set-threshold-badge">Note</span>
                   <span>This set has no combat bonus yet.</span>

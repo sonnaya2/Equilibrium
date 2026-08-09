@@ -18,7 +18,7 @@ Domain truth lives elsewhere — read those skills before rewriting expectations
 | Skill | Owns |
 | ----- | ---- |
 | `combat-math` | Hit value, rounding, DPL, crit layers, modifier order, **source hierarchy** for every combat number |
-| `combat-sim` | Engine layout, tick/cast/event semantics, branch rules, horizon metrics |
+| `combat-sim` | Engine layout, tick/cast/event semantics, stochastic lanes, horizon metrics |
 | `equipment-effects` | Item/passive/set routing |
 | `league-blessings` / `league-data` | League facts and support labels |
 | `playwright-e2e` | How to run local Playwright (managed runner, ports, teardown) |
@@ -97,7 +97,7 @@ why the expectation exists. No essay comments.
 **Integers** when representing actual simulated events: hit counts, cast counts, ticks, stacks,
 souls, necrosis/parasite stacks, event counts, cooldown ticks, ability slots.
 
-**Fractional OK** for expected damage, probability-weighted damage, average DPM, weighted branch
+**Fractional OK** for expected damage, probability-weighted damage, average DPM, weighted lane
 totals, expected crit contribution.
 
 The Analysis UI must never describe a fractional number of actual hits, casts, ticks, or stacks.
@@ -121,7 +121,7 @@ The Analysis UI must never describe a fractional number of actual hits, casts, t
 ### Vitest
 
 Formulas, rounding, ability contracts, cast prepare/commit, event scheduling, runtime snapshots,
-branches, summaries, style mechanics, solver scoring/constraints, small exhaustive solver oracles,
+stochastic lanes, summaries, style mechanics, solver scoring/constraints, small exhaustive solver oracles,
 parsers/data validation, components that do not need a real browser, combat-module integrations.
 
 ### Playwright
@@ -168,8 +168,8 @@ effects. Group by style or mechanic; do not force one file per ability.
 
 **Simulation / runtime** — rejected casts mutate nothing; successful casts commit once; monotonic
 timestamps; deterministic same-tick order; GCD/cooldown/adrenaline integrity; snapshot safety;
-branch weights ~1; merge preserves weighted totals; fixed seeds; damage-only RNG must not branch
-state; state-changing RNG must; fixed-window vs natural-completion metrics not mixed; no NaN/
+lane weights sum to 1; aggregation preserves weighted totals; fixed seeds; damage-only RNG stays
+expected-value; future-changing RNG uses concrete lane state; fixed-window vs natural-completion metrics not mixed; no NaN/
 Infinity; DoT vs direct classification. Seeded random counts stay modest.
 
 **Revolution / rotation** — bar order, legality, adrenaline, channels, duration, summary DPM **plus**

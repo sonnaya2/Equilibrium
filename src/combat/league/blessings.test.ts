@@ -32,12 +32,12 @@ describe("Equilibrium blessing combat rules", () => {
   it("routes Chaotic Insight through the shared set-piece contribution seam", () => {
     const active = rules(["Chaos", "Chaos", "Chaos", "Chaos", "Chaos", "Chaos"]);
     expect(active.blessingIds.has("chaotic-insight")).toBe(true);
-    expect(setPieceContributionModifier(active)).toEqual({ piecesPerItem: 3 });
+    expect(setPieceContributionModifier(active)).toEqual({ additionalPiecesPerItem: 2 });
     expect(setPieceContributionModifier(rules(["Chaos", "Chaos"]))).toEqual({
-      piecesPerItem: 1,
+      additionalPiecesPerItem: 0,
     });
     expect(setPieceContributionModifier(resolveLeagueRules({ ruleset: "base" }))).toEqual({
-      piecesPerItem: 1,
+      additionalPiecesPerItem: 0,
     });
   });
 
@@ -463,7 +463,7 @@ describe("Equilibrium blessing combat rules", () => {
     expect(result.adrenalineDelta).toBe(13.5);
   });
 
-  it("branches Avernic Rampage and makes only later casts inside its window free", () => {
+  it("samples Avernic Rampage and makes only later casts inside its window free", () => {
     const league = rules(["Chaos", "Chaos", "Chaos"]);
     const assault = baseInput.abilities.find((ability) => ability.id === "assault")!;
     const context = createCastContext({
@@ -484,20 +484,20 @@ describe("Equilibrium blessing combat rules", () => {
     ).toBe(true);
     expect(context.getState().adrenaline).toBe(75);
 
-    const branched = simulate({
+    const sampled = simulate({
       ...baseInput,
       league,
       context: { style: "melee", ruleset: "equilibrium" },
       rotation: rotationOf("attack"),
     });
-    expect(branched.rng).toMatchObject({
-      method: "probability-weighted branching",
-      terminalClasses: 2,
-      representativeClassWeight: 0.95,
+    expect(sampled.rng).toMatchObject({
+      method: "deterministic-stratified-ensemble",
+      lanes: 128,
+      representative: { historyWeight: 1 },
     });
   });
 
-  it("keeps long Avernic rotations exact and bounded", () => {
+  it("keeps long Avernic rotations deterministic and bounded", () => {
     const rotation = rotationOf(...Array(100).fill("attack"));
     const withoutAvernic = simulate(
       {
@@ -519,7 +519,7 @@ describe("Equilibrium blessing combat rules", () => {
     );
     expect(withAvernic.totalExpected).toBeCloseTo(withoutAvernic.totalExpected, 6);
     expect(withAvernic.rng?.residualWeight).toBe(0);
-    expect(withAvernic.rng?.terminalClasses).toBeLessThanOrEqual(8);
+    expect(withAvernic.rng?.lanes).toBe(128);
   });
 });
 

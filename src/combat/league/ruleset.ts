@@ -100,11 +100,25 @@ export interface LeagueCritualStats {
   convertedChance: number;
 }
 
+const CRITUAL_EFFECTIVE_CHANCE_CAP = 0.5;
+
+function critChanceEquivalent(layers: CritLayers): number {
+  if (layers.eligible === false || layers.disabled) return 0;
+  if (layers.guaranteed) return 1;
+  if (!Number.isFinite(layers.chance)) {
+    throw new RangeError(`Critual chance must be finite: ${layers.chance}`);
+  }
+  return Math.max(0, layers.chance);
+}
+
 export function resolveLeagueCritualStats(
   rules: ResolvedLeagueRules | undefined,
   baseChance: number,
   disabled = false,
 ): LeagueCritualStats {
+  if (!Number.isFinite(baseChance)) {
+    throw new RangeError(`Critual chance must be finite: ${baseChance}`);
+  }
   const raw = Math.max(0, baseChance);
   const rule = blessingRule(rules, "unholy-critual")?.unholyCritual;
   if (!rule) {
@@ -117,31 +131,36 @@ export function resolveLeagueCritualStats(
   const uncappedChance = raw + Math.max(0, rule.chanceBonus);
   const effectiveChance = disabled
     ? 0
-    : Math.min(rule.effectiveChanceCap, Math.max(0, uncappedChance));
+    : Math.min(CRITUAL_EFFECTIVE_CHANCE_CAP, Math.max(0, uncappedChance));
   const convertedChance = disabled
     ? 0
-    : Math.max(0, uncappedChance - rule.effectiveChanceCap) * rule.excessCritDamageRatio;
+    : Math.max(0, uncappedChance - CRITUAL_EFFECTIVE_CHANCE_CAP) * rule.excessCritDamageRatio;
   return { uncappedChance, effectiveChance, convertedChance };
 }
 
 export function resolveLeagueCritAtLand(
   rules: ResolvedLeagueRules | undefined,
-  base: CritLayers,
   current: CritLayers,
 ): CritLayers {
+  // current is the complete chance layer set after all land-time bonuses.
   const rule = blessingRule(rules, "unholy-critual")?.unholyCritual;
-  if (!rule || current.disabled) return current;
-  const baseEffective = Math.min(rule.effectiveChanceCap, Math.max(0, base.chance));
-  const dynamicChance = Math.max(0, current.chance - base.chance);
-  const effectiveChance = Math.min(rule.effectiveChanceCap, baseEffective + dynamicChance);
-  const convertedDynamic =
-    baseEffective >= rule.effectiveChanceCap
-      ? dynamicChance
-      : Math.max(0, baseEffective + dynamicChance - rule.effectiveChanceCap);
+  if (!rule || current.disabled || current.eligible === false) return current;
+  const existingConverted = Math.max(0, current.critualConvertedDamageBonus ?? 0);
+  const nonCritualDamageBonus = Math.max(0, (current.damageBonus ?? 0) - existingConverted);
+  const uncappedChance = current.guaranteed
+    ? 1
+    : existingConverted > 0
+      ? Math.max(0, current.chance) + existingConverted
+      : critChanceEquivalent(current);
+  const effectiveChance = Math.min(CRITUAL_EFFECTIVE_CHANCE_CAP, uncappedChance);
+  const convertedChance =
+    Math.max(0, uncappedChance - CRITUAL_EFFECTIVE_CHANCE_CAP) * rule.excessCritDamageRatio;
   return {
     ...current,
     chance: effectiveChance,
-    damageBonus: (current.damageBonus ?? 0) + convertedDynamic * rule.excessCritDamageRatio,
+    guaranteed: false,
+    damageBonus: nonCritualDamageBonus + convertedChance,
+    critualConvertedDamageBonus: convertedChance,
   };
 }
 
@@ -277,13 +296,12 @@ export function blessingRule(
 export function setPieceContributionModifier(
   rules: ResolvedLeagueRules | undefined,
 ): SetPieceContributionModifier {
-  const multiplier = blessingRule(rules, "chaotic-insight")?.setPieceContributionMultiplier;
-  const piecesPerItem =
-    typeof multiplier === "number" && Number.isFinite(multiplier) && multiplier > 0
-      ? Math.floor(multiplier)
-      : 1;
+  const additional = blessingRule(rules, "chaotic-insight")?.additionalSetPiecesPerItem;
   return {
-    piecesPerItem,
+    additionalPiecesPerItem:
+      typeof additional === "number" && Number.isFinite(additional) && additional >= 0
+        ? Math.floor(additional)
+        : 0,
   };
 }
 

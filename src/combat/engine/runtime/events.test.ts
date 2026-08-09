@@ -1,27 +1,9 @@
 import { describe, expect, it } from "vitest";
-import type { CombatModifier } from "../../types";
 import { RANGED_ABILITIES } from "../../styles/ranged/abilities";
-import type { CastSnapshot } from "../cast/snapshot";
 import { rotationOf } from "../simulation/contracts";
 import { simulate, type SimulateInput } from "../simulation/simulate";
 import { baseInput } from "../../test/fixtures/inputs";
 import { EventQueue, type ScheduledEvent } from "./events";
-
-const stubMod = (id: string, stage: CombatModifier["stage"], priority: number): CombatModifier => ({
-  id,
-  stage,
-  priority,
-  applies: () => true,
-  apply: (s) => s,
-  source: { source: "derived", url: "test", verifiedAt: "2026-08-03" },
-});
-
-/**
- * Event provenance and ownership: what a scheduled event has to carry so
- * branching, cancellation and attached damage stay correct. Derived-hit
- * provenance and Bloat's replacement-by-owner are covered in
- * simulation/mechanics.test.ts.
- */
 
 const rangedInput: Omit<SimulateInput, "rotation"> = {
   base: 1000,
@@ -32,23 +14,6 @@ const rangedInput: Omit<SimulateInput, "rotation"> = {
   context: { style: "ranged" },
   equipmentIds: ["item:noxious-longbow"],
 };
-
-const castSnap = (over: Partial<CastSnapshot> = {}): CastSnapshot => ({
-  castSeq: 0,
-  critLayers: { chance: 0, eligible: true },
-  baseMods: [],
-  chaosRoarActive: false,
-  channelled: false,
-  greaterFuryActive: false,
-  furyActive: false,
-  firstEligibleHitIndex: 0,
-  empowerMult: 1,
-  searingWindsAtCast: false,
-  hauntedAtCast: false,
-  hauntedCapAd: 0,
-  enduringRuinBonus: 0,
-  ...over,
-});
 
 const event = (over: Partial<ScheduledEvent>): ScheduledEvent => ({
   tick: 0,
@@ -95,313 +60,66 @@ describe("event queue", () => {
   });
 });
 
-describe("branch equivalence signature", () => {
-  it("distinguishes tails derived from different relative source hits", () => {
-    // Single historical derivedFrom refs rank to the same h0 slot; absolute
-    // source identity is carried by hitDetails in the branch key, not here.
-    const loneA = new EventQueue();
-    const loneB = new EventQueue();
-    loneA.push(event({ derivedFrom: 4 }));
-    loneB.push(event({ derivedFrom: 9 }));
-    expect(loneA.signature()).toBe(loneB.signature());
-
-    // Multi-parent relative graph still splits (tail from first vs second).
-    const fromFirst = new EventQueue();
-    fromFirst.push(event({ seq: 1, hitIndex: 0 }));
-    fromFirst.push(event({ seq: 2, hitIndex: 1 }));
-    fromFirst.push(event({ seq: 3, derivedFrom: 1, hitIndex: 2 }));
-    const fromSecond = new EventQueue();
-    fromSecond.push(event({ seq: 10, hitIndex: 0 }));
-    fromSecond.push(event({ seq: 11, hitIndex: 1 }));
-    fromSecond.push(event({ seq: 12, derivedFrom: 11, hitIndex: 2 }));
-    expect(fromFirst.signature()).not.toBe(fromSecond.signature());
-  });
-
-  it("distinguishes an owned event from an unowned one", () => {
-    const owned = new EventQueue();
-    const free = new EventQueue();
-    owned.push(event({ cancelOwner: 0 }));
-    free.push(event({}));
-    expect(owned.signature()).not.toBe(free.signature());
-  });
-
-  it("distinguishes castSnap searingWindsAtCast", () => {
-    const a = new EventQueue();
-    const b = new EventQueue();
-    a.push(event({ castSnap: castSnap({ searingWindsAtCast: true }) }));
-    b.push(event({ castSnap: castSnap({ searingWindsAtCast: false }) }));
-    expect(a.signature()).not.toBe(b.signature());
-  });
-
-  it("distinguishes castSnap hauntedAtCast and hauntedCapAd", () => {
-    const a = new EventQueue();
-    const b = new EventQueue();
-    const c = new EventQueue();
-    a.push(event({ castSnap: castSnap({ hauntedAtCast: true, hauntedCapAd: 1000 }) }));
-    b.push(event({ castSnap: castSnap({ hauntedAtCast: false, hauntedCapAd: 0 }) }));
-    c.push(event({ castSnap: castSnap({ hauntedAtCast: true, hauntedCapAd: 500 }) }));
-    expect(a.signature()).not.toBe(b.signature());
-    expect(a.signature()).not.toBe(c.signature());
-  });
-
-  it("distinguishes castSnap Tuska empowered damage", () => {
-    const a = new EventQueue();
-    const b = new EventQueue();
-    a.push(event({ castSnap: castSnap({ tuskasEmpoweredDamage: 9_900 }) }));
-    b.push(event({ castSnap: castSnap() }));
-    expect(a.signature()).not.toBe(b.signature());
-  });
-
-  it("distinguishes castSnap greaterFuryActive", () => {
-    const a = new EventQueue();
-    const b = new EventQueue();
-    a.push(event({ castSnap: castSnap({ greaterFuryActive: true }) }));
-    b.push(event({ castSnap: castSnap({ greaterFuryActive: false }) }));
-    expect(a.signature()).not.toBe(b.signature());
-  });
-
-  it("distinguishes castSnap empowerMult", () => {
-    const a = new EventQueue();
-    const b = new EventQueue();
-    a.push(event({ castSnap: castSnap({ empowerMult: 1.25 }) }));
-    b.push(event({ castSnap: castSnap({ empowerMult: 1 }) }));
-    expect(a.signature()).not.toBe(b.signature());
-  });
-
-  it("distinguishes castSnap chaosRoarActive", () => {
-    const a = new EventQueue();
-    const b = new EventQueue();
-    a.push(event({ castSnap: castSnap({ chaosRoarActive: true }) }));
-    b.push(event({ castSnap: castSnap({ chaosRoarActive: false }) }));
-    expect(a.signature()).not.toBe(b.signature());
-  });
-
-  it("distinguishes lightningSurge marker (LS-eligible vs plain hit)", () => {
-    const surge = new EventQueue();
-    const plain = new EventQueue();
-    const unset = new EventQueue();
-    surge.push(event({ lightningSurge: true }));
-    plain.push(event({ lightningSurge: false }));
-    unset.push(event({}));
-    expect(surge.signature()).not.toBe(plain.signature());
-    expect(surge.signature()).not.toBe(unset.signature());
-    // false and undefined both encode as 0
-    expect(plain.signature()).toBe(unset.signature());
-  });
-
-  it("distinguishes castSnap baseMods id/stage/priority", () => {
-    const a = new EventQueue();
-    const b = new EventQueue();
-    const c = new EventQueue();
-    const d = new EventQueue();
-    a.push(event({ castSnap: castSnap({ baseMods: [stubMod("m1", "base", 0)] }) }));
-    b.push(event({ castSnap: castSnap({ baseMods: [stubMod("m2", "base", 0)] }) }));
-    c.push(event({ castSnap: castSnap({ baseMods: [stubMod("m1", "onHit", 0)] }) }));
-    d.push(event({ castSnap: castSnap({ baseMods: [stubMod("m1", "base", 1)] }) }));
-    expect(a.signature()).not.toBe(b.signature());
-    expect(a.signature()).not.toBe(c.signature());
-    expect(a.signature()).not.toBe(d.signature());
-  });
-
-  it("covers every provenance field the resolver can branch on", () => {
-    const base = new EventQueue();
-    base.push(event({}));
-    // Absolute seq / lone sourceCast are key-ranked within the pending set, so a
-    // single-event queue with only those absolute ids changed is still equivalent.
-    const variants: Partial<ScheduledEvent>[] = [
-      { tick: 1 },
-      { family: "dot" },
-      { abilityId: "b" },
-      { hitIndex: 1 },
-      { attached: true },
-      { procEligible: false },
-      { recursionAllowed: true },
-      { cancelOwner: 0 },
-      { derivedFrom: 0 },
-      { originKind: "dot" },
-      { expectedTriggerRolls: 1 },
-      { expectedActivations: 0.05 },
-      { expectedSeparateHits: 1 },
-      { damageTag: "bonus-damage" },
-      { bonusTargetId: "abyssal-cinders" },
-      { expectedOccurrences: 0.5 },
-      { flowReduction: 0.1 },
-      { convertedChannel: true },
-      { dotKind: "bleed" },
-      { bleedId: "dismember" },
-      { bleedExpiresAtTick: 10 },
-      { blessingId: "big-boned" },
-      { lightningSurge: true },
-      { provenance: { kind: "player_dot" } },
-      { provenance: { kind: "player_direct", detail: "x" } },
-      { castSnap: castSnap() },
-    ];
-    for (const over of variants) {
-      const other = new EventQueue();
-      other.push(event(over));
-      expect(other.signature(), JSON.stringify(over)).not.toBe(base.signature());
-    }
-  });
-
-  it("absolute seq alone does not split single-event queue keys", () => {
-    const a = new EventQueue();
-    const b = new EventQueue();
-    a.push(event({ seq: 3 }));
-    b.push(event({ seq: 99 }));
-    expect(a.signature()).toBe(b.signature());
-  });
-
-  it("equivalent futures with different absolute seqs merge after rank normalize", () => {
-    const a = new EventQueue();
-    const b = new EventQueue();
-    // Same relative graph: parent hit + derived tail, different drained-history seqs.
-    a.push(event({ tick: 5, seq: 10, abilityId: "bloat", sourceCast: 2, cancelOwner: 2 }));
-    a.push(
-      event({
-        tick: 7,
-        seq: 11,
-        family: "dot",
-        abilityId: "bloat",
-        sourceCast: 2,
-        cancelOwner: 2,
-        derivedFrom: 10,
-        hitIndex: 1,
-      }),
-    );
-    b.push(event({ tick: 5, seq: 40, abilityId: "bloat", sourceCast: 9, cancelOwner: 9 }));
-    b.push(
-      event({
-        tick: 7,
-        seq: 41,
-        family: "dot",
-        abilityId: "bloat",
-        sourceCast: 9,
-        cancelOwner: 9,
-        derivedFrom: 40,
-        hitIndex: 1,
-      }),
-    );
-    expect(a.signature()).toBe(b.signature());
-  });
-
-  it("different relative derivedFrom graphs still split after rank normalize", () => {
-    const linked = new EventQueue();
-    const cross = new EventQueue();
-    const histA = new EventQueue();
-    const histB = new EventQueue();
-    // Two pending hits; tail derives from first vs second.
-    linked.push(event({ tick: 1, seq: 1, abilityId: "h0", hitIndex: 0 }));
-    linked.push(event({ tick: 2, seq: 2, abilityId: "tail", derivedFrom: 1, hitIndex: 1 }));
-    cross.push(event({ tick: 1, seq: 10, abilityId: "h0", hitIndex: 0 }));
-    cross.push(event({ tick: 2, seq: 11, abilityId: "tail", derivedFrom: 10, hitIndex: 1 }));
-    // Same absolute relative as linked after rank (both derive from rank 0).
-    expect(linked.signature()).toBe(cross.signature());
-
-    // Cross-edge: second derives from a different pending parent than first-only.
-    const twoParents = new EventQueue();
-    twoParents.push(event({ tick: 1, seq: 1, abilityId: "h0", hitIndex: 0 }));
-    twoParents.push(event({ tick: 1, seq: 2, abilityId: "h1", hitIndex: 1 }));
-    twoParents.push(event({ tick: 3, seq: 3, abilityId: "tail", derivedFrom: 2, hitIndex: 2 }));
-    const firstParent = new EventQueue();
-    firstParent.push(event({ tick: 1, seq: 1, abilityId: "h0", hitIndex: 0 }));
-    firstParent.push(event({ tick: 1, seq: 2, abilityId: "h1", hitIndex: 1 }));
-    firstParent.push(event({ tick: 3, seq: 3, abilityId: "tail", derivedFrom: 1, hitIndex: 2 }));
-    expect(twoParents.signature()).not.toBe(firstParent.signature());
-
-    // Distinct historical derivedFrom identity among multi-ref queues.
-    histA.push(event({ tick: 4, seq: 1, derivedFrom: 100 }));
-    histA.push(event({ tick: 5, seq: 2, derivedFrom: 200 }));
-    histB.push(event({ tick: 4, seq: 10, derivedFrom: 100 }));
-    histB.push(event({ tick: 5, seq: 11, derivedFrom: 100 }));
-    expect(histA.signature()).not.toBe(histB.signature());
-  });
-
-  it("different relative sourceCast ownership still splits", () => {
-    const sameOwner = new EventQueue();
-    const splitOwner = new EventQueue();
-    sameOwner.push(event({ seq: 1, sourceCast: 5, cancelOwner: 5, hitIndex: 0 }));
-    sameOwner.push(event({ seq: 2, sourceCast: 5, cancelOwner: 5, hitIndex: 1 }));
-    splitOwner.push(event({ seq: 1, sourceCast: 5, cancelOwner: 5, hitIndex: 0 }));
-    splitOwner.push(event({ seq: 2, sourceCast: 6, cancelOwner: 6, hitIndex: 1 }));
-    expect(sameOwner.signature()).not.toBe(splitOwner.signature());
-  });
-
-  it("a clone keeps the same signature and cancels independently", () => {
-    const original = new EventQueue();
-    original.push(event({ seq: 0, cancelOwner: 1 }));
-    original.push(event({ seq: 1, cancelOwner: 2 }));
-    const clone = original.clone();
-    expect(clone.signature()).toBe(original.signature());
-    expect(clone.cancelByOwner(1)).toBe(1);
-    expect(original.length).toBe(2);
-    expect(clone.signature()).not.toBe(original.signature());
-  });
-});
-
 describe("attached damage is not a separate hit", () => {
   it("the Searing Winds bonus rides its source hit instead of scheduling one", () => {
-    const s = simulate({
+    const summary = simulate({
       ...rangedInput,
       rotation: rotationOf("galeshot", "ranged_attack"),
     });
-    expect(s.ok).toBe(true);
-    const boosted = s.events.filter((e) => e.abilityId === "ranged_attack");
-    // One ability hit is one event, whatever damage is attached to it.
+    expect(summary.ok).toBe(true);
+    const boosted = summary.events.filter((event) => event.abilityId === "ranged_attack");
     expect(boosted).toHaveLength(1);
-    // 90-110% of 1000 plus the attached 20% bonus hit.
-    expect(boosted[0].damage.expected).toBeCloseTo(1200);
-    expect(s.events.some((e) => e.attached)).toBe(false);
+    expect(boosted[0]!.damage.expected).toBeCloseTo(1200);
+    expect(summary.events.some((event) => event.attached)).toBe(false);
   });
 
   it("attached damage does not generate an extra Deathspore stack", () => {
-    // Deathspore grants a free cast every 10 landed ranged hits. With the
-    // bonus attached rather than scheduled, Galeshot + 9 attacks is 10 hits,
-    // not 19 - so exactly one free cast is available.
-    const s = simulate({
+    const summary = simulate({
       ...rangedInput,
       ammo: "deathspore",
       rotation: rotationOf("galeshot", ...Array(9).fill("ranged_attack"), "corruption_shot"),
     });
-    expect(s.ok).toBe(true);
-    const hits = s.events.filter((e) => e.procEligible && !e.attached && e.family === "hit");
+    expect(summary.ok).toBe(true);
+    const hits = summary.events.filter(
+      (event) => event.procEligible && !event.attached && event.family === "hit",
+    );
     expect(hits).toHaveLength(10);
   });
 });
 
-describe("same-tick event order is explicit and stable", () => {
-  it("is deterministic and orders same-tick events by (tick, seq) in hit-index order", () => {
+describe("same-tick event order", () => {
+  it("orders same-tick events by tick and sequence", () => {
     const rotation = rotationOf("attack", "adaptive_strike_dw", "attack", "dismember");
-    const a = simulate({ ...baseInput, rotation });
-    const b = simulate({ ...baseInput, rotation });
-    expect(a.events).toEqual(b.events);
-    expect(a).toEqual(b);
-    const dw = a.events.filter((e) => e.abilityId === "adaptive_strike_dw");
-    expect(dw.map((e) => e.tick)).toEqual([3, 3]);
-    expect(dw[0].hitIndex).toBe(0);
-    expect(dw[1].hitIndex).toBe(1);
-    expect(dw[0].seq).toBeLessThan(dw[1].seq);
+    const first = simulate({ ...baseInput, rotation });
+    const second = simulate({ ...baseInput, rotation });
+    expect(first.events).toEqual(second.events);
+    expect(first).toEqual(second);
+    const dualWield = first.events.filter((event) => event.abilityId === "adaptive_strike_dw");
+    expect(dualWield.map((event) => event.tick)).toEqual([3, 3]);
+    expect(dualWield[0]!.hitIndex).toBe(0);
+    expect(dualWield[1]!.hitIndex).toBe(1);
+    expect(dualWield[0]!.seq).toBeLessThan(dualWield[1]!.seq);
   });
 });
 
-describe("attached damage rides its source event", () => {
-  it("folds Searing Winds into the source hit event — no separate event, and Galeshot never rides its own buff", () => {
-    const s = simulate({
+describe("attached damage accounting", () => {
+  it("folds Searing Winds into the source event without boosting Galeshot itself", () => {
+    const summary = simulate({
       ...baseInput,
       abilities: RANGED_ABILITIES,
       context: { style: "ranged" },
       rotation: rotationOf("galeshot", "ranged_attack"),
     });
-    expect(s.ok).toBe(true);
-    const galeshot = s.events.filter((e) => e.abilityId === "galeshot");
+    expect(summary.ok).toBe(true);
+    const galeshot = summary.events.filter((event) => event.abilityId === "galeshot");
     expect(galeshot).toHaveLength(1);
-    expect(galeshot[0].damage.expected).toBeCloseTo(1000);
-    const attack = s.events.filter((e) => e.abilityId === "ranged_attack");
+    expect(galeshot[0]!.damage.expected).toBeCloseTo(1000);
+    const attack = summary.events.filter((event) => event.abilityId === "ranged_attack");
     expect(attack).toHaveLength(1);
-    expect(attack[0].family).toBe("hit");
-    expect(attack[0].attached).toBe(false);
-    expect(attack[0].damage.expected).toBeCloseTo(1200);
-    // The attached +20% is in the event damage but not in the real hit's own roll.
-    expect(s.casts[1].result.hits[0].expected).toBeCloseTo(1000);
-    expect(s.casts[1].result.expected).toBeCloseTo(1200);
+    expect(attack[0]!.family).toBe("hit");
+    expect(attack[0]!.attached).toBe(false);
+    expect(attack[0]!.damage.expected).toBeCloseTo(1200);
+    expect(summary.casts[1]!.result.hits[0]!.expected).toBeCloseTo(1000);
+    expect(summary.casts[1]!.result.expected).toBeCloseTo(1200);
   });
 });

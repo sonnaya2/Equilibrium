@@ -21,6 +21,7 @@ import type { ActiveEquipmentEffects } from "../shared/equipment";
 
 const emptyEffects: ActiveEquipmentEffects = {
   activation: "pre-activated-static-loadout",
+  setCritChance: { unconditional: 0, conditional: {} },
   passiveIds: [],
   enchantments: [],
   weaponClass: null,

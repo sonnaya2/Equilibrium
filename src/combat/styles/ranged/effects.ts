@@ -10,6 +10,7 @@ import {
   type ShadowImbuedState,
 } from "./onHit";
 import { newPuncture, type PunctureState } from "./puncture";
+import { inactiveDracolichInfusion, type DracolichInfusionState } from "./dracolich";
 
 /**
  * Death's Swiftness became a mobile self-buff on 16 Mar 2026: 1.5x ranged
@@ -72,6 +73,7 @@ export interface RangedRotationState {
   shadowImbued: ShadowImbuedState;
   deathspore: DeathsporeState;
   puncture: PunctureState;
+  dracolichInfusion: DracolichInfusionState;
 }
 
 export const newRangedRotationState = (): RangedRotationState => ({
@@ -80,4 +82,5 @@ export const newRangedRotationState = (): RangedRotationState => ({
   shadowImbued: newShadowImbued(),
   deathspore: newDeathspore(),
   puncture: newPuncture(),
+  dracolichInfusion: inactiveDracolichInfusion(),
 });

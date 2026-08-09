@@ -25,6 +25,7 @@ export function solverSnapshotFromResolvedModel(model: ResolvedCombatModel): Sol
       chance: model.crit.chance,
       disabled: model.crit.disabled,
       damageBonus: model.crit.damageBonus,
+      critualConvertedDamageBonus: model.crit.critualConvertedDamageBonus,
     },
     adrenaline: model.adrenaline,
     procs: model.procs,
@@ -36,7 +37,6 @@ export function solverSnapshotFromResolvedModel(model: ResolvedCombatModel): Sol
     conjureBasicDamageMult: model.conjureBasicDamageMult,
     conjureDurationMult: model.conjureDurationMult,
     tumekensPieces: model.tumekensPieces,
-    tumekensCritEnabled: model.tumekensCritEnabled,
     equipmentEffects: model.equipmentEffects,
     league: {
       ...model.league,

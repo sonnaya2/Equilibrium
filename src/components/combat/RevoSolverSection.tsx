@@ -533,7 +533,7 @@ export function RevoSolverSection({
                   solverResult.rng?.residualWeight ??
                   solverResult.summary?.rng?.residualWeight,
                 exactness:
-                  solverResult.honesty?.branchExactness ??
+                  solverResult.honesty?.stochasticExactness ??
                   solverResult.rng?.exactness ??
                   solverResult.summary?.rng?.exactness,
                 probabilityMass: solverResult.summary?.rng?.probabilityMass,

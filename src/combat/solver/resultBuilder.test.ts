@@ -11,6 +11,7 @@ import { EQUIPMENT_SET_ACTIVATION, type ActiveEquipmentEffects } from "../shared
 
 const emptyEffects: ActiveEquipmentEffects = {
   activation: EQUIPMENT_SET_ACTIVATION,
+  setCritChance: { unconditional: 0, conditional: {} },
   passiveIds: [],
   enchantments: [],
   weaponClass: null,

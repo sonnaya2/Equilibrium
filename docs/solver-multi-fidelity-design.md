@@ -78,7 +78,7 @@ Previous winners feed the next stage:
 - Lowering `TIER_BUDGETS` or cutting total evals.
 - Ranking medium scores against full scores.
 - Replacing finalize full-horizon rescoring with medium.
-- Approximate damage / dropping RNG branches.
+- Changing expected-value or future-state RNG treatment.
 
 ## Verify
 

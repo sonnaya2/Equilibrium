@@ -36,7 +36,7 @@ import { maySaveVerified } from "./revoPanelFormat";
 import { RevoBarGraphic } from "./RevoBarGraphic";
 import { RevoBarLibraryPanel } from "./RevoBarLibraryPanel";
 import { RevoSolverSection } from "./RevoSolverSection";
-import { RevoRunResults, type BranchFidelityMeta } from "./RevoRunResults";
+import { RevoRunResults } from "./RevoRunResults";
 import { useRevolutionSolver } from "./useRevolutionSolver";
 import "./revo-solver.css";
 
@@ -72,8 +72,6 @@ export function RevolutionPanel({
   const { build } = useLeagueBuild();
   const [durationSeconds, setDurationSeconds] = useState(DEFAULT_DURATION_SECONDS);
   const [result, setResult] = useState<RotationSummary | null>(null);
-  /** Live-cap / adaptive fidelity meta from Run; separate from RotationSummary. */
-  const [branchFidelityMeta, setBranchFidelityMeta] = useState<BranchFidelityMeta | null>(null);
   const [runBusy, setRunBusy] = useState(false);
   const [runProgressLabel, setRunProgressLabel] = useState<string | null>(null);
   const [runError, setRunError] = useState<string | null>(null);
@@ -103,7 +101,6 @@ export function RevolutionPanel({
   );
   const onClearSimResult = useCallback(() => {
     setResult(null);
-    setBranchFidelityMeta(null);
   }, []);
 
   const bar: RevoBarView | undefined = useMemo(
@@ -235,7 +232,6 @@ export function RevolutionPanel({
     prevEquipKey.current = equipKey;
     setActiveBarIds(null);
     setResult(null);
-    setBranchFidelityMeta(null);
     setResultKey(null);
     setShowAllCasts(false);
     setAnalysisOpen(false);
@@ -261,7 +257,6 @@ export function RevolutionPanel({
     const cached = getUiRunCache(runKey);
     if (cached) {
       setResult(cached.summary);
-      setBranchFidelityMeta(cached.meta);
       setResultKey(runKey);
       return;
     }
@@ -270,14 +265,14 @@ export function RevolutionPanel({
     const gen = ++runGenRef.current;
     runCancelRef.current = false;
     setRunBusy(true);
-    setRunProgressLabel("Probing branch widths…");
+    setRunProgressLabel("Running full analysis…");
 
     const barIds = modelled.map((m) => m.id).filter(Boolean);
     const packed = packSimBaseFromModel(combatModel);
 
     void (async () => {
       try {
-        const { summary, meta } = await runUiRevolution(
+        const { summary } = await runUiRevolution(
           {
             loadout: packed,
             barIds,
@@ -288,26 +283,14 @@ export function RevolutionPanel({
             isCancelled: () => runCancelRef.current || gen !== runGenRef.current,
             onProgress: (p) => {
               if (gen !== runGenRef.current) return;
-              if (p.phase === "probes") {
-                setRunProgressLabel(
-                  `Probing live ${p.maxLiveBranches ?? "…"} (${p.done}/${p.total})`,
-                );
-              } else {
-                setRunProgressLabel(`Full analysis live ${p.maxLiveBranches ?? "…"}…`);
-              }
+              setRunProgressLabel(`Full analysis (${p.done}/${p.total})…`);
             },
           },
         );
         if (gen !== runGenRef.current) return;
-        const branchMeta: BranchFidelityMeta = {
-          maxLiveBranches: meta.finalBudget.maxLiveBranches,
-          residualWeight: meta.residualWeight,
-          attempts: meta.attempts,
-        };
         setResult(summary);
-        setBranchFidelityMeta(branchMeta);
         setResultKey(runKey);
-        setUiRunCache(runKey, { summary, meta: branchMeta });
+        setUiRunCache(runKey, { summary });
       } catch (err) {
         if (gen !== runGenRef.current) return;
         const aborted =
@@ -339,7 +322,6 @@ export function RevolutionPanel({
   const applySolverBar = (ids: readonly string[]) => {
     setActiveBarIds(ensureNecroConjuresOnBarIds(ids, loadout.style, weaponConfiguration));
     setResult(null);
-    setBranchFidelityMeta(null);
   };
 
   // Run/active bars are necro-normalized; match verified DTO against the same face.
@@ -475,7 +457,6 @@ export function RevolutionPanel({
         analysisOpen={analysisOpen}
         setAnalysisOpen={setAnalysisOpen}
         nameById={nameById}
-        branchFidelityMeta={liveResult ? branchFidelityMeta : null}
         runBusy={runBusy}
         runProgressLabel={runProgressLabel}
         runError={runError}

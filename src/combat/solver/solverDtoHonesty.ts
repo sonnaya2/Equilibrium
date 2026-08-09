@@ -5,7 +5,7 @@
 import type { ProofLabel, SolveStatus } from "./contracts";
 import type { SolverResultDTO } from "./worker/serializable";
 import { VERIFIED_CACHEABLE_PROOFS } from "./identity";
-import { exactnessEligibleForExactProof, RESIDUAL_FREE_TOLERANCE } from "./objective";
+import { RESIDUAL_FREE_TOLERANCE } from "./objective";
 
 export { RESIDUAL_FREE_TOLERANCE };
 
@@ -14,14 +14,13 @@ export interface SolverResultHonesty {
   /** Finalize status: ok when a full-rankable best exists (upgrade or incumbent). */
   status: SolveStatus;
   /**
-   * True when presentation is residual-free and exact (or merged-exactly).
-   * Ranking may still have been residual-free score-only; residual presentation fails this.
+   * True when presentation is residual-free and uses the canonical fixed-lane model.
    */
   fullyValidated: boolean;
   /** True when proposed full score beats the incumbent (score compare only). */
   beatsBar: boolean;
-  /** Branch expansion exactness of the presentation re-sim when known. */
-  branchExactness: string | null;
+  /** Stochastic exactness of the presentation re-sim when known. */
+  stochasticExactness: string | null;
   /** Residual probability mass on the presentation re-sim (0 when residual-free). */
   residualMass: number;
   /** Full-horizon incumbent score when evaluated; -Infinity when none. */
@@ -44,24 +43,27 @@ export function residualMassOfDto(
   return typeof w === "number" && Number.isFinite(w) && w > RESIDUAL_FREE_TOLERANCE ? w : 0;
 }
 
-export function branchExactnessOfDto(
+export function stochasticExactnessOfDto(
   dto: Pick<SolverResultDTO, "rng" | "summary" | "honesty">,
 ): string | null {
-  if (dto.honesty?.branchExactness != null && dto.honesty.branchExactness.length > 0) {
-    return dto.honesty.branchExactness;
+  if (dto.honesty?.stochasticExactness != null && dto.honesty.stochasticExactness.length > 0) {
+    return dto.honesty.stochasticExactness;
   }
   const ex = dto.rng?.exactness ?? dto.summary?.rng?.exactness;
   return typeof ex === "string" && ex.length > 0 ? ex : null;
 }
 
-/** Residual-free + exact/merged-exactly (or missing exactness as legacy exact). */
+/** Residual-free canonical result; fixed-lane estimates are valid product outputs. */
 export function isFullyValidatedPresentation(
   residualMass: number,
-  branchExactness: string | null | undefined,
+  stochasticExactness: string | null | undefined,
 ): boolean {
   if (!(residualMass <= RESIDUAL_FREE_TOLERANCE)) return false;
-  return exactnessEligibleForExactProof(
-    branchExactness == null || branchExactness.length === 0 ? undefined : branchExactness,
+  return (
+    stochasticExactness == null ||
+    stochasticExactness.length === 0 ||
+    stochasticExactness === "exact" ||
+    stochasticExactness === "estimated"
   );
 }
 
@@ -78,10 +80,10 @@ export function buildSolverResultHonesty(args: {
   improvement: number;
   proofLabel: ProofLabel;
   residualMass: number;
-  branchExactness: string | null;
+  stochasticExactness: string | null;
 }): SolverResultHonesty {
   const residual = Math.max(0, args.residualMass);
-  const fullyValidated = isFullyValidatedPresentation(residual, args.branchExactness);
+  const fullyValidated = isFullyValidatedPresentation(residual, args.stochasticExactness);
   const residualFree = residual <= RESIDUAL_FREE_TOLERANCE;
   const proofOk = VERIFIED_CACHEABLE_PROOFS.has(args.proofLabel);
   const applyAllowed =
@@ -96,7 +98,7 @@ export function buildSolverResultHonesty(args: {
     status: args.status,
     fullyValidated,
     beatsBar: args.isUpgrade,
-    branchExactness: args.branchExactness,
+    stochasticExactness: args.stochasticExactness,
     residualMass: residual,
     currentBarScore: args.currentBarScore,
     proposedBarScore: args.proposedBarScore,

@@ -25,6 +25,7 @@ import {
   strikingLightBasicRowMark,
 } from "./blessingPresentation";
 import { AbilityCategoryChip } from "./AbilityCategoryChip";
+import { hasCritualRecursiveSource, occurrenceModelNote } from "./rotationAnalysisFormat";
 
 const SOURCE_LABEL: Record<DamageSourceKind, string> = {
   "ability-direct": "Direct abilities",
@@ -229,6 +230,10 @@ function EventTable({
             const critical = critLabel(event);
             const weight = eventExpectedWeight(event);
             const parent = parentEffectLabel(event, bySeq, nameForId);
+            const occurrenceNote = occurrenceModelNote(
+              event,
+              effectName(event.abilityId, nameForId),
+            );
             return (
               <tr key={event.seq} className="border-b border-stone-750/70">
                 <td className="py-1.5 pr-3 font-mono text-parch-300">
@@ -268,6 +273,15 @@ function EventTable({
                   {critical ? (
                     <span className={critical === "Crit" ? "rotation-crit" : undefined}>
                       {critical}
+                    </span>
+                  ) : null}
+                  {occurrenceNote ? (
+                    <span
+                      className="ml-2 text-gold-300"
+                      data-occurrence-model={event.occurrenceModel?.kind}
+                      title="Expected multiplicity is packed into this event; it is not one deterministic hit."
+                    >
+                      {occurrenceNote}
                     </span>
                   ) : null}
                   {event.stackCount != null ? (
@@ -359,7 +373,7 @@ export function RotationAnalysisModal({
             </h2>
             <p className="mt-1 text-xs text-parch-300">
               {result.rng
-                ? "Totals are probability-weighted. The event log shows the most likely terminal path."
+                ? "Totals are probability-weighted. The event log shows the most common sampled history."
                 : "The event log follows the resolved expected-value timeline."}
             </p>
           </div>
@@ -438,13 +452,31 @@ export function RotationAnalysisModal({
                 </dd>
               </div>
               <div className="combat-subpanel p-2">
-                <dt className="text-parch-300">Representative target state</dt>
+                <dt className="text-parch-300">Sampled target state</dt>
                 <dd className="mt-1 font-mono text-parch-50">
-                  decay {result.playerPoison.decayIndex} · poison{" "}
-                  {result.playerPoison.remainingTargetPoisonTicks}t · Bik{" "}
-                  {result.playerPoison.bikStacks} ({result.playerPoison.bikRemainingTicks}t)
+                  decay {result.playerPoison.targetState.decayIndex} · poison{" "}
+                  {result.playerPoison.targetState.remainingTargetPoisonTicks}t · Bik{" "}
+                  {result.playerPoison.targetState.bikStacks} (
+                  {result.playerPoison.targetState.bikRemainingTicks}t)
                 </dd>
               </div>
+              {result.playerPoison.expectedTargetState ? (
+                <div className="combat-subpanel p-2">
+                  <dt className="text-parch-300">Weighted end-state</dt>
+                  <dd
+                    className="mt-1 font-mono text-parch-50"
+                    title="Lane-weighted expectation; not a concrete target state."
+                  >
+                    decay {formatExpected(result.playerPoison.expectedTargetState.decayIndex)} ·
+                    poison{" "}
+                    {formatExpected(
+                      result.playerPoison.expectedTargetState.remainingTargetPoisonTicks,
+                    )}
+                    t · Bik {formatExpected(result.playerPoison.expectedTargetState.bikStacks)} (
+                    {formatExpected(result.playerPoison.expectedTargetState.bikRemainingTicks)}t)
+                  </dd>
+                </div>
+              ) : null}
             </dl>
           </section>
         ) : null}
@@ -574,6 +606,15 @@ export function RotationAnalysisModal({
                       <td className="py-1.5 pr-3 text-parch-50">
                         <span className="inline-flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
                           <span>{effectName(effect.id, nameForId)}</span>
+                          {hasCritualRecursiveSource(effect) ? (
+                            <span
+                              className="whitespace-nowrap font-mono text-[10px] text-gold-300"
+                              data-occurrence-model="geometric"
+                              title="Unholy Critual is represented as a recursive geometric expected chain."
+                            >
+                              Critual recursive EV
+                            </span>
+                          ) : null}
                           {effect.expectedPlayerPoisonHits > 0 ? (
                             <span
                               className="whitespace-nowrap font-mono text-[10px] text-emerald-300"

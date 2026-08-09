@@ -7,23 +7,15 @@ import {
   findConjure,
 } from "../../styles/necromancy/conjures";
 import { castRejection, resolveCastAbility, type WeaponConfiguration } from "../cast/rules";
-import {
-  branchCapsFromBudget,
-  combineExactness,
-  materializeCastPlans,
-  mergeAndCapBranches,
-  planCastOutcomes,
-  type Branch,
-  type BranchExactness,
-  type CastOutcomePlan,
-} from "./branch";
 import { createRuntime } from "../runtime/runtime";
 import type { RotationState } from "../runtime/state";
 import { firstLegalTickFor } from "../runtime/state";
 import type { CastRecord, RotationSummary, SimulateInput, SimulateOptions } from "./simulate";
-import { combineBranchSummaries } from "./summary";
+import { combineStochasticSummaries, type StochasticLane } from "./summary";
 import type { ResolvedLeagueRules } from "../../league/ruleset";
 import { runWithHitReuseScope } from "../resolution/hitReuse";
+import { performCast } from "../cast";
+import { stochasticLaneCount } from "../runtime/stochastic";
 
 export interface RevolutionInput extends Omit<SimulateInput, "rotation" | "autoWeave"> {
   bar: readonly AbilitySpec[];
@@ -120,138 +112,79 @@ function revoReadyCastAbility(
   return legal(castAbility) ? castAbility : null;
 }
 
-/**
- * Revolution driver: the bar is scanned in priority order on every branch;
- * branches diverge at state-changing RNG points and merge when their futures
- * realign. Revolution completes channels - occupancy advances past the full
- * channel before the next scan.
-
- * Casts are planned across the whole live set first, then only the heaviest
- * RNG outcomes are materialized (snapshot+commit). That applies the live-branch
- * cap before the expensive work, which matters when Impatient/Relentless/Avernic
- * would otherwise expand 64 parents into hundreds of full commits per GCD.
- * Discarded cap mass accumulates as residual; it is never folded into a survivor.
- */
-export function simulateRevolution(
+function simulateRevolutionLane(
   input: RevolutionInput,
-  options?: SimulateOptions,
-): RotationSummary {
-  return runWithHitReuseScope(() => simulateRevolutionScoped(input, options));
-}
-
-function simulateRevolutionScoped(
-  input: RevolutionInput,
-  options?: SimulateOptions,
-): RotationSummary {
-  const { maxLive, intermediateMax } = branchCapsFromBudget(options?.branchBudget);
-  let branches: Branch[] = [
+  options: SimulateOptions | undefined,
+  laneIndex: number,
+  laneCount: number,
+): StochasticLane {
+  const rt = createRuntime(
     {
-      weight: 1,
-      rt: createRuntime({
-        ...input,
-        horizonTicks: input.durationTicks,
-        detailLevel: options?.detailLevel,
-      }),
+      ...input,
+      horizonTicks: input.durationTicks,
+      detailLevel: options?.detailLevel,
     },
-  ];
-  let sawBranching = false;
-  let residualWeight = 0;
-  let exactness: BranchExactness = "exact";
+    { laneIndex, laneCount, seed: options?.stochasticSeed },
+  );
+  const lane: StochasticLane = { weight: 1 / laneCount, rt };
   const offGcd = input.bar.find((ability) => ability.offGcd);
   if (offGcd) {
-    branches[0]!.error = `${offGcd.name} is off-GCD and cannot be placed on a Revolution bar; trigger it manually`;
-    return combineBranchSummaries(branches, input.durationTicks, options, false, 0, "exact");
+    lane.error = `${offGcd.name} is off-GCD and cannot be placed on a Revolution bar; trigger it manually`;
+    return lane;
   }
   const selectedGroups = new Map<string, string>();
   for (const ability of input.bar) {
     if (!ability.replacementGroup) continue;
     const existing = selectedGroups.get(ability.replacementGroup);
     if (existing && existing !== ability.id) {
-      branches[0]!.error = `${existing} and ${ability.id} are mutually exclusive variants`;
-      return combineBranchSummaries(branches, input.durationTicks, options, false, 0, "exact");
+      lane.error = `${existing} and ${ability.id} are mutually exclusive variants`;
+      return lane;
     }
     selectedGroups.set(ability.replacementGroup, ability.id);
   }
+
   let guard = 0;
   const maxCasts = Math.max(input.durationTicks * 2, 64);
-
-  for (;;) {
-    const anyActive = branches.some(
-      (b) => b.error === undefined && b.rt.state.tick < input.durationTicks,
-    );
-    if (!anyActive) break;
+  while (lane.error === undefined && rt.state.tick < input.durationTicks) {
     if (++guard > maxCasts) {
-      branches = branches.map((b) =>
-        b.error !== undefined || b.rt.state.tick >= input.durationTicks
-          ? b
-          : { ...b, error: `revolution stalled at tick ${b.rt.state.tick}: cast guard exceeded` },
-      );
+      lane.error = `revolution stalled at tick ${rt.state.tick}: cast guard exceeded`;
       break;
     }
-
-    const carried: Branch[] = [];
-    const plans: CastOutcomePlan[] = [];
-    const advanced = runWithHitReuseScope(() => {
-      for (const branch of branches) {
-        if (branch.error !== undefined || branch.rt.state.tick >= input.durationTicks) {
-          carried.push(branch);
-          continue;
-        }
-        const state = branch.rt.state;
-        // Base Overpower becomes Igneous when equipped; conjure_* morphs to command_*.
-        let ready: AbilitySpec | undefined;
-        for (const barAbility of input.bar) {
-          const cast = revoReadyCastAbility(barAbility, state, input, branch.rt.byId);
-          if (cast) {
-            ready = cast;
-            break;
-          }
-        }
-        // Basics fill every empty GCD when the bar has nothing ready/affordable.
-        const basic = ready ? undefined : branch.rt.basicByStyle.get(input.style);
-        const ability = ready ?? basic;
-        if (!ability) {
-          carried.push({
-            ...branch,
-            error: `revolution stalled at tick ${state.tick}: no bar ability ready and no basic for ${input.style}`,
-          });
-          continue;
-        }
-        const planned = planCastOutcomes(
-          branch,
-          ability,
-          state.tick,
-          ready === undefined,
-          maxLive,
-          intermediateMax,
-        );
-        residualWeight += planned.residualWeight;
-        exactness = combineExactness(exactness, planned.exactness);
-        if (planned.plans.length > 1) sawBranching = true;
-        carried.push(...planned.errors);
-        plans.push(...planned.plans);
+    let ready: AbilitySpec | undefined;
+    for (const barAbility of input.bar) {
+      const cast = revoReadyCastAbility(barAbility, rt.state, input, rt.byId);
+      if (cast) {
+        ready = cast;
+        break;
       }
-      return materializeCastPlans(plans, maxLive, intermediateMax);
-    });
-    residualWeight += advanced.residualWeight;
-    exactness = combineExactness(exactness, advanced.exactness);
-    sawBranching ||= advanced.branches.length > 1;
-    const capped = mergeAndCapBranches([...carried, ...advanced.branches], maxLive);
-    residualWeight += capped.residualWeight;
-    exactness = combineExactness(exactness, capped.exactness);
-    branches = capped.branches;
+    }
+    const basic = ready ? undefined : rt.basicByStyle.get(input.style);
+    const ability = ready ?? basic;
+    if (!ability) {
+      lane.error = `revolution stalled at tick ${rt.state.tick}: no bar ability ready and no basic for ${input.style}`;
+      break;
+    }
+    const attempt = performCast(rt, ability, rt.state.tick, ready === undefined);
+    if (!attempt.ok) lane.error = attempt.error;
   }
+  return lane;
+}
 
-  // Sparse Primordial Ice atoms are residual-free and exact for stack physics;
-  // no score-only Leng exactness downgrade.
-  return combineBranchSummaries(
-    branches,
-    input.durationTicks,
-    options,
-    sawBranching,
-    residualWeight,
-    exactness,
+export function simulateRevolution(
+  input: RevolutionInput,
+  options?: SimulateOptions,
+): RotationSummary {
+  const laneCount = stochasticLaneCount(
+    input,
+    input.bar.map((ability) => ability.id),
+    options?.stochasticLanes,
   );
+  return runWithHitReuseScope(() => {
+    const lanes = Array.from({ length: laneCount }, (_, laneIndex) =>
+      simulateRevolutionLane(input, options, laneIndex, laneCount),
+    );
+    return combineStochasticSummaries(lanes, input.durationTicks, options);
+  });
 }
 
 export const STRICT_PRIORITY_RESOURCE_DIVERGENCE_EXPLANATION =

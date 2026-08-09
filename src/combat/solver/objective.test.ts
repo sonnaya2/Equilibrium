@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   exactnessEligibleForExactProof,
-  isNonExactBranchExactness,
+  isNonExactStochasticExactness,
   isNonUnitMassTotalsBasis,
   MIN_RANKABLE_HORIZON_TICKS,
   OBJECTIVE_HORIZON_TICKS,
@@ -151,13 +151,13 @@ describe("scoreSummary", () => {
     expect(s.robustScore).toBe(0);
   });
 
-  it("rejects residualWeight > 0 (approximated branch expansion)", () => {
+  it("rejects residualWeight > 0", () => {
     const s = scoreSummary(
       {
         ok: true,
         damageByTick: { 0: 1000 },
         horizonTicks: OBJECTIVE_HORIZON_TICKS,
-        rng: { residualWeight: 0.1, exactness: "bounded-approximation" },
+        rng: { residualWeight: 0.1, exactness: "approximated" },
       },
       "sustained",
     );
@@ -174,28 +174,22 @@ describe("scoreSummary", () => {
     ).toBe(false);
   });
 
-  it("rejects non-exact exactness even when residualWeight is 0", () => {
-    for (const exactness of [
-      "bounded-approximation",
-      "truncated",
-      "resampled",
-      "approximated",
-    ] as const) {
-      const s = scoreSummary(
-        {
-          ok: true,
-          damageByTick: { 0: 1000 },
-          horizonTicks: OBJECTIVE_HORIZON_TICKS,
-          rng: { residualWeight: 0, exactness },
-        },
-        "balanced",
-      );
-      expect(s.ok, exactness).toBe(false);
-      if (s.ok) return;
-      expect(s.reason).toMatch(new RegExp(`exactness=${exactness}`));
-      expect(isNonExactBranchExactness(exactness)).toBe(true);
-      expect(exactnessEligibleForExactProof(exactness)).toBe(false);
-    }
+  it("rejects approximated totals even when residualWeight is 0", () => {
+    const exactness = "approximated";
+    const s = scoreSummary(
+      {
+        ok: true,
+        damageByTick: { 0: 1000 },
+        horizonTicks: OBJECTIVE_HORIZON_TICKS,
+        rng: { residualWeight: 0, exactness },
+      },
+      "balanced",
+    );
+    expect(s.ok).toBe(false);
+    if (s.ok) return;
+    expect(s.reason).toMatch(/exactness=approximated/);
+    expect(isNonExactStochasticExactness(exactness)).toBe(true);
+    expect(exactnessEligibleForExactProof(exactness)).toBe(false);
   });
 
   it("rejects concrete-terminals / known-mass-contribution totals basis (not unit-mass)", () => {
@@ -281,8 +275,8 @@ describe("scoreSummary", () => {
     expect(s.robustScore).toBe(0);
   });
 
-  it("allows exact / merged-exactly / missing exactness for scoring and exact proof", () => {
-    for (const exactness of [undefined, "exact", "merged-exactly"] as const) {
+  it("allows exact and missing exactness for scoring and exact proof", () => {
+    for (const exactness of [undefined, "exact"] as const) {
       const s = scoreSummary(
         {
           ok: true,
@@ -295,6 +289,20 @@ describe("scoreSummary", () => {
       expect(s.ok, String(exactness)).toBe(true);
       expect(exactnessEligibleForExactProof(exactness)).toBe(true);
     }
+  });
+
+  it("ranks a residual-free fixed-lane estimate without claiming exact proof", () => {
+    const s = scoreSummary(
+      {
+        ok: true,
+        damageByTick: { 0: 6000 },
+        horizonTicks: OBJECTIVE_HORIZON_TICKS,
+        rng: { residualWeight: 0, exactness: "estimated" },
+      },
+      "burst",
+    );
+    expect(s.ok).toBe(true);
+    expect(exactnessEligibleForExactProof("estimated")).toBe(false);
   });
 
   it("allows unit-mass totalsBasis when residual is 0", () => {

@@ -4,6 +4,16 @@ import { simulate } from "../simulation/simulate";
 import { magicInput } from "../../test/fixtures/inputs";
 import { createCastContext } from "../simulation/context";
 import { resolveLeagueRules } from "../../league/ruleset";
+import { activeEquipmentEffects } from "../../shared/equipment";
+
+const tumekenEffects = activeEquipmentEffects({
+  style: "magic",
+  equipmentSlots: {
+    helmet: "item:tumekens-resplendence-helm",
+    body: "item:tumekens-resplendence-body",
+    legs: "item:tumekens-resplendence-legs",
+  },
+});
 
 function delayedMagicHit(tickOffset: number) {
   const attack = magicInput.abilities.find((ability) => ability.id === "magic_attack")!;
@@ -115,6 +125,7 @@ describe("Lightning Surge proc event", () => {
       ...magicInput,
       crit: { chance: 0 },
       startingAdrenaline: 100,
+      equipmentEffects: tumekenEffects,
       tumekensPieces: 3,
       adrenaline: { relentlessRank: 1 },
     });
@@ -129,12 +140,39 @@ describe("Lightning Surge proc event", () => {
       ...magicInput,
       crit: { chance: 1, disabled: true },
       startingAdrenaline: 50,
+      equipmentEffects: tumekenEffects,
       tumekensPieces: 3,
-      tumekensCritEnabled: false,
       rotation: rotationOf("instability", "magic_attack"),
     });
     expect(equilibrium.casts.at(-1)!.result.hits[0].critChance).toBe(0);
     expect(equilibrium.events.some((event) => event.family === "proc")).toBe(false);
+  });
+
+  it("applies the Sunshine crit layer through the Unholy Critual cap", () => {
+    const league = resolveLeagueRules({
+      ruleset: "equilibrium",
+      blessingPicks: ["Order", "Order", "Order", "Order", "Chaos"],
+    });
+    const ctx = createCastContext({
+      ...magicInput,
+      crit: { chance: 0.5 },
+      cap: { cap: 1_000 },
+      startingAdrenaline: 100,
+      equipmentEffects: tumekenEffects,
+      tumekensPieces: 3,
+      league,
+      context: { style: "magic", ruleset: "equilibrium" },
+    });
+    ctx.performCast(ctx.byId.get("instability")!, 0, false, { relentless: true });
+    ctx.performCast(ctx.byId.get("sunshine")!, ctx.getState().tick, false);
+    ctx.performCast(ctx.byId.get("magic_attack")!, ctx.getState().tick, false);
+    const summary = ctx.finish();
+    const surge = summary.events.find((event) => event.family === "proc");
+
+    expect(surge).toBeDefined();
+    // The source and surge are both at the 50% effective Critual cap. The raw
+    // +4.5% Sunshine layer converts to crit damage and is then hit-capped.
+    expect(surge!.damage.expected).toBeCloseTo(450, 10);
   });
 
   it("weights its separate hit and attached Big Boned host by the source crit chance", () => {

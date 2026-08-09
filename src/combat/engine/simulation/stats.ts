@@ -1,4 +1,4 @@
-/** Probability and branch-aggregation helpers for stochastic summaries. */
+/** Probability and lane-aggregation helpers for stochastic summaries. */
 
 export const PROB_TOLERANCE = 1e-9;
 export const WEIGHT_TOLERANCE = 1e-12;

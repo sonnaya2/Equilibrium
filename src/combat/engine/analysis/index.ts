@@ -1,7 +1,6 @@
 export {
   cloneAnalysisState,
   emptyAnalysisState,
-  mixAnalysisStates,
   type EffectAnalysisLedger,
   type RuntimeAnalysisState,
 } from "./contracts";

@@ -66,6 +66,7 @@ export interface BenchCaseDef {
 
 const emptyEffects = (passiveIds: readonly string[] = []): ActiveEquipmentEffects => ({
   activation: EQUIPMENT_SET_ACTIVATION,
+  setCritChance: { unconditional: 0, conditional: {} },
   passiveIds: passiveIds as ActiveEquipmentEffects["passiveIds"],
   enchantments: [],
   weaponClass: null,
@@ -96,7 +97,6 @@ function baseLoadout(opts: {
   conjureBasicDamageMult?: number;
   conjureDurationMult?: number;
   tumekensPieces?: number;
-  tumekensCritEnabled?: boolean;
   crit?: SerializableRevolutionSimBase["crit"];
   league?: SerializableRevolutionSimBase["league"];
   context?: SerializableRevolutionSimBase["context"];
@@ -133,7 +133,6 @@ function baseLoadout(opts: {
     conjureBasicDamageMult: opts.conjureBasicDamageMult,
     conjureDurationMult: opts.conjureDurationMult,
     tumekensPieces: opts.tumekensPieces,
-    tumekensCritEnabled: opts.tumekensCritEnabled,
     modifierSources: emptyModifierSources(),
   };
 }
@@ -163,7 +162,6 @@ function makeRequest(opts: {
   conjureBasicDamageMult?: number;
   conjureDurationMult?: number;
   tumekensPieces?: number;
-  tumekensCritEnabled?: boolean;
   crit?: SerializableRevolutionSimBase["crit"];
   league?: SerializableRevolutionSimBase["league"];
   context?: SerializableRevolutionSimBase["context"];
@@ -210,7 +208,6 @@ function makeRequest(opts: {
       conjureBasicDamageMult: opts.conjureBasicDamageMult,
       conjureDurationMult: opts.conjureDurationMult,
       tumekensPieces: opts.tumekensPieces,
-      tumekensCritEnabled: opts.tumekensCritEnabled,
       crit: opts.crit,
       league: opts.league,
       context: opts.context,
@@ -556,7 +553,6 @@ function leagueAoeRequest(seed: number, leagueEnabled: boolean): SerializableSol
     ],
     passiveIds: ["igneous-omnipower"],
     tumekensPieces: 5,
-    tumekensCritEnabled: true,
     procs: { cracklingRank: 4 },
     ...(leagueEnabled
       ? {
@@ -924,8 +920,8 @@ export const BENCH_CASES: readonly BenchCaseDef[] = [
   },
 
   /**
-   * 5. Impatient + Relentless - state-changing adren RNG (branched in sim).
-   * Short horizon; full suite only (branch cost).
+   * 5. Impatient + Relentless - state-changing adrenaline RNG.
+   * Short horizon; full suite only.
    */
   {
     id: "impatient-relentless",

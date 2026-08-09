@@ -1,0 +1,36 @@
+{"op":"upsert","entity":"item:warpriest-of-tuska-helm","set":{"entity_type":"equipment","name":"Warpriest of Tuska helm","short_description":"Tier 75 hybrid Warpriest of Tuska helm.","detailed_description":"Tier 75 hybrid armour from Airuts or the Mazcab Armoursmith.","verified_at":"2026-08-08","status":"active","sort_key":"warpriest of tuska helm"},"reason":"Create the Warpriest of Tuska helm entity before attaching its catalogue record."}
+{"op":"upsert","entity":"item:warpriest-of-tuska-cuirass","set":{"entity_type":"equipment","name":"Warpriest of Tuska cuirass","short_description":"Tier 75 hybrid Warpriest of Tuska cuirass.","detailed_description":"Tier 75 hybrid armour from Airuts or the Mazcab Armoursmith.","verified_at":"2026-08-08","status":"active","sort_key":"warpriest of tuska cuirass"},"reason":"Create the Warpriest of Tuska cuirass entity before attaching its catalogue record."}
+{"op":"upsert","entity":"item:warpriest-of-tuska-robe-legs","set":{"entity_type":"equipment","name":"Warpriest of Tuska robe legs","short_description":"Tier 75 hybrid Warpriest of Tuska robe legs.","detailed_description":"Tier 75 hybrid armour from Airuts or the Mazcab Armoursmith.","verified_at":"2026-08-08","status":"active","sort_key":"warpriest of tuska robe legs"},"reason":"Create the Warpriest of Tuska robe legs entity before attaching its catalogue record."}
+{"op":"upsert","entity":"item:warpriest-of-tuska-gauntlets","set":{"entity_type":"equipment","name":"Warpriest of Tuska gauntlets","short_description":"Tier 75 hybrid Warpriest of Tuska gauntlets.","detailed_description":"Tier 75 hybrid armour from Airuts or the Mazcab Armoursmith.","verified_at":"2026-08-08","status":"active","sort_key":"warpriest of tuska gauntlets"},"reason":"Create the Warpriest of Tuska gauntlets entity before attaching its catalogue record."}
+{"op":"upsert","entity":"item:warpriest-of-tuska-boots","set":{"entity_type":"equipment","name":"Warpriest of Tuska boots","short_description":"Tier 75 hybrid Warpriest of Tuska boots.","detailed_description":"Tier 75 hybrid armour from Airuts or the Mazcab Armoursmith.","verified_at":"2026-08-08","status":"active","sort_key":"warpriest of tuska boots"},"reason":"Create the Warpriest of Tuska boots entity before attaching its catalogue record."}
+{"op":"upsert","entity":"item:warpriest-of-tuska-cape","set":{"entity_type":"equipment","name":"Warpriest of Tuska cape","short_description":"Tier 75 hybrid Warpriest of Tuska cape.","detailed_description":"Tier 75 hybrid armour from Airuts or the Mazcab Armoursmith.","verified_at":"2026-08-08","status":"active","sort_key":"warpriest of tuska cape"},"reason":"Create the Warpriest of Tuska cape entity before attaching its catalogue record."}
+{"op":"link-source","entity":"item:warpriest-of-tuska-helm","source":"source:runescape-wiki:warpriest-tuska-01","role":"verification","order":0}
+{"op":"link-source","entity":"item:warpriest-of-tuska-cuirass","source":"source:runescape-wiki:warpriest-tuska-01","role":"verification","order":0}
+{"op":"link-source","entity":"item:warpriest-of-tuska-robe-legs","source":"source:runescape-wiki:warpriest-tuska-01","role":"verification","order":0}
+{"op":"link-source","entity":"item:warpriest-of-tuska-gauntlets","source":"source:runescape-wiki:warpriest-tuska-01","role":"verification","order":0}
+{"op":"link-source","entity":"item:warpriest-of-tuska-boots","source":"source:runescape-wiki:warpriest-tuska-01","role":"verification","order":0}
+{"op":"link-source","entity":"item:warpriest-of-tuska-cape","source":"source:runescape-wiki:warpriest-tuska-01","role":"verification","order":0}
+{"op":"unlink-region","entity":"item:warpriest-of-tuska-helm","region":"kandarin","relation":"required","order":0}
+{"op":"unlink-region","entity":"item:warpriest-of-tuska-helm","region":"desert","relation":"required","order":1}
+{"op":"link-region","entity":"item:warpriest-of-tuska-helm","region":"kandarin","relation":"optional","group":"acquisition_region","order":0}
+{"op":"link-region","entity":"item:warpriest-of-tuska-helm","region":"desert","relation":"optional","group":"acquisition_region","order":1}
+{"op":"unlink-region","entity":"item:warpriest-of-tuska-cuirass","region":"kandarin","relation":"required","order":0}
+{"op":"unlink-region","entity":"item:warpriest-of-tuska-cuirass","region":"desert","relation":"required","order":1}
+{"op":"link-region","entity":"item:warpriest-of-tuska-cuirass","region":"kandarin","relation":"optional","group":"acquisition_region","order":0}
+{"op":"link-region","entity":"item:warpriest-of-tuska-cuirass","region":"desert","relation":"optional","group":"acquisition_region","order":1}
+{"op":"unlink-region","entity":"item:warpriest-of-tuska-robe-legs","region":"kandarin","relation":"required","order":0}
+{"op":"unlink-region","entity":"item:warpriest-of-tuska-robe-legs","region":"desert","relation":"required","order":1}
+{"op":"link-region","entity":"item:warpriest-of-tuska-robe-legs","region":"kandarin","relation":"optional","group":"acquisition_region","order":0}
+{"op":"link-region","entity":"item:warpriest-of-tuska-robe-legs","region":"desert","relation":"optional","group":"acquisition_region","order":1}
+{"op":"unlink-region","entity":"item:warpriest-of-tuska-gauntlets","region":"kandarin","relation":"required","order":0}
+{"op":"unlink-region","entity":"item:warpriest-of-tuska-gauntlets","region":"desert","relation":"required","order":1}
+{"op":"link-region","entity":"item:warpriest-of-tuska-gauntlets","region":"kandarin","relation":"optional","group":"acquisition_region","order":0}
+{"op":"link-region","entity":"item:warpriest-of-tuska-gauntlets","region":"desert","relation":"optional","group":"acquisition_region","order":1}
+{"op":"unlink-region","entity":"item:warpriest-of-tuska-boots","region":"kandarin","relation":"required","order":0}
+{"op":"unlink-region","entity":"item:warpriest-of-tuska-boots","region":"desert","relation":"required","order":1}
+{"op":"link-region","entity":"item:warpriest-of-tuska-boots","region":"kandarin","relation":"optional","group":"acquisition_region","order":0}
+{"op":"link-region","entity":"item:warpriest-of-tuska-boots","region":"desert","relation":"optional","group":"acquisition_region","order":1}
+{"op":"unlink-region","entity":"item:warpriest-of-tuska-cape","region":"kandarin","relation":"required","order":0}
+{"op":"unlink-region","entity":"item:warpriest-of-tuska-cape","region":"desert","relation":"required","order":1}
+{"op":"link-region","entity":"item:warpriest-of-tuska-cape","region":"kandarin","relation":"optional","group":"acquisition_region","order":0}
+{"op":"link-region","entity":"item:warpriest-of-tuska-cape","region":"desert","relation":"optional","group":"acquisition_region","order":1}

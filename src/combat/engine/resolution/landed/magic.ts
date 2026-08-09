@@ -14,7 +14,7 @@ import { resolveLightningSurge } from "../lightningSurge";
 
 /**
  * Magic state a real landed hit changes: Conc Blast crit ledger, Sonic Flow,
- * and Tsunami crit-adren window arm (grant branches in tsunamiCritBranch).
+ * and Tsunami crit-adrenaline state.
  */
 export function onMagicHitLanded(
   rt: SimulationRuntime,

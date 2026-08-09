@@ -7,7 +7,7 @@ import {
   resolveAbilityCatalogue,
   resolveAbilitySpecsFromCatalogue,
 } from "../../abilities/catalogue";
-import { simulateRevolutionForUiHybrid } from "../../solver/uiRunCore";
+import { simulateRevolutionForUi } from "../../solver/uiRunCore";
 
 const army = abilityById(NECROMANCY_ABILITIES, "conjure_undead_army");
 const skeleton = abilityById(NECROMANCY_ABILITIES, "conjure_skeleton_warrior");
@@ -54,7 +54,7 @@ describe("weaponConfiguration gate for necro conjures", () => {
     expect(s.casts.some((c) => c.abilityId === "conjure_undead_army" && c.tick === 0)).toBe(true);
   });
 
-  it("UI hybrid full-analysis path summons with wiki-like barIds", () => {
+  it("UI full-analysis path summons with wiki-like barIds", () => {
     const cat = resolveAbilityCatalogue();
     const barIds = [
       "conjure_undead_army",
@@ -64,7 +64,7 @@ describe("weaponConfiguration gate for necro conjures", () => {
       "touch_of_death",
     ];
     const bar = resolveAbilitySpecsFromCatalogue(cat, barIds);
-    const { summary } = simulateRevolutionForUiHybrid({
+    const { summary } = simulateRevolutionForUi({
       ...necroInput,
       weaponConfiguration: "dualwield",
       style: "necromancy",

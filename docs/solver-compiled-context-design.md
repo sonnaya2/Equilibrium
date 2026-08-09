@@ -5,7 +5,7 @@ Scope: compile ability catalogue, id maps, basics, and Strength Cape variants
 **once per solver request**, then reuse them for every bar evaluation. Measure-
 first (Phase 0); no scoring or eligibility changes.
 
-Related: score-only detail levels are Phase 3 (`docs/solver-score-only-design.md`).
+Related: score-only detail levels share the same physics and stochastic streams as full analysis.
 Hit-level `compileModifiers` / exact plateau means live on
 `grok/combat-pipeline-performance` and are orthogonal (per-hit, not per-request).
 
@@ -15,7 +15,7 @@ A thorough solve can call `evaluateRevolutionBar` thousands of times. Most of th
 inputs to the Revolution driver are **request-invariant**: full ability
 catalogue, Basic Attacks, Strength Cape Dismember patch, cast-modifier
 factory, league/equipment fields. Today those structures are rebuilt on every
-bar, and again inside every `createRuntime` for every branch root.
+bar, and again inside every `createRuntime` for every stochastic lane.
 
 Phase 4 removes that duplicate setup without changing sim physics or scores.
 
@@ -67,7 +67,7 @@ Cost shape (order of magnitude):
 | Merge sim.abilities + pool.byId into Map | per bar | once per request |
 | `withStrengthCape99Dismember` on full catalogue | per bar when cape | once per request |
 | `withStrengthCape99Dismember` on resolved bar | per bar when cape | once per bar **or** lookup pre-patched specs from byId |
-| `mapAbilitiesById` / `mapBasicsByStyle` | per `createRuntime` (each branch root) | once per request, shared readonly maps |
+| `mapAbilitiesById` / `mapBasicsByStyle` | per `createRuntime` (each lane) | once per request, shared readonly maps |
 | Resolve bar id list -> specs | per bar | per bar (unavoidable; cheap Map.get) |
 | Eligibility + simulate + score | per bar | per bar |
 
@@ -105,7 +105,7 @@ Optional (Phase 4 stretch, only if measured useful):
 - Eligibility (`validateBarEligibility`).
 - Bar as ordered `readonly string[]` -> `resolved: AbilitySpec[]` via `byId.get` (same object references as catalogue; no deep clone).
 - `durationTicks` / explore vs full horizon.
-- `simulateRevolution` mutable runtime (state, queue, ledgers) - still created per branch.
+- `simulateRevolution` mutable runtime (state, queue, ledgers) - still created per lane.
 - Objective scoring from the summary.
 
 ### Strength Cape variants
@@ -142,8 +142,8 @@ When `abilityRegistry` is present, `createRuntime` uses it and skips
 `mapAbilitiesById` / `mapBasicsByStyle`. When absent, current behavior stays
 (manual combat UI, unit tests, one-off sims).
 
-Branch clones must keep sharing the same readonly maps (they already share
-`input`; maps stay on `SimulationRuntime` as readonly fields).
+Lane runtimes share the same readonly maps through `input`; the maps stay on
+`SimulationRuntime` as readonly fields.
 
 ### Modifiers (immutable portion)
 
@@ -218,7 +218,7 @@ Goal: **identical scores and sim totals**, not identical allocation counts.
 | Mutating a shared AbilitySpec | One bar path mutates hits/cooldowns and poisons later bars | Specs stay readonly after compile; cape produces new objects once at compile |
 | Pool entry is not full AbilitySpec | `pool.byId` typed as PoolAbility; cast needs hits | Keep current `poolAsSpecs` / catalogue merge rules; compile fails closed if hits missing for a resolved id |
 | Basic Attack missing from a saved bar | Stable IDs resolve through the full catalogue | Keep the four established engine IDs and storage mappings |
-| Branch key / equality assumes fresh maps | Unlikely maps are not in branch keys today | Confirm `branchKey` does not identity-compare byId Map instances |
+| Lane mutates a shared map | Later lanes or bars see changed ability specs | Keep registries readonly and mutation-free |
 | API split: evaluate with and without compiled | Two merge paths drift | Single `compileEvaluationContext` helper; evaluate always goes through it |
 | Engine option unused by manual UI | Dead field | Optional registry only; default rebuild path remains tested |
 
@@ -243,10 +243,10 @@ deferred.**
 Out of scope for Phase 4:
 
 - Score-only summary thinning (Phase 3)
-- Changing objective weights, horizons, proof labels, branch caps
-- Approximate EV / dropping RNG branches
+- Changing objective weights, horizons, proof labels, or stochastic lane count
+- Changing expected-value or future-state RNG treatment
 - Freezing land-time window modifiers
-- Requiring hit-pipeline `compileModifiers` from the pipeline-performance branch
+- Requiring hit-pipeline `compileModifiers` from another performance change
 
 ## Non-goals
 
@@ -260,7 +260,7 @@ Out of scope for Phase 4:
 | Phase | Intent |
 | ----- | ------ |
 | 0 | Measure-first baselines, profile counters, no speed claims |
-| 1–2 | (other rewrite slices as planned on the branch) |
+| 1–2 | Other measured rewrite slices |
 | 3 | Score-only / thinner summary for search ranking |
 | 4 | **This doc** - compile-once ability registry + optional baseMods |
 | later | Wire pipeline-performance hit compile if/when merged |

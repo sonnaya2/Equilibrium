@@ -4,12 +4,6 @@
  */
 import { allEngineSpecs, engineSpecs } from "../../abilities/registry";
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
-import {
-  getBranchProfile,
-  isBranchProfilingEnabled,
-  resetBranchProfile,
-  type BranchProfile,
-} from "../../engine/simulation/branch";
 import { buildCandidatePool } from "../candidatePool";
 import type { RevolutionBarEvaluation } from "../contracts";
 import { evaluateRevolutionBar } from "../evaluate";
@@ -41,7 +35,6 @@ export interface LengMicroArmResult {
   exactness: string | null;
   totalExpected: number | null;
   failureReason?: string;
-  branchProfile?: BranchProfile;
 }
 
 export interface LengMicroReport {
@@ -49,7 +42,6 @@ export interface LengMicroReport {
   kind: "leng-microbench";
   generatedAt: string;
   host: { node: string; platform: string };
-  branchProf: boolean;
   durationTicks: number;
   bar: readonly string[];
   totalWallMs: number;
@@ -82,7 +74,6 @@ function buildSimCommon(request: ReturnType<ReturnType<typeof caseById>["build"]
     conjureBasicDamageMult: simBase.conjureBasicDamageMult,
     conjureDurationMult: simBase.conjureDurationMult,
     tumekensPieces: simBase.tumekensPieces,
-    tumekensCritEnabled: simBase.tumekensCritEnabled,
     equipmentEffects: simBase.equipmentEffects,
     league,
     context: simBase.context,
@@ -130,7 +121,6 @@ function runArm(
   });
   const resolved = resolveBar(bar);
 
-  if (isBranchProfilingEnabled()) resetBranchProfile();
   const t0 = performance.now();
   const evaluation = evaluateRevolutionBar({
     bar: resolved,
@@ -168,7 +158,6 @@ function runArm(
     failureReason: evaluation.ok
       ? undefined
       : (evaluation.failureReason ?? evaluation.reasons?.[0]?.message),
-    branchProfile: isBranchProfilingEnabled() ? { ...getBranchProfile() } : undefined,
   };
 }
 
@@ -194,7 +183,6 @@ export function runLengMicrobench(options?: {
       node: typeof process !== "undefined" ? process.version : "unknown",
       platform: typeof process !== "undefined" ? process.platform : "unknown",
     },
-    branchProf: isBranchProfilingEnabled(),
     durationTicks,
     bar: [...bar],
     totalWallMs: Math.round((performance.now() - t0) * 1000) / 1000,
@@ -204,7 +192,7 @@ export function runLengMicrobench(options?: {
 
 export function formatLengMicroSummary(report: LengMicroReport): string {
   const lines = [
-    `leng-microbench ticks=${report.durationTicks} bar=${report.bar.join(",")} totalMs=${report.totalWallMs} branchProf=${report.branchProf}`,
+    `leng-microbench ticks=${report.durationTicks} bar=${report.bar.join(",")} totalMs=${report.totalWallMs}`,
   ];
   for (const a of report.arms) {
     const bits = [
@@ -218,15 +206,6 @@ export function formatLengMicroSummary(report: LengMicroReport): string {
       `exactness=${a.exactness ?? "n/a"}`,
     ];
     if (a.failureReason) bits.push(`fail=${a.failureReason.slice(0, 72)}`);
-    if (a.branchProfile) {
-      bits.push(
-        `snaps=${a.branchProfile.branchSnapshots}`,
-        `keySer=${a.branchProfile.branchKeySerializations}`,
-        `maxLive=${a.branchProfile.maxLiveBranches}`,
-        `mergeCap=${a.branchProfile.mergeAndCapCalls}`,
-        `discards=${a.branchProfile.mergeAndCapDiscards}`,
-      );
-    }
     lines.push(bits.join("  "));
   }
   const leng = report.arms.find((a) => a.id === "leng-icy-context");

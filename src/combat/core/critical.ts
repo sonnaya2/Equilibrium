@@ -26,6 +26,8 @@ export interface CritLayers {
   chance: number;
   /** Extra crit damage on top of base, e.g. +0.2 from an ability. */
   damageBonus?: number;
+  /** Portion of damageBonus already produced by Unholy Critual conversion. */
+  critualConvertedDamageBonus?: number;
   /** Skips the chance roll. */
   guaranteed?: boolean;
   /** Prevents all critical strikes, including guarantees and chance bonuses. */

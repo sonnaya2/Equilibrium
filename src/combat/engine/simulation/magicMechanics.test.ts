@@ -6,6 +6,8 @@ import { rotationOf } from "./contracts";
 import { simulate, type CastRecord, type SimulateInput } from "./simulate";
 import { createCastContext } from "./simulate";
 import { simulateRevolution } from "./revolution";
+import { activeEquipmentEffects } from "../../shared/equipment";
+import { resolveLeagueRules } from "../../league/ruleset";
 
 /**
  * Wild Magic crit layers, Concentrated Blast / Greater Concentrated Blast crit
@@ -47,6 +49,41 @@ describe("Wild Magic crit layers", () => {
     const wm = lastCastOf(s);
     expect(wm.result.expected).toBeCloseTo(2995.9102990033225, 10);
     expect(wm.result.hits[0].critChance).toBeCloseTo(0.1);
+  });
+
+  it("converts Wild Magic snapshot excess after the global Critual layer", () => {
+    const league = resolveLeagueRules({
+      ruleset: "equilibrium",
+      blessingPicks: ["Order", "Order", "Order", "Order", "Chaos"],
+    });
+    const result = simulate({
+      ...magicInput,
+      startingAdrenaline: 100,
+      crit: { chance: 0.45 },
+      league,
+      context: { style: "magic", ruleset: "equilibrium" },
+      rotation: rotationOf("wild_magic"),
+    });
+    const hit = lastCastOf(result).result.hits[0]!;
+    expect(hit.critChance).toBeCloseTo(0.5, 10);
+    expect(hit.critDamageBonus).toBeCloseTo(0.25, 10);
+  });
+
+  it("caps an ability-guaranteed crit while Critual is active", () => {
+    const league = resolveLeagueRules({
+      ruleset: "equilibrium",
+      blessingPicks: ["Order", "Order", "Order", "Order", "Chaos"],
+    });
+    const result = simulate({
+      ...magicInput,
+      crit: { chance: 0.5 },
+      league,
+      context: { style: "magic", ruleset: "equilibrium" },
+      rotation: rotationOf("smoke_tendrils"),
+    });
+    const hit = lastCastOf(result).result.hits[0]!;
+    expect(hit.critChance).toBeCloseTo(0.5, 10);
+    expect(hit.critDamageBonus).toBeCloseTo(0.5, 10);
   });
 });
 
@@ -164,6 +201,14 @@ describe("Channelled Might", () => {
       ...magicInput,
       startingAdrenaline: 100,
       tumekensPieces: 3,
+      equipmentEffects: activeEquipmentEffects({
+        style: "magic",
+        equipmentSlots: {
+          helmet: "item:tumekens-resplendence-helm",
+          body: "item:tumekens-resplendence-body",
+          legs: "item:tumekens-resplendence-legs",
+        },
+      }),
     });
     ctx.performCast(ctx.byId.get("sunshine")!, 0, false);
     ctx.performCast(ctx.byId.get("magic_attack")!, ctx.getState().tick, false);

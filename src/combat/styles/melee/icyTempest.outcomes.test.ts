@@ -42,7 +42,7 @@ function outcomeFor(
 }
 
 describe("Icy Tempest coupled outcome oracle", () => {
-  it("keeps 0/3 stack damage coupled to each spend branch", () => {
+  it("keeps 0/3 stack damage coupled to each sampled spend outcome", () => {
     const resolved = resolveIcyTempest(mixedZeroThree, 0, false);
     expect(resolved.outcomes).toEqual([outcomeFor(0.5, 0), outcomeFor(0.5, 3)]);
   });

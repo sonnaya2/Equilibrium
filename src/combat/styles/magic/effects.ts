@@ -139,7 +139,7 @@ export function armTsunamiCritAdren(landTick: number): number {
   return landTick + TSUNAMI_CRIT_ADREN_DURATION_TICKS;
 }
 
-/** Expired windows encode as 0 for branch merge. */
+/** Expired windows normalize to 0 for compact state identity. */
 export function normalizeTsunamiCritAdrenUntil(untilTick: number, tick: number): number {
   if (untilTick <= 0) return 0;
   return untilTick <= tick ? 0 : untilTick;
@@ -223,19 +223,6 @@ export function activateGreaterSunshine(tick: number): SunshineState {
 
 export function sunshineActive(state: SunshineState, tick: number): boolean {
   return tick >= state.startsAtTick && tick < state.expiresAtTick;
-}
-
-/** Tumeken set(3): +1.5% Magic crit chance per piece inside another cast's Sunshine. */
-export function tumekensSunshineCritChance(
-  pieces: number,
-  state: SunshineState,
-  tick: number,
-  sourceCast: number,
-): number {
-  const n = Math.max(0, Math.floor(pieces));
-  return n >= 3 && state.grantedByCast !== sourceCast && sunshineActive(state, tick)
-    ? n * 0.015
-    : 0;
 }
 
 export const SUNSHINE_SOURCE: SourceReference = {

@@ -2,7 +2,7 @@ import type { BleedId, CombatContext, DamageOverTimeKind, OutgoingDamageSource }
 
 /**
  * Capability-derived damage provenance. Prefer kind + capabilities over ability-id lists.
- * Serializable plain object for branch signatures / IPC.
+ * Serializable plain object for event state and IPC.
  *
  * wiki: Full Slayer Helmet / Salve apply to player direct attacks only (not DoT, conjure, procs).
  * Big Boned follows blessingRider; Cinders follows direct player attacks and direct bounces.
@@ -56,6 +56,8 @@ export interface DamageCapabilities {
   blessingOnHit: boolean;
   /** Default crit eligibility; hitSpec may still force false. */
   canCrit: boolean;
+  /** A resolved inherited crit can feed Critual even when the hit cannot reroll. */
+  canTriggerCritual?: boolean;
   canGenerateResources: boolean;
   /** ~procEligible for invention + gear land. */
   canTriggerProcs: boolean;
@@ -265,7 +267,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     canApplyWeaponPoison: true,
     canApplyEvolvingToxin: false,
   },
-  // Death Skulls bounce: separate hit counter / blessings; damage not re-modified.
+  // Death Skulls bounce: inherited critical outcome can trigger Critual; no reroll.
   derived_bounce: {
     playerAttack: true,
     directHit: false,
@@ -274,6 +276,7 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     cindersOnHit: true,
     blessingOnHit: true,
     canCrit: false,
+    canTriggerCritual: true,
     canGenerateResources: false,
     canTriggerProcs: true,
     recursiveDamage: false,

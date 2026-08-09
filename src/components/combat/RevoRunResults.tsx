@@ -26,6 +26,7 @@ import {
   castCritLabel,
   formatAdrenalineTimeline,
   formatCount,
+  formatCritContext,
   formatNumber,
   formatTime,
 } from "./revoPanelFormat";
@@ -36,15 +37,7 @@ import {
   runDiagnosticsNote,
   runScoreBadge,
   shouldShowRunScoreChrome,
-  type BranchCapDiagnosticsOpts,
 } from "./revoStochasticLabels";
-
-/** Adaptive / fixed branch budget meta for residual under-count chrome. */
-export type BranchFidelityMeta = {
-  maxLiveBranches: number;
-  residualWeight: number;
-  attempts?: number;
-};
 
 export type RevoRunResultsProps = {
   stats: CalcStats;
@@ -58,8 +51,6 @@ export type RevoRunResultsProps = {
   analysisOpen: boolean;
   setAnalysisOpen: (v: boolean) => void;
   nameById: Map<string, string>;
-  /** From adaptive fidelity Run meta; optional live-cap disclosure when residual remains. */
-  branchFidelityMeta?: BranchFidelityMeta | null;
   /** Multi-worker Run in flight. */
   runBusy?: boolean;
   runProgressLabel?: string | null;
@@ -76,19 +67,6 @@ export type RevoRunResultsProps = {
   } | null;
 };
 
-function capOptsFromMeta(
-  meta: BranchFidelityMeta | null | undefined,
-): BranchCapDiagnosticsOpts | undefined {
-  if (meta == null) return undefined;
-  if (!(typeof meta.maxLiveBranches === "number" && meta.maxLiveBranches > 0)) {
-    return undefined;
-  }
-  return {
-    maxLiveBranches: meta.maxLiveBranches,
-    attempts: meta.attempts,
-  };
-}
-
 export function RevoRunResults({
   stats,
   durationSeconds,
@@ -101,7 +79,6 @@ export function RevoRunResults({
   analysisOpen,
   setAnalysisOpen,
   nameById,
-  branchFidelityMeta = null,
   runBusy = false,
   runProgressLabel = null,
   runError = null,
@@ -117,17 +94,14 @@ export function RevoRunResults({
   const conjureDurationMult = stats.conjureDurationMult ?? 1;
   const effectLabel = (id: string) =>
     blessingEffectDisplayName(id) ?? nameById.get(id) ?? spiritEffectDisplayName(id) ?? id;
-  const capOpts = capOptsFromMeta(branchFidelityMeta);
   const scoreBadge = result ? runScoreBadge(result) : null;
-  const scoreNote = result ? runDiagnosticsNote(result, capOpts) : null;
+  const scoreNote = result ? runDiagnosticsNote(result) : null;
   const hasResidual = result ? residualWeightOf(result) > 0 : false;
   const damageLabel = result ? primaryDamageLabel(result) : "Damage";
   const dpsLabel = result ? primaryDpsLabel(result) : "Fixed-window DPS";
   const showScoreStrip = shouldShowRunScoreChrome(result);
   const run = () => onRun();
-  const busyPhaseFull =
-    typeof runProgressLabel === "string" && /full analysis/i.test(runProgressLabel);
-  const busyPhaseLabel = busyPhaseFull ? "Full analysis" : "Branch probe";
+  const busyPhaseLabel = "Full analysis";
   const slotCount = 8;
 
   return (
@@ -232,7 +206,7 @@ export function RevoRunResults({
 
       {runBusy ? (
         <div
-          className={busyPhaseFull ? "revo-run-busy is-full" : "revo-run-busy"}
+          className="revo-run-busy is-full"
           data-testid="revo-run-busy"
           aria-live="polite"
           aria-busy="true"
@@ -330,6 +304,18 @@ export function RevoRunResults({
             </div>
           </dl>
 
+          <p className="mt-2 text-xs text-parch-300" data-testid="revo-crit-context">
+            Effective crit rate{" "}
+            {formatCritContext({
+              critChance: stats.critChance,
+              uncappedCritChance: stats.uncappedCritChance,
+              convertedCritChance: stats.convertedCritChance,
+              critualActive: stats.league.blessings.some(
+                (choice) => choice.id === "unholy-critual",
+              ),
+            })}
+          </p>
+
           {scoreNote ? (
             <p className="mt-2 text-xs text-chaos-300" data-testid="revo-score-note" role="note">
               {hasResidual ? (
@@ -350,7 +336,7 @@ export function RevoRunResults({
             </button>
           </div>
 
-          <CalculationAssumptions stats={stats} result={result} branchCapOpts={capOpts} />
+          <CalculationAssumptions stats={stats} result={result} />
 
           <section className="revo-section revo-timeline">
             <h3 className="combat-section-title text-xs font-medium text-parch-50">Timeline</h3>
@@ -367,9 +353,9 @@ export function RevoRunResults({
                     <th className="py-1.5 pr-2 font-medium">Ability</th>
                     <th
                       className="py-1.5 pr-2 font-medium"
-                      title="Ability resources → end of occupancy"
+                      title="Before cast → after immediate resources → end of occupancy"
                     >
-                      Adren (resources → end)
+                      Adren (before → resources → end)
                     </th>
                     <th className="py-1.5 font-medium">Damage</th>
                   </tr>

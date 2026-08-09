@@ -162,7 +162,7 @@ describe("canonical blessings data contract", () => {
     });
     expect(lateChoices.find((choice) => choice.id === "chaotic-insight")).toMatchObject({
       support: { status: "modeled", mechanicsUnverified: true, excluded: [] },
-      combat: { setPieceContributionMultiplier: 3 },
+      combat: { additionalSetPiecesPerItem: 2 },
     });
   });
 

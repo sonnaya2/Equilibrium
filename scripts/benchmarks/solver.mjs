@@ -25,14 +25,14 @@ if (mode !== "quick" && mode !== "full" && mode !== "stress") {
 
 const testFile =
   mode === "stress"
-    ? "src/combat/solver/benchmarks/branchStress.test.ts"
+    ? "src/combat/solver/benchmarks/stochasticStress.test.ts"
     : mode === "full"
       ? "src/combat/solver/benchmarks/full.test.ts"
       : "src/combat/solver/benchmarks/quick.test.ts";
 
 const reportName =
   mode === "stress"
-    ? "solver-branch-stress.json"
+    ? "solver-stochastic-stress.json"
     : mode === "full"
       ? "solver-benchmark-full.json"
       : "solver-benchmark-quick.json";

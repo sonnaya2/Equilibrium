@@ -39,6 +39,7 @@ const attack = MELEE_ABILITIES.find((ability) => ability.id === "attack")!;
 
 const emptyEquipmentEffects: ActiveEquipmentEffects = {
   activation: EQUIPMENT_SET_ACTIVATION,
+  setCritChance: { unconditional: 0, conditional: {} },
   passiveIds: [],
   enchantments: [],
   weaponClass: null,
@@ -294,7 +295,8 @@ describe("Striking Light regression fixture", () => {
     expect(uiRun.summary.events.map((event) => event.abilityId)).toEqual(
       hostFull.events.map((event) => event.abilityId),
     );
-    expect(uiRun.meta.residualWeight).toBe(0);
+    expect(uiRun.meta.lanes).toBe(1);
+    expect(uiRun.summary.rng).toBeUndefined();
   });
 
   it("keeps Big Boned attached to Light without changing the Basic Attack", () => {

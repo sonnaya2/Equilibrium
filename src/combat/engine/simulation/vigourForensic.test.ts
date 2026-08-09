@@ -41,14 +41,14 @@ describe("vigourForensic", () => {
       adrenalineBefore: 100,
       actualSpend: 100,
       adrenalineAfter: 0,
-      branchWeight: 1,
+      historyWeight: 1,
       ringOfVigourRefund: 0,
     });
 
     const onRows = report.on.rows;
     expect(onRows[0]!.adrenalineAfter).toBe(10);
     expect(onRows[0]!.ringOfVigourRefund).toBe(10);
-    expect(onRows[0]!.branchWeight).toBe(1);
+    expect(onRows[0]!.historyWeight).toBe(1);
   });
 
   it("controlled revo bar without ultimates: Vigour is a no-op (equal damage, equal sequence)", () => {
@@ -178,7 +178,7 @@ describe("vigourForensic", () => {
     expect(report.on.rows[4]!.adrenalineBefore).toBe(report.off.rows[4]!.adrenalineBefore + 10);
   });
 
-  it("rows carry branchWeight and cumulative expected damage monotonically", () => {
+  it("rows carry historyWeight and cumulative expected damage monotonically", () => {
     const report = compareVigourRevolution({
       ...melee,
       bar: bar("assault", "dismember"),
@@ -188,7 +188,7 @@ describe("vigourForensic", () => {
     const rows = report.off.rows;
     expect(rows.length).toBeGreaterThan(2);
     for (let i = 0; i < rows.length; i++) {
-      expect(rows[i]!.branchWeight).toBe(1);
+      expect(rows[i]!.historyWeight).toBe(1);
       if (i > 0) {
         expect(rows[i]!.cumulativeExpectedDamage).toBeGreaterThanOrEqual(
           rows[i - 1]!.cumulativeExpectedDamage - 1e-12,

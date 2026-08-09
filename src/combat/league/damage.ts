@@ -24,7 +24,12 @@ import {
   type DamageProvenance,
 } from "../shared/damageProvenance";
 import { COMMAND_REQUIRES_CONJURE } from "../styles/necromancy/conjures";
-import { blessingRule, resolveMaximumLife, type ResolvedLeagueRules } from "./ruleset";
+import {
+  blessingRule,
+  resolveLeagueCritAtLand,
+  resolveMaximumLife,
+  type ResolvedLeagueRules,
+} from "./ruleset";
 import type { BlessingId } from "../../league/blessings";
 import {
   packageCritical,
@@ -190,6 +195,13 @@ function damageOf(hit: HitResult): ResolvedDamage {
   };
 }
 
+function boundedCritualProbability(value: number, label: string): number {
+  if (!Number.isFinite(value)) {
+    throw new RangeError(`Critual ${label} probability must be finite: ${value}`);
+  }
+  return Math.min(0.5, Math.max(0, value));
+}
+
 function weightedDamage(
   hit: HitResult,
   expectedActivations: number,
@@ -308,9 +320,17 @@ export function resolveLeagueAttachedHost(
     provenance,
   };
   const prepared = applyAbilityBaseModifiers(input.base, input.modifiers ?? [], context);
+  const crit = input.rules ? resolveLeagueCritAtLand(input.rules, input.crit) : input.crit;
   if (!input.rules) {
     const composed = calculateHitWithAttached(
-      { ...input, base: prepared.base, modifiers: prepared.modifiers, provenance, context },
+      {
+        ...input,
+        base: prepared.base,
+        modifiers: prepared.modifiers,
+        provenance,
+        context,
+        crit,
+      },
       [],
     );
     return {
@@ -325,7 +345,14 @@ export function resolveLeagueAttachedHost(
     abilityBase: prepared.base,
   });
   const composed = calculateHitWithAttached(
-    { ...input, base: prepared.base, modifiers: prepared.modifiers, provenance, context },
+    {
+      ...input,
+      base: prepared.base,
+      modifiers: prepared.modifiers,
+      provenance,
+      context,
+      crit,
+    },
     terms.map(({ id, amount }) => ({ id, amount })),
   );
   const components = leagueAttachedComponents(composed.attached, terms, input.bonusTargetId);
@@ -354,8 +381,9 @@ export function resolveLeagueAttachedRawHost(
     damageSource: outgoingSourceOf(provenance),
     provenance,
   };
+  const crit = input.rules ? resolveLeagueCritAtLand(input.rules, input.crit) : input.crit;
   if (!input.rules) {
-    const composed = calculateRawHitBandWithAttached({ ...input, provenance, context }, []);
+    const composed = calculateRawHitBandWithAttached({ ...input, provenance, context, crit }, []);
     return {
       hit: composed.hit,
       baseHit: composed.baseHit,
@@ -364,7 +392,7 @@ export function resolveLeagueAttachedRawHost(
   }
   const terms = resolveLeagueAttachedTerms({ ...input, rules: input.rules });
   const composed = calculateRawHitBandWithAttached(
-    { ...input, provenance, context },
+    { ...input, provenance, context, crit },
     terms.map(({ id, amount }) => ({ id, amount })),
   );
   return {
@@ -437,21 +465,32 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
     typeof input.source === "string"
       ? provenanceFromLegacy({ damageSource: input.source })
       : input.source;
-  const parentCrit = input.parentCrit ?? {
+  const globalCrit = resolveLeagueCritAtLand(input.rules, input.crit);
+  const rawParentCrit = input.parentCrit ?? {
     ...input.crit,
     eligible:
       capabilitiesOf(parentProvenance).canCrit &&
       (input.ability.hits[input.hitIndex]?.critEligible ?? true),
   };
+  const parentCrit = resolveLeagueCritAtLand(input.rules, rawParentCrit);
   const infernoCrit: CritLayers = {
-    ...input.crit,
+    ...globalCrit,
     eligible: true,
     guaranteed: false,
-    damageBonus: (input.crit.damageBonus ?? 0) + (unholy?.infernoCritDamageBonus ?? 0),
+    damageBonus: (globalCrit.damageBonus ?? 0) + (unholy?.infernoCritDamageBonus ?? 0),
   };
-  const infernoCritChance = unholy ? critProbability(infernoCrit) : 0;
-  const chainExpected = (start: number) =>
-    unholy ? start / Math.max(Number.EPSILON, 1 - infernoCritChance) : start;
+  const infernoCritChance = unholy
+    ? boundedCritualProbability(critProbability(infernoCrit), "continuation")
+    : 0;
+  const chainExpected = (start: number) => {
+    if (!unholy) return start;
+    const boundedStart = boundedCritualProbability(start, "trigger");
+    const denominator = 1 - infernoCritChance;
+    if (denominator < 0.5) {
+      throw new RangeError(`Critual continuation probability ${infernoCritChance} exceeds 0.5`);
+    }
+    return boundedStart / denominator;
+  };
   const chainModel = (start: number): StatefulOccurrenceModel | undefined =>
     unholy
       ? {
@@ -533,9 +572,13 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
     });
   }
 
-  const parentCanCrit = capabilitiesOf(parentProvenance).canCrit;
+  const parentCapabilities = capabilitiesOf(parentProvenance);
+  const parentCanTriggerCritual =
+    parentCapabilities.canTriggerCritual ?? parentCapabilities.canCrit;
   const unholyTriggerChance =
-    unholy && parentCanCrit && parentCrit.eligible !== false ? critProbability(parentCrit) : 0;
+    unholy && parentCanTriggerCritual && parentCrit.eligible !== false
+      ? boundedCritualProbability(critProbability(parentCrit), "trigger")
+      : 0;
   const unholyBand = unholy?.infernoAbilityDamageBand;
   if (unholy && unholyTriggerChance > 0 && unholyBand) {
     const prov = blessingProv("inferno-of-zamorak");
@@ -809,7 +852,13 @@ export function calculateLeagueAbility(
     ability,
     blessingRule(rules, "tearing-thorns")?.tearingThorns?.durationMultiplier,
   );
-  const ordinary = calculateAbility(working, baseInput);
+  const globalCrit = resolveLeagueCritAtLand(rules, input.crit);
+  const normalizedCritByHit = input.critByHit?.map((crit) => resolveLeagueCritAtLand(rules, crit));
+  const ordinary = calculateAbility(working, {
+    ...baseInput,
+    crit: globalCrit,
+    ...(normalizedCritByHit ? { critByHit: normalizedCritByHit } : {}),
+  });
   // Light of Saradomin 9s CD: at most first direct hit of this cast can trigger.
   let strikingLightAvailable = strikingLightReady ?? true;
   let lordOfLightAvailable = lordOfLightReady ?? true;
@@ -821,7 +870,7 @@ export function calculateLeagueAbility(
       : isCommand
         ? { kind: "conjure_command" }
         : { kind: "player_direct" };
-    const crit = input.critByHit?.[hitIndex] ?? input.crit;
+    const parentCrit = normalizedCritByHit?.[hitIndex] ?? globalCrit;
     const sharedInput = {
       rules,
       ability: working,
@@ -829,8 +878,9 @@ export function calculateLeagueAbility(
       base: input.base,
       level: input.level,
       accuracy: input.accuracy,
-      crit,
-      parentCrit: { ...crit, eligible: hit.critEligible ?? true },
+      // Inferno is its own hit: global layers apply to it; per-hit layers stay on the parent.
+      crit: globalCrit,
+      parentCrit: { ...parentCrit, eligible: hit.critEligible ?? true },
       modifiers: input.modifiers ?? [],
       context: {
         ...input.context,

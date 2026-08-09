@@ -5,6 +5,9 @@ describe("equipmentSets/support", () => {
   it("maps known catalogue sets and defaults missing ids to none", () => {
     expect(setEffectSupport({ id: "tectonic" })).toBe("modeled");
     expect(setEffectSupport({ id: "elite-tectonic" })).toBe("modeled");
+    expect(setEffectSupport({ id: "dracolich" })).toBe("modeled");
+    expect(setEffectSupport({ id: "elite-dracolich" })).toBe("modeled");
+    expect(setEffectSupport({ id: "first-necromancer" })).toBe("outgoing-only");
     expect(setEffectSupport({ id: "sirenic" })).toBe("not-modeled");
     expect(setEffectSupport({ id: "trimmed-masterwork" })).toBe("outgoing-only");
     expect(setEffectSupport({ id: "unknown-set-xyz" })).toBe("none");

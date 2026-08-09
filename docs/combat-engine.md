@@ -13,7 +13,7 @@ src/combat/engine/
   runtime/       clock, per-run mutable runtime, event queue, RotationState
   resolution/    land-time damage calculation
     landed/      on-hit state transitions by style
-  simulation/    drivers, branching, contracts, summaries
+  simulation/    fixed-lane drivers, contracts, summaries
   schedulers/    autonomous actors (conjures)
 ```
 
@@ -23,12 +23,12 @@ src/combat/engine/
 | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Preparation is read-only                | `cast/prepare.ts` computes against advanced state and records mutations as `PreparedTransition` variants. New mechanics add variants, not booleans on `PreparedCast`.                                                                 |
 | Rejected cast is inert                  | No resources, cooldowns, scheduled events, or cast records beyond the time advance used to re-check readiness.                                                                                                                        |
-| Single readiness boundary               | `prepareSimulationCast` decides readiness/affordability for manual, Revolution, and branch drivers.                                                                                                                                   |
+| Single readiness boundary               | `prepareSimulationCast` decides readiness/affordability for manual and Revolution lanes.                                                                                                                                              |
 | Effects split by lifecycle and style    | `cast/effects/`: prepared transitions, cooldowns, resources, completion, plus one module per style. Channel completion effects run after occupancy advance (`completion.ts`).                                                         |
 | Resolution calculates; recording writes | Resolvers return `EventResolution` and do not touch ledgers. `resolution/record.ts` writes totals, per-ability ledgers, hit details, event log, then dispatches `accounting`, league blessing damage, invention procs, and `landed/`. |
 | Landed handlers for real hits only      | Attached components, conjure autos, poison ticks, and procs are excluded by the caller.                                                                                                                                               |
 | State grouped by style and target       | Global clocks on `RotationState`; style buckets and `target` for debuffs the sim applied.                                                                                                                                             |
-| Immutable patches only                  | `patchMelee`, `patchRanged`, `patchMagic`, `patchNecro`, `patchConjures`, `patchTarget` — no in-place nested mutation (branch isolation).                                                                                             |
+| Immutable patches only                  | `patchMelee`, `patchRanged`, `patchMagic`, `patchNecro`, `patchConjures`, `patchTarget` - no in-place nested mutation.                                                                                                                 |
 | Conjures are capability-typed           | `ActiveConjure` carries only the tracks that spirit has. Sentinel shared shapes are forbidden.                                                                                                                                        |
 | DoT classification is declared          | `AbilityHit.dot` + scheduler; not inferred from land tick or crit eligibility.                                                                                                                                                        |
 | External API is the barrel              | `src/combat/index.ts`. `cast/`, `resolution/`, `runtime/`, `schedulers/` stay internal.                                                                                                                                               |
@@ -140,7 +140,7 @@ Every damaging or state-changing event (`ScheduledEvent` in `engine/runtime/even
 - `canApplyAbyssalParasite` is true only for `player_direct` / `player_auto`. Stack application is land-time (capabilities + melee + passive + damage).
 - Endless Assault converted channel hits use `player_converted_channel` (DoT-family gear gates; prayer/window mods + crit retained).
 
-Events must not close over a runtime instance (branch-safe shared pending events).
+Events must not close over a runtime instance; each lane resolves them against its own state.
 
 ### Hit-count integrity
 
@@ -165,26 +165,42 @@ Do not flatten all randomness into expected damage.
 | Kind                                                                                                         | Treatment                      |
 | ------------------------------------------------------------------------------------------------------------ | ------------------------------ |
 | Damage-only randomness (does not change future state, topology, or cast legality)                            | Deterministic expected value   |
-| State-changing RNG (adrenaline, cooldowns, windows, stacks, scheduled events, target state, future legality) | Probability-weighted branching |
+| State-changing RNG (adrenaline, cooldowns, windows, stacks, scheduled events, target state, future legality) | One concrete outcome per deterministic stratified lane |
 
-Current cast RNG points include `impatient`, `relentless`, `avernic-rampage` (`CastRng` in `simulation/contracts.ts`). Missing flag = no proc (deterministic single-branch runs never proc).
+Current cast RNG points include `impatient`, `relentless`, and `avernic-rampage`. Icy Tempest and Tsunami crit-adrenaline also sample coupled future state.
 
-Player poison is exact but does not fork the whole runtime. `RotationState.target.weaponPoison` carries conditional poison states, distinct earned delayed-hit carriers, and a finite decay PMF; application, ordinary refresh, Cinderbane extra hits, recursive continuation, decay, and atom-specific Envenomed immunity advance inside that compact distribution. Exact local transition caches advance these atoms without rebuilding the same outcomes for every global branch. Poison events retain shared `(tick, seq)` ordering, while global branch identity uses the runtime-local poison future id and all other future-changing state. The poison interner and transition caches are bounded, ids are monotonic, and global branch caps never discard poison probability mass. State-changing RNG such as Impatient, Relentless, and Avernic remains in the global branch graph; damage-only RNG remains expected value. One explicit provenance capability decides eligibility per hitsplat: player attacks, player DoTs, and verified separate player auxiliary/blessing hits are eligible; attached riders, familiar/conjure damage, Putrid Zombie pulses, and Blood Reaver passive damage are not. Analysis attributes expected poison hits back to the eligible source row.
+Player poison uses one concrete target state per lane. That state stores active tier, expiry, cadence, remaining hits, decay index, earned delayed-hit carriers, Cinderbane continuation, source multiplier, and Envenomed immunity. Application and continuation are sampled because they change future target state; poison damage-range randomness stays expected-value. One provenance capability decides eligibility per hitsplat: player attacks, player DoTs, and verified separate player auxiliary/blessing hits are eligible; attached riders, familiar/conjure damage, Putrid Zombie pulses, and Blood Reaver passive damage are not. Analysis attributes lane-weighted poison hits back to the eligible source row.
 
 Big Boned and Abyssal Cinders are host-attached damage terms. Each term is resolved once inside its host damage family, inherits the host crit result and applicable modifiers, creates no extra hit or proc roll, and cannot recursively attach itself. Big Boned applies to every supported host, including poison. Cinders retains its narrower eligibility matrix and does not apply to poison or to another attached term. Inferno remains a separate blessing hit; it can host Big Boned but not Cinders and cannot start an unbounded blessing event chain. Splash Zone uses `targetSize` for its size bonus; `occupiedTiles` remains separate spatial-coverage input for mechanics that use footprint area.
 
-### Branching (`simulation/branch.ts`)
+### Fixed stochastic lanes
 
-- Each branch owns an independent runtime via `snapshotRuntime`.
-- Merge equivalent future states: same `RotationState`, pending-event signature, run counters.
-- **Pending-event signature** (`EventQueue.signature`): includes fields that change land-time resolution - `originKind`, multiplicity, `damageTag`, `provenance` (`kind`/`detail`), `snapSig(castSnap)` when `castSnap` is present (no nested LS snap), plus `derivedFrom`, cancel owner, and the other structural keys. Adding a resolution-affecting field to `ScheduledEvent` requires a signature update in the same change.
-- **Historical damage ledgers are not future state** - omit `totalExpected` / min/max / `perAbility` / `damageByTick` / logs from the merge key; `mergePair` weight-averages ledgers and takes support extrema via min/max.
-- `resolve` closures stay out of the key; equivalent branches schedule identical events from identical casts.
-- Seeded Monte Carlo only when exact branching is unreasonably expensive; method and assumptions appear in result metadata and tests.
+- Manual and Revolution simulations automatically use one lane when no supported RNG can change later state, otherwise the same 128 deterministic stratified lanes.
+- Each lane owns one `SimulationRuntime` and one concrete `RotationState`.
+- Named counter-based streams make repeated inputs bit-for-bit deterministic and keep mechanics from sharing accidental RNG order.
+- Stateful-RNG runs use a fixed lane count and seed in the production UI and solver. There is no adaptive retry ladder.
+- Lane weights always sum to one. Fixed-window results report probability mass 1 and residual mass 0; no lane is discarded or survivor-renormalized.
+- The model is an estimate for future-changing RNG. Damage-only randomness remains exact expected value where the damage pipeline supports it.
+- `createCastContext` is a one-lane diagnostic. Use `simulate` or `simulateRevolution` for stochastic expectations.
+
+#### Accuracy contract
+
+| Quantity | Treatment | Accuracy impact |
+| --- | --- | --- |
+| Damage bands, crit chance, and damage-only procs | Closed-form or pipeline expected value | No sampling error; normal formula and rounding assumptions still apply. |
+| Impatient, Relentless, Avernic Rampage, Icy Tempest spend, Tsunami crit-adrenaline | Concrete outcome in each of 128 lanes | Deterministic estimate. An isolated Bernoulli rate is quantized to one lane (1/128); interacting rolls can accumulate more error. |
+| Poison application, Cinderbane continuation, and occurrence-gated poison state | Concrete target state in each lane; compact binomial/geometric sampling where an event represents repeated occurrences | Rare continuation counts have visible sampling noise. The combined Avernic/Cinderbane workload is pinned within 1% of the retired exact oracle in `stochasticMigration.test.ts`. |
+| Aggregate damage and analysis counts | Equal-weight mean across all lanes | Unit-mass estimate with no discarded outcomes. |
+| `totalMin` / `totalMax` | Lowest/highest conditional damage band observed across lanes | Bounds the sampled ensemble, not every mathematically possible future-state history. |
+| `casts` / `events` | Most common concrete history | For explanation only; it is not a fractional expected timeline and does not rebuild aggregate totals. |
+
+The fixed seed makes regression results repeatable; it is not a confidence interval. Increasing lanes is a product-model change, not a retry response to one run.
+
+Do not restore the retired global state enumerator, future-state keys, event signatures, live-state caps, residual-mass pruning, adaptive reruns, poison atom distributions, poison future profiles, or poison transition interners. `residualWeight` remains only as a zero-valued invariant on fixed-lane summaries.
 
 ### Analysis count semantics
 
-Every count in `analysis.byEffect` is a conditional expected value over expanded concrete terminal mass: `expectedCasts`, `expectedTriggerRolls`, `expectedActivations`, `expectedSeparateHits`, and `expectedAttachedComponents`. Residual mass is not assigned counts. These values may be fractional after branch weighting or deterministic expected-value packing.
+Every count in `analysis.byEffect` is a lane-weighted expected value: `expectedCasts`, `expectedTriggerRolls`, `expectedActivations`, `expectedSeparateHits`, and `expectedAttachedComponents`. Values may be fractional after lane aggregation or deterministic expected-value packing.
 
 `summary.casts` and `summary.events` are concrete arrays from the complete history or one representative terminal class. Their array lengths are integers and must not be used to reconstruct or reconcile the weighted analysis ledger when `history.eventsReconcileWithWeightedTotals` is false.
 
@@ -220,7 +236,7 @@ Optional second metric: **damage from casts begun within the horizon** including
 - `summary` - score metrics plus light diagnostics; no casts/events/analysis.
 - `full-analysis` - full `RotationSummary` for UI/forensics.
 
-Physics, branching, and ranking metrics are identical across levels (see `docs/solver-score-only-design.md` and `scoreOnlyParity.test.ts`).
+Physics, stochastic streams, and ranking metrics are identical across detail levels (`scoreOnlyParity.test.ts`).
 
 | Metric                 | Definition                                                                                                               |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------ |
@@ -244,7 +260,7 @@ Support labels match the honesty model in [`combat-model.md`](./combat-model.md)
 
 ## Drivers and contracts
 
-- **Manual rotation** — `simulation/simulate.ts`: queued `RotationAction[]`, optional automatic Basic Attacks, branching on state-changing RNG. The combat UI supplies a 100-tick fixed window so recursive Cinderbane support is finite and directly comparable with a 60-second Revolution bar; engine callers may still request natural completion by omitting `horizonTicks`.
+- **Manual rotation** - `simulation/simulate.ts`: queued `RotationAction[]`, optional automatic Basic Attacks, fixed-lane sampling for state-changing RNG. The combat UI supplies a 100-tick fixed window so Cinderbane continuation is bounded and directly comparable with a 60-second Revolution bar; engine callers may still request natural completion by omitting `horizonTicks`.
 - **Revolution** — `simulation/revolution.ts`: bar-driven selection; shares prepare/commit and clock.
 - **Contracts** — `simulation/contracts.ts` (`SimulateInput`, adrenaline/proc rules, equipment effects, league rules, horizon options).
 
@@ -265,7 +281,7 @@ Cover where relevant:
 - Stack spend, expiry, rebuild, lockout boundaries
 - Sequence success, missing predecessor, expiration
 - Simultaneous events with deterministic ordering
-- State-neutral EV vs state-changing RNG branches
+- State-neutral EV vs state-changing sampled lanes
 - Autonomous scheduler + command interaction
 - Events landing before / at / after the horizon
 - Ruleset `"base"` vs `"equilibrium"`

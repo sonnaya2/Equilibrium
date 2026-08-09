@@ -66,8 +66,13 @@ export function reviveRevolutionBase(sim: SerializableRevolutionSimBase): Revive
     ammo: sim.ammo,
     caromingRank: sim.caromingRank ?? sim.modifierSources?.caroming ?? 0,
     tumekensPieces: sim.tumekensPieces,
-    tumekensCritEnabled: sim.tumekensCritEnabled,
-    equipmentEffects: sim.equipmentEffects,
+    equipmentEffects: {
+      ...sim.equipmentEffects,
+      setCritChance: {
+        unconditional: sim.equipmentEffects.setCritChance.unconditional,
+        conditional: { ...sim.equipmentEffects.setCritChance.conditional },
+      },
+    },
     league,
     procs: sim.procs,
     conjureBasicDamageMult: sim.conjureBasicDamageMult,

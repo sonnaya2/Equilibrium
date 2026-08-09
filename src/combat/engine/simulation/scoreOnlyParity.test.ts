@@ -14,6 +14,7 @@ import { scoreSummary } from "../../solver/objective";
 import { simulateRevolution, type RevolutionInput } from "./revolution";
 import { simulate } from "./simulate";
 import { rotationOf } from "./contracts";
+import { necroInput } from "../../test/fixtures/inputs";
 
 function rankingSlice(summary: {
   ok: boolean;
@@ -100,7 +101,7 @@ describe("score-only / full-analysis ranking parity", () => {
     expect(full.events.length).toBeGreaterThan(0);
   });
 
-  it("branching Impatient revolution matches ranking metrics", () => {
+  it("sampled Impatient revolution matches ranking metrics", () => {
     const input: RevolutionInput = {
       ...meleeBar(["fury", "dismember", "assault", "punish"], 60),
       adrenaline: { impatientRank: 4 },
@@ -109,7 +110,7 @@ describe("score-only / full-analysis ranking parity", () => {
     const scoreOnly = simulateRevolution(input, { detailLevel: "score-only" });
     expect(full.ok).toBe(true);
     expect(scoreOnly.ok).toBe(true);
-    // Branching may or may not surface rng; when it does, exactness must match.
+    // Both detail levels use the same stochastic lanes.
     expectRankingParity(full, scoreOnly);
     if (full.rng) {
       expect(scoreOnly.rng?.exactness).toBe(full.rng.exactness);
@@ -117,7 +118,7 @@ describe("score-only / full-analysis ranking parity", () => {
     }
   });
 
-  it("Impatient+Relentless branching matches ranking metrics", () => {
+  it("Impatient and Relentless sampling matches ranking metrics", () => {
     const input: RevolutionInput = {
       ...meleeBar(["fury", "dismember", "assault"], 50),
       adrenaline: { impatientRank: 4, relentlessRank: 5 },
@@ -127,7 +128,7 @@ describe("score-only / full-analysis ranking parity", () => {
     expectRankingParity(full, scoreOnly);
   });
 
-  it("manual simulate with branching matches ranking totals", () => {
+  it("manual stochastic simulation matches ranking totals", () => {
     const input = {
       ...meleeBase,
       rotation: rotationOf("fury", "dismember", "assault"),
@@ -136,6 +137,22 @@ describe("score-only / full-analysis ranking parity", () => {
     const full = simulate(input, { detailLevel: "full-analysis" });
     const scoreOnly = simulate(input, { detailLevel: "score-only" });
     expect(scoreOnly.totalExpected).toBe(full.totalExpected);
+    expect(rankingSlice(scoreOnly)).toEqual(rankingSlice(full));
+  });
+
+  it("manual Ghost damage and healing stay identical in score-only mode", () => {
+    const input = {
+      ...necroInput,
+      rotation: rotationOf(
+        "conjure_vengeful_ghost",
+        "command_vengeful_ghost",
+        ...Array(18).fill("necromancy_basic"),
+      ),
+    };
+    const full = simulate(input, { detailLevel: "full-analysis", stochasticLanes: 1 });
+    const scoreOnly = simulate(input, { detailLevel: "score-only", stochasticLanes: 1 });
+    expect(scoreOnly.totalExpected).toBe(full.totalExpected);
+    expect(scoreOnly.totalHealed).toBe(full.totalHealed);
     expect(rankingSlice(scoreOnly)).toEqual(rankingSlice(full));
   });
 

@@ -17,11 +17,6 @@ import { noteBarKeySeen, noteDuplicateEvalAttempt } from "../profiling";
 import { isFiniteEval } from "../objective";
 import type { Rng } from "../rng";
 import { createRng } from "../rng";
-import {
-  branchFidelityLadderMemoToken,
-  branchFidelityModeForEval,
-  resolveBranchFidelityLadder,
-} from "../branchFidelity";
 import { barHasRequiredAbilities } from "../stylePolicy";
 
 export interface SearchConfig {
@@ -117,11 +112,9 @@ export function normalizeEvalMode(mode: EvalMode | undefined): ScoreEvalMode {
 
 /**
  * Per-solve eval cache key. Mode separates search/medium/full.
- * Optional fidelityToken keeps ladders distinct if EvaluateFn policies diverge.
  */
-export function cacheKeyFor(mode: ScoreEvalMode, fingerprint: string, fidelityToken = ""): string {
-  const fid = fidelityToken.length > 0 ? `|bf=${fidelityToken}` : "";
-  return `m=${mode}|ov=${OBJECTIVE_VERSION}${fid}|${fingerprint}`;
+export function cacheKeyFor(mode: ScoreEvalMode, fingerprint: string): string {
+  return `m=${mode}|ov=${OBJECTIVE_VERSION}|${fingerprint}`;
 }
 
 export function createSearchState(opts: {
@@ -230,11 +223,7 @@ function evalBar(
     noteDuplicateEvalAttempt();
     return null;
   }
-  // Mode ladder token so search (64…) never reuses full (512…) under the same bar fp.
-  const fidelityToken = branchFidelityLadderMemoToken(
-    resolveBranchFidelityLadder(branchFidelityModeForEval(scoreMode)),
-  );
-  const cacheKey = cacheKeyFor(scoreMode, fp, fidelityToken);
+  const cacheKey = cacheKeyFor(scoreMode, fp);
   const cached = state.cache.get(cacheKey);
   if (cached) {
     // Duplicate attempt: count it, return cached ScoredBar, no re-simulate / no budget spend.

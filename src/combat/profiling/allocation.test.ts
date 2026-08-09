@@ -55,12 +55,6 @@ describe("allocation profiling counters", () => {
       blessingIndexRebuilds: 0,
       blessingDamageCacheHits: 0,
       blessingDamageCacheMisses: 0,
-      poisonAtomMergeInputs: 0,
-      poisonAtomMergeOutputs: 0,
-      poisonOrderingScans: 0,
-      poisonProbabilityBytesMaterialized: 0,
-      poisonTransitionCacheHits: 0,
-      poisonTransitionCacheMisses: 0,
     });
   });
 

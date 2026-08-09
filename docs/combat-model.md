@@ -213,7 +213,7 @@ Per style, cover: basic attack, basic ability, enhanced, ultimate, multi-hit, Do
 
 ## Related
 
-- [`combat-engine.md`](./combat-engine.md) — tick clock, casts, events, branching, horizons
+- [`combat-engine.md`](./combat-engine.md) — tick clock, casts, events, stochastic lanes, horizons
 - [`equipment-effects.md`](./equipment-effects.md) — item facts → combat behavior
 - [`data-platform.md`](./data-platform.md) — data authoring and canonical export
 )

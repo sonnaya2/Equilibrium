@@ -30,6 +30,10 @@ function copyEquipmentEffects(
 ): HostCombatResolveInput["equipmentEffects"] {
   return {
     activation: effects.activation,
+    setCritChance: {
+      unconditional: effects.setCritChance.unconditional,
+      conditional: { ...effects.setCritChance.conditional },
+    },
     passiveIds: [...effects.passiveIds],
     enchantments: [...effects.enchantments],
     weaponClass: effects.weaponClass,
@@ -37,6 +41,12 @@ function copyEquipmentEffects(
     passage: { ...effects.passage },
     amZiFlatDamage: effects.amZiFlatDamage,
     amHejDamageBonus: effects.amHejDamageBonus,
+    dracolich: effects.dracolich
+      ? {
+          ...effects.dracolich,
+          thresholds: { ...effects.dracolich.thresholds },
+        }
+      : undefined,
     vestments: { ...effects.vestments },
   };
 }
@@ -61,6 +71,7 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
       chance: input.crit.chance,
       disabled: input.crit.disabled,
       damageBonus: input.crit.damageBonus,
+      critualConvertedDamageBonus: input.crit.critualConvertedDamageBonus,
     },
     equipmentIds: [...input.equipmentIds],
     equipmentEffects: copyEquipmentEffects(input.equipmentEffects),
@@ -83,8 +94,6 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
     conjureBasicDamageMult: input.conjureBasicDamageMult ?? 1,
     conjureDurationMult: input.conjureDurationMult ?? 1,
     tumekensPieces: input.tumekensPieces ?? 0,
-    // Explicit boolean only; undefined means off (adapter always passes host value).
-    tumekensCritEnabled: input.tumekensCritEnabled === true,
     target: {
       hpPercent: input.targetHpPercent,
       demon: input.target?.demon,

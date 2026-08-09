@@ -29,7 +29,7 @@ import {
   strikingLightAssumptionRows,
   temperedHeartAssumptionRows,
 } from "./blessingPresentation";
-import { stochasticAssumptionRows, type BranchCapDiagnosticsOpts } from "./revoStochasticLabels";
+import { stochasticAssumptionRows } from "./revoStochasticLabels";
 
 const PERCENT_FORMAT = new Intl.NumberFormat("en-US", {
   style: "percent",
@@ -50,11 +50,9 @@ const SUPPORT_LABEL: Record<string, string> = {
 export function CalculationAssumptions({
   stats,
   result,
-  branchCapOpts,
 }: {
   stats: CalcStats;
   result?: RotationSummary | null;
-  branchCapOpts?: BranchCapDiagnosticsOpts;
 }) {
   const manualInputsOnly = stats.baseDamageMode === "manual" && stats.mainhandTier === 0;
   const barkscalesPicked = stats.league.blessings.some((choice) => choice.id === "barkscales");
@@ -248,10 +246,10 @@ export function CalculationAssumptions({
     if (result.rng) {
       rows.push([
         "Timeline path",
-        `${result.rng.representativeClassTicks} ticks · ${(result.rng.representativeClassWeight * 100).toFixed(1)}% terminal class`,
+        `${result.rng.representative.ticks} ticks · ${(result.rng.representative.historyWeight * 100).toFixed(1)}% representative history`,
       ]);
     }
-    for (const row of stochasticAssumptionRows(result, branchCapOpts)) {
+    for (const row of stochasticAssumptionRows(result)) {
       rows.push(row);
     }
   }
@@ -275,7 +273,8 @@ export function CalculationAssumptions({
         </dl>
         {stats.combatStyle.includes("necromancy") ? (
           <p className="mt-2 text-xs text-chaos-300">
-            Partial: no Haunted or Ghost healing; Spectral Scythe soul rolls are fixed.
+            Partial: Phantom Guardian defensive/incoming behavior is not modeled; Ghost healing uses
+            final basic-hit damage.
           </p>
         ) : null}
       </div>

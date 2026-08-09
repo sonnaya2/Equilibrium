@@ -70,7 +70,8 @@ export interface BlessingSupport {
 export interface BlessingCombatRules {
   /** Minimum effective tier for equipped weapon profiles. */
   weaponTierOverride?: number;
-  setPieceContributionMultiplier?: number;
+  /** Additional effective set pieces contributed by each qualifying equipped item. */
+  additionalSetPiecesPerItem?: number;
   baseAbilityDamageArmourPercent?: number;
   defenderArmourMultiplier?: number;
   shieldArmourMultiplier?: number;

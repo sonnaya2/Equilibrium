@@ -293,6 +293,16 @@ describe("damage eligibility matrix (capabilitiesOf)", () => {
       }
     });
   }
+
+  it("separates inherited Critual triggers from independent crit rolls", () => {
+    expect(capabilitiesOf({ kind: "derived_bounce" })).toMatchObject({
+      canCrit: false,
+      canTriggerCritual: true,
+    });
+    const tail = capabilitiesOf({ kind: "derived_tail" });
+    expect(tail.canCrit).toBe(false);
+    expect(tail.canTriggerCritual).toBeUndefined();
+  });
 });
 
 describe("blessingHitEligibility from capabilities", () => {

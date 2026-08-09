@@ -99,6 +99,14 @@ export const SPIRIT_AUTO_ABILITY_ID: Readonly<Record<ConjureId, string>> = {
   phantom_guardian: "spirit_phantom_guardian",
 };
 
+export const VENGEFUL_GHOST_HEAL_FRACTION = 1.4;
+
+/** Ghost heals for 140% of final damage dealt by each basic attack. */
+export function vengefulGhostExpectedHeal(finalDamageDealt: number): number {
+  if (!Number.isFinite(finalDamageDealt) || finalDamageDealt <= 0) return 0;
+  return Math.floor(finalDamageDealt * VENGEFUL_GHOST_HEAL_FRACTION);
+}
+
 export const SPIRIT_POISON_ABILITY_ID = "spirit_putrid_zombie_poison";
 
 /**

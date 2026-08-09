@@ -804,6 +804,12 @@
 {"entityId":"item:wand-of-the-praesul","slot":"mainhand","style":"magic","tier":92}
 {"entityId":"item:wand-of-treachery","slot":"mainhand","style":"magic","tier":70}
 {"entityId":"item:ward-of-subjugation","slot":"offhand","style":"magic","tier":70}
+{"entityId":"item:warpriest-of-tuska-boots","slot":"boots","style":"hybrid","tier":75}
+{"entityId":"item:warpriest-of-tuska-cape","slot":"cape","style":"hybrid","tier":75}
+{"entityId":"item:warpriest-of-tuska-cuirass","slot":"body","style":"hybrid","tier":75}
+{"entityId":"item:warpriest-of-tuska-gauntlets","slot":"gloves","style":"hybrid","tier":75}
+{"entityId":"item:warpriest-of-tuska-helm","slot":"helmet","style":"hybrid","tier":75}
+{"entityId":"item:warpriest-of-tuska-robe-legs","slot":"legs","style":"hybrid","tier":75}
 {"entityId":"item:warrior-ring","slot":"ring","style":"melee","tier":1}
 {"entityId":"item:wen-arrows","slot":"ammo","style":"ranged","tier":90}
 {"entityId":"item:winds-of-waiko","slot":"twohand","style":"ranged","tier":70}

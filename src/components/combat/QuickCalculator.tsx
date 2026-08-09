@@ -189,6 +189,7 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
     guaranteed: calculatedAbility?.guaranteedCrit,
     disabled: useBuild && setup.critsDisabled,
     damageBonus: useBuild ? setup.critDamageBonus : 0,
+    critualConvertedDamageBonus: useBuild ? setup.convertedCritChance : 0,
   };
 
   const result =
@@ -376,7 +377,7 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
               </p>
               {ability.id === "icy_tempest" ? (
                 <p className="text-xs leading-5 text-parch-300">
-                  Quick uses the zero-stack baseline. Rotation and solver retain branch-specific
+                  Quick uses the zero-stack baseline. Rotation and solver retain stateful sampled
                   Leng outcomes.
                 </p>
               ) : null}

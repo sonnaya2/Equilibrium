@@ -96,6 +96,14 @@ export function normalizeModifierSources(sources: SerializableModifierSources): 
 export function normalizeEquipmentEffects(effects: ActiveEquipmentEffects): unknown {
   return {
     activation: effects.activation,
+    setCritChance: {
+      unconditional: roundN(effects.setCritChance.unconditional, 6),
+      conditional: Object.fromEntries(
+        Object.entries(effects.setCritChance.conditional)
+          .sort(([a], [b]) => a.localeCompare(b))
+          .map(([key, value]) => [key, roundN(value, 6)]),
+      ),
+    },
     passiveIds: sortedStrings(effects.passiveIds as readonly string[]),
     enchantments: sortedStrings(effects.enchantments as readonly string[]),
     weaponClass: effects.weaponClass ?? null,
@@ -106,6 +114,23 @@ export function normalizeEquipmentEffects(effects: ActiveEquipmentEffects): unkn
     },
     amZiFlatDamage: roundN(effects.amZiFlatDamage ?? 0, 4),
     amHejDamageBonus: roundN(effects.amHejDamageBonus ?? 0, 6),
+    dracolich: effects.dracolich
+      ? {
+          setId: effects.dracolich.setId ?? null,
+          physicalPieces: effects.dracolich.physicalPieces ?? 0,
+          effectivePieces: effects.dracolich.effectivePieces ?? 0,
+          bowEligible: effects.dracolich.bowEligible === true,
+          mixed: effects.dracolich.mixed === true,
+          adrenalinePerRapidFireHit: roundN(effects.dracolich.adrenalinePerRapidFireHit ?? 0, 6),
+          infusionCritChance: roundN(effects.dracolich.infusionCritChance ?? 0, 6),
+          infusionDurationTicks: effects.dracolich.infusionDurationTicks ?? 0,
+          thresholds: {
+            three: effects.dracolich.thresholds.three === true,
+            four: effects.dracolich.thresholds.four === true,
+            five: effects.dracolich.thresholds.five === true,
+          },
+        }
+      : null,
     vestments: {
       pieces: effects.vestments?.pieces ?? 0,
       heraldOfChaos: effects.vestments?.heraldOfChaos === true,
@@ -164,6 +189,7 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
       chance: roundN(loadout.crit?.chance ?? 0, 6),
       disabled: loadout.crit?.disabled === true,
       damageBonus: roundN(loadout.crit?.damageBonus ?? 0, 6),
+      critualConvertedDamageBonus: roundN(loadout.crit?.critualConvertedDamageBonus ?? 0, 6),
       guaranteed: loadout.crit?.guaranteed === true,
     },
     equipmentIds: sortedStrings(loadout.equipmentIds),
@@ -181,7 +207,6 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
     conjureBasicDamageMult: roundN(loadout.conjureBasicDamageMult ?? 1, 6),
     conjureDurationMult: roundN(loadout.conjureDurationMult ?? 1, 6),
     tumekensPieces: loadout.tumekensPieces ?? 0,
-    tumekensCritEnabled: loadout.tumekensCritEnabled === true,
     targetHpPercent: loadout.targetHpPercent ?? null,
     playerPoison: {
       potion: loadout.playerPoison?.potion ?? "none",

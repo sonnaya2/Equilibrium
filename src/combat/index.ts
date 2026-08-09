@@ -57,6 +57,8 @@ export type {
   DamageEffectBreakdown,
   DamageEffectGroupBreakdown,
   DamageSourceKind,
+  PlayerPoisonAnalysis,
+  PlayerPoisonTargetState,
   RotationSummary,
   CastRecord,
   SimulateInput,

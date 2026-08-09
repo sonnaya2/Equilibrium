@@ -98,7 +98,7 @@ Crackling / Aftershock ranks enter via `SimulateInput.procs` and simulation inve
 - Does not treat attached damage components as extra proc rolls.
 - Cooldown / charge clocks live under `RotationState.invention`.
 
-Perks such as Precise (min-hit raise before pipeline), Impatient, and Relentless are configured on the simulation input; state-changing ranks use probability branching, not flat EV that spends resources no real branch would have.
+Perks such as Precise (min-hit raise before pipeline), Impatient, and Relentless are configured on the simulation input; state-changing ranks use fixed stochastic lanes, not flat EV that creates a resource state no real outcome has.
 
 ## Bleed duration extension and similar passives
 

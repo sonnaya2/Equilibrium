@@ -23,6 +23,7 @@ import {
   loadoutWeaponConfig,
   loadoutWeaponTier,
   nonWeaponAccuracyBonus,
+  setEffectsSummary,
 } from "./loadoutStats";
 import { DEFAULT_LOADOUT, normalizeLoadout, type Loadout } from "./useLoadout";
 
@@ -345,6 +346,33 @@ describe("loadoutStats", () => {
       perks: { ...base.perks, biting: 4, bitingLevel20: true },
     });
     expect(r4l20.critChance).toBeCloseTo(0.188, 10);
+  });
+
+  it("surfaces Warpriest of Tuska in the loadout crit breakdown and set summary", () => {
+    const equipmentSlots = {
+      helmet: "item:warpriest-of-tuska-helm",
+      body: "item:warpriest-of-tuska-cuirass",
+      legs: "item:warpriest-of-tuska-robe-legs",
+    } as const;
+    const stats = loadoutStats({
+      ...base,
+      critChance: 10,
+      equipmentSlots,
+    });
+    expect(stats.critChance).toBeCloseTo(0.13, 10);
+    expect(stats.critChanceBreakdown.sets).toBeCloseTo(0.03, 10);
+    expect(stats.equipmentEffects.setCritChance).toEqual({
+      unconditional: 0.03,
+      conditional: {},
+    });
+    expect(setEffectsSummary({ equipmentSlots })).toEqual([
+      expect.objectContaining({
+        setId: "warpriest-of-tuska",
+        pieces: 3,
+        effectivePieces: 3,
+        support: "modeled",
+      }),
+    ]);
   });
 
   it("Equilibrium rank >0 forces critChance 0 and damage mult 1.08–1.14 by rank", () => {
@@ -841,7 +869,7 @@ describe("loadoutStats", () => {
     const inv4 = loadoutStats({ ...base, perks: { ...base.perks, invigorating: 4 } });
     expect(inv4.adrenaline?.basicGainMultiplier).toBeCloseTo(1.2, 10);
 
-    // Impatient / Relentless pass ranks through; rotation drivers branch on
+    // Impatient / Relentless pass ranks through; rotation drivers sample
     // them (probability-weighted). EV is not computed at this boundary.
     const imp4 = loadoutStats({ ...base, perks: { ...base.perks, impatient: 4 } });
     expect(imp4.adrenaline?.impatientRank).toBe(4);

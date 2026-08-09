@@ -1,7 +1,7 @@
 /**
  * Scope-local reuse of land-time EventResolution when the full hit identity matches.
- * Leng multi-branch re-resolves the same ability hit on arms that only differ in
- * post-hit state (e.g. primordial ice stacks). Cache is active only inside
+ * Fixed lanes re-resolve the same ability hit when only post-hit state differs,
+ * such as Primordial Ice stacks. Cache is active only inside
  * runWithHitReuseScope; inactive path has zero lookup cost.
  */
 

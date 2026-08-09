@@ -1,9 +1,7 @@
-/** Clone-safe UI Run bar job payloads (worker protocol). */
 import type { CombatStyle } from "../../types";
-import type { SerializableRevolutionSimBase } from "./serializable";
-import type { BranchFidelityAttemptMeta } from "../branchFidelity";
-import type { UiRunProbeResult } from "../uiRunCore";
 import type { RotationSummary } from "../../engine/simulation/simulate";
+import type { StochasticRunMeta } from "../uiRunCore";
+import type { SerializableRevolutionSimBase } from "./serializable";
 
 export function toSerializableUiRunSummary(summary: RotationSummary): RotationSummary {
   return {
@@ -17,21 +15,9 @@ export interface SerializableUiRunRequest {
   barIds: readonly string[];
   style: CombatStyle;
   durationTicks: number;
-  /** When set, single-cap probe (score-only). */
-  maxLiveBranches?: number;
-  /** When true, full-analysis at maxLiveBranches (required). */
-  fullAnalysis?: boolean;
 }
 
-export interface UiRunProbeWorkerResult {
-  kind: "probe";
-  probe: UiRunProbeResult;
-}
-
-export interface UiRunFullWorkerResult {
-  kind: "full";
+export interface UiRunWorkerResult {
   summary: RotationSummary;
-  meta: BranchFidelityAttemptMeta;
+  meta: StochasticRunMeta;
 }
-
-export type UiRunWorkerResult = UiRunProbeWorkerResult | UiRunFullWorkerResult;

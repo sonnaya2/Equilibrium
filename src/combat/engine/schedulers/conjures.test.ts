@@ -13,8 +13,7 @@ import {
   type ConjureId,
 } from "../../styles/necromancy/conjures";
 import { commitCast, prepareSimulationCast } from "../cast";
-import { createRuntime } from "../runtime/runtime";
-import { snapshotRuntime } from "../simulation/branch";
+import { cloneRuntime, createRuntime } from "../runtime/runtime";
 import { rotationOf, type CastContextInput } from "../simulation/contracts";
 import {
   createCastContext,
@@ -124,7 +123,7 @@ describe("spirit capabilities stay attached to their own conjure", () => {
   });
 });
 
-describe("branch cloning preserves conjure track state", () => {
+describe("runtime cloning preserves conjure track state", () => {
   it("a clone keeps the zombie's poison track and resolves it independently", () => {
     const rt = createRuntime(necroInput);
     for (let i = 0; i < 3; i++) {
@@ -135,9 +134,8 @@ describe("branch cloning preserves conjure track state", () => {
     expect(attempt.ok).toBe(true);
     if (attempt.ok) commitCast(rt, attempt.prepared, false);
 
-    const clone = snapshotRuntime(rt);
-    // Identical pending events, including the single poison track.
-    expect(clone.queue.signature()).toBe(rt.queue.signature());
+    const clone = cloneRuntime(rt);
+    expect(clone.queue.pending()).toEqual(rt.queue.pending());
     const pendingPoison = (runtime: typeof rt) =>
       runtime.queue.pending().filter((e) => e.abilityId === SPIRIT_POISON_ABILITY_ID);
     expect(pendingPoison(clone)).toHaveLength(1);

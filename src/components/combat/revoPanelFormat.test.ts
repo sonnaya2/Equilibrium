@@ -6,8 +6,9 @@ import {
   barBoundsFromPreset,
   barsMatch,
   clampedBarBoundsFromPreset,
-  formatNumber,
   formatAdrenalineTimeline,
+  formatCritContext,
+  formatNumber,
   formatProofLabel,
   formatTime,
   APPLY_FINAL_STAMP_REJECT_MESSAGE,
@@ -45,10 +46,43 @@ import { packSolverRequestFromUi } from "./useRevolutionSolver";
 
 describe("revoPanelFormat", () => {
   it("labels ability resources separately from end-of-occupancy adrenaline", () => {
-    expect(formatAdrenalineTimeline({ adrenalineAfterResources: 12, adrenalineAfter: 18 })).toBe(
-      "12% → 18%",
+    expect(
+      formatAdrenalineTimeline({
+        adrenalineBefore: 5,
+        adrenalineAfterResources: 12,
+        adrenalineAfter: 18,
+      }),
+    ).toBe("5% → 12% → 18%");
+    expect(
+      formatAdrenalineTimeline({
+        adrenalineBefore: 50,
+        adrenalineAfterResources: 70,
+        adrenalineAfter: 70,
+        adrenalineTransaction: { spendPreventedBy: "deathspore" },
+      }),
+    ).toBe("50% → 70% (Deathspore free cast)");
+    expect(formatAdrenalineTimeline({ adrenalineBefore: 18, adrenalineAfter: 18 })).toBe(
+      "18% → 18%",
     );
-    expect(formatAdrenalineTimeline({ adrenalineAfter: 18 })).toBe("18%");
+  });
+
+  it("shows effective crit rate and Critual conversion from resolved stats", () => {
+    expect(
+      formatCritContext({
+        critChance: 0.5,
+        uncappedCritChance: 0.55,
+        convertedCritChance: 0.05,
+        critualActive: true,
+      }),
+    ).toBe("50.0% effective · 55.0% uncapped · +5.0% Critual damage");
+    expect(
+      formatCritContext({
+        critChance: 0.2,
+        uncappedCritChance: 0.2,
+        convertedCritChance: 0,
+        critualActive: false,
+      }),
+    ).toBe("20.0%");
   });
 
   it("labels solver phases for status chrome", () => {
@@ -89,10 +123,10 @@ describe("revoPanelFormat", () => {
     );
     expect(
       formatProofLabel("full-objective-global-optimum", {
-        exactness: "bounded-approximation",
+        exactness: "estimated",
       }),
     ).toBe("Approximated");
-    expect(formatProofLabel("search-objective-exhaustive", { exactness: "truncated" })).toBe(
+    expect(formatProofLabel("search-objective-exhaustive", { exactness: "estimated" })).toBe(
       "Approximated",
     );
     expect(formatProofLabel("full-objective-global-optimum", { residualWeight: 0 })).toBe(
@@ -395,7 +429,7 @@ describe("Phase 4 apply / validation failure gates", () => {
           status: "ok",
           fullyValidated: false,
           beatsBar: true,
-          branchExactness: "approximated",
+          stochasticExactness: "approximated",
           residualMass: 0.66,
           currentBarScore: 100,
           proposedBarScore: 1000,

@@ -10,7 +10,9 @@ import {
   firstNecromancerConjureDamageMult,
   firstNecromancerConjureDurationMult,
   loadoutFirstNecromancerConjureDamageMult,
+  loadoutFirstNecromancerConjureDurationMult,
   loadoutSetCritChance,
+  resolveLoadoutSetCritChance,
   setCritChanceFromDef,
   setDamageModifiers,
   setEffectsSummary,
@@ -62,7 +64,7 @@ describe("shared/equipment set effects", () => {
         setId: "tectonic",
         pieces: 3,
         effectivePieces: 3,
-        piecesPerItem: 1,
+        additionalPiecesPerItem: 0,
         label: "Tectonic (Fracture Point)",
         support: "modeled",
       },
@@ -93,6 +95,81 @@ describe("shared/equipment set effects", () => {
     expect(loadoutSetCritChance({ equipmentSlots: {} })).toBe(0);
     expect(loadoutSetCritChance({})).toBe(0);
     expect(setEffectsSummary({ equipmentSlots: {} })).toEqual([]);
+  });
+
+  it("resolves an unknown catalogue set through the injectable generic loadout path", () => {
+    const synthetic: EquipmentSetDef = {
+      id: "synthetic-unknown-set",
+      label: "Synthetic unknown set",
+      maxPieces: 6,
+      effects: [{ minPieces: 2, kind: "critChancePerPiece", value: 0.02 }],
+      source: equipmentSetById("tectonic")!.source,
+    };
+    const resolved = resolveLoadoutSetCritChance(
+      { pieceContribution: { additionalPiecesPerItem: 1 } },
+      {
+        definitions: [synthetic],
+        countsResolver: () => ({
+          setCounts: new Map([[synthetic.id, 3]]),
+          itemCounts: new Map([[synthetic.id, 3]]),
+        }),
+      },
+    );
+    expect(resolved).toEqual({ unconditional: 0.12, conditional: {} });
+    expect(
+      loadoutSetCritChance(
+        { pieceContribution: { additionalPiecesPerItem: 1 } },
+        {
+          definitions: [synthetic],
+          countsResolver: () => ({
+            setCounts: new Map([[synthetic.id, 3]]),
+            itemCounts: new Map([[synthetic.id, 3]]),
+          }),
+        },
+      ),
+    ).toBeCloseTo(0.12, 10);
+  });
+
+  it("models Warpriest of Tuska thresholds and Chaotic Insight above maxPieces", () => {
+    const pieces = [
+      "item:warpriest-of-tuska-helm",
+      "item:warpriest-of-tuska-cuirass",
+      "item:warpriest-of-tuska-robe-legs",
+      "item:warpriest-of-tuska-gauntlets",
+      "item:warpriest-of-tuska-boots",
+      "item:warpriest-of-tuska-cape",
+    ] as const;
+    const chanceAt = (count: number, pieceContribution?: { additionalPiecesPerItem: number }) =>
+      activeEquipmentEffects({
+        style: "melee",
+        equipmentIds: pieces.slice(0, count),
+        pieceContribution,
+      }).setCritChance.unconditional;
+    expect(chanceAt(2)).toBe(0);
+    expect(chanceAt(3)).toBeCloseTo(0.03, 10);
+    expect(chanceAt(4)).toBeCloseTo(0.04, 10);
+    expect(chanceAt(5)).toBeCloseTo(0.05, 10);
+    expect(chanceAt(6)).toBeCloseTo(0.06, 10);
+
+    const chaotic = activeEquipmentEffects({
+      style: "melee",
+      equipmentIds: pieces.slice(0, 3),
+      pieceContribution: { additionalPiecesPerItem: 2 },
+    });
+    expect(chaotic.setCritChance).toEqual({ unconditional: 0.09, conditional: {} });
+    expect(
+      setEffectsSummary({
+        equipmentIds: pieces.slice(0, 3),
+        pieceContribution: { additionalPiecesPerItem: 2 },
+      }),
+    ).toEqual([
+      expect.objectContaining({
+        setId: "warpriest-of-tuska",
+        pieces: 3,
+        effectivePieces: 9,
+        support: "modeled",
+      }),
+    ]);
   });
 
   it("derives sourced passive rows from equipped items and account enchantments", () => {
@@ -283,6 +360,28 @@ describe("shared/equipment set effects", () => {
     expect(setEffectsSummary(visageLoadout)[0]).toMatchObject({ pieces: 5, effectivePieces: 6 });
     expect(loadoutFirstNecromancerConjureDamageMult(visageLoadout)).toBeCloseTo(1.35, 10);
 
+    const chaotic = { additionalPiecesPerItem: 2 } as const;
+    const normalChaotic = {
+      equipmentSlots: { body: "item:first-necromancer-body" },
+      pieceContribution: chaotic,
+    };
+    const visageChaotic = {
+      equipmentSlots: { helmet: "item:visage-of-the-first-necromancer" },
+      pieceContribution: chaotic,
+    };
+    expect(setEffectsSummary(normalChaotic)[0]).toMatchObject({
+      pieces: 1,
+      effectivePieces: 3,
+      support: "outgoing-only",
+    });
+    expect(setEffectsSummary(visageChaotic)[0]).toMatchObject({
+      pieces: 1,
+      effectivePieces: 4,
+    });
+    expect(loadoutFirstNecromancerConjureDamageMult(normalChaotic)).toBeCloseTo(1.21, 10);
+    expect(loadoutFirstNecromancerConjureDamageMult(visageChaotic)).toBeCloseTo(1.28, 10);
+    expect(loadoutFirstNecromancerConjureDurationMult(visageChaotic)).toBeCloseTo(1.2, 10);
+
     const helmLoadout = {
       equipmentSlots: {
         helmet: "item:first-necromancer-helm",
@@ -307,9 +406,9 @@ describe("shared/equipment set effects", () => {
       effects: [{ minPieces: 2, kind: "critChancePerPiece", value: 0.01 }],
       source,
     };
-    expect(effectiveSetPieces(3, { piecesPerItem: 3 })).toBe(9);
+    expect(effectiveSetPieces(3, { additionalPiecesPerItem: 2 })).toBe(9);
     expect(
-      setCritChanceFromDef(thresholdDef, 1, { pieceContribution: { piecesPerItem: 3 } }),
+      setCritChanceFromDef(thresholdDef, 1, { pieceContribution: { additionalPiecesPerItem: 2 } }),
     ).toBeCloseTo(0.03, 10);
 
     const perPieceDef: EquipmentSetDef = {
@@ -318,7 +417,7 @@ describe("shared/equipment set effects", () => {
     };
     const modifiers = setDamageModifiers(
       new Map([[perPieceDef.id, 3]]),
-      { pieceContribution: { piecesPerItem: 3 } },
+      { pieceContribution: { additionalPiecesPerItem: 2 } },
       [perPieceDef],
     );
     expect(modifiers).toHaveLength(1);
@@ -331,7 +430,7 @@ describe("shared/equipment set effects", () => {
         helmet: "item:tectonic-helm",
         body: "item:tumekens-resplendence-body",
       },
-      pieceContribution: { piecesPerItem: 3 },
+      pieceContribution: { additionalPiecesPerItem: 2 },
     };
     const counts = equippedSetCounts(loadout);
     expect(counts.get("tectonic")).toBe(1);
@@ -358,14 +457,14 @@ describe("shared/equipment set effects", () => {
           legs: "item:tumekens-resplendence-legs",
         },
         insideSunshine: true,
-        pieceContribution: { piecesPerItem: 3 },
+        pieceContribution: { additionalPiecesPerItem: 2 },
       }),
     ).toBeCloseTo(0.135, 10);
 
     const vestments = activeEquipmentEffects({
       style: "melee",
       equipmentSlots: { helmet: "item:vestments-of-havoc-hood" },
-      pieceContribution: { piecesPerItem: 3 },
+      pieceContribution: { additionalPiecesPerItem: 2 },
     });
     expect(vestments.vestments).toMatchObject({
       pieces: 3,
@@ -381,10 +480,11 @@ describe("shared/equipment set effects", () => {
         body: "item:first-necromancer-body",
         legs: "item:first-necromancer-legs",
       },
-      pieceContribution: { piecesPerItem: 3 },
+      pieceContribution: { additionalPiecesPerItem: 2 },
     };
     expect(equippedSetCounts(loadout).get("first-necromancer")).toBe(2);
     expect(loadoutFirstNecromancerConjureDamageMult(loadout)).toBeCloseTo(1.35, 10);
+    expect(loadoutFirstNecromancerConjureDurationMult(loadout)).toBeCloseTo(1.25, 10);
   });
 
   it("catalogue sets carry provenance; facts-only / non-player-AD sets stay empty effects", () => {

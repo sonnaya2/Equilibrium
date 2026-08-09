@@ -4,14 +4,16 @@ import { processSpiritEvent } from "../schedulers/conjures";
 import { recordResolved } from "../resolution";
 import { gainAdrenaline, patchMelee } from "./state";
 import type { SimulationRuntime } from "./runtime";
+import { playerPoisonPrecedes } from "../schedulers/playerPoison";
 import {
   nextPlayerPoisonEvent,
-  playerPoisonPrecedes,
   processNextPlayerPoisonEvent,
-} from "../schedulers/playerPoison";
+} from "../schedulers/playerPoisonState";
 import { applyPoisonLandEffects } from "../simulation/poisonLand";
 import { temperedHeartAdrenalineGain } from "../../league/ruleset";
 import { clockAdvanceBounds } from "./clockBounds";
+import { applyStatefulLandRng } from "../simulation/statefulLand";
+import { expirePrimordialIce } from "../../styles/melee/primordialIce";
 
 /**
  * The canonical simulation clock. Time moves only through advanceTo: it lands
@@ -45,6 +47,7 @@ function processDueEvents(rt: SimulationRuntime, bound: number): void {
     const resolution = event.resolve(rt, event.tick);
     recordResolved(rt, event, resolution);
     applyPoisonLandEffects(rt, event, resolution.damage);
+    applyStatefulLandRng(rt, event, resolution.damage);
   }
 }
 
@@ -98,4 +101,8 @@ export function advanceTo(rt: SimulationRuntime, targetTick: number): void {
     });
   }
   if (targetTick > rt.state.tick) rt.state = { ...rt.state, tick: targetTick };
+  const ice = expirePrimordialIce(rt.state.melee.primordialIce, rt.state.tick);
+  if (ice !== rt.state.melee.primordialIce) {
+    rt.state = patchMelee(rt.state, { primordialIce: ice });
+  }
 }

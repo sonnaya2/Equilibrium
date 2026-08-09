@@ -159,7 +159,7 @@ export function buildSolverResultDto(args: {
       : typeof presentation?.summary?.rng?.residualWeight === "number"
         ? presentation.summary.rng.residualWeight
         : 0;
-  const branchExactness =
+  const stochasticExactness =
     typeof presentation?.rng?.exactness === "string"
       ? presentation.rng.exactness
       : typeof presentation?.summary?.rng?.exactness === "string"
@@ -180,7 +180,7 @@ export function buildSolverResultDto(args: {
     improvement: scoreImprovement,
     proofLabel: result.proof,
     residualMass,
-    branchExactness,
+    stochasticExactness,
   });
 
   if (!isUpgrade) {
@@ -191,7 +191,7 @@ export function buildSolverResultDto(args: {
     );
   } else if (!honesty.applyAllowed && !honesty.fullyValidated) {
     proofNotes.push(
-      `presentation not fully validated exactness=${branchExactness ?? "missing"} blocks apply`,
+      `presentation not fully validated exactness=${stochasticExactness ?? "missing"} blocks apply`,
     );
   }
 
@@ -227,11 +227,11 @@ export function buildSolverResultDto(args: {
     ...(presentation?.summary ? { summary: presentation.summary } : {}),
     ...(presentation?.rng
       ? { rng: presentation.rng }
-      : residualMass > 0 || branchExactness != null
+      : residualMass > 0 || stochasticExactness != null
         ? {
             rng: {
               residualWeight: residualMass,
-              ...(branchExactness != null ? { exactness: branchExactness } : {}),
+              ...(stochasticExactness != null ? { exactness: stochasticExactness } : {}),
             },
           }
         : {}),

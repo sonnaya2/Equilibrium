@@ -19,6 +19,7 @@ function minimalInput(patch: Partial<HostCombatResolveInput> = {}): HostCombatRe
     crit: { chance: 0.1, disabled: false, damageBonus: 0 },
     equipmentEffects: {
       activation: EQUIPMENT_SET_ACTIVATION,
+      setCritChance: { unconditional: 0, conditional: {} },
       passiveIds: [],
       enchantments: [],
       weaponClass: null,

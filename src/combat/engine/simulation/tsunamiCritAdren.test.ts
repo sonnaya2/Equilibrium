@@ -16,11 +16,6 @@ import {
 import { rotationOf } from "./contracts";
 import { createCastContext } from "./context";
 import { simulate, type SimulateInput } from "./simulate";
-import { expandTsunamiCritAdrenOnLand, tsunamiCritChanceFromDamage } from "./tsunamiCritBranch";
-import { createRuntime } from "../runtime/runtime";
-import { gainAdrenaline, patchMagic } from "../runtime/state";
-import { packageCritical } from "../resolution/types";
-import { buildBranchKey } from "./branchKey";
 
 function rankingSlice(summary: {
   ok: boolean;
@@ -188,55 +183,6 @@ describe("Tsunami crit-adren window", () => {
     expect(s.rng!.residualWeight).toBe(0);
   });
 
-  it("branch key expires tsunami window to 0 for merge equivalence", () => {
-    const input = { ...magicBase, rotation: rotationOf("magic_attack") };
-    const rt = createRuntime(input);
-    rt.state = patchMagic(rt.state, { tsunamiCritAdrenUntilTick: 10 });
-    rt.state = { ...rt.state, tick: 10 };
-    const kExpired = buildBranchKey(rt);
-    rt.state = patchMagic(rt.state, { tsunamiCritAdrenUntilTick: 0 });
-    const kZero = buildBranchKey(rt);
-    expect(kExpired).toBe(kZero);
-  });
-
-  it("at-cap grants do not fork", () => {
-    const input = { ...magicBase, rotation: rotationOf("magic_attack"), startingAdrenaline: 100 };
-    const rt = createRuntime(input);
-    rt.state = patchMagic(rt.state, { tsunamiCritAdrenUntilTick: 50 });
-    rt.state = gainAdrenaline(rt.state, 1000);
-    const set = expandTsunamiCritAdrenOnLand({ weight: 1, rt }, 0, 0.4);
-    expect(set.branches).toHaveLength(1);
-    expect(set.residualWeight).toBe(0);
-  });
-
-  it("expand forks mass p / 1-p without changing damage ledger", () => {
-    const input = { ...magicBase, rotation: rotationOf("magic_attack"), startingAdrenaline: 0 };
-    const rt = createRuntime(input);
-    rt.state = patchMagic(rt.state, { tsunamiCritAdrenUntilTick: 50 });
-    rt.totalExpected = 999;
-    const set = expandTsunamiCritAdrenOnLand({ weight: 1, rt }, 0, 0.25);
-    expect(set.branches).toHaveLength(2);
-    const mass = set.branches.reduce((s, b) => s + b.weight, 0);
-    expect(mass).toBeCloseTo(1, 12);
-    const crit = set.branches.find((b) => b.rt.state.adrenaline === 8)!;
-    const non = set.branches.find((b) => b.rt.state.adrenaline === 0)!;
-    expect(crit.weight).toBeCloseTo(0.25, 12);
-    expect(non.weight).toBeCloseTo(0.75, 12);
-    expect(crit.rt.totalExpected).toBe(999);
-    expect(non.rt.totalExpected).toBe(999);
-  });
-
-  it("tsunamiCritChanceFromDamage reads critical package", () => {
-    expect(
-      tsunamiCritChanceFromDamage({
-        min: 0,
-        max: 1,
-        expected: 0.5,
-        critical: packageCritical(0.3, 1, 0),
-      }),
-    ).toBeCloseTo(0.3);
-  });
-
   it("score-only matches full-analysis ranking under mid-crit Tsunami rotation", () => {
     const input = {
       ...magicBase,
@@ -388,7 +334,7 @@ describe("Support labels", () => {
   });
 });
 
-describe("Tsunami branch performance (critical-heavy)", () => {
+describe("Tsunami stochastic performance (critical-heavy)", () => {
   it("long mid-crit rotation under window discloses residual without silent mass loss", () => {
     const basics = Array.from({ length: 24 }, () => "magic_attack" as const);
     const s = simulate({
@@ -400,7 +346,7 @@ describe("Tsunami branch performance (critical-heavy)", () => {
     expect(s.ok).toBe(true);
     const rng = s.rng;
     if (!rng) {
-      // Single-branch collapse still conserves mass.
+      // The fixed ensemble still conserves unit mass.
       expect(s.totalExpected).toBeGreaterThan(0);
       return;
     }

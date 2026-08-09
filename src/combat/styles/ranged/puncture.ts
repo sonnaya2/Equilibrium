@@ -33,7 +33,7 @@ export interface PunctureState {
   storedDamage: number;
   /**
    * Monotonic generation. Scheduled events close over the gen at schedule
-   * time; resolve is a no-op when state.generation differs (refresh / branch).
+   * time; resolve is a no-op when state.generation differs after refresh.
    */
   generation: number;
   /**

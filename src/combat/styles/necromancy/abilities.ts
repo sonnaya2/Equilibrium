@@ -429,7 +429,8 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     adrenaline: { cost: 0 },
     stateEffect: "conjure_vengeful_ghost",
     weaponRequirement: "conduit",
-    supportNote: "Ghost healing and Spirit Pact duration variants are not modeled.",
+    supportNote:
+      "Outgoing Ghost basic damage and 140% damage-derived healing are modeled; Spirit Pact duration variants are not modeled.",
     source: CONJURE_GHOST_WIKI,
   },
   {
@@ -454,7 +455,9 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     adrenaline: { cost: 0 },
     stateEffect: "conjure_phantom_guardian",
     weaponRequirement: "conduit",
-    supportNote: "Phantom Guardian's taunt / damage-sharing role is not modeled (damage only).",
+    supportStatus: "partially-modeled",
+    supportNote:
+      "Outgoing damage is modeled; Phantom Guardian defensive and incoming-damage behavior is not.",
     source: CONJURE_PHANTOM_WIKI,
   },
   {

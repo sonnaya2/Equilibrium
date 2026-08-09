@@ -22,11 +22,6 @@ import {
   scoreSummary,
   summaryObjectiveIneligibilityReason,
 } from "./objective";
-import {
-  resolveBranchFidelityLadder,
-  simulateWithAdaptiveBranchFidelity,
-  type BranchFidelityAttemptMeta,
-} from "./branchFidelity";
 
 export type {
   ObjectiveProfileId,
@@ -331,52 +326,14 @@ export function evaluateRevolutionBar(
     request.detailLevel !== undefined ? { detailLevel: request.detailLevel } : undefined;
   const allowExpectedDamageApproximation = request.allowExpectedDamageApproximation === true;
 
-  let branchFidelity: BranchFidelityAttemptMeta | undefined;
-  let summary;
-  if (request.branchFidelityMode != null) {
-    const ladder = resolveBranchFidelityLadder(
-      request.branchFidelityMode,
-      request.branchFidelityOverrides,
-    );
-    const adaptive = simulateWithAdaptiveBranchFidelity(revInput, simOpts, ladder, {
-      allowExpectedDamageApproximation,
-    });
-    summary = adaptive.summary;
-    branchFidelity = adaptive.meta;
-  } else {
-    summary = simulateRevolution(revInput, simOpts);
-  }
+  const summary = simulateRevolution(revInput, simOpts);
 
   if (!summary.ok) {
     reasons.push({
       code: "sim-failed",
       message: summary.error ?? "revolution simulation failed",
     });
-    return failEval(request, reasons, { resolved, summary, branchFidelity });
-  }
-
-  // Adaptive ladder exhausted without completeness: still unrankable (do not fabricate score).
-  if (branchFidelity != null && !branchFidelity.complete) {
-    const msg = `branch fidelity incomplete residualWeight=${branchFidelity.residualWeight} after ${branchFidelity.attempts} attempt(s) maxLive=${branchFidelity.finalBudget.maxLiveBranches}`;
-    reasons.push({ code: "score-failed", message: msg });
-    const diagnostics = diagnosticMetrics(summary);
-    return failEval(request, reasons, {
-      mode: durationTicks < MIN_RANKABLE_HORIZON_TICKS ? "search" : "full",
-      exploratory: durationTicks < MIN_RANKABLE_HORIZON_TICKS,
-      validForFinalRanking: false,
-      resolved,
-      summary,
-      failureReason: msg,
-      branchFidelity,
-      metrics:
-        Object.keys(diagnostics).length > 0
-          ? {
-              dpm: Number.NEGATIVE_INFINITY,
-              totalExpected: summary.totalExpected,
-              ...diagnostics,
-            }
-          : undefined,
-    });
+    return failEval(request, reasons, { resolved, summary });
   }
 
   // Short horizon: exploratory single-window DPM only when unit-mass eligible.
@@ -398,7 +355,6 @@ export function evaluateRevolutionBar(
         resolved,
         summary,
         failureReason: ineligible,
-        branchFidelity,
         // Diagnostics only: known-mass / conditional mean never become score.
         metrics:
           Object.keys(diagnostics).length > 0
@@ -429,7 +385,6 @@ export function evaluateRevolutionBar(
         ...diagnosticMetrics(summary),
       },
       profileId,
-      branchFidelity,
     };
   }
 
@@ -451,7 +406,6 @@ export function evaluateRevolutionBar(
       summary,
       objective: scored,
       failureReason: scored.reason,
-      branchFidelity,
     });
   }
 
@@ -477,6 +431,5 @@ export function evaluateRevolutionBar(
       ...diagnosticMetrics(summary),
     },
     profileId,
-    branchFidelity,
   };
 }

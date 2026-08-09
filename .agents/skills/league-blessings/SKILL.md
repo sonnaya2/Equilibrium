@@ -87,7 +87,7 @@ Classify each effect before writing code, then place it at the matching engine s
 | persistent runtime state     | the style or target bucket of `RotationState`, written through its patch helper                    |
 | autonomous actor             | `engine/schedulers/`, with its own scheduler state                                                 |
 
-Nothing league-specific goes into a base formula, an unconditional engine branch, or a blessing-only field bolted onto shared state. With the ruleset omitted, base-game totals, event order, and cast sequence must be unchanged.
+Nothing league-specific goes into a base formula, an unconditional engine path, or a blessing-only field bolted onto shared state. With the ruleset omitted, base-game totals, event order, and cast sequence must be unchanged.
 
 ### Derived inputs and resolver overrides
 
@@ -348,7 +348,7 @@ Provisional implementation:
 - normal starting-adrenaline requirements do not block those casts;
 - another activation refreshes or extends the active window.
 
-Use probability-weighted state branching with equivalent states merged when practical. Use seeded Monte Carlo only if exact branching becomes unreasonably expensive. Do not model it as a flat average adrenaline discount.
+Use the canonical fixed 128-lane stochastic model because the proc changes later adrenaline and cast legality. Do not model it as a flat average adrenaline discount or add a separate enumeration path.
 
 Still unverified:
 
@@ -472,7 +472,7 @@ Until testing proves otherwise:
 
 ## RNG policy
 
-`combat-sim` owns it. Blessing procs follow the same rule as every other state-changing roll: expected value only when the outcome cannot change future state, probability-weighted state where it can, and a labelled method whenever an approximation is used. Avernic Rampage uses global state branching. Inferno damage stays expected-value, while poison observes its Bernoulli occurrence inside the exact poison-local distribution rather than cloning the combat runtime.
+`combat-sim` owns it. Blessing procs use expected value when the outcome cannot change future state and one concrete outcome per deterministic stratified lane when it can. Avernic Rampage uses lane-local state. Inferno damage stays expected-value; poison observes Inferno occurrence through the same lane when that occurrence can change future poison state.
 
 ## Required context additions
 

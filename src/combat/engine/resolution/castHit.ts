@@ -6,9 +6,10 @@ import { FURY_CRIT_CHANCE_BONUS } from "../../styles/melee/effects";
 import {
   channelledMightCritBonus,
   isConcentratedBlast,
-  tumekensSunshineCritChance,
+  sunshineActive,
 } from "../../styles/magic/effects";
 import { SEARING_WINDS_BONUS_HIT_PCT } from "../../styles/ranged/onHit";
+import { dracolichInfusionCritChance } from "../../styles/ranged/dracolich";
 import {
   COMMAND_REQUIRES_CONJURE,
   CONJURE_DAMAGE_POTENTIAL,
@@ -259,6 +260,10 @@ function resolveCastHitUncached(
     hitIndex,
     activeBleedCount(state.target.melee, at),
   );
+  const dracolichCrit =
+    ability.style === "ranged"
+      ? dracolichInfusionCritChance(state.ranged.dracolichInfusion, at)
+      : 0;
   // Concentrated Blast's own hits read the live accumulating stacks; every
   // other magic cast consumed them at cast time (baked into snap.critLayers).
   const liveConcChance =
@@ -271,23 +276,21 @@ function resolveCastHitUncached(
     chance:
       snap.critLayers.chance +
       liveConcChance +
-      (ability.style === "magic" && input.tumekensCritEnabled !== false
-        ? tumekensSunshineCritChance(
-            input.tumekensPieces ?? 0,
-            state.magic.sunshine,
-            at,
-            snap.castSeq,
-          )
+      (ability.style === "magic" &&
+      state.magic.sunshine.grantedByCast !== snap.castSeq &&
+      sunshineActive(state.magic.sunshine, at)
+        ? (input.equipmentEffects?.setCritChance?.conditional.sunshine ?? 0)
         : 0) +
       (firstEligible && snap.furyActive ? FURY_CRIT_CHANCE_BONUS : 0) +
-      equipmentCrit.chance,
+      equipmentCrit.chance +
+      dracolichCrit,
     guaranteed: snap.critLayers.guaranteed || (firstEligible && snap.greaterFuryActive),
     damageBonus:
       (snap.critLayers.damageBonus ?? 0) +
       (ability.style === "magic" ? channelledMightCritBonus(state.magic.channelledMight, at) : 0) +
       equipmentCrit.damageBonus,
   };
-  const crit = resolveLeagueCritAtLand(input.league, snap.critLayers, rawCrit);
+  const crit = resolveLeagueCritAtLand(input.league, rawCrit);
 
   // Command abilities are part of the conjure: full Damage Potential, the
   // conjure-eligible modifier set (never prayers), and for the skeleton the

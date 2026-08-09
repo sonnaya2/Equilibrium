@@ -41,7 +41,7 @@ import { unlockedRegions } from "@/league";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
 import { uiRunFingerprint } from "./uiSimFingerprint";
 import { equipAbilityForLoadout, filterAbilitiesForLoadout } from "./abilityLoadoutFilter";
-import { formatAdrenalineTimeline } from "./revoPanelFormat";
+import { formatAdrenalineTimeline, formatCritContext } from "./revoPanelFormat";
 
 const STORAGE_KEY = "eq:rotation:v1";
 const MANUAL_HORIZON_TICKS = 100;
@@ -707,6 +707,18 @@ export function RotationPlanner({
                 </div>
               </dl>
 
+              <p className="mt-2 text-xs text-parch-300" data-testid="rotation-crit-context">
+                Effective crit rate{" "}
+                {formatCritContext({
+                  critChance: activeStats.critChance,
+                  uncappedCritChance: activeStats.uncappedCritChance,
+                  convertedCritChance: activeStats.convertedCritChance,
+                  critualActive: activeStats.league.blessings.some(
+                    (choice) => choice.id === "unholy-critual",
+                  ),
+                })}
+              </p>
+
               {scoreNote ? (
                 <p
                   className="mt-2 text-xs text-chaos-300"
@@ -736,8 +748,11 @@ export function RotationPlanner({
                       <th className="py-2 pr-4 font-medium">Tick</th>
                       <th className="py-2 pr-4 font-medium">Ability</th>
                       <th className="py-2 pr-4 font-medium">Expected</th>
-                      <th className="py-2 font-medium" title="Ability resources → end of occupancy">
-                        Adren (resources → end)
+                      <th
+                        className="py-2 font-medium"
+                        title="Before cast → after immediate resources → end of occupancy"
+                      >
+                        Adren (before → resources → end)
                       </th>
                     </tr>
                   </thead>

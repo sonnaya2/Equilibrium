@@ -11,6 +11,7 @@ function minimalInput(patch: Partial<HostCombatResolveInput> = {}): HostCombatRe
     crit: { chance: 0.1, disabled: false, damageBonus: 0 },
     equipmentEffects: {
       activation: EQUIPMENT_SET_ACTIVATION,
+      setCritChance: { unconditional: 0.03, conditional: { sunshine: 0.045 } },
       passiveIds: [],
       enchantments: [],
       weaponClass: null,
@@ -96,5 +97,9 @@ describe("ResolvedCombatModel immutability", () => {
     expect(clone.modifierSources.vulnerability).toBe(true);
     expect(clone.target.undead).toBe(true);
     expect(clone.target.hpPercent).toBe(40);
+    expect(clone.equipmentEffects.setCritChance).toEqual({
+      unconditional: 0.03,
+      conditional: { sunshine: 0.045 },
+    });
   });
 });

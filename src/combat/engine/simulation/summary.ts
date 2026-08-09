@@ -1,17 +1,7 @@
 import { finalizeAnalysis, graspGroupFromEffects } from "../analysis";
-import {
-  appendWithIntermediateCap,
-  branchCapsFromBudget,
-  combineExactness,
-  mergeAndCapBranches,
-  snapshotRuntime,
-  type Branch,
-  type BranchExactness as EngineBranchExactness,
-} from "./branch";
-import { drainBranchToEnd } from "./landBranch";
 import type {
-  BranchExactness,
-  BranchFailureSummary,
+  StochasticExactness,
+  StochasticFailureSummary,
   DamageEffectBreakdown,
   DamageEffectSourceBreakdown,
   DamageSourceKind,
@@ -40,17 +30,12 @@ import {
   resolveDetailLevel,
 } from "./contracts";
 import { advanceTo } from "../runtime/clock";
-import type { SimulationRuntime } from "../runtime/runtime";
-import {
-  lastPlayerPoisonTick,
-  modalTargetWeaponPoison,
-  playerPoisonProbabilityMass,
-} from "../schedulers/playerPoison";
+import { cloneRuntime, type SimulationRuntime } from "../runtime/runtime";
+import { lastPlayerPoisonTick } from "../schedulers/playerPoisonState";
 import { TICK_SECONDS } from "../../core/ticks";
 import {
   finiteOrZero,
   PROB_TOLERANCE,
-  RESIDUAL_FREE_TOLERANCE,
   supportMaxFrom,
   supportMinFrom,
   weightedMean,
@@ -93,9 +78,7 @@ function buildPlayerPoisonAnalysis(
   const source = resolvePoisonApplication(rt.input.playerPoison, 0);
   if (!source) return undefined;
   const row = analysis.byEffect.find((effect) => effect.id === PLAYER_POISON_EFFECT_ID);
-  const distribution = rt.state.target.weaponPoison;
-  const atom = modalTargetWeaponPoison(distribution);
-  const poison = atom.poison;
+  const poison = rt.state.target.weaponPoison.poison;
   const toxin = rt.state.target.evolvingToxin;
   const poisonLive = poison.active && rt.state.tick < poison.expiresAtTick;
   const toxinLive = rt.state.tick < toxin.expiresAtTick;
@@ -108,6 +91,12 @@ function buildPlayerPoisonAnalysis(
     return undefined;
   }
   const cinderbane = rt.input.playerPoison?.cinderbane === true;
+  const targetState = {
+    decayIndex: poisonLive ? poison.decayIndex : 0,
+    remainingTargetPoisonTicks: poisonLive ? Math.max(0, poison.expiresAtTick - rt.state.tick) : 0,
+    bikStacks: toxinLive ? toxin.stacks : 0,
+    bikRemainingTicks: toxinLive ? toxin.expiresAtTick - rt.state.tick : 0,
+  };
   return {
     sourceLabel: poisonLive ? poison.sourceLabel : source.sourceLabel,
     effectiveTier: poisonLive ? poison.effectiveTier : source.effectiveTier,
@@ -121,11 +110,8 @@ function buildPlayerPoisonAnalysis(
     minimumDamage: (row?.minimumDamage ?? 0) + (row?.bonusDamage ?? 0),
     expectedDamage: (row?.totalDamage ?? 0) + (row?.bonusDamage ?? 0),
     maximumDamage: (row?.maximumDamage ?? 0) + (row?.bonusDamage ?? 0),
-    decayIndex: poisonLive ? poison.decayIndex : 0,
-    remainingTargetPoisonTicks: poisonLive ? Math.max(0, poison.expiresAtTick - rt.state.tick) : 0,
-    bikStacks: toxinLive ? toxin.stacks : 0,
-    bikRemainingTicks: toxinLive ? toxin.expiresAtTick - rt.state.tick : 0,
-    probabilityMass: playerPoisonProbabilityMass(distribution),
+    targetState,
+    probabilityMass: 1,
     supportStatus: "partially-modeled",
     supportNote: cinderbane
       ? `${PLAYER_POISON_SUPPORT_NOTE} ${CINDERBANE_SUPPORT_NOTE}`
@@ -145,7 +131,7 @@ function dpsFrom(damage: number, ticks: number): number {
   return ticks > 0 ? damage / (ticks * TICK_SECONDS) : 0;
 }
 
-function emptyFailure(primaryReason: string, failedWeight: number): BranchFailureSummary {
+function emptyFailure(primaryReason: string, failedWeight: number): StochasticFailureSummary {
   return {
     failedWeight,
     successfulWeight: 0,
@@ -177,13 +163,13 @@ function buildDpsDetail(args: {
   primary: number;
   ratioOfExpectations: number;
   representativeDps: number;
-  expectedBranchDps?: number;
+  expectedLaneDps?: number;
 }): DpsSummary {
   return {
     primary: args.primary,
     ratioOfExpectations: args.ratioOfExpectations,
     representativeDps: args.representativeDps,
-    ...(args.expectedBranchDps !== undefined ? { expectedBranchDps: args.expectedBranchDps } : {}),
+    ...(args.expectedLaneDps !== undefined ? { expectedLaneDps: args.expectedLaneDps } : {}),
   };
 }
 
@@ -224,7 +210,7 @@ export function finish(
 
   let tails: TailMetrics | undefined;
   if (options?.includeTails && fixedWindow) {
-    const preview = snapshotRuntime(rt);
+    const preview = cloneRuntime(rt);
     Object.assign(preview, {
       input: { ...preview.input, horizonTicks: undefined },
       horizon: undefined,
@@ -245,7 +231,7 @@ export function finish(
 
   const history: HistoryProvenance = {
     kind: "complete",
-    classWeight: 1,
+    historyWeight: 1,
     ticks: pathTicks,
     selectionReason: "sole-terminal",
     // Failed sole paths still expose casts/events, but they are not a success ledger.
@@ -335,7 +321,7 @@ function poolMean(
 
 function collectFailures(
   parts: readonly { weight: number; summary: RotationSummary }[],
-): BranchFailureSummary | undefined {
+): StochasticFailureSummary | undefined {
   const failed = parts.filter((p) => !p.summary.ok);
   if (failed.length === 0) return undefined;
   const failedWeight = failed.reduce((s, p) => s + p.weight, 0);
@@ -343,7 +329,7 @@ function collectFailures(
   const successfulWeight = successful.reduce((s, p) => s + p.weight, 0);
   const byReason = new Map<string, number>();
   for (const part of failed) {
-    const reason = part.summary.error ?? "branch failed";
+    const reason = part.summary.error ?? "lane failed";
     byReason.set(reason, (byReason.get(reason) ?? 0) + part.weight);
   }
   const reasons = [...byReason.entries()]
@@ -360,7 +346,7 @@ function collectFailures(
     failedWeight,
     successfulWeight,
     totalsScope: successfulWeight > PROB_TOLERANCE ? "unconditional-all-mass" : "none",
-    primaryReason: reasons[0]?.reason ?? "branch failed",
+    primaryReason: reasons[0]?.reason ?? "lane failed",
     reasons,
     ...(conditionalOnSuccessExpectedDamage !== undefined
       ? { conditionalOnSuccessExpectedDamage }
@@ -369,50 +355,22 @@ function collectFailures(
   };
 }
 
-/**
- * Combine terminal equivalence classes.
- * residual ~ 0: expectedDamage / totalExpected = unit-mass EV; scope unit-mass.
- * residual > 0: expectedDamage / totalExpected = known-mass contribution
- * (concreteMass * E[D|concrete] = sum w_i D_i); scope known-mass-contribution.
- * Never expose E[D|concrete] as unit-mass EV. Never success-renormalize.
- * Residual is disclosed on rng, not zero-filled into a silent full EV.
- * Casts/events from highest-weight successful class (else highest-weight failure).
- */
-export function combineBranchSummaries(
-  branches: readonly Branch[],
+export interface StochasticLane {
+  weight: number;
+  rt: SimulationRuntime;
+  error?: string;
+}
+
+export function combineStochasticSummaries(
+  lanes: readonly StochasticLane[],
   horizonTicks: number | undefined,
   options: SimulateOptions | undefined,
-  sawBranching: boolean,
-  residualWeight = 0,
-  exactness: EngineBranchExactness = "exact",
 ): RotationSummary {
-  const { maxLive, intermediateMax } = branchCapsFromBudget(options?.branchBudget);
-  // Drain unlanded queue with Leng land forks before assembling terminal summaries.
-  let residual = residualWeight;
-  let exact: EngineBranchExactness = exactness;
-  if (branches.some((branch) => (branch.rt.input.procs?.aftershockRank ?? 0) > 0)) {
-    exact = combineExactness(exact, "bounded-approximation");
-  }
-  let forkedAtDrain = false;
-  let drained: Branch[] = [];
-  for (const branch of branches) {
-    const set = drainBranchToEnd(branch, horizonTicks, maxLive, intermediateMax);
-    residual += set.residualWeight;
-    exact = combineExactness(exact, set.exactness);
-    if (set.branches.length > 1) forkedAtDrain = true;
-    const folded = appendWithIntermediateCap(drained, set.branches, maxLive);
-    residual += folded.residualWeight;
-    exact = combineExactness(exact, folded.exactness);
-    drained = folded.branches;
-  }
-  const capped = mergeAndCapBranches(drained, maxLive);
-  residual += capped.residualWeight;
-  exact = combineExactness(exact, capped.exactness);
-  const terminalBranches = capped.branches;
-  const branching = sawBranching || forkedAtDrain || terminalBranches.length > 1;
+  const terminalLanes = [...lanes];
+  const stochastic = terminalLanes.length > 1;
 
-  if (terminalBranches.length === 0) {
-    const failure = emptyFailure("no branches", 1);
+  if (terminalLanes.length === 0) {
+    const failure = emptyFailure("no lanes", 1);
     return {
       ok: false,
       error: failure.primaryReason,
@@ -459,7 +417,7 @@ export function combineBranchSummaries(
       events: [],
       history: {
         kind: "complete",
-        classWeight: 0,
+        historyWeight: 0,
         ticks: 0,
         selectionReason: "sole-terminal",
         eventsReconcileWithWeightedTotals: false,
@@ -476,29 +434,48 @@ export function combineBranchSummaries(
     };
   }
 
-  const parts = terminalBranches.map((branch) => ({
-    weight: branch.weight,
-    summary: finish(branch.rt, branch.error, horizonTicks, options),
+  const parts = terminalLanes.map((lane) => ({
+    weight: lane.weight,
+    summary: finish(lane.rt, lane.error, horizonTicks, options),
   }));
-  // Concrete terminal mass only; residual is disclosed separately (sum ~ 1).
+  // Fixed lanes always carry the complete unit mass.
   const rawMass = parts.reduce((sum, p) => sum + p.weight, 0);
   const failure = collectFailures(parts);
   const successful = parts.filter((p) => p.summary.ok);
-  // Primary mix: every terminal branch. Failed mass never becomes successful.
+  // Primary mix includes every lane. Failed mass never becomes successful.
   // Residual is unexpanded measure - never folded into a concrete survivor state.
   const mixPool = parts;
   const mixWeight = rawMass;
 
-  // Representative history prefers successful class for display; failed mass
-  // is never reclassified as success for ok / totalsScope.
   const representativePool = successful.length > 0 ? successful : parts;
-  const representative = representativePool.reduce((best, part) =>
-    part.weight > best.weight ? part : best,
+  const historyGroups = new Map<
+    string,
+    { weight: number; representative: (typeof representativePool)[number] }
+  >();
+  for (const part of representativePool) {
+    const key = JSON.stringify([
+      part.summary.ok,
+      part.summary.error ?? "",
+      part.summary.casts.map((cast) => [
+        cast.tick,
+        cast.abilityId,
+        cast.actualSpend,
+        cast.adrenalineAfter,
+      ]),
+      part.summary.events.map((event) => [event.tick, event.abilityId, event.family]),
+    ]);
+    const existing = historyGroups.get(key);
+    if (existing) existing.weight += part.weight;
+    else historyGroups.set(key, { weight: part.weight, representative: part });
+  }
+  const representativeGroup = [...historyGroups.values()].reduce((best, group) =>
+    group.weight > best.weight ? group : best,
   );
+  const representative = representativeGroup.representative;
   const selectionReason: HistorySelectionReason =
     successful.length > 0 && failure !== undefined
-      ? "highest-successful-mass"
-      : "highest-probability-mass";
+      ? "most-common-successful-history"
+      : "most-common-history";
   const modal = representative.summary;
   const fixedWindow = modal.metric.type === "fixed-window";
   const denomHorizon =
@@ -509,12 +486,10 @@ export function combineBranchSummaries(
   // Conditional (weight-normalized over concrete) then known-mass = scale * conditional.
   const mix = (f: (s: RotationSummary) => number) => poolMean(mixPool, f);
 
-  const safeResidual = finiteOrZero(residual);
+  const safeResidual = 0;
   const concreteMass = rawMass;
-  const hasResidual = safeResidual > RESIDUAL_FREE_TOLERANCE;
-  // Known-mass scale: multiply conditional means by concreteMass when residual remains.
-  // residual ~ 0 => concreteMass ~ 1 => scale 1 leaves unit-mass EV.
-  const knownMassScale = hasResidual ? concreteMass : 1;
+  const hasResidual = false;
+  const knownMassScale = 1;
   const toKnownMass = (conditional: number) => conditional * knownMassScale;
 
   const damageByTick: Record<number, number> = {};
@@ -524,10 +499,7 @@ export function combineBranchSummaries(
 
   // E[D|concrete] over expanded terminals (success + fail banked).
   const conditionalConcreteMean = mix((s) => s.damage.expectedDamage);
-  // sum w_i D_i (known contribution only; residual unassigned).
   const knownMassExpectedDamage = concreteMass * conditionalConcreteMean;
-  // residual ~ 0: unit-mass EV (= conditional when mass ~ 1).
-  // residual > 0: known-mass contribution only - never put conditional into expectedDamage.
   const expectedDamage = hasResidual ? knownMassExpectedDamage : conditionalConcreteMean;
   const expectedConditionalMin = mix((s) => s.damage.expectedConditionalMin);
   const expectedConditionalMax = mix((s) => s.damage.expectedConditionalMax);
@@ -543,7 +515,7 @@ export function combineBranchSummaries(
   const denominatorTicks = denomHorizon ?? expectedTicks;
   const primaryDps = dpsFrom(expectedDamage, denominatorTicks);
   const ratioOfExpectations = dpsFrom(expectedDamage, expectedTicks);
-  const expectedBranchDps =
+  const expectedLaneDps =
     !fixedWindow && mixPool.length > 1
       ? mix((s) => dpsFrom(s.damage.expectedDamage, s.duration.expectedTicks))
       : undefined;
@@ -552,8 +524,7 @@ export function combineBranchSummaries(
     modal.duration.representativeTicks,
   );
 
-  // Detail level from any terminal runtime (all branches share the request flag).
-  const detail = resolveDetailLevel(terminalBranches[0]?.rt.detailLevel);
+  const detail = resolveDetailLevel(terminalLanes[0]?.rt.detailLevel);
   const wantAnalysis = keepsAnalysisLedgers(detail);
   const wantPerAbility = keepsPerAbilityMap(detail);
   const wantHistory = keepsPresentationHistory(detail);
@@ -583,7 +554,7 @@ export function combineBranchSummaries(
     | "minimumDamage"
     | "maximumDamage"
     | "analysisGroupActivations";
-  // Count fields stay conditional means; damage fields use known-mass scale with residual.
+  // Count and damage fields are lane-weighted means.
   const DAMAGE_EFFECT_FIELDS = new Set<EffectNumericField>([
     "totalDamage",
     "bonusDamage",
@@ -605,6 +576,16 @@ export function combineBranchSummaries(
             const sample = mixPool
               .flatMap((p) => p.summary.analysis.byEffect)
               .find((effect) => effect.id === id)!;
+            const hasMinimumDamage = mixPool.some((part) =>
+              part.summary.analysis.byEffect.some(
+                (effect) => effect.id === id && effect.minimumDamage !== undefined,
+              ),
+            );
+            const hasMaximumDamage = mixPool.some((part) =>
+              part.summary.analysis.byEffect.some(
+                (effect) => effect.id === id && effect.maximumDamage !== undefined,
+              ),
+            );
             const value = (field: EffectNumericField) => {
               const conditional = mix(
                 (summary) => summary.analysis.byEffect.find((e) => e.id === id)?.[field] ?? 0,
@@ -682,12 +663,8 @@ export function combineBranchSummaries(
               dotDamage: value("dotDamage"),
               criticalContribution: value("criticalContribution"),
               capLoss: value("capLoss"),
-              ...(sample.minimumDamage !== undefined
-                ? { minimumDamage: value("minimumDamage") }
-                : {}),
-              ...(sample.maximumDamage !== undefined
-                ? { maximumDamage: value("maximumDamage") }
-                : {}),
+              ...(hasMinimumDamage ? { minimumDamage: value("minimumDamage") } : {}),
+              ...(hasMaximumDamage ? { maximumDamage: value("maximumDamage") } : {}),
               ...(sample.analysisGroupId ? { analysisGroupId: sample.analysisGroupId } : {}),
               ...(sample.analysisGroupActivations !== undefined
                 ? { analysisGroupActivations: value("analysisGroupActivations") }
@@ -697,25 +674,22 @@ export function combineBranchSummaries(
           .sort((a, b) => b.totalDamage - a.totalDamage);
       })();
 
-  const multiClass = parts.length > 1;
-  // Absolute probability mass of the representative class (not share of concrete-only mass).
-  const classWeight = representative.weight;
-  const useRepresentativeHistory = branching || multiClass || residual > RESIDUAL_FREE_TOLERANCE;
-  // Branching merges weight-mix ledgers with one event log: events are not a
-  // safe rebuild source for weighted totals.
+  const multiLane = parts.length > 1;
+  const representativeWeight = representativeGroup.weight;
+  const useRepresentativeHistory = stochastic || multiLane;
   const eventsReconcileWithWeightedTotals =
-    !branching && parts.length === 1 && failure === undefined;
+    !stochastic && parts.length === 1 && failure === undefined;
   const history: HistoryProvenance = useRepresentativeHistory
     ? {
-        kind: "representative-terminal-class",
-        classWeight,
+        kind: "representative-sample-history",
+        historyWeight: representativeWeight,
         ticks: representativeTicks,
         selectionReason,
         eventsReconcileWithWeightedTotals,
       }
     : {
         kind: "complete",
-        classWeight: 1,
+        historyWeight: 1,
         ticks: representativeTicks,
         selectionReason: "sole-terminal",
         eventsReconcileWithWeightedTotals: failure === undefined,
@@ -746,43 +720,41 @@ export function combineBranchSummaries(
   const ok = failure === undefined;
   const error = failure?.primaryReason;
 
-  const resolvedExactness: BranchExactness =
-    exact === "exact" || exact === "merged-exactly"
-      ? safeResidual > RESIDUAL_FREE_TOLERANCE
-        ? "approximated"
-        : "exact"
-      : "approximated";
-  // residual > 0 => known-mass contribution primary; residual ~ 0 => unit-mass EV.
+  const usesExpectedDamageApproximation = terminalLanes.some(
+    (lane) => (lane.rt.input.procs?.aftershockRank ?? 0) > 0,
+  );
+  // Aftershock threshold timing uses expected damage, so it is approximated even with one lane.
+  const resolvedExactness: StochasticExactness = usesExpectedDamageApproximation
+    ? "approximated"
+    : stochastic
+      ? "estimated"
+      : "exact";
   const totalsBasis: DamageTotalsBasis = hasResidual ? "known-mass-contribution" : "unit-mass";
-  const eligibleForRanking = !hasResidual && resolvedExactness === "exact" && ok;
+  const eligibleForRanking =
+    !hasResidual && (resolvedExactness === "exact" || resolvedExactness === "estimated") && ok;
 
-  // Stochastic rng when branching, multi-terminal, or residual mass remains.
+  // One lane is exact when no supported RNG can change later state.
   // probabilityMass/concreteMass = expanded measure only.
   const rng: StochasticRngSummary | undefined =
-    branching ||
-    multiClass ||
-    safeResidual > RESIDUAL_FREE_TOLERANCE ||
-    resolvedExactness !== "exact"
+    stochastic || multiLane || resolvedExactness !== "exact"
       ? {
-          method: "probability-weighted branching",
-          terminalClasses: parts.length,
-          successfulClasses: successful.length,
-          failedClasses: parts.filter((p) => !p.summary.ok).length,
+          method: "deterministic-stratified-ensemble",
+          lanes: parts.length,
+          successfulLanes: successful.length,
+          failedLanes: parts.filter((p) => !p.summary.ok).length,
           probabilityMass: rawMass,
           concreteMass: rawMass,
           residualWeight: safeResidual,
           totalsBasis,
           exactness: resolvedExactness,
           representative: {
-            classWeight,
+            historyWeight: representativeWeight,
             ticks: representativeTicks,
             selectionReason,
-            historyKind: "representative-terminal-class",
+            historyKind: "representative-sample-history",
             eventsReconcileWithWeightedTotals,
           },
           ...(failure !== undefined ? { failure, failedWeight: failure.failedWeight } : {}),
-          representativeClassWeight: classWeight,
-          representativeClassTicks: representativeTicks,
         }
       : undefined;
 
@@ -810,7 +782,27 @@ export function combineBranchSummaries(
           minimumDamage: (poisonRow?.minimumDamage ?? 0) + (poisonRow?.bonusDamage ?? 0),
           expectedDamage: (poisonRow?.totalDamage ?? 0) + (poisonRow?.bonusDamage ?? 0),
           maximumDamage: (poisonRow?.maximumDamage ?? 0) + (poisonRow?.bonusDamage ?? 0),
-          probabilityMass: modal.playerPoison.probabilityMass,
+          cinderbaneContinuationAttempts: mix(
+            (summary) => summary.playerPoison?.cinderbaneContinuationAttempts ?? 0,
+          ),
+          successfulCinderbaneContinuations: mix(
+            (summary) => summary.playerPoison?.successfulCinderbaneContinuations ?? 0,
+          ),
+          ...(stochastic
+            ? {
+                expectedTargetState: {
+                  decayIndex: mix((summary) => summary.playerPoison?.targetState.decayIndex ?? 0),
+                  remainingTargetPoisonTicks: mix(
+                    (summary) => summary.playerPoison?.targetState.remainingTargetPoisonTicks ?? 0,
+                  ),
+                  bikStacks: mix((summary) => summary.playerPoison?.targetState.bikStacks ?? 0),
+                  bikRemainingTicks: mix(
+                    (summary) => summary.playerPoison?.targetState.bikRemainingTicks ?? 0,
+                  ),
+                },
+              }
+            : {}),
+          probabilityMass: 1,
         }
       : undefined;
 
@@ -843,9 +835,7 @@ export function combineBranchSummaries(
       primary: finiteOrZero(primaryDps),
       ratioOfExpectations: finiteOrZero(ratioOfExpectations),
       representativeDps: finiteOrZero(representativeDps),
-      ...(expectedBranchDps !== undefined
-        ? { expectedBranchDps: finiteOrZero(expectedBranchDps) }
-        : {}),
+      ...(expectedLaneDps !== undefined ? { expectedLaneDps: finiteOrZero(expectedLaneDps) } : {}),
     }),
     metric: {
       type: fixedWindow ? "fixed-window" : "natural-completion",

@@ -29,7 +29,6 @@ import {
   hasPassive,
   loadoutFirstNecromancerConjureDamageMult,
   loadoutFirstNecromancerConjureDurationMult,
-  loadoutSetCritChance,
   setDamageModifiers,
   staticEquipmentCritBonus,
   wieldedOffhandKind,
@@ -800,7 +799,6 @@ export interface ResolvedCrit {
   totalCritDamage: number;
   baseCritDamageBonus: number;
   totalCritDamageBonus: number;
-  tumekensCritEnabled: boolean;
   critByHitFor: (
     ability: AbilitySpec,
     crit: Omit<CritLayers, "eligible">,
@@ -865,10 +863,7 @@ export function resolveCrit(
     loadout.perks.biting > 0
       ? bitingCritChanceBonus(loadout.perks.biting, loadout.perks.bitingLevel20)
       : 0;
-  const setCrit = loadoutSetCritChance({
-    equipmentSlots: loadout.equipmentSlots,
-    pieceContribution: setPieceContributionModifier(leagueBundle?.league),
-  });
+  const setCrit = equipment.equipmentEffects.setCritChance.unconditional;
   const configuredCrit = loadout.critChance / 100;
   const critSubtotal =
     configuredCrit + biting + setCrit + equipmentCrit.chance + icyenicCrit + trueEquilibriumCrit;
@@ -909,7 +904,6 @@ export function resolveCrit(
     totalCritDamage: critDamage.totalMultiplier,
     baseCritDamageBonus: critDamage.baseBonus,
     totalCritDamageBonus: critDamage.totalBonus,
-    tumekensCritEnabled: !critsDisabled,
     critByHitFor: (ability, crit) => equipmentCritByHit(equipment.equipmentEffects, ability, crit),
   };
 }
@@ -1045,7 +1039,7 @@ export function resolveCombatRules(
     ...(conservationOfEnergyRefund > 0 ? { conservationOfEnergyRefund } : {}),
     ...(ringOfVigour ? { ringOfVigour: true } : {}),
     // Impatient / Relentless are state-changing RNG: the rotation drivers
-    // branch on them (probability-weighted), never flat expected value.
+    // sample them as state because they change later ability selection.
     impatientRank: loadout.perks.impatient > 0 ? loadout.perks.impatient : 0,
     impatientLevel20: loadout.perks.impatientLevel20,
     relentlessRank: loadout.perks.relentless > 0 ? loadout.perks.relentless : 0,

@@ -19,11 +19,6 @@ import { emitProgress } from "./progressReporter";
 import { noteEval, noteUniqueBar } from "./profiling/counters";
 import { compileEvaluationContext, type CompiledEvaluationContext } from "./compiledContext";
 import { summaryObjectiveIneligibilityReason } from "./objective";
-import {
-  branchFidelityLadderMemoToken,
-  branchFidelityModeForEval,
-  resolveBranchFidelityLadder,
-} from "./branchFidelity";
 import { fitIncumbentBar, regionDenyList } from "./requestContext";
 
 // Same structural fields as the inline simCommon object in solveFromRequest.
@@ -141,10 +136,6 @@ export function createEvaluateFn(args: {
       : useMedium
         ? ("medium" as const)
         : ("short" as const);
-    const branchFidelityMode = branchFidelityModeForEval(scoreMode);
-    // Ladder token includes live caps so a 64-branch policy never reuses a 4096 result.
-    const branchFidelityLadder = resolveBranchFidelityLadder(branchFidelityMode);
-    const branchFidelityToken = branchFidelityLadderMemoToken(branchFidelityLadder);
     // One join for seenBars + evaluation memo key (no second bar.join).
     const key = barKey(bar);
     const peer = options?.coord?.getIncumbent();
@@ -155,7 +146,6 @@ export function createEvaluateFn(args: {
     if (peer?.fullScore != null && peer.fullScore > state.bestFullScore) {
       state.bestFullScore = peer.fullScore;
     }
-    // Memo context includes branch-fidelity ladder (mode + live caps + residual threshold).
     const memoKey = fingerprintEvaluationKey({
       bar,
       barKey: key,
@@ -163,11 +153,7 @@ export function createEvaluateFn(args: {
       horizonTicks: durationTicks,
       profileId: request.profileId,
       customWeights: request.customWeights,
-      context: {
-        base: memoContext,
-        branchFidelityMode,
-        branchFidelityToken,
-      },
+      context: memoContext,
       objectiveVersion: OBJECTIVE_VERSION,
     });
     const memoHit = readEvalMemo(memoKey);
@@ -248,7 +234,6 @@ export function createEvaluateFn(args: {
         : { min: request.minBarSize, max: request.maxBarSize },
       incumbentBaseline: isIncumbentBaseline,
       detailLevel: "score-only",
-      branchFidelityMode,
       allowExpectedDamageApproximation,
     });
     if (useFull) fullEvaluations?.set(key, evaluation);

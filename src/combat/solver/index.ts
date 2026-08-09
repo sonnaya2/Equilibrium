@@ -14,7 +14,7 @@ export {
   type ObjectiveWeights,
   type ObjectiveWindowSpec,
   type ScoreableSummary,
-  type SolverBranchExactness,
+  type SolverStochasticExactness,
   type ObjectiveWindowDpms,
   type ObjectiveScoreOk,
   type ObjectiveScoreFail,
@@ -72,8 +72,8 @@ export {
   scoreFromDamageByTick,
   scoreSummary,
   isFiniteEval,
-  NON_EXACT_BRANCH_EXACTNESS,
-  isNonExactBranchExactness,
+  NON_EXACT_STOCHASTIC_EXACTNESS,
+  isNonExactStochasticExactness,
   summaryEligibleForObjectiveScore,
   exactnessEligibleForExactProof,
 } from "./objective";
@@ -134,30 +134,7 @@ export {
   type EvalFidelity,
   type FidelityBudgetAllocation,
 } from "./fidelity";
-export {
-  DEFAULT_BRANCH_FIDELITY_LADDERS,
-  UI_MAIN_THREAD_BRANCH_FIDELITY_LADDER,
-  UI_RUN_BRANCH_FIDELITY_LADDER,
-  RESIDUAL_FREE_TOLERANCE,
-  resolveBranchFidelityLadder,
-  meetsBranchCompleteness,
-  shouldStopAdaptiveAttempt,
-  simulateWithAdaptiveBranchFidelity,
-  simulateRevolutionForUi,
-  budgetForLiveCap,
-  branchFidelityModeForEval,
-  type BranchFidelityMode,
-  type BranchFidelityLadder,
-  type BranchExactnessRequirement,
-  type BranchFidelityAttemptMeta,
-  type AdaptiveBranchFidelityResult,
-} from "./branchFidelity";
-export {
-  pickBestUiRunProbe,
-  preferredUiRunWorkerCount,
-  simulateRevolutionForUiHybrid,
-  type UiRunProbeResult,
-} from "./uiRunCore";
+export { simulateRevolutionForUi, type StochasticRunMeta, type UiRunResult } from "./uiRunCore";
 export {
   runUiRevolution,
   cancelUiRevolutionWorkers,
@@ -268,10 +245,9 @@ export {
   buildSolverResultHonesty,
   dtoAllowsApply,
   residualMassOfDto,
-  branchExactnessOfDto,
+  stochasticExactnessOfDto,
   type SolverResultHonesty,
 } from "./solverDtoHonesty";
-export { branchFidelityLadderMemoToken, branchFidelityCacheToken } from "./branchFidelity";
 export {
   dualVersionDenyIds,
   styleRequiredAbilityIds,

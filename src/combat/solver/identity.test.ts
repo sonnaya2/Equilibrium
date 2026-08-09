@@ -23,7 +23,7 @@ import {
   type SerializableSolverRequest,
   type SolverResultDTO,
 } from "./worker/serializable";
-import type { ActiveEquipmentEffects } from "../shared/equipment";
+import { activeEquipmentEffects, type ActiveEquipmentEffects } from "../shared/equipment";
 import { stableStringify } from "./fingerprint";
 
 /** Minimal localStorage so rememberSolvedBar / lookupSolvedBar work under node vitest. */
@@ -57,6 +57,7 @@ installMemoryLocalStorage();
 
 const emptyEffects: ActiveEquipmentEffects = {
   activation: "pre-activated-static-loadout",
+  setCritChance: { unconditional: 0, conditional: {} },
   passiveIds: [],
   enchantments: [],
   weaponClass: null,
@@ -223,6 +224,23 @@ describe("fingerprint changes one field at a time", () => {
   it("starting adrenaline", async () => {
     await expectDiff("startingAdrenaline", (r) =>
       withSim(r, (s) => ({ ...s, startingAdrenaline: 50 })),
+    );
+  });
+
+  it("Dracolich resolved effects", async () => {
+    await expectDiff("Dracolich", (r) =>
+      withSim(r, (s) => ({
+        ...s,
+        equipmentIds: ["item:noxious-longbow", "item:dracolich-body"],
+        equipmentEffects: activeEquipmentEffects({
+          style: "ranged",
+          equipmentSlots: {
+            twohand: "item:noxious-longbow",
+            body: "item:dracolich-body",
+          },
+          pieceContribution: { additionalPiecesPerItem: 2 },
+        }),
+      })),
     );
   });
 
@@ -438,6 +456,18 @@ describe("fingerprint changes one field at a time", () => {
           ...s.equipmentEffects,
           enchantments: ["agony"],
           passage: { active: true, agonyActive: true },
+        },
+      })),
+    );
+  });
+
+  it("resolved set crit payload changes the solver identity", async () => {
+    await expectDiff("setCritChance", (r) =>
+      withSim(r, (s) => ({
+        ...s,
+        equipmentEffects: {
+          ...s.equipmentEffects,
+          setCritChance: { unconditional: 0.03, conditional: { sunshine: 0.045 } },
         },
       })),
     );

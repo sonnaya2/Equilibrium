@@ -358,7 +358,12 @@ test("Cinderbanes add recursive poison hits to a rendered 60-second bar", async 
     body: poisonEventText.join("\n"),
     contentType: "text/plain",
   });
-  expect(poisonEventText.some((row) => /0\.\d+ expected occurrences?/.test(row))).toBe(true);
+  await expect(
+    withCinderbanes.dialog.getByText(
+      "Totals are probability-weighted. The event log shows the most common sampled history.",
+    ),
+  ).toBeVisible();
+  expect(poisonEventText.length).toBeGreaterThan(0);
   expect(poisonEventText.some((row) => /\b0 expected occurrences?/.test(row))).toBe(false);
   await withCinderbanes.dialog.screenshot({ path: testInfo.outputPath("cinderbane-analysis.png") });
   await poisonTimeline.screenshot({ path: testInfo.outputPath("cinderbane-timeline.png") });
@@ -754,13 +759,13 @@ test("set thresholds downgrade and disappear with equipped pieces", async ({ pag
   await page.reload();
   await page.getByRole("button", { name: "Gear", exact: true }).click();
   const setCard = page.locator(".set-effect-card").filter({ hasText: "Vestments of havoc" });
-  await expect(setCard).toContainText("2/4");
+  await expect(setCard).toContainText("2 equipped · 2 effective pieces");
   await expect(setCard.getByText("Active", { exact: true })).toBeVisible();
   await expect(setCard.getByText("Set 3", { exact: true })).toBeVisible();
 
   await page.getByRole("button", { name: /^Helmet Hood of the Vestments of Havoc/ }).click();
   await page.getByRole("button", { name: "Clear Helmet" }).click();
-  await expect(setCard).toContainText("1/4");
+  await expect(setCard).toContainText("1 equipped · 1 effective piece");
   await expect(setCard.getByText("Active", { exact: true })).toHaveCount(0);
   await expect(setCard.getByText("Set 2", { exact: true })).toBeVisible();
 

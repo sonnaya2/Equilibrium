@@ -1,5 +1,4 @@
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
-import { notePoisonFutureIntern } from "./poisonFutureProfile";
 import { gainBloodlust } from "../../styles/melee/bloodlust";
 import {
   newMeleeRotationState,
@@ -102,16 +101,19 @@ export interface TargetRuntimeState {
   melee: MeleeTargetEffects;
   /** Haunted debuff from Command Vengeful Ghost autos. */
   haunted: HauntedState;
-  weaponPoison: TargetWeaponPoisonDistribution;
+  weaponPoison: TargetWeaponPoisonSample;
   evolvingToxin: EvolvingToxinState;
+}
+
+export interface TargetWeaponPoisonSample {
+  readonly poison: TargetWeaponPoisonState;
+  readonly immunityDisabledUntilTick: number;
 }
 
 export interface TargetWeaponPoisonState {
   readonly active: boolean;
   readonly expiresAtTick: number;
   readonly effectiveTier: PoisonTier;
-  /** Conditional probability mass for decay indices 0..44; 44 also holds larger zero-damage indices. */
-  readonly decayMass: readonly number[];
   readonly decayIndex: number;
   readonly remainingHits: number;
   readonly cadenceTicks: 8 | 16;
@@ -141,63 +143,6 @@ export interface TargetWeaponPoisonPendingHit {
   readonly multiplicity: TargetWeaponPoisonHitMultiplicity;
 }
 
-export interface TargetWeaponPoisonAtom {
-  readonly id: number;
-  readonly probability: number;
-  readonly poison: TargetWeaponPoisonState;
-  readonly immunityDisabledUntilTick: number;
-}
-
-export interface TargetWeaponPoisonSupport {
-  readonly min: number;
-  readonly max: number;
-}
-
-export interface TargetWeaponPoisonDistribution {
-  readonly atoms: readonly TargetWeaponPoisonAtom[];
-  readonly nextAtomId: number;
-  readonly futureId: number;
-  readonly supportByAtom: Readonly<Record<number, TargetWeaponPoisonSupport>>;
-}
-
-export interface TargetWeaponPoisonFuture {
-  readonly id: number;
-  readonly atoms: readonly TargetWeaponPoisonAtom[];
-  readonly nextAtomId: number;
-}
-
-export interface TargetWeaponPoisonFutureInterner {
-  nextId: number;
-  readonly byKey: Map<string, TargetWeaponPoisonFuture>;
-}
-
-const MAX_INTERNED_POISON_FUTURES = 64;
-
-export function createTargetWeaponPoisonFutureInterner(): TargetWeaponPoisonFutureInterner {
-  return { nextId: 1, byKey: new Map() };
-}
-
-export function internTargetWeaponPoisonFuture(
-  interner: TargetWeaponPoisonFutureInterner,
-  key: string,
-  atoms: readonly TargetWeaponPoisonAtom[],
-  nextAtomId: number,
-): { readonly future: TargetWeaponPoisonFuture; readonly hit: boolean } {
-  const existing = interner.byKey.get(key);
-  if (existing) {
-    notePoisonFutureIntern(true);
-    return { future: existing, hit: true };
-  }
-  const future = { id: interner.nextId++, atoms, nextAtomId };
-  interner.byKey.set(key, future);
-  if (interner.byKey.size > MAX_INTERNED_POISON_FUTURES) {
-    const oldest = interner.byKey.keys().next().value;
-    if (oldest !== undefined) interner.byKey.delete(oldest);
-  }
-  notePoisonFutureIntern(false);
-  return { future, hit: false };
-}
-
 export interface EvolvingToxinState {
   stacks: number;
   expiresAtTick: number;
@@ -208,7 +153,6 @@ export function inactiveTargetWeaponPoisonState(): TargetWeaponPoisonState {
     active: false,
     expiresAtTick: 0,
     effectiveTier: 1,
-    decayMass: [1],
     decayIndex: 0,
     remainingHits: 0,
     cadenceTicks: 16,
@@ -221,19 +165,10 @@ export function inactiveTargetWeaponPoisonState(): TargetWeaponPoisonState {
   };
 }
 
-export function inactiveTargetWeaponPoison(): TargetWeaponPoisonDistribution {
+export function inactiveTargetWeaponPoison(): TargetWeaponPoisonSample {
   return {
-    atoms: [
-      {
-        id: 0,
-        probability: 1,
-        poison: inactiveTargetWeaponPoisonState(),
-        immunityDisabledUntilTick: 0,
-      },
-    ],
-    nextAtomId: 1,
-    futureId: 0,
-    supportByAtom: { 0: { min: 0, max: 0 } },
+    poison: inactiveTargetWeaponPoisonState(),
+    immunityDisabledUntilTick: 0,
   };
 }
 
@@ -244,7 +179,7 @@ export function inactiveEvolvingToxin(): EvolvingToxinState {
 /**
  * The complete simulation state. Everything mutable lives here - never in
  * module globals or captured closure state - and every field is replaced rather
- * than mutated in place, so a branch can share the object safely.
+ * than mutated in place, so runtime snapshots remain isolated.
 
  * Genuinely global clocks stay at the top level; everything else belongs to the
  * style that owns its mechanics, or to the target it was applied to.
@@ -351,31 +286,6 @@ export function newRotationState(
       weaponPoison: inactiveTargetWeaponPoison(),
       evolvingToxin: inactiveEvolvingToxin(),
     },
-  };
-}
-
-export function mergeTargetWeaponPoisonHistories(
-  left: TargetWeaponPoisonDistribution,
-  right: TargetWeaponPoisonDistribution,
-): TargetWeaponPoisonDistribution {
-  if (left.atoms.length !== right.atoms.length) return left;
-  return {
-    ...left,
-    nextAtomId: Math.max(left.nextAtomId, right.nextAtomId),
-    supportByAtom: Object.fromEntries(
-      left.atoms.map((atom, index) => {
-        const other = right.atoms[index]!;
-        const leftSupport = left.supportByAtom[atom.id] ?? { min: 0, max: 0 };
-        const rightSupport = right.supportByAtom[other.id] ?? { min: 0, max: 0 };
-        return [
-          atom.id,
-          {
-            min: Math.min(leftSupport.min, rightSupport.min),
-            max: Math.max(leftSupport.max, rightSupport.max),
-          },
-        ];
-      }),
-    ),
   };
 }
 

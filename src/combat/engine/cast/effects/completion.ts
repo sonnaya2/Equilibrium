@@ -2,6 +2,7 @@ import { grantChannelledMight } from "../../../styles/magic/effects";
 import { schedulePunctureAfterFinish } from "../../resolution/landed/ranged";
 import { patchMagic, patchRanged } from "../../runtime/state";
 import type { CastEffectContext } from "./context";
+import { dracolichInfusionAtCompletion } from "../../../styles/ranged/dracolich";
 
 /**
  * Effects that require the cast's occupancy to have finished. Applied after the
@@ -16,7 +17,8 @@ import type { CastEffectContext } from "./context";
  * Puncture (splintering): sequence starts 1 tick after the applying ability
  * finishes; multi-hit casts share one restart via pendingOwnerCast.
  */
-export function applyCompletionEffects(fx: CastEffectContext): void {
+export function applyCompletionEffects(fx: CastEffectContext, completed: boolean): void {
+  if (!completed) return;
   const { rt, ability, working, candidate, prepared } = fx;
   if (ability.id === "asphyxiate" && working.channelTicks != null) {
     rt.state = patchMagic(rt.state, {
@@ -28,6 +30,12 @@ export function applyCompletionEffects(fx: CastEffectContext): void {
   }
   const finishTick = candidate + prepared.occupancyTicks;
   if (ability.style === "ranged") {
+    if (ability.id === "rapid_fire") {
+      const infusion = dracolichInfusionAtCompletion(rt.input.equipmentEffects, finishTick);
+      if (infusion) {
+        rt.state = patchRanged(rt.state, { dracolichInfusion: infusion });
+      }
+    }
     const puncture = rt.state.ranged.puncture;
     const shouldSchedule =
       puncture.stacks > 0 && puncture.pendingOwnerCast === prepared.snap.castSeq;

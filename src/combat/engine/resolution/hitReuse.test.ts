@@ -25,8 +25,8 @@ function runtimeWithAssault() {
   return rt;
 }
 
-describe("hit reuse under multi-branch land identity", () => {
-  it("memoizes ability modifier programs across equivalent branch casts", () => {
+describe("hit reuse across stochastic lanes", () => {
+  it("memoizes ability modifier programs across equivalent lane casts", () => {
     let builds = 0;
     const rt = createRuntime({
       base: 1000,

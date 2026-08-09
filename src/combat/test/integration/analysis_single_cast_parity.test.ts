@@ -3,6 +3,7 @@
  */
 import { describe, expect, it } from "vitest";
 import { toResolvedCombatModel } from "../../../components/combat/toResolvedCombatModel";
+import { loadoutStats } from "../../../components/combat/loadoutStats";
 import {
   DEFAULT_LOADOUT,
   normalizeLoadout,
@@ -20,6 +21,7 @@ import { resolveAbilityCatalogue } from "../../abilities/catalogue";
 import { simulate } from "../../engine/simulation/simulate";
 import { rotationOf } from "../../engine/simulation/contracts";
 import { MELEE_ABILITIES } from "../../styles/melee/abilities";
+import { MAGIC_ABILITIES } from "../../styles/magic/abilities";
 import { NECROMANCY_ABILITIES, volleyOfSouls } from "../../styles/necromancy/abilities";
 import { FULL_SLAYER_HELMET_ITEM_ID } from "../../shared/slayerHelmet";
 import { SALVE_AMULET_E_ITEM_ID } from "../../shared/salveAmulet";
@@ -52,8 +54,13 @@ function withLoadout(patch: Partial<Loadout> = {}): Loadout {
   });
 }
 
-function abilityById(id: string, style: "melee" | "necromancy" = "melee"): AbilitySpec {
-  const pool = style === "necromancy" ? NECROMANCY_ABILITIES : MELEE_ABILITIES;
+function abilityById(id: string, style: "melee" | "magic" | "necromancy" = "melee"): AbilitySpec {
+  const pool =
+    style === "necromancy"
+      ? NECROMANCY_ABILITIES
+      : style === "magic"
+        ? MAGIC_ABILITIES
+        : MELEE_ABILITIES;
   const found = pool.find((a) => a.id === id);
   if (!found) throw new Error(`missing ability ${id}`);
   return found;
@@ -130,6 +137,45 @@ describe("analyzeSingleCast simple-cast parity", () => {
     );
     const analysis = expectAnalysisMatchesOneCast("icy_tempest", model, abilityById("icy_tempest"));
     expect(analysis.statefulLimitations.some((l) => l.id === "primordial_ice_stacks")).toBe(true);
+  });
+
+  it("carries Tuska set crit from loadout stats through model and simulation", () => {
+    const loadout = withLoadout({
+      style: "magic",
+      startingAdrenaline: 100,
+      equipmentSlots: {
+        helmet: "item:warpriest-of-tuska-helm",
+        body: "item:warpriest-of-tuska-cuirass",
+        legs: "item:warpriest-of-tuska-robe-legs",
+      },
+    });
+    const stats = loadoutStats(loadout, { now: NOW });
+    const model = toResolvedCombatModel(loadout, { now: NOW }, stats);
+    const directAbility = abilityById("magic_attack", "magic");
+    const direct = analyzeSingleCast(model, directAbility);
+    const catalogue = resolveAbilityCatalogue({ strengthCape99: model.strengthCape99 });
+    const simulationInput = toManualSimulateInput(buildSimulationInputBase(model, catalogue), {
+      rotation: rotationOf("magic_attack", "magic_attack"),
+      autoWeave: false,
+    });
+    const full = simulate(simulationInput);
+
+    expect(stats.equipmentEffects.setCritChance).toEqual({
+      unconditional: 0.03,
+      conditional: {},
+    });
+    expect(model.equipmentEffects.setCritChance).toEqual(stats.equipmentEffects.setCritChance);
+    expect(model.crit.chance).toBeCloseTo(stats.critChance, 10);
+    expect(direct.ok).toBe(true);
+    expect(direct.hits[0]!.critChance).toBeCloseTo(stats.critChance, 10);
+    expect(full.ok).toBe(true);
+    const fullHits = full.casts.flatMap((cast) => cast.result.hits);
+    expect(fullHits.length).toBeGreaterThan(0);
+    expect(fullHits.every((hit) => hit.critChance === stats.critChance)).toBe(true);
+
+    const ineligible = analyzeSingleCast(model, abilityById("magma_tempest", "magic"));
+    expect(ineligible.ok).toBe(true);
+    expect(ineligible.hits.every((hit) => hit.critChance === 0)).toBe(true);
   });
 });
 
@@ -209,6 +255,39 @@ describe("overlayAnalysisStatLine", () => {
     expect(overlaid.startingAdrenaline).toBe(model.startingAdrenaline);
     expect(overlaid.crit.disabled).toBe(model.crit.disabled);
     expect(overlaid.crit.damageBonus).toBe(model.crit.damageBonus);
+  });
+
+  it("caps a 100% Critual line-B chance and replaces prior converted excess", () => {
+    const model = toResolvedCombatModel(withLoadout({ critChance: 40 }), {
+      now: NOW,
+      blessingPicks: ["Chaos", "Chaos", "Chaos", "Chaos", "Chaos", "Chaos"],
+    });
+    const modelB = overlayAnalysisStatLine(model, {
+      base: model.base,
+      level: model.level,
+      accuracy: model.accuracy,
+      critChance: 1,
+    });
+    const ability = abilityById("attack");
+    const analysis = analyzeSingleCast(modelB, ability);
+    const summary = oneCastSummary(modelB, ability.id);
+    const inferno = summary.events.find((event) => event.blessingId === "unholy-critual");
+
+    expect(model.crit.critualConvertedDamageBonus).toBeCloseTo(0.05, 10);
+    expect(modelB.crit.chance).toBeCloseTo(0.5, 10);
+    expect(modelB.crit.damageBonus).toBeCloseTo(0.5, 10);
+    expect(modelB.crit.critualConvertedDamageBonus).toBeCloseTo(0.5, 10);
+    expect(analysis.hits[0]?.critChance).toBeCloseTo(0.5, 10);
+    expect(analysis.expected).toBeCloseTo(summary.totalExpected, 6);
+    expect(Number.isFinite(analysis.expected)).toBe(true);
+    expect(inferno).toMatchObject({
+      expectedActivations: 1,
+      occurrenceModel: {
+        kind: "geometric",
+        startProbability: 0.5,
+        continuationProbability: 0.5,
+      },
+    });
   });
 });
 

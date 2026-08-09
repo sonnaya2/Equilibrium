@@ -11,8 +11,8 @@ import { lastCast } from "../../test/helpers/summary";
 import { meetsWeaponRequirement } from "./rules";
 
 /**
- * Regression coverage for the cast-branch preparation boundary: future-tick
- * evaluation uses the advanced state at the candidate tick, branching commits
+ * Regression coverage for cast preparation: future-tick evaluation uses the
+ * advanced state at the candidate tick, and stochastic outcomes commit
  * the same prepared cast as direct execution, and rejection mutates nothing
  * beyond the canonical time advance.
  */
@@ -49,6 +49,9 @@ describe("cast boundary — candidate-tick evaluation", () => {
     expect(corruption.tick).toBe(26);
     // Free cast: 54 − 25 (Rapid Fire) = 29 adrenaline, spend 0 for Corruption.
     expect(corruption.adrenalineAfter).toBe(29);
+    expect(corruption.adrenalineBefore).toBe(29);
+    expect(corruption.adrenalineAfterResources).toBe(29);
+    expect(corruption.adrenalineTransaction?.spendPreventedBy).toBe("deathspore");
   });
 
   it("the same cast pays full price once the window has lapsed at the candidate tick", () => {
@@ -71,8 +74,8 @@ describe("cast boundary — candidate-tick evaluation", () => {
   });
 });
 
-describe("cast boundary — branching commits the prepared cast", () => {
-  it("Relentless branches across a cooldown wait with the candidate-tick spend", () => {
+describe("cast boundary — stateful RNG commits the prepared cast", () => {
+  it("Relentless samples across a cooldown wait with the candidate-tick spend", () => {
     const s = simulate({
       ...meleeInput,
       adrenaline: { relentlessRank: 5 },
@@ -80,9 +83,9 @@ describe("cast boundary — branching commits the prepared cast", () => {
     });
     expect(s.ok).toBe(true);
     // First assault at 18 splits (0.05 refund / 0.95 spend). In the refund
-    // branch the lockout blocks a second point; in the spend branch the second
+    // outcome the lockout blocks a second point; in the spend outcome the second
     // assault (candidate 28, after its 10-tick cooldown) splits again.
-    expect(s.rng?.terminalClasses).toBe(3);
+    expect(s.rng?.lanes).toBe(128);
     // Highest-weight terminal class (0.95², no refunds): 54 − 25 − 25 adrenaline.
     expect(s.casts.at(-1)!.adrenalineAfter).toBe(4);
   });

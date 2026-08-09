@@ -12,10 +12,8 @@ import type { ResolvedDamage } from "../resolution/types";
 import type { ScheduledEvent } from "../runtime/events";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { patchTarget, type TargetWeaponPoisonHitMultiplicity } from "../runtime/state";
-import {
-  applyPlayerPoisonLandOccurrence,
-  type PlayerPoisonLandOccurrence,
-} from "../schedulers/playerPoison";
+import type { PlayerPoisonLandOccurrence } from "../schedulers/playerPoison";
+import { applyPlayerPoisonLandOccurrence } from "../schedulers/playerPoisonState";
 
 function poisonSuccessMultiplicity(
   event: ScheduledEvent<SimulationRuntime>,

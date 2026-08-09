@@ -43,6 +43,7 @@ export interface SolverPackSnapshot {
     chance: number;
     disabled?: boolean;
     damageBonus?: number;
+    critualConvertedDamageBonus?: number;
   };
   adrenaline?: AdrenalineRules;
   procs?: ProcRules;
@@ -53,7 +54,6 @@ export interface SolverPackSnapshot {
   conjureBasicDamageMult?: number;
   conjureDurationMult?: number;
   tumekensPieces?: number;
-  tumekensCritEnabled?: boolean;
   equipmentEffects: ActiveEquipmentEffects;
   league: SerializableLeagueRules;
   context?: CombatContext;
@@ -153,6 +153,7 @@ export function packSimBase(snapshot: SolverPackSnapshot): SerializableRevolutio
       chance: snapshot.crit.chance,
       disabled: snapshot.crit.disabled,
       damageBonus: snapshot.crit.damageBonus,
+      critualConvertedDamageBonus: snapshot.crit.critualConvertedDamageBonus,
     },
     adrenaline: snapshot.adrenaline,
     procs: snapshot.procs,
@@ -164,7 +165,6 @@ export function packSimBase(snapshot: SolverPackSnapshot): SerializableRevolutio
     conjureBasicDamageMult: snapshot.conjureBasicDamageMult,
     conjureDurationMult: snapshot.conjureDurationMult,
     tumekensPieces: snapshot.tumekensPieces,
-    tumekensCritEnabled: snapshot.tumekensCritEnabled,
     equipmentEffects: snapshot.equipmentEffects,
     league: snapshot.league,
     context: snapshot.context,

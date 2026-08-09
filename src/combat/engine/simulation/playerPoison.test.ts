@@ -17,6 +17,11 @@ const profile = (patch: Partial<PlayerPoisonProfile> = {}): PlayerPoisonProfile 
   ...patch,
 });
 
+const expectWithinLanes = (actual: number | undefined, expected: number, lanes = 1) => {
+  expect(actual).toBeDefined();
+  expect(Math.abs(actual! - expected)).toBeLessThanOrEqual(lanes / 128 + 1e-12);
+};
+
 describe("player poison simulation", () => {
   it("keeps one qualifying landed hit at 12.5% inside unit poison mass", () => {
     const result = simulate({
@@ -26,7 +31,7 @@ describe("player poison simulation", () => {
     });
     const poison = result.analysis.byEffect.find((row) => row.id === PLAYER_POISON_EFFECT_ID);
     expect(result.ok).toBe(true);
-    expect(result.rng).toBeUndefined();
+    expect(result.rng).toMatchObject({ lanes: 128, residualWeight: 0, exactness: "estimated" });
     expect(poison?.expectedTriggerRolls).toBe(1);
     expect(poison?.expectedActivations).toBeCloseTo(0.125, 12);
     expect(poison?.expectedSeparateHits).toBeCloseTo(18 * 0.125, 12);
@@ -38,13 +43,7 @@ describe("player poison simulation", () => {
       probabilityMass: 1,
       supportStatus: "partially-modeled",
     });
-    const poisonEvents = result.events.filter(
-      (event) => event.abilityId === PLAYER_POISON_EFFECT_ID,
-    );
-    expect(poisonEvents.some((event) => (event.expectedOccurrences ?? 0) < 1)).toBe(true);
-    expect(
-      poisonEvents.reduce((sum, event) => sum + (event.expectedOccurrences ?? 0), 0),
-    ).toBeCloseTo(result.playerPoison?.separateHits ?? 0, 12);
+    expect(result.rng?.representative.eventsReconcileWithWeightedTotals).toBe(false);
   });
 
   it("uses 17.5% for Laniakea without creating a source by itself", () => {
@@ -53,7 +52,7 @@ describe("player poison simulation", () => {
       rotation: rotationOf("attack"),
       playerPoison: profile({ laniakea: true }),
     });
-    expect(active.playerPoison?.successfulApplications).toBeCloseTo(0.175, 12);
+    expectWithinLanes(active.playerPoison?.successfulApplications, 0.175);
     const inactive = simulate({
       ...baseInput,
       rotation: rotationOf("attack"),
@@ -107,7 +106,26 @@ describe("player poison simulation", () => {
       playerPoison: profile(),
     });
     expect(bik.playerPoison?.expectedDamage).toBe(ordinary.playerPoison?.expectedDamage);
-    expect(bik.playerPoison?.bikStacks).toBe(0);
+    expect(bik.playerPoison?.targetState.bikStacks).toBe(0);
+  });
+
+  it("keeps sampled Bik stacks concrete while exposing stochastic state separately", () => {
+    const result = simulate({
+      ...rangedInput,
+      horizonTicks: 20,
+      rotation: rotationOf("ranged_attack", "ranged_attack", "ranged_attack"),
+      ammo: "bik",
+      playerPoison: profile(),
+    });
+    expect(result.rng).toBeDefined();
+    expect(Number.isInteger(result.playerPoison?.targetState.bikStacks)).toBe(true);
+    expect(Number.isInteger(result.playerPoison?.targetState.bikRemainingTicks)).toBe(true);
+    expect(result.playerPoison?.expectedTargetState).toEqual(
+      expect.objectContaining({
+        bikStacks: expect.any(Number),
+        bikRemainingTicks: expect.any(Number),
+      }),
+    );
   });
 
   it("makes one application attempt per independent Hurricane hit", () => {
@@ -122,51 +140,41 @@ describe("player poison simulation", () => {
   });
 
   it("only Cinderbane turns both simultaneous Hurricane applications into extra hits", () => {
-    const ctx = createCastContext({
+    const result = simulate({
       ...baseInput,
       horizonTicks: 3,
       startingAdrenaline: 100,
+      rotation: rotationOf("hurricane"),
       playerPoison: profile({ cinderbane: true }),
     });
-    expect(ctx.performCast(ctx.byId.get("hurricane")!, 0, false)).toEqual({ ok: true });
-    const result = ctx.finish(undefined, 3);
-    const tickTwoMass = result.events
-      .filter((event) => event.abilityId === PLAYER_POISON_EFFECT_ID && event.tick === 2)
-      .reduce((sum, event) => sum + (event.expectedOccurrences ?? 0), 0);
-    expect(tickTwoMass).toBeCloseTo(0.25, 12);
-    expect(tickTwoMass).not.toBeCloseTo(1 - 0.875 ** 2, 12);
-    expect(
+    expectWithinLanes(result.playerPoison?.separateHits, 0.25, 2);
+    expectWithinLanes(
       result.analysis.byEffect.find((row) => row.id === "hurricane")?.expectedPlayerPoisonHits,
-    ).toBeCloseTo(0.25, 12);
+      0.25,
+      2,
+    );
     expect(result.playerPoison?.probabilityMass).toBeCloseTo(1, 12);
 
-    const ordinary = createCastContext({
+    const ordinaryResult = simulate({
       ...baseInput,
       horizonTicks: 3,
       startingAdrenaline: 100,
+      rotation: rotationOf("hurricane"),
       playerPoison: profile(),
     });
-    expect(ordinary.performCast(ordinary.byId.get("hurricane")!, 0, false)).toEqual({ ok: true });
-    const ordinaryResult = ordinary.finish(undefined, 3);
-    const ordinaryMass = ordinaryResult.events
-      .filter((event) => event.abilityId === PLAYER_POISON_EFFECT_ID && event.tick === 2)
-      .reduce((sum, event) => sum + (event.expectedOccurrences ?? 0), 0);
-    expect(ordinaryMass).toBeCloseTo(1 - 0.875 ** 2, 12);
+    expectWithinLanes(ordinaryResult.playerPoison?.separateHits, 1 - 0.875 ** 2, 2);
   });
 
   it("lands Assault's tick-1 application hit with 12.5% mass at tick 3", () => {
-    const ctx = createCastContext({
+    const result = simulate({
       ...baseInput,
       horizonTicks: 4,
       startingAdrenaline: 100,
+      rotation: rotationOf("assault"),
       playerPoison: profile(),
     });
-    expect(ctx.performCast(ctx.byId.get("assault")!, 0, false)).toEqual({ ok: true });
-    const result = ctx.finish(undefined, 4);
-    const tickThreeMass = result.events
-      .filter((event) => event.abilityId === PLAYER_POISON_EFFECT_ID && event.tick === 3)
-      .reduce((sum, event) => sum + (event.expectedOccurrences ?? 0), 0);
-    expect(tickThreeMass).toBeCloseTo(0.125, 12);
+    expectWithinLanes(result.playerPoison?.separateHits, 0.125);
+    expect(result.damageByTick[3]).toBeGreaterThan(0);
     expect(result.playerPoison?.probabilityMass).toBeCloseTo(1, 12);
   });
 
@@ -195,8 +203,8 @@ describe("player poison simulation", () => {
       rotation: rotationOf("attack"),
       playerPoison: profile(),
     });
-    expect(result.playerPoison?.applicationAttempts).toBeCloseTo(1.05, 12);
-    expect(result.playerPoison?.successfulApplications).toBeCloseTo(0.125 * 1.05, 12);
+    expectWithinLanes(result.playerPoison?.applicationAttempts, 1.05);
+    expectWithinLanes(result.playerPoison?.successfulApplications, 0.125 * 1.05, 2);
     expect(result.playerPoison?.probabilityMass).toBeCloseTo(1, 12);
     const infernos = result.events.filter((event) => event.abilityId === "inferno-of-zamorak");
     expect(infernos).toHaveLength(1);
@@ -230,24 +238,14 @@ describe("player poison simulation", () => {
       rotation: rotationOf("attack"),
       playerPoison: profile(),
     });
-    const poisonHits = result.events.filter((event) => event.abilityId === PLAYER_POISON_EFFECT_ID);
-    const riders = poisonHits.flatMap((event) =>
-      (event.components ?? []).filter(
-        (component) =>
-          component.id === "big-boned" &&
-          component.analysis?.bonusTargetId === PLAYER_POISON_EFFECT_ID,
-      ),
-    );
-    expect(riders).toHaveLength(poisonHits.length);
-    expect(riders.length).toBeGreaterThan(0);
-    expect(
-      riders.every((component) => component.attached && component.hitCapPolicy === "shared"),
-    ).toBe(true);
+    const poison = result.analysis.byEffect.find((row) => row.id === PLAYER_POISON_EFFECT_ID);
+    const bigBoned = result.analysis.byEffect.find((row) => row.id === "big-boned");
+    expect(bigBoned?.totalDamage).toBeGreaterThan(0);
+    expect(bigBoned?.expectedAttachedComponents).toBeGreaterThan(0);
+    expect(poison?.bonusDamage).toBeGreaterThan(0);
+    expect(poison?.bonusDamage).toBeLessThan(bigBoned?.totalDamage ?? 0);
     expect(result.playerPoison?.applicationAttempts).toBe(1);
     expect(result.playerPoison?.successfulApplications).toBeCloseTo(0.125, 12);
-    expect(riders.reduce((sum, component) => sum + component.damage.expected, 0)).toBeGreaterThan(
-      0,
-    );
   });
 
   it("applies poison source and target multipliers to Big Boned poison riders", () => {
@@ -264,15 +262,9 @@ describe("player poison simulation", () => {
         rotation: rotationOf("attack"),
         playerPoison: profile({ kwuarmPotency }),
       });
-      return result.events
-        .filter((event) => event.abilityId === PLAYER_POISON_EFFECT_ID)
-        .flatMap((event) => event.components ?? [])
-        .filter(
-          (component) =>
-            component.id === "big-boned" &&
-            component.analysis?.bonusTargetId === PLAYER_POISON_EFFECT_ID,
-        )
-        .reduce((sum, component) => sum + component.damage.expected, 0);
+      return (
+        result.analysis.byEffect.find((row) => row.id === PLAYER_POISON_EFFECT_ID)?.bonusDamage ?? 0
+      );
     };
     const plain = run(0, false);
     expect(run(4, false)).toBeCloseTo(plain * 1.1, 8);
@@ -336,9 +328,10 @@ describe("player poison simulation", () => {
       [false, 0.125],
       [true, 0.175],
     ] as const) {
-      const ctx = createCastContext({
+      const result = simulate({
         ...baseInput,
         horizonTicks: 17,
+        rotation: rotationOf("attack"),
         playerPoison: profile({
           potion: "none",
           potionUntilTick: 0,
@@ -346,16 +339,15 @@ describe("player poison simulation", () => {
           laniakea,
         }),
       });
-      expect(ctx.performCast(ctx.byId.get("attack")!, 0, false)).toEqual({ ok: true });
-      const result = ctx.finish(undefined, 17);
       const boundedOracle = Array.from({ length: 9 }, (_, index) => chance ** (index + 1)).reduce(
         (sum, value) => sum + value,
         0,
       );
-      expect(result.playerPoison?.successfulApplications).toBeCloseTo(boundedOracle, 10);
-      expect(result.playerPoison?.successfulCinderbaneContinuations).toBeCloseTo(
+      expectWithinLanes(result.playerPoison?.successfulApplications, boundedOracle, 3);
+      expectWithinLanes(
+        result.playerPoison?.successfulCinderbaneContinuations,
         boundedOracle - chance,
-        10,
+        3,
       );
       expect(result.playerPoison?.cinderbaneContinuationChance).toBe(chance);
       expect(result.playerPoison).toMatchObject({
@@ -369,38 +361,34 @@ describe("player poison simulation", () => {
     }
   });
 
-  it("materializes each recursive Cinderbane poison hit at successive 1/8 powers", () => {
+  it("keeps recursive Cinderbane continuation bounded by the simulation horizon", () => {
     const chance = 1 / 8;
-    const ctx = createCastContext({
+    const input = {
       ...baseInput,
       horizonTicks: 18,
+      rotation: rotationOf("attack"),
       playerPoison: profile({
         potion: "none",
         potionUntilTick: 0,
         cinderbane: true,
       }),
-    });
-    expect(ctx.performCast(ctx.byId.get("attack")!, 0, false)).toEqual({ ok: true });
-    const result = ctx.finish(undefined, 18);
+    };
+    const result = simulate(input);
     const poisonHits = result.events.filter((event) => event.abilityId === PLAYER_POISON_EFFECT_ID);
-    expect(poisonHits.map((event) => event.tick)).toEqual([2, 4, 6, 8, 10, 12, 14, 16]);
-    expect(poisonHits.map((event) => event.expectedOccurrences ?? 0)).toEqual(
-      Array.from({ length: 8 }, (_, index) => chance ** (index + 1)),
-    );
-    const conditionalExtraHits =
-      (poisonHits.reduce((sum, event) => sum + (event.expectedOccurrences ?? 0), 0) - chance) /
-      chance;
+    expect(poisonHits.every((event) => event.tick >= 2 && event.tick < 18)).toBe(true);
+    expect(poisonHits.length).toBeLessThanOrEqual(8);
     const finiteOracle = Array.from({ length: 7 }, (_, index) => chance ** (index + 1)).reduce(
       (sum, value) => sum + value,
       0,
     );
-    expect(conditionalExtraHits).toBeCloseTo(finiteOracle, 12);
-    expect(conditionalExtraHits).toBeCloseTo(1 / 7, 6);
-    expect(
-      result.analysis.byEffect.find((row) => row.id === PLAYER_POISON_EFFECT_ID)
-        ?.expectedPlayerPoisonHits,
-    ).toBeCloseTo(chance * finiteOracle, 12);
+    expectWithinLanes(
+      result.playerPoison?.successfulCinderbaneContinuations,
+      chance * finiteOracle,
+      2,
+    );
     expect(result.playerPoison?.probabilityMass).toBeCloseTo(1, 12);
+    expect(result.rng?.residualWeight).toBe(0);
+    expect(simulate(input)).toEqual(result);
   });
 
   it("keeps full-analysis and score-only totals aligned for multi-hit Cinderbane", () => {
@@ -425,19 +413,15 @@ describe("player poison simulation", () => {
     expect(score.damage.concreteMass ?? 1).toBeCloseTo(full.damage.concreteMass ?? 1, 12);
   });
 
-  it("does not spend or discard global branch mass at a one-branch cap", () => {
-    const ctx = createCastContext(
-      {
-        ...baseInput,
-        horizonTicks: 20,
-        startingAdrenaline: 100,
-        playerPoison: profile({ cinderbane: true }),
-      },
-      { maxLiveBranches: 1, maxIntermediateBranches: 1, maximumResidualWeight: 0 },
-    );
-    expect(ctx.performCast(ctx.byId.get("hurricane")!, 0, false)).toEqual({ ok: true });
-    const result = ctx.finish(undefined, 20);
-    expect(result.rng).toBeUndefined();
+  it("keeps poison probability mass inside one stateful runtime", () => {
+    const result = simulate({
+      ...baseInput,
+      horizonTicks: 20,
+      startingAdrenaline: 100,
+      rotation: rotationOf("hurricane"),
+      playerPoison: profile({ cinderbane: true }),
+    });
+    expect(result.rng).toMatchObject({ lanes: 128, residualWeight: 0 });
     expect(result.playerPoison?.probabilityMass).toBeCloseTo(1, 12);
     expect(result.playerPoison?.expectedDamage).toBeGreaterThan(0);
     expect(result.damage.scope).toBe("unit-mass");

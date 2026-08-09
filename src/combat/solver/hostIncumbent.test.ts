@@ -18,6 +18,7 @@ import { emptyBuild } from "@/league";
 
 const emptyEffects: ActiveEquipmentEffects = {
   activation: "pre-activated-static-loadout",
+  setCritChance: { unconditional: 0, conditional: {} },
   passiveIds: [],
   enchantments: [],
   weaponClass: null,
@@ -57,7 +58,7 @@ function agentDto(
       status: "ok",
       fullyValidated: true,
       beatsBar: true,
-      branchExactness: "exact",
+      stochasticExactness: "exact",
       residualMass: 0,
       currentBarScore: Number.NEGATIVE_INFINITY,
       proposedBarScore: partial.score,

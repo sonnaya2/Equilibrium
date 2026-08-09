@@ -23,9 +23,9 @@ function baseInput(patch: Partial<HostCombatResolveInput> = {}): HostCombatResol
     conjureBasicDamageMult: 1,
     conjureDurationMult: 1,
     tumekensPieces: 0,
-    tumekensCritEnabled: true,
     equipmentEffects: {
       activation: EQUIPMENT_SET_ACTIVATION,
+      setCritChance: { unconditional: 0, conditional: {} },
       passiveIds: [],
       enchantments: [],
       weaponClass: null,

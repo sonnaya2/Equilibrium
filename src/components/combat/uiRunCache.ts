@@ -3,11 +3,9 @@
  * Main-thread only; does not share across tabs.
  */
 import type { RotationSummary } from "@/combat/engine/simulation/simulate";
-import type { BranchFidelityMeta } from "./RevoRunResults";
 
 export type UiRunCacheEntry = {
   summary: RotationSummary;
-  meta: BranchFidelityMeta;
 };
 
 const MAX = 12;

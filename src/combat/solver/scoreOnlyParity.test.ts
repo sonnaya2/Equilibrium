@@ -89,7 +89,7 @@ describe("score-only oracle parity (gate)", () => {
     expect(scoreOnly.metrics?.dpm).toBeCloseTo(full.metrics?.dpm ?? NaN, 10);
   });
 
-  it("Leng dual-wield: score-only and full-analysis share sparse atom state", () => {
+  it("Leng dual-wield: score-only and full-analysis share compact state", () => {
     const abilities = MELEE_ABILITIES;
     const sim = {
       base: 1000,
@@ -125,9 +125,8 @@ describe("score-only oracle parity (gate)", () => {
     expect(score.ok).toBe(true);
     expect(score.rng?.residualWeight ?? 0).toBeLessThanOrEqual(1e-12);
     expect(full.rng?.residualWeight ?? 0).toBeLessThanOrEqual(1e-12);
-    // Compact mass is residual-free; exactness exact or merged-exactly.
-    expect(["exact", "merged-exactly"]).toContain(score.rng?.exactness ?? "exact");
-    expect(["exact", "merged-exactly"]).toContain(full.rng?.exactness ?? "exact");
+    expect(score.rng).toBeUndefined();
+    expect(full.rng).toBeUndefined();
     expect(score.totalExpected).toBeGreaterThan(0);
     expect(full.totalExpected).toBeGreaterThan(0);
   });

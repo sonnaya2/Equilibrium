@@ -216,14 +216,9 @@ export function scoreFromDamageByTick(
 }
 
 /** Exactness values that are never rankable as exact objective scores. */
-export const NON_EXACT_BRANCH_EXACTNESS = [
-  "approximated",
-  "bounded-approximation",
-  "truncated",
-  "resampled",
-] as const;
+export const NON_EXACT_STOCHASTIC_EXACTNESS = ["approximated"] as const;
 
-export type NonExactBranchExactness = (typeof NON_EXACT_BRANCH_EXACTNESS)[number];
+export type NonExactStochasticExactness = (typeof NON_EXACT_STOCHASTIC_EXACTNESS)[number];
 
 /** Totals bases that are never unit-mass EV and must not rank. */
 export const NON_UNIT_MASS_TOTALS_BASIS = [
@@ -233,15 +228,10 @@ export const NON_UNIT_MASS_TOTALS_BASIS = [
 
 export type NonUnitMassTotalsBasis = (typeof NON_UNIT_MASS_TOTALS_BASIS)[number];
 
-export function isNonExactBranchExactness(
+export function isNonExactStochasticExactness(
   exactness: string | undefined,
-): exactness is NonExactBranchExactness {
-  return (
-    exactness === "approximated" ||
-    exactness === "bounded-approximation" ||
-    exactness === "truncated" ||
-    exactness === "resampled"
-  );
+): exactness is NonExactStochasticExactness {
+  return exactness === "approximated";
 }
 
 export function isNonUnitMassTotalsBasis(
@@ -262,7 +252,7 @@ export function resolveTotalsBasis(summary: ScoreableSummary): string | undefine
 
 /**
  * Residual at or below this is treated as residual-free for ranking, fidelity, Apply.
- * Shared across objective, adaptive ladders, and DTO honesty.
+ * Shared across objective scoring and DTO honesty.
  */
 export { RESIDUAL_FREE_TOLERANCE };
 
@@ -289,11 +279,8 @@ export function summaryObjectiveIneligibilityReason(
   }
   const exactness = summary.rng?.exactness;
   if (
-    isNonExactBranchExactness(exactness) &&
-    !(
-      options?.allowExpectedDamageApproximation === true &&
-      (exactness === "bounded-approximation" || exactness === "approximated")
-    )
+    isNonExactStochasticExactness(exactness) &&
+    !(options?.allowExpectedDamageApproximation === true && exactness === "approximated")
   ) {
     return `simulation exactness=${exactness}`;
   }
@@ -309,13 +296,12 @@ export function summaryEligibleForObjectiveScore(summary: ScoreableSummary): boo
 }
 
 /**
- * Exact proof labels require exact (or merged-exactly) branch expansion.
- * Residual / approximation never unlock full-objective-global-optimum claims.
+ * Exact proof labels require exact deterministic simulation.
  */
 export function exactnessEligibleForExactProof(exactness: string | undefined): boolean {
   if (exactness === undefined) return true;
-  if (isNonExactBranchExactness(exactness)) return false;
-  return exactness === "exact" || exactness === "merged-exactly";
+  if (isNonExactStochasticExactness(exactness)) return false;
+  return exactness === "exact";
 }
 
 /**

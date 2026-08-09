@@ -18,7 +18,7 @@ import {
 } from "../../solver/worker/revive";
 import type { SerializableRevolutionSimBase } from "../../solver/worker/serializable";
 import { toSerializableUiRunSummary } from "../../solver/worker/uiRunTypes";
-import { simulateUiRunFullAnalysis, simulateUiRunProbe } from "../../solver/uiRunCore";
+import { simulateRevolutionForUi } from "../../solver/uiRunCore";
 
 const attack = MELEE_ABILITIES.find((ability) => ability.id === "attack")!;
 const berserk = MELEE_ABILITIES.find((ability) => ability.id === "berserk")!;
@@ -186,8 +186,7 @@ describe("Tempered Heart timed adrenaline", () => {
     };
     const revolution = simulateRevolution(revoInput, { detailLevel: "full-analysis" });
     const scoreOnly = simulateRevolution(revoInput, { detailLevel: "score-only" });
-    const fullAnalysis = simulateUiRunFullAnalysis(revoInput, 128).summary;
-    const probe = simulateUiRunProbe(revoInput, 128);
+    const fullAnalysis = simulateRevolutionForUi(revoInput).summary;
 
     const serialBase: SerializableRevolutionSimBase = {
       base: baseInput.base,
@@ -222,11 +221,6 @@ describe("Tempered Heart timed adrenaline", () => {
     expect(summarySlice(worker)).toEqual(summarySlice(revolution));
     expect(scoreOnly.totalExpected).toBe(revolution.totalExpected);
     expect(scoreOnly.damageByTick).toEqual(revolution.damageByTick);
-    expect(probe).toMatchObject({
-      ok: true,
-      residualWeight: 0,
-      totalExpected: revolution.totalExpected,
-    });
     expect(summarySlice(wireWorker)).toEqual(summarySlice(revolution));
   });
 

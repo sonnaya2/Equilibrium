@@ -15,7 +15,10 @@ import {
   serializeLeague,
 } from "./revive";
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
-import { EQUIPMENT_SET_ACTIVATION } from "../../shared/equipment";
+import { modifiersFromSources, reviveLeague as hostReviveLeague } from "../../model";
+import { activeEquipmentEffects, EQUIPMENT_SET_ACTIVATION } from "../../shared/equipment";
+import { RANGED_ABILITIES } from "../../styles/ranged/abilities";
+import { simulateRevolution } from "../../engine/simulation/revolution";
 
 const basicAbility: AbilitySpec = {
   id: "melee:slice",
@@ -34,6 +37,7 @@ function sampleSimBase(): SerializableRevolutionSimBase {
     crit: { chance: 0.1, damageBonus: 0 },
     equipmentEffects: {
       activation: EQUIPMENT_SET_ACTIVATION,
+      setCritChance: { unconditional: 0, conditional: {} },
       passiveIds: [],
       enchantments: [],
       weaponClass: null,
@@ -115,6 +119,122 @@ describe("solver worker serializable boundary", () => {
     expect(cloned).toEqual(request);
     expect(isSerializableSimBase(cloned.loadout)).toBe(true);
     expect(requireSimBase(cloned.loadout).base).toBe(1200);
+  });
+
+  it("preserves Critual conversion metadata through worker revival", () => {
+    const sim = {
+      ...sampleSimBase(),
+      crit: {
+        chance: 0.5,
+        damageBonus: 0.05,
+        critualConvertedDamageBonus: 0.05,
+      },
+    } satisfies SerializableRevolutionSimBase;
+    const revived = reviveRevolutionBase(structuredClone(sim));
+
+    expect(revived.crit.critualConvertedDamageBonus).toBeCloseTo(0.05, 12);
+  });
+
+  it("preserves Dracolich effects through clone and worker revival", () => {
+    const effects = {
+      ...activeEquipmentEffects({
+        style: "ranged",
+        equipmentSlots: {
+          twohand: "item:noxious-longbow",
+          body: "item:dracolich-body",
+        },
+        pieceContribution: { additionalPiecesPerItem: 2 },
+      }),
+      setCritChance: { unconditional: 0.03, conditional: { sunshine: 0.045 } },
+    };
+    const sim = {
+      ...sampleSimBase(),
+      equipmentIds: ["item:noxious-longbow", "item:dracolich-body"],
+      equipmentEffects: effects,
+    } satisfies SerializableRevolutionSimBase;
+    const cloned = structuredClone(sim);
+    const revived = reviveRevolutionBase(cloned);
+
+    expect(cloned.equipmentEffects).toEqual(effects);
+    expect(revived.equipmentEffects).toEqual(effects);
+    expect(revived.equipmentEffects?.dracolich).toMatchObject({
+      setId: "dracolich",
+      physicalPieces: 1,
+      effectivePieces: 3,
+      bowEligible: true,
+      infusionDurationTicks: 5,
+    });
+    expect(revived.equipmentEffects?.setCritChance).toEqual({
+      unconditional: 0.03,
+      conditional: { sunshine: 0.045 },
+    });
+  });
+
+  it("keeps main and revived Revolution Rapid Fire results identical", () => {
+    const effects = activeEquipmentEffects({
+      style: "ranged",
+      equipmentSlots: {
+        twohand: "item:noxious-longbow",
+        body: "item:dracolich-body",
+      },
+      pieceContribution: { additionalPiecesPerItem: 2 },
+    });
+    const rapidFire = RANGED_ABILITIES.find((ability) => ability.id === "rapid_fire")!;
+    const rangedAttack = RANGED_ABILITIES.find((ability) => ability.id === "ranged_attack")!;
+    const sim = {
+      ...sampleSimBase(),
+      context: { style: "ranged", ruleset: "equilibrium", targetSize: 1, occupiedTiles: 1 },
+      equipmentIds: ["item:noxious-longbow", "item:dracolich-body"],
+      equipmentEffects: effects,
+      weaponConfiguration: "twohand" as const,
+    } satisfies SerializableRevolutionSimBase;
+    const cloned = structuredClone(sim);
+    const parts = {
+      bar: [rapidFire, rangedAttack],
+      style: "ranged" as const,
+      durationTicks: 20,
+      abilities: [rapidFire, rangedAttack],
+    };
+    const hostLeague = hostReviveLeague(sim.league);
+    const host = simulateRevolution({
+      base: sim.base,
+      level: sim.level,
+      accuracy: sim.accuracy,
+      crit: sim.crit,
+      modifiers: modifiersFromSources(sim.modifierSources, hostLeague),
+      context: sim.context,
+      cap: sim.cap,
+      startingAdrenaline: sim.startingAdrenaline,
+      equipmentIds: sim.equipmentIds,
+      weaponConfiguration: sim.weaponConfiguration,
+      equipmentEffects: sim.equipmentEffects,
+      league: hostLeague,
+      adrenaline: sim.adrenaline,
+      procs: sim.procs,
+      plantedFeet: sim.plantedFeet,
+      preciseRank: sim.preciseRank,
+      bar: parts.bar,
+      style: parts.style,
+      durationTicks: parts.durationTicks,
+      abilities: parts.abilities,
+    });
+    const worker = simulateRevolution(buildRevolutionInput(cloned, parts));
+
+    expect(worker.casts).toEqual(host.casts);
+    expect(worker.casts[1]?.result.hits[0]?.critChance).toBeCloseTo(0.3, 10);
+    const eventResults = (events: typeof host.events) =>
+      events.map((event) => ({
+        tick: event.tick,
+        seq: event.seq,
+        family: event.family,
+        abilityId: event.abilityId,
+        sourceCast: event.sourceCast,
+        hitIndex: event.hitIndex,
+        damage: event.damage,
+        components: event.components,
+      }));
+    expect(eventResults(worker.events)).toEqual(eventResults(host.events));
+    expect(worker.totalExpected).toBe(host.totalExpected);
   });
 
   it("revives league blessingIds into a Set", () => {

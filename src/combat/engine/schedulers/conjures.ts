@@ -32,7 +32,6 @@ import type { CombatModifier, SourceReference } from "../../types";
 import {
   activeEvolvingToxinStacks,
   evolvingToxinPoisonModifier,
-  isTargetPoisonImmune,
   poisonProfileDamageModifier,
 } from "../../poison/mechanics";
 import { isRangedAmmoActive } from "../../styles/ranged/ammoModel";
@@ -41,7 +40,7 @@ import { NO_DAMAGE, recordResolved } from "../resolution";
 import type { AttachedDamageComponent, EventResolution } from "../resolution/types";
 import { scheduleEvent, type SimulationRuntime } from "../runtime/runtime";
 import { patchConjures, patchTarget } from "../runtime/state";
-import { recordConditionalPoisonDamage, refreshPlayerPoisonImmunity } from "./playerPoison";
+import { refreshPlayerPoisonImmunity, playerPoisonDamageAllowed } from "./playerPoisonState";
 import { envenomedPoisonImmunityDisableTicks } from "../../league/ruleset";
 import { attachedResolutionComponent, resolveLeagueAttachedHost } from "../../league/damage";
 
@@ -364,39 +363,17 @@ export function processSpiritEvent(
       haunted: applyHaunted(event.tick, rt.input.base),
     });
   }
-  let eligiblePoisonAtomIds: readonly number[] | undefined;
+  let poisonLanded = true;
   if (live.kind === "poison" && rt.input.targetPoisonImmune === true) {
-    const eligibleAtoms = rt.state.target.weaponPoison.atoms.filter(
-      (atom) =>
-        !isTargetPoisonImmune(
-          rt.input.targetPoisonImmune,
-          atom.immunityDisabledUntilTick,
-          event.tick,
-        ),
-    );
-    const atomIds = eligibleAtoms.map((atom) => atom.id);
-    eligiblePoisonAtomIds = atomIds;
-    const probability = eligibleAtoms.reduce((sum, atom) => sum + atom.probability, 0);
-    recordConditionalPoisonDamage(
-      rt,
-      {
-        ...event,
-        expectedActivations: probability,
-        expectedSeparateHits: probability,
-      },
-      resolution,
-      atomIds,
-    );
+    poisonLanded = playerPoisonDamageAllowed(rt, event.tick);
+    if (poisonLanded) recordResolved(rt, event, resolution);
   } else {
     recordResolved(rt, event, resolution);
   }
-  refreshPlayerPoisonImmunity(
-    rt,
-    event.tick,
-    event.tick + envenomedPoisonImmunityDisableTicks(rt.input.league),
-    1,
-    eligiblePoisonAtomIds,
-  );
+  if (poisonLanded) {
+    const untilTick = event.tick + envenomedPoisonImmunityDisableTicks(rt.input.league);
+    refreshPlayerPoisonImmunity(rt, event.tick, untilTick);
+  }
   rt.spiritEventMeta.delete(event.seq);
   if (live.kind === "poison") {
     // Only the zombie has a poison track, and the type says so.

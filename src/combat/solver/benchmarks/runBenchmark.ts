@@ -36,12 +36,6 @@ import {
   snapshotProfile,
   type SolverProfileSnapshot,
 } from "../profiling/counters";
-import {
-  getBranchProfile,
-  isBranchProfilingEnabled,
-  resetBranchProfile,
-  type BranchProfile,
-} from "../../engine/simulation/branch";
 import { allCases, quickCases, type BenchCaseDef, type BenchCaseId } from "./cases";
 
 export type BenchMode = "quick" | "full";
@@ -67,8 +61,6 @@ export interface BenchCaseResult {
   allocation?: AllocationCounters;
   /** Present when SOLVER_PROFILE=1 (search / solveFromRequest counters). */
   solverProfile?: SolverProfileSnapshot;
-  /** Present when RS3_BRANCH_PROF=1|true (branchCore measure-only). */
-  branchProfile?: BranchProfile;
 }
 
 export interface BenchReport {
@@ -306,7 +298,6 @@ type ProfileExtras = {
   hitPipeline?: HitPipelineCounters;
   allocation?: AllocationCounters;
   solverProfile?: SolverProfileSnapshot;
-  branchProfile?: BranchProfile;
 };
 
 function attachProfiles<T extends object>(row: T, extras: ProfileExtras = {}): T & ProfileExtras {
@@ -321,9 +312,6 @@ function attachProfiles<T extends object>(row: T, extras: ProfileExtras = {}): T
     const active = getActiveSolverProfile();
     if (active?.enabled) out = { ...out, solverProfile: snapshotProfile(active) };
   }
-  if (isBranchProfilingEnabled()) {
-    out = { ...out, branchProfile: { ...getBranchProfile() } };
-  }
   return out;
 }
 
@@ -334,7 +322,6 @@ export async function runBenchCase(def: BenchCaseDef, mode: BenchMode): Promise<
   const bounds = { min: request.minBarSize, max: request.maxBarSize };
   if (isHitPipelineProfilingEnabled()) resetHitPipelineCounters();
   if (isAllocationProfilingEnabled()) resetAllocationCounters();
-  if (isBranchProfilingEnabled()) resetBranchProfile();
 
   try {
     if (mode === "full") {

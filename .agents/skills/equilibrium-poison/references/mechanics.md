@@ -48,7 +48,7 @@ expectedFactor = (minimumFactor + maximumFactor) / 2
 expectedBaseDamage = abilityDamage * tierCoefficient * expectedFactor
 ```
 
-Damage-only RNG stays expected-value in the engine. Preserve minimum and maximum for analysis, but do not create probability branches for the random damage roll. Apply the sourced poison multipliers after the decaying base calculation; keep integer rounding order provisional until a fixture proves it.
+Damage-only RNG stays expected-value in the engine. Preserve minimum and maximum for analysis, but do not sample the random damage roll. Apply the sourced poison multipliers after the decaying base calculation; keep integer rounding order provisional until a fixture proves it.
 
 Required numeric fixtures before modifiers:
 
@@ -62,7 +62,7 @@ Required numeric fixtures before modifiers:
 
 ## Named interactions
 
-- Cinderbane gloves provide the 1/8 application roll when they are the only poison source. With another source active, they raise its tier by one and let poison hits reapply recursively; current Wiki and PVME descriptions do not support a second parallel potion-plus-Cinderbane roll. If already poisoned, success schedules an extra poison hit two ticks later, refreshes the target state, and that hit may continue the chain. For continuation chance `p`, expected hits are `p / (1 - p)`: `1/7` at `p = 1/8`, or `7/33` with Laniakea at `p = 0.175`. Use this only as a test oracle, not as a state-changing EV shortcut.
+- Cinderbane gloves provide the 1/8 application roll when they are the only poison source. With another source active, they raise its tier by one and let poison hits reapply recursively; current Wiki and PVME descriptions do not support a second parallel potion-plus-Cinderbane roll. If already poisoned, success schedules an extra poison hit two ticks later, refreshes the target state, and that hit may continue the chain. For continuation chance `p`, expected hits are `p / (1 - p)`: `1/7` at `p = 1/8`, or `7/33` with Laniakea at `p = 0.175`. Use this only as an aggregate test oracle; runtime state remains one concrete sample per stochastic lane.
 - Cinderbane acts as Weapon poison+ without a potion and adds one tier when a potion is active, up to effective tier 5.
 - Upgraded bone blowpipe supplies inherent tier 1 poison, halves poison damage including Cinderbane hits, and changes the recurring cadence from 16 to 8 ticks. The same 300-tick poison status deals 36 hits instead of 18. It does not double the Cinderbane roll.
 - Laniakea's spear adds 5 percentage points to the single poison application or Cinderbane-continuation chance and multiplies poison damage by 1.05. It modifies an active poison source; do not let it create poison by itself without evidence.

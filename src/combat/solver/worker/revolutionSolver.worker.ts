@@ -47,8 +47,7 @@ async function runUiJob(
     const { requireSimBase, buildRevolutionInput } = await import("./revive");
     const { resolveAbilityCatalogue, resolveAbilitySpecsFromCatalogue } =
       await import("../../abilities/catalogue");
-    const { simulateUiRunProbe, simulateUiRunFullAnalysis } = await import("../uiRunCore");
-    const { UI_RUN_BRANCH_FIDELITY_LADDER } = await import("../branchFidelity");
+    const { simulateRevolutionForUi } = await import("../uiRunCore");
 
     if (cancelled.has(requestId) || runningId !== requestId) {
       post({ type: "cancelled", requestId });
@@ -77,38 +76,16 @@ async function runUiJob(
       abilities: cat.catalogue,
     });
 
-    const live =
-      payload.maxLiveBranches ??
-      UI_RUN_BRANCH_FIDELITY_LADDER.liveCaps[UI_RUN_BRANCH_FIDELITY_LADDER.liveCaps.length - 1]!;
-
-    if (payload.fullAnalysis) {
-      const { summary, meta } = simulateUiRunFullAnalysis(
-        input,
-        live,
-        UI_RUN_BRANCH_FIDELITY_LADDER,
-      );
-      if (cancelled.has(requestId) || runningId !== requestId) {
-        post({ type: "cancelled", requestId });
-        return;
-      }
-      const { toSerializableUiRunSummary } = await import("./uiRunTypes");
-      post({
-        type: "ui_run_result",
-        requestId,
-        result: { kind: "full", summary: toSerializableUiRunSummary(summary), meta },
-      });
-      return;
-    }
-
-    const probe = simulateUiRunProbe(input, live, UI_RUN_BRANCH_FIDELITY_LADDER);
+    const { summary, meta } = simulateRevolutionForUi(input);
     if (cancelled.has(requestId) || runningId !== requestId) {
       post({ type: "cancelled", requestId });
       return;
     }
+    const { toSerializableUiRunSummary } = await import("./uiRunTypes");
     post({
       type: "ui_run_result",
       requestId,
-      result: { kind: "probe", probe },
+      result: { summary: toSerializableUiRunSummary(summary), meta },
     });
   } catch (err) {
     if (cancelled.has(requestId) || runningId !== requestId) {

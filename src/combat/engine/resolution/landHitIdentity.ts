@@ -12,6 +12,7 @@ import {
 } from "../../styles/magic/effects";
 import { burnActive } from "../../styles/magic/burn";
 import { deathsSwiftnessMultiplier } from "../../styles/ranged/effects";
+import { dracolichInfusionCritChance } from "../../styles/ranged/dracolich";
 import { activeBleedCount } from "../../styles/melee/effects";
 import { activeFrostbladesMass } from "../../styles/melee/primordialIce";
 import { findConjure } from "../../styles/necromancy/conjures";
@@ -37,7 +38,7 @@ function b(v: boolean): string {
 
 /**
  * Fingerprint of every land-time input that can change HitResult / attached SW / Haunted.
- * Branches that only differ post-hit (e.g. primordialIce mass alone) collide.
+ * Lanes that only differ after this hit (such as Primordial Ice state) collide.
  */
 export function landHitIdentity(
   rt: SimulationRuntime,
@@ -73,6 +74,8 @@ export function landHitIdentity(
       : 0;
   const might = ability.style === "magic" ? channelledMightCritBonus(mag.channelledMight, at) : 0;
   const ds = ability.style === "ranged" ? deathsSwiftnessMultiplier(ranged.swiftness, at) : 1;
+  const dracolichCrit =
+    ability.style === "ranged" ? dracolichInfusionCritChance(ranged.dracolichInfusion, at) : 0;
   const combust = ability.id === "dragon_breath" && burnActive(t.burns, "combust", at);
   const erBleed =
     hitSpec.dotKind === "bleed" &&
@@ -87,6 +90,12 @@ export function landHitIdentity(
 
   // Equipment effects object identity covers am-zi / am-hej / champion-ring etc.
   const equipId = input.equipmentEffects ? oid(input.equipmentEffects) : 0;
+  const setCritChance = input.equipmentEffects?.setCritChance;
+  const setCritConditional = setCritChance
+    ? Object.entries(setCritChance.conditional)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .flatMap(([key, value]) => [key, value])
+    : [];
 
   return [
     oid(input),
@@ -110,6 +119,7 @@ export function landHitIdentity(
     frostMass,
     b(berserkOn),
     ds,
+    dracolichCrit,
     b(sunOn),
     b(sunSelf),
     concLive,
@@ -122,8 +132,8 @@ export function landHitIdentity(
     input.level,
     input.accuracy,
     input.preciseRank ?? 0,
-    input.tumekensPieces ?? 0,
-    b(input.tumekensCritEnabled !== false),
+    setCritChance?.unconditional ?? 0,
+    ...setCritConditional,
     cap?.cap ?? -1,
     b(!!cap?.bypass),
     ctx?.ruleset ?? "",

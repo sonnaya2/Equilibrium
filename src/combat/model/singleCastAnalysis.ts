@@ -14,11 +14,13 @@ import {
   type AdrenalineTransaction,
 } from "../shared/adrenalineTransaction";
 import { hasPassive } from "../shared/equipment";
+import { resolveLeagueCritAtLand } from "../league/ruleset";
 import { COMMAND_REQUIRES_CONJURE } from "../styles/necromancy/conjures";
 import { isMeleeAbility } from "../styles/melee/abilities";
 import type { HostCombatResolveInput, ResolvedCombatModel } from "./contracts";
 import { buildResolvedCombatModel } from "./resolve";
 import { buildSimulationInputBase, toManualSimulateInput } from "./simulationBase";
+import { reviveLeague } from "./simulationInput";
 
 export type StatefulLimitationId =
   | "active_bleed_count"
@@ -85,16 +87,21 @@ export function hostInputFromResolvedModel(
   const level = line ? Math.min(Math.max(1, line.level), 145) : model.level;
   const accuracy = line ? Math.min(Math.max(0, line.accuracy), 1) : model.accuracy;
   const critChance = line ? Math.min(Math.max(0, line.critChance), 1) : model.crit.chance;
+  const existingCritualConversion = model.crit.critualConvertedDamageBonus ?? 0;
+  const crit = line
+    ? resolveLeagueCritAtLand(reviveLeague(model.league), {
+        chance: critChance,
+        disabled: model.crit.disabled,
+        damageBonus: (model.crit.damageBonus ?? 0) - existingCritualConversion,
+        critualConvertedDamageBonus: 0,
+      })
+    : model.crit;
   return {
     style: model.style,
     base,
     level,
     accuracy,
-    crit: {
-      chance: critChance,
-      disabled: model.crit.disabled,
-      damageBonus: model.crit.damageBonus,
-    },
+    crit,
     adrenaline: model.adrenaline,
     procs: model.procs,
     plantedFeet: model.plantedFeet,
@@ -103,7 +110,6 @@ export function hostInputFromResolvedModel(
     conjureBasicDamageMult: model.conjureBasicDamageMult,
     conjureDurationMult: model.conjureDurationMult,
     tumekensPieces: model.tumekensPieces,
-    tumekensCritEnabled: model.tumekensCritEnabled,
     equipmentEffects: model.equipmentEffects,
     league: model.league,
     context: model.context,

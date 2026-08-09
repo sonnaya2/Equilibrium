@@ -6,10 +6,8 @@ import { RANGED_ABILITIES } from "../../../styles/ranged/abilities";
 import { abilityBehaviorFingerprint } from "../../../shared/abilityFingerprint";
 import { baseInput, magicInput, rangedInput } from "../../../test/fixtures/inputs";
 import { commitCast, prepareSimulationCast } from "../../cast";
-import { createRuntime } from "../../runtime/runtime";
+import { cloneRuntime, createRuntime } from "../../runtime/runtime";
 import { readyChargeCount, maxChargesFor } from "../../runtime/state";
-import { snapshotRuntime } from "../../simulation/branch";
-import { branchKeyStructural } from "../../simulation/branchKey";
 import { rotationOf } from "../../simulation/contracts";
 import { simulateRevolution } from "../../simulation/revolution";
 import { createCastContext, simulate } from "../../simulation/simulate";
@@ -143,48 +141,13 @@ describe("stun-basic charges (Backhand / Binding Shot / Impact)", () => {
     const rt = createRuntime(baseInput);
     const backhand = rt.byId.get("backhand")!;
     expect(castAbility(rt, backhand, 0)).toBe(true);
-    const snap = snapshotRuntime(rt);
+    const snap = cloneRuntime(rt);
     snap.state = {
       ...snap.state,
       charges: { backhand: [99, 100] },
     };
     expect(rt.state.charges.backhand).toEqual([CD_15]);
     expect(snap.state.charges.backhand).toEqual([99, 100]);
-    expect(branchKeyStructural(rt)).not.toBe(branchKeyStructural(snap));
-  });
-
-  it("branch keys merge equivalent charge timelines and split different ones", () => {
-    const a = createRuntime(baseInput);
-    const b = createRuntime(baseInput);
-    const backhand = a.byId.get("backhand")!;
-    castAbility(a, backhand, 0);
-    castAbility(b, backhand, 0);
-    expect(branchKeyStructural(a)).toBe(branchKeyStructural(b));
-
-    castAbility(b, backhand, GCD);
-    expect(branchKeyStructural(a)).not.toBe(branchKeyStructural(b));
-  });
-
-  it("branch keys treat fully recovered charges as never spent", () => {
-    const recovered = createRuntime(baseInput);
-    const never = createRuntime(baseInput);
-    // readyAt <= tick is pruned from the key (same future as never spent).
-    recovered.state = {
-      ...recovered.state,
-      tick: CD_15,
-      charges: { backhand: [CD_15] },
-    };
-    never.state = { ...never.state, tick: CD_15, charges: {} };
-    expect(branchKeyStructural(recovered)).toBe(branchKeyStructural(never));
-
-    // Still recovering stays distinct.
-    recovered.state = {
-      ...recovered.state,
-      tick: 0,
-      charges: { backhand: [CD_15] },
-    };
-    never.state = { ...never.state, tick: 0, charges: {} };
-    expect(branchKeyStructural(recovered)).not.toBe(branchKeyStructural(never));
   });
 
   it("Revolution can spend both Backhand charges before the first recovers", () => {

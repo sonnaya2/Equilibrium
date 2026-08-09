@@ -190,7 +190,6 @@ export interface CalcStats {
   conjureBasicDamageMult?: number;
   conjureDurationMult?: number;
   tumekensPieces?: number;
-  tumekensCritEnabled?: boolean;
   equipmentEffects: ActiveEquipmentEffects;
   equipment: EquipmentStatTotals;
   defence: DefenceStats;
@@ -332,7 +331,6 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     conjureBasicDamageMult: combat.conjureBasicDamageMult,
     conjureDurationMult: combat.conjureDurationMult,
     tumekensPieces: equipment.tumekensPieces,
-    tumekensCritEnabled: crit.tumekensCritEnabled,
     equipmentEffects: equipment.equipmentEffects,
     equipment: equipment.equipmentStats,
     defence: defenceLife.defence,

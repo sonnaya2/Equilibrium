@@ -1,17 +1,16 @@
 import type { AbilityResult, AbilitySpec } from "../../pipeline/calculateAbility";
 import { activateRunicCharge } from "../../styles/magic/runicCharge";
-import { castRejection, candidateTick, resolveCastAbility } from "./rules";
+import { castRejection, candidateTick, resolveCastAbility, rngPointsFor } from "./rules";
 import { scheduleCastEvents } from "./schedule";
 import { applyCastEffects, applyCompletionEffects, castEffectContext } from "./effects";
 import { prepareCast, type PreparedCast } from "./prepare";
-import { advanceToBranches } from "../simulation/landBranch";
+import { advanceTo } from "../runtime/clock";
 import { firstLegalTickFor } from "../runtime/state";
 import type { CastAttempt, CastRng } from "../simulation/contracts";
 import type { CastRecord } from "../simulation/contracts";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { patchMagic } from "../runtime/state";
 import { noteCastsGrowth } from "../../profiling/allocation";
-import { planCastOutcomes, type BranchSet } from "../simulation/branch";
 import { resolveIcyTempest } from "../../styles/melee/icyTempest";
 
 function emptyAbilityResult(): AbilityResult {
@@ -24,26 +23,10 @@ export type { PreparedCast } from "./prepare";
 export type CastPreparation = { ok: true; prepared: PreparedCast } | { ok: false; error: string };
 
 /**
- * Single-runtime spine: after non-Leng stochastic forks, keep the heaviest
- * arm on the caller's `rt` reference. Leng atoms stay coupled on that runtime;
- * mixed Icy Tempest spends use the branched context.
- */
-function adoptHeaviestBranch(rt: SimulationRuntime, set: BranchSet): void {
-  if (set.branches.length === 0) return;
-  const heaviest = set.branches.reduce((a, b) => (a.weight >= b.weight ? a : b));
-  if (heaviest.rt === rt) return;
-  const src = heaviest.rt as unknown as Record<string, unknown>;
-  const dst = rt as unknown as Record<string, unknown>;
-  for (const key of Object.keys(src)) {
-    dst[key] = src[key];
-  }
-}
-
-/**
  * Advance to candidate tick, then validate + prepare. Rejection only advances time;
- * prepareCast is read-only. Pre-cast uses advanceToBranches (sparse Leng atoms).
+ * prepareCast is read-only.
  *
- * Mixed Icy Tempest spend groups require the branched cast context.
+ * Mixed Icy Tempest spend groups must be sampled before preparation.
  */
 export function prepareSimulationCast(
   rt: SimulationRuntime,
@@ -61,8 +44,7 @@ export function prepareSimulationCast(
     candidateTick(rt.state, readyTick),
     firstLegalTickFor(rt.state, castAbility, rt.input.level),
   );
-  const advanced = advanceToBranches({ weight: 1, rt }, candidate);
-  adoptHeaviestBranch(rt, advanced);
+  advanceTo(rt, candidate);
   const rejection = castRejection(
     rt.state,
     castAbility,
@@ -81,15 +63,14 @@ export function prepareSimulationCast(
       rt.state.ringOfVigour,
     );
     if (resolved.outcomes.length > 1) {
-      return { ok: false, error: "Icy Tempest mixed stack state requires a branched cast context" };
+      return { ok: false, error: "Icy Tempest mixed stack state requires a sampled outcome" };
     }
   }
   return { ok: true, prepared: prepareCast(rt, castAbility, candidate) };
 }
 
 /**
- * Commit on one runtime; occupancy advances via advanceToBranches so Leng atoms
- * update on lands. Mixed Icy Tempest casts are handled by the branch planner.
+ * Commit on one runtime; occupancy advances through the canonical clock.
  */
 export function commitCast(
   rt: SimulationRuntime,
@@ -103,9 +84,9 @@ export function commitCast(
   rt.lastCastAdrenalineTransaction = null;
   const completesAt = prepared.candidate + prepared.occupancyTicks;
   rt.endTick = Math.max(rt.endTick, completesAt);
-  const advanced = advanceToBranches({ weight: 1, rt }, completesAt);
-  adoptHeaviestBranch(rt, advanced);
-  applyCompletionEffects(castEffectContext(rt, prepared, rng));
+  const completed = rt.horizon == null || completesAt < rt.horizon;
+  advanceTo(rt, completesAt);
+  applyCompletionEffects(castEffectContext(rt, prepared, rng), completed);
   record.adrenalineAfter = rt.state.adrenaline;
 
   if (tx) {
@@ -137,10 +118,7 @@ export function commitCast(
 }
 
 /**
- * One atomic cast on a single runtime.
- *
- * A single runtime cannot represent mixed Icy Tempest spend groups without
- * inventing a representative arm; branched callers use planCastOutcomes.
+ * One atomic cast on a single stochastic runtime.
  */
 export function performCast(
   rt: SimulationRuntime,
@@ -149,40 +127,57 @@ export function performCast(
   auto: boolean,
   rng?: CastRng,
 ): CastAttempt {
-  const planned = planCastOutcomes({ weight: 1, rt }, ability, readyTick, auto);
-  if (planned.plans.length === 0) {
-    return {
-      ok: false,
-      error: planned.errors[0]?.error ?? `unable to cast ${ability.id}`,
-    };
+  const { ability: castAbility } = resolveCastAbility(ability, {
+    byId: rt.byId,
+    weaponConfiguration: rt.input.weaponConfiguration,
+    equipmentIds: rt.input.equipmentIds,
+    passiveIds: rt.input.equipmentEffects?.passiveIds,
+    league: rt.input.league,
+  });
+  const candidate = Math.max(
+    candidateTick(rt.state, readyTick),
+    firstLegalTickFor(rt.state, castAbility, rt.input.level),
+  );
+  advanceTo(rt, candidate);
+  const rejection = castRejection(
+    rt.state,
+    castAbility,
+    candidate,
+    rt.input.weaponConfiguration,
+    rt.input.equipmentIds,
+    rt.input.equipmentEffects?.passiveIds,
+    rt.byId,
+    rt.input.league,
+  );
+  if (rejection) return { ok: false, error: rejection };
+
+  const prepared =
+    castAbility.id === "icy_tempest"
+      ? (() => {
+          const resolved = resolveIcyTempest(
+            rt.state.melee.primordialIce,
+            candidate,
+            rt.state.ringOfVigour,
+          );
+          const index = rt.stochastic.weightedIndex(
+            "cast:icy-tempest-outcome",
+            resolved.outcomes.map((outcome) => outcome.probability),
+          );
+          return prepareCast(rt, castAbility, candidate, resolved.outcomes[index]!);
+        })()
+      : prepareCast(rt, castAbility, candidate);
+  const sampledRng: Record<string, boolean> = {};
+  for (const point of rngPointsFor(
+    rt.state,
+    prepared.working,
+    prepared.candidate,
+    prepared.spend,
+    rt.input.adrenaline,
+    rt.input.league,
+  )) {
+    sampledRng[point.id] = rt.stochastic.bernoulli(`cast:${point.id}`, point.chance);
   }
-  if (ability.id === "icy_tempest") {
-    const outcomes = new Set(
-      planned.plans.map((plan) =>
-        JSON.stringify({
-          spend: plan.prepared.spend,
-          hits: plan.prepared.working.hits,
-          next: plan.prepared.transitions.find(
-            (transition) => transition.kind === "consumePrimordialIce",
-          ),
-        }),
-      ),
-    );
-    if (outcomes.size > 1) {
-      return { ok: false, error: "Icy Tempest mixed stack state requires a branched cast context" };
-    }
-  }
-  // This single-runtime API has already rejected mixed Icy outcomes.
-  const heaviest = planned.plans.reduce((a, b) => (a.weight >= b.weight ? a : b));
-  // planCastOutcomes may have forked parent rts; adopt the heaviest parent first.
-  if (heaviest.parent.rt !== rt) {
-    adoptHeaviestBranch(rt, {
-      branches: [heaviest.parent],
-      residualWeight: 0,
-      exactness: "exact",
-    });
-  }
-  commitCast(rt, heaviest.prepared, auto, rng ?? heaviest.rng);
+  commitCast(rt, prepared, auto, rng ?? (sampledRng as CastRng));
   return { ok: true };
 }
 

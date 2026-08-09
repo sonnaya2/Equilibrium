@@ -20,6 +20,7 @@ export interface ResolvedCritInput {
   readonly chance: number;
   readonly disabled?: boolean;
   readonly damageBonus?: number;
+  readonly critualConvertedDamageBonus?: number;
 }
 
 /**
@@ -79,7 +80,6 @@ export interface ResolvedCombatModel {
   readonly conjureBasicDamageMult: number;
   readonly conjureDurationMult: number;
   readonly tumekensPieces: number;
-  readonly tumekensCritEnabled: boolean;
 
   readonly target: ResolvedTargetScenario;
   readonly playerPoison: PlayerPoisonProfile;
@@ -119,7 +119,6 @@ export interface HostCombatResolveInput {
   readonly conjureBasicDamageMult?: number;
   readonly conjureDurationMult?: number;
   readonly tumekensPieces?: number;
-  readonly tumekensCritEnabled?: boolean;
   readonly equipmentEffects: ActiveEquipmentEffects;
   readonly league: SerializableLeagueRules;
   readonly context?: CombatContext;

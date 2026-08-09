@@ -107,7 +107,7 @@ describe("completion effects wait for the channel", () => {
     // Cast-start transitions alone must not award the channel's completion buff.
     expect(rt.state.magic.channelledMight).toEqual(newChannelledMight());
 
-    applyCompletionEffects(castEffectContext(rt, prepared));
+    applyCompletionEffects(castEffectContext(rt, prepared), true);
     expect(rt.state.magic.channelledMight.startsAtTick).toBe(
       prepared.candidate + prepared.occupancyTicks,
     );

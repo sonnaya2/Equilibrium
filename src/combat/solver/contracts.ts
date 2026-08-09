@@ -3,15 +3,15 @@ import type { AdrenalineRules } from "../engine/simulation/contracts";
 import type { ResolvedLeagueRules } from "../league/ruleset";
 
 /** Bumped when evaluation inputs change shape (e.g. Basic Attack subtype). */
-export const SOLVER_SCHEMA_VERSION = 8 as const;
+export const SOLVER_SCHEMA_VERSION = 10 as const;
 
 /**
  * Bumped when objective math or score tagging semantics change.
  * Included in eval cache keys so search/full archives never mix scales.
- * v3: residualWeight / non-exact branch exactness hard-fail scoring.
  * v4: residual / known-mass not rankable on explore either.
+ * v5: fixed-lane stateful RNG replaces adaptive global enumeration.
  */
-export const OBJECTIVE_VERSION = 4 as const;
+export const OBJECTIVE_VERSION = 5 as const;
 
 export type Bar = readonly string[];
 
@@ -84,11 +84,9 @@ export interface ObjectiveWindowSpec {
 }
 
 /**
- * Branch expansion exactness (mirrors engine BranchExactness).
- * Solver must not rank residual / approximation as exact proof.
+ * Stochastic model exactness.
  */
-export type SolverBranchExactness =
-  "exact" | "merged-exactly" | "bounded-approximation" | "truncated" | "resampled" | "approximated";
+export type SolverStochasticExactness = "exact" | "estimated" | "approximated";
 
 /**
  * Machine-readable primary totals basis (mirrors engine damage.scope / rng.totalsBasis).
@@ -137,7 +135,7 @@ export interface ScoreableSummary {
   };
   rng?: {
     failedWeight?: number;
-    /** Cap residual mass; residual > 0 means approximated expansion. */
+    /** Fixed-lane invariant: zero. */
     residualWeight?: number;
     /** Concrete expanded measure (success + fail). Prefer over probabilityMass. */
     concreteMass?: number;
@@ -145,7 +143,7 @@ export interface ScoreableSummary {
     probabilityMass?: number;
     /** Same tokens as damage.scope. Prefer when present. */
     totalsBasis?: SolverDamageTotalsBasis | string;
-    exactness?: SolverBranchExactness | string;
+    exactness?: SolverStochasticExactness | string;
   };
 }
 
@@ -443,7 +441,13 @@ export interface RevolutionEvalSimBase {
   base: number;
   level: number;
   accuracy: number;
-  crit: { chance: number; disabled?: boolean; damageBonus?: number; guaranteed?: boolean };
+  crit: {
+    chance: number;
+    disabled?: boolean;
+    damageBonus?: number;
+    critualConvertedDamageBonus?: number;
+    guaranteed?: boolean;
+  };
   /** Full AbilitySpec[] at runtime; PoolAbility is the documented minimum. */
   abilities: readonly PoolAbility[];
   equipmentIds?: readonly string[];
@@ -474,23 +478,6 @@ export interface RevolutionEvalRequest {
    * Solver search/session passes score-only for ranking evals.
    */
   detailLevel?: EvalDetailLevel;
-  /**
-   * Adaptive branch-width fidelity. When set, simulate at progressive live caps
-   * until residual/exactness meet the mode ladder (or ladder exhausts -> unrankable).
-   * Omitted: single-shot default budget (64 live) - tests/UI stay cheap.
-   */
-  branchFidelityMode?: "exploratory" | "medium" | "full";
-  /** Optional ladder overrides for profiling / tests. */
-  branchFidelityOverrides?: Partial<
-    Record<
-      "exploratory" | "medium" | "full",
-      {
-        liveCaps?: readonly number[];
-        maximumResidualWeight?: number;
-        exactness?: "any" | "exact-or-merged";
-      }
-    >
-  >;
   /** Internal solver allowance for the engine's expected-charge Aftershock model. */
   allowExpectedDamageApproximation?: boolean;
 }
@@ -537,17 +524,4 @@ export interface RevolutionBarEvaluation<
     conditionalConcreteMean?: number;
   };
   profileId: ObjectiveProfileId;
-  /** Present when adaptive branch fidelity ran. */
-  branchFidelity?: {
-    mode: "exploratory" | "medium" | "full";
-    attempts: number;
-    finalBudget: {
-      maxLiveBranches: number;
-      maxIntermediateBranches: number;
-      maximumResidualWeight: number;
-    };
-    complete: boolean;
-    residualWeight: number;
-    exactness?: string;
-  };
 }

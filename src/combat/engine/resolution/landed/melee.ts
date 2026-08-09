@@ -208,7 +208,7 @@ export function onMeleeHitLanded(
   if (mayStack) addParasiteStack(rt, event);
 
   // Leng stack / Frostblades RNG is probability-weighted in expandLengOnLand
-  // (simulation/landBranch.ts), not a per-seq hash roll.
+  // Primordial Ice keeps a compact distribution until Icy Tempest samples a coupled outcome.
 }
 
 function applyHurricaneTargetCdr(

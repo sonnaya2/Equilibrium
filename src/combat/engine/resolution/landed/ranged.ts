@@ -17,6 +17,7 @@ import type { ResolvedDamage } from "../types";
 import type { ScheduledEvent } from "../../runtime/events";
 import { scheduleEvent, type SimulationRuntime } from "../../runtime/runtime";
 import { gainAdrenaline, patchRanged } from "../../runtime/state";
+import { dracolichAdrenalinePerRapidFireHit } from "../../../styles/ranged/dracolich";
 import { attachedResolutionComponent, resolveLeagueAttachedRawHost } from "../../../league/damage";
 import { targetAndPostHitModifiers } from "../modifiers";
 
@@ -133,6 +134,10 @@ export function onRangedHitLanded(
   ability: AbilitySpec,
   damage: ResolvedDamage,
 ): void {
+  if (ability.id === "rapid_fire") {
+    const grant = dracolichAdrenalinePerRapidFireHit(rt.input.equipmentEffects);
+    if (grant > 0) rt.state = gainAdrenaline(rt.state, grant);
+  }
   const fleeting = rt.input.equipmentIds?.some(
     (id) => id === "item:fleeting-boots" || id === "item:enhanced-fleeting-boots",
   );

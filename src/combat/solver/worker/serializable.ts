@@ -112,6 +112,7 @@ export interface SerializableRevolutionSimBase {
     chance: number;
     disabled?: boolean;
     damageBonus?: number;
+    critualConvertedDamageBonus?: number;
     guaranteed?: boolean;
   };
   adrenaline?: AdrenalineRules;
@@ -127,7 +128,6 @@ export interface SerializableRevolutionSimBase {
   conjureBasicDamageMult?: number;
   conjureDurationMult?: number;
   tumekensPieces?: number;
-  tumekensCritEnabled?: boolean;
   equipmentEffects: ActiveEquipmentEffects;
   league: SerializableLeagueRules;
   context?: CombatContext;
@@ -272,7 +272,7 @@ export interface SolverResultHonestyDTO {
   status: "ok" | "degraded" | "failed";
   fullyValidated: boolean;
   beatsBar: boolean;
-  branchExactness: string | null;
+  stochasticExactness: string | null;
   residualMass: number;
   currentBarScore: number;
   proposedBarScore: number;
@@ -303,7 +303,7 @@ export interface SolverResultDTO {
    * Prefer these over digging through proof notes for gates.
    */
   honesty?: SolverResultHonestyDTO;
-  /** Winner residual / branch exactness when disclosed (feeds proof chrome). */
+  /** Winner stochastic metadata when disclosed. */
   rng?: {
     residualWeight?: number;
     exactness?: string;

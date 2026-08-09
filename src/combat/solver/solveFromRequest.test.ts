@@ -19,6 +19,7 @@ import { baseInput } from "../test/fixtures/inputs";
 
 const emptyEffects: ActiveEquipmentEffects = {
   activation: EQUIPMENT_SET_ACTIVATION,
+  setCritChance: { unconditional: 0, conditional: {} },
   passiveIds: [],
   enchantments: [],
   weaponClass: null,
@@ -75,7 +76,7 @@ function nakedRequest() {
  * pool, product min bar size. This is the path that freezes/fails when naked still works.
  */
 function complicatedRequest() {
-  // Balance→Chaos→Chaos grants big-boned, abyssal-cinders, avernic-rampage (state-branching).
+  // Balance→Chaos→Chaos grants Big Boned, Abyssal Cinders, and Avernic Rampage.
   const blessingPicks = [
     "Balance",
     "Chaos",
@@ -135,7 +136,7 @@ function complicatedRequest() {
       equipmentIds: ["item:vestments", "item:mainhand", "item:offhand"],
       weaponConfiguration: "dualwield",
       startingAdrenaline: 100,
-      // Impatient + Relentless force state-changing RNG branches - the freeze/OOM path.
+      // Impatient + Relentless exercise state-changing RNG across a long solve.
       adrenaline: {
         abilityGainMultiplier: 1.1,
         basicGainMultiplier: 1,
@@ -194,10 +195,14 @@ describe("solveFromRequest", () => {
   it("solves Aftershock requests with an honest expected-charge assumption", async () => {
     const request = nakedRequest();
     const loadout = request.loadout as SerializableRevolutionSimBase;
+    const aftershockLoadout = {
+      ...loadout,
+      procs: { aftershockRank: 4, cracklingRank: 0 },
+    };
     const aftershockRequest = {
       ...request,
       exploreDurationTicks: 50,
-      loadout: { ...loadout, procs: { aftershockRank: 4, cracklingRank: 0 } },
+      loadout: aftershockLoadout,
     };
     const result = await solveFromRequest(aftershockRequest);
     const clonedResult = await solveFromRequest(structuredClone(aftershockRequest));
@@ -216,23 +221,24 @@ describe("solveFromRequest", () => {
       durationTicks: 500,
       pool,
       sim: {
-        ...loadout,
+        ...aftershockLoadout,
         abilities: allEngineSpecs(),
         league,
       },
       profileId: "balanced",
       size: { min: 3, max: 6 },
       detailLevel: "full-analysis",
-      branchFidelityMode: "full",
       allowExpectedDamageApproximation: true,
     });
     expect(evaluated.ok).toBe(true);
+    expect(evaluated.summary?.rng?.exactness).toBe("approximated");
     const aftershockSimulation = simulate({
       ...baseInput,
       procs: { aftershockRank: 4, cracklingRank: 0 },
       rotation: rotationOf(...Array(84).fill("attack")),
     });
     expect(aftershockSimulation.perAbility.aftershock).toBeGreaterThan(0);
+    expect(aftershockSimulation.rng?.exactness).toBe("approximated");
     expect(result.assumptions).toContain(
       "Aftershock charge threshold timing uses expected landed damage; exact damage-roll charge modeling is not yet implemented.",
     );
@@ -327,7 +333,7 @@ describe("solveFromRequest", () => {
       expect(explore.reasons.length).toBeGreaterThan(0);
     }
 
-    // Full-horizon unit (branch cap must keep Avernic/Impatient/Relentless bounded).
+    // Full-horizon unit must keep Avernic, Impatient, and Relentless bounded.
     const full = evaluateRevolutionBar({
       bar,
       style: "melee",

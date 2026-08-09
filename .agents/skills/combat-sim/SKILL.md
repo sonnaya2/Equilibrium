@@ -22,24 +22,24 @@ src/combat/engine/
   runtime/       clock, per-run mutable runtime, event queue, RotationState
   resolution/    land-time damage calculation
     landed/      on-hit state transitions, by style
-  simulation/    drivers, branching, contracts, summaries
+  simulation/    fixed-lane drivers, contracts, summaries
   schedulers/    autonomous actors (conjures)
 ```
 
 The boundaries that make it work:
 
 - **Preparation is read-only.** `cast/prepare.ts` computes everything the cast needs against the advanced state and records each implied mutation as a `PreparedTransition` variant. A new mechanic adds a variant, not another boolean on `PreparedCast`.
-- **A rejected cast mutates nothing** beyond the canonical time advance — no resources, cooldowns, scheduled events, or cast records. `prepareSimulationCast` is the single boundary where readiness and affordability are decided, shared by the manual driver, Revolution, and the branch layer.
+- **A rejected cast mutates nothing** beyond the canonical time advance — no resources, cooldowns, scheduled events, or cast records. `prepareSimulationCast` is the single boundary where readiness and affordability are decided, shared by manual and Revolution lanes.
 - **Cast effects are split by lifecycle and by style.** `cast/effects/` holds prepared transitions, cooldowns, resources, completion, and one module per style. A cast has exactly one style, so style modules never interleave; effects needing a finished channel belong in `completion.ts`, applied after advancing through occupancy.
 - **Resolution calculates; recording writes.** Resolvers return an `EventResolution` and touch no runtime ledger. `resolution/record.ts` is the orchestration boundary that writes totals, per-ability ledgers, hit details and the event log, then dispatches domain handlers: `accounting.ts` (ledgers), `league/blessingDamage.ts`, `procs/invention.ts` (Crackling/Aftershock), and `landed/` (style on-hit state).
 - **`resolution/landed/` applies on-hit state**, dispatched to the style that owns it, and only for real hits — attached components, conjure autos, poison ticks and procs are excluded by the caller.
 - **Runtime state is grouped by combat style and target.** `RotationState` carries the genuinely global clocks (`tick`, `adrenaline`, `cooldowns`, `relentlessUntilTick`) plus one bucket per style and one for the target. Each style's state and its constructor live in that style's module, so the engine composes state rather than declaring it. Debuffs the simulation put on the target (burns, Bloat) live in `target`, not in player state.
-- **Every state write goes through a patch helper** (`patchMelee`, `patchRanged`, `patchMagic`, `patchNecro`, `patchConjures`, `patchTarget`). No nested object is mutated in place, so a branch snapshot stays isolated.
+- **Every state write goes through a patch helper** (`patchMelee`, `patchRanged`, `patchMagic`, `patchNecro`, `patchConjures`, `patchTarget`). No nested object is mutated in place, so lane state and tail previews stay isolated.
 - **Conjures use capability-specific discriminated types.** `ActiveConjure` carries exactly the tracks a spirit has — the skeleton's auto track and Rage, the zombie's auto and poison tracks, the ghost's auto, the phantom's neither. A poison track on a skeleton is a compile error, not a test someone has to remember. Never reintroduce a shared shape with sentinel values or a runtime `id ===` guard standing in for a type.
 - **Damage-over-time classification is declared, not inferred.** An `AbilityHit` carries an explicit `dot` flag and the scheduler classifies from it. Landing late and being crit-ineligible are two unrelated axes and neither implies DoT: Corruption Shot's first bleed tick lands on the cast tick and is still DoT; Magma Tempest lands over 16 ticks, cannot crit, and is still a direct hit. Classification is decided once, where the event is scheduled, and passed to the resolver.
 - **`src/combat/index.ts` is the deliberate external API.** It must name every module an outside consumer may reach for. `cast/`, `resolution/`, `runtime/` and `schedulers/` are internal; nothing outside `src/combat/` imports them.
 
-`src/combat/rotation/` no longer exists. Do not recreate it, `castEffects.ts`, the old flat `resolution.ts`, a flat eighteen-field `RotationState`, or a single conjure shape with unusable fields. If a module is growing into a dispatcher that touches every mechanic, split it along these seams instead of adding another branch to it.
+`src/combat/rotation/` no longer exists. Do not recreate it, `castEffects.ts`, the old flat `resolution.ts`, a flat eighteen-field `RotationState`, or a single conjure shape with unusable fields. If a module is growing into a dispatcher that touches every mechanic, split it along these seams instead of adding another conditional to it.
 
 Two more structural rules, for the same reason:
 
@@ -159,7 +159,7 @@ Do not flatten all randomness into expected damage.
 
 Use deterministic expected value only when the random outcome changes damage but does **not** change future state, event topology, or cast legality.
 
-Use probability-weighted state branching when randomness changes any of the following:
+Use one concrete sampled outcome per deterministic stratified lane when randomness changes any of the following:
 
 - adrenaline or another spendable resource;
 - cooldowns or active windows;
@@ -168,11 +168,13 @@ Use probability-weighted state branching when randomness changes any of the foll
 - target state used by later mechanics;
 - future cast requirements or legality.
 
-Merge equivalent states to control growth. Use seeded Monte Carlo only when exact branching is unreasonably expensive. Any approximation must expose its method and assumptions in tests and result metadata.
+The simulator automatically uses one lane when no supported RNG can change later state. Otherwise the canonical production ensemble is 128 lanes with a fixed seed. Each named RNG stream is counter-based and stratified across lanes. Do not add a live-state cap, an adaptive lane ladder, survivor renormalization, or discarded probability mass. A fixed-window result covers unit mass and reports `residualWeight: 0`.
 
-**Branch-relevant event provenance belongs in the equivalence signature.** Two branches are equivalent when their `RotationState`, pending-event signature, and run counters match. Every field of a pending event that can change how it resolves belongs in that signature — `derivedFrom` included, since tails deriving from different source hits resolve to different damage and are not the same branch. Adding such a field to `ScheduledEvent` means adding it to the signature in the same change; omitting it silently merges branches that were never equivalent, and the totals are then wrong in a way no damage assertion will catch. `resolve` closures stay out: equivalent branches scheduled identical events from identical casts.
+Damage, per-ability totals, `damageByTick`, and analysis counts are lane-weighted means. The public cast/event arrays are the most common sampled history; they are concrete integer histories and do not reconcile with aggregate totals when `history.eventsReconcileWithWeightedTotals` is false.
 
-**Historical damage ledgers are not future state.** `totalExpected` / `totalMin` / `totalMax` / `perAbility` / `damageByTick` and event/cast logs must not appear in the branch equivalence key: `mergePair` already weight-averages those ledgers. Two branches with identical future state and different past damage must merge; two with different queues or `RotationState` must not.
+`createCastContext` is a one-lane diagnostic, not an expected-value API. Use `simulate` or `simulateRevolution` whenever a test or product result asserts stochastic expectations.
+
+Every approximation must be explicit. Fixed-lane state-changing outcomes are `estimated`; deterministic or closed-form damage-only quantities may be exact. Validate important workloads against an independent oracle and keep total damage within the documented product tolerance.
 
 ## Resource clocks and lockouts
 
@@ -263,7 +265,7 @@ Use relevant cases including:
 - stack spend, expiry, rebuild, and lockout boundaries;
 - sequence success, missing predecessor, and expiration;
 - simultaneous events with deterministic ordering;
-- state-neutral expected value versus state-changing RNG branches;
+- state-neutral expected value versus state-changing sampled lanes;
 - autonomous scheduler plus command interaction;
 - events landing exactly before, at, and after the horizon;
 - ruleset `"base"` versus `"equilibrium"`;

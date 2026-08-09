@@ -24,7 +24,6 @@ describe("uiRunCache", () => {
     expect(getUiRunCache("a")).toBeNull();
     setUiRunCache("a", {
       summary: fakeSummary(1),
-      meta: { maxLiveBranches: 128, residualWeight: 0, attempts: 2 },
     });
     expect(getUiRunCache("a")?.summary.totalExpected).toBe(1);
   });
@@ -33,7 +32,6 @@ describe("uiRunCache", () => {
     for (let i = 0; i < 14; i++) {
       setUiRunCache(`k${i}`, {
         summary: fakeSummary(i),
-        meta: { maxLiveBranches: 64, residualWeight: 0 },
       });
     }
     expect(getUiRunCache("k0")).toBeNull();

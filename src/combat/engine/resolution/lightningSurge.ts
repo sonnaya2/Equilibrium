@@ -2,13 +2,14 @@ import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import {
   LIGHTNING_SURGE_BAND,
   lightningSurgeExpected,
-  tumekensSunshineCritChance,
+  sunshineActive,
 } from "../../styles/magic/effects";
 import type { CastSnapshot } from "../cast/snapshot";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { landTimeModifiers } from "./modifiers";
 import { NO_DAMAGE, type EventResolution } from "./types";
 import { attachedResolutionComponent, resolveLeagueAttachedHost } from "../../league/damage";
+import { resolveLeagueCritAtLand } from "../../league/ruleset";
 
 /**
  * Resolve an Instability Lightning Surge proc at its own land tick: EV = the
@@ -34,6 +35,17 @@ export function resolveLightningSurge(
   const { critLayers } = snap;
   // Equipment proc: never onHitGear (Slayer/Salve). Not recursive proc-eligible.
   const provenance = { kind: "equipment_proc" as const, detail: "lightning_surge" };
+  const rawCrit = {
+    ...critLayers,
+    chance:
+      critLayers.chance +
+      (state.magic.sunshine.grantedByCast !== snap.castSeq &&
+      sunshineActive(state.magic.sunshine, at)
+        ? (input.equipmentEffects?.setCritChance?.conditional.sunshine ?? 0)
+        : 0),
+    eligible: true,
+  };
+  const crit = resolveLeagueCritAtLand(input.league, rawCrit);
   const host = resolveLeagueAttachedHost({
     rules: input.league,
     source: provenance,
@@ -42,20 +54,7 @@ export function resolveLightningSurge(
     band: LIGHTNING_SURGE_BAND,
     level: input.level,
     accuracy: input.accuracy,
-    crit: {
-      ...critLayers,
-      chance:
-        critLayers.chance +
-        (input.tumekensCritEnabled === false
-          ? 0
-          : tumekensSunshineCritChance(
-              input.tumekensPieces ?? 0,
-              state.magic.sunshine,
-              at,
-              snap.castSeq,
-            )),
-      eligible: true,
-    },
+    crit,
     modifiers,
     provenance,
     context: {

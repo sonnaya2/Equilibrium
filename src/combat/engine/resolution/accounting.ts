@@ -8,7 +8,12 @@ import {
   keepsPerAbilityMap,
   keepsPresentationHistory,
 } from "../simulation/contracts";
-import { COMMAND_REQUIRES_CONJURE, findConjure } from "../../styles/necromancy/conjures";
+import {
+  COMMAND_REQUIRES_CONJURE,
+  findConjure,
+  SPIRIT_AUTO_ABILITY_ID,
+  vengefulGhostExpectedHeal,
+} from "../../styles/necromancy/conjures";
 import { sacrificeExpectedHeal } from "../../styles/shared/constitutionAbilities";
 import { shouldRetainHitDetail } from "./hitDetailsRetention";
 import { blessingRule } from "../../league/ruleset";
@@ -52,7 +57,11 @@ export function recordEventAccounting(
       : 0;
   // Expected-value convention: floor each Light event's expected heal, not E[floor(actual heal)].
   const lightHeal = Math.floor(damage.expected * lightHealFraction);
-  const expectedHeal = sacrificeHeal + lightHeal;
+  const ghostHeal =
+    event.family === "conjureAuto" && event.abilityId === SPIRIT_AUTO_ABILITY_ID.vengeful_ghost
+      ? vengefulGhostExpectedHeal(damage.expected)
+      : 0;
+  const expectedHeal = sacrificeHeal + lightHeal + ghostHeal;
   if (expectedHeal > 0) rt.totalHealed += expectedHeal;
 
   if (keepsPerAbilityMap(rt.detailLevel)) {

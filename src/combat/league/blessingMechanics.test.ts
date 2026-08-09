@@ -132,11 +132,12 @@ describe("Avernic Rampage window boundary", () => {
     });
 
     expect(withoutRampage.totalExpected).toBe(6_500);
-    expect(withRampage.totalExpected).toBe(6_825);
+    expect(withRampage.totalExpected).toBe(6_804.6875);
+    expect(Math.abs(withRampage.totalExpected - 6_825) / 6_825).toBeLessThan(0.01);
     expect(withRampage.rng).toMatchObject({
-      method: "probability-weighted branching",
-      successfulClasses: 1,
-      failedClasses: 1,
+      method: "deterministic-stratified-ensemble",
+      successfulLanes: 6,
+      failedLanes: 122,
     });
   });
 
@@ -160,11 +161,12 @@ describe("Avernic Rampage window boundary", () => {
     const withRampage = simulate({ ...input, league: avernic });
 
     expect(withoutRampage.totalExpected).toBe(5_175);
-    expect(withRampage.totalExpected).toBe(5_336.25);
+    expect(withRampage.totalExpected).toBe(5_326.171875);
+    expect(Math.abs(withRampage.totalExpected - 5_336.25) / 5_336.25).toBeLessThan(0.01);
     expect(withRampage.rng).toMatchObject({
-      method: "probability-weighted branching",
-      successfulClasses: 1,
-      failedClasses: 1,
+      method: "deterministic-stratified-ensemble",
+      successfulLanes: 6,
+      failedLanes: 122,
     });
   });
 });

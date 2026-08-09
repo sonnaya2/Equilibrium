@@ -10,7 +10,7 @@ npm run benchmark:solver:quick   # 4-slot subset, tiny budgets, <60s target
 npm run benchmark:solver         # same as quick
 npm run benchmark:solver:json    # quick + prints report path
 npm run benchmark:solver:full    # all cases via solveFromRequest (slow)
-npm run benchmark:solver:branch-stress # valid League stress matrix + matched controls
+npm run benchmark:solver:stochastic-stress # valid League stress matrix + matched controls
 ```
 
 Or directly:
@@ -32,9 +32,9 @@ Single case (programmatic / vitest harness): import `runBenchmark` from
 | `src/combat/solver/benchmarks/quick.test.ts`   | Vitest entry (quick)                     |
 | `src/combat/solver/benchmarks/full.test.ts`    | Vitest entry (full)                      |
 | `scripts/benchmarks/solver.mjs`                | CLI wrapper around vitest                |
-| `src/combat/solver/benchmarks/branchStress.ts` | Exactness and pipeline stress runner     |
+| `src/combat/solver/benchmarks/stochasticStress.ts` | Fixed-lane and pipeline stress runner |
 | `reports/solver-benchmark-*.json`              | Local report output (gitignored)         |
-| `reports/solver-branch-stress.json`             | Latest branch stress report (gitignored) |
+| `reports/solver-stochastic-stress.json`         | Latest stochastic stress report (gitignored) |
 | `reports/solver-performance-*.md`              | Short baseline / phase check summaries   |
 
 ## Case IDs
@@ -63,7 +63,7 @@ Single case (programmatic / vitest harness): import `runBenchmark` from
 | `sunshine-magic`                | no     | Magic DW + Planted Feet; authored seed includes engine id `sunshine`   |
 | `deaths-swiftness-ranged`       | no     | Ranged 2H + Planted Feet; seed includes `deaths_swiftness`             |
 | `necro-conjures`                | no     | Necro conduit pool with `includePartial`; conjure mults + conjure seed |
-| `impatient-relentless`          | no     | Melee DW 4–6 with Impatient 4 + Relentless 5 (state-branching RNG)     |
+| `impatient-relentless`          | no     | Melee DW 4–6 with Impatient 4 + Relentless 5 (state-changing RNG)      |
 | `equipment-procs`               | yes    | Crackling 4 + Aftershock 4 invention procs, fixed 4                    |
 | `league-blessings`              | no     | Valid League Leng build; global + Leng state RNG                       |
 | `league-blessings-control`      | no     | Same Leng/perk build with League effects off                           |
@@ -91,15 +91,15 @@ Single case (programmatic / vitest harness): import `runBenchmark` from
   defined in cases (still short vs product UI for most cases; `unhinged-300s`
   uses the full 500-tick / unhinged budget path).
 
-### Branch stress
+### Stochastic stress
 
 - Evaluates fixed, legal League builds for Leng, poison melee, necromancy conjures, Lord of Light fanout, multi-target magic, and an isolated Avernic Rampage delta.
 - Runs matched controls so League overhead and state changes can be separated from the underlying rotation.
-- Runs score-only and full-analysis simulations at 30, 45, and 60 ticks, plus a 30-tick 16,384-branch oracle. Leng stops at 45 ticks because its 60-tick state space is not exact under the 8,192 release cap.
-- Uses an adaptive live-cap ladder of 512, 1,024, 2,048, 4,096, and 8,192. A release case passes only when the final attempt is exact, probability mass plus residual mass is one, residual and failed mass are zero, and score/full results agree deterministically.
-- Keeps the Aftershock poison variant profile-only because that workload is already labeled approximate by the verified solver contract; the corresponding poison case without Aftershock remains an exact release gate through 60 ticks.
-- Records branch-key cache work, poison atoms and transition caches, blessing damage reuse, hit-resolution reuse, modifier evaluation, queue depth, snapshot bytes, RSS/heap observations, and branch timing.
-- Applies absolute duration/snapshot/live-branch ceilings on the pinned Windows x64 Node 26 runner and a broad League/control ratio elsewhere.
+- Runs score-only and full-analysis simulations at 30, 45, and 60 ticks using the production 128-lane ensemble.
+- Requires deterministic repeats, probability mass one, residual and failed mass zero, and score/full totals that agree exactly.
+- Keeps the Aftershock poison variant profile-only because its authored benchmark case is not a release-supported solve; the ordinary poison case remains a release gate.
+- Records lane timing, RSS/heap, event-queue depth, allocations, hit-resolution reuse, and modifier evaluation.
+- Applies fixed duration ceilings on the pinned Windows x64 Node 26 runner. There is no oracle mode, live-state cap, or adaptive retry ladder.
 
 ## Report schema (per case)
 

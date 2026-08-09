@@ -7,6 +7,7 @@ import type { CombatModifier, CombatStyle, SourceReference } from "../types";
 import { mulFloor } from "../core/rounding";
 import { equipmentRecordPassiveIds } from "./requirements";
 import { setEffectSupport, type SetEffectSupport } from "../equipmentSets/support";
+import type { DracolichSetSummary } from "../styles/ranged/dracolich";
 import {
   IGNEOUS_ULTIMATE_PASSIVE_SET,
   LENG_PASSIVES,
@@ -86,23 +87,29 @@ export function equipmentSetById(id: string): EquipmentSetDef | undefined {
 }
 
 export interface SetPieceContributionModifier {
-  piecesPerItem: number;
+  additionalPiecesPerItem: number;
 }
 
 export const DEFAULT_SET_PIECE_CONTRIBUTION: SetPieceContributionModifier = {
-  piecesPerItem: 1,
+  additionalPiecesPerItem: 0,
 };
 
 export function effectiveSetPieces(
-  physicalPieces: number,
+  intrinsicPieces: number,
   contribution: SetPieceContributionModifier = DEFAULT_SET_PIECE_CONTRIBUTION,
+  equippedItemCount?: number,
 ): number {
-  const pieces = Number.isFinite(physicalPieces) ? Math.max(0, Math.floor(physicalPieces)) : 0;
-  const piecesPerItem =
-    Number.isFinite(contribution.piecesPerItem) && contribution.piecesPerItem > 0
-      ? contribution.piecesPerItem
-      : DEFAULT_SET_PIECE_CONTRIBUTION.piecesPerItem;
-  return pieces * piecesPerItem;
+  const pieces = Number.isFinite(intrinsicPieces) ? Math.max(0, Math.floor(intrinsicPieces)) : 0;
+  const items =
+    equippedItemCount == null || !Number.isFinite(equippedItemCount)
+      ? pieces
+      : Math.max(0, Math.floor(equippedItemCount));
+  const additional =
+    Number.isFinite(contribution.additionalPiecesPerItem) &&
+    contribution.additionalPiecesPerItem >= 0
+      ? Math.floor(contribution.additionalPiecesPerItem)
+      : DEFAULT_SET_PIECE_CONTRIBUTION.additionalPiecesPerItem;
+  return pieces + items * additional;
 }
 
 export type LoadoutEquipmentView = {
@@ -193,6 +200,7 @@ export type EquipmentEnchantmentId = (typeof EQUIPMENT_ENCHANTMENTS)[number];
 
 export interface ActiveEquipmentEffects {
   activation: typeof EQUIPMENT_SET_ACTIVATION;
+  setCritChance: ResolvedSetCritChance;
   passiveIds: readonly ItemPassiveId[];
   enchantments: readonly EquipmentEnchantmentId[];
   weaponClass: WeaponClass | null;
@@ -203,11 +211,73 @@ export interface ActiveEquipmentEffects {
   };
   amZiFlatDamage: number;
   amHejDamageBonus: number;
+  dracolich?: DracolichSetSummary;
   vestments: {
     pieces: number;
     heraldOfChaos: boolean;
     berserkExtension: boolean;
     increasedAdrenalineCap: boolean;
+  };
+}
+
+export interface ResolvedSetCritChance {
+  unconditional: number;
+  conditional: Partial<Record<SetEffectRequires, number>>;
+}
+
+export interface SetCritCounts {
+  setCounts: ReadonlyMap<string, number>;
+  itemCounts: ReadonlyMap<string, number>;
+}
+
+export type SetCritCountsResolver = (loadout: LoadoutEquipmentView) => SetCritCounts;
+
+function dracolichSetSummary(
+  counts: Map<string, number>,
+  itemCounts: Map<string, number>,
+  contribution: SetPieceContributionModifier | undefined,
+  weaponClass: WeaponClass | null,
+): DracolichSetSummary {
+  const physicalNormal = counts.get("dracolich") ?? 0;
+  const physicalElite = counts.get("elite-dracolich") ?? 0;
+  const mixed = physicalNormal > 0 && physicalElite > 0;
+  const setId = mixed
+    ? null
+    : physicalElite > 0
+      ? "elite-dracolich"
+      : physicalNormal > 0
+        ? "dracolich"
+        : null;
+  const physicalPieces = physicalNormal + physicalElite;
+  const itemCount = (itemCounts.get("dracolich") ?? 0) + (itemCounts.get("elite-dracolich") ?? 0);
+  const effectivePieces = mixed ? 0 : effectiveSetPieces(physicalPieces, contribution, itemCount);
+  const thresholds = {
+    three: effectivePieces >= 3,
+    four: effectivePieces >= 4,
+    five: effectivePieces >= 5,
+  };
+  const infusionDurationTicks = thresholds.five
+    ? 11
+    : thresholds.four
+      ? 8
+      : thresholds.three
+        ? 5
+        : 0;
+  return {
+    setId,
+    physicalPieces,
+    effectivePieces,
+    bowEligible: setId !== null && weaponClass === "bow",
+    mixed,
+    adrenalinePerRapidFireHit:
+      setId === "dracolich"
+        ? effectivePieces * 0.2
+        : setId === "elite-dracolich"
+          ? effectivePieces * 0.5
+          : 0,
+    infusionCritChance: setId === "dracolich" ? 0.2 : setId === "elite-dracolich" ? 0.4 : 0,
+    infusionDurationTicks,
+    thresholds,
   };
 }
 
@@ -220,13 +290,19 @@ export function activeEquipmentEffects(
     effectiveStrengthLevel?: number;
   },
 ): ActiveEquipmentEffects {
+  const setCounts = equippedSetCounts(loadout);
+  const itemCounts = equippedSetItemCounts(loadout);
+  const setCritChance = resolveSetCritChance({ setCounts, itemCounts }, loadout.pieceContribution);
   const pieces = effectiveSetPieces(
-    equippedSetCounts(loadout).get("vestments-of-havoc") ?? 0,
+    setCounts.get("vestments-of-havoc") ?? 0,
     loadout.pieceContribution,
+    itemCounts.get("vestments-of-havoc"),
   );
   const slots = resolvedEquipmentSlots(loadout);
   const weaponId = slots.twohand ?? slots.mainhand;
   const weapon = weaponId ? equipmentById(weaponId) : undefined;
+  const weaponClass =
+    loadout.style === "ranged" && weapon?.style === "ranged" ? (weapon.weaponClass ?? null) : null;
   const offhandId = slots.offhand;
   const offhand = offhandId ? equipmentById(offhandId) : undefined;
   const meleeWeapon = weaponId ? weapon?.style === "melee" : loadout.style === "melee";
@@ -252,12 +328,10 @@ export function activeEquipmentEffects(
   const passageActive = passiveIds.includes("enduring-ruin");
   return {
     activation: EQUIPMENT_SET_ACTIVATION,
+    setCritChance,
     passiveIds,
     enchantments,
-    weaponClass:
-      loadout.style === "ranged" && weapon?.style === "ranged"
-        ? (weapon.weaponClass ?? null)
-        : null,
+    weaponClass,
     defenderEquipped: offhand?.defender === true,
     passage: {
       active: passageActive,
@@ -272,6 +346,7 @@ export function activeEquipmentEffects(
     amHejDamageBonus: passiveIds.includes("am-hej")
       ? Math.floor((loadout.effectiveStrengthLevel ?? 0) * 0.05) / 100
       : 0,
+    dracolich: dracolichSetSummary(setCounts, itemCounts, loadout.pieceContribution, weaponClass),
     vestments: {
       pieces,
       heraldOfChaos: meleeWeapon && pieces >= 2,
@@ -548,7 +623,7 @@ export type SetEffectSummary = {
   setId: string;
   pieces: number;
   effectivePieces: number;
-  piecesPerItem: number;
+  additionalPiecesPerItem: number;
   label: string;
   support: SetEffectSupport;
 };
@@ -571,8 +646,8 @@ export function setEffectsSummary(loadout: LoadoutEquipmentView): SetEffectSumma
     out.push({
       setId,
       pieces: itemCounts.get(setId) ?? 0,
-      effectivePieces: effectiveSetPieces(pieces, loadout.pieceContribution),
-      piecesPerItem: loadout.pieceContribution?.piecesPerItem ?? 1,
+      effectivePieces: effectiveSetPieces(pieces, loadout.pieceContribution, itemCounts.get(setId)),
+      additionalPiecesPerItem: loadout.pieceContribution?.additionalPiecesPerItem ?? 0,
       label: def.label,
       support: setEffectSupport(def),
     });
@@ -584,24 +659,21 @@ export function setEffectsSummary(loadout: LoadoutEquipmentView): SetEffectSumma
 export type SetCritContext = {
   insideSunshine?: boolean;
   pieceContribution?: SetPieceContributionModifier;
+  equippedItemCount?: number;
+  equippedItemCounts?: ReadonlyMap<string, number>;
 };
-
-/** Effective tectonic piece count comes only from equipped catalogue records. */
-export function effectiveTectonicPieces(counts: Map<string, number>): {
-  pieces: number;
-  elite: boolean;
-} {
-  const gearElite = counts.get("elite-tectonic") ?? 0;
-  const gearBase = counts.get("tectonic") ?? 0;
-  return { pieces: Math.max(gearElite, gearBase), elite: gearElite > 0 };
-}
 
 /** Effective Tumeken piece count comes only from equipped catalogue records. */
 export function effectiveTumekenPieces(
   counts: Map<string, number>,
   contribution: SetPieceContributionModifier = DEFAULT_SET_PIECE_CONTRIBUTION,
+  equippedItemCount?: number,
 ): number {
-  return effectiveSetPieces(counts.get("tumekens-resplendence") ?? 0, contribution);
+  return effectiveSetPieces(
+    counts.get("tumekens-resplendence") ?? 0,
+    contribution,
+    equippedItemCount,
+  );
 }
 
 function effectActive(effect: EquipmentSetEffectDef, pieces: number, ctx: SetCritContext): boolean {
@@ -619,7 +691,7 @@ export function setCritChanceFromDef(
   pieces: number,
   ctx: SetCritContext = {},
 ): number {
-  const n = effectiveSetPieces(pieces, ctx.pieceContribution);
+  const n = effectiveSetPieces(pieces, ctx.pieceContribution, ctx.equippedItemCount);
   let bonus = 0;
   for (const effect of def.effects) {
     if (effect.kind !== "critChancePerPiece") continue;
@@ -633,24 +705,58 @@ export function setCritChanceFromDef(
  * Total set crit chance from equipped gear. Tumeken's bonus requires a live
  * Sunshine context; the rotation engine supplies that at hit land time.
  */
-export function loadoutSetCritChance(loadout: LoadoutEquipmentView & SetCritContext): number {
-  const counts = equippedSetCounts(loadout);
-  const { pieces: tecPhysicalPieces, elite } = effectiveTectonicPieces(counts);
-  const contribution = loadout.pieceContribution;
-  const tecPieces = effectiveSetPieces(tecPhysicalPieces, contribution);
-  const tumPieces = effectiveSetPieces(counts.get("tumekens-resplendence") ?? 0, contribution);
-
-  let bonus = 0;
-  const tecDef = equipmentSetById(elite ? "elite-tectonic" : "tectonic");
-  if (tecDef) bonus += setCritChanceFromDef(tecDef, tecPieces);
-
-  const tumDef = equipmentSetById("tumekens-resplendence");
-  if (tumDef) {
-    bonus += setCritChanceFromDef(tumDef, tumPieces, {
-      insideSunshine: loadout.insideSunshine === true,
-    });
+export function resolveSetCritChance(
+  counts: SetCritCounts,
+  pieceContribution?: SetPieceContributionModifier,
+  definitions: readonly EquipmentSetDef[] = EQUIPMENT_SETS,
+): ResolvedSetCritChance {
+  let unconditional = 0;
+  const conditional: Partial<Record<SetEffectRequires, number>> = {};
+  for (const def of definitions) {
+    const effectivePieces = effectiveSetPieces(
+      counts.setCounts.get(def.id) ?? 0,
+      pieceContribution,
+      counts.itemCounts.get(def.id),
+    );
+    if (effectivePieces <= 0) continue;
+    for (const effect of def.effects) {
+      if (effect.kind !== "critChancePerPiece" || effectivePieces < effect.minPieces) continue;
+      const bonus = effectivePieces * effect.value;
+      if (effect.requires === undefined) {
+        unconditional += bonus;
+      } else {
+        conditional[effect.requires] = (conditional[effect.requires] ?? 0) + bonus;
+      }
+    }
   }
-  return bonus;
+  return { unconditional, conditional };
+}
+
+export interface LoadoutSetCritChanceOptions {
+  definitions?: readonly EquipmentSetDef[];
+  countsResolver?: SetCritCountsResolver;
+}
+
+export function resolveLoadoutSetCritChance(
+  loadout: LoadoutEquipmentView,
+  options: LoadoutSetCritChanceOptions = {},
+): ResolvedSetCritChance {
+  const counts = options.countsResolver?.(loadout) ?? {
+    setCounts: equippedSetCounts(loadout),
+    itemCounts: equippedSetItemCounts(loadout),
+  };
+  return resolveSetCritChance(counts, loadout.pieceContribution, options.definitions);
+}
+
+/** Total set crit chance from equipped gear, including optional live gates. */
+export function loadoutSetCritChance(
+  loadout: LoadoutEquipmentView & SetCritContext,
+  options: LoadoutSetCritChanceOptions = {},
+): number {
+  const resolved = resolveLoadoutSetCritChance(loadout, options);
+  return (
+    resolved.unconditional + (loadout.insideSunshine ? (resolved.conditional.sunshine ?? 0) : 0)
+  );
 }
 
 /**
@@ -667,7 +773,11 @@ export function setDamageModifiers(
 ): CombatModifier[] {
   const mods: CombatModifier[] = [];
   for (const def of definitions) {
-    const pieces = effectiveSetPieces(counts.get(def.id) ?? 0, ctx.pieceContribution);
+    const pieces = effectiveSetPieces(
+      counts.get(def.id) ?? 0,
+      ctx.pieceContribution,
+      ctx.equippedItemCounts?.get(def.id),
+    );
     if (pieces <= 0) continue;
     for (const effect of def.effects) {
       if (effect.kind !== "damageMult" && effect.kind !== "damageMultPerPiece") continue;
@@ -709,19 +819,25 @@ export function firstNecromancerConjureDurationMult(pieces: number): number {
 
 /** Equipped first-necromancer piece count → conjure basic mult (1 if none / <2). */
 export function loadoutFirstNecromancerConjureDamageMult(loadout: LoadoutEquipmentView): number {
+  const counts = equippedSetCounts(loadout);
+  const itemCounts = equippedSetItemCounts(loadout);
   return firstNecromancerConjureDamageMult(
     effectiveSetPieces(
-      equippedSetCounts(loadout).get("first-necromancer") ?? 0,
+      counts.get("first-necromancer") ?? 0,
       loadout.pieceContribution,
+      itemCounts.get("first-necromancer"),
     ),
   );
 }
 
 export function loadoutFirstNecromancerConjureDurationMult(loadout: LoadoutEquipmentView): number {
+  const counts = equippedSetCounts(loadout);
+  const itemCounts = equippedSetItemCounts(loadout);
   return firstNecromancerConjureDurationMult(
     effectiveSetPieces(
-      equippedSetCounts(loadout).get("first-necromancer") ?? 0,
+      counts.get("first-necromancer") ?? 0,
       loadout.pieceContribution,
+      itemCounts.get("first-necromancer"),
     ),
   );
 }

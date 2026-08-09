@@ -1053,6 +1053,12 @@
 {"entityId":"item:wand-of-treachery","stat":"accuracy","value":1486}
 {"entityId":"item:ward-of-subjugation","stat":"armour","value":297.2}
 {"entityId":"item:ward-of-subjugation","stat":"prayer","value":1}
+{"entityId":"item:warpriest-of-tuska-boots","stat":"armour","value":56.6}
+{"entityId":"item:warpriest-of-tuska-cape","stat":"armour","value":33.9}
+{"entityId":"item:warpriest-of-tuska-cuirass","stat":"armour","value":260.3}
+{"entityId":"item:warpriest-of-tuska-gauntlets","stat":"armour","value":56.6}
+{"entityId":"item:warpriest-of-tuska-helm","stat":"armour","value":226.4}
+{"entityId":"item:warpriest-of-tuska-robe-legs","stat":"armour","value":249}
 {"entityId":"item:warrior-ring","stat":"damage","value":22.5}
 {"entityId":"item:wen-arrows","stat":"damage","value":960}
 {"entityId":"item:winds-of-waiko","stat":"accuracy","value":1486}

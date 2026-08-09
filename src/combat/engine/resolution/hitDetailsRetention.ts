@@ -12,7 +12,7 @@ export function hitDetailStillNeeded(rt: SimulationRuntime, seq: number): boolea
 /**
  * Score-only stores HitResult only when a later land may read it:
  * pre-scheduled derived tails/bounces, or Lightning Surge (scheduled post-land).
- * full-analysis / summary keep every landed detail for presentation + branchKey.
+ * full-analysis / summary keep every landed detail for presentation.
  */
 export function shouldRetainHitDetail(
   rt: SimulationRuntime,
@@ -37,7 +37,7 @@ export function releaseScoreOnlyHitDetails(
   }
 }
 
-/** Seq set of live derivedFrom sources (score-only branchKey). */
+/** Seq set of live derivedFrom sources for score-only retention. */
 export function liveDerivedSourceSeqs(rt: SimulationRuntime): number[] {
   const seen = new Set<number>();
   const out: number[] = [];

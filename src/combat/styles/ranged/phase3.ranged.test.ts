@@ -817,7 +817,7 @@ describe("deterministic ammunition hit effects", () => {
     const targetAccuracyProfile = {
       playerAccuracyRating: 1000,
       originalTargetArmourRating: 1200,
-      affinity: "same" as const,
+      affinity: 60,
       additiveHitChance: 0,
     };
     const withBlackStone = simulate({
@@ -861,7 +861,7 @@ describe("deterministic ammunition hit effects", () => {
       targetAccuracyProfile: {
         playerAccuracyRating: 1000,
         originalTargetArmourRating: 1200,
-        affinity: "same",
+        affinity: 60,
         additiveHitChance: 0,
       },
     });
@@ -903,7 +903,7 @@ describe("ammunition profile packing Manual / Revolution / identity", () => {
     const targetAccuracyProfile = {
       playerAccuracyRating: 1234,
       originalTargetArmourRating: 987,
-      affinity: "weakness" as const,
+      affinity: 90,
       additiveHitChance: 0.02,
       damagePotentialOverride: 0.42,
     };

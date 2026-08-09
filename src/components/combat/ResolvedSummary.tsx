@@ -122,7 +122,27 @@ function partialNote(stats: ResolvedStats): string | null {
   return `${missingItems} equipped item${missingItems === 1 ? " lacks" : "s lack"} stats. Partial: ${partial.join(", ")}.`;
 }
 
-export function ResolvedSummary({ stats }: { stats: ResolvedStats }) {
+function damagePotentialNote(
+  stats: ResolvedStats,
+  storedTargetAffinity?: number,
+): string | undefined {
+  if (stats.targetAffinity == null) return undefined;
+  const parts = [stats.damagePotentialSource];
+  if (storedTargetAffinity != null && storedTargetAffinity !== stats.targetAffinity) {
+    parts.push(`Aff_eff ${stats.targetAffinity}`, `stored ${storedTargetAffinity}`);
+  } else {
+    parts.push(`Aff ${stats.targetAffinity}`);
+  }
+  return parts.join(" · ");
+}
+
+export function ResolvedSummary({
+  stats,
+  storedTargetAffinity,
+}: {
+  stats: ResolvedStats;
+  storedTargetAffinity?: number;
+}) {
   return (
     <CombatFrame as="section" className="setup-summary" aria-labelledby="combat-results-title">
       <header className="setup-card-header">
@@ -130,12 +150,18 @@ export function ResolvedSummary({ stats }: { stats: ResolvedStats }) {
           Combat Results
         </h2>
       </header>
-      <ResolvedBreakdown stats={stats} />
+      <ResolvedBreakdown stats={stats} storedTargetAffinity={storedTargetAffinity} />
     </CombatFrame>
   );
 }
 
-export function ResolvedBreakdown({ stats }: { stats: ResolvedStats }) {
+export function ResolvedBreakdown({
+  stats,
+  storedTargetAffinity,
+}: {
+  stats: ResolvedStats;
+  storedTargetAffinity?: number;
+}) {
   const missingArmour = incompleteCount(stats, "armour");
   const missingLife = incompleteCount(stats, "life");
   const missingDamage = incompleteCount(stats, "damage");
@@ -188,7 +214,12 @@ export function ResolvedBreakdown({ stats }: { stats: ResolvedStats }) {
           <SummaryMetric label="Accuracy" value={formatNum(stats.accuracyRating)}>
             <Breakdown total={stats.accuracyRating} items={stats.accuracyBreakdown} />
           </SummaryMetric>
-          <SummaryMetric child label="Damage Potential" value={PERCENT_FORMAT.format(stats.dp)} />
+          <SummaryMetric
+            child
+            label="Damage Potential"
+            value={PERCENT_FORMAT.format(stats.dp)}
+            note={damagePotentialNote(stats, storedTargetAffinity)}
+          />
         </div>
         <SummaryMetric label="Crit Chance" value={PERCENT_FORMAT.format(stats.critChance)}>
           <Breakdown

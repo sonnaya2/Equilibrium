@@ -483,7 +483,11 @@ describe("solver bridge: Aff/Mark collapses into packed accuracy", () => {
   } as const;
 
   it("Mark upgrades Aff 60 to weakness 90 DP; pack uses that accuracy only", () => {
-    const loadout = withLoadout({ target: { ...targetBase } });
+    const loadout = withLoadout({
+      style: "ranged",
+      buffs: { ...DEFAULT_LOADOUT.buffs, attackCape120: false },
+      target: { ...targetBase },
+    });
     const markOpts = { blessingPicks: [...MARK_PICKS], now: NOW };
     const stats = loadoutStats(loadout, markOpts);
     const model = toResolvedCombatModel(loadout, markOpts, stats);
@@ -510,7 +514,11 @@ describe("solver bridge: Aff/Mark collapses into packed accuracy", () => {
   });
 
   it("without Mark, Aff 60 DP stays even when hasApplicableWeakness is true", () => {
-    const loadout = withLoadout({ target: { ...targetBase } });
+    const loadout = withLoadout({
+      style: "ranged",
+      buffs: { ...DEFAULT_LOADOUT.buffs, attackCape120: false },
+      target: { ...targetBase },
+    });
     const plainOpts = { blessingPicks: [...NO_MARK_PICKS], now: NOW };
     const stats = loadoutStats(loadout, plainOpts);
     const model = toResolvedCombatModel(loadout, plainOpts, stats);

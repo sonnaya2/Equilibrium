@@ -91,7 +91,7 @@ describe("loadout-owned ranged ammunition resolution", () => {
       }),
       target: {
         defenceLevel: 80,
-        affinity: "weak",
+        affinity: 70,
         hpPercent: 100,
         maximumLifePoints: 1_000_000,
       },

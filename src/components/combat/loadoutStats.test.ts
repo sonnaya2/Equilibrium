@@ -360,82 +360,65 @@ describe("loadoutStats", () => {
     const markPicks = ["Balance", "Chaos", "Chaos"] as const;
     const noMarkPicks = ["Order", "Order"] as const;
     const hardDef = 170;
+    // Neutral style loadout so Attack cape +2% additive does not muddy Aff goldens.
+    const markBase = {
+      ...base,
+      style: "ranged" as const,
+      buffs: { ...base.buffs, attackCape120: false },
+    };
     const styleStored = {
       defenceLevel: hardDef,
       affinity: 60,
       hasApplicableWeakness: true as const,
     };
+    const dpAt = (stats: { accuracyRating: number }, affinity: number) =>
+      targetDamagePotential(stats.accuracyRating, {
+        defenceLevel: hardDef,
+        affinity,
+      });
 
     it("checkbox alone keeps Aff_eff at stored style Aff (no Mark)", () => {
       const stats = loadoutStats(
-        { ...base, target: styleStored },
+        { ...markBase, target: styleStored },
         { blessingPicks: [...noMarkPicks] },
       );
       expect(stats.league.blessingIds.has("demons-mark")).toBe(false);
       expect(stats.damagePotentialSource).toBe("target stats");
-      expect(stats.dp).toBeCloseTo(
-        targetDamagePotential(stats.accuracyRating, {
-          defenceLevel: hardDef,
-          affinity: 60,
-        }),
-        10,
-      );
+      expect(stats.dp).toBeCloseTo(dpAt(stats, 60), 10);
       expect(stats.dp).toBeLessThan(1);
     });
 
     it("Mark + applicable + stored 60 uses Aff_eff 90 and labels target weakness", () => {
       const stats = loadoutStats(
-        { ...base, target: styleStored },
+        { ...markBase, target: styleStored },
         { blessingPicks: [...markPicks] },
       );
       expect(stats.league.blessingIds.has("demons-mark")).toBe(true);
       expect(stats.damagePotentialSource).toBe("target weakness");
-      expect(stats.dp).toBeCloseTo(
-        targetDamagePotential(stats.accuracyRating, {
-          defenceLevel: hardDef,
-          affinity: 90,
-        }),
-        10,
-      );
+      expect(stats.dp).toBeCloseTo(dpAt(stats, 90), 10);
       // Upgrade is resolve-time only: DP with stored Aff 60 is strictly worse.
-      expect(stats.dp).toBeGreaterThan(
-        targetDamagePotential(stats.accuracyRating, {
-          defenceLevel: hardDef,
-          affinity: 60,
-        }),
-      );
+      expect(stats.dp).toBeGreaterThan(dpAt(stats, 60));
     });
 
     it("Mark + weakness 55 + stored 60 keeps Aff_eff 60 (better-only)", () => {
       const stats = loadoutStats(
         {
-          ...base,
+          ...markBase,
           target: { ...styleStored, weaknessAffinity: 55 },
         },
         { blessingPicks: [...markPicks] },
       );
       expect(stats.league.blessingIds.has("demons-mark")).toBe(true);
       expect(stats.damagePotentialSource).toBe("target stats");
-      expect(stats.dp).toBeCloseTo(
-        targetDamagePotential(stats.accuracyRating, {
-          defenceLevel: hardDef,
-          affinity: 60,
-        }),
-        10,
-      );
+      expect(stats.dp).toBeCloseTo(dpAt(stats, 60), 10);
       // Must not bake/use the worse weakness as Aff_eff.
-      expect(stats.dp).toBeGreaterThan(
-        targetDamagePotential(stats.accuracyRating, {
-          defenceLevel: hardDef,
-          affinity: 55,
-        }),
-      );
+      expect(stats.dp).toBeGreaterThan(dpAt(stats, 55));
     });
 
     it("Mark upgrades sourced weakness without baking stored Aff (50 -> Aff_eff 55)", () => {
       const stats = loadoutStats(
         {
-          ...base,
+          ...markBase,
           target: {
             defenceLevel: hardDef,
             affinity: 50,
@@ -446,19 +429,8 @@ describe("loadoutStats", () => {
         { blessingPicks: [...markPicks] },
       );
       expect(stats.damagePotentialSource).toBe("target weakness");
-      expect(stats.dp).toBeCloseTo(
-        targetDamagePotential(stats.accuracyRating, {
-          defenceLevel: hardDef,
-          affinity: 55,
-        }),
-        10,
-      );
-      expect(stats.dp).toBeGreaterThan(
-        targetDamagePotential(stats.accuracyRating, {
-          defenceLevel: hardDef,
-          affinity: 50,
-        }),
-      );
+      expect(stats.dp).toBeCloseTo(dpAt(stats, 55), 10);
+      expect(stats.dp).toBeGreaterThan(dpAt(stats, 50));
     });
 
     it("preset apply keeps style Aff; Mark uses catalogue weaknessAffinity", async () => {
@@ -483,7 +455,7 @@ describe("loadoutStats", () => {
       expect(qbd?.affinity).toBe(70);
       expect(qbd?.weaknessAffinity).toBe(40);
       const stats = loadoutStats(
-        { ...base, target: qbd },
+        { ...markBase, target: qbd },
         { blessingPicks: [...markPicks] },
       );
       expect(stats.targetAffinity).toBe(70);

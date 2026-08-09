@@ -60,7 +60,7 @@ describe("toResolvedCombatModel", () => {
   it("projects the host-resolved target accuracy profile", () => {
     const loadout = withLoadout({
       style: "ranged",
-      target: { defenceLevel: 80, armour: 500, affinity: "same" },
+      target: { defenceLevel: 80, armour: 500, affinity: 60 },
     });
     const stats = loadoutStats(loadout, { now: NOW });
     const model = toResolvedCombatModel(loadout, { now: NOW }, stats);

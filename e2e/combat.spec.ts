@@ -662,7 +662,7 @@ test("v1 loadout migration and Defence/life controls persist across reload", asy
         enchantments: ["agony"],
         perks: { biting: 4 },
         buffs: { vulnerability: true, styleCurse: "turmoil", overload: "elder" },
-        target: { defenceLevel: 88, armour: 420, affinity: "strong" },
+        target: { defenceLevel: 88, armour: 420, affinity: 50 },
         baseDamage: { mode: "manual", manualValue: 4321 },
         startingAdrenaline: 72,
         hitCapEnabled: false,

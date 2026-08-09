@@ -234,7 +234,7 @@ describe("fingerprint changes one field at a time", () => {
         targetAccuracyProfile: {
           playerAccuracyRating: 1200,
           originalTargetArmourRating: 900,
-          affinity: "same",
+          affinity: 60,
           additiveHitChance: 0.02,
         },
       })),

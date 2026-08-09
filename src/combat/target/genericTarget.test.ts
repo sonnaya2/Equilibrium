@@ -83,7 +83,7 @@ describe("genericTarget", () => {
     const profile = {
       playerAccuracyRating: 600,
       originalTargetArmourRating: 1000,
-      affinity: "same" as const,
+      affinity: 60,
       additiveHitChance: 0,
     };
     const state = applyBlackStoneArmourReduction(newBlackStoneArmourState(1000), 0).state;

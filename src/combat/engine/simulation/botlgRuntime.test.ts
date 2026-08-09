@@ -90,7 +90,7 @@ function blackStoneAmmunition() {
 const targetAccuracyProfile: ResolvedTargetAccuracyProfile = {
   playerAccuracyRating: 1000,
   originalTargetArmourRating: 1200,
-  affinity: "same",
+  affinity: 60,
   additiveHitChance: 0,
 };
 

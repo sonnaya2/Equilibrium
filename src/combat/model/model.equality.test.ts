@@ -240,7 +240,7 @@ describe("ResolvedCombatModel equality", () => {
     const targetAccuracyProfile = {
       playerAccuracyRating: 1200,
       originalTargetArmourRating: 900,
-      affinity: "same" as const,
+      affinity: 60,
       additiveHitChance: 0.02,
       damagePotentialOverride: 0.42,
     };

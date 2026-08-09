@@ -56,7 +56,10 @@ export function SetupTab({
           onOpenRotation={onOpenRotation}
         />
         <aside className="setup-summary-column">
-          <ResolvedSummary stats={stats} />
+          <ResolvedSummary
+            stats={stats}
+            storedTargetAffinity={loadout.target?.affinity}
+          />
         </aside>
       </div>
       <LeagueLoadoutDisplay build={build} regions={regions} />

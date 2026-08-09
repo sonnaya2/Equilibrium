@@ -79,7 +79,8 @@ export interface GenericTarget {
 export interface ResolvedTargetAccuracyProfile {
   readonly playerAccuracyRating: number;
   readonly originalTargetArmourRating: number;
-  readonly affinity: AffinityKind;
+  /** Exact affinity percent (1-100) after Mark / scenario resolve. */
+  readonly affinity: number;
   readonly additiveHitChance: number;
   readonly damagePotentialOverride?: number;
 }
@@ -117,13 +118,16 @@ export function hitChance(accuracy: number, target: GenericTarget): number {
 function hitChanceForArmour(
   accuracy: number,
   armour: number,
-  affinity: AffinityKind,
+  affinityPercent: number,
   additiveHitChance: number,
 ): number {
   if (armour <= 0) return 1;
   return Math.min(
     1,
-    Math.max(0, (AFFINITY[affinity] / 100) * (accuracy / armour) + additiveHitChance),
+    Math.max(
+      0,
+      (resolveAffinityPercent(affinityPercent) / 100) * (accuracy / armour) + additiveHitChance,
+    ),
   );
 }
 

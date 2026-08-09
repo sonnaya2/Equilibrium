@@ -128,7 +128,7 @@ describe("solver worker serializable boundary", () => {
       targetAccuracyProfile: {
         playerAccuracyRating: 1200,
         originalTargetArmourRating: 900,
-        affinity: "weakness" as const,
+        affinity: 90,
         additiveHitChance: 0.02,
         damagePotentialOverride: 0.42,
       },

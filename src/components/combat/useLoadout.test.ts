@@ -728,7 +728,7 @@ describe("skillcape buffs", () => {
     expect(
       normalizeLoadout({
         buffs: { eliteSeersVillage: true },
-        target: { defenceLevel: 80, affinity: "same" },
+        target: { defenceLevel: 80, affinity: 60 },
       }),
     ).toMatchObject({
       buffs: { eliteSeersVillage: true },
@@ -738,7 +738,7 @@ describe("skillcape buffs", () => {
       normalizeLoadout({
         target: {
           defenceLevel: 80,
-          affinity: "same",
+          affinity: 60,
           elementalWeakness: "water",
           dragonfireImmune: true,
         },
@@ -748,7 +748,7 @@ describe("skillcape buffs", () => {
       normalizeLoadout({
         target: {
           defenceLevel: 80,
-          affinity: "same",
+          affinity: 60,
           elementalWeakness: "invented",
           dragonfireImmune: 1,
         },

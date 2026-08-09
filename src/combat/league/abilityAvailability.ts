@@ -1,6 +1,6 @@
 import type { AbilitySpec, AppliedEffectId, StateEffectId } from "../pipeline/calculateAbility";
 import type { BlessingId } from "../../league/blessings";
-import type { ResolvedLeagueRules } from "./ruleset";
+import { hasBlessing, type ResolvedLeagueRules } from "./ruleset";
 
 type LeagueRestriction = {
   blessingId: BlessingId;
@@ -26,7 +26,7 @@ export function resolveLeagueAbilityAvailability(
 ): LeagueAbilityAvailability {
   if (league?.ruleset !== "equilibrium") return { available: true };
   for (const restriction of LEAGUE_RESTRICTIONS) {
-    if (!league.blessingIds.has(restriction.blessingId)) continue;
+    if (!hasBlessing(league, restriction.blessingId)) continue;
     if (restriction.stateEffects?.includes(ability.stateEffect as StateEffectId)) {
       return { available: false, message: restriction.message };
     }

@@ -505,10 +505,15 @@ export function RevoRunResults({
                     activations: row.expectedActivations,
                     total: row.totalDamage,
                     share: row.share,
-                    mark: strikingLightBasicRowMark(stats.league.blessings, {
-                      category: ENGINE_SPECS.get(row.id)?.category,
-                      kind: row.kind,
-                    }),
+                    mark: (() => {
+                      const spec = ENGINE_SPECS.get(row.id);
+                      return strikingLightBasicRowMark(stats.league.blessings, {
+                        id: row.id,
+                        category: spec?.category,
+                        basicAttack: spec?.basicAttack,
+                        kind: row.kind,
+                      });
+                    })(),
                   })),
                 ]
                   .sort((a, b) => b.total - a.total)

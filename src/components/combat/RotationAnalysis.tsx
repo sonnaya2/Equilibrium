@@ -726,8 +726,11 @@ export function RotationAnalysisModal({
                             <AbilityCategoryChip category="conjure" />
                           ) : null}
                           {(() => {
+                            const spec = ENGINE_SPECS.get(effect.id);
                             const mark = strikingLightBasicRowMark(stats.league.blessings, {
-                              category: ENGINE_SPECS.get(effect.id)?.category,
+                              id: effect.id,
+                              category: spec?.category,
+                              basicAttack: spec?.basicAttack,
                               kind: effect.kind,
                             });
                             return mark ? (

@@ -34,7 +34,7 @@ export function sourceKindOf(
   if (event.family === "conjureAuto" || event.family === "command" || event.family === "poison") {
     return "conjure-or-familiar";
   }
-  if (isBasicAttack(rt.byId.get(event.abilityId) ?? {})) return "basic-attack";
+  if (isBasicAttack(rt.byId.get(event.abilityId) ?? { id: event.abilityId })) return "basic-attack";
   // Origin provenance outranks family for derived/attached components.
   if (event.originKind === "dot" || event.family === "dot") return "ability-dot";
   if (event.family === "hit") return "ability-direct";

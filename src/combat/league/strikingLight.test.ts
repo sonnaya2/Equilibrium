@@ -95,6 +95,43 @@ function revivedRevolutionInput(rules = strikingLeague) {
 }
 
 describe("Striking Light regression fixture", () => {
+  it("still multiplies and lights when blessingIds is a plain array (frozen model shape)", () => {
+    const live = strikingLeague;
+    const arrayIds = {
+      ...live,
+      blessingIds: [...live.blessingIds] as unknown as typeof live.blessingIds,
+    };
+    const modifiers = leagueModifiers(arrayIds);
+    expect(modifiers.some((m) => m.id === "blessing:striking-light")).toBe(true);
+    const result = simulate({
+      ...baseInput,
+      league: arrayIds,
+      modifiers,
+      context: { style: "melee", ruleset: "equilibrium" },
+      rotation: rotationOf("attack", "attack"),
+    });
+    const attacks = result.events.filter((event) => event.abilityId === "attack");
+    const lights = result.events.filter((event) => event.abilityId === "light-of-saradomin");
+    expect(attacks).toHaveLength(2);
+    expect(attacks.every((event) => event.damage.expected >= 1_680)).toBe(true);
+    expect(lights).toHaveLength(1);
+  });
+
+  it("still multiplies a Basic Attack when only the engine id is present", () => {
+    const thinAttack: AbilitySpec = {
+      id: "magic_attack",
+      name: "Magic",
+      style: "magic",
+      category: "basic",
+      hits: [{ band: { minPct: 100, maxPct: 100 } }],
+    };
+    const result = basicPreview(thinAttack);
+    expect(result.hits[0]?.expected).toBe(1_400);
+    expect(
+      result.leagueContributions.filter((c) => c.effectId === "light-of-saradomin"),
+    ).toHaveLength(1);
+  });
+
   it("resolves the isolated Basic Attack and Light at 2,180 total", () => {
     const modifiers = leagueModifiers(strikingLeague);
     const preview = calculateLeagueAbility(attack, {

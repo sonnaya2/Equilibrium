@@ -18,7 +18,30 @@ import {
   patchTarget,
   type RotationState,
 } from "./state";
-import { hasBlessing, hasNaragiEdict, resolveMaximumAdrenaline } from "../../league/ruleset";
+import {
+  hasBlessing,
+  hasNaragiEdict,
+  resolveMaximumAdrenaline,
+  type ResolvedLeagueRules,
+} from "../../league/ruleset";
+
+const LEAGUE_CLOCK_BLESSING_IDS = [
+  "avernic-rampage",
+  "striking-light",
+  "lord-of-light",
+  "tearing-thorns",
+] as const;
+
+/** League runtime clocks for Light CD / Rampage / Thorns. */
+function needsLeagueRuntimeClocks(league: ResolvedLeagueRules | undefined): boolean {
+  if (!league || league.ruleset !== "equilibrium") return false;
+  for (const id of LEAGUE_CLOCK_BLESSING_IDS) {
+    if (hasBlessing(league, id)) return true;
+  }
+  return league.blessings.some((choice) =>
+    (LEAGUE_CLOCK_BLESSING_IDS as readonly string[]).includes(choice.id),
+  );
+}
 import { activateNaragiSliver } from "../../league/naragiActivation";
 import { SLIVER_OF_EDICTS_ID } from "../../league/naragiEdict";
 import { noteRuntimeCreated } from "../../profiling/allocation";
@@ -311,11 +334,7 @@ export function createRuntime(
     adrenaline: input.startingAdrenaline,
     adrenalineCap,
     naturalInstinctUntilTick: input.naturalInstinctUntilTick,
-    league:
-      hasBlessing(input.league, "avernic-rampage") ||
-      hasBlessing(input.league, "striking-light") ||
-      hasBlessing(input.league, "lord-of-light") ||
-      hasBlessing(input.league, "tearing-thorns"),
+    league: needsLeagueRuntimeClocks(input.league),
     ringOfVigour: input.adrenaline?.ringOfVigour === true,
     lantern: soulboundLantern,
     ...(playerVitality && playerVitality.maximumLifePoints > 0

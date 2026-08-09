@@ -10,6 +10,8 @@
 import { IMPATIENT_EXTRA_ADRENALINE } from "./perks";
 
 export type AbilityAdrenalineShape = {
+  /** Engine ability id; failsafe when basicAttack flag is stripped. */
+  id?: string;
   category?: string;
   basicAttack?: boolean;
   /** @deprecated Legacy metadata; not a post-modernisation Basic Attack. */
@@ -17,9 +19,25 @@ export type AbilityAdrenalineShape = {
   adrenaline?: { gain?: number };
 };
 
-/** The four style Basic Attacks. Invigorating multiplies only these. */
+/** Post-modernisation style Basic Attack engine ids. */
+export const BASIC_ATTACK_ABILITY_IDS: ReadonlySet<string> = new Set([
+  "attack",
+  "ranged_attack",
+  "magic_attack",
+  "necromancy_basic",
+]);
+
+/**
+ * The four style Basic Attacks. Invigorating and Striking Light use this gate.
+ * Prefer the explicit flag; fall back to known engine ids when a thin catalogue
+ * drops basicAttack. Legacy autoAttack alone is never enough.
+ */
 export function isBasicAttack(ability: AbilityAdrenalineShape): boolean {
-  return ability.basicAttack === true;
+  if (ability.basicAttack === true) return true;
+  if (ability.basicAttack === false) return false;
+  if (ability.autoAttack === true) return false;
+  if (ability.id != null && BASIC_ATTACK_ABILITY_IDS.has(ability.id)) return true;
+  return false;
 }
 
 /** Basic-category ability with listed gain > 0. */

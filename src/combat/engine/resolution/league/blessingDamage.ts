@@ -9,7 +9,7 @@ import {
   type BlessingDamageSource,
 } from "../../../league/damage";
 import { capabilitiesOf, type DamageProvenance } from "../../../shared/damageProvenance";
-import { blessingRule, resolveLeagueCritAtLand } from "../../../league/ruleset";
+import { blessingRule, hasBlessing, resolveLeagueCritAtLand } from "../../../league/ruleset";
 import { patchLeague } from "../../runtime/state";
 import {
   appendAttachedComponents,
@@ -282,8 +282,15 @@ export function applyBlessingDamage(
     eligible: damage.critical?.mode !== "none",
     damageBonus: resolution.hitDetail?.critDamageBonus ?? rt.input.crit.damageBonus,
   };
-  const strikingLightReady = event.tick >= (rt.state.league?.strikingLightReadyTick ?? Infinity);
-  const lordOfLightReady = event.tick >= (rt.state.league?.lordOfLightReadyTick ?? Infinity);
+  // Missing league clocks used to default ready-tick to Infinity (Light never armed).
+  const strikingLightReady =
+    rt.state.league != null
+      ? event.tick >= rt.state.league.strikingLightReadyTick
+      : hasBlessing(rt.input.league, "striking-light");
+  const lordOfLightReady =
+    rt.state.league != null
+      ? event.tick >= rt.state.league.lordOfLightReadyTick
+      : hasBlessing(rt.input.league, "lord-of-light");
   const includedAttached = new Set(resolution.components?.map((component) => component.id) ?? []);
   const expectedAttached = resolveLeagueAttachedTerms({
     rules: rt.input.league,
@@ -333,7 +340,10 @@ export function applyBlessingDamage(
         ...rt.input.context,
         style,
         abilityCategory: resolvedAbility.category,
-        basicAttack: isBasicAttack(resolvedAbility),
+        basicAttack: isBasicAttack({
+          id: resolvedAbility.id ?? event.abilityId,
+          basicAttack: resolvedAbility.basicAttack,
+        }),
         area: resolvedAbility.area,
       },
       cap: rt.input.cap,

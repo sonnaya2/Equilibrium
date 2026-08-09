@@ -25,8 +25,17 @@ describe("eligibility", () => {
     expect(isBasicAttack(rend)).toBe(false);
   });
 
+  it("recognizes Basic Attacks by engine id when the flag is missing", () => {
+    expect(isBasicAttack({ id: "magic_attack" })).toBe(true);
+    expect(isBasicAttack({ id: "ranged_attack" })).toBe(true);
+    expect(isBasicAttack({ id: "necromancy_basic" })).toBe(true);
+    expect(isBasicAttack({ id: "attack" })).toBe(true);
+    expect(isBasicAttack({ id: "wrack" })).toBe(false);
+  });
+
   it("does not treat legacy autoattacks as post-modernisation Basic Attacks", () => {
     expect(isBasicAttack({ autoAttack: true })).toBe(false);
+    expect(isBasicAttack({ id: "attack", basicAttack: undefined, autoAttack: true })).toBe(false);
   });
 
   it("isGeneratingBasicAbility needs listed gain > 0", () => {

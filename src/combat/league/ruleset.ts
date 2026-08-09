@@ -265,7 +265,13 @@ export function resolveMaximumLife(rules: ResolvedLeagueRules, landTick: number)
 }
 
 export function hasBlessing(rules: ResolvedLeagueRules | undefined, id: BlessingId): boolean {
-  return rules?.ruleset === "equilibrium" && rules.blessingIds.has(id);
+  if (!rules || rules.ruleset !== "equilibrium") return false;
+  const ids = rules.blessingIds as ReadonlySet<BlessingId> | readonly BlessingId[] | undefined;
+  if (ids != null && typeof (ids as ReadonlySet<BlessingId>).has === "function") {
+    return (ids as ReadonlySet<BlessingId>).has(id);
+  }
+  if (Array.isArray(ids)) return (ids as readonly BlessingId[]).includes(id);
+  return rules.blessings.some((choice) => choice.id === id);
 }
 
 export function hasRelic(rules: ResolvedLeagueRules | undefined, name: string): boolean {

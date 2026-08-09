@@ -190,6 +190,7 @@ export function strikingLightBasicRowMark(
   blessings: readonly BlessingChoice[] | undefined,
   ability:
     | {
+        id?: string;
         category?: string;
         basicAttack?: boolean;
         autoAttack?: boolean;

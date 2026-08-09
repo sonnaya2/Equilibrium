@@ -163,7 +163,8 @@ export function wieldedOffhandKind(loadout: LoadoutEquipmentView): "shield" | "d
 }
 
 const SET_PIECE_WEIGHTS: Readonly<Record<string, number>> = {
-  // The combined crown + death mask occupies one slot but counts twice.
+  // Visage and Misalionar's death mask each occupy one slot but count twice.
+  "item:misalionars-death-mask": 2,
   "item:visage-of-the-first-necromancer": 2,
 };
 

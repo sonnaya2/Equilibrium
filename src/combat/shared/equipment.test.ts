@@ -360,6 +360,14 @@ describe("shared/equipment set effects", () => {
     expect(setEffectsSummary(visageLoadout)[0]).toMatchObject({ pieces: 5, effectivePieces: 6 });
     expect(loadoutFirstNecromancerConjureDamageMult(visageLoadout)).toBeCloseTo(1.35, 10);
 
+    const maskLoadout = {
+      equipmentSlots: { helmet: "item:misalionars-death-mask" },
+    };
+    expect(equippedSetCounts(maskLoadout).get("first-necromancer")).toBe(2);
+    expect(setEffectsSummary(maskLoadout)[0]).toMatchObject({ pieces: 1, effectivePieces: 2 });
+    expect(loadoutFirstNecromancerConjureDamageMult(maskLoadout)).toBeCloseTo(1.14, 10);
+    expect(loadoutFirstNecromancerConjureDurationMult(maskLoadout)).toBe(1);
+
     const chaotic = { additionalPiecesPerItem: 2 } as const;
     const normalChaotic = {
       equipmentSlots: { body: "item:first-necromancer-body" },

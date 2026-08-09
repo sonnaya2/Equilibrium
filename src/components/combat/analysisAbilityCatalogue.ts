@@ -2,6 +2,7 @@ import { engineSpecsForStyle } from "@/combat/abilities/registry";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import { volleyOfSouls } from "@/combat/styles/necromancy/abilities";
 import type { CombatStyle } from "@/combat/types";
+import { sortAbilitiesForDisplay } from "./abilityLoadoutFilter";
 
 export interface AnalysisAbilityEntry {
   readonly id: `${CombatStyle}:${string}`;
@@ -13,11 +14,11 @@ function analysisAbilityEntry(style: CombatStyle, ability: AbilitySpec): Analysi
   return { id: `${style}:${ability.id}`, style, ability };
 }
 
-const damaging = (["melee", "ranged", "magic"] as const).flatMap((style) =>
-  engineSpecsForStyle(style)
-    .filter((ability) => ability.hits.length > 0)
-    .map((ability) => analysisAbilityEntry(style, ability)),
-);
+const damaging = sortAbilitiesForDisplay(
+  (["melee", "ranged", "magic"] as const).flatMap((style) =>
+    engineSpecsForStyle(style).filter((ability) => ability.hits.length > 0),
+  ),
+).map((ability) => analysisAbilityEntry(ability.style, ability));
 
 const volley = volleyOfSouls(3);
 

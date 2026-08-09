@@ -12,14 +12,16 @@ export function RevoBarGraphic({ slots, revoSize }: { slots: ResolvedSlot[]; rev
         const unmodelled = !isKeybind && slot.modelledBy === "unmodelled";
         const cat =
           slot.spec?.category === "enhanced"
-            ? "threshold"
-            : slot.spec?.category === "basic"
-              ? "basic"
-              : slot.spec?.category === "ultimate"
-                ? "ultimate"
-                : slot.spec?.category === "utility"
-                  ? "utility"
-                  : undefined;
+            ? "enhanced"
+            : slot.spec?.category === "threshold"
+              ? "threshold"
+              : slot.spec?.category === "basic"
+                ? "basic"
+                : slot.spec?.category === "ultimate"
+                  ? "ultimate"
+                  : slot.spec?.category === "utility"
+                    ? "utility"
+                    : undefined;
         return (
           <div
             key={`${slot.name}-${index}`}

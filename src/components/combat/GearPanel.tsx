@@ -14,9 +14,10 @@ import { useBuild } from "@/league/useBuild";
 import { equipmentIconPath, styleIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import { RegionCrest } from "../RegionCrest";
-import { CombatFrameCorners } from "./CombatFrameCorners";
+import { CombatFrame } from "./CombatFrame";
+import { PrayerPicker } from "./PrayerPicker";
 import { SetEffectsList } from "./SetEffectsList";
-import { clearEquipment, equipInSlot, type Loadout } from "./useLoadout";
+import { clearEquipment, equipInSlot, type Loadout, type SetLoadout } from "./useLoadout";
 
 const REGION_NAMES = new Map(regionsData.records.map((r) => [r.id, r.name]));
 
@@ -212,13 +213,7 @@ function EquipmentSlotButton({
 }
 
 /** Paper doll + item picker. Item bonuses unsourced - placement is organisational. */
-export function GearPanel({
-  loadout,
-  setLoadout,
-}: {
-  loadout: Loadout;
-  setLoadout: (next: Loadout) => void;
-}) {
+export function GearPanel({ loadout, setLoadout }: { loadout: Loadout; setLoadout: SetLoadout }) {
   const [activeSlot, setActiveSlot] = useState<PickerSlot | null>(null);
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("tier");
@@ -343,8 +338,7 @@ export function GearPanel({
 
   return (
     <div className="gear-layout">
-      <div className="combat-frame paper-doll">
-        <CombatFrameCorners />
+      <CombatFrame className="paper-doll">
         <h2 className="combat-section-title text-sm font-medium text-parch-50">Loadout</h2>
 
         <div className="paper-doll-grid" role="group" aria-label="Equipment slots">
@@ -449,6 +443,8 @@ export function GearPanel({
           </button>
         </div>
 
+        <PrayerPicker loadout={loadout} setLoadout={setLoadout} />
+
         <section className="gear-passives mt-4" aria-labelledby="gear-passives-title">
           <h3
             id="gear-passives-title"
@@ -481,9 +477,7 @@ export function GearPanel({
                 </li>
               ))}
             </ul>
-          ) : (
-            <p className="mt-1.5 text-xs text-parch-300">No equipped item grants a passive.</p>
-          )}
+          ) : null}
 
           <h4
             id="gear-set-effects-title"
@@ -498,10 +492,9 @@ export function GearPanel({
             )}
           />
         </section>
-      </div>
+      </CombatFrame>
 
-      <div className="combat-frame wearables-browser">
-        <CombatFrameCorners />
+      <CombatFrame className="wearables-browser">
         <div className="gear-filterbar text-xs">
           <label>
             Region
@@ -667,7 +660,7 @@ export function GearPanel({
             </>
           )}
         </div>
-      </div>
+      </CombatFrame>
     </div>
   );
 }

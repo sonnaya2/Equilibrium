@@ -90,7 +90,12 @@ export function CalculationAssumptions({
     ["Starting adrenaline", `${stats.startingAdrenaline}%`],
     ["Max adrenaline", `${stats.maxAdrenaline}%`],
     ...adrenEconomyAssumptionRows(stats),
-    ["Damage Potential", `${PERCENT_FORMAT.format(stats.dp)} · ${stats.damagePotentialSource}`],
+    [
+      "Damage Potential",
+      stats.damagePotentialSource === "100% assumption"
+        ? PERCENT_FORMAT.format(stats.dp)
+        : `${PERCENT_FORMAT.format(stats.dp)} · ${stats.damagePotentialSource}`,
+    ],
     ["Critical chance", PERCENT_FORMAT.format(stats.critChance)],
     ...(unholyPicked
       ? ([
@@ -125,18 +130,18 @@ export function CalculationAssumptions({
           ],
         ] as Array<[string, string | number]>)
       : []),
-    // Aegis converts Armour rating into flat base damage.
+    // Aegis converts Total Armour Value into flat base damage.
     ...(stats.aegis.armourPercent > 0
       ? ([
           [
-            "Aegis Armour rating",
+            "Aegis Total Armour Value",
             `${formatNumber(stats.defence.blockArmourRating)} · ${PERCENT_FORMAT.format(
               stats.aegis.armourPercent,
             )} · off-hand ${stats.aegis.offhand}`,
           ],
           [
             "Aegis base-damage bonus",
-            `+${formatNumber(stats.aegis.baseAbilityDamageBonus)} (Armour rating)`,
+            `+${formatNumber(stats.aegis.baseAbilityDamageBonus)} (Total Armour Value)`,
           ],
         ] as Array<[string, string | number]>)
       : []),
@@ -187,13 +192,13 @@ export function CalculationAssumptions({
           [
             "Naragi Edict",
             sliverWorn
-              ? `Sliver worn · +${SLIVER_PASSIVE.armour} armour · +${SLIVER_PASSIVE.styleDamage} style damage · +${formatNumber(SLIVER_PASSIVE.life)} LP · +${SLIVER_PASSIVE.prayer} prayer`
+              ? `Sliver worn · +${SLIVER_PASSIVE.armour} armour · +${SLIVER_PASSIVE.styleDamage} style damage · +${formatNumber(SLIVER_PASSIVE.life)} Hitpoints · +${SLIVER_PASSIVE.prayer} prayer`
               : "Sliver of Edicts not equipped (pocket) - no passive or activation",
           ],
           [
             "Sliver activation",
             sliverWorn
-              ? `${NARAGI_COOLDOWN_SECONDS}s CD · ${NARAGI_ACTIVE_DURATION_SECONDS}s · ${NARAGI_HEAL_COUNT}×${formatNumber(NARAGI_HEAL_AMOUNT)} LP · levels ${NARAGI_LEVEL_OVERRIDE} · one revive · auto re-use when toggle On`
+              ? `${NARAGI_COOLDOWN_SECONDS}s CD · ${NARAGI_ACTIVE_DURATION_SECONDS}s · ${NARAGI_HEAL_COUNT}×${formatNumber(NARAGI_HEAL_AMOUNT)} Hitpoints · levels ${NARAGI_LEVEL_OVERRIDE} · one revive · auto re-use when toggle On`
               : "Equip Sliver to activate in sim",
           ],
         ] as Array<[string, string | number]>)
@@ -204,7 +209,7 @@ export function CalculationAssumptions({
             "Berserker's Fury",
             `+${PERCENT_FORMAT.format(stats.berserkersFury.bonus)} · ${formatNumber(
               stats.berserkersFury.currentLifePoints,
-            )}/${formatNumber(stats.berserkersFury.maximumLifePoints)} LP (${stats.berserkersFury.currentHealthPercent.toFixed(0)}%) · after roll, before crit · not bleeds`,
+            )}/${formatNumber(stats.berserkersFury.maximumLifePoints)} Hitpoints (${stats.berserkersFury.currentHealthPercent.toFixed(0)}%) · after roll, before crit · not bleeds`,
           ],
         ] as Array<[string, string | number]>)
       : []),

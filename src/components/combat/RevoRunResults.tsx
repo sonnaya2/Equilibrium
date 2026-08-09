@@ -17,7 +17,6 @@ import {
   spiritEffectDisplayName,
 } from "./conjurePresentation";
 import {
-  blessingEffectDisplayName,
   formatBlessingByEffectLabel,
   isBlessingEffectRow,
   strikingLightBasicRowMark,
@@ -38,6 +37,7 @@ import {
   runScoreBadge,
   shouldShowRunScoreChrome,
 } from "./revoStochasticLabels";
+import { combatEffectDisplayName, combatEffectIconPath } from "./effectPresentation";
 
 export type RevoRunResultsProps = {
   stats: CalcStats;
@@ -56,6 +56,7 @@ export type RevoRunResultsProps = {
   runProgressLabel?: string | null;
   runError?: string | null;
   onCancelRun?: () => void;
+  showControls?: boolean;
   /** Sliver of Edicts start-activate (Naragi); shown beside Run when pocket is Sliver. */
   sliverToggle?: {
     active: boolean;
@@ -83,6 +84,7 @@ export function RevoRunResults({
   runProgressLabel = null,
   runError = null,
   onCancelRun,
+  showControls = true,
   sliverToggle = null,
 }: RevoRunResultsProps) {
   const groups = result?.analysis.groups ?? [];
@@ -93,7 +95,13 @@ export function RevoRunResults({
   const castLog = result ? (showAllCasts ? result.casts : result.casts.slice(0, 40)) : [];
   const conjureDurationMult = stats.conjureDurationMult ?? 1;
   const effectLabel = (id: string) =>
-    blessingEffectDisplayName(id) ?? nameById.get(id) ?? spiritEffectDisplayName(id) ?? id;
+    combatEffectDisplayName(id) ?? nameById.get(id) ?? spiritEffectDisplayName(id) ?? id;
+  const effectIcon = (id: string, kind?: string, blessingId?: string) => {
+    const spec = ENGINE_SPECS.get(id);
+    return spec
+      ? abilityIconPath(spec.id, spec.style)
+      : combatEffectIconPath(id, { kind, blessingId });
+  };
   const scoreBadge = result ? runScoreBadge(result) : null;
   const scoreNote = result ? runDiagnosticsNote(result) : null;
   const hasResidual = result ? residualWeightOf(result) > 0 : false;
@@ -106,103 +114,105 @@ export function RevoRunResults({
 
   return (
     <>
-      <div className="revo-run-controls">
-        <label className="revo-duration-field">
-          <span>Duration</span>
-          <input
-            type="number"
-            value={durationSeconds}
-            min={6}
-            max={1000}
-            step={1}
-            onChange={(event) => setDurationSeconds(Number(event.target.value))}
-            className="border border-stone-750 bg-transparent px-2 py-1 font-mono text-xs text-parch-50"
-            data-testid="revo-run-duration"
-            title="Run bar duration (6–1000 seconds)"
-            disabled={runBusy}
-          />
-          <span>s</span>
-        </label>
-        <p className="revo-horizon-plan" data-testid="revo-horizon-plan">
-          {plannedTicks > 0 ? `${plannedTicks} ticks` : "—"}
-        </p>
-        {sliverToggle ? (
-          <div className="revo-sliver-group" data-testid="revo-sliver-group">
-            <button
-              type="button"
-              className={`combat-button revo-sliver-toggle border text-xs ${
-                sliverToggle.active
-                  ? "border-stone-750 bg-stone-850 text-parch-50"
-                  : "border-stone-750 text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
-              }`}
-              aria-pressed={sliverToggle.active}
-              data-testid="sliver-buff-toggle"
-              title="Activate Sliver of Edicts on a cycle: at combat start and again every 90s CD (16.8s window)"
-              disabled={sliverToggle.disabled === true || runBusy}
-              onClick={sliverToggle.onToggle}
-            >
-              <span className="revo-sliver-toggle__label">Sliver</span>
-              <span className="revo-sliver-toggle__state font-mono">
-                {sliverToggle.active ? "On" : "Off"}
-              </span>
-            </button>
-            <p
-              className="revo-sliver-base"
-              data-testid="revo-sliver-base-compare"
-              title="Effective base ability damage: loadout level (off) vs Naragi 255 window (on)"
-            >
-              <span className="revo-sliver-base__label">Base AD</span>
-              <span className="revo-sliver-base__row font-mono">
-                <span
-                  className={
-                    sliverToggle.active
-                      ? "revo-sliver-base__val is-dim"
-                      : "revo-sliver-base__val is-active"
-                  }
-                  data-testid="revo-sliver-base-off"
-                >
-                  {formatNumber(sliverToggle.baseOff)}
+      {showControls ? (
+        <div className="revo-run-controls">
+          <label className="revo-duration-field">
+            <span>Duration</span>
+            <input
+              type="number"
+              value={durationSeconds}
+              min={6}
+              max={1000}
+              step={1}
+              onChange={(event) => setDurationSeconds(Number(event.target.value))}
+              className="border border-stone-750 bg-transparent px-2 py-1 font-mono text-xs text-parch-50"
+              data-testid="revo-run-duration"
+              title="Run bar duration (6–1000 seconds)"
+              disabled={runBusy}
+            />
+            <span>s</span>
+          </label>
+          <p className="revo-horizon-plan" data-testid="revo-horizon-plan">
+            {plannedTicks > 0 ? `${plannedTicks} ticks` : "—"}
+          </p>
+          {sliverToggle ? (
+            <div className="revo-sliver-group" data-testid="revo-sliver-group">
+              <button
+                type="button"
+                className={`combat-button revo-sliver-toggle border text-xs ${
+                  sliverToggle.active
+                    ? "border-stone-750 bg-stone-850 text-parch-50"
+                    : "border-stone-750 text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
+                }`}
+                aria-pressed={sliverToggle.active}
+                data-testid="sliver-buff-toggle"
+                title="Activate Sliver of Edicts on a cycle: at combat start and again every 90s CD (16.8s window)"
+                disabled={sliverToggle.disabled === true || runBusy}
+                onClick={sliverToggle.onToggle}
+              >
+                <span className="revo-sliver-toggle__label">Sliver</span>
+                <span className="revo-sliver-toggle__state font-mono">
+                  {sliverToggle.active ? "On" : "Off"}
                 </span>
-                <span className="revo-sliver-base__sep" aria-hidden>
-                  /
+              </button>
+              <p
+                className="revo-sliver-base"
+                data-testid="revo-sliver-base-compare"
+                title="Effective base ability damage: loadout level (off) vs Naragi 255 window (on)"
+              >
+                <span className="revo-sliver-base__label">Base AD</span>
+                <span className="revo-sliver-base__row font-mono">
+                  <span
+                    className={
+                      sliverToggle.active
+                        ? "revo-sliver-base__val is-dim"
+                        : "revo-sliver-base__val is-active"
+                    }
+                    data-testid="revo-sliver-base-off"
+                  >
+                    {formatNumber(sliverToggle.baseOff)}
+                  </span>
+                  <span className="revo-sliver-base__sep" aria-hidden>
+                    /
+                  </span>
+                  <span
+                    className={
+                      sliverToggle.active
+                        ? "revo-sliver-base__val is-active"
+                        : "revo-sliver-base__val is-dim"
+                    }
+                    data-testid="revo-sliver-base-on"
+                  >
+                    {formatNumber(sliverToggle.baseOn)}
+                  </span>
                 </span>
-                <span
-                  className={
-                    sliverToggle.active
-                      ? "revo-sliver-base__val is-active"
-                      : "revo-sliver-base__val is-dim"
-                  }
-                  data-testid="revo-sliver-base-on"
-                >
-                  {formatNumber(sliverToggle.baseOn)}
-                </span>
-              </span>
-              <span className="revo-sliver-base__hint">off / on</span>
-            </p>
-          </div>
-        ) : null}
-        <button
-          type="button"
-          onClick={run}
-          disabled={runBusy}
-          className={
-            runBusy ? "combat-button revo-run-button is-running" : "combat-button revo-run-button"
-          }
-          data-testid="revo-run-button"
-        >
-          {runBusy ? "Scanning…" : "Run bar"}
-        </button>
-        {runBusy && onCancelRun ? (
+                <span className="revo-sliver-base__hint">off / on</span>
+              </p>
+            </div>
+          ) : null}
           <button
             type="button"
-            onClick={onCancelRun}
-            className="combat-button revo-run-cancel"
-            data-testid="revo-run-cancel"
+            onClick={run}
+            disabled={runBusy}
+            className={
+              runBusy ? "combat-button revo-run-button is-running" : "combat-button revo-run-button"
+            }
+            data-testid="revo-run-button"
           >
-            Cancel
+            {runBusy ? "Scanning…" : "Run bar"}
           </button>
-        ) : null}
-      </div>
+          {runBusy && onCancelRun ? (
+            <button
+              type="button"
+              onClick={onCancelRun}
+              className="combat-button revo-run-cancel"
+              data-testid="revo-run-cancel"
+            >
+              Cancel
+            </button>
+          ) : null}
+        </div>
+      ) : null}
 
       {runBusy ? (
         <div
@@ -254,7 +264,7 @@ export function RevoRunResults({
       ) : null}
 
       {showScoreStrip && result ? (
-        <div className="mt-4">
+        <div className="revo-run-output mt-4">
           <dl className="revo-stat-strip grid grid-cols-2 gap-x-6 border-t border-stone-750 text-sm sm:grid-cols-3 lg:grid-cols-6">
             <div className="border-b border-stone-750/70 py-2">
               <dt className="text-xs text-parch-300">Ticks</dt>
@@ -326,15 +336,17 @@ export function RevoRunResults({
             </p>
           ) : null}
 
-          <div className="mt-3 flex justify-end">
-            <button
-              type="button"
-              onClick={() => setAnalysisOpen(true)}
-              className="combat-button border border-gem-400 bg-stone-850 px-3 py-1.5 text-xs text-gem-300 hover:bg-stone-800"
-            >
-              Analyze damage
-            </button>
-          </div>
+          {showControls ? (
+            <div className="mt-3 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setAnalysisOpen(true)}
+                className="combat-button border border-gem-400 bg-stone-850 px-3 py-1.5 text-xs text-gem-300 hover:bg-stone-800"
+              >
+                Analyze damage
+              </button>
+            </div>
+          ) : null}
 
           <CalculationAssumptions stats={stats} result={result} />
 
@@ -418,7 +430,10 @@ export function RevoRunResults({
                                 {spec &&
                                 !isConjureSummonAbilityId(cast.abilityId) &&
                                 !isConjureCommandAbilityId(cast.abilityId) ? (
-                                  <AbilityCategoryChip category={spec.category} />
+                                  <AbilityCategoryChip
+                                    category={spec.category}
+                                    weaponSpecial={spec.weaponSpecial}
+                                  />
                                 ) : cast.auto ? (
                                   <AbilityCategoryChip category="basic" />
                                 ) : null}
@@ -461,6 +476,10 @@ export function RevoRunResults({
                   data-effect-group={group.id}
                 >
                   <span className="flex min-w-0 items-center gap-2 text-parch-50">
+                    <GameIcon
+                      src={effectIcon(group.id, group.kind, group.sourceBreakdown?.[0]?.blessingId)}
+                      size={18}
+                    />
                     <span className="truncate">
                       {formatBlessingByEffectLabel(group.id, group.kind, effectLabel(group.id))}
                     </span>
@@ -483,17 +502,16 @@ export function RevoRunResults({
                 <div
                   key={row.id}
                   className="revo-contribution-row grid grid-cols-[1fr_auto_auto] gap-4 border-b border-stone-750/70 py-2 text-xs"
+                  data-effect-id={row.id}
                   data-effect-kind={row.kind}
                 >
                   <span className="flex min-w-0 items-center gap-2 text-parch-50">
-                    {(() => {
-                      const spec = ENGINE_SPECS.get(row.id);
-                      return spec ? (
-                        <GameIcon src={abilityIconPath(spec.id, spec.style)} size={18} />
-                      ) : null;
-                    })()}
-                    <span className="inline-flex min-w-0 items-center gap-1.5 truncate">
-                      <span className="truncate">
+                    <GameIcon
+                      src={effectIcon(row.id, row.kind, row.sourceBreakdown?.[0]?.blessingId)}
+                      size={18}
+                    />
+                    <span className="inline-flex min-w-0 flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
+                      <span className="break-words leading-tight">
                         {formatConjureByEffectLabel(
                           row.id,
                           row.kind,

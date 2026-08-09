@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { allEngineSpecs } from "@/combat/abilities/registry";
 import { activeEquipmentEffects } from "@/combat/shared/equipment";
-import { equipAbilityForLoadout, filterAbilitiesForLoadout } from "./abilityLoadoutFilter";
+import {
+  equipAbilityForLoadout,
+  filterAbilitiesForLoadout,
+  sortAbilitiesForDisplay,
+} from "./abilityLoadoutFilter";
 
 const catalogue = allEngineSpecs();
 
@@ -93,5 +97,27 @@ describe("filterAbilitiesForLoadout — igneous only-version", () => {
     ).map((a) => a.id);
     expect(ids).toContain("death_skulls_igneous");
     expect(ids).not.toContain("death_skulls");
+  });
+
+  it("groups by display type and alphabetizes names within each group", () => {
+    const pool = catalogue;
+    const ordered = sortAbilitiesForDisplay(pool);
+    const groups = [
+      pool.filter((ability) => ability.weaponSpecial === true),
+      pool.filter((ability) => ability.weaponSpecial !== true && ability.category === "utility"),
+      pool.filter((ability) => ability.weaponSpecial !== true && ability.category === "basic"),
+      pool.filter((ability) => ability.weaponSpecial !== true && ability.category === "enhanced"),
+      pool.filter((ability) => ability.weaponSpecial !== true && ability.category === "threshold"),
+      pool.filter((ability) => ability.weaponSpecial !== true && ability.category === "ultimate"),
+    ].map((group) =>
+      [...group].sort((left, right) =>
+        left.name.localeCompare(right.name, "en", {
+          numeric: true,
+          sensitivity: "base",
+        }),
+      ),
+    );
+
+    expect(ordered).toEqual(groups.flat());
   });
 });

@@ -136,7 +136,8 @@ describe("revoPanelFormat", () => {
   });
 
   it("maps ability categories for preview slots", () => {
-    expect(previewCategory("enhanced")).toBe("threshold");
+    expect(previewCategory("enhanced")).toBe("enhanced");
+    expect(previewCategory("threshold")).toBe("threshold");
     expect(previewCategory("basic")).toBe("basic");
     expect(previewCategory(undefined)).toBeUndefined();
   });

@@ -128,6 +128,23 @@ export function revoManagedModelled(
   return specs.map((s) => equipAbilityForLoadout(s, ENGINE_SPECS, gate));
 }
 
+export function defaultRevoBarIds(
+  style: string,
+  weaponConfiguration?: WeaponShape,
+  gate?: {
+    passiveIds?: readonly ItemPassiveId[];
+    equipmentIds?: readonly string[];
+  },
+): string[] {
+  const bar = pickBarForLoadout(style, weaponConfiguration) ?? pickBarForLoadout(style);
+  if (!bar) return [];
+  return ensureNecroConjuresOnBarIds(
+    revoManagedModelled(bar, weaponConfiguration, gate).map((ability) => ability.id),
+    style,
+    weaponConfiguration,
+  );
+}
+
 /** Apply Igneous (etc.) upgrade or reverse-to-base on resolved bar slots. */
 export function applyLoadoutVariantsToSlots(
   slots: readonly ResolvedSlot[],

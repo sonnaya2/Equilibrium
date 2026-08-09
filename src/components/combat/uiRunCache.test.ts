@@ -1,5 +1,11 @@
 import { describe, expect, it, beforeEach } from "vitest";
-import { clearUiRunCache, getUiRunCache, setUiRunCache } from "./uiRunCache";
+import {
+  clearUiRunCache,
+  getUiRunCache,
+  reloadUiRunCacheForTests,
+  setUiRunCache,
+  UI_RUN_CACHE_KEY,
+} from "./uiRunCache";
 import type { RotationSummary } from "@/combat/engine/simulation/simulate";
 
 function fakeSummary(n: number): RotationSummary {
@@ -17,6 +23,34 @@ function fakeSummary(n: number): RotationSummary {
   } as unknown as RotationSummary;
 }
 
+function installMemoryLocalStorage(): void {
+  const map = new Map<string, string>();
+  const storage = {
+    getItem: (key: string) => map.get(key) ?? null,
+    setItem: (key: string, value: string) => {
+      map.set(key, String(value));
+    },
+    removeItem: (key: string) => {
+      map.delete(key);
+    },
+    clear: () => map.clear(),
+    key: (index: number) => [...map.keys()][index] ?? null,
+    get length() {
+      return map.size;
+    },
+  };
+  (globalThis as { window?: { localStorage: typeof storage } }).window = {
+    localStorage: storage,
+  };
+  Object.defineProperty(globalThis, "localStorage", {
+    value: storage,
+    configurable: true,
+    writable: true,
+  });
+}
+
+installMemoryLocalStorage();
+
 describe("uiRunCache", () => {
   beforeEach(() => clearUiRunCache());
 
@@ -26,6 +60,13 @@ describe("uiRunCache", () => {
       summary: fakeSummary(1),
     });
     expect(getUiRunCache("a")?.summary.totalExpected).toBe(1);
+  });
+
+  it("restores a cached result from local storage", () => {
+    setUiRunCache("persisted", { summary: fakeSummary(42) });
+    expect(window.localStorage.getItem(UI_RUN_CACHE_KEY)).not.toBeNull();
+    reloadUiRunCacheForTests();
+    expect(getUiRunCache("persisted")?.summary.totalExpected).toBe(42);
   });
 
   it("evicts oldest when over capacity", () => {

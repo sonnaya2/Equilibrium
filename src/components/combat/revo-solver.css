@@ -650,6 +650,7 @@
 .revo-solver-preview__slot[data-category="basic"] {
   border-color: color-mix(in srgb, var(--combat-basic) 70%, var(--combat-gold-mid));
 }
+.revo-solver-preview__slot[data-category="enhanced"],
 .revo-solver-preview__slot[data-category="threshold"] {
   border-color: color-mix(in srgb, var(--combat-threshold) 70%, var(--combat-gold-mid));
 }

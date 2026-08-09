@@ -15,7 +15,8 @@ import type { ItemPassiveId } from "@/combat/data/records";
 import { abilityIconPath, styleIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import { AbilityCategoryChip } from "./AbilityCategoryChip";
-import { CombatFrameCorners } from "./CombatFrameCorners";
+import { AbilityUnlockMarkers } from "./AbilityUnlockMarkers";
+import { CombatFrame } from "./CombatFrame";
 import { SupportStatusChip } from "./SupportStatusChip";
 import { NumberField } from "./NumberField";
 import type { Loadout } from "./useLoadout";
@@ -27,6 +28,7 @@ import { useBuild as useLeagueBuild } from "@/league/useBuild";
 import {
   equipAbilityForLoadout,
   filterAbilitiesForLoadout,
+  sortAbilitiesForDisplay,
   type LoadoutAbilityGate,
 } from "./abilityLoadoutFilter";
 
@@ -61,12 +63,12 @@ function necroPalette(souls: number): AbilitySpec[] {
   const fromKit = engineSpecsForStyle("necromancy").filter(
     (a) => a.id !== "volley_of_souls" && (a.hits.length > 0 || a.id.startsWith("conjure_")),
   );
-  return [...fromKit, volleyOfSouls(clamped)];
+  return sortAbilitiesForDisplay([...fromKit, volleyOfSouls(clamped)]);
 }
 
 function paletteForStyle(style: CombatStyle, souls: number): AbilitySpec[] {
   if (style === "necromancy") return necroPalette(souls);
-  return engineSpecsForStyle(style).filter((a) => a.hits.length > 0);
+  return sortAbilitiesForDisplay(engineSpecsForStyle(style).filter((a) => a.hits.length > 0));
 }
 
 function damagingPalette(
@@ -254,8 +256,7 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
       </div>
 
       <div className="combat-quick-grid">
-        <section className="combat-frame combat-quick-main flex min-h-0 flex-col">
-          <CombatFrameCorners />
+        <CombatFrame as="section" className="combat-quick-main flex min-h-0 flex-col">
           <div className="combat-field-strip grid grid-cols-2 gap-x-2 sm:grid-cols-4">
             <NumberField
               label={`${STYLE_LABELS[activeStyle]} level`}
@@ -334,14 +335,18 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
                       style={{ cursor: "pointer" }}
                     >
                       <td className="font-medium">
-                        <span className="inline-flex min-w-0 items-center gap-1.5">
+                        <span className="flex w-full min-w-0 items-center gap-1.5">
                           <GameIcon
                             src={abilityIconPath(a.id, a.style)}
                             size={18}
                             className="shrink-0"
                           />
                           <span className="min-w-0 truncate">{a.name}</span>
-                          <AbilityCategoryChip category={a.category} />
+                          <AbilityCategoryChip
+                            category={a.category}
+                            weaponSpecial={a.weaponSpecial}
+                          />
+                          <AbilityUnlockMarkers ability={a} />
                         </span>
                       </td>
                       <td className="mono secondary">{hitBandLabel(a)}</td>
@@ -351,11 +356,10 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
               </tbody>
             </table>
           </div>
-        </section>
+        </CombatFrame>
 
         {ability && result ? (
-          <div className="combat-frame combat-detail panel panel--facet min-w-0">
-            <CombatFrameCorners />
+          <CombatFrame className="combat-detail panel panel--facet min-w-0">
             <div className="panel-head flex flex-wrap items-center justify-between gap-2">
               <h3 className="m-0 flex min-w-0 items-center gap-2 text-inherit font-medium">
                 <GameIcon
@@ -364,7 +368,10 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
                   className="shrink-0"
                 />
                 <span className="min-w-0 truncate">{ability.name}</span>
-                <AbilityCategoryChip category={ability.category} />
+                <AbilityCategoryChip
+                  category={ability.category}
+                  weaponSpecial={ability.weaponSpecial}
+                />
                 <SupportStatusChip ability={ability} />
               </h3>
               <span className="font-mono text-[11px] font-normal normal-case tracking-normal text-parch-300">
@@ -464,10 +471,9 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
               </dl>
               {useBuild ? <CalculationAssumptions stats={setup} /> : null}
             </div>
-          </div>
+          </CombatFrame>
         ) : ability && ability.hits.length === 0 ? (
-          <div className="combat-frame combat-detail panel panel--facet min-w-0">
-            <CombatFrameCorners />
+          <CombatFrame className="combat-detail panel panel--facet min-w-0">
             <div className="panel-head">
               <h3 className="m-0 flex items-center gap-2 text-inherit font-medium">
                 <GameIcon
@@ -476,7 +482,10 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
                   className="shrink-0"
                 />
                 <span>{ability.name}</span>
-                <AbilityCategoryChip category={ability.category} />
+                <AbilityCategoryChip
+                  category={ability.category}
+                  weaponSpecial={ability.weaponSpecial}
+                />
                 <SupportStatusChip ability={ability} />
               </h3>
             </div>
@@ -487,12 +496,11 @@ export function QuickCalculator({ loadout }: { loadout: Loadout }) {
               ) : null}
               <p className="mt-2 text-sm text-parch-300">No damage hits. Summon or buff only.</p>
             </div>
-          </div>
+          </CombatFrame>
         ) : (
-          <div className="combat-frame combat-detail panel panel--facet min-w-0 p-3 text-sm text-parch-300">
-            <CombatFrameCorners />
+          <CombatFrame className="combat-detail panel panel--facet min-w-0 p-3 text-sm text-parch-300">
             Select an ability.
-          </div>
+          </CombatFrame>
         )}
       </div>
     </div>

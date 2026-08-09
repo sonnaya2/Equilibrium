@@ -5,10 +5,17 @@ import {
   isScoreVerifiedForContext,
   libraryForStyle,
   loadBarLibrary,
+  loadActiveRevoBar,
+  loadRevoRunDuration,
+  loadRotationMode,
   MAX_RECENT_BARS,
   normalizeBarLibrary,
   REVO_BAR_LIBRARY_KEY,
+  ROTATION_WORKSPACE_KEY,
   resetBarLibraryForTests,
+  saveActiveRevoBar,
+  saveRevoRunDuration,
+  saveRotationMode,
   barScoreContext,
   withPermanentBar,
   withRecentBar,
@@ -66,6 +73,30 @@ afterEach(() => {
 });
 
 describe("revoBarLibrary", () => {
+  it("restores the last Rotation mode and active bar per weapon context", () => {
+    saveRotationMode("manual");
+    saveRevoRunDuration(6);
+    saveActiveRevoBar("melee", "dualwield", BAR_A);
+    saveActiveRevoBar("melee", "twohand", BAR_B);
+
+    expect(loadRotationMode()).toBe("manual");
+    expect(loadRevoRunDuration()).toBe(6);
+    expect(loadActiveRevoBar("melee", "dualwield")).toEqual(BAR_A);
+    expect(loadActiveRevoBar("melee", "twohand")).toEqual(BAR_B);
+    expect(loadActiveRevoBar("magic", "dualwield")).toBeNull();
+    expect(window.localStorage.getItem(ROTATION_WORKSPACE_KEY)).not.toBeNull();
+  });
+
+  it("drops corrupt active bars and falls back to Revolution mode", () => {
+    window.localStorage.setItem(
+      ROTATION_WORKSPACE_KEY,
+      JSON.stringify({ mode: "other", activeBars: { "melee|dualwield": ["slice", 3] } }),
+    );
+    expect(loadRotationMode()).toBe("revolution");
+    expect(loadActiveRevoBar("melee", "dualwield")).toBeNull();
+    expect(loadRevoRunDuration()).toBe(60);
+  });
+
   it("normalizes corrupt storage to empty lists", () => {
     expect(normalizeBarLibrary(null).recents).toEqual([]);
     expect(normalizeBarLibrary({ version: 1, recents: "nope" }).saved).toEqual([]);

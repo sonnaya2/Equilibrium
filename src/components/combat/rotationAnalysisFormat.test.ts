@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { occurrenceModelNote } from "./rotationAnalysisFormat";
+import {
+  occurrenceModelNote,
+  resolvedEventPreview,
+  RESOLVED_EVENT_PREVIEW_LIMIT,
+} from "./rotationAnalysisFormat";
 
 describe("rotation analysis presentation", () => {
   it("keeps the legacy Quick geometric note separate from concrete runtime events", () => {
@@ -20,5 +24,17 @@ describe("rotation analysis presentation", () => {
     ).toBe(
       "Critual recursive chain: 1 expected Inferno per eligible parent (50.0% start; 50.0% continuation)",
     );
+  });
+
+  it("pins the first Perfect Equilibrium hit after the resolved-event preview limit", () => {
+    const events = Array.from({ length: 20 }, (_, index) => ({
+      abilityId: index === 15 ? "perfect_equilibrium" : `ability_${index}`,
+    }));
+
+    const preview = resolvedEventPreview(events);
+
+    expect(preview.events).toHaveLength(RESOLVED_EVENT_PREVIEW_LIMIT + 1);
+    expect(preview.events.at(-1)?.abilityId).toBe("perfect_equilibrium");
+    expect(preview.pinnedPerfectEquilibrium).toBe(true);
   });
 });

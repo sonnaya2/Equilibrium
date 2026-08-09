@@ -21,7 +21,8 @@ import { abilityIconPath } from "@/lib/gameArt";
 import { loadState, saveState } from "@/lib/storage";
 import { GameIcon } from "../GameIcon";
 import { AbilityCategoryChip } from "./AbilityCategoryChip";
-import { CombatFrameCorners } from "./CombatFrameCorners";
+import { AbilityUnlockMarkers } from "./AbilityUnlockMarkers";
+import { CombatFrame } from "./CombatFrame";
 import { CalculationAssumptions } from "./CalculationAssumptions";
 import { spiritEffectDisplayName } from "./conjurePresentation";
 import { blessingEffectDisplayName } from "./blessingPresentation";
@@ -40,7 +41,13 @@ import type { Loadout, SetLoadout } from "./useLoadout";
 import { unlockedRegions } from "@/league";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
 import { uiRunFingerprint } from "./uiSimFingerprint";
-import { equipAbilityForLoadout, filterAbilitiesForLoadout } from "./abilityLoadoutFilter";
+import { getUiRunCache, setUiRunCache } from "./uiRunCache";
+import { loadRotationMode, saveRotationMode } from "./revoBarLibrary";
+import {
+  equipAbilityForLoadout,
+  filterAbilitiesForLoadout,
+  sortAbilitiesForDisplay,
+} from "./abilityLoadoutFilter";
 import { formatAdrenalineTimeline, formatCritContext } from "./revoPanelFormat";
 
 const STORAGE_KEY = "eq:rotation:v1";
@@ -151,6 +158,7 @@ export function RotationPlanner({
   const [analysisOpen, setAnalysisOpen] = useState(false);
 
   useEffect(() => {
+    setMode(loadRotationMode());
     const stored = loadState<unknown>(STORAGE_KEY, []);
     const list = Array.isArray(stored) ? stored : [];
     setQueue(
@@ -221,6 +229,13 @@ export function RotationPlanner({
   const liveResult = result != null && resultKey === runKey ? result : null;
 
   useEffect(() => {
+    const cached = getUiRunCache(runKey);
+    if (!cached) return;
+    setResult(cached.summary);
+    setResultKey(runKey);
+  }, [runKey]);
+
+  useEffect(() => {
     if (result != null && resultKey !== runKey) {
       setAnalysisOpen(false);
     }
@@ -229,10 +244,17 @@ export function RotationPlanner({
   const updateQueue = (next: string[]) => {
     setQueue(next);
     saveState(STORAGE_KEY, next);
+    window.dispatchEvent(new Event("eq:rotation:changed"));
   };
 
   const run = () => {
     setAnalysisOpen(false);
+    const cached = getUiRunCache(runKey);
+    if (cached) {
+      setResult(cached.summary);
+      setResultKey(runKey);
+      return;
+    }
     const rotation = rotationOf(...queue);
     // null clears model-packed ammo; undefined would keep Deathspore/etc from loadout.
     const ammoOpt = ammo === "none" ? null : ammo;
@@ -241,17 +263,17 @@ export function RotationPlanner({
         strengthCape99: combatModel.strengthCape99,
       });
       const simBase = buildSimulationInputBase(combatModel, catalogue);
-      setResult(
-        simulate(
-          toManualSimulateInput(simBase, {
-            rotation,
-            autoWeave: weave,
-            ammo: ammoOpt,
-            horizonTicks: MANUAL_HORIZON_TICKS,
-          }),
-        ),
+      const summary = simulate(
+        toManualSimulateInput(simBase, {
+          rotation,
+          autoWeave: weave,
+          ammo: ammoOpt,
+          horizonTicks: MANUAL_HORIZON_TICKS,
+        }),
       );
+      setResult(summary);
       setResultKey(runKey);
+      setUiRunCache(runKey, { summary });
       return;
     }
     // Manual-stat mode: pure slider constructor (no gear/league/mods).
@@ -263,20 +285,22 @@ export function RotationPlanner({
       adrenaline: setupStats.adrenaline,
       procs: setupStats.procs,
     });
-    setResult(
-      simulate(
-        toManualSimulateInput(simBase, {
-          rotation,
-          autoWeave: weave,
-          ammo: ammoOpt,
-          horizonTicks: MANUAL_HORIZON_TICKS,
-        }),
-      ),
+    const summary = simulate(
+      toManualSimulateInput(simBase, {
+        rotation,
+        autoWeave: weave,
+        ammo: ammoOpt,
+        horizonTicks: MANUAL_HORIZON_TICKS,
+      }),
     );
+    setResult(summary);
     setResultKey(runKey);
+    setUiRunCache(runKey, { summary });
   };
 
-  const stylePool = DISPLAY_CATALOGUE.catalogue.filter((a) => a.style === paletteStyle);
+  const stylePool = sortAbilitiesForDisplay(
+    DISPLAY_CATALOGUE.catalogue.filter((a) => a.style === paletteStyle),
+  );
   // Use-build: only the legal ultimate (base or Igneous), never both.
   const palette = useBuild
     ? filterAbilitiesForLoadout(stylePool, {
@@ -352,9 +376,8 @@ export function RotationPlanner({
 
   return (
     <div className="rotation-layout">
-      <div className="combat-frame rotation-settings">
-        <CombatFrameCorners />
-        <h2 className="combat-page-title text-sm font-medium text-parch-50">Rotation</h2>
+      <CombatFrame className="rotation-settings">
+        <h2 className="combat-page-title text-sm font-medium text-parch-50">Rotation setup</h2>
         <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
           <label className="flex items-center gap-2 text-xs text-parch-300">
             <input
@@ -374,12 +397,10 @@ export function RotationPlanner({
             <input
               type="checkbox"
               checked={!setupStats.cap.bypass}
-              disabled={setupStats.league.ruleset === "equilibrium"}
               aria-label="30,000 hit cap"
               onChange={(e) => setLoadout({ ...loadout, hitCapEnabled: e.target.checked })}
             />
             30,000 hit cap
-            {setupStats.league.ruleset === "equilibrium" ? " (removed in League)" : ""}
           </label>
         </div>
         {useBuild ? (
@@ -483,7 +504,10 @@ export function RotationPlanner({
             <button
               key={candidate}
               type="button"
-              onClick={() => setMode(candidate)}
+              onClick={() => {
+                setMode(candidate);
+                saveRotationMode(candidate);
+              }}
               aria-pressed={mode === candidate}
               className={`combat-button border px-3 py-1.5 text-xs capitalize ${
                 mode === candidate
@@ -539,14 +563,15 @@ export function RotationPlanner({
                     title={reason}
                     className="grid w-full grid-cols-[1fr_auto] gap-2 border-b border-stone-750/70 px-2 py-2 text-left text-xs text-parch-300 enabled:hover:bg-white/[0.02] enabled:hover:text-parch-50 disabled:cursor-not-allowed disabled:opacity-45"
                   >
-                    <span className="inline-flex min-w-0 items-center gap-1.5">
+                    <span className="flex w-full min-w-0 items-center gap-1.5">
                       <GameIcon
                         src={abilityIconPath(a.id, a.style)}
                         size={16}
                         className="shrink-0"
                       />
                       <span className="min-w-0 truncate">{a.name}</span>
-                      <AbilityCategoryChip category={a.category} />
+                      <AbilityCategoryChip category={a.category} weaponSpecial={a.weaponSpecial} />
+                      <AbilityUnlockMarkers ability={a} />
                     </span>
                     <span className="font-mono">
                       {reason ??
@@ -562,11 +587,10 @@ export function RotationPlanner({
             </div>
           </>
         ) : null}
-      </div>
+      </CombatFrame>
 
       {mode === "revolution" ? (
-        <div className="combat-frame rotation-workbench">
-          <CombatFrameCorners />
+        <div className="rotation-workbench">
           <RevolutionPanel
             stats={activeStats}
             loadout={loadout}
@@ -576,8 +600,7 @@ export function RotationPlanner({
           />
         </div>
       ) : (
-        <div className="combat-frame rotation-workbench rotation-manual">
-          <CombatFrameCorners />
+        <CombatFrame className="rotation-workbench rotation-manual">
           <div className="flex flex-wrap items-baseline justify-between gap-3">
             <h2 className="text-sm font-medium text-parch-50">
               Queue · {queue.length} casts · 60s fixed window
@@ -634,7 +657,7 @@ export function RotationPlanner({
                     }`}
                   >
                     <span className="font-mono text-parch-300">{index + 1}</span>
-                    <span className="inline-flex min-w-0 items-center gap-1.5">
+                    <span className="flex w-full min-w-0 items-center gap-1.5">
                       {a ? (
                         <>
                           <GameIcon
@@ -643,7 +666,11 @@ export function RotationPlanner({
                             className="shrink-0"
                           />
                           <span className="min-w-0 truncate">{a.name}</span>
-                          <AbilityCategoryChip category={a.category} />
+                          <AbilityCategoryChip
+                            category={a.category}
+                            weaponSpecial={a.weaponSpecial}
+                          />
+                          <AbilityUnlockMarkers ability={a} />
                         </>
                       ) : (
                         <span>{abilityName(id)}</span>
@@ -836,7 +863,7 @@ export function RotationPlanner({
               <RotationEventPreview result={liveResult} nameForId={abilityName} />
             </div>
           ) : null}
-        </div>
+        </CombatFrame>
       )}
       {liveResult?.ok ? (
         <RotationAnalysisModal

@@ -5,10 +5,13 @@ import { styleIconPath } from "@/lib/gameArt";
 import { WorkbenchPanel, SectionTabs } from "@/components/SectionTabs";
 import { GameIcon } from "../GameIcon";
 import { AnalysisTab } from "./AnalysisTab";
+import { CombatFrame } from "./CombatFrame";
 import { RotationPlanner } from "./RotationPlanner";
+import { SavedSetupRibbon } from "./SavedSetupRibbon";
 import { SetupTab } from "./SetupTab";
-import { useLoadout } from "./useLoadout";
+import { useSavedSetups } from "./useLoadout";
 import "./combat.css";
+import "./combat-v7.css";
 
 const COMBAT_TABS = [
   { id: "Setup", label: "Loadout" },
@@ -20,32 +23,38 @@ type Tab = (typeof COMBAT_TABS)[number]["id"];
 
 export function CombatTabs() {
   const [tab, setTab] = useState<Tab>("Setup");
-  const [loadout, setLoadout] = useLoadout();
+  const { collection, loadout, setLoadout, actions } = useSavedSetups();
 
   return (
     <div className="combat-screen">
-      <header className="combat-toolbar">
-        {/* The equipped weapon sets the style, so this icon is the only readout. */}
-        <div className="combat-toolbar__title">
-          <GameIcon src={styleIconPath(loadout.style)} size={30} />
-          <span>Combat</span>
+      <CombatFrame as="header" className="combat-header">
+        <div className="combat-toolbar">
+          <div className="combat-toolbar__title">
+            <GameIcon src={styleIconPath(loadout.style)} size={24} />
+            <span>Combat</span>
+          </div>
+          <SectionTabs
+            aria-label="Combat sections"
+            tabs={COMBAT_TABS}
+            active={tab}
+            onChange={setTab}
+          />
         </div>
-        <SectionTabs
-          aria-label="Combat sections"
-          tabs={COMBAT_TABS}
-          active={tab}
-          onChange={setTab}
-        />
-      </header>
+        <SavedSetupRibbon collection={collection} actions={actions} />
+      </CombatFrame>
 
       <div className="combat-tab-stage">
         <WorkbenchPanel id="Setup" active={tab}>
-          <SetupTab loadout={loadout} setLoadout={setLoadout} />
+          <SetupTab
+            loadout={loadout}
+            setLoadout={setLoadout}
+            onOpenRotation={() => setTab("Rotation")}
+          />
         </WorkbenchPanel>
-        <WorkbenchPanel id="Rotation" active={tab} clip>
+        <WorkbenchPanel id="Rotation" active={tab}>
           <RotationPlanner loadout={loadout} setLoadout={setLoadout} />
         </WorkbenchPanel>
-        <WorkbenchPanel id="Analysis" active={tab} clip>
+        <WorkbenchPanel id="Analysis" active={tab}>
           <AnalysisTab loadout={loadout} />
         </WorkbenchPanel>
       </div>

@@ -117,11 +117,11 @@ export function TargetPanel({
                   })
                 }
               />
-              Track target maximum LP
+              Track target maximum Hitpoints
             </label>
             {target.maximumLifePoints !== undefined ? (
               <NumberField
-                label="Maximum LP"
+                label="Maximum Hitpoints"
                 value={target.maximumLifePoints}
                 min={1}
                 onChange={(value) =>

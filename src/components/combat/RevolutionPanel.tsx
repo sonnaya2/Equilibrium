@@ -15,7 +15,14 @@ import type { CalcStats } from "./loadoutStats";
 import { naragiBaseDamageCompare, resolveLoadoutCombat } from "./toResolvedCombatModel";
 import { uiRunFingerprint } from "./uiSimFingerprint";
 import { getUiRunCache, setUiRunCache } from "./uiRunCache";
-import { isBarAlreadySaved, type RevoBarEntry } from "./revoBarLibrary";
+import {
+  isBarAlreadySaved,
+  loadActiveRevoBar,
+  loadRevoRunDuration,
+  saveActiveRevoBar,
+  saveRevoRunDuration,
+  type RevoBarEntry,
+} from "./revoBarLibrary";
 import type { Loadout, SetLoadout } from "./useLoadout";
 import { withLoadoutBuffs } from "./useLoadout";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
@@ -33,6 +40,7 @@ import {
   type RevoBarView,
 } from "./revoBarResolve";
 import { maySaveVerified } from "./revoPanelFormat";
+import { CombatFrame } from "./CombatFrame";
 import { RevoBarGraphic } from "./RevoBarGraphic";
 import { RevoBarLibraryPanel } from "./RevoBarLibraryPanel";
 import { RevoSolverSection } from "./RevoSolverSection";
@@ -76,10 +84,21 @@ export function RevolutionPanel({
   const [runProgressLabel, setRunProgressLabel] = useState<string | null>(null);
   const [runError, setRunError] = useState<string | null>(null);
   const [showAllCasts, setShowAllCasts] = useState(false);
+
+  useEffect(() => {
+    setDurationSeconds(loadRevoRunDuration());
+  }, []);
+
+  const updateDurationSeconds = (value: number) => {
+    const duration = clampRunDurationSeconds(value);
+    setDurationSeconds(duration);
+    saveRevoRunDuration(duration);
+  };
   const [analysisOpen, setAnalysisOpen] = useState(false);
   const [activeBarIds, setActiveBarIds] = useState<string[] | null>(null);
   const runGenRef = useRef(0);
   const runCancelRef = useRef(false);
+  const weaponConfiguration = stats.weaponConfiguration;
 
   useEffect(() => {
     return () => {
@@ -93,11 +112,14 @@ export function RevolutionPanel({
     (ids: string[] | null) => {
       if (ids == null) {
         setActiveBarIds(null);
+        saveActiveRevoBar(loadout.style, weaponConfiguration, null);
         return;
       }
-      setActiveBarIds(ensureNecroConjuresOnBarIds(ids, loadout.style, stats.weaponConfiguration));
+      const normalized = ensureNecroConjuresOnBarIds(ids, loadout.style, weaponConfiguration);
+      setActiveBarIds(normalized);
+      saveActiveRevoBar(loadout.style, weaponConfiguration, normalized);
     },
-    [loadout.style, stats.weaponConfiguration],
+    [loadout.style, weaponConfiguration],
   );
   const onClearSimResult = useCallback(() => {
     setResult(null);
@@ -119,7 +141,6 @@ export function RevolutionPanel({
     [stats.equipmentEffects.passiveIds, stats.equipmentIds],
   );
 
-  const weaponConfiguration = stats.weaponConfiguration;
   // Solver bars can drop conjure_*; merge wiki early-bar conjures for necro Run/display.
   const effectiveActiveBarIds = useMemo(() => {
     if (!activeBarIds?.length) return null;
@@ -216,6 +237,13 @@ export function RevolutionPanel({
   const [resultKey, setResultKey] = useState<string | null>(null);
   const liveResult = result != null && resultKey === runKey ? result : null;
 
+  useEffect(() => {
+    const cached = getUiRunCache(runKey);
+    if (!cached) return;
+    setResult(cached.summary);
+    setResultKey(runKey);
+  }, [runKey]);
+
   // Solver always packs the same combatModel as Run (use-build or hybrid).
   const solver = useRevolutionSolver({
     stats,
@@ -228,16 +256,22 @@ export function RevolutionPanel({
   });
 
   useEffect(() => {
-    if (prevEquipKey.current === equipKey) return;
+    const equipmentChanged = prevEquipKey.current !== equipKey;
     prevEquipKey.current = equipKey;
-    setActiveBarIds(null);
+    const restored = loadActiveRevoBar(loadout.style, weaponConfiguration);
+    setActiveBarIds(
+      restored?.length
+        ? ensureNecroConjuresOnBarIds(restored, loadout.style, weaponConfiguration)
+        : null,
+    );
+    if (!equipmentChanged) return;
     setResult(null);
     setResultKey(null);
     setShowAllCasts(false);
     setAnalysisOpen(false);
     solver.clearSolverUi();
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only equip shape; clearSolverUi is stable
-  }, [equipKey]);
+  }, [equipKey, loadout.style, weaponConfiguration]);
 
   useEffect(() => {
     if (result != null && resultKey !== runKey) {
@@ -320,7 +354,7 @@ export function RevolutionPanel({
   };
 
   const applySolverBar = (ids: readonly string[]) => {
-    setActiveBarIds(ensureNecroConjuresOnBarIds(ids, loadout.style, weaponConfiguration));
+    onActiveBar([...ids]);
     setResult(null);
   };
 
@@ -337,7 +371,9 @@ export function RevolutionPanel({
       ? [...finalRunBar]
       : stoppedRunBar
         ? [...stoppedRunBar]
-        : null;
+        : barIdsForKey.length
+          ? [...barIdsForKey]
+          : null;
   const finalBarMatch =
     !!finalRunBar &&
     !!currentSaveBar &&
@@ -372,75 +408,167 @@ export function RevolutionPanel({
     applySolverBar(entry.bar);
   };
 
+  const firstCast = liveResult?.casts[0];
+  const lastCast = liveResult?.casts.at(-1);
+  const totalAdrenalineGained = liveResult
+    ? liveResult.casts.reduce((total, cast) => total + cast.adrenalineGained, 0)
+    : null;
+  const statusLabel = runBusy
+    ? "Running"
+    : liveResult
+      ? liveResult.ok
+        ? "Complete"
+        : "Failed"
+      : "Not run";
+  const statusWarnings = [
+    modelled.length === 0 ? "No modelled abilities available." : null,
+    unmodelled.length > 0 ? `${unmodelled.length} bar slot(s) are unmodelled.` : null,
+    solver.solverError,
+    runError,
+  ].filter((warning): warning is string => warning != null);
+
   return (
     <div className="revolution-panel">
-      <RevoBarLibraryPanel
-        style={loadout.style}
-        barLibrary={solver.barLibrary}
-        currentSaveBar={currentSaveBar}
-        currentSaveScore={currentSaveScore}
-        alreadySaved={alreadySaved}
-        solving={solver.solving}
-        liveScoreContext={solver.liveIdentity}
-        onSave={() =>
-          solver.saveCurrentBar(currentSaveBar, currentSaveScore, { verified: saveVerified })
-        }
-        onLoad={loadLibraryBar}
-        onDropRecent={solver.dropRecent}
-        onDropSaved={solver.dropSaved}
-      />
+      <CombatFrame as="aside" className="revo-library-column" aria-label="Bar library">
+        <RevoBarLibraryPanel
+          style={loadout.style}
+          barLibrary={solver.barLibrary}
+          currentSaveBar={currentSaveBar}
+          currentSaveScore={currentSaveScore}
+          alreadySaved={alreadySaved}
+          solving={solver.solving}
+          liveScoreContext={solver.liveIdentity}
+          onSave={() =>
+            solver.saveCurrentBar(currentSaveBar, currentSaveScore, { verified: saveVerified })
+          }
+          onLoad={loadLibraryBar}
+          onDropRecent={solver.dropRecent}
+          onDropSaved={solver.dropSaved}
+        />
+      </CombatFrame>
 
-      <RevoSolverSection
-        regions={regions}
-        solving={solver.solving}
-        stopping={solver.stopping}
-        solverProgress={solver.solverProgress}
-        solverResult={solver.solverResult}
-        stoppedPreview={solver.stoppedPreview}
-        solverError={solver.solverError}
-        bestPulse={solver.bestPulse}
-        solverAgents={solver.solverAgents}
-        solverTier={solver.solverTier}
-        setSolverTier={(t) => {
-          solver.setSolverTier(t);
-          solver.setSolverAgents(preferredAgentCount(t));
-        }}
-        setSolverAgents={solver.setSolverAgents}
-        solverProfile={solver.solverProfile}
-        setSolverProfile={solver.setSolverProfile}
-        barSizePreset={solver.barSizePreset}
-        setBarSizePreset={solver.setBarSizePreset}
-        limitToRegions={solver.limitToRegions}
-        setLimitToRegions={solver.setLimitToRegions}
-        onOptimize={() => void solver.optimize()}
-        onCancel={solver.cancelSolve}
-        onApplyBar={applySolverBar}
-      />
+      <CombatFrame as="main" className="revo-main-column">
+        <section className="revo-bar-frame" aria-labelledby="revo-bar-title">
+          <header className="revo-bar-heading">
+            <h2 id="revo-bar-title">Revolution bar</h2>
+            <span>
+              {slots.length} slots · {revoSize} active
+            </span>
+          </header>
+          <div className="ability-bar-row">
+            <RevoBarGraphic slots={slots} revoSize={revoSize} />
+          </div>
+          <div className="revo-toolbar flex flex-wrap items-center gap-2 text-xs">
+            <span className="text-parch-300" data-testid="revo-reference-bar">
+              {activeBarIds ? (
+                <>Solved bar · {modelled.length} abilities</>
+              ) : bar ? (
+                <>
+                  <span className="text-parch-50">{barOptionLabel(bar)}</span>
+                  <span className="revo-solver-status__dot" aria-hidden>
+                    ·
+                  </span>
+                  from Setup
+                  <span className="revo-solver-status__dot" aria-hidden>
+                    ·
+                  </span>
+                  {modelled.length} of {managedSlots.length} modelled
+                  {unmodelled.length > 0 ? ` · ${unmodelled.length} skipped` : ""}
+                  {keybindCount > 0
+                    ? ` · ${keybindCount} keybind${keybindCount === 1 ? "" : "s"}`
+                    : ""}
+                </>
+              ) : (
+                "No reference bar for this loadout"
+              )}
+            </span>
+          </div>
+        </section>
 
-      <div className="revo-toolbar flex flex-wrap items-center gap-2 text-xs">
-        <span className="text-parch-300" data-testid="revo-reference-bar">
-          {activeBarIds ? (
-            <>Solved bar · {modelled.length} abilities</>
-          ) : bar ? (
-            <>
-              <span className="text-parch-50">{barOptionLabel(bar)}</span>
-              <span className="revo-solver-status__dot" aria-hidden>
-                ·
-              </span>
-              from Setup
-              <span className="revo-solver-status__dot" aria-hidden>
-                ·
-              </span>
-              {modelled.length} of {managedSlots.length} modelled
-              {unmodelled.length > 0 ? ` · ${unmodelled.length} skipped` : ""}
-              {keybindCount > 0 ? ` · ${keybindCount} keybind${keybindCount === 1 ? "" : "s"}` : ""}
-            </>
-          ) : (
-            "No reference bar for this loadout"
-          )}
-        </span>
+        <RevoSolverSection
+          regions={regions}
+          solving={solver.solving}
+          stopping={solver.stopping}
+          solverProgress={solver.solverProgress}
+          solverResult={solver.solverResult}
+          stoppedPreview={solver.stoppedPreview}
+          solverError={solver.solverError}
+          bestPulse={solver.bestPulse}
+          solverAgents={solver.solverAgents}
+          solverTier={solver.solverTier}
+          setSolverTier={(t) => {
+            solver.setSolverTier(t);
+            solver.setSolverAgents(preferredAgentCount(t));
+          }}
+          setSolverAgents={solver.setSolverAgents}
+          solverProfile={solver.solverProfile}
+          setSolverProfile={solver.setSolverProfile}
+          barSizePreset={solver.barSizePreset}
+          setBarSizePreset={solver.setBarSizePreset}
+          limitToRegions={solver.limitToRegions}
+          setLimitToRegions={solver.setLimitToRegions}
+          onOptimize={() => void solver.optimize()}
+          onCancel={solver.cancelSolve}
+          onApplyBar={applySolverBar}
+        />
+
+        <section className="revo-results-shell" aria-label="Run results">
+          <RevoRunResults
+            stats={stats}
+            durationSeconds={durationSeconds}
+            setDurationSeconds={updateDurationSeconds}
+            plannedTicks={plannedTicks}
+            onRun={run}
+            result={liveResult}
+            showAllCasts={showAllCasts}
+            setShowAllCasts={setShowAllCasts}
+            analysisOpen={analysisOpen}
+            setAnalysisOpen={setAnalysisOpen}
+            nameById={nameById}
+            runBusy={runBusy}
+            runProgressLabel={runProgressLabel}
+            runError={runError}
+            onCancelRun={cancelRun}
+            showControls={false}
+            sliverToggle={
+              loadout.equipmentSlots?.pocket === SLIVER_OF_EDICTS_ID && setLoadout
+                ? {
+                    active: loadout.buffs.sliverOfEdictsActive,
+                    onToggle: () =>
+                      setLoadout((prev) =>
+                        withLoadoutBuffs(prev, {
+                          sliverOfEdictsActive: !prev.buffs.sliverOfEdictsActive,
+                        }),
+                      ),
+                    baseOff: sliverBaseCompare.off,
+                    baseOn: sliverBaseCompare.on,
+                  }
+                : null
+            }
+          />
+        </section>
+      </CombatFrame>
+
+      <CombatFrame as="aside" className="revo-status-rail" aria-label="Run control status">
+        <h2>Run control &amp; status</h2>
+        <label className="revo-status-control">
+          <span>Duration</span>
+          <span>
+            <input
+              type="number"
+              value={durationSeconds}
+              min={6}
+              max={1000}
+              step={1}
+              onChange={(event) => updateDurationSeconds(Number(event.target.value))}
+              data-testid="revo-run-duration"
+              disabled={runBusy}
+            />
+            <span>s</span>
+          </span>
+        </label>
         {setLoadout ? (
-          <label className="flex items-start gap-2 text-parch-300">
+          <label className="revo-status-check">
             <input
               type="checkbox"
               checked={loadout.buffs.useEquippedWeaponSpecial}
@@ -453,51 +581,93 @@ export function RevolutionPanel({
               }
             />
             <span>
-              <span className="block text-parch-50">Use equipped weapon special manually</span>
-              <span className="block text-[0.68rem] text-parch-400">
-                Fires it when legal while Revolution controls the bar.
-              </span>
+              <strong>Use equipped weapon special manually</strong>
+              <small>Fires it when legal.</small>
             </span>
           </label>
         ) : null}
-      </div>
-
-      <div className="ability-bar-row">
-        <RevoBarGraphic slots={slots} revoSize={revoSize} />
-      </div>
-
-      <RevoRunResults
-        stats={stats}
-        durationSeconds={durationSeconds}
-        setDurationSeconds={(n) => setDurationSeconds(clampRunDurationSeconds(n))}
-        plannedTicks={plannedTicks}
-        onRun={run}
-        result={liveResult}
-        showAllCasts={showAllCasts}
-        setShowAllCasts={setShowAllCasts}
-        analysisOpen={analysisOpen}
-        setAnalysisOpen={setAnalysisOpen}
-        nameById={nameById}
-        runBusy={runBusy}
-        runProgressLabel={runProgressLabel}
-        runError={runError}
-        onCancelRun={cancelRun}
-        sliverToggle={
-          loadout.equipmentSlots?.pocket === SLIVER_OF_EDICTS_ID && setLoadout
-            ? {
-                active: loadout.buffs.sliverOfEdictsActive,
-                onToggle: () =>
-                  setLoadout((prev) =>
-                    withLoadoutBuffs(prev, {
-                      sliverOfEdictsActive: !prev.buffs.sliverOfEdictsActive,
-                    }),
-                  ),
-                baseOff: sliverBaseCompare.off,
-                baseOn: sliverBaseCompare.on,
-              }
-            : null
-        }
-      />
+        <div className="revo-status-actions">
+          <button
+            type="button"
+            className="combat-button revo-run-button"
+            onClick={run}
+            disabled={runBusy || modelled.length === 0}
+            data-testid="revo-run-button"
+          >
+            {runBusy ? "Running…" : "Run bar"}
+          </button>
+          {runBusy ? (
+            <button
+              type="button"
+              className="combat-button revo-run-cancel"
+              onClick={cancelRun}
+              data-testid="revo-run-cancel"
+            >
+              Cancel
+            </button>
+          ) : null}
+          {liveResult?.ok ? (
+            <button
+              type="button"
+              className="combat-button revo-analyze-button"
+              onClick={() => setAnalysisOpen(true)}
+            >
+              Analyze damage
+            </button>
+          ) : null}
+        </div>
+        <dl>
+          <div>
+            <dt>Duration</dt>
+            <dd>{durationSeconds}s</dd>
+          </div>
+          <div>
+            <dt>Horizon</dt>
+            <dd>{plannedTicks > 0 ? `${plannedTicks} ticks` : "—"}</dd>
+          </div>
+          <div>
+            <dt>Status</dt>
+            <dd>{statusLabel}</dd>
+          </div>
+          <div>
+            <dt>Active bar</dt>
+            <dd>{currentSaveBar?.length ?? 0} slots</dd>
+          </div>
+          <div>
+            <dt>Solver proof</dt>
+            <dd>{solver.solverResult?.proofLabel ?? "Not available"}</dd>
+          </div>
+        </dl>
+        <section aria-labelledby="revo-adren-title">
+          <h2 id="revo-adren-title">Adrenaline</h2>
+          <dl>
+            <div>
+              <dt>Start</dt>
+              <dd>{firstCast ? `${firstCast.adrenalineBefore}%` : "—"}</dd>
+            </div>
+            <div>
+              <dt>End</dt>
+              <dd>{lastCast ? `${lastCast.adrenalineAfter}%` : "—"}</dd>
+            </div>
+            <div>
+              <dt>Gained</dt>
+              <dd>{totalAdrenalineGained == null ? "—" : totalAdrenalineGained.toFixed(1)}</dd>
+            </div>
+          </dl>
+        </section>
+        <section aria-labelledby="revo-warnings-title">
+          <h2 id="revo-warnings-title">Warnings / limits</h2>
+          {statusWarnings.length ? (
+            <ul>
+              {statusWarnings.map((warning) => (
+                <li key={warning}>{warning}</li>
+              ))}
+            </ul>
+          ) : (
+            <small>No current warnings.</small>
+          )}
+        </section>
+      </CombatFrame>
     </div>
   );
 }

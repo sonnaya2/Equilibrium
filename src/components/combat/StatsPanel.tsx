@@ -232,7 +232,7 @@ export function StatsPanel({
           ) : null}
         </StatsGroup>
 
-        <StatsGroup title="Defence & life">
+        <StatsGroup title="Defence & Hitpoints">
           <NumberField
             label="Defence level"
             value={loadout.defenceLevel}
@@ -252,32 +252,15 @@ export function StatsPanel({
             value={format(stats.defence.visibleLevel)}
             note={boostNote(loadout.defenceLevel)}
           />
-          {stats.defence.blockLevel !== stats.defence.visibleLevel ? (
-            <DerivedRow
-              label="Block level"
-              value={format(stats.defence.blockLevel, 2)}
-              note={
-                loadout.buffs.fortitude
-                  ? "Fortitude"
-                  : loadout.buffs.styleCurse !== "none"
-                    ? loadout.buffs.styleCurse
-                    : undefined
-              }
-            />
-          ) : null}
           {/* Two different numbers: the Loadout screen's Total Armor Value, which every
               "% of your armour value" effect reads, and the hit-chance rating
               that Defence level, curses and Fortitude also feed. */}
-          <DerivedRow label="Total Armor Value" value={format(stats.defence.totalArmour)} />
-          <DerivedRow
-            label="Armour rating"
-            value={format(stats.defence.blockArmourRating)}
-            note="hit chance only"
-          />
+          <DerivedRow label="Equipment Armour" value={format(stats.defence.totalArmour)} />
+          <DerivedRow label="Total Armour Value" value={format(stats.defence.blockArmourRating)} />
           {/* null current life means "follow the maximum", so it never goes stale
               when a buff moves the maximum underneath it. */}
           <AutoNumberField
-            label="Current HP"
+            label="Current Hitpoints"
             value={stats.life.currentLife}
             min={0}
             max={stats.life.overhealCeiling}
@@ -316,7 +299,7 @@ export function StatsPanel({
             }}
           />
           <DerivedRow
-            label="Maximum HP"
+            label="Maximum Hitpoints"
             value={format(stats.life.temporaryMaxLife)}
             note={
               stats.life.powerburstActive
@@ -358,7 +341,11 @@ export function StatsPanel({
           <DerivedRow
             label="Damage Potential"
             value={`${Math.round(stats.dp * 1000) / 10}%`}
-            note={stats.damagePotentialSource}
+            note={
+              stats.damagePotentialSource === "100% assumption"
+                ? undefined
+                : stats.damagePotentialSource
+            }
           />
         </StatsGroup>
       </div>

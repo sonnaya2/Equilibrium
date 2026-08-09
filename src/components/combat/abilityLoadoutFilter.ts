@@ -20,6 +20,32 @@ export type LoadoutAbilityGate = {
   league?: ResolvedLeagueRules;
 };
 
+export function sortAbilitiesForDisplay(abilities: readonly AbilitySpec[]): AbilitySpec[] {
+  return abilities
+    .map((ability, index) => ({ ability, index }))
+    .sort(
+      (left, right) =>
+        displayPriority(left.ability) - displayPriority(right.ability) ||
+        compareAbilityNames(left.ability, right.ability) ||
+        left.index - right.index,
+    )
+    .map(({ ability }) => ability);
+}
+
+function displayPriority(ability: AbilitySpec): number {
+  if (ability.weaponSpecial === true) return 0;
+  if (ability.category === "utility") return 1;
+  if (ability.category === "basic") return 2;
+  if (ability.category === "enhanced") return 3;
+  if (ability.category === "threshold") return 4;
+  if (ability.category === "ultimate") return 5;
+  return 6;
+}
+
+function compareAbilityNames(left: AbilitySpec, right: AbilitySpec): number {
+  return left.name.localeCompare(right.name, "en", { numeric: true, sensitivity: "base" });
+}
+
 /**
  * Keep only abilities legal under the loadout.
  * Base Overpower drops when Kal-Ket is on; Overpower (Igneous) drops when cape is off.

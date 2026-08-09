@@ -9,6 +9,7 @@ import { loadState, saveState } from "@/lib/storage";
 export const REVO_BAR_LIBRARY_KEY = "eq:revo-bars:v2";
 /** @deprecated read-only migration from pre-context storage */
 const REVO_BAR_LIBRARY_KEY_V1 = "eq:revo-bars:v1";
+export const ROTATION_WORKSPACE_KEY = "eq:rotation-workspace:v1";
 
 export const MAX_RECENT_BARS = 5;
 export const MAX_SAVED_BARS = 40;
@@ -44,6 +45,15 @@ export interface RevoBarLibrary {
   saved: RevoBarEntry[];
 }
 
+export type RotationMode = "revolution" | "manual";
+
+type RotationWorkspace = {
+  version: 1;
+  mode: RotationMode;
+  activeBars: Record<string, string[]>;
+  runDurationSeconds: number;
+};
+
 export interface RememberBarInput {
   bar: readonly string[];
   style: string;
@@ -59,6 +69,12 @@ export interface RememberBarInput {
 }
 
 const EMPTY: RevoBarLibrary = { version: 2, recents: [], saved: [] };
+const EMPTY_WORKSPACE: RotationWorkspace = {
+  version: 1,
+  mode: "revolution",
+  activeBars: {},
+  runDurationSeconds: 60,
+};
 
 export function emptyBarLibrary(): RevoBarLibrary {
   return { version: 2, recents: [], saved: [] };
@@ -66,6 +82,78 @@ export function emptyBarLibrary(): RevoBarLibrary {
 
 function isStringArray(v: unknown): v is string[] {
   return Array.isArray(v) && v.every((x) => typeof x === "string" && x.length > 0);
+}
+
+function rotationContext(style: string, weaponConfiguration: string): string {
+  return `${style}|${weaponConfiguration}`;
+}
+
+function normalizeRotationWorkspace(raw: unknown): RotationWorkspace {
+  if (!raw || typeof raw !== "object") return { ...EMPTY_WORKSPACE, activeBars: {} };
+  const record = raw as Record<string, unknown>;
+  const mode: RotationMode = record.mode === "manual" ? "manual" : "revolution";
+  const runDurationSeconds =
+    typeof record.runDurationSeconds === "number" && Number.isFinite(record.runDurationSeconds)
+      ? Math.min(1000, Math.max(6, Math.floor(record.runDurationSeconds)))
+      : EMPTY_WORKSPACE.runDurationSeconds;
+  const activeBars: Record<string, string[]> = {};
+  if (record.activeBars && typeof record.activeBars === "object") {
+    for (const [context, bar] of Object.entries(record.activeBars)) {
+      if (isStringArray(bar) && bar.length > 0) activeBars[context] = [...bar];
+    }
+  }
+  return { version: 1, mode, activeBars, runDurationSeconds };
+}
+
+function loadRotationWorkspace(): RotationWorkspace {
+  return loadState(
+    ROTATION_WORKSPACE_KEY,
+    { ...EMPTY_WORKSPACE, activeBars: {} },
+    normalizeRotationWorkspace,
+  );
+}
+
+function saveRotationWorkspace(workspace: RotationWorkspace): void {
+  saveState(ROTATION_WORKSPACE_KEY, workspace);
+  if (typeof window !== "undefined" && typeof window.dispatchEvent === "function") {
+    window.dispatchEvent(new Event("eq:rotation:changed"));
+  }
+}
+
+export function loadRotationMode(): RotationMode {
+  return loadRotationWorkspace().mode;
+}
+
+export function saveRotationMode(mode: RotationMode): void {
+  const workspace = loadRotationWorkspace();
+  saveRotationWorkspace({ ...workspace, mode });
+}
+
+export function loadRevoRunDuration(): number {
+  return loadRotationWorkspace().runDurationSeconds;
+}
+
+export function saveRevoRunDuration(runDurationSeconds: number): void {
+  const workspace = loadRotationWorkspace();
+  saveRotationWorkspace(normalizeRotationWorkspace({ ...workspace, runDurationSeconds }));
+}
+
+export function loadActiveRevoBar(style: string, weaponConfiguration: string): string[] | null {
+  const bar = loadRotationWorkspace().activeBars[rotationContext(style, weaponConfiguration)];
+  return bar?.length ? [...bar] : null;
+}
+
+export function saveActiveRevoBar(
+  style: string,
+  weaponConfiguration: string,
+  bar: readonly string[] | null,
+): void {
+  const workspace = loadRotationWorkspace();
+  const context = rotationContext(style, weaponConfiguration);
+  const activeBars = { ...workspace.activeBars };
+  if (bar?.length) activeBars[context] = [...bar];
+  else delete activeBars[context];
+  saveRotationWorkspace({ ...workspace, activeBars });
 }
 
 export function barFingerprint(bar: readonly string[]): string {
@@ -195,6 +283,7 @@ export function resetBarLibraryForTests(): void {
   try {
     window.localStorage?.removeItem(REVO_BAR_LIBRARY_KEY);
     window.localStorage?.removeItem(REVO_BAR_LIBRARY_KEY_V1);
+    window.localStorage?.removeItem(ROTATION_WORKSPACE_KEY);
   } catch {
     // ignore
   }

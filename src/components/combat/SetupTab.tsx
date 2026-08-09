@@ -1,381 +1,70 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
-import { GameIcon } from "../GameIcon";
-import { ArchPanel } from "./ArchPanel";
-import { BuffsPanel } from "./BuffsPanel";
-import { CombatFrameCorners } from "./CombatFrameCorners";
-import { GearPanel } from "./GearPanel";
-import { loadoutStats } from "./loadoutStats";
-import { PerksPanel } from "./PerksPanel";
-import { QuickCalculator } from "./QuickCalculator";
-import { StatsPanel } from "./StatsPanel";
-import { TargetPanel } from "./TargetPanel";
-import type { Loadout, SetLoadout } from "./useLoadout";
+import { useMemo, useState } from "react";
 import { unlockedRegions } from "@/league";
 import { useBuild } from "@/league/useBuild";
+import { EquipmentColumn } from "./EquipmentColumn";
+import { LoadoutEditorDialog, type LoadoutEditorMode } from "./LoadoutEditorDialog";
+import { loadoutStats } from "./loadoutStats";
+import { ResolvedSummary } from "./ResolvedSummary";
+import { SetupWorkbench } from "./SetupWorkbench";
+import type { Loadout, SetLoadout } from "./useLoadout";
 
-const SUB_TABS = ["Gear", "Stats", "Buffs", "Arch", "Invention", "Abilities", "Target"] as const;
-type SubTab = (typeof SUB_TABS)[number];
+export { SummaryMetric } from "./ResolvedSummary";
 
-const SUB_TAB_ICONS: Record<SubTab, string> = {
-  Gear: "/game/skills/defence.webp",
-  Stats: "/game/skills/constitution.webp",
-  Buffs: "/game/skills/prayer.webp",
-  Arch: "/game/skills/archaeology.webp",
-  Invention: "/game/skills/invention.webp",
-  Abilities: "/game/combat/melee-abilities.webp",
-  Target: "/game/bosses/nex.webp",
-};
-
-const NUMBER_FORMAT = new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 });
-const LEVEL_FORMAT = new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 });
-const PERCENT_FORMAT = new Intl.NumberFormat("en-US", {
-  style: "percent",
-  maximumFractionDigits: 1,
-});
-
-function formatNum(value: number): string {
-  return NUMBER_FORMAT.format(value);
-}
-
-function Breakdown({
-  items,
-  total,
-  percent = false,
+export function SetupTab({
+  loadout,
+  setLoadout,
+  onOpenRotation,
 }: {
-  items: readonly { label: string; value: number }[];
-  total: number;
-  percent?: boolean;
+  loadout: Loadout;
+  setLoadout: SetLoadout;
+  onOpenRotation: () => void;
 }) {
-  return (
-    <dl className="summary-breakdown" data-breakdown-total={total}>
-      {items.map((item) =>
-        item.value !== 0 ? (
-          <div key={item.label} data-breakdown-value={item.value}>
-            <dt>{item.label}</dt>
-            <dd>{percent ? PERCENT_FORMAT.format(item.value) : formatNum(item.value)}</dd>
-          </div>
-        ) : null,
-      )}
-    </dl>
-  );
-}
-
-export function SummaryMetric({
-  label,
-  value,
-  note,
-  partialItems = 0,
-  children,
-}: {
-  label: string;
-  value: string;
-  note?: string;
-  partialItems?: number;
-  children?: ReactNode;
-}) {
-  const row = (
-    <>
-      <span className="summary-metric__label">
-        {label}
-        {note ? <small>{note}</small> : null}
-      </span>
-      <span className="summary-metric__result">
-        <strong>{partialItems ? `≥ ${value}` : value}</strong>
-        {partialItems ? (
-          <small>
-            Partial · {partialItems} item{partialItems === 1 ? "" : "s"}
-          </small>
-        ) : null}
-      </span>
-    </>
-  );
-
-  return children ? (
-    <details className="summary-metric summary-metric--expandable" role="group" aria-label={label}>
-      <summary>{row}</summary>
-      {children}
-    </details>
-  ) : (
-    <div className="summary-metric" role="group" aria-label={label}>
-      {row}
-    </div>
-  );
-}
-
-function SummarySection({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <section className="summary-section" aria-label={title}>
-      <h4>{title}</h4>
-      <div>{children}</div>
-    </section>
-  );
-}
-
-export function SetupTab({ loadout, setLoadout }: { loadout: Loadout; setLoadout: SetLoadout }) {
-  const [subTab, setSubTab] = useState<SubTab>("Gear");
+  const [editorMode, setEditorMode] = useState<LoadoutEditorMode | null>(null);
   const { build } = useBuild();
+  const regions = useMemo(() => unlockedRegions(build), [build]);
   const stats = useMemo(
     () =>
       loadoutStats(loadout, {
         blessingPicks: build.blessingPicks,
         relics: Object.values(build.relics).filter(Boolean),
-        unlockedRegions: unlockedRegions(build),
+        unlockedRegions: regions,
       }),
-    [loadout, build],
+    [build.blessingPicks, build.relics, loadout, regions],
   );
-  const incompleteCount = (stat: "armour" | "life" | "damage") =>
-    new Set(stats.equipment.incomplete.filter((item) => item.stat === stat).map((item) => item.id))
-      .size;
-  const missingArmour = incompleteCount("armour");
-  const missingLife = incompleteCount("life");
-  const missingDamage = incompleteCount("damage");
-  const missingItems = new Set(stats.equipment.incomplete.map((item) => item.id)).size;
-  const partialTotals = [
-    missingDamage ? "Equipment damage" : null,
-    missingArmour ? "Armour and armour rating" : null,
-    missingLife ? "Maximum HP" : null,
-  ].filter((label): label is string => label != null);
-  const life = stats.life.breakdown;
-  const maximumHp = stats.life.temporaryMaxLife;
-  const maximumHpNote = stats.life.powerburstActive
-    ? "Powerburst active"
-    : stats.life.temporaryMaxLife !== stats.life.normalMaxLife
-      ? "Includes temporary effects"
-      : undefined;
-  // Every named life source, including temporary ones. Zero rows hide in Breakdown.
-  // The pieces always sum to the live maximum (temporaryMaxLife after Powerburst).
-  const maximumHpBreakdown = [
-    { label: "Constitution", value: life.constitution },
-    { label: "Equipment", value: life.equipment },
-    { label: "Reaper Crew", value: life.reaperCrew },
-    { label: "Boon of Het", value: life.boonOfHet },
-    { label: "Font of Life", value: life.fontOfLife },
-    { label: "Fortitude", value: life.fortitude },
-    { label: "Thermal bath", value: life.thermalBath },
-    { label: "Elidinis Statuette", value: life.elidinisStatuette },
-    { label: "Bonfire", value: life.bonfire },
-    { label: "Totem of Vitality", value: life.totemOfVitality },
-    { label: "True Equilibrium", value: life.leagueMaximumFlat },
-    { label: "Big Boned", value: life.leagueMaximumNormal + life.leagueMaximumTemporary },
-    { label: "Havoc Born", value: life.finalMaximumNormal + life.finalMaximumTemporary },
-    { label: "Powerburst of vitality", value: life.powerburst },
-  ];
 
   return (
     <div className="combat-setup">
       <div className="setup-layout">
-        <nav className="combat-frame setup-nav" aria-label="Loadout sections">
-          <CombatFrameCorners />
-          {SUB_TABS.map((tab) => (
-            <button
-              key={tab}
-              type="button"
-              onClick={() => setSubTab(tab)}
-              aria-pressed={subTab === tab}
-              className="combat-button setup-nav-button"
-            >
-              <GameIcon
-                src={
-                  tab === "Abilities"
-                    ? `/game/combat/${loadout.style}-abilities.webp`
-                    : SUB_TAB_ICONS[tab]
-                }
-                size={20}
-              />
-              {tab}
-            </button>
-          ))}
-        </nav>
-
-        <div
-          className={`setup-stage min-w-0${
-            subTab === "Gear" || subTab === "Abilities" ? "" : " combat-frame loadout-editor"
-          }`}
-        >
-          {subTab === "Gear" || subTab === "Abilities" ? null : <CombatFrameCorners />}
-          {subTab === "Gear" ? <GearPanel loadout={loadout} setLoadout={setLoadout} /> : null}
-          {subTab === "Stats" ? <StatsPanel loadout={loadout} setLoadout={setLoadout} /> : null}
-          {subTab === "Buffs" ? <BuffsPanel loadout={loadout} setLoadout={setLoadout} /> : null}
-          {subTab === "Arch" ? <ArchPanel loadout={loadout} setLoadout={setLoadout} /> : null}
-          {subTab === "Invention" ? <PerksPanel loadout={loadout} setLoadout={setLoadout} /> : null}
-          {subTab === "Abilities" ? <QuickCalculator loadout={loadout} /> : null}
-          {subTab === "Target" ? <TargetPanel loadout={loadout} setLoadout={setLoadout} /> : null}
-        </div>
-
-        <aside className="combat-frame setup-summary" aria-label="Loadout summary">
-          <CombatFrameCorners />
-          <header className="setup-summary__header">
-            <div>
-              <p>{loadout.style} loadout</p>
-              <h3 className="combat-section-title">Setup summary</h3>
-            </div>
-          </header>
-
-          <div className="setup-summary__sections">
-            <SummarySection title="Offence">
-              <SummaryMetric label="Base ability damage" value={formatNum(stats.base)}>
-                <Breakdown total={stats.base} items={stats.baseAbilityDamageBreakdown} />
-              </SummaryMetric>
-              <SummaryMetric
-                label="Equipment damage"
-                value={formatNum(stats.equipment.damage)}
-                partialItems={missingDamage}
-              >
-                <Breakdown total={stats.equipment.damage} items={stats.equipmentDamageBreakdown} />
-                {stats.styleMismatchNotes.length > 0 ? (
-                  <ul className="summary-notes">
-                    {stats.styleMismatchNotes.map((note) => (
-                      <li key={note}>{note}</li>
-                    ))}
-                  </ul>
-                ) : null}
-              </SummaryMetric>
-              <SummaryMetric label="Accuracy" value={formatNum(stats.accuracyRating)}>
-                <Breakdown total={stats.accuracyRating} items={stats.accuracyBreakdown} />
-              </SummaryMetric>
-              <SummaryMetric
-                label="Damage Potential"
-                value={PERCENT_FORMAT.format(stats.dp)}
-                note={stats.damagePotentialSource}
-              />
-              <SummaryMetric label="Crit chance" value={PERCENT_FORMAT.format(stats.critChance)}>
-                <Breakdown
-                  percent
-                  total={stats.critChance}
-                  items={[
-                    { label: "Configured", value: stats.critChanceBreakdown.configured },
-                    { label: "Biting", value: stats.critChanceBreakdown.biting },
-                    { label: "Set effects", value: stats.critChanceBreakdown.sets },
-                    ...stats.critChanceSources,
-                    { label: "Equipment", value: stats.critChanceBreakdown.equipment },
-                    {
-                      label: "True Equilibrium",
-                      value: stats.critChanceBreakdown.trueEquilibrium ?? 0,
-                    },
-                    {
-                      label: stats.critsDisabled ? "Equilibrium" : "Cap adjustment",
-                      value: stats.critChanceBreakdown.adjustment,
-                    },
-                  ]}
-                />
-                {stats.critConditionalNotes.length > 0 ? (
-                  <ul className="summary-notes">
-                    {stats.critConditionalNotes.map((note) => (
-                      <li key={note}>{note}</li>
-                    ))}
-                  </ul>
-                ) : null}
-              </SummaryMetric>
-              <SummaryMetric
-                label="Crit damage"
-                value={`+${PERCENT_FORMAT.format(stats.totalCritDamageBonus)}`}
-              >
-                <Breakdown
-                  percent
-                  total={stats.totalCritDamageBonus}
-                  items={[
-                    { label: "Level", value: stats.baseCritDamageBonus },
-                    ...stats.critDamageSources,
-                  ]}
-                />
-              </SummaryMetric>
-            </SummarySection>
-
-            <SummarySection title="Defence">
-              <SummaryMetric
-                label="Defence"
-                value={LEVEL_FORMAT.format(stats.defence.visibleLevel)}
-                note={
-                  stats.defence.blockLevel !== stats.defence.visibleLevel
-                    ? `Block level ${LEVEL_FORMAT.format(stats.defence.blockLevel)}`
-                    : undefined
-                }
-              >
-                <Breakdown total={stats.defence.visibleLevel} items={stats.defenceBreakdown} />
-              </SummaryMetric>
-              <SummaryMetric
-                label="Total Armor Value"
-                value={formatNum(stats.defence.totalArmour)}
-                partialItems={missingArmour}
-              >
-                <Breakdown total={stats.defence.totalArmour} items={stats.armourBreakdown} />
-              </SummaryMetric>
-              <SummaryMetric
-                label="Armour rating"
-                value={formatNum(stats.defence.blockArmourRating)}
-                note="Hit chance only"
-                partialItems={missingArmour}
-              >
-                <Breakdown
-                  total={stats.defence.blockArmourRating}
-                  items={stats.armourRatingBreakdown}
-                />
-              </SummaryMetric>
-            </SummarySection>
-
-            <SummarySection title="Life & resources">
-              <SummaryMetric
-                label="Maximum HP"
-                value={formatNum(maximumHp)}
-                note={maximumHpNote}
-                partialItems={missingLife}
-              >
-                <Breakdown total={maximumHp} items={maximumHpBreakdown} />
-              </SummaryMetric>
-              <SummaryMetric label="Current HP" value={formatNum(stats.life.currentLife)} />
-              {stats.life.overhealCeiling > stats.life.temporaryMaxLife ? (
-                <SummaryMetric label="Overheal cap" value={formatNum(stats.life.overhealCeiling)} />
-              ) : null}
-              <SummaryMetric label="Prayer bonus" value={formatNum(stats.league.prayerBonus)}>
-                <Breakdown
-                  total={stats.league.prayerBonus}
-                  items={[
-                    { label: "Equipment", value: stats.equipment.prayer },
-                    { label: "True Equilibrium", value: stats.league.trueEquilibrium.prayerBonus },
-                  ]}
-                />
-              </SummaryMetric>
-              <SummaryMetric label="Starting adrenaline" value={`${stats.startingAdrenaline}%`} />
-              <SummaryMetric
-                label="Maximum adrenaline"
-                value={`${stats.maxAdrenaline}%`}
-                note={
-                  stats.adrenaline?.maxAdrenalineBonus
-                    ? `Includes Heightened Senses +${stats.adrenaline.maxAdrenalineBonus}`
-                    : undefined
-                }
-              />
-              {stats.adrenaline?.basicAdrenalineFlatBonus ? (
-                <SummaryMetric
-                  label="Fury of the Small"
-                  value={`+${stats.adrenaline.basicAdrenalineFlatBonus}% on basics`}
-                />
-              ) : null}
-              {(stats.adrenaline?.conservationOfEnergyRefund ?? 0) > 0 ? (
-                <SummaryMetric
-                  label="Conservation of Energy"
-                  value={`+${stats.adrenaline!.conservationOfEnergyRefund}% after ultimates`}
-                />
-              ) : null}
-              {stats.adrenaline?.ringOfVigour ? (
-                <SummaryMetric
-                  label="Ring of Vigour"
-                  value="+10% after ultimates · specials at 90% listed cost"
-                />
-              ) : null}
-            </SummarySection>
-          </div>
-
-          {missingItems ? (
-            <p className="summary-incomplete" role="status">
-              {missingItems} equipped item{missingItems === 1 ? " lacks" : "s lack"} stats. Partial:{" "}
-              {partialTotals.join(", ")}.
-            </p>
-          ) : null}
+        <EquipmentColumn
+          loadout={loadout}
+          setLoadout={setLoadout}
+          genesisActive={stats.weaponTierOverride != null}
+          onEdit={() => setEditorMode("equipment")}
+          onOpenPrayers={() => setEditorMode("equipment")}
+        />
+        <SetupWorkbench
+          loadout={loadout}
+          stats={stats}
+          ringOfVigourPassive={regions.includes("anachronia")}
+          onOpenEffects={() => setEditorMode("effects")}
+          onOpenPerks={() => setEditorMode("perks")}
+          onOpenRelics={() => setEditorMode("relics")}
+          onOpenTarget={() => setEditorMode("target")}
+          onOpenRotation={onOpenRotation}
+        />
+        <aside className="setup-summary-column">
+          <ResolvedSummary stats={stats} />
         </aside>
       </div>
+      <LoadoutEditorDialog
+        mode={editorMode}
+        loadout={loadout}
+        setLoadout={setLoadout}
+        stats={stats}
+        onDismiss={() => setEditorMode(null)}
+      />
     </div>
   );
 }

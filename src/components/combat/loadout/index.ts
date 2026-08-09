@@ -3,7 +3,9 @@
  * Prefer importing from here or the stable `../useLoadout` re-export surface.
  */
 export * from "./model";
+export * from "./savedSetups";
 export { useLoadout, type SetLoadout } from "./useLoadout";
+export { useSavedSetups, type SavedSetupActions } from "./useSavedSetups";
 export {
   equippedRecordIds,
   equipmentStyleDamageBonus,

@@ -19,13 +19,19 @@ import {
 } from "./conjurePresentation";
 import { engineSpecs as ENGINE_SPECS } from "@/combat/abilities/registry";
 import {
-  blessingEffectDisplayName,
   blessingEventTypeLabel,
   isBlessingEffectRow,
   strikingLightBasicRowMark,
 } from "./blessingPresentation";
 import { AbilityCategoryChip } from "./AbilityCategoryChip";
-import { occurrenceModelNote } from "./rotationAnalysisFormat";
+import {
+  occurrenceModelNote,
+  resolvedEventPreview,
+  RESOLVED_EVENT_PREVIEW_LIMIT,
+} from "./rotationAnalysisFormat";
+import { abilityIconPath } from "@/lib/gameArt";
+import { GameIcon } from "../GameIcon";
+import { combatEffectDisplayName, combatEffectIconPath } from "./effectPresentation";
 
 const SOURCE_LABEL: Record<DamageSourceKind, string> = {
   "ability-direct": "Direct abilities",
@@ -40,12 +46,6 @@ const SOURCE_LABEL: Record<DamageSourceKind, string> = {
   "other-modeled": "Other effects",
   "target-status": "Target status",
 };
-const PROCEDURAL_EFFECT_LABEL: Record<string, string> = {
-  aftershock: "Aftershock",
-  crackling: "Crackling",
-  player_weapon_poison: "Player weapon poison",
-};
-
 /** Damage totals as whole numbers. */
 const formatNumber = (value: number) =>
   new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(value);
@@ -57,12 +57,14 @@ const formatExpectedOccurrence = (value: number) =>
 const formatPercent = (value: number) => `${(value * 100).toFixed(1)}%`;
 
 function effectName(id: string, nameForId: (id: string) => string): string {
-  return (
-    blessingEffectDisplayName(id) ??
-    PROCEDURAL_EFFECT_LABEL[id] ??
-    spiritEffectDisplayName(id) ??
-    nameForId(id)
-  );
+  return combatEffectDisplayName(id) ?? spiritEffectDisplayName(id) ?? nameForId(id);
+}
+
+function effectIconPath(id: string, kind?: string, blessingId?: string): string | null {
+  const spec = ENGINE_SPECS.get(id);
+  return spec
+    ? abilityIconPath(spec.id, spec.style)
+    : combatEffectIconPath(id, { kind, blessingId });
 }
 
 /** Probability weight carried by an EV-scheduled event, when present. */
@@ -246,6 +248,10 @@ function EventTable({
                 </td>
                 <td className="py-1.5 pr-3 text-parch-50">
                   <span className="inline-flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+                    <GameIcon
+                      src={effectIconPath(event.abilityId, undefined, event.blessingId)}
+                      size={18}
+                    />
                     <span>{effectName(event.abilityId, nameForId)}</span>
                     {isConjureDamageEvent(event) ? (
                       <AbilityCategoryChip category="conjure" />
@@ -314,17 +320,19 @@ export function RotationEventPreview({
   result: RotationSummary;
   nameForId: (id: string) => string;
 }) {
-  const preview = result.events.slice(0, 12);
+  const preview = resolvedEventPreview(result.events);
   return (
     <section className="mt-4 border-t border-stone-750 pt-3">
       <div className="flex items-baseline justify-between gap-3">
         <h3 className="combat-section-title text-xs font-medium text-parch-50">Resolved events</h3>
         <span className="text-[11px] text-parch-300">
-          First {preview.length} of {result.events.length}
+          First {Math.min(RESOLVED_EVENT_PREVIEW_LIMIT, result.events.length)}
+          {preview.pinnedPerfectEquilibrium ? " + Perfect Equilibrium" : ""} of{" "}
+          {result.events.length}
         </span>
       </div>
       <div className="mt-2 border-t border-stone-750">
-        <EventTable events={preview} nameForId={nameForId} compact />
+        <EventTable events={preview.events} nameForId={nameForId} compact />
       </div>
     </section>
   );
@@ -502,7 +510,7 @@ export function RotationAnalysisModal({
             </div>
             {deathMark.currentLifePoints !== undefined ? (
               <p className="mt-2 font-mono text-xs text-parch-100">
-                LP {formatNumber(deathMark.currentLifePoints)} /{" "}
+                Hitpoints {formatNumber(deathMark.currentLifePoints)} /{" "}
                 {formatNumber(deathMark.maximumLifePoints ?? 0)}
               </p>
             ) : null}
@@ -568,7 +576,15 @@ export function RotationAnalysisModal({
                 data-effect-group={group.id}
               >
                 <div className="grid grid-cols-[1fr_auto_auto_auto] gap-3 border-b border-stone-750/70 py-2">
-                  <span className="text-parch-50">
+                  <span className="inline-flex items-center gap-1.5 text-parch-50">
+                    <GameIcon
+                      src={effectIconPath(
+                        group.id,
+                        group.kind,
+                        group.sourceBreakdown?.[0]?.blessingId,
+                      )}
+                      size={18}
+                    />
                     {effectName(group.id, nameForId)}
                     <span className="ml-1.5 font-mono text-[10px] text-gold-300">grouped</span>
                   </span>
@@ -587,7 +603,17 @@ export function RotationAnalysisModal({
                     className="grid grid-cols-[1fr_auto_auto] gap-3 border-b border-stone-750/50 py-1.5 pl-3 text-[11px]"
                     data-effect-component={component.id}
                   >
-                    <span className="text-parch-300">{effectName(component.id, nameForId)}</span>
+                    <span className="inline-flex items-center gap-1.5 text-parch-300">
+                      <GameIcon
+                        src={effectIconPath(
+                          component.id,
+                          component.kind,
+                          component.sourceBreakdown?.[0]?.blessingId,
+                        )}
+                        size={16}
+                      />
+                      {effectName(component.id, nameForId)}
+                    </span>
                     <span className="font-mono text-parch-300">
                       {formatNumber(component.totalDamage)}
                     </span>
@@ -638,10 +664,19 @@ export function RotationAnalysisModal({
                     <tr
                       key={effect.id}
                       className="border-b border-stone-750/70"
+                      data-effect-id={effect.id}
                       data-effect-kind={effect.kind}
                     >
                       <td className="py-1.5 pr-3 text-parch-50">
                         <span className="inline-flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+                          <GameIcon
+                            src={effectIconPath(
+                              effect.id,
+                              effect.kind,
+                              effect.sourceBreakdown?.[0]?.blessingId,
+                            )}
+                            size={18}
+                          />
                           <span>{effectName(effect.id, nameForId)}</span>
                           {effect.expectedPlayerPoisonHits > 0 ? (
                             <span

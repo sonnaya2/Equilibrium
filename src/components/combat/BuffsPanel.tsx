@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, type ReactNode } from "react";
 import {
   MAX_FIREMAKING_LEVEL,
   formatRingOfVigourSources,
@@ -14,7 +14,6 @@ import {
   type SlayerHelmetTierId,
 } from "@/combat/shared/slayerHelmet";
 import { resolveSalve } from "@/combat/shared/salveAmulet";
-import type { CombatStyle } from "@/combat/types";
 import {
   BLESSING_PATHS,
   PATH_TIERS,
@@ -32,6 +31,7 @@ import relicsData from "#shard/league/relics.json";
 import { useBuild } from "@/league/useBuild";
 import { GameIcon } from "../GameIcon";
 import { NumberField } from "./NumberField";
+import type { ResolvedStats } from "./ResolvedSummary";
 import { ICYENIC_FAITH_RELIC, TOME_OF_THE_ICYENE_ID } from "@/combat/league/icyenicFaith";
 import { NARAGI_EDICT_RELIC, SLIVER_OF_EDICTS_ID } from "@/combat/league/naragiEdict";
 import { relicIconPath } from "@/lib/gameArt";
@@ -49,15 +49,8 @@ import {
   type Loadout,
   type OverloadChoice,
   type SetLoadout,
-  type StyleCurseChoice,
 } from "./useLoadout";
 
-/** Wiki art under public/game - standard book vs ancient curses folders. */
-const STANDARD_PRAYER_IDS = new Set(["piety", "rigour", "augury", "sanctity"]);
-const PRAYER_ICON = (id: Exclude<StyleCurseChoice, "none">) =>
-  STANDARD_PRAYER_IDS.has(id)
-    ? `/game/combat/prayers/standard/${id}.webp`
-    : `/game/combat/prayers/ancient-curses/${id}.webp`;
 const VULNERABILITY_ICON = "/game/upgrades/combat-utility/vulnerability-bomb.webp";
 const OVERLOAD_ICON: Record<Exclude<OverloadChoice, "none">, string> = {
   overload: "/game/upgrades/skilling-production/overload.webp",
@@ -97,6 +90,7 @@ const T7_RELIC_CHOICES: readonly Tier7RelicChoice[] = (() => {
 const SKILLCAPE_ICON = {
   strength: "/game/skills/strength.webp",
   attack: "/game/skills/attack.webp",
+  ranged: "/game/skills/ranged.webp",
 } as const;
 const ENCHANTMENTS: Record<EquipmentEnchantmentId, { label: string; effect: string }> = {
   agony: {
@@ -116,99 +110,6 @@ const ENCHANTMENTS: Record<EquipmentEnchantmentId, { label: string; effect: stri
     effect: "Channeller's ring: +2.5% crit damage for each successive channel hit",
   },
 };
-
-const PRAYER_OPTIONS: Array<{
-  value: Exclude<StyleCurseChoice, "none">;
-  label: string;
-  effect: string;
-  style: CombatStyle;
-  book: "standard" | "ancient";
-}> = [
-  {
-    value: "piety",
-    label: "Piety",
-    effect: "+8% melee damage · +8 Attack/Defence levels",
-    style: "melee",
-    book: "standard",
-  },
-  {
-    value: "rigour",
-    label: "Rigour",
-    effect: "+8% ranged damage · +8 Ranged/Defence levels",
-    style: "ranged",
-    book: "standard",
-  },
-  {
-    value: "augury",
-    label: "Augury",
-    effect: "+8% magic damage · +8 Magic/Defence levels",
-    style: "magic",
-    book: "standard",
-  },
-  {
-    value: "sanctity",
-    label: "Sanctity",
-    effect: "+8% necromancy damage · +8 Necromancy/Defence levels",
-    style: "necromancy",
-    book: "standard",
-  },
-  {
-    value: "turmoil",
-    label: "Turmoil",
-    effect: "+10% melee damage · +10 levels",
-    style: "melee",
-    book: "ancient",
-  },
-  {
-    value: "anguish",
-    label: "Anguish",
-    effect: "+10% ranged damage · +10 levels",
-    style: "ranged",
-    book: "ancient",
-  },
-  {
-    value: "torment",
-    label: "Torment",
-    effect: "+10% magic damage · +10 levels",
-    style: "magic",
-    book: "ancient",
-  },
-  {
-    value: "sorrow",
-    label: "Sorrow",
-    effect: "+10% necromancy damage · +10 levels",
-    style: "necromancy",
-    book: "ancient",
-  },
-  {
-    value: "malevolence",
-    label: "Malevolence",
-    effect: "+12% melee damage · +12 levels",
-    style: "melee",
-    book: "ancient",
-  },
-  {
-    value: "desolation",
-    label: "Desolation",
-    effect: "+12% ranged damage · +12 levels",
-    style: "ranged",
-    book: "ancient",
-  },
-  {
-    value: "affliction",
-    label: "Affliction",
-    effect: "+12% magic damage · +12 levels",
-    style: "magic",
-    book: "ancient",
-  },
-  {
-    value: "ruination",
-    label: "Ruination",
-    effect: "+12% necromancy damage · +12 levels",
-    style: "necromancy",
-    book: "ancient",
-  },
-];
 
 const OVERLOAD_OPTIONS: Array<{
   value: Exclude<OverloadChoice, "none">;
@@ -269,15 +170,104 @@ function BuffTile({
   );
 }
 
-/** Player-toggled buffs - wiki numbers only. */
-export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoadout: SetLoadout }) {
-  // Same-style damage prayers; keep an off-style pick visible so it can be cleared.
-  const prayerOptions = PRAYER_OPTIONS.filter(
-    (opt) => opt.style === loadout.style || opt.value === loadout.buffs.styleCurse,
+function CombatValueLabel({ icon, children }: { icon: string; children: ReactNode }) {
+  return (
+    <span className="setup-stat-label">
+      <GameIcon src={icon} size={20} />
+      <span>{children}</span>
+    </span>
   );
-  const standardPrayers = prayerOptions.filter((opt) => opt.book === "standard");
-  const ancientPrayers = prayerOptions.filter((opt) => opt.book === "ancient");
+}
 
+function CombatValues({
+  loadout,
+  setLoadout,
+  stats,
+}: {
+  loadout: Loadout;
+  setLoadout: SetLoadout;
+  stats: ResolvedStats;
+}) {
+  const damagePotential =
+    loadout.target?.damagePotentialOverride == null
+      ? loadout.accuracy
+      : loadout.target.damagePotentialOverride * 100;
+
+  return (
+    <section className="buff-combat-values" role="group" aria-label="Combat values">
+      <NumberField
+        label={
+          <CombatValueLabel icon="/game/skills/constitution.webp">
+            Current Hitpoints
+          </CombatValueLabel>
+        }
+        value={loadout.currentLife ?? stats.life.currentLife}
+        min={0}
+        max={stats.life.overhealCeiling}
+        onChange={(currentLife) => {
+          const maximumLife = stats.life.temporaryMaxLife;
+          setLoadout({
+            ...loadout,
+            currentLife,
+            currentHealthPercent:
+              maximumLife > 0
+                ? Math.min(100, Math.max(0, (currentLife / maximumLife) * 100))
+                : loadout.currentHealthPercent,
+          });
+        }}
+      />
+      <NumberField
+        label={
+          <CombatValueLabel icon="/game/skills/attack.webp">Damage Potential</CombatValueLabel>
+        }
+        value={damagePotential}
+        min={0}
+        max={100}
+        suffix="%"
+        onChange={(value) => {
+          if (loadout.target) {
+            setLoadout({
+              ...loadout,
+              target: {
+                ...loadout.target,
+                damagePotentialOverride: Math.min(1, Math.max(0, value / 100)),
+              },
+            });
+            return;
+          }
+          setLoadout({ ...loadout, accuracy: value });
+        }}
+      />
+      <NumberField
+        label={
+          <CombatValueLabel icon="/game/combat/critical-strike.webp">Crit chance</CombatValueLabel>
+        }
+        value={loadout.critChance}
+        suffix="%"
+        onChange={(value) => setLoadout({ ...loadout, critChance: value })}
+      />
+      <label className="loadout-check setup-input-check">
+        <input
+          type="checkbox"
+          checked={loadout.hitCapEnabled}
+          onChange={(event) => setLoadout({ ...loadout, hitCapEnabled: event.target.checked })}
+        />
+        Hit cap
+      </label>
+    </section>
+  );
+}
+
+/** Player-toggled buffs - wiki numbers only. */
+export function BuffsPanel({
+  loadout,
+  setLoadout,
+  stats,
+}: {
+  loadout: Loadout;
+  setLoadout: SetLoadout;
+  stats: ResolvedStats;
+}) {
   const powerburstActive = isPowerburstOfVitalityActive(loadout);
   const powerburstReady = isPowerburstOfVitalityReady(loadout);
   const { build, loaded: buildLoaded, pickBlessing, toggleRelic } = useBuild();
@@ -309,12 +299,15 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeRelicNames.join("\0")]);
   const anachroniaUnlocked = isRegionUnlocked(build, "anachronia");
+  const desertUnlocked = isRegionUnlocked(build, "desert");
+  const assassinInsight = activeRelicNames.includes("Assassin's Insight");
+  const automaticSlayerStand = assassinInsight ? "corrupted" : loadout.buffs.slayerHelmetStand;
   // Worn = ring slot only. Unlock pins in equipmentIds must not count as equipped.
   const slottedIds = equipmentIdList(loadout.equipmentSlots);
   const ringEquipped = isRingOfVigourWorn(slottedIds);
   const vigourSources = ringOfVigourActiveSources({
     equipmentIds: slottedIds,
-    ringOfVigourPassive: loadout.buffs.ringOfVigourPassive,
+    ringOfVigourPassive: anachroniaUnlocked,
     unlockedRegions: anachroniaUnlocked ? ["anachronia"] : [],
   });
 
@@ -340,8 +333,8 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
     SLAYER_HELMET_TIERS.some((t) => t.itemId === loadout.equipmentSlots.helmet);
   const slayerResolved = resolveSlayerHelmet({
     equipmentSlots: loadout.equipmentSlots,
-    standTier: loadout.buffs.slayerHelmetStand,
-    unlockedRegions: anachroniaUnlocked ? ["anachronia"] : [],
+    standTier: automaticSlayerStand,
+    unlockedRegions: assassinInsight ? undefined : anachroniaUnlocked ? ["anachronia"] : [],
     onSlayerTask: loadout.target?.onSlayerTask === true,
     style: loadout.style,
     ensouledSpectralLens: loadout.buffs.ensouledSpectralLens,
@@ -378,7 +371,7 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
 
   return (
     <div className="loadout-panel loadout-panel-wide buffs-panel">
-      <h2 className="combat-section-title text-sm font-medium text-parch-50">Buffs</h2>
+      <CombatValues loadout={loadout} setLoadout={setLoadout} stats={stats} />
 
       <div className="buffs-panel__cols">
         <div className="buffs-panel__col">
@@ -454,47 +447,6 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
             </div>
           </div>
 
-          <div className="buff-group buff-prayers" role="group" aria-label="Prayers">
-            <h3 className="buff-group__title">Prayers</h3>
-            <div className="icon-tile-grid icon-tile-grid--prayers">
-              <BuffTile
-                icon={null}
-                label="None"
-                effect="No damage prayer"
-                pressed={loadout.buffs.styleCurse === "none"}
-                onClick={() => setBuffs({ styleCurse: "none" })}
-              />
-              {standardPrayers.map((opt) => (
-                <BuffTile
-                  key={opt.value}
-                  icon={PRAYER_ICON(opt.value)}
-                  label={opt.label}
-                  effect={opt.effect}
-                  pressed={loadout.buffs.styleCurse === opt.value}
-                  onClick={() =>
-                    setBuffs({
-                      styleCurse: loadout.buffs.styleCurse === opt.value ? "none" : opt.value,
-                    })
-                  }
-                />
-              ))}
-              {ancientPrayers.map((opt) => (
-                <BuffTile
-                  key={opt.value}
-                  icon={PRAYER_ICON(opt.value)}
-                  label={opt.label}
-                  effect={opt.effect}
-                  pressed={loadout.buffs.styleCurse === opt.value}
-                  onClick={() =>
-                    setBuffs({
-                      styleCurse: loadout.buffs.styleCurse === opt.value ? "none" : opt.value,
-                    })
-                  }
-                />
-              ))}
-            </div>
-          </div>
-
           <div className="buff-group buff-t7-relics" role="group" aria-label="Tier 7 relics">
             <h3 className="buff-group__title">Tier 7 relics</h3>
             <div className="icon-tile-grid icon-tile-grid--t7">
@@ -550,7 +502,7 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
                 <BuffTile
                   icon={LIFE_ICON.powerburstOfVitality}
                   label="Sliver activate"
-                  effect="90s CD · 16.8s · four 10,000 LP heals · levels 255 · one revive (sim timeline)"
+                  effect="90s CD · 16.8s · four 10,000 Hitpoints heals · levels 255 · one revive"
                   pressed={false}
                   disabled
                   onClick={() => undefined}
@@ -592,16 +544,26 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
               <BuffTile
                 icon={SKILLCAPE_ICON.strength}
                 label="Strength cape (99)"
-                effect="Dismember deals three extra bleed hits (wiki Strength cape perk)"
-                pressed={loadout.buffs.strengthCape99}
-                onClick={() => setBuffs({ strengthCape99: !loadout.buffs.strengthCape99 })}
+                effect="Automatic from base Strength 99: Dismember deals three extra bleed hits"
+                pressed={loadout.strengthLevel >= 99}
+                disabled
+                onClick={() => undefined}
               />
               <BuffTile
                 icon={SKILLCAPE_ICON.attack}
                 label="Attack cape (120)"
-                effect="+2% melee hit chance (wiki Attack master cape perk)"
-                pressed={loadout.buffs.attackCape120}
-                onClick={() => setBuffs({ attackCape120: !loadout.buffs.attackCape120 })}
+                effect="Automatic from base Attack 120: +2% melee hit chance"
+                pressed={loadout.attackLevel >= 120}
+                disabled
+                onClick={() => undefined}
+              />
+              <BuffTile
+                icon={SKILLCAPE_ICON.ranged}
+                label="Ranged cape (99)"
+                effect="Automatic from base Ranged 99: ×1.2 enchanted-bolt activation chance"
+                pressed={loadout.style === "ranged" && loadout.level >= 99}
+                disabled
+                onClick={() => undefined}
               />
             </div>
           </div>
@@ -618,17 +580,14 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
                 label="Ring of Vigour Passive"
                 effect={
                   !anachroniaUnlocked
-                    ? "Needs Anachronia unlocked"
+                    ? "Requires Anachronia"
                     : ringEquipped
-                      ? "Same effect as the equipped ring, without wearing it. Does not stack."
-                      : "Same effect as wearing Ring of Vigour. +10 adren after ultimates; weapon specials cost 90%."
+                      ? "Already active from the equipped ring"
+                      : "Permanent passive"
                 }
-                pressed={loadout.buffs.ringOfVigourPassive}
-                disabled={!anachroniaUnlocked}
-                onClick={() =>
-                  anachroniaUnlocked &&
-                  setBuffs({ ringOfVigourPassive: !loadout.buffs.ringOfVigourPassive })
-                }
+                pressed={anachroniaUnlocked}
+                disabled
+                onClick={() => undefined}
               />
               <BuffTile
                 icon={SPECTRAL_LENS_ICON}
@@ -648,9 +607,7 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
             ) : null}
             {anachroniaUnlocked && ringEquipped ? (
               <p className="mt-1.5 text-[11px] text-parch-300" data-testid="vigour-no-stack">
-                {loadout.buffs.ringOfVigourPassive
-                  ? "Ring is equipped - keep this on if you swap rings. Effects do not stack."
-                  : "Ring is equipped; this is optional for when you unequip it."}
+                Anachronia unlock and equipped ring provide the same effect. They do not stack.
               </p>
             ) : null}
 
@@ -664,10 +621,14 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
                 icon={null}
                 label="None"
                 effect={
-                  !anachroniaUnlocked ? "Needs Anachronia unlocked" : "No helmet on the stand"
+                  assassinInsight
+                    ? "Assassin's Insight automatically supplies the Corrupted Slayer Helmet"
+                    : !anachroniaUnlocked
+                      ? "Needs Anachronia unlocked"
+                      : "No helmet on the stand"
                 }
-                pressed={loadout.buffs.slayerHelmetStand == null}
-                disabled={!anachroniaUnlocked}
+                pressed={automaticSlayerStand == null}
+                disabled={!anachroniaUnlocked || assassinInsight}
                 onClick={() => anachroniaUnlocked && setBuffs({ slayerHelmetStand: null })}
               />
               {SLAYER_HELMET_TIERS.map((tier) => (
@@ -676,12 +637,14 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
                   icon={tier.iconPath}
                   label={tier.label}
                   effect={
-                    !anachroniaUnlocked
-                      ? "Needs Anachronia unlocked (tier-3 Slayer Lodge)"
-                      : `On-task: +${((tier.damageMult - 1) * 100).toFixed(1).replace(/\.0$/, "")}% damage · +${((tier.hitChanceMult - 1) * 100).toFixed(1).replace(/\.0$/, "")}% hit chance (direct hits). Stand only.`
+                    assassinInsight && tier.id === "corrupted"
+                      ? "Automatic from Assassin's Insight"
+                      : !anachroniaUnlocked
+                        ? "Needs Anachronia unlocked (tier-3 Slayer Lodge)"
+                        : `On-task: +${((tier.damageMult - 1) * 100).toFixed(1).replace(/\.0$/, "")}% damage · +${((tier.hitChanceMult - 1) * 100).toFixed(1).replace(/\.0$/, "")}% hit chance (direct hits). Stand only.`
                   }
-                  pressed={loadout.buffs.slayerHelmetStand === tier.id}
-                  disabled={!anachroniaUnlocked}
+                  pressed={automaticSlayerStand === tier.id}
+                  disabled={!anachroniaUnlocked || assassinInsight}
                   onClick={() =>
                     anachroniaUnlocked &&
                     setBuffs({
@@ -791,56 +754,58 @@ export function BuffsPanel({ loadout, setLoadout }: { loadout: Loadout; setLoado
             </p>
           </div>
 
-          <div className="buff-group buff-life" role="group" aria-label="Defence and life">
-            <h3 className="buff-group__title">Defence & life</h3>
+          <div className="buff-group buff-life" role="group" aria-label="Defence and Hitpoints">
+            <h3 className="buff-group__title">Defence &amp; Hitpoints</h3>
             <div className="icon-tile-grid">
               <BuffTile
                 icon={LIFE_ICON.fortitude}
                 label="Fortitude"
-                effect="+15% Defence in the block calculation; +10 life points per Constitution level, plus 10 (clears damage prayer)"
+                effect="+15% Defence; +10 Hitpoints per Constitution level, plus 10. Clears damage prayer."
                 pressed={loadout.buffs.fortitude}
                 onClick={() => setBuffs({ fortitude: !loadout.buffs.fortitude })}
               />
               <BuffTile
                 icon={LIFE_ICON.reaperCrew}
                 label="Reaper Crew"
-                effect="+200 maximum life points"
+                effect="+200 maximum Hitpoints"
                 pressed={loadout.buffs.reaperCrew}
                 onClick={() => setBuffs({ reaperCrew: !loadout.buffs.reaperCrew })}
               />
               <BuffTile
                 icon={LIFE_ICON.fontOfLife}
                 label="Font of Life"
-                effect="Persistent +500 maximum life points while Font of Life is active"
+                effect="+500 maximum Hitpoints"
                 pressed={loadout.buffs.fontOfLife}
                 onClick={() => setBuffs({ fontOfLife: !loadout.buffs.fontOfLife })}
               />
               <BuffTile
                 icon={LIFE_ICON.boonOfHet}
                 label="Boon of Het"
-                effect="+5% of Constitution life to maximum life points"
-                pressed={loadout.buffs.boonOfHet}
-                onClick={() => setBuffs({ boonOfHet: !loadout.buffs.boonOfHet })}
+                effect="Automatic with Desert: +5% Constitution Hitpoints"
+                pressed={desertUnlocked}
+                disabled
+                onClick={() => undefined}
               />
               <BuffTile
                 icon={null}
                 fallback="Bath"
                 label="Thermal bath"
-                effect="+3 maximum life points per Constitution level for its active window"
+                effect="+3 maximum Hitpoints per Constitution level"
                 pressed={loadout.buffs.thermalBath}
                 onClick={() => setBuffs({ thermalBath: !loadout.buffs.thermalBath })}
               />
               <BuffTile
                 icon={LIFE_ICON.totemOfVitality}
                 label="Totem of Vitality"
-                effect="Persistent up to +1,500 maximum life points while active; replaces a bonfire boost"
-                pressed={loadout.buffs.totemOfVitality}
-                onClick={() => setBuffs({ totemOfVitality: !loadout.buffs.totemOfVitality })}
+                effect="Automatic with Anachronia: up to +1,500 maximum Hitpoints; replaces bonfire"
+                pressed={anachroniaUnlocked}
+                disabled
+                onClick={() => undefined}
               />
               <BuffTile
                 icon={LIFE_ICON.powerburstOfVitality}
                 label="Powerburst of vitality"
-                effect="Doubles current and maximum life points for 6 seconds; 2-minute powerburst cooldown"
+                effect="Doubles current and maximum Hitpoints for 6 seconds; 2-minute cooldown"
                 pressed={powerburstActive}
                 disabled={!powerburstReady}
                 onClick={() => setLoadout((prev) => activatePowerburstOfVitality(prev))}

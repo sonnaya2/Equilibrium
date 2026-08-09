@@ -59,7 +59,7 @@ export function RevoBarLibraryPanel({
   return (
     <section className="revo-bar-library" data-testid="revo-bar-library" aria-label="Bar list">
       <div className="revo-bar-library__head">
-        <span className="revo-bar-library__title">Bars</span>
+        <span className="revo-bar-library__title">Bar library</span>
         <button
           type="button"
           className="combat-button revo-bar-library__save"
@@ -77,8 +77,29 @@ export function RevoBarLibraryPanel({
           {alreadySaved ? "Saved" : "Save"}
         </button>
       </div>
+      {currentSaveBar?.length ? (
+        <div className="revo-bar-library__active" data-testid="revo-active-bar">
+          <span className="revo-bar-library__active-label">Active Revo++</span>
+          <span className="revo-bar-library__icons" aria-hidden>
+            {currentSaveBar.slice(0, 14).map((id, index) => {
+              const spec = ENGINE_SPECS.get(id);
+              return spec ? (
+                <GameIcon
+                  key={`${id}-${index}`}
+                  src={abilityIconPath(spec.id, spec.style)}
+                  size={20}
+                  className="revo-bar-library__icon"
+                />
+              ) : (
+                <span key={`${id}-${index}`} className="revo-bar-library__icon-empty" />
+              );
+            })}
+          </span>
+          <span className="revo-bar-library__active-count">{currentSaveBar.length} abilities</span>
+        </div>
+      ) : null}
       {styleLibrary.recents.length === 0 && styleLibrary.saved.length === 0 ? (
-        <p className="revo-bar-library__empty">No bars yet.</p>
+        <p className="revo-bar-library__empty">No saved bars yet.</p>
       ) : (
         <div className="revo-bar-library__groups">
           {styleLibrary.recents.length > 0 ? (

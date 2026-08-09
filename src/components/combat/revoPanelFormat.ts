@@ -478,9 +478,16 @@ export function formatProofLabel(
 
 export function previewCategory(
   category: AbilitySpec["category"] | undefined,
-): "basic" | "threshold" | "ultimate" | "utility" | undefined {
-  if (category === "enhanced") return "threshold";
-  if (category === "basic" || category === "ultimate" || category === "utility") return category;
+): "basic" | "enhanced" | "threshold" | "ultimate" | "utility" | undefined {
+  if (
+    category === "basic" ||
+    category === "enhanced" ||
+    category === "threshold" ||
+    category === "ultimate" ||
+    category === "utility"
+  ) {
+    return category;
+  }
   return undefined;
 }
 

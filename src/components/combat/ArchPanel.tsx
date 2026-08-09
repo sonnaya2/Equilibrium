@@ -230,12 +230,10 @@ export function ArchPanel({ loadout, setLoadout }: { loadout: Loadout; setLoadou
   const coeRefund = coeSelected
     ? (adren?.conservationOfEnergyRefund ?? CONSERVATION_OF_ENERGY_REFUND)
     : 0;
-  const rovOn = adren?.ringOfVigour === true;
   const adrenLive = [
     hsSelected ? `Heightened Senses · max adrenaline ${stats.maxAdrenaline}%` : null,
     fotsSelected ? `Fury of the Small · basics +${fotsBonus}% adren` : null,
     coeSelected ? `Conservation of Energy · +${coeRefund}% after ultimate` : null,
-    rovOn ? `Ring of Vigour · +10% after ultimate; specials cost 90%` : null,
   ].filter((line): line is string => line != null);
 
   const toggleRelic = (relicId: string) => {
@@ -345,13 +343,10 @@ export function ArchPanel({ loadout, setLoadout }: { loadout: Loadout; setLoadou
       {furySelected ? (
         <div className="buff-group arch-fury-detail" role="group" aria-label="Berserker's Fury">
           <h3 className="buff-group__title">Berserker&apos;s Fury</h3>
-          <p className="arch-relic-meta__desc">
-            Player life for the bonus curve. Edit absolute LP or health %; both write the shared
-            loadout (same fields as Stats Current HP).
-          </p>
+          <p className="arch-relic-meta__desc">Current Hitpoints set the bonus.</p>
           <div className="arch-relic-controls">
             <NumberField
-              label="Current HP"
+              label="Current Hitpoints"
               value={currentLifePoints}
               min={0}
               max={stats.life.overhealCeiling}
@@ -370,14 +365,14 @@ export function ArchPanel({ loadout, setLoadout }: { loadout: Loadout; setLoadou
               <strong className="arch-relic-bonus__value">+{BONUS_FORMAT.format(liveBonus)}</strong>
               {maximumLife > 0 ? (
                 <span className="arch-relic-bonus__basis">
-                  {currentLifePoints.toLocaleString()} / {maximumLife.toLocaleString()} LP
+                  {currentLifePoints.toLocaleString()} / {maximumLife.toLocaleString()} Hitpoints
                 </span>
               ) : null}
             </div>
           </div>
           {Math.abs(liveBonus - engineBonus) > 1e-9 ? (
             <p className="arch-relic-meta__note">
-              Engine bonus is +{BONUS_FORMAT.format(engineBonus)} from resolved LP (
+              Engine bonus is +{BONUS_FORMAT.format(engineBonus)} from resolved Hitpoints (
               {stats.berserkersFury.currentLifePoints.toLocaleString()} /{" "}
               {stats.berserkersFury.maximumLifePoints.toLocaleString()}).
             </p>

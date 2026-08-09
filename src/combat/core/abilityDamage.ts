@@ -120,16 +120,8 @@ export function baseAbilityDamage(level: number, config: WeaponConfiguration): n
     return main + Math.floor(mainHand(level, offhandTier, styleBonus) / 2);
   }
 
+  // Wiki 2H: floor(DPL)+floor(DPL/2)+floor(14.4*min(t,styleCap)+1.5*b).
+  // Melee styleCap=level; ranged=ammo tier; magic=spell tier. All styles share one weapon floor.
   const levelTerms = Math.floor(damagePerLevel(level)) + Math.floor(damagePerLevel(level) / 2);
-  if (config.style === "magic") {
-    return levelTerms + Math.floor(14.4 * weaponTier + 1.5 * styleBonus);
-  }
-  const primaryTier =
-    config.style === "ranged" && config.ammunitionTier === 0 ? rawWeaponTier : weaponTier;
-  const secondaryTier = config.style === "melee" ? rawWeaponTier : weaponTier;
-  return (
-    levelTerms +
-    Math.floor(9.6 * primaryTier + styleBonus) +
-    Math.floor(4.8 * secondaryTier + 0.5 * styleBonus)
-  );
+  return levelTerms + Math.floor(14.4 * weaponTier + 1.5 * styleBonus);
 }

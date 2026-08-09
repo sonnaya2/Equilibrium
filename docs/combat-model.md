@@ -75,14 +75,13 @@ Main-hand term:
 floor(DPL(level)) + floor(9.6 × tier + styleBonus)
 ```
 
-- Style damage bonus enters **inside** the weapon-term floor, at that term’s own multiplier: `1` main-hand, `0.5` on the secondary two-hand melee/ranged term, `1.5` for two-handed magic’s weapon term.
+- Style damage bonus enters **inside** the weapon-term floor: multiplier `1` on main-hand, `1.5` on two-handed weapon term.
 - Tier caps clamp the **weapon term**, not the total:
   - Melee: level cap on tier.
   - Ranged: ammunition tier.
   - Magic: spell tier.
 - Off-hand (main-hand config): half of an independently floored main-hand term for the off-hand tier.
-- Two-handed melee/ranged: `floor(DPL) + floor(DPL/2)` level terms + primary `9.6` + secondary `4.8` weapon floors (with styleBonus split).
-- Two-handed magic: same level terms + `floor(14.4 × tier + 1.5 × styleBonus)`.
+- Two-handed (melee / ranged / magic): `floor(DPL) + floor(DPL/2) + floor(14.4 × min(t, styleCap) + 1.5 × styleBonus)`.
 - **Necromancy is not two-handed melee.** Death guard uses the main-hand term; conduit adds half of its own main-hand-equivalent term when present.
 
 Bands: `bandOf(base, { minPct, maxPct })` applies `percentFloor` to each end; expected mean of the inclusive integer band is `(min + max) / 2` before the full hit pipeline.

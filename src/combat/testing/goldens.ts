@@ -32,10 +32,10 @@ export const GOLDEN_L99_T99_RANGED_AMMO80 = 1548;
 export const GOLDEN_L99_T99_MAGIC_SPELL80 = 1548;
 
 /**
- * Level 50 damage level, T99 melee 2H with level-capped 9.6 term:
- * floor(DPL(50))+floor(DPL(50)/2)+floor(9.6*50)+floor(4.8*99) = 145+72+480+475 = 1172.
+ * Level 50 damage level, T99 melee 2H with level-capped weapon term:
+ * floor(DPL(50))+floor(DPL(50)/2)+floor(14.4*min(99,50)) = 145+72+720 = 937.
  */
-export const GOLDEN_L50_T99_MELEE_LEVEL_CAP = 1172;
+export const GOLDEN_L50_T99_MELEE_LEVEL_CAP = 937;
 
 /** Level 99 T99 2H melee with styleBonus 12.7 inside weapon floor: 264+132+floor(14.4*99+1.5*12.7)=1840. */
 export const GOLDEN_L99_T99_STYLE_BONUS_12_7 = 1840;

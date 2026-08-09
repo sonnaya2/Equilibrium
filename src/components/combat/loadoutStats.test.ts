@@ -319,26 +319,26 @@ describe("loadoutStats", () => {
   });
 
   it("exposes Unholy Critual's uncapped, effective, and converted chance", () => {
+    // Manual crit slider is ignored; only gear / perks / league layers count.
     const stats = loadoutStats(
       { ...base, critChance: 40 },
       { blessingPicks: ["Chaos", "Chaos", "Chaos", "Chaos", "Chaos", "Chaos"] },
     );
-    expect(stats.uncappedCritChance).toBeCloseTo(0.55, 10);
-    expect(stats.critChance).toBeCloseTo(0.5, 10);
-    expect(stats.convertedCritChance).toBeCloseTo(0.05, 10);
+    expect(stats.uncappedCritChance).toBeCloseTo(0.15, 10);
+    expect(stats.critChance).toBeCloseTo(0.15, 10);
+    expect(stats.convertedCritChance).toBeCloseTo(0, 10);
     expect(stats.critChanceSources).toEqual(
       expect.arrayContaining([{ label: "Unholy Critual", value: 0.15 }]),
     );
-    // Cap residual only: configured + Unholy + adjustment = effective (no double-count).
     expect(stats.critChanceBreakdown.unholyCritual).toBeCloseTo(0.15, 10);
-    expect(stats.critChanceBreakdown.adjustment).toBeCloseTo(-0.05, 10);
+    expect(stats.critChanceBreakdown.adjustment).toBeCloseTo(0, 10);
     expect(
       Object.values(stats.critChanceBreakdown).reduce((sum, value) => sum + value, 0),
     ).toBeCloseTo(stats.critChance, 10);
   });
 
-  it("surfaces manual target DP override provenance", () => {
-    const stats = loadoutStats({
+  it("ignores manual target DP override; target model is final", () => {
+    const withOverride = loadoutStats({
       ...base,
       target: {
         defenceLevel: 80,
@@ -346,8 +346,13 @@ describe("loadoutStats", () => {
         damagePotentialOverride: 0.42,
       },
     });
-    expect(stats.dp).toBe(0.42);
-    expect(stats.damagePotentialSource).toBe("manual override");
+    const without = loadoutStats({
+      ...base,
+      target: { defenceLevel: 80, affinity: 60 },
+    });
+    expect(withOverride.dp).toBeCloseTo(without.dp, 10);
+    expect(withOverride.damagePotentialSource).toBe("target stats");
+    expect(withOverride.dp).not.toBe(0.42);
   });
 
   /**
@@ -507,19 +512,19 @@ describe("loadoutStats", () => {
 
   it("set crit wiring: tectonic +3%, elite clamps at 100%, Tumeken is dynamic-only", () => {
     const plain = loadoutStats(base);
-    expect(plain.critChance).toBeCloseTo(0.1, 10);
+    expect(plain.critChance).toBeCloseTo(0, 10);
 
     const tectonic = loadoutStats({
       ...base,
-      critChance: 10,
       equipmentSlots: {
         helmet: "item:tectonic-helm",
         body: "item:tectonic-body",
         legs: "item:tectonic-legs",
       },
     });
-    expect(tectonic.critChance).toBeCloseTo(0.13, 10);
+    expect(tectonic.critChance).toBeCloseTo(0.03, 10);
 
+    // Elite tectonic +6% set crit; no manual slider, so stack gear until clamp.
     const eliteClamp = loadoutStats({
       ...base,
       critChance: 97,
@@ -529,33 +534,31 @@ describe("loadoutStats", () => {
         legs: "item:elite-tectonic-robe-bottom",
       },
     });
-    expect(eliteClamp.critChance).toBe(1);
+    expect(eliteClamp.critChance).toBeCloseTo(0.06, 10);
     expect(
       Object.values(eliteClamp.critChanceBreakdown).reduce((sum, value) => sum + value, 0),
     ).toBeCloseTo(eliteClamp.critChance, 10);
 
     const tumeken = loadoutStats({
       ...base,
-      critChance: 10,
       equipmentSlots: {
         helmet: "item:tumekens-resplendence-helm",
         body: "item:tumekens-resplendence-body",
         legs: "item:tumekens-resplendence-legs",
       },
     });
-    expect(tumeken.critChance).toBeCloseTo(0.1, 10);
+    expect(tumeken.critChance).toBeCloseTo(0, 10);
     expect(tumeken.tumekensPieces).toBe(3);
   });
 
   it("Biting adds +2%/rank crit (+2.2% with level-20 flag)", () => {
-    const r4 = loadoutStats({ ...base, critChance: 10, perks: { ...base.perks, biting: 4 } });
-    expect(r4.critChance).toBeCloseTo(0.18, 10);
+    const r4 = loadoutStats({ ...base, perks: { ...base.perks, biting: 4 } });
+    expect(r4.critChance).toBeCloseTo(0.08, 10);
     const r4l20 = loadoutStats({
       ...base,
-      critChance: 10,
       perks: { ...base.perks, biting: 4, bitingLevel20: true },
     });
-    expect(r4l20.critChance).toBeCloseTo(0.188, 10);
+    expect(r4l20.critChance).toBeCloseTo(0.088, 10);
   });
 
   it("surfaces Warpriest of Tuska in the loadout crit breakdown and set summary", () => {
@@ -566,10 +569,9 @@ describe("loadoutStats", () => {
     } as const;
     const stats = loadoutStats({
       ...base,
-      critChance: 10,
       equipmentSlots,
     });
-    expect(stats.critChance).toBeCloseTo(0.13, 10);
+    expect(stats.critChance).toBeCloseTo(0.03, 10);
     expect(stats.critChanceBreakdown.sets).toBeCloseTo(0.03, 10);
     expect(stats.equipmentEffects.setCritChance).toEqual({
       unconditional: 0.03,
@@ -802,10 +804,9 @@ describe("loadoutStats", () => {
     expect(loadoutStats(defender).accuracyRating).toBeCloseTo(
       loadoutStats(dual).accuracyRating * 1.03,
     );
-    // Manual accuracy is a final Damage Potential override when no target is set -
-    // defender ×1.03 does not re-scale the slider (it still multiplies accuracyRating).
-    expect(loadoutStats(shield).dp).toBe(0.5);
-    expect(loadoutStats(defender).dp).toBe(0.5);
+    // No target: DP is 100% (not the accuracy slider). Defender still multiplies accuracyRating.
+    expect(loadoutStats(shield).dp).toBe(1);
+    expect(loadoutStats(defender).dp).toBe(1);
     expect(loadoutStats(defender).activePassives).toContain("Defender accuracy");
 
     const target = {
@@ -1365,6 +1366,7 @@ describe("loadoutStats", () => {
     });
 
     it("resolves True Equilibrium once for one, two, and three unique paths", () => {
+      // Crit is TE only (no manual loadout crit baseline).
       const fixtures = [
         {
           picks: ["Balance", "Balance", "Balance", "Balance"] as const,
@@ -1372,7 +1374,7 @@ describe("loadoutStats", () => {
           base: 1_836,
           armour: 50,
           life: 15_600,
-          crit: 0.15,
+          crit: 0.05,
           prayer: 5,
           critDamage: 0.075,
         },
@@ -1382,7 +1384,7 @@ describe("loadoutStats", () => {
           base: 2_239,
           armour: 100,
           life: 10_900,
-          crit: 0.2,
+          crit: 0.1,
           prayer: 10,
           critDamage: 0.15,
         },
@@ -1392,7 +1394,7 @@ describe("loadoutStats", () => {
           base: 2_326,
           armour: 150,
           life: 11_400,
-          crit: 0.25,
+          crit: 0.15,
           prayer: 15,
           critDamage: 0.225,
         },
@@ -1454,7 +1456,8 @@ describe("loadoutStats", () => {
       expect(withTome.base).toBe(2_507);
       expect(withTome.league.prayerBonus).toBe(60);
       expect(withTome.icyenic.totalPrayerBonus).toBe(60);
-      expect(withTome.critChance).toBeCloseTo(0.32, 10);
+      // TE 10% + Icyenic crit from prayer stack; no manual crit baseline.
+      expect(withTome.critChance).toBeCloseTo(0.22, 10);
       expect(withTome.baseAbilityDamageBreakdown).toEqual(
         expect.arrayContaining([
           { label: "True Equilibrium", value: 150 },

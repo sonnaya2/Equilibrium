@@ -204,7 +204,10 @@ describe("scheduled hit multiplicity and origin provenance", () => {
     );
     const infernos = summary.events.filter((e) => e.abilityId === "inferno-of-zamorak");
     expect(riders).toHaveLength(7);
-    expect(infernos).toHaveLength(7);
+    expect(
+      summary.analysis.byEffect.find((effect) => effect.id === "inferno-of-zamorak")
+        ?.expectedActivations,
+    ).toBeCloseTo(7 * 0.05, 1);
 
     let expectedTriggerRolls = 0;
     let activations = 0;
@@ -212,21 +215,19 @@ describe("scheduled hit multiplicity and origin provenance", () => {
     for (const inferno of infernos) {
       expect(inferno.attached).toBe(false);
       expect(inferno.expectedTriggerRolls).toBe(1);
-      expect(inferno.expectedActivations).toBeCloseTo(0.05, 10);
-      expect(inferno.expectedSeparateHits).toBeCloseTo(0.05, 10);
-      expect(inferno.occurrenceModel).toEqual({
-        kind: "bernoulli",
-        probability: 0.05,
-      });
+      expect(inferno.expectedOccurrences).toBe(1);
+      expect(inferno.expectedActivations).toBe(1);
+      expect(inferno.expectedSeparateHits).toBe(1);
+      expect(inferno.occurrenceModel).toBeUndefined();
       expect(inferno.originKind).toBe("blessing");
       const mult = resolveEventMultiplicity(inferno);
       expectedTriggerRolls += mult.expectedTriggerRolls;
       activations += mult.expectedActivations;
       separateHits += mult.expectedSeparateHits;
     }
-    expect(expectedTriggerRolls).toBe(7);
-    expect(activations).toBeCloseTo(7 * 0.05, 10);
-    expect(separateHits).toBeCloseTo(7 * 0.05, 10);
+    expect(expectedTriggerRolls).toBe(infernos.length);
+    expect(activations).toBe(infernos.length);
+    expect(separateHits).toBe(infernos.length);
 
     for (const rider of riders) {
       expect(rider.attached).toBe(true);

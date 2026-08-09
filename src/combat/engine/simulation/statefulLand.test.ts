@@ -5,8 +5,13 @@ import { unitPrimordialIce } from "../../styles/melee/primordialIce";
 import { baseInput } from "../../test/fixtures/inputs";
 import { performCast } from "../cast";
 import { createRuntime } from "../runtime/runtime";
-import { patchMelee } from "../runtime/state";
+import { patchMagic, patchMelee } from "../runtime/state";
+import type { ScheduledEvent } from "../runtime/events";
+import type { SimulationRuntime } from "../runtime/runtime";
+import type { ResolvedDamage } from "../resolution/types";
+import { applyStatefulLandRng } from "./statefulLand";
 import { simulateRevolution } from "./revolution";
+import { MAGIC_ABILITIES } from "../../styles/magic/abilities";
 
 const lengIds = ["item:dark-shard-of-leng", "item:dark-sliver-of-leng"] as const;
 
@@ -25,6 +30,82 @@ function lengInput() {
 }
 
 describe("bounded state-changing land RNG", () => {
+  it("samples nested Surge Tsunami adrenaline at source-crit times surge-crit", () => {
+    const damage: ResolvedDamage = {
+      min: 0,
+      max: 1,
+      expected: 1,
+      critical: { mode: "expected", chance: 0.5, contribution: 0 },
+    };
+    const event: ScheduledEvent<SimulationRuntime> = {
+      tick: 10,
+      seq: 1,
+      family: "proc",
+      abilityId: "instability_lightning_surge",
+      sourceCast: 0,
+      hitIndex: 0,
+      attached: false,
+      procEligible: false,
+      recursionAllowed: false,
+      provenance: { kind: "equipment_proc", detail: "lightning_surge" },
+      resolve: () => ({ damage }),
+      lightningSurgeSourceCritChance: 0.5,
+    };
+    let total = 0;
+    for (let laneIndex = 0; laneIndex < 128; laneIndex++) {
+      const rt = createRuntime(
+        {
+          ...baseInput,
+          abilities: MAGIC_ABILITIES,
+          context: { style: "magic" },
+          startingAdrenaline: 0,
+        },
+        { laneIndex, laneCount: 128 },
+      );
+      rt.state = patchMagic(rt.state, { tsunamiCritAdrenUntilTick: 50 });
+      applyStatefulLandRng(rt, event, damage);
+      total += rt.state.adrenaline;
+    }
+
+    expect(total / 128).toBe(2);
+  });
+
+  it("uses the materialized parent crit for Tsunami adrenaline", () => {
+    for (const outcome of [false, true]) {
+      const rt = createRuntime(
+        {
+          ...baseInput,
+          abilities: MAGIC_ABILITIES,
+          context: { style: "magic" },
+          startingAdrenaline: 0,
+        },
+        { laneIndex: 0, laneCount: 1 },
+      );
+      rt.state = patchMagic(rt.state, { tsunamiCritAdrenUntilTick: 50 });
+      const damage: ResolvedDamage = {
+        min: 1,
+        max: 1,
+        expected: 1,
+        critical: { mode: "expected", chance: 0.5, contribution: 0, outcome },
+      };
+      const event: ScheduledEvent<SimulationRuntime> = {
+        tick: 10,
+        seq: 1,
+        family: "hit",
+        abilityId: MAGIC_ABILITIES[0]!.id,
+        sourceCast: 0,
+        hitIndex: 0,
+        attached: false,
+        procEligible: true,
+        recursionAllowed: false,
+        provenance: { kind: "player_direct" },
+        resolve: () => ({ damage }),
+      };
+      applyStatefulLandRng(rt, event, damage);
+      expect(rt.state.adrenaline).toBe(outcome ? 8 : 0);
+    }
+  });
+
   it("samples Icy Tempest's coupled integer outcome across fixed lanes", () => {
     const input = lengInput();
     const spends: number[] = [];

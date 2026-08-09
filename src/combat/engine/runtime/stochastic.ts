@@ -32,6 +32,8 @@ export function needsStochasticLanes(
   if ((input.adrenaline?.impatientRank ?? 0) > 0) return true;
   if ((input.adrenaline?.relentlessRank ?? 0) > 0) return true;
   if (hasBlessing(input.league, "avernic-rampage")) return true;
+  if (hasBlessing(input.league, "unholy-critual")) return true;
+  if (hasBlessing(input.league, "abyssal-cinders")) return true;
   if (
     input.playerPoison !== undefined &&
     resolvePoisonApplication(input.playerPoison, 0) !== null &&

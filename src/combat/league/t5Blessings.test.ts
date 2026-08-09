@@ -43,6 +43,7 @@ describe("Tier 5 and Tier 6 blessing mechanics", () => {
         blessingId: event.blessingId,
         tick: event.tick,
         expectedTriggerRolls: event.expectedTriggerRolls,
+        expectedOccurrences: event.expectedOccurrences,
         expectedActivations: event.expectedActivations,
         expectedSeparateHits: event.expectedSeparateHits,
         occurrenceModel: event.occurrenceModel,
@@ -94,15 +95,30 @@ describe("Tier 5 and Tier 6 blessing mechanics", () => {
       "abyssal-cinders",
       "inferno-of-zamorak",
     );
-    expect(cindersBase[0]).toMatchObject({
-      occurrenceModel: { kind: "geometric", startProbability: 0.05 },
-    });
-    expect(cindersPerfidious[0]).toMatchObject({
-      occurrenceModel: { kind: "geometric", startProbability: 0.25 },
-    });
-    expect(blessingStream(unholyBase, "unholy-critual", "inferno-of-zamorak")).toEqual(
-      blessingStream(unholyPerfidious, "unholy-critual", "inferno-of-zamorak"),
-    );
+    for (const event of [...cindersBase, ...cindersPerfidious]) {
+      expect(event.occurrenceModel).toBeUndefined();
+      expect(event.expectedOccurrences).toBe(1);
+      expect(event.expectedActivations).toBe(1);
+      expect(event.expectedSeparateHits).toBe(1);
+    }
+    expect(
+      unholyBase.analysis.byEffect
+        .find((row) => row.id === "inferno-of-zamorak")
+        ?.sourceBreakdown?.find((source) => source.blessingId === "abyssal-cinders")
+        ?.expectedActivations,
+    ).toBeCloseTo(0.05, 1);
+    expect(
+      unholyPerfidious.analysis.byEffect
+        .find((row) => row.id === "inferno-of-zamorak")
+        ?.sourceBreakdown?.find((source) => source.blessingId === "abyssal-cinders")
+        ?.expectedActivations,
+    ).toBeCloseTo(0.25, 1);
+    expect(
+      unholyBase.analysis.byEffect
+        .find((row) => row.id === "inferno-of-zamorak")
+        ?.sourceBreakdown?.find((source) => source.blessingId === "unholy-critual")
+        ?.expectedActivations,
+    ).toBeCloseTo(1.05, 0);
     const infernoRow = unholyPerfidious.analysis.byEffect.find(
       (row) => row.id === "inferno-of-zamorak",
     );
@@ -110,13 +126,13 @@ describe("Tier 5 and Tier 6 blessing mechanics", () => {
       expect.arrayContaining([
         expect.objectContaining({
           blessingId: "abyssal-cinders",
-          expectedTriggerRolls: 1,
-          expectedActivations: 0.5,
+          expectedTriggerRolls: 0.25,
+          expectedActivations: 0.25,
         }),
         expect.objectContaining({
           blessingId: "unholy-critual",
-          expectedTriggerRolls: 1,
-          expectedActivations: 1,
+          expectedTriggerRolls: 0.5,
+          expectedActivations: expect.closeTo(1.2, 0),
         }),
       ]),
     );
@@ -282,11 +298,10 @@ describe("Tier 5 and Tier 6 blessing mechanics", () => {
     const inferno = result.analysis.byEffect.find((row) => row.id === "inferno-of-zamorak");
     const corruption = result.analysis.byEffect.find((row) => row.id === "corruption_shot");
     const poison = result.analysis.byEffect.find((row) => row.id === PLAYER_POISON_EFFECT_ID);
-    expect(inferno).toMatchObject({
-      expectedTriggerRolls: 1,
-      expectedActivations: 1,
-      expectedSeparateHits: 1,
-    });
+    expect(inferno).toBeDefined();
+    expect(inferno?.expectedTriggerRolls).toBeGreaterThan(0);
+    expect(inferno?.expectedActivations).toBeCloseTo(1, 0);
+    expect(inferno?.expectedSeparateHits).toBeCloseTo(1, 0);
     expect(corruption?.dotDamage).toBeGreaterThan(0);
     expect(poison?.expectedSeparateHits).toBeGreaterThan(0);
     expect(
@@ -310,8 +325,15 @@ describe("Tier 5 and Tier 6 blessing mechanics", () => {
       rotation: rotationOf("death_skulls"),
     });
     expect(critical.analysis.byEffect.find((row) => row.id === "inferno-of-zamorak")).toMatchObject(
-      { expectedActivations: 3, expectedSeparateHits: 3 },
+      { expectedActivations: expect.closeTo(3, 0), expectedSeparateHits: expect.closeTo(3, 0) },
     );
+    const skulls = critical.events.filter((event) => event.abilityId === "death_skulls");
+    expect(skulls).toHaveLength(3);
+    expect(
+      skulls
+        .slice(1)
+        .every((event) => event.damage.critical?.outcome === skulls[0]?.damage.critical?.outcome),
+    ).toBe(true);
 
     const nonCrit = simulate({
       ...necroInput,
@@ -326,28 +348,37 @@ describe("Tier 5 and Tier 6 blessing mechanics", () => {
     ).toBeUndefined();
   });
 
-  it("packs Unholy Inferno recursion without requiring Cinders", () => {
+  it("materializes Unholy Inferno recursion without requiring Cinders", () => {
     const league = picks("Order", "Order", "Order", "Order", "Chaos");
     expect(league.blessingIds.has("abyssal-cinders")).toBe(false);
     const result = simulate({
-      ...baseInput,
+      ...rangedInput,
       league,
       crit: { chance: 0.5 },
-      context: { style: "melee", ruleset: "equilibrium" },
-      rotation: rotationOf("attack"),
+      context: { style: "ranged", ruleset: "equilibrium" },
+      rotation: rotationOf("greater_ricochet"),
     });
     const infernos = result.events.filter((event) => event.abilityId === "inferno-of-zamorak");
-    expect(infernos).toHaveLength(1);
-    expect(infernos[0]).toMatchObject({
-      blessingId: "unholy-critual",
-      occurrenceModel: {
-        kind: "geometric",
-        startProbability: 0.5,
-        continuationProbability: 0.5,
-      },
-      expectedActivations: 1,
-      expectedSeparateHits: 1,
+    expect(result.analysis.byEffect.find((row) => row.id === "inferno-of-zamorak")).toMatchObject({
+      expectedActivations: expect.closeTo(7, 0),
+      expectedSeparateHits: expect.closeTo(7, 0),
     });
+    for (const event of infernos) {
+      expect(event.occurrenceModel).toBeUndefined();
+      expect(event.expectedOccurrences).toBe(1);
+      expect(event.expectedActivations).toBe(1);
+      expect(event.expectedSeparateHits).toBe(1);
+    }
+    const chains = new Map<number, typeof infernos>();
+    for (const event of infernos) {
+      const chain = chains.get(event.derivedFrom ?? -1) ?? [];
+      chain.push(event);
+      chains.set(event.derivedFrom ?? -1, chain);
+    }
+    for (const chain of chains.values()) {
+      expect(chain.at(-1)?.damage.critical?.outcome).toBe(false);
+      expect(chain.slice(0, -1).every((event) => event.damage.critical?.outcome)).toBe(true);
+    }
   });
 
   it("keeps Perfidious scoped to original Cinders and Barkscales origins", () => {
@@ -384,7 +415,13 @@ describe("Tier 5 and Tier 6 blessing mechanics", () => {
         (event) =>
           event.abilityId === "inferno-of-zamorak" && event.blessingId === "abyssal-cinders",
       ),
-    ).toMatchObject([{ expectedActivations: 0.25 }]);
+    ).toEqual([]);
+    expect(
+      cindersRun.analysis.byEffect
+        .find((row) => row.id === "inferno-of-zamorak")
+        ?.sourceBreakdown?.find((source) => source.blessingId === "abyssal-cinders")
+        ?.expectedActivations,
+    ).toBeCloseTo(0.25, 1);
   });
 
   it("doubles marked DoT duration and triggers Grasp every fifth hit", () => {

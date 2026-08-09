@@ -9,6 +9,48 @@ import { applyBlessingDamage } from "./league/blessingDamage";
 import { applyLeagueLandedHitEffects } from "./landed/league";
 import { noteAttachedTermsResolved } from "../../profiling/allocation";
 
+function materializeCriticalOutcome(
+  rt: SimulationRuntime,
+  event: ScheduledEvent<SimulationRuntime>,
+  resolution: EventResolution,
+  inheritedOutcome?: boolean,
+): EventResolution {
+  const existingOutcome = resolution.damage.critical?.outcome;
+  const critical = resolution.damage.critical;
+  if (!critical || critical.mode === "none") return resolution;
+  const outcome =
+    existingOutcome ??
+    inheritedOutcome ??
+    (critical.mode === "guaranteed"
+      ? true
+      : rt.stochastic.bernoulli(`land:critical:${event.seq}`, critical.chance));
+  const damage = {
+    ...resolution.damage,
+    critical: { ...critical, outcome },
+  };
+  const hitDetail = resolution.hitDetail
+    ? { ...resolution.hitDetail, critOutcome: outcome }
+    : undefined;
+  const components = resolution.components?.map((component) => {
+    const componentCritical = component.damage.critical;
+    return {
+      ...component,
+      hitDetail: component.hitDetail
+        ? { ...component.hitDetail, critOutcome: outcome }
+        : component.hitDetail,
+      damage: componentCritical
+        ? { ...component.damage, critical: { ...componentCritical, outcome } }
+        : component.damage,
+    };
+  });
+  return {
+    ...resolution,
+    damage,
+    ...(hitDetail ? { hitDetail } : {}),
+    ...(components ? { components } : {}),
+  };
+}
+
 /**
  * Sole ledger-write step for a landed event (resolvers only calculate).
  * Order: (1) hit-detail + ledgers/cast/event log (2) target state (3) blessing
@@ -22,7 +64,13 @@ export function recordResolved(
   event: ScheduledEvent<SimulationRuntime>,
   resolution: EventResolution,
 ): void {
-  const composed = applyBlessingDamage(rt, event, resolution);
+  const landed = materializeCriticalOutcome(rt, event, resolution);
+  const composed = materializeCriticalOutcome(
+    rt,
+    event,
+    applyBlessingDamage(rt, event, landed),
+    landed.damage.critical?.outcome,
+  );
   noteAttachedTermsResolved(composed.components?.length ?? 0);
   recordEventAccounting(rt, event, composed);
 

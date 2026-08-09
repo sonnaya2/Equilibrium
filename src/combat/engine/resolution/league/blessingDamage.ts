@@ -4,14 +4,16 @@ import {
   attachedResolutionComponent,
   blessingHitEligibility,
   leagueDamageComponents,
+  resolveLeagueAttachedHost,
   resolveLeagueAttachedTerms,
   type BlessingDamageSource,
 } from "../../../league/damage";
-import type { DamageProvenance } from "../../../shared/damageProvenance";
-import { blessingRule } from "../../../league/ruleset";
+import { capabilitiesOf, type DamageProvenance } from "../../../shared/damageProvenance";
+import { blessingRule, resolveLeagueCritAtLand } from "../../../league/ruleset";
 import { patchLeague } from "../../runtime/state";
 import {
   appendAttachedComponents,
+  packageCritical,
   type AttachedDamageComponent,
   type EventResolution,
   type ResolvedDamage,
@@ -19,6 +21,8 @@ import {
 import { isBasicAttack } from "../../../shared/adrenalineGain";
 import { statefulOccurrenceProbability } from "../../analysis/multiplicity";
 import { noteBlessingDamageCache } from "../../../profiling/allocation";
+import { critProbability, type CritLayers } from "../../../core/critical";
+import type { CombatContext, CombatModifier } from "../../../types";
 
 /**
  * Prefer scheduled DamageProvenance (keeps blessing detail for rider carve-out);
@@ -72,11 +76,120 @@ function scaleAttachedComponent(
   };
 }
 
-/**
- * Compose league blessing damage components for a landed event and advance
- * Striking Light readiness when Light of Saradomin contributes.
- * Chance-weighted Inferno is one separate hit and may host attached Big Boned damage.
- */
+function infernoCritLayers(rt: SimulationRuntime): CritLayers {
+  const unholy = blessingRule(rt.input.league, "unholy-critual")?.unholyCritual;
+  const globalCrit = resolveLeagueCritAtLand(rt.input.league, rt.input.crit);
+  return {
+    ...globalCrit,
+    eligible: true,
+    guaranteed: false,
+    damageBonus: (globalCrit.damageBonus ?? 0) + (unholy?.infernoCritDamageBonus ?? 0),
+  };
+}
+
+function resolveConcreteInferno(
+  rt: SimulationRuntime,
+  event: ScheduledEvent<SimulationRuntime>,
+  style: CombatContext["style"],
+  context: CombatContext,
+  modifiers: readonly CombatModifier[],
+  band: readonly [number, number],
+  forcedOutcome?: boolean,
+): EventResolution {
+  const provenance: DamageProvenance = { kind: "blessing", detail: "inferno-of-zamorak" };
+  const inferno = resolveLeagueAttachedHost({
+    rules: rt.input.league,
+    source: provenance,
+    bonusTargetId: "inferno-of-zamorak",
+    base: rt.input.base,
+    band: { minPct: band[0], maxPct: band[1] },
+    level: rt.input.level,
+    accuracy: rt.input.accuracy,
+    crit: infernoCritLayers(rt),
+    modifiers: modifiers.filter(
+      (modifier) => modifier.stage === "target" || modifier.stage === "postHit",
+    ),
+    context: {
+      ...context,
+      style,
+      damageSource: "blessing",
+      provenance,
+    },
+    cap: rt.input.cap,
+    preciseRank: rt.input.preciseRank,
+    landTick: event.tick,
+  });
+  const critical = packageCritical(
+    inferno.hit.critChance,
+    inferno.hit.critExpected,
+    inferno.hit.nonCritExpected,
+    forcedOutcome === undefined ? undefined : { outcome: forcedOutcome },
+  );
+  return {
+    damage: {
+      min: inferno.hit.min,
+      max: inferno.hit.max,
+      expected: inferno.hit.expected,
+      critExpected: inferno.hit.critExpected,
+      capLoss: inferno.hit.capLoss,
+      critical,
+    },
+    hitDetail: inferno.hit,
+    components: inferno.components.map((component) => attachedResolutionComponent(component)),
+  };
+}
+
+function scheduleConcreteInfernoChain(
+  rt: SimulationRuntime,
+  parent: ScheduledEvent<SimulationRuntime>,
+  style: CombatContext["style"],
+  context: CombatContext,
+  modifiers: readonly CombatModifier[],
+  band: readonly [number, number],
+  blessingId: "abyssal-cinders" | "unholy-critual",
+  count: number,
+  forceChainOutcomes: boolean,
+): void {
+  for (let index = 0; index < count; index++) {
+    const forcedOutcome = forceChainOutcomes ? index < count - 1 : undefined;
+    const eventBlessingId = index === 0 ? blessingId : "unholy-critual";
+    scheduleEvent(rt, {
+      tick: parent.tick,
+      family: "blessing",
+      abilityId: "inferno-of-zamorak",
+      sourceCast: parent.sourceCast,
+      hitIndex: parent.hitIndex,
+      attached: false,
+      procEligible: false,
+      recursionAllowed: false,
+      derivedFrom: parent.seq,
+      blessingId: eventBlessingId,
+      bonusTargetId: "inferno-of-zamorak",
+      originKind: "blessing",
+      provenance: { kind: "blessing", detail: "inferno-of-zamorak" },
+      expectedOccurrences: 1,
+      expectedTriggerRolls: index === 0 ? 1 : 0,
+      expectedActivations: 1,
+      expectedSeparateHits: 1,
+      resolve: (runtime) =>
+        resolveConcreteInferno(
+          runtime,
+          {
+            ...parent,
+            blessingId: eventBlessingId,
+            abilityId: "inferno-of-zamorak",
+          },
+          style,
+          context,
+          modifiers,
+          band,
+          forcedOutcome,
+        ),
+    });
+  }
+}
+
+/** Compose deterministic league blessing damage and schedule concrete stateful procs. */
 export function applyBlessingDamage(
   rt: SimulationRuntime,
   event: ScheduledEvent<SimulationRuntime>,
@@ -192,11 +305,85 @@ export function applyBlessingDamage(
       rt.state = patchLeague(rt.state, { lordOfLightReadyTick: event.tick + cooldown });
     }
   }
+
+  const cinders = blessingRule(rt.input.league, "abyssal-cinders");
+  const unholy = blessingRule(rt.input.league, "unholy-critual")?.unholyCritual;
+  const parentCapabilities = capabilitiesOf(event.provenance);
+  const parentCanTriggerCritual =
+    parentCapabilities.canTriggerCritual ?? parentCapabilities.canCrit;
+  const parentCritOutcome = resolution.damage.critical?.outcome;
+  const infernoCritChance = unholy
+    ? Math.min(0.5, Math.max(0, critProbability(infernoCritLayers(rt))))
+    : 0;
+  const infernoBand = unholy?.infernoAbilityDamageBand ?? cinders?.inferno?.abilityDamageBand;
+  if (infernoBand && !event.attached) {
+    const cindersChance = eligible.cinders
+      ? Math.min(
+          1,
+          Math.max(
+            0,
+            (cinders?.inferno?.chance ?? 0) *
+              (blessingRule(rt.input.league, "perfidious")?.perfidious?.cindersChanceMultiplier ??
+                1),
+          ),
+        )
+      : 0;
+    if (
+      cindersChance > 0 &&
+      rt.stochastic.bernoulli(`blessing:cinders:${event.seq}`, cindersChance)
+    ) {
+      const count =
+        unholy && infernoCritChance > 0
+          ? 1 +
+            rt.stochastic.geometricSuccesses(
+              `blessing:critual-chain:cinders:${event.seq}`,
+              infernoCritChance,
+            )
+          : 1;
+      scheduleConcreteInfernoChain(
+        rt,
+        event,
+        style,
+        { ...rt.input.context, style },
+        modifiers,
+        cinders?.inferno?.abilityDamageBand ?? unholy!.infernoAbilityDamageBand,
+        "abyssal-cinders",
+        count,
+        unholy !== undefined,
+      );
+    }
+    if (
+      unholy &&
+      parentCanTriggerCritual &&
+      parentCritOutcome === true &&
+      infernoCritChance >= 0 &&
+      unholy.infernoAbilityDamageBand
+    ) {
+      const count =
+        1 +
+        rt.stochastic.geometricSuccesses(
+          `blessing:critual-chain:parent:${event.seq}`,
+          infernoCritChance,
+        );
+      scheduleConcreteInfernoChain(
+        rt,
+        event,
+        style,
+        { ...rt.input.context, style },
+        modifiers,
+        unholy.infernoAbilityDamageBand,
+        "unholy-critual",
+        count,
+        true,
+      );
+    }
+  }
   // Chance-weighted parents pass their activation mass into attached components.
   const parentWeight = event.expectedActivations ?? event.expectedOccurrences ?? 1;
   const parentOccurrenceProbability = statefulOccurrenceProbability(event);
   let composed = resolution;
   for (const component of components) {
+    if (component.effectId === "inferno-of-zamorak") continue;
     const scaledDamage = scaleResolvedDamage(component.damage, parentWeight);
     if (component.attached) {
       if (includedAttached.has(component.effectId)) continue;

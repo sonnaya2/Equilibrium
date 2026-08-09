@@ -52,6 +52,8 @@ export interface HitResult {
   /** Same expectation before the hit cap, for analysis attribution. */
   uncappedExpected: number;
   capLoss: number;
+  /** Concrete land-time outcome; absent on deterministic expected-value hit details. */
+  critOutcome?: boolean;
 }
 
 export interface RawHitBandInput extends Omit<HitInput, "base" | "band"> {

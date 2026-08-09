@@ -5,6 +5,7 @@ import type { ScheduledEvent } from "../runtime/events";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { gainAdrenaline, patchMelee } from "../runtime/state";
 import type { ResolvedDamage } from "../resolution/types";
+import { capabilitiesOf } from "../../shared/damageProvenance";
 
 function isLengEligible(
   rt: SimulationRuntime,
@@ -34,6 +35,8 @@ function isTsunamiEligible(
 ): boolean {
   if (!ability || ability.style !== "magic") return false;
   if (event.attached || !(event.procEligible || event.convertedChannel)) return false;
+  // Tsunami counts non-necromancy player critical strikes; blessing-origin hits do not grant adren.
+  if (capabilitiesOf(event.provenance).canGenerateResources !== true) return false;
   if (damage.max <= 0 && damage.expected <= 0) return false;
   return tsunamiCritAdrenActive(rt.state.magic, event.tick);
 }
@@ -58,7 +61,12 @@ export function applyStatefulLandRng(
   if (rt.state.adrenaline >= rt.state.adrenalineCap) return;
   const grant = tsunamiCritAdrenGrant(rt.state.naturalInstinctUntilTick, event.tick);
   if (grant <= 0) return;
-  if (rt.stochastic.bernoulli("land:tsunami-crit-adrenaline", tsunamiCritChance(damage))) {
+  const actualCrit = damage.critical?.outcome;
+  const critical =
+    actualCrit !== undefined
+      ? actualCrit
+      : rt.stochastic.bernoulli("land:tsunami-crit-adrenaline", tsunamiCritChance(damage));
+  if (critical) {
     rt.state = gainAdrenaline(rt.state, grant);
   }
 }

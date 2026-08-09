@@ -25,7 +25,7 @@ import {
   strikingLightBasicRowMark,
 } from "./blessingPresentation";
 import { AbilityCategoryChip } from "./AbilityCategoryChip";
-import { hasCritualRecursiveSource, occurrenceModelNote } from "./rotationAnalysisFormat";
+import { occurrenceModelNote } from "./rotationAnalysisFormat";
 
 const SOURCE_LABEL: Record<DamageSourceKind, string> = {
   "ability-direct": "Direct abilities",
@@ -96,6 +96,7 @@ function eventType(event: ResolvedEvent): string {
 function critLabel(event: ResolvedEvent): string | null {
   const critical = event.damage.critical;
   if (!critical || critical.mode === "none") return null;
+  if (critical.outcome !== undefined) return critical.outcome ? "Crit" : "No crit";
   if (critical.mode === "guaranteed") return "Crit";
   return `${formatPercent(critical.chance)} crit EV`;
 }
@@ -606,15 +607,6 @@ export function RotationAnalysisModal({
                       <td className="py-1.5 pr-3 text-parch-50">
                         <span className="inline-flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
                           <span>{effectName(effect.id, nameForId)}</span>
-                          {hasCritualRecursiveSource(effect) ? (
-                            <span
-                              className="whitespace-nowrap font-mono text-[10px] text-gold-300"
-                              data-occurrence-model="geometric"
-                              title="Unholy Critual is represented as a recursive geometric expected chain."
-                            >
-                              Critual recursive EV
-                            </span>
-                          ) : null}
                           {effect.expectedPlayerPoisonHits > 0 ? (
                             <span
                               className="whitespace-nowrap font-mono text-[10px] text-emerald-300"

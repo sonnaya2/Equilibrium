@@ -5,6 +5,7 @@ import type { ScheduledEvent } from "../../runtime/events";
 import { createRuntime, type SimulationRuntime } from "../../runtime/runtime";
 import type { AttachedDamageComponent, EventResolution } from "../types";
 import { applyBlessingDamage } from "./blessingDamage";
+import { createStochasticOracle } from "../../runtime/stochastic";
 
 function attached(id: "big-boned" | "abyssal-cinders", damage: number): AttachedDamageComponent {
   return {
@@ -22,18 +23,28 @@ function attached(id: "big-boned" | "abyssal-cinders", damage: number): Attached
 
 describe("blessing damage event composition", () => {
   it("keeps attached terms on the host and schedules only the separate Inferno hit", () => {
-    const rt = createRuntime({
-      base: 1_000,
-      level: 99,
-      accuracy: 1,
-      crit: { chance: 0 },
-      abilities: MELEE_ABILITIES,
-      league: resolveLeagueRules(
-        { ruleset: "equilibrium", blessingPicks: ["Balance", "Chaos"] },
-        { maximumLife: 10_000 },
+    const laneIndex = Array.from({ length: 128 }, (_, value) => value).find((value) =>
+      createStochasticOracle({ laneIndex: value, laneCount: 128 }).bernoulli(
+        "blessing:cinders:0",
+        0.05,
       ),
-      context: { style: "melee", ruleset: "equilibrium" },
-    });
+    );
+    if (laneIndex === undefined) throw new Error("could not choose a Cinders-success lane");
+    const rt = createRuntime(
+      {
+        base: 1_000,
+        level: 99,
+        accuracy: 1,
+        crit: { chance: 0 },
+        abilities: MELEE_ABILITIES,
+        league: resolveLeagueRules(
+          { ruleset: "equilibrium", blessingPicks: ["Balance", "Chaos"] },
+          { maximumLife: 10_000 },
+        ),
+        context: { style: "melee", ruleset: "equilibrium" },
+      },
+      { laneIndex, laneCount: 128 },
+    );
     const event: ScheduledEvent<SimulationRuntime> = {
       tick: 0,
       seq: 0,
@@ -58,7 +69,10 @@ describe("blessing damage event composition", () => {
     expect(rt.queue.pending().map((pending) => pending.abilityId)).toEqual(["inferno-of-zamorak"]);
     const inferno = rt.queue.pending()[0]!;
     expect(inferno.expectedTriggerRolls).toBe(1);
-    expect(inferno.expectedActivations).toBeCloseTo(0.05, 12);
+    expect(inferno.expectedOccurrences).toBe(1);
+    expect(inferno.expectedActivations).toBe(1);
+    expect(inferno.expectedSeparateHits).toBe(1);
+    expect(inferno.occurrenceModel).toBeUndefined();
     const infernoResolution = inferno.resolve(rt, inferno.tick);
     expect(infernoResolution.components?.map((component) => component.id)).toEqual(["big-boned"]);
   });

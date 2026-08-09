@@ -5,13 +5,14 @@ export interface CriticalResolution {
   chance: number;
   contribution: number;
   inherited?: boolean;
+  outcome?: boolean;
 }
 
 export function packageCritical(
   chance: number,
   critExpected: number,
   nonCritExpected: number,
-  opts?: { inherited?: boolean; scale?: number },
+  opts?: { inherited?: boolean; outcome?: boolean; scale?: number },
 ): CriticalResolution {
   const scale = opts?.scale ?? 1;
   return {
@@ -19,6 +20,7 @@ export function packageCritical(
     chance,
     contribution: Math.max(0, chance * (critExpected - nonCritExpected)) * scale,
     ...(opts?.inherited ? { inherited: true } : {}),
+    ...(opts?.outcome === undefined ? {} : { outcome: opts.outcome }),
   };
 }
 

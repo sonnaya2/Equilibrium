@@ -103,6 +103,11 @@ export function CalculationAssumptions({
         ] as Array<[string, string | number]>)
       : []),
     ["Critical damage", `+${PERCENT_FORMAT.format(stats.totalCritDamageBonus)}`],
+    ...(result?.playerPoison?.targetState
+      ? ([
+          ["Current Bik-arrow stacks", formatNumber(result.playerPoison.targetState.bikStacks)],
+        ] as Array<[string, string | number]>)
+      : []),
     ["30,000 cap", stats.cap.bypass ? "Off" : "On · effect exceptions"],
     ...(stats.league.blessings.length > 0
       ? ([

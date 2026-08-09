@@ -271,7 +271,7 @@ describe("overlayAnalysisStatLine", () => {
     const ability = abilityById("attack");
     const analysis = analyzeSingleCast(modelB, ability);
     const summary = oneCastSummary(modelB, ability.id);
-    const inferno = summary.events.find((event) => event.blessingId === "unholy-critual");
+    const infernos = summary.events.filter((event) => event.blessingId === "unholy-critual");
 
     expect(model.crit.critualConvertedDamageBonus).toBeCloseTo(0.05, 10);
     expect(modelB.crit.chance).toBeCloseTo(0.5, 10);
@@ -280,14 +280,15 @@ describe("overlayAnalysisStatLine", () => {
     expect(analysis.hits[0]?.critChance).toBeCloseTo(0.5, 10);
     expect(analysis.expected).toBeCloseTo(summary.totalExpected, 6);
     expect(Number.isFinite(analysis.expected)).toBe(true);
-    expect(inferno).toMatchObject({
-      expectedActivations: 1,
-      occurrenceModel: {
-        kind: "geometric",
-        startProbability: 0.5,
-        continuationProbability: 0.5,
-      },
-    });
+    expect(
+      summary.analysis.byEffect.find((row) => row.id === "inferno-of-zamorak")?.expectedActivations,
+    ).toBeCloseTo(1, 0);
+    for (const inferno of infernos) {
+      expect(inferno.occurrenceModel).toBeUndefined();
+      expect(inferno.expectedOccurrences).toBe(1);
+      expect(inferno.expectedActivations).toBe(1);
+      expect(inferno.expectedSeparateHits).toBe(1);
+    }
   });
 });
 

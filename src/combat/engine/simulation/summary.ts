@@ -462,7 +462,12 @@ export function combineStochasticSummaries(
         cast.actualSpend,
         cast.adrenalineAfter,
       ]),
-      part.summary.events.map((event) => [event.tick, event.abilityId, event.family]),
+      part.summary.events.map((event) => [
+        event.tick,
+        event.abilityId,
+        event.family,
+        event.damage.critical?.outcome ?? "expected",
+      ]),
     ]);
     const existing = historyGroups.get(key);
     if (existing) existing.weight += part.weight;

@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { hasCritualRecursiveSource, occurrenceModelNote } from "./rotationAnalysisFormat";
+import { occurrenceModelNote } from "./rotationAnalysisFormat";
 
 describe("rotation analysis presentation", () => {
-  it("names Critual as a recursive geometric EV rather than a deterministic Inferno", () => {
+  it("keeps the legacy Quick geometric note separate from concrete runtime events", () => {
     expect(
       occurrenceModelNote(
         {
@@ -20,20 +20,5 @@ describe("rotation analysis presentation", () => {
     ).toBe(
       "Critual recursive chain: 1 expected Inferno per eligible parent (50.0% start; 50.0% continuation)",
     );
-  });
-
-  it("identifies the Critual source on the effect ledger", () => {
-    expect(
-      hasCritualRecursiveSource({
-        id: "inferno-of-zamorak",
-        sourceBreakdown: [{ blessingId: "unholy-critual" }],
-      }),
-    ).toBe(true);
-    expect(
-      hasCritualRecursiveSource({
-        id: "inferno-of-zamorak",
-        sourceBreakdown: [{ blessingId: "abyssal-cinders" }],
-      }),
-    ).toBe(false);
   });
 });

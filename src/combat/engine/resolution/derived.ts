@@ -57,6 +57,7 @@ export function resolveDerivedHit(
     critical: packageCritical(inheritedCrit.chance, source.critExpected, source.nonCritExpected, {
       scale: fractionPct / 100,
       inherited: true,
+      ...(source.critOutcome === undefined ? {} : { outcome: source.critOutcome }),
     }),
   };
 

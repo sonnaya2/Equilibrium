@@ -273,9 +273,14 @@ Attached components are excluded by the hit-count integrity rule; blessing damag
 nothing recurses. Damage Potential replaces hit/miss rolls against NPCs, so there is no missed-hit
 case, and a zero-damage event is excluded by the caller.
 
-Inferno is one non-recursive, critical-eligible Bernoulli event. Its `max` represents the proc
-landing, so read it together with `expectedOccurrences` and never as a guaranteed hit. It may roll
-weapon poison and host Big Boned, but neither outcome can trigger Cinders.
+Quick calculation keeps Inferno's closed-form Bernoulli/geometric expectation. Full simulation uses
+the fixed 128-lane stochastic ensemble: a successful Cinders roll or Critual parent crit schedules
+integer-multiplicity Inferno events, and an Inferno crit can continue the Critual chain. Every
+materialized event has `expectedOccurrences`, `expectedActivations`, and `expectedSeparateHits` of
+1 with no occurrence model wrapper. The terminal event is noncritical; continuing events are
+critical. Inferno may roll weapon poison once and host Big Boned, but its blessing provenance does
+not grant Tsunami adrenaline and it never reopens Cinders. A Cinders-origin continuation is
+attributed to Unholy Critual after the independent Cinders start.
 
 Still unverified:
 
@@ -466,13 +471,13 @@ Until testing proves otherwise:
 - an unspecified on-hit proc uses the first qualifying hit of an attack;
 - a blessing that explicitly applies to all hits overrides that default;
 - proc chance described per attack rolls once per attack or ability use;
-- blessing-generated damage cannot trigger the same blessing recursively;
+- blessing-generated damage cannot trigger the same blessing recursively, except Unholy Critual may continue from a critical Inferno; Cinders itself never reopens;
 - ordinary downstream target modifiers still apply;
 - interactions with unrelated poison, healing, proc counters, or other blessings remain unverified unless tested.
 
 ## RNG policy
 
-`combat-sim` owns it. Blessing procs use expected value when the outcome cannot change future state and one concrete outcome per deterministic stratified lane when it can. Avernic Rampage uses lane-local state. Inferno damage stays expected-value; poison observes Inferno occurrence through the same lane when that occurrence can change future poison state.
+`combat-sim` owns it. Blessing procs use expected value when the outcome cannot change future state and one concrete outcome per deterministic stratified lane when it can. Avernic Rampage uses lane-local state. Inferno event occurrence is concrete when it can change recursive or poison state; each event's damage amount remains expected-value. Poison observes Inferno occurrence through the same lane.
 
 ## Required context additions
 

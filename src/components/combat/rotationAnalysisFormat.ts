@@ -25,13 +25,3 @@ export function occurrenceModelNote(
     model.startProbability,
   )} start; ${percent(model.continuationProbability)} continuation)`;
 }
-
-export function hasCritualRecursiveSource(row: {
-  id: string;
-  sourceBreakdown?: readonly { blessingId: string }[];
-}): boolean {
-  return (
-    row.id === "inferno-of-zamorak" &&
-    row.sourceBreakdown?.some((source) => source.blessingId === "unholy-critual") === true
-  );
-}

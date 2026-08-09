@@ -170,10 +170,16 @@ describe("Cinders direct-hit rolls", () => {
     });
 
     expect(expectedActivations(summary, "abyssal-cinders")).toBe(hits);
-    expect(infernos(summary)).toHaveLength(hits);
     expect(
-      infernos(summary).reduce((sum, event) => sum + (event.expectedActivations ?? 0), 0),
-    ).toBeCloseTo(hits * INFERNO_CHANCE, 12);
+      summary.analysis.byEffect.find((effect) => effect.id === "inferno-of-zamorak")
+        ?.expectedActivations,
+    ).toBeCloseTo(hits * INFERNO_CHANCE, 1);
+    for (const event of infernos(summary)) {
+      expect(event.occurrenceModel).toBeUndefined();
+      expect(event.expectedOccurrences).toBe(1);
+      expect(event.expectedActivations).toBe(1);
+      expect(event.expectedSeparateHits).toBe(1);
+    }
     expect(summary.events.some((event) => event.abilityId === "abyssal-cinders")).toBe(false);
   });
 
@@ -199,14 +205,20 @@ describe("Cinders direct-hit rolls", () => {
       rotation: rotationOf("greater_ricochet"),
     });
 
-    expect(summary.events.filter((event) => event.blessingId)).toHaveLength(7);
+    expect(
+      summary.analysis.byEffect.find((effect) => effect.id === "inferno-of-zamorak")
+        ?.expectedActivations,
+    ).toBeCloseTo(7 * INFERNO_CHANCE, 1);
     for (const event of infernos(summary)) {
       expect(event).toMatchObject({
         attached: false,
         procEligible: false,
         recursionAllowed: false,
-        occurrenceModel: { kind: "bernoulli", probability: INFERNO_CHANCE },
       });
+      expect(event.occurrenceModel).toBeUndefined();
+      expect(event.expectedOccurrences).toBe(1);
+      expect(event.expectedActivations).toBe(1);
+      expect(event.expectedSeparateHits).toBe(1);
       expect(event.components?.map((component) => component.id)).toEqual(["big-boned"]);
       expect(event.components?.some((component) => component.id === "abyssal-cinders")).toBe(false);
     }
@@ -259,7 +271,10 @@ describe("Cinders direct-hit rolls", () => {
           event.components?.filter((component) => component.id === "abyssal-cinders").length === 1,
       ),
     ).toBe(true);
-    expect(infernos(summary)).toHaveLength(3);
+    expect(
+      summary.analysis.byEffect.find((effect) => effect.id === "inferno-of-zamorak")
+        ?.expectedActivations,
+    ).toBeCloseTo(3 * INFERNO_CHANCE, 1);
     expect(infernos(summary).every((event) => event.components?.length === 1)).toBe(true);
     expect(infernos(summary).every((event) => event.components?.[0]?.id === "big-boned")).toBe(
       true,
@@ -345,8 +360,14 @@ describe("Big Boned source composition", () => {
         ),
       ).toBe(false);
     }
-    expect(infernos(parasiteSummary)).toHaveLength(1);
-    expect(infernos(punctureSummary)).toHaveLength(1);
+    expect(
+      parasiteSummary.analysis.byEffect.find((effect) => effect.id === "inferno-of-zamorak")
+        ?.expectedActivations,
+    ).toBeCloseTo(INFERNO_CHANCE, 1);
+    expect(
+      punctureSummary.analysis.byEffect.find((effect) => effect.id === "inferno-of-zamorak")
+        ?.expectedActivations,
+    ).toBeCloseTo(INFERNO_CHANCE, 1);
   });
 });
 

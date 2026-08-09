@@ -210,10 +210,15 @@ export function calculateAbility(
     critByHit?: readonly Omit<CritLayers, "eligible">[];
   },
 ): AbilityResult {
+  // Wiki hit chance: Sunshine / Greater Sunshine zone DoT uses full Damage Potential.
+  // https://runescape.wiki/w/Hit_chance
+  const accuracy =
+    ability.id === "sunshine" || ability.id === "greater_sunshine" ? 1 : input.accuracy;
   const hits = ability.hits.map((hit, index) => {
     const { damageSource, provenance } = hitProvenance(ability, hit);
     return calculateHit({
       ...input,
+      accuracy,
       band: hit.band,
       crit: { ...(input.critByHit?.[index] ?? input.crit), eligible: hit.critEligible ?? true },
       provenance,

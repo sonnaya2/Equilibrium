@@ -151,6 +151,21 @@ describe("magic ability data", () => {
     expect(sun.hits[15].tickOffset).toBe(48);
   });
 
+  // Wiki hit chance: Sunshine / Greater Sunshine zone DoT bypasses hit chance (full DP).
+  it("Sunshine zone DoT uses full Damage Potential regardless of input accuracy", () => {
+    const input = { base: 1000, level: 99, accuracy: 0.5, crit: { chance: 0 as const } };
+    for (const id of ["sunshine", "greater_sunshine"] as const) {
+      const half = calculateAbility(byId(id), input);
+      const full = calculateAbility(byId(id), { ...input, accuracy: 1 });
+      expect(half.expected).toBeCloseTo(full.expected, 10);
+      expect(half.hits.every((h) => h.potential === 1)).toBe(true);
+    }
+    // Ordinary magic still scales with Damage Potential.
+    const basicHalf = calculateAbility(byId("magic_attack"), input);
+    const basicFull = calculateAbility(byId("magic_attack"), { ...input, accuracy: 1 });
+    expect(basicHalf.expected).toBeLessThan(basicFull.expected);
+  });
+
   it("no longer exposes Runic-Charged Dragon Breath as a separate ability", () => {
     expect(MAGIC_ABILITIES.some((a) => a.id === "dragon_breath_empowered")).toBe(false);
     const base = byId("dragon_breath");

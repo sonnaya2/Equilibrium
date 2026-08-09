@@ -18,7 +18,6 @@ import { resolveRangedAmmunitionHitEffects } from "../../styles/ranged/ammunitio
 import { dracolichInfusionCritChance } from "../../styles/ranged/dracolich";
 import {
   COMMAND_REQUIRES_CONJURE,
-  CONJURE_DAMAGE_POTENTIAL,
   conjureEligibleModifiers,
   findConjure,
   skeletonRageMult,
@@ -401,6 +400,12 @@ function resolveCastHitUncached(
           0,
           Math.min(1, targetDamagePotentialBeforeAmmunition + ammunition.damagePotentialDelta),
         );
+  // Wiki hit chance: conjures/commands and Sunshine / Greater Sunshine zone DoT
+  // bypass hit chance (full Damage Potential). https://runescape.wiki/w/Hit_chance
+  const hitAccuracy =
+    isCommand || ability.id === "sunshine" || ability.id === "greater_sunshine"
+      ? 1
+      : effectiveAccuracy;
   const damageSource = outgoingSourceOf(provenance);
   const hitContext: import("../../types").CombatContext = {
     ...input.context,
@@ -442,7 +447,7 @@ function resolveCastHitUncached(
           base,
           band,
           level,
-          accuracy: isCommand ? CONJURE_DAMAGE_POTENTIAL : effectiveAccuracy,
+          accuracy: hitAccuracy,
           crit,
           ...(snap.surgingStormAtCast
             ? { critDamageDistribution: SURGING_STORM_CRIT_DAMAGE_DISTRIBUTION }
@@ -465,7 +470,7 @@ function resolveCastHitUncached(
         base,
         band,
         level,
-        accuracy: isCommand ? CONJURE_DAMAGE_POTENTIAL : effectiveAccuracy,
+        accuracy: hitAccuracy,
         crit: { ...crit, chance: 0, guaranteed: false, eligible: false },
         modifiers: isCommand ? conjureEligibleModifiers(modifiers) : modifiers,
         context: hitContext,

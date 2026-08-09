@@ -112,13 +112,25 @@ describe("berserkersFuryModifier", () => {
     expect(berserkersFuryModifier(-0.01)).toBeNull();
   });
 
-  it("multiplies at roll stage and skips bleeds", () => {
+  it("multiplies at roll stage and skips all true DoTs", () => {
     const mod = berserkersFuryModifier(0.03);
     expect(mod).not.toBeNull();
     expect(mod!.stage).toBe("roll");
     expect(mod!.applies({ style: "melee" })).toBe(true);
     expect(mod!.applies({ style: "melee", dotKind: "bleed" })).toBe(false);
-    expect(mod!.applies({ style: "melee", dotKind: "burn" })).toBe(true);
+    expect(mod!.applies({ style: "melee", dotKind: "burn" })).toBe(false);
+    expect(mod!.applies({ style: "melee", dotKind: "poison" })).toBe(false);
+    expect(mod!.applies({ style: "melee", damageSource: "dot" })).toBe(false);
+    expect(mod!.applies({ style: "melee", provenance: { kind: "player_dot" } })).toBe(false);
+    expect(mod!.applies({ style: "melee", provenance: { kind: "derived_tail" } })).toBe(false);
+    // Converted channels project damageSource "dot" but still take BF.
+    expect(
+      mod!.applies({
+        style: "melee",
+        provenance: { kind: "player_converted_channel" },
+        damageSource: "dot",
+      }),
+    ).toBe(true);
     expect(mod!.apply({ damage: 1000 }, { style: "melee" }).damage).toBe(mulFloor(1000, 1.03));
   });
 });

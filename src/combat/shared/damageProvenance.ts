@@ -395,6 +395,22 @@ export function capabilitiesOf(p: DamageProvenance): DamageCapabilities {
   return CAPS[p.kind];
 }
 
+/**
+ * True DoT damage for Precise / Berserker's Fury gates.
+ * Converted channels project damageSource "dot" but are not true DoTs (keep Precise/BF).
+ * https://runescape.wiki/w/Precise
+ * https://runescape.wiki/w/Berserker%27s_Fury
+ */
+export function isTrueDotDamage(context: CombatContext): boolean {
+  const kind = context.provenance?.kind;
+  if (kind === "player_converted_channel") return false;
+  if (kind === "player_dot" || kind === "player_poison" || kind === "derived_tail") return true;
+  if (context.dotKind != null) return true;
+  // Legacy / projected flag; converted channel already returned false above.
+  if (context.damageSource === "dot") return true;
+  return false;
+}
+
 export function assertProvenance(p: DamageProvenance | null | undefined): DamageProvenance {
   if (p == null || p.kind == null) {
     throw new Error("assertProvenance: missing DamageProvenance");

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { calculateAbility } from "../../pipeline/calculateAbility";
+import { berserkersFuryModifier } from "../../shared/berserkersFury";
 import { RUNIC_EMPOWERMENTS } from "./runicCharge";
 import { MAGIC_ABILITIES, MAGIC_EFFECTS, resplendentAsphyxiate } from "./abilities";
 
@@ -10,6 +11,25 @@ const byId = (id: string) => {
 };
 
 describe("magic ability data", () => {
+  it("Precise and Berserker's Fury do not buff Combust DoT hits (no dotKind required)", () => {
+    const combust = byId("combust");
+    expect(combust.hits.every((h) => h.dot === true && h.dotKind == null)).toBe(true);
+    const baseInput = {
+      base: 1000,
+      level: 99,
+      accuracy: 1,
+      crit: { chance: 0 },
+    };
+    const plain = calculateAbility(combust, baseInput);
+    const withPrecise = calculateAbility(combust, { ...baseInput, preciseRank: 6 });
+    expect(withPrecise.min).toBe(plain.min);
+    expect(withPrecise.expected).toBe(plain.expected);
+
+    const fury = berserkersFuryModifier(0.03)!;
+    const withFury = calculateAbility(combust, { ...baseInput, modifiers: [fury] });
+    expect(withFury.expected).toBe(plain.expected);
+  });
+
   it("promotes Revo-priority bands from verified wiki ranges", () => {
     const basic = byId("magic_attack");
     expect(basic.hits[0].band).toEqual({ minPct: 90, maxPct: 110 });

@@ -8,6 +8,8 @@ import {
   PUNISH_TARGET_MULTIPLIER,
   withStrengthCape99Dismember,
 } from "./abilities";
+import { calculateAbility } from "../../pipeline/calculateAbility";
+import { berserkersFuryModifier } from "../../shared/berserkersFury";
 import { STRENGTH_CAPE_DISMEMBER_EXTRA_HITS } from "../../shared/perks";
 
 const byId = (id: string) => {
@@ -34,6 +36,25 @@ describe("melee ability data", () => {
     expect(dismember.category).toBe("enhanced");
     expect(dismember.enables).toBe("slaughter");
     expect(byId("slaughter").enables).toBe("massacre");
+  });
+
+  it("Precise and Berserker's Fury do not buff Dismember DoT hits", () => {
+    const dismember = byId("dismember");
+    const baseInput = {
+      base: 1000,
+      level: 99,
+      accuracy: 1,
+      crit: { chance: 0 },
+    };
+    const plain = calculateAbility(dismember, baseInput);
+    const withPrecise = calculateAbility(dismember, { ...baseInput, preciseRank: 6 });
+    expect(withPrecise.min).toBe(plain.min);
+    expect(withPrecise.max).toBe(plain.max);
+    expect(withPrecise.expected).toBe(plain.expected);
+
+    const fury = berserkersFuryModifier(0.03)!;
+    const withFury = calculateAbility(dismember, { ...baseInput, modifiers: [fury] });
+    expect(withFury.expected).toBe(plain.expected);
   });
 
   it("Strength cape (99) adds three extra Dismember hits of the same band", () => {

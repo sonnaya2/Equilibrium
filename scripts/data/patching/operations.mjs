@@ -392,6 +392,16 @@ function setRecord(db, operation, source) {
   return [entityId];
 }
 
+function removeRecord(db, operation) {
+  const { file, path } = operation;
+  const record = db
+    .prepare("SELECT entity_id FROM source_records WHERE source_file = ? AND record_path = ?")
+    .get(file, path);
+  if (!record) throw new Error(`remove-record source record not found: ${file}#${path}`);
+  db.prepare("DELETE FROM source_records WHERE source_file = ? AND record_path = ?").run(file, path);
+  return record.entity_id == null ? [] : [record.entity_id];
+}
+
 function setBlessingChoice(db, operation, source) {
   const file = "data/league/blessings.json";
   const matches = db
@@ -456,6 +466,7 @@ function setBlessingTier(db, operation, source) {
 export const HANDLERS = new Map([
   ["upsert", upsertEntity],
   ["set-record", setRecord],
+  ["remove-record", removeRecord],
   ["set-blessing-choice", setBlessingChoice],
   ["set-blessing-tier", setBlessingTier],
   ["upsert-source", upsertSource],

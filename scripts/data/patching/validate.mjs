@@ -49,6 +49,7 @@ const SCHEMA = new Map([
     { keys: ["entity", "region", "section", "reason"], required: ["entity", "region", "section", "reason"] },
   ],
   ["set-record", { keys: ["file", "path", "body", "entity", "reason"], required: ["file", "path", "body"] }],
+  ["remove-record", { keys: ["file", "path", "reason"], required: ["file", "path", "reason"] }],
   ["set-blessing-choice", { keys: ["id", "body", "reason"], required: ["id", "body"] }],
   ["set-blessing-tier", { keys: ["progressionSlot", "body", "reason"], required: ["progressionSlot", "body"] }],
   [
@@ -163,16 +164,22 @@ const SHAPE = {
       reason: identifier(operation, "reason", context),
     };
   },
-  // Documents are rebuilt as skeleton + source records, so revealing something
-  // new in one - a relic tier, a task band - means writing the record itself.
-  // Every other operation edits an entity, which no document is assembled from.
-  "set-record": (operation, context) => {
+  recordLocation: (operation, context) => {
     const file = identifier(operation, "file", context);
     if (!file.startsWith("data/") || file.includes("..")) {
       fail(context, `record file must sit under data/: ${file}`);
     }
     const path = identifier(operation, "path", context);
-    if (!path.startsWith("$.")) fail(context, `record path must be a JSON path: ${path}`);
+    if (!path.startsWith("$.") || path.includes("..") || /[*?]/.test(path)) {
+      fail(context, `record path must be an exact JSON path: ${path}`);
+    }
+    return { file, path };
+  },
+  // Documents are rebuilt as skeleton + source records, so revealing something
+  // new in one - a relic tier, a task band - means writing the record itself.
+  // Every other operation edits an entity, which no document is assembled from.
+  "set-record": (operation, context) => {
+    const { file, path } = SHAPE.recordLocation(operation, context);
     if (operation.body == null || typeof operation.body !== "object") {
       fail(context, "set-record body must be an object");
     }
@@ -182,6 +189,10 @@ const SHAPE = {
       operation.entity == null ? null : identifier(operation, "entity", context);
     return { file, path, body: operation.body, entity, reason: scalar(operation.reason) };
   },
+  "remove-record": (operation, context) => ({
+    ...SHAPE.recordLocation(operation, context),
+    reason: identifier(operation, "reason", context),
+  }),
   "set-blessing-choice": (operation, context) => {
     const id = identifier(operation, "id", context);
     if (operation.body == null || typeof operation.body !== "object" || Array.isArray(operation.body)) {
@@ -245,6 +256,7 @@ const SHAPE_OF = new Map([
   ["remove", SHAPE.remove],
   ["unlink-research-entry", SHAPE["unlink-research-entry"]],
   ["set-record", SHAPE["set-record"]],
+  ["remove-record", SHAPE["remove-record"]],
   ["set-blessing-choice", SHAPE["set-blessing-choice"]],
   ["set-blessing-tier", SHAPE["set-blessing-tier"]],
   ["add-requirement", SHAPE.requirement],

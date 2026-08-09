@@ -34,6 +34,18 @@ const validation = await load<{
   validateOperation: (operation: unknown, context: string) => Record<string, unknown>;
 }>("patching/validate.mjs");
 
+const database = await load<{
+  migrate: (db: DatabaseSync) => number;
+  openDatabase: (path: string, mustExist: boolean) => DatabaseSync;
+}>("database.mjs");
+
+const patching = await load<{
+  HANDLERS: Map<
+    string,
+    (db: DatabaseSync, operation: Record<string, unknown>, source: string) => string[]
+  >;
+}>("patching/operations.mjs");
+
 const dataValidation = await load<{
   futureVerificationRecords: (
     records: Array<{ source_file: string; record_path: string; raw_json: string }>,
@@ -320,11 +332,134 @@ describe("patch validation", () => {
     }
   });
 
+  it("accepts an exact source-record removal", () => {
+    expect(
+      validate({
+        op: "remove-record",
+        file: "data/combat/equipment-sets.json",
+        path: "$.records[26]",
+        reason: "replace the obsolete duplicate source row",
+      }),
+    ).toEqual({
+      op: "remove-record",
+      file: "data/combat/equipment-sets.json",
+      path: "$.records[26]",
+      reason: "replace the obsolete duplicate source row",
+    });
+  });
+
+  it("requires a reason and rejects unsafe source-record locations", () => {
+    expect(() =>
+      validate({
+        op: "remove-record",
+        file: "data/combat/equipment-sets.json",
+        path: "$.records[26]",
+      }),
+    ).toThrow(/remove-record requires reason/);
+    for (const operation of [
+      {
+        op: "remove-record",
+        file: "data/../outside.json",
+        path: "$.records[26]",
+        reason: "unsafe",
+      },
+      {
+        op: "remove-record",
+        file: "data/combat/equipment-sets.json",
+        path: "$.records[*]",
+        reason: "unsafe",
+      },
+      {
+        op: "remove-record",
+        file: "data/combat/equipment-sets.json",
+        path: "records[26]",
+        reason: "unsafe",
+      },
+    ]) {
+      expect(() => validate(operation)).toThrow(/record (file|path)/);
+    }
+  });
+
   it("rejects a negative or fractional order", () => {
     for (const order of [-1, 1.5, "2"]) {
       expect(() =>
         validate({ op: "link-source", entity: "item:x", source: "source:y", order }),
       ).toThrow(/non-negative integer/);
+    }
+  });
+});
+
+describe("source-record removal handler", () => {
+  it("deletes only the exact row and returns its mapped entity", () => {
+    const db = database.openDatabase(":memory:", false);
+    database.migrate(db);
+    try {
+      const file = "data/fixture.json";
+      const otherFile = "data/other.json";
+      db.prepare(
+        "INSERT INTO source_files(path, classification, content_hash, bytes) VALUES (?, 'seed-content', ?, 1)",
+      ).run(file, "fixture-hash");
+      db.prepare(
+        "INSERT INTO source_files(path, classification, content_hash, bytes) VALUES (?, 'seed-content', ?, 1)",
+      ).run(otherFile, "other-hash");
+      const insertEntity = db.prepare(
+        "INSERT INTO entities(id, slug, entity_type, name, sort_key, created_source, updated_source) VALUES (?, ?, 'task', ?, ?, 'fixture', 'fixture')",
+      );
+      insertEntity.run("task:alpha", "task-alpha", "Alpha", "alpha");
+      insertEntity.run("task:beta", "task-beta", "Beta", "beta");
+      insertEntity.run("task:gamma", "task-gamma", "Gamma", "gamma");
+      const insertRecord = db.prepare(
+        "INSERT INTO source_records(source_file, record_path, stable_id, entity_id, record_hash, raw_json) VALUES (?, ?, ?, ?, 'hash', '{}')",
+      );
+      insertRecord.run(file, "$.records[12]", "task:alpha", "task:alpha");
+      insertRecord.run(file, "$.records[13]", "task:beta", "task:beta");
+      insertRecord.run(otherFile, "$.records[12]", "task:gamma", "task:gamma");
+      insertRecord.run(file, "$.records[14]", null, null);
+
+      const removeRecord = patching.HANDLERS.get("remove-record");
+      if (!removeRecord) throw new Error("remove-record handler is not registered");
+      expect(
+        removeRecord(
+          db,
+          { file, path: "$.records[12]", reason: "replace duplicate" },
+          "patch:fixture.jsonl",
+        ),
+      ).toEqual(["task:alpha"]);
+      expect(
+        db
+          .prepare(
+            "SELECT count(*) AS count FROM source_records WHERE source_file = ? AND record_path = ?",
+          )
+          .get(file, "$.records[12]"),
+      ).toEqual({ count: 0 });
+      expect(
+        db
+          .prepare("SELECT entity_id FROM source_records WHERE source_file = ? AND record_path = ?")
+          .get(file, "$.records[13]"),
+      ).toEqual({ entity_id: "task:beta" });
+      expect(
+        db
+          .prepare("SELECT entity_id FROM source_records WHERE source_file = ? AND record_path = ?")
+          .get(otherFile, "$.records[12]"),
+      ).toEqual({ entity_id: "task:gamma" });
+      expect(db.prepare("SELECT count(*) AS count FROM entities").get()).toEqual({ count: 3 });
+
+      expect(
+        removeRecord(
+          db,
+          { file, path: "$.records[14]", reason: "remove unmapped row" },
+          "patch:fixture.jsonl",
+        ),
+      ).toEqual([]);
+      expect(() =>
+        removeRecord(
+          db,
+          { file, path: "$.records[12]", reason: "missing row" },
+          "patch:fixture.jsonl",
+        ),
+      ).toThrow(/source record not found/);
+    } finally {
+      db.close();
     }
   });
 });

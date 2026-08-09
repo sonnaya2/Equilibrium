@@ -18,6 +18,8 @@ Ingestion is `scripts/data/ingest.mjs` over `scripts/data/canonical/`. It reads 
 
 Patching is `scripts/data/patching/`: parse reads the file without touching what it read, validate holds every operation's allowed and required fields and returns a frozen copy, the handlers write canonical columns, and apply owns identity, the transaction and the ledger. A patch never writes back into `source_records.raw_json` — a provenance record is what the source document said.
 
+When replacing a source record, `set-record` the surviving exact path, then `remove-record` the obsolete exact `source_file` and `record_path`. Never mutate an applied patch or hand-edit canonical data; rebuild, export, and validate.
+
 Do not restore the retired `scraped-data` mutation chain, per-domain JSON authoring files, the compressed seed, v1 research store, API, CMS, or a second source of truth. New facts arrive as the smallest sourced JSONL patch that expresses the change. Schema changes arrive as a forward-only migration.
 
 `scripts/data/platform.mjs` is only the CLI; `docs/data-platform.md` maps each module to its responsibility. Put new work in the module that already owns that stage rather than back in the entry point.

@@ -172,6 +172,41 @@ describe("generated data platform", () => {
     }
   });
 
+  it("keeps generated equipment-set IDs unique and uses the current Deathdealer T90 face", () => {
+    const document = readJson<{
+      records: Array<{
+        effects: unknown[];
+        facts?: string[];
+        id?: string;
+        label?: string;
+        maxPieces?: number;
+        source?: { source: string; title: string; url: string; verifiedAt: string };
+      } | null>;
+    }>(".generated/documents/combat/equipment-sets.json");
+    const records = document.records.filter(
+      (record): record is NonNullable<typeof record> => record !== null,
+    );
+    expect(new Set(records.map(({ id }) => id)).size).toBe(records.length);
+    const deathdealer = records.filter(({ id }) => id === "deathdealer-90");
+    expect(deathdealer).toHaveLength(1);
+    expect(deathdealer[0]).toMatchObject({
+      effects: [],
+      facts: [
+        "Set(1): each physical T90 piece contributes 2% per landed qualifying Necromancy attack to apply Death Mark; full set 10%.",
+        "Mixed tiers add each worn piece's tier rate. Chaotic Insight contributes two additional effective pieces per combat item without a five-piece clamp.",
+      ],
+      id: "deathdealer-90",
+      label: "Deathdealer T90",
+      maxPieces: 5,
+      source: {
+        source: "runescape-wiki",
+        title: "Deathdealer robe armour - Death Mark set chance",
+        url: "https://runescape.wiki/w/Deathdealer_robe_armour",
+        verifiedAt: "2026-08-08",
+      },
+    });
+  });
+
   it("builds every panel from SQLite, matching the normalized records", () => {
     type Row = Record<string, unknown>;
     const skilling = live(

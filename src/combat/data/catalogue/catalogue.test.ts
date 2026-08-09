@@ -8,15 +8,22 @@ import {
   combatPerks,
   combatPrayers,
   combatRevolutionBars,
+  combatTargetPresets,
   effectById,
   equipmentById,
   perkById,
   prayerById,
   revolutionBarById,
+  targetPresetById,
 } from "../index";
 import { compileCombatDataCatalogue, indexRecordsById } from "./compile";
 import type { CombatDataSources } from "./contracts";
-import { assertCatalogueIntegrity, findDuplicateIds } from "./validate";
+import type { TargetPresetRecord } from "../records";
+import {
+  assertCatalogueIntegrity,
+  assertTargetPresetRecords,
+  findDuplicateIds,
+} from "./validate";
 
 const datasets = [
   ["abilities", combatAbilities, combatDataCatalogue.abilitiesById],
@@ -25,6 +32,7 @@ const datasets = [
   ["perks", combatPerks, combatDataCatalogue.perksById],
   ["prayers", combatPrayers, combatDataCatalogue.prayersById],
   ["revolution-bars", combatRevolutionBars, combatDataCatalogue.revolutionBarsById],
+  ["target-presets", combatTargetPresets, combatDataCatalogue.targetPresetsById],
 ] as const;
 
 function sourcesFromLive(): CombatDataSources {
@@ -35,6 +43,7 @@ function sourcesFromLive(): CombatDataSources {
     perks: combatPerks,
     prayers: combatPrayers,
     revolutionBars: combatRevolutionBars,
+    targetPresets: combatTargetPresets,
   };
 }
 
@@ -88,18 +97,21 @@ describe("combat data catalogue", () => {
     expect(perkById("perk:missing")).toBeUndefined();
     expect(prayerById("prayer:missing")).toBeUndefined();
     expect(revolutionBarById("bar-missing")).toBeUndefined();
+    expect(targetPresetById("boss:missing")).toBeUndefined();
   });
 
-  it("singleton is built once and exposes all six maps", () => {
+  it("singleton is built once and exposes all dataset maps", () => {
     expect(combatDataCatalogue.abilitiesById).toBeInstanceOf(Map);
     expect(combatDataCatalogue.equipmentById).toBeInstanceOf(Map);
     expect(combatDataCatalogue.effectsById).toBeInstanceOf(Map);
     expect(combatDataCatalogue.perksById).toBeInstanceOf(Map);
     expect(combatDataCatalogue.prayersById).toBeInstanceOf(Map);
     expect(combatDataCatalogue.revolutionBarsById).toBeInstanceOf(Map);
+    expect(combatDataCatalogue.targetPresetsById).toBeInstanceOf(Map);
     // Module init: re-import of the same binding stays referentially identical
     expect(combatDataCatalogue.abilities).toBe(combatAbilities);
     expect(combatDataCatalogue.equipment).toBe(combatEquipment);
+    expect(combatDataCatalogue.targetPresets).toBe(combatTargetPresets);
   });
 
   it("compilation is deterministic: equal sizes/keys and same object refs", () => {
@@ -169,7 +181,68 @@ describe("combat data catalogue", () => {
   it("preserves dataset verification metadata", () => {
     expect(combatAbilities.trackedSince).toBe("2024-03-04");
     expect(combatEquipment.trackedSince).toBe("2024-03-04");
+    expect(combatTargetPresets.trackedSince).toBe("2024-03-04");
     expect(combatDataCatalogue.abilities.lastSynced).toBe(combatAbilities.lastSynced);
     expect(combatDataCatalogue.abilities.records).toBe(combatAbilities.records);
+  });
+
+  it("rejects target presets with out-of-range affinity", () => {
+    const bad: TargetPresetRecord = {
+      id: "boss:test",
+      name: "Test",
+      encounter: "Test",
+      category: "boss",
+      wiki: { pageName: "Test" },
+      support: "supported",
+      sources: [
+        {
+          source: "runescape-wiki",
+          url: "https://runescape.wiki/w/Test",
+          verifiedAt: "2026-08-09",
+        },
+      ],
+      stats: {
+        defenceLevel: 1,
+        armour: 0,
+        affinities: { melee: 55, ranged: 200, magic: 50 },
+        size: 1,
+      },
+    };
+    expect(() => assertTargetPresetRecords([bad])).toThrow(/affinity 200 out of range/);
+  });
+
+  it("accepts a supported target preset with exact affinity 55", () => {
+    const good: TargetPresetRecord = {
+      id: "boss:test-55",
+      name: "Test 55",
+      encounter: "Test",
+      category: "boss",
+      wiki: { pageName: "Test_55" },
+      support: "supported",
+      sources: [
+        {
+          source: "runescape-wiki",
+          url: "https://runescape.wiki/w/Test_55",
+          verifiedAt: "2026-08-09",
+        },
+      ],
+      stats: {
+        defenceLevel: 90,
+        armour: 100,
+        affinities: { melee: 55, ranged: 55, magic: 55, weakness: 55 },
+        size: 3,
+        poisonImmune: true,
+      },
+    };
+    expect(() => assertTargetPresetRecords([good])).not.toThrow();
+    const compiled = compileCombatDataCatalogue({
+      ...sourcesFromLive(),
+      targetPresets: {
+        lastSynced: "2026-08-09",
+        trackedSince: "2024-03-04",
+        records: [good],
+      },
+    });
+    expect(compiled.targetPresetsById.get("boss:test-55")).toBe(good);
   });
 });

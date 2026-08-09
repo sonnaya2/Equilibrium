@@ -1,4 +1,5 @@
-import type { CombatDataset } from "../records";
+import { AFFINITY_MAX, AFFINITY_MIN } from "../../target/genericTarget";
+import type { CombatDataset, TargetPresetRecord } from "../records";
 import type { CombatDataCatalogue } from "./contracts";
 
 type IdRecord = { readonly id: string };
@@ -48,6 +49,44 @@ function assertDatasetIndex<T extends IdRecord>(
   assertIndexMatchesRecords(dataset.records, byId, label);
 }
 
+function assertAffinityInRange(value: number | null | undefined, label: string): void {
+  if (value == null) return;
+  if (!Number.isFinite(value) || value < AFFINITY_MIN || value > AFFINITY_MAX) {
+    throw new Error(`${label}: affinity ${value} out of range ${AFFINITY_MIN}-${AFFINITY_MAX}`);
+  }
+}
+
+/** Field-level checks for target presets (ranges, required support metadata). */
+export function assertTargetPresetRecords(records: readonly TargetPresetRecord[]): void {
+  for (const record of records) {
+    if (!record.id || !record.name || !record.encounter) {
+      throw new Error(`target-preset missing id/name/encounter: ${record.id ?? "(no id)"}`);
+    }
+    if (!record.wiki?.pageName) {
+      throw new Error(`target-preset ${record.id}: missing wiki.pageName`);
+    }
+    if (record.sources.length === 0) {
+      throw new Error(`target-preset ${record.id}: sources required`);
+    }
+    if (record.stats.defenceLevel != null && record.stats.defenceLevel < 0) {
+      throw new Error(`target-preset ${record.id}: defenceLevel must be nonnegative`);
+    }
+    if (record.stats.armour != null && record.stats.armour < 0) {
+      throw new Error(`target-preset ${record.id}: armour must be nonnegative`);
+    }
+    const aff = record.stats.affinities;
+    if (aff) {
+      assertAffinityInRange(aff.melee, `target-preset ${record.id} melee`);
+      assertAffinityInRange(aff.ranged, `target-preset ${record.id} ranged`);
+      assertAffinityInRange(aff.magic, `target-preset ${record.id} magic`);
+      assertAffinityInRange(aff.weakness ?? null, `target-preset ${record.id} weakness`);
+    }
+    if (record.support === "unsupported" && !record.unsupportedReason) {
+      throw new Error(`target-preset ${record.id}: unsupportedReason required`);
+    }
+  }
+}
+
 /** Full catalogue integrity: unique ids, size equality, reference identity. */
 export function assertCatalogueIntegrity(catalogue: CombatDataCatalogue): void {
   assertDatasetIndex(catalogue.abilities, catalogue.abilitiesById, "ability");
@@ -56,6 +95,8 @@ export function assertCatalogueIntegrity(catalogue: CombatDataCatalogue): void {
   assertDatasetIndex(catalogue.perks, catalogue.perksById, "perk");
   assertDatasetIndex(catalogue.prayers, catalogue.prayersById, "prayer");
   assertDatasetIndex(catalogue.revolutionBars, catalogue.revolutionBarsById, "revolution-bar");
+  assertDatasetIndex(catalogue.targetPresets, catalogue.targetPresetsById, "target-preset");
+  assertTargetPresetRecords(catalogue.targetPresets.records);
 }
 
 /** Non-throwing unique-id check for tests (returns duplicates). */

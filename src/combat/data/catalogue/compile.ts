@@ -32,12 +32,14 @@ export function compileCombatDataCatalogue(
     perks: sources.perks,
     prayers: sources.prayers,
     revolutionBars: sources.revolutionBars,
+    targetPresets: sources.targetPresets,
     abilitiesById: indexRecordsById(sources.abilities.records, "ability"),
     equipmentById: indexRecordsById(sources.equipment.records, "equipment"),
     effectsById: indexRecordsById(sources.effects.records, "effect"),
     perksById: indexRecordsById(sources.perks.records, "perk"),
     prayersById: indexRecordsById(sources.prayers.records, "prayer"),
     revolutionBarsById: indexRecordsById(sources.revolutionBars.records, "revolution-bar"),
+    targetPresetsById: indexRecordsById(sources.targetPresets.records, "target-preset"),
   };
   if (options?.assert !== false) {
     assertCatalogueIntegrity(catalogue);

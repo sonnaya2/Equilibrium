@@ -9,6 +9,7 @@ import {
   combatPerks,
   combatPrayers,
   combatRevolutionBars,
+  combatTargetPresets,
 } from "./catalogue";
 import type {
   AbilityRecord,
@@ -17,6 +18,7 @@ import type {
   PerkRecord,
   PrayerRecord,
   RevolutionBarRecord,
+  TargetPresetRecord,
 } from "./records";
 
 export type * from "./records";
@@ -29,10 +31,12 @@ export {
   combatPerks,
   combatPrayers,
   combatRevolutionBars,
+  combatTargetPresets,
   compileCombatDataCatalogue,
   indexRecordsById,
   assertCatalogueIntegrity,
   assertIndexMatchesRecords,
+  assertTargetPresetRecords,
   assertUniqueRecordIds,
   findDuplicateIds,
 } from "./catalogue";
@@ -42,7 +46,14 @@ export {
  * Lookups use the module-init catalogue Maps (not linear scan).
  */
 
-type AnyRecord = AbilityRecord | EffectRecord | EquipmentRecord | PerkRecord | PrayerRecord | RevolutionBarRecord;
+type AnyRecord =
+  | AbilityRecord
+  | EffectRecord
+  | EquipmentRecord
+  | PerkRecord
+  | PrayerRecord
+  | RevolutionBarRecord
+  | TargetPresetRecord;
 
 /** Map lookup; unknown ids return undefined. Prefer typed helpers below. */
 export function recordById<T extends AnyRecord>(index: ReadonlyMap<string, T>, id: string): T | undefined {
@@ -91,6 +102,10 @@ export const prayersByRegion = (region: RegionId, options?: { regionLockedOnly?:
 export const revolutionBarById = (id: string) => combatDataCatalogue.revolutionBarsById.get(id);
 export const revolutionBarsByStyle = (style: CombatStyle) =>
   combatRevolutionBars.records.filter((record) => record.style === style);
+
+export const targetPresetById = (id: string) => combatDataCatalogue.targetPresetsById.get(id);
+export const targetPresetsByEncounter = (encounter: string) =>
+  combatTargetPresets.records.filter((record) => record.encounter === encounter);
 
 /** Sync facts for the Combat > Reference surface, straight from the envelopes. */
 export function combatSyncFacts() {

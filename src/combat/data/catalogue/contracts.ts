@@ -6,6 +6,7 @@ import type {
   PerkRecord,
   PrayerRecord,
   RevolutionBarRecord,
+  TargetPresetRecord,
 } from "../records";
 
 /**
@@ -19,6 +20,7 @@ export interface CombatDataSources {
   perks: CombatDataset<PerkRecord>;
   prayers: CombatDataset<PrayerRecord>;
   revolutionBars: CombatDataset<RevolutionBarRecord>;
+  targetPresets: CombatDataset<TargetPresetRecord>;
 }
 
 /**
@@ -34,6 +36,7 @@ export interface CombatDataCatalogue {
   perks: CombatDataset<PerkRecord>;
   prayers: CombatDataset<PrayerRecord>;
   revolutionBars: CombatDataset<RevolutionBarRecord>;
+  targetPresets: CombatDataset<TargetPresetRecord>;
 
   abilitiesById: ReadonlyMap<string, AbilityRecord>;
   equipmentById: ReadonlyMap<string, EquipmentRecord>;
@@ -41,6 +44,7 @@ export interface CombatDataCatalogue {
   perksById: ReadonlyMap<string, PerkRecord>;
   prayersById: ReadonlyMap<string, PrayerRecord>;
   revolutionBarsById: ReadonlyMap<string, RevolutionBarRecord>;
+  targetPresetsById: ReadonlyMap<string, TargetPresetRecord>;
 }
 
 export type CatalogueIndexKey =
@@ -49,4 +53,5 @@ export type CatalogueIndexKey =
   | "effectsById"
   | "perksById"
   | "prayersById"
-  | "revolutionBarsById";
+  | "revolutionBarsById"
+  | "targetPresetsById";

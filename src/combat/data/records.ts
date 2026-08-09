@@ -255,6 +255,52 @@ export interface PerkRecord extends CombatRecordBase {
   facts: string[];
 }
 
+/** Support status for a boss/target preset in the combat calculator. */
+export type TargetPresetSupport = "supported" | "provisional" | "unsupported";
+
+/** Exact style affinities from Wiki; weakness is optional and separate. */
+export interface TargetAffinityProfile {
+  melee: number;
+  ranged: number;
+  magic: number;
+  /** Exact weakness affinity when sourced; not implied by weakness class alone. */
+  weakness?: number | null;
+}
+
+/**
+ * Sourced NPC target facts for the generic target model.
+ * No executable combat logic; nullable unknown facts only.
+ */
+export interface TargetPresetRecord extends CombatRecordBase {
+  category: "boss";
+  /** Encounter grouping for the selector (e.g. "God Wars Dungeon"). */
+  encounter: string;
+  aliases?: string[];
+  wiki: {
+    pageName: string;
+    pageNameSub?: string;
+    versionAnchor?: string;
+    npcIds?: number[];
+  };
+  support: TargetPresetSupport;
+  unsupportedReason?: string;
+  stats: {
+    defenceLevel: number | null;
+    armour: number | null;
+    affinities: TargetAffinityProfile | null;
+    weaknessClass?: "melee" | "ranged" | "magic" | null;
+    weaknessText?: string[];
+    size: number | null;
+    lifePoints?: number | null;
+    poisonImmune?: boolean | null;
+    susceptibilities?: string[];
+    slayerCategories?: string[];
+    undead?: boolean | null;
+    demon?: boolean | null;
+    dragon?: boolean | null;
+  };
+}
+
 /** Shared envelope for every data/combat/*.json dataset. */
 export interface CombatDataset<T> {
   lastSynced: string | null;
@@ -262,7 +308,14 @@ export interface CombatDataset<T> {
   records: T[];
 }
 
-export type TrackedEntityKind = "ability" | "equipment" | "effect" | "perk" | "prayer" | "backlog";
+export type TrackedEntityKind =
+  | "ability"
+  | "equipment"
+  | "effect"
+  | "perk"
+  | "prayer"
+  | "target-preset"
+  | "backlog";
 
 /** One row of the update-index.json tracked-entity ledger. */
 export interface UpdateIndexEntry {

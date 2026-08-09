@@ -45,7 +45,7 @@ function withLoadout(patch: Partial<Loadout> = {}): Loadout {
           : {
               ...patch.target,
               defenceLevel: patch.target.defenceLevel ?? 80,
-              affinity: patch.target.affinity ?? "same",
+              affinity: patch.target.affinity ?? 60,
             },
   };
 }
@@ -90,7 +90,7 @@ describe("solver bridge: model projection identity", () => {
     const model = toResolvedCombatModel(
       withLoadout({
         perks: { ...DEFAULT_LOADOUT.perks, demonSlayer: 1, ultimatums: 4 },
-        target: { defenceLevel: 80, affinity: "same", demon: true },
+        target: { defenceLevel: 80, affinity: 60, demon: true },
       }),
       { now: NOW },
     );

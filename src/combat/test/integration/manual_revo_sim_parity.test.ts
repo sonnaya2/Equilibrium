@@ -39,7 +39,7 @@ function withLoadout(patch: Partial<Loadout>): Loadout {
           : {
               ...patch.target,
               defenceLevel: patch.target.defenceLevel ?? 80,
-              affinity: patch.target.affinity ?? "same",
+              affinity: patch.target.affinity ?? 60,
             },
   };
 }

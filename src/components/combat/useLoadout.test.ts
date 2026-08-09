@@ -145,7 +145,7 @@ describe("normalizeLoadout", () => {
       enchantments: ["agony"],
       perks: { biting: 4, impatient: 3 },
       buffs: { vulnerability: true, styleCurse: "anguish", overload: "elder" },
-      target: { defenceLevel: 88, armour: 420, affinity: "strong" },
+      target: { defenceLevel: 88, armour: 420, affinity: 50 },
       baseDamage: { mode: "manual", manualValue: 4321 },
       startingAdrenaline: 72,
       hitCapEnabled: false,
@@ -167,7 +167,7 @@ describe("normalizeLoadout", () => {
       perks: { biting: 4, impatient: 3 },
       // Anguish is the ranged curse, so following the wand moves it to Torment.
       buffs: { vulnerability: true, styleCurse: "torment", overload: "elder" },
-      target: { defenceLevel: 88, armour: 420, affinity: "strong" },
+      target: { defenceLevel: 88, armour: 420, affinity: 50 },
       baseDamage: { mode: "automatic" },
       startingAdrenaline: 72,
       hitCapEnabled: false,
@@ -220,7 +220,7 @@ describe("normalizeLoadout", () => {
       normalizeLoadout({
         target: {
           defenceLevel: 80,
-          affinity: "same",
+          affinity: 60,
           size: 3.8,
           occupiedTiles: 4,
           areaTargets: 7.9,
@@ -229,45 +229,14 @@ describe("normalizeLoadout", () => {
     ).toMatchObject({ size: 3, occupiedTiles: 4, areaTargets: 7 });
     expect(
       normalizeLoadout({
-        target: { defenceLevel: 80, affinity: "same", areaTargets: 0 },
+        target: { defenceLevel: 80, affinity: 60, areaTargets: 0 },
       }).target?.areaTargets,
     ).toBe(1);
   });
 
   it("fills missing buffs and equipmentSlots", () => {
     const next = normalizeLoadout({ style: "magic", level: 99 });
-    expect(next.buffs).toEqual({
-      useEquippedWeaponSpecial: false,
-      vulnerability: false,
-      weaponPoison: "none",
-      kwuarmPotency: 0,
-      herbloreLevel: 99,
-      styleCurse: "none",
-      overload: "none",
-      fortitude: false,
-      reaperCrew: false,
-      fontOfLife: false,
-      boonOfHet: false,
-      bonfireLogType: null,
-      bonfireFiremakingLevel: null,
-      totemOfVitality: false,
-      thermalBath: false,
-      overheal: "none",
-      powerburstOfVitalityUntil: null,
-      powerburstOfVitalityCooldownUntil: null,
-      strengthCape99: false,
-      attackCape120: false,
-      eliteSeersVillage: false,
-      protectionPrayer: false,
-      berserkersFury: false,
-      furyOfTheSmall: false,
-      heightenedSenses: false,
-      conservationOfEnergy: false,
-      ringOfVigourPassive: false,
-      slayerHelmetStand: null,
-      ensouledSpectralLens: false,
-      sliverOfEdictsActive: false,
-    });
+    expect(next.buffs).toEqual(DEFAULT_LOADOUT.buffs);
     expect(next.currentHealthPercent).toBe(50);
     expect(next.equipmentSlots).toEqual({});
     expect(next.equipmentIds).toEqual([]);
@@ -276,6 +245,42 @@ describe("normalizeLoadout", () => {
     expect(next.perks.impatient).toBe(0);
     expect(next.perks.impatientLevel20).toBe(false);
     expect(next.perks.plantedFeet).toBe(0);
+  });
+
+  it("migrates legacy affinity kind strings to exact percents", () => {
+    expect(normalizeLoadout({ target: { defenceLevel: 80, affinity: "weak" } }).target?.affinity).toBe(
+      70,
+    );
+    expect(normalizeLoadout({ target: { defenceLevel: 80, affinity: "same" } }).target?.affinity).toBe(
+      60,
+    );
+    expect(
+      normalizeLoadout({ target: { defenceLevel: 80, affinity: "strong" } }).target?.affinity,
+    ).toBe(50);
+    expect(
+      normalizeLoadout({ target: { defenceLevel: 80, affinity: "weakness" } }).target?.affinity,
+    ).toBe(90);
+  });
+
+  it("accepts exact numeric affinity including arbitrary 55", () => {
+    expect(normalizeLoadout({ target: { defenceLevel: 80, affinity: 55 } }).target?.affinity).toBe(
+      55,
+    );
+    expect(normalizeLoadout({ target: { defenceLevel: 80, affinity: 0 } }).target?.affinity).toBe(1);
+    expect(normalizeLoadout({ target: { defenceLevel: 80, affinity: 200 } }).target?.affinity).toBe(
+      100,
+    );
+  });
+
+  it("keeps a target when affinity is valid and drops only unusable affinity", () => {
+    expect(
+      normalizeLoadout({ target: { defenceLevel: 80, affinity: "nope" } }).target,
+    ).toBeNull();
+    expect(
+      normalizeLoadout({
+        target: { defenceLevel: 99, armour: 10, affinity: 55, demon: true },
+      }).target,
+    ).toMatchObject({ defenceLevel: 99, armour: 10, affinity: 55, demon: true });
   });
 
   it("drops the removed Aegis basis from saved builds", () => {

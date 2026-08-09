@@ -19,7 +19,7 @@ const NOW = 1_700_000_000_000;
 
 const TARGET_DEFAULTS = {
   defenceLevel: 80,
-  affinity: "same" as const,
+  affinity: 60,
 };
 
 function withGear(patch: Partial<Loadout>): Loadout {
@@ -118,7 +118,7 @@ describe("packSolverRequest region modes", () => {
     const loadout = withGear({
       style: "melee",
       buffs: { ...DEFAULT_LOADOUT.buffs, slayerHelmetStand: "corrupted" },
-      target: { defenceLevel: 80, affinity: "same", onSlayerTask: true },
+      target: { defenceLevel: 80, affinity: 60, onSlayerTask: true },
     });
     const locked = ["misthalin", "kandarin"] as const;
     const stats = loadoutStats(loadout, { unlockedRegions: [...locked] });

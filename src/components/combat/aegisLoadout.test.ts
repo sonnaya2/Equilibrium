@@ -237,7 +237,7 @@ describe("Barkscales through a Setup loadout", () => {
         ...DEFAULT_LOADOUT,
         style: "melee",
         equipmentSlots: { body: "mock:body-1000" },
-        target: { defenceLevel: 80, affinity: "same", incomingHitIntervalSeconds: 6 },
+        target: { defenceLevel: 80, affinity: 60, incomingHitIntervalSeconds: 6 },
       } as Loadout,
       { blessingPicks: ["Order", "Balance", "Balance"] },
     );

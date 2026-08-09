@@ -155,7 +155,7 @@ describe("Barkscales unavailable is never zero damage", () => {
       ...base,
       target: {
         defenceLevel: 80,
-        affinity: "same",
+        affinity: 60,
         incomingHitIntervalSeconds: -3,
       },
     });

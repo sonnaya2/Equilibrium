@@ -16,7 +16,11 @@ import {
 import { mulFloor } from "../core/rounding";
 import { isBasicAttack } from "../shared/adrenalineGain";
 import { resolveCombatProvenance } from "../shared/damageProvenance";
-import { AFFINITY, type AffinityKind } from "../target/genericTarget";
+import {
+  DEFAULT_AFFINITIES,
+  resolveAffinityPercent,
+  type AffinityKind,
+} from "../target/genericTarget";
 import type { CombatContext, CombatModifier } from "../types";
 import type { SetPieceContributionModifier } from "../shared/equipment";
 import {
@@ -468,19 +472,27 @@ export function effectiveCooldownTicks(
   return Math.max(1, Math.floor(base * multiplier));
 }
 
+/**
+ * Resolve effective affinity percent for hit chance.
+ * Demon's Mark may force the target's exact weakness affinity when applicable.
+ * `weaknessAffinity` defaults to 90; presets pass the sourced weakness value.
+ */
 export function effectiveTargetAffinity(
-  affinity: AffinityKind,
+  affinity: number | AffinityKind,
   hasApplicableWeakness: boolean,
   rules: ResolvedLeagueRules | undefined,
-): AffinityKind {
+  weaknessAffinity: number = DEFAULT_AFFINITIES.weakness,
+): number {
+  const current = resolveAffinityPercent(affinity);
+  const weakness = resolveAffinityPercent(weaknessAffinity);
   if (
     !hasApplicableWeakness ||
     blessingRule(rules, "demons-mark")?.useTargetWeakness !== true ||
-    AFFINITY.weakness <= AFFINITY[affinity]
+    weakness <= current
   ) {
-    return affinity;
+    return current;
   }
-  return "weakness";
+  return weakness;
 }
 
 export function leagueModifiers(rules: ResolvedLeagueRules | undefined): CombatModifier[] {

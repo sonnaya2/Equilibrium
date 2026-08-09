@@ -4,7 +4,7 @@ import { loadoutStats } from "./loadoutStats";
 import { toResolvedCombatModel } from "./toResolvedCombatModel";
 import { uiRunFingerprint } from "./uiSimFingerprint";
 
-const TARGET_DEFAULTS = { defenceLevel: 80, affinity: "same" as const };
+const TARGET_DEFAULTS = { defenceLevel: 80, affinity: 60 };
 
 function withLoadout(patch: Partial<Loadout>): Loadout {
   return normalizeLoadout({
@@ -147,19 +147,19 @@ describe("uiRunFingerprint", () => {
   it("target undead/demon changes identity when slayer perk present", () => {
     const undeadLoadout = withLoadout({
       perks: { ...DEFAULT_LOADOUT.perks, undeadSlayer: 1 },
-      target: { defenceLevel: 80, affinity: "same", undead: true },
+      target: { defenceLevel: 80, affinity: 60, undead: true },
     });
     const livingLoadout = withLoadout({
       perks: { ...DEFAULT_LOADOUT.perks, undeadSlayer: 1 },
-      target: { defenceLevel: 80, affinity: "same", undead: false },
+      target: { defenceLevel: 80, affinity: 60, undead: false },
     });
     const demonLoadout = withLoadout({
       perks: { ...DEFAULT_LOADOUT.perks, demonSlayer: 1 },
-      target: { defenceLevel: 80, affinity: "same", demon: true },
+      target: { defenceLevel: 80, affinity: 60, demon: true },
     });
     const nonDemonLoadout = withLoadout({
       perks: { ...DEFAULT_LOADOUT.perks, demonSlayer: 1 },
-      target: { defenceLevel: 80, affinity: "same", demon: false },
+      target: { defenceLevel: 80, affinity: 60, demon: false },
     });
 
     const parts = {

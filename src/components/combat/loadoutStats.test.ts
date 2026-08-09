@@ -140,7 +140,7 @@ describe("loadoutStats", () => {
       strengthLevel: 110,
       level: 110,
       weaponTier: 90,
-      target: { defenceLevel: 80, affinity: "same" },
+      target: { defenceLevel: 80, affinity: 60 },
     };
     expect(loadoutAttackLevel(melee)).toBe(80);
     expect(loadoutDamageLevel(melee)).toBe(110);
@@ -153,7 +153,7 @@ describe("loadoutStats", () => {
     expect(stats.level).toBe(110);
     expect(stats.attackLevel).toBe(80);
     expect(stats.dp).toBeCloseTo(
-      targetDamagePotential(playerAccuracy(80, 90), { defenceLevel: 80, affinity: "same" }),
+      targetDamagePotential(playerAccuracy(80, 90), { defenceLevel: 80, affinity: 60 }),
       10,
     );
   });
@@ -169,7 +169,7 @@ describe("loadoutStats", () => {
     ).toBe(true);
 
     // Strong target so hit chance is below the 100% cap and the cape is visible.
-    const target = { defenceLevel: 120, armour: 5000, affinity: "strong" as const };
+    const target = { defenceLevel: 120, armour: 5000, affinity: 50 };
     const plain = loadoutStats({
       ...base,
       style: "melee",
@@ -234,7 +234,7 @@ describe("loadoutStats", () => {
       {
         ...base,
         style: "melee",
-        target: { defenceLevel: 1, affinity: "same", onSlayerTask: true },
+        target: { defenceLevel: 1, affinity: 60, onSlayerTask: true },
       },
       {
         ruleset: "equilibrium",
@@ -253,7 +253,7 @@ describe("loadoutStats", () => {
       attackLevel: 1,
       strengthLevel: 1,
       weaponTier: 90,
-      target: { defenceLevel: 80, affinity: "same" },
+      target: { defenceLevel: 80, affinity: 60 },
     };
     expect(loadoutAttackLevel(magic)).toBe(105);
     expect(loadoutDamageLevel(magic)).toBe(105);
@@ -261,7 +261,7 @@ describe("loadoutStats", () => {
     expect(stats.level).toBe(105);
     expect(stats.attackLevel).toBe(105);
     expect(stats.dp).toBeCloseTo(
-      targetDamagePotential(playerAccuracy(105, 90), { defenceLevel: 80, affinity: "same" }),
+      targetDamagePotential(playerAccuracy(105, 90), { defenceLevel: 80, affinity: 60 }),
       10,
     );
   });
@@ -274,7 +274,7 @@ describe("loadoutStats", () => {
   });
 
   it("derives Damage Potential from the target model when set", () => {
-    const target = { defenceLevel: 80, armour: 500, affinity: "same" as const };
+    const target = { defenceLevel: 80, armour: 500, affinity: 60 };
     const stats = loadoutStats({ ...base, attackLevel: 99, target });
     const expected = hitChance(playerAccuracy(99, 90), target);
     expect(stats.dp).toBeCloseTo(expected, 10);
@@ -282,7 +282,7 @@ describe("loadoutStats", () => {
     expect(stats.targetAccuracyProfile).toMatchObject({
       playerAccuracyRating: stats.accuracyRating,
       originalTargetArmourRating: targetArmour(target),
-      affinity: "same",
+      affinity: 60,
       additiveHitChance: 0,
     });
   });
@@ -293,13 +293,13 @@ describe("loadoutStats", () => {
       style: "magic",
       level: 105,
       weaponTier: 90,
-      target: { defenceLevel: 80, affinity: "same" },
+      target: { defenceLevel: 80, affinity: 60 },
       equipmentSlots: { ring: "mock:acc-ring", amulet: "mock:acc-amulet" },
     };
     const stats = loadoutStats(loadout);
     expect(stats.accuracyRating).toBe(playerAccuracy(105, 90) + 150);
     expect(stats.dp).toBeCloseTo(
-      targetDamagePotential(stats.accuracyRating, { defenceLevel: 80, affinity: "same" }),
+      targetDamagePotential(stats.accuracyRating, { defenceLevel: 80, affinity: 60 }),
       10,
     );
   });
@@ -342,7 +342,7 @@ describe("loadoutStats", () => {
       ...base,
       target: {
         defenceLevel: 80,
-        affinity: "same",
+        affinity: 60,
         damagePotentialOverride: 0.42,
       },
     });
@@ -382,11 +382,11 @@ describe("loadoutStats", () => {
     const withPerk = loadoutStats({
       ...base,
       perks: { ...base.perks, energising: 4 },
-      target: { defenceLevel: 80, affinity: "same" },
+      target: { defenceLevel: 80, affinity: 60 },
     });
     const expected = hitChance(playerAccuracy(99, 90) + 150, {
       defenceLevel: 80,
-      affinity: "same",
+      affinity: 60,
     });
     expect(withPerk.dp).toBeCloseTo(expected, 10);
     expect(loadoutStats({ ...base, perks: { ...base.perks, energising: 4 } }).dp).toBe(1);
@@ -504,7 +504,7 @@ describe("loadoutStats", () => {
       attackLevel: 99,
       strengthLevel: 99,
       weaponTier: 90,
-      target: { defenceLevel: 80, affinity: "same" },
+      target: { defenceLevel: 80, affinity: 60 },
       buffs: {
         ...base.buffs,
         vulnerability: true,
@@ -518,7 +518,7 @@ describe("loadoutStats", () => {
     expect(stats.dp).toBeCloseTo(
       targetDamagePotential(playerAccuracy(boostedAttack, 90), {
         defenceLevel: 80,
-        affinity: "same",
+        affinity: 60,
       }),
       10,
     );
@@ -533,7 +533,7 @@ describe("loadoutStats", () => {
   it("buffs off leave accuracy unboosted and omit vuln/curse modifiers", () => {
     const stats = loadoutStats({
       ...base,
-      target: { defenceLevel: 80, affinity: "same" },
+      target: { defenceLevel: 80, affinity: 60 },
       buffs: { ...base.buffs, vulnerability: false, styleCurse: "none", overload: "none" },
     });
     expect(stats.attackLevel).toBe(120);
@@ -698,7 +698,7 @@ describe("loadoutStats", () => {
     const target = {
       defenceLevel: 99,
       armour: 1000,
-      affinity: "strong" as const,
+      affinity: 50,
       additiveHitChance: 10,
     };
     const shieldDp = loadoutStats({ ...shield, target }).dp;
@@ -902,7 +902,7 @@ describe("loadoutStats", () => {
   });
 
   it("accessory accuracy 100 raises DP vs target vs same loadout without it", () => {
-    const target = { defenceLevel: 120, affinity: "strong" as const };
+    const target = { defenceLevel: 120, affinity: 50 };
     const without = loadoutStats({
       ...base,
       attackLevel: 70,
@@ -1001,7 +1001,7 @@ describe("loadoutStats", () => {
       target: {
         defenceLevel: 80,
         armour: 0,
-        affinity: "same" as const,
+        affinity: 60,
         demon: true,
       },
     };
@@ -1011,7 +1011,7 @@ describe("loadoutStats", () => {
     const offTarget = {
       ...base,
       perks: { ...base.perks, demonSlayer: 1 },
-      target: { defenceLevel: 80, armour: 0, affinity: "same" as const },
+      target: { defenceLevel: 80, armour: 0, affinity: 60 },
     };
     const mod = loadoutStats(offTarget).globalModifiers.find((m) => m.id === "perk:demon-slayer");
     expect(mod).toBeDefined();
@@ -1152,7 +1152,7 @@ describe("loadoutStats", () => {
       const demonsMark = loadoutStats(
         {
           ...base,
-          target: { defenceLevel: 80, affinity: "same", hasApplicableWeakness: true },
+          target: { defenceLevel: 80, affinity: 60, hasApplicableWeakness: true },
         },
         { blessingPicks: ["Balance", "Chaos", "Chaos"] },
       );
@@ -1160,7 +1160,7 @@ describe("loadoutStats", () => {
       expect(demonsMark.dp).toBeCloseTo(
         targetDamagePotential(demonsMark.accuracyRating, {
           defenceLevel: 80,
-          affinity: "weakness",
+          affinity: 90,
         }),
       );
 
@@ -1195,7 +1195,7 @@ describe("loadoutStats", () => {
         {
           ...base,
           equipmentSlots: { body: "mock:defence-body" },
-          target: { defenceLevel: 80, affinity: "same", occupiedTiles: 4, areaTargets: 12 },
+          target: { defenceLevel: 80, affinity: 60, occupiedTiles: 4, areaTargets: 12 },
         },
         { blessingPicks: ["Order", "Balance", "Chaos", "Balance", "Order"] },
       );

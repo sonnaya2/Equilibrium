@@ -8,24 +8,54 @@ import { effectiveBaseArmourAtTick, type BlackStoneArmourState } from "../styles
  *   player accuracy  = f(style level) + 2.5 × f(weapon tier)
  *   target armour    = armour stat + f(Defence level)
  *   hit chance       = affinity × accuracy / armour + additive modifiers, capped at 100%
- * Default affinities are Weak 70, Same 60, Strong 50, and specific weakness 90.
+ * Exact affinity is a percent (1-100). Named defaults are UI convenience only.
  */
 
-export const AFFINITY = {
+/** Named defaults for UI convenience. Stored values are exact percents. */
+export const DEFAULT_AFFINITIES = {
+  weakness: 90,
   weak: 70,
   same: 60,
   strong: 50,
-  weakness: 90,
 } as const;
 
-export type AffinityKind = keyof typeof AFFINITY;
+/** Alias of DEFAULT_AFFINITIES for existing imports. */
+export const AFFINITY = DEFAULT_AFFINITIES;
+
+export type AffinityKind = keyof typeof DEFAULT_AFFINITIES;
+
+export const AFFINITY_MIN = 1;
+export const AFFINITY_MAX = 100;
+
+export function isAffinityKind(value: unknown): value is AffinityKind {
+  return value === "weak" || value === "same" || value === "strong" || value === "weakness";
+}
+
+/** Clamp a numeric affinity percent into the engine range. */
+export function sanitizeAffinity(value: number): number {
+  if (!Number.isFinite(value)) return DEFAULT_AFFINITIES.same;
+  return Math.min(AFFINITY_MAX, Math.max(AFFINITY_MIN, Math.round(value)));
+}
+
+/**
+ * Resolve an affinity percent from a number or legacy kind name.
+ * Legacy kind strings migrate via DEFAULT_AFFINITIES; never invent values.
+ */
+export function resolveAffinityPercent(
+  affinity: number | AffinityKind | undefined | null,
+): number {
+  if (affinity == null) return DEFAULT_AFFINITIES.same;
+  if (typeof affinity === "number") return sanitizeAffinity(affinity);
+  if (isAffinityKind(affinity)) return DEFAULT_AFFINITIES[affinity];
+  return DEFAULT_AFFINITIES.same;
+}
 
 export interface GenericTarget {
   defenceLevel: number;
   /** The target's armour stat; defaults to 0 (armour = f(Defence) only). */
   armour?: number;
-  /** Defaults to "same". */
-  affinity?: AffinityKind;
+  /** Exact affinity percent (1-100). Defaults to 60 (same). */
+  affinity?: number;
   /** Additive hit-chance modifiers from gear/effects, as a fraction (0.02 = +2%). */
   additiveHitChance?: number;
   /** Bypasses the formula entirely - the documented escape hatch. */
@@ -80,7 +110,7 @@ export function targetArmour(target: GenericTarget): number {
 export function hitChance(accuracy: number, target: GenericTarget): number {
   const armour = targetArmour(target);
   if (armour <= 0) return 1;
-  const affinity = AFFINITY[target.affinity ?? "same"] / 100;
+  const affinity = resolveAffinityPercent(target.affinity) / 100;
   return Math.min(1, Math.max(0, affinity * (accuracy / armour) + (target.additiveHitChance ?? 0)));
 }
 

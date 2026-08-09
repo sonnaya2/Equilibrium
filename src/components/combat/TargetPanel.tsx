@@ -1,8 +1,17 @@
 "use client";
 
-import type { AffinityKind } from "@/combat/target/genericTarget";
+import { DEFAULT_AFFINITIES, sanitizeAffinity } from "@/combat/target/genericTarget";
 import { NumberField } from "./NumberField";
 import type { Loadout, LoadoutTarget } from "./useLoadout";
+
+const NAMED_AFFINITY_OPTIONS = [
+  { value: DEFAULT_AFFINITIES.weak, label: "Weak (70)" },
+  { value: DEFAULT_AFFINITIES.same, label: "Same (60)" },
+  { value: DEFAULT_AFFINITIES.strong, label: "Strong (50)" },
+  { value: DEFAULT_AFFINITIES.weakness, label: "Specific weakness (90)" },
+] as const;
+
+const NAMED_AFFINITY_VALUES = new Set<number>(NAMED_AFFINITY_OPTIONS.map((o) => o.value));
 
 export function TargetPanel({
   loadout,
@@ -16,6 +25,9 @@ export function TargetPanel({
     if (!target) return;
     setLoadout({ ...loadout, target: { ...target, ...patch } });
   };
+
+  const affinitySelectValue =
+    target && NAMED_AFFINITY_VALUES.has(target.affinity) ? String(target.affinity) : "custom";
 
   return (
     <div className="loadout-panel">
@@ -36,10 +48,8 @@ export function TargetPanel({
                   ? {
                       defenceLevel: 80,
                       armour: 0,
-                      affinity: "same",
+                      affinity: DEFAULT_AFFINITIES.same,
                       additiveHitChance: 0,
-                      elementalWeakness: "unknown",
-                      dragonfireImmune: false,
                     }
                   : null,
               })
@@ -68,15 +78,33 @@ export function TargetPanel({
             <label className="loadout-select loadout-select--wide">
               <span>Affinity</span>
               <select
-                value={target.affinity}
-                onChange={(event) => updateTarget({ affinity: event.target.value as AffinityKind })}
+                value={affinitySelectValue}
+                onChange={(event) => {
+                  if (event.target.value === "custom") {
+                    updateTarget({ affinity: 55 });
+                    return;
+                  }
+                  updateTarget({ affinity: sanitizeAffinity(Number(event.target.value)) });
+                }}
               >
-                <option value="weak">Weak (70)</option>
-                <option value="same">Same (60)</option>
-                <option value="strong">Strong (50)</option>
-                <option value="weakness">Specific weakness (90)</option>
+                {NAMED_AFFINITY_OPTIONS.map((option) => (
+                  <option key={option.value} value={String(option.value)}>
+                    {option.label}
+                  </option>
+                ))}
+                <option value="custom">Custom</option>
               </select>
             </label>
+            {affinitySelectValue === "custom" ? (
+              <NumberField
+                label="Affinity percent"
+                value={target.affinity}
+                min={1}
+                max={100}
+                onChange={(value) => updateTarget({ affinity: sanitizeAffinity(value) })}
+                suffix="%"
+              />
+            ) : null}
             <label className="loadout-check">
               <input
                 type="checkbox"
@@ -124,11 +152,11 @@ export function TargetPanel({
                   })
                 }
               />
-              Track target maximum Hitpoints
+              Track target maximum LP
             </label>
             {target.maximumLifePoints !== undefined ? (
               <NumberField
-                label="Maximum Hitpoints"
+                label="Maximum LP"
                 value={target.maximumLifePoints}
                 min={1}
                 onChange={(value) =>
@@ -147,24 +175,6 @@ export function TargetPanel({
                 }
               />
               Has an applicable weakness
-            </label>
-            <label className="loadout-select loadout-select--wide">
-              <span>Elemental weakness</span>
-              <select
-                value={target.elementalWeakness ?? "unknown"}
-                onChange={(event) =>
-                  updateTarget({
-                    elementalWeakness: event.target.value as NonNullable<
-                      LoadoutTarget["elementalWeakness"]
-                    >,
-                  })
-                }
-              >
-                <option value="unknown">Unknown</option>
-                <option value="water">Water</option>
-                <option value="fire">Fire</option>
-                <option value="other">Other</option>
-              </select>
             </label>
             <label className="loadout-check">
               <input
@@ -185,14 +195,6 @@ export function TargetPanel({
             <label className="loadout-check">
               <input
                 type="checkbox"
-                checked={target.dragonfireImmune === true}
-                onChange={(event) => updateTarget({ dragonfireImmune: event.target.checked })}
-              />
-              Dragonfire immune
-            </label>
-            <label className="loadout-check">
-              <input
-                type="checkbox"
                 checked={target.undead === true}
                 onChange={(event) => updateTarget({ undead: event.target.checked || undefined })}
               />
@@ -206,21 +208,8 @@ export function TargetPanel({
                   updateTarget({ onSlayerTask: event.target.checked || undefined })
                 }
               />
-              On Slayer task (helmet / Tuska)
+              On Slayer task (helmet)
             </label>
-            <NumberField
-              label="Slayer level (Tuska)"
-              value={loadout.slayerLevel ?? 0}
-              min={0}
-              max={200}
-              onChange={(value) => {
-                const floor = Math.floor(value);
-                setLoadout({
-                  ...loadout,
-                  slayerLevel: floor > 0 ? Math.min(200, floor) : undefined,
-                });
-              }}
-            />
             <NumberField
               label="Target size"
               value={target.size ?? 1}

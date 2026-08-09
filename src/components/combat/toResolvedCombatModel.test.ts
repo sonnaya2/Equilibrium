@@ -20,7 +20,7 @@ import { toResolvedCombatModel } from "./toResolvedCombatModel";
 
 const NOW = 1_700_000_000_000;
 
-const TARGET_DEFAULTS = { defenceLevel: 80, affinity: "same" as const };
+const TARGET_DEFAULTS = { defenceLevel: 80, affinity: 60 };
 
 function withLoadout(patch: Partial<Loadout>): Loadout {
   return {

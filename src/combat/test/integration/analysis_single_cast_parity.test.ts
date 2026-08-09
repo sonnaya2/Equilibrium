@@ -49,7 +49,7 @@ function withLoadout(patch: Partial<Loadout> = {}): Loadout {
           : {
               ...patch.target,
               defenceLevel: patch.target.defenceLevel ?? 80,
-              affinity: patch.target.affinity ?? "same",
+              affinity: patch.target.affinity ?? 60,
             },
   });
 }
@@ -197,14 +197,14 @@ describe("analyzeSingleCast modifiers still resolve", () => {
       {
         loadout: withLoadout({
           equipmentSlots: { helmet: FULL_SLAYER_HELMET_ITEM_ID },
-          target: { defenceLevel: 80, affinity: "same", onSlayerTask: true },
+          target: { defenceLevel: 80, affinity: 60, onSlayerTask: true },
         }),
         abilityId: "assault",
       },
       {
         loadout: withLoadout({
           equipmentSlots: { amulet: SALVE_AMULET_E_ITEM_ID },
-          target: { defenceLevel: 80, affinity: "same", undead: true },
+          target: { defenceLevel: 80, affinity: 60, undead: true },
         }),
         abilityId: "assault",
       },
@@ -231,7 +231,7 @@ describe("overlayAnalysisStatLine", () => {
       withLoadout({
         perks: { ...DEFAULT_LOADOUT.perks, ultimatums: 2, lunging: 2 },
         equipmentSlots: { amulet: SALVE_AMULET_E_ITEM_ID },
-        target: { defenceLevel: 80, affinity: "same", undead: true },
+        target: { defenceLevel: 80, affinity: 60, undead: true },
       }),
       { now: NOW },
     );

@@ -34,7 +34,7 @@ function withLoadout(patch: Partial<Loadout>): Loadout {
           : {
               ...patch.target,
               defenceLevel: patch.target.defenceLevel ?? 80,
-              affinity: patch.target.affinity ?? "same",
+              affinity: patch.target.affinity ?? 60,
             },
   });
 }
@@ -70,7 +70,7 @@ describe("castModifiersFor vs modifiersForResolvedModel parity", () => {
   it("matches Slayer Helmet on-task melee", () => {
     const loadout = withLoadout({
       equipmentSlots: { helmet: FULL_SLAYER_HELMET_ITEM_ID },
-      target: { defenceLevel: 80, affinity: "same", onSlayerTask: true },
+      target: { defenceLevel: 80, affinity: 60, onSlayerTask: true },
     });
     expectParity(loadout, "assault");
   });
@@ -78,7 +78,7 @@ describe("castModifiersFor vs modifiersForResolvedModel parity", () => {
   it("matches Salve (e) + undead target", () => {
     const loadout = withLoadout({
       equipmentSlots: { amulet: SALVE_AMULET_E_ITEM_ID },
-      target: { defenceLevel: 80, affinity: "same", undead: true },
+      target: { defenceLevel: 80, affinity: 60, undead: true },
     });
     expectParity(loadout, "assault");
   });
@@ -116,7 +116,7 @@ describe("castModifiersFor vs modifiersForResolvedModel parity", () => {
       },
       target: {
         defenceLevel: 80,
-        affinity: "same",
+        affinity: 60,
         demon: true,
         dragon: true,
         undead: true,

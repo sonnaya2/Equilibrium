@@ -44,7 +44,11 @@ import {
   type WeaponPoisonChoice,
 } from "@/combat/poison/mechanics";
 import { STYLE_CURSES as STYLE_CURSE_BOOSTS, styleCurseById } from "@/combat/shared/prayers";
-import type { AffinityKind } from "@/combat/target/genericTarget";
+import {
+  isAffinityKind,
+  resolveAffinityPercent,
+  sanitizeAffinity,
+} from "@/combat/target/genericTarget";
 import type { CombatStyle } from "@/combat/types";
 import type { RegionId } from "@/league";
 
@@ -71,7 +75,8 @@ const SLOT_SET = new Set<string>(EQUIPMENT_SLOTS);
 export interface LoadoutTarget {
   defenceLevel: number;
   armour?: number;
-  affinity: AffinityKind;
+  /** Exact affinity percent (1-100). Legacy kind strings migrate on load. */
+  affinity: number;
   additiveHitChance?: number;
   damagePotentialOverride?: number;
   /** Optional target life-points % (0-100) for HP-dependent mechanics; absent = unavailable. */
@@ -537,7 +542,6 @@ export const DEFAULT_LOADOUT: Loadout = {
 
 export const LOADOUT_STORAGE_KEY = "eq:loadout:v1";
 const STYLES = ["melee", "ranged", "magic", "necromancy"];
-const AFFINITIES = ["weak", "same", "strong", "weakness"];
 const STYLE_CURSES: StyleCurseChoice[] = [
   "none",
   "piety",
@@ -631,6 +635,13 @@ const num = (value: unknown, fallback: number) =>
   Number.isFinite(value) ? Number(value) : fallback;
 const clamp = (value: unknown, min: number, max: number, fallback: number) =>
   Math.min(max, Math.max(min, num(value, fallback)));
+
+/** Parse affinity: exact percent or legacy kind string. Null if unusable. */
+function parseLoadoutAffinity(value: unknown): number | null {
+  if (typeof value === "number" && Number.isFinite(value)) return sanitizeAffinity(value);
+  if (isAffinityKind(value)) return resolveAffinityPercent(value);
+  return null;
+}
 
 /** Non-empty string ids currently in slots (order follows EQUIPMENT_SLOTS). */
 export function equipmentIdList(
@@ -1247,11 +1258,11 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
     accuracy: clamp(raw.accuracy, 0, 100, DEFAULT_LOADOUT.accuracy),
     critChance: clamp(raw.critChance, 0, 100, DEFAULT_LOADOUT.critChance),
     target:
-      rawTarget && AFFINITIES.includes(rawTarget.affinity as string)
+      rawTarget && parseLoadoutAffinity(rawTarget.affinity) != null
         ? {
             defenceLevel: Math.max(0, num(rawTarget.defenceLevel, 80)),
             armour: Math.max(0, num(rawTarget.armour, 0)),
-            affinity: rawTarget.affinity as AffinityKind,
+            affinity: parseLoadoutAffinity(rawTarget.affinity)!,
             additiveHitChance: clamp(rawTarget.additiveHitChance, -100, 100, 0),
             ...(Number.isFinite(rawTarget.damagePotentialOverride)
               ? {

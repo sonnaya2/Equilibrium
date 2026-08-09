@@ -26,7 +26,7 @@ import { uiRunFingerprint } from "./uiSimFingerprint";
 
 const NOW = 1_700_000_000_000;
 
-const TARGET_DEFAULTS = { defenceLevel: 80, affinity: "same" as const };
+const TARGET_DEFAULTS = { defenceLevel: 80, affinity: 60 };
 
 function withLoadout(patch: Partial<Loadout>): Loadout {
   return {
@@ -153,12 +153,12 @@ describe("combat result identity (stale-result product rule)", () => {
     it("target race flags flow through packed snapshot into sim identity", () => {
       const neutral = packFromLoadout(
         withLoadout({
-          target: { defenceLevel: 80, affinity: "same" },
+          target: { defenceLevel: 80, affinity: 60 },
         }),
       );
       const demon = packFromLoadout(
         withLoadout({
-          target: { defenceLevel: 80, affinity: "same", demon: true },
+          target: { defenceLevel: 80, affinity: 60, demon: true },
         }),
       );
       expect(neutral.snapshot.target?.demon).not.toBe(true);
@@ -330,7 +330,7 @@ describe("combat result identity (stale-result product rule)", () => {
         equipmentSlots: { helmet: FULL_SLAYER_HELMET_ITEM_ID },
         target: {
           defenceLevel: 80,
-          affinity: "same",
+          affinity: 60,
           onSlayerTask: true,
         },
       });
@@ -348,7 +348,7 @@ describe("combat result identity (stale-result product rule)", () => {
       const inactive = packFromLoadout(
         withLoadout({
           buffs: { ...DEFAULT_LOADOUT.buffs, slayerHelmetStand: "corrupted" },
-          target: { defenceLevel: 80, affinity: "same", onSlayerTask: true },
+          target: { defenceLevel: 80, affinity: 60, onSlayerTask: true },
         }),
         { unlockedRegions: ["misthalin"] },
       );
@@ -365,12 +365,12 @@ describe("end-to-end: stale score never verifies after material change", () => {
   it("bar verified for request A fails isScoreVerifiedForContext under request B identity", () => {
     const reqA = packFromLoadout(
       withLoadout({
-        target: { defenceLevel: 80, affinity: "same", demon: false },
+        target: { defenceLevel: 80, affinity: 60, demon: false },
       }),
     ).request;
     const reqB = packFromLoadout(
       withLoadout({
-        target: { defenceLevel: 80, affinity: "same", demon: true },
+        target: { defenceLevel: 80, affinity: 60, demon: true },
       }),
     ).request;
     const idA = solveIdentityFromRequest(reqA);

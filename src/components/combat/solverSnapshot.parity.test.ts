@@ -29,7 +29,7 @@ function withGear(patch: Partial<Loadout>): Loadout {
           : {
               ...patch.target,
               defenceLevel: patch.target.defenceLevel ?? 80,
-              affinity: patch.target.affinity ?? "same",
+              affinity: patch.target.affinity ?? 60,
             },
   };
 }
@@ -47,7 +47,7 @@ describe("solverSnapshotFromResolvedModel slayer / salve descriptors", () => {
     const loadout = withGear({
       style: "melee",
       buffs: { ...DEFAULT_LOADOUT.buffs, slayerHelmetStand: "corrupted" },
-      target: { defenceLevel: 80, affinity: "same", onSlayerTask: true },
+      target: { defenceLevel: 80, affinity: 60, onSlayerTask: true },
     });
     const locked = ["misthalin", "kandarin"] as const;
     const { stats, model, snap } = modelSnap(loadout, locked);
@@ -70,7 +70,7 @@ describe("solverSnapshotFromResolvedModel slayer / salve descriptors", () => {
     const loadout = withGear({
       style: "melee",
       buffs: { ...DEFAULT_LOADOUT.buffs, slayerHelmetStand: "corrupted" },
-      target: { defenceLevel: 80, affinity: "same", onSlayerTask: true },
+      target: { defenceLevel: 80, affinity: 60, onSlayerTask: true },
     });
     const open = ["anachronia"] as const;
     const { stats, model, snap } = modelSnap(loadout, open);
@@ -88,7 +88,7 @@ describe("solverSnapshotFromResolvedModel slayer / salve descriptors", () => {
     const loadout = withGear({
       style: "melee",
       equipmentSlots: { helmet: FULL_SLAYER_HELMET_ITEM_ID },
-      target: { defenceLevel: 80, affinity: "same", onSlayerTask: true },
+      target: { defenceLevel: 80, affinity: 60, onSlayerTask: true },
     });
     const { stats, snap } = modelSnap(loadout);
     expect(stats.slayerHelmet).toMatchObject({
@@ -104,7 +104,7 @@ describe("solverSnapshotFromResolvedModel slayer / salve descriptors", () => {
       style: "melee",
       equipmentSlots: { helmet: FULL_SLAYER_HELMET_ITEM_ID },
       buffs: { ...DEFAULT_LOADOUT.buffs, slayerHelmetStand: "corrupted" },
-      target: { defenceLevel: 80, affinity: "same", onSlayerTask: true },
+      target: { defenceLevel: 80, affinity: 60, onSlayerTask: true },
     });
     const { stats, snap } = modelSnap(loadout, ["anachronia"]);
     expect(stats.slayerHelmet).toMatchObject({
@@ -118,7 +118,7 @@ describe("solverSnapshotFromResolvedModel slayer / salve descriptors", () => {
       style: "melee",
       equipmentSlots: { helmet: MIGHTY_SLAYER_HELMET_ITEM_ID },
       buffs: { ...DEFAULT_LOADOUT.buffs, slayerHelmetStand: "mighty" },
-      target: { defenceLevel: 80, affinity: "same", onSlayerTask: true },
+      target: { defenceLevel: 80, affinity: 60, onSlayerTask: true },
     });
     const equalStats = loadoutStats(equal, { unlockedRegions: ["anachronia"] });
     expect(equalStats.slayerHelmet).toMatchObject({
@@ -131,7 +131,7 @@ describe("solverSnapshotFromResolvedModel slayer / salve descriptors", () => {
     const base = {
       style: "necromancy" as const,
       equipmentSlots: { helmet: CORRUPTED_SLAYER_HELMET_ITEM_ID },
-      target: { defenceLevel: 80, affinity: "same" as const, onSlayerTask: true },
+      target: { defenceLevel: 80, affinity: 60, onSlayerTask: true },
     };
     const noLens = modelSnap(
       withGear({
@@ -164,7 +164,7 @@ describe("solverSnapshotFromResolvedModel slayer / salve descriptors", () => {
       },
       target: {
         defenceLevel: 80,
-        affinity: "same",
+        affinity: 60,
         onSlayerTask: true,
         undead: true,
       },

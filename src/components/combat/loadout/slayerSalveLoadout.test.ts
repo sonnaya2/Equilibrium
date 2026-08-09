@@ -26,7 +26,7 @@ function withGear(patch: Partial<Loadout>): Loadout {
           : {
               ...patch.target,
               defenceLevel: patch.target.defenceLevel ?? 80,
-              affinity: patch.target.affinity ?? "same",
+              affinity: patch.target.affinity ?? 60,
             },
   };
 }
@@ -42,11 +42,11 @@ describe("legacy normalize for slayer/salve", () => {
 
   it("persists onSlayerTask only when true", () => {
     const on = normalizeLoadout({
-      target: { defenceLevel: 80, affinity: "same", onSlayerTask: true, undead: true },
+      target: { defenceLevel: 80, affinity: 60, onSlayerTask: true, undead: true },
     });
     expect(on.target?.onSlayerTask).toBe(true);
     const off = normalizeLoadout({
-      target: { defenceLevel: 80, affinity: "same", onSlayerTask: false },
+      target: { defenceLevel: 80, affinity: 60, onSlayerTask: false },
     });
     expect(off.target?.onSlayerTask).toBeUndefined();
   });
@@ -62,7 +62,7 @@ describe("loadoutStats wires slayer and salve", () => {
       },
       target: {
         defenceLevel: 80,
-        affinity: "same",
+        affinity: 60,
         onSlayerTask: true,
         undead: true,
       },
@@ -82,7 +82,7 @@ describe("loadoutStats wires slayer and salve", () => {
     // Accuracy rating mult product (uncapped hit-chance ratio needs a tough target).
     const bareRating = playerAccuracy(loadout.attackLevel, 90);
     const boostedRating = bareRating * 1.125 * 1.2;
-    const hard = { defenceLevel: 99, armour: 2500, affinity: "strong" as const };
+    const hard = { defenceLevel: 99, armour: 2500, affinity: 50 };
     const bareHc = hitChance(bareRating, hard);
     const boostedHc = hitChance(boostedRating, hard);
     expect(bareHc).toBeLessThan(0.95);
@@ -99,7 +99,7 @@ describe("loadoutStats wires slayer and salve", () => {
         },
         target: {
           defenceLevel: 80,
-          affinity: "same",
+          affinity: 60,
           onSlayerTask: true,
           undead: true,
         },
@@ -126,7 +126,7 @@ describe("loadoutStats wires slayer and salve", () => {
         perks: { ...DEFAULT_LOADOUT.perks, undeadSlayer: 1 },
         target: {
           defenceLevel: 80,
-          affinity: "same",
+          affinity: 60,
           onSlayerTask: true,
           undead: true,
         },
@@ -141,7 +141,7 @@ describe("loadoutStats wires slayer and salve", () => {
     const standOnly = loadoutStats(
       withGear({
         buffs: { ...DEFAULT_LOADOUT.buffs, slayerHelmetStand: "corrupted" },
-        target: { defenceLevel: 80, affinity: "same", onSlayerTask: true },
+        target: { defenceLevel: 80, affinity: 60, onSlayerTask: true },
       }),
       { unlockedRegions: [] },
     );
@@ -153,7 +153,7 @@ describe("loadoutStats wires slayer and salve", () => {
       withGear({
         equipmentSlots: { helmet: FULL_SLAYER_HELMET_ITEM_ID },
         buffs: { ...DEFAULT_LOADOUT.buffs, slayerHelmetStand: "corrupted" },
-        target: { defenceLevel: 80, affinity: "same", onSlayerTask: true },
+        target: { defenceLevel: 80, affinity: 60, onSlayerTask: true },
       }),
       { unlockedRegions: [] },
     );
@@ -172,7 +172,7 @@ describe("resolver parity for solver snapshot sources", () => {
       },
       target: {
         defenceLevel: 80,
-        affinity: "same",
+        affinity: 60,
         onSlayerTask: true,
         undead: true,
       },
@@ -210,7 +210,7 @@ describe("resolver parity for solver snapshot sources", () => {
     const stats = loadoutStats(
       withGear({
         buffs: { ...DEFAULT_LOADOUT.buffs, slayerHelmetStand: "corrupted" },
-        target: { defenceLevel: 80, affinity: "same", onSlayerTask: true },
+        target: { defenceLevel: 80, affinity: 60, onSlayerTask: true },
       }),
       { unlockedRegions: [] },
     );

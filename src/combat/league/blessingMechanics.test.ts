@@ -8,7 +8,6 @@ import { MELEE_ABILITIES } from "../styles/melee/abilities";
 import { NECROMANCY_ABILITIES } from "../styles/necromancy/abilities";
 import { baseInput, magicInput, necroInput } from "../test/fixtures/inputs";
 import { secondsToTicks } from "../core/ticks";
-import { AFFINITY } from "../target/genericTarget";
 import { blessingChoice } from "../../league/blessings";
 import {
   aegisArmourBonus,
@@ -305,29 +304,31 @@ describe("Demon's Mark affinity resolution", () => {
   // Two Chaos picks in the segment grant the Chaos god tier.
   const mark = rules(["Chaos", "Chaos", "Balance"]);
 
-  it("uses the target's weakness when one is declared", () => {
-    expect(effectiveTargetAffinity("same", true, mark)).toBe("weakness");
+  it("uses the target's exact weakness affinity when one is declared", () => {
+    expect(effectiveTargetAffinity(60, true, mark)).toBe(90);
+    // Sourced weakness 55 upgrades strong (50), but never worsens same (60).
+    expect(effectiveTargetAffinity(50, true, mark, 55)).toBe(55);
+    expect(effectiveTargetAffinity(60, true, mark, 55)).toBe(60);
   });
 
   it("leaves a target with no declared weakness alone", () => {
-    expect(effectiveTargetAffinity("same", false, mark)).toBe("same");
+    expect(effectiveTargetAffinity(60, false, mark)).toBe(60);
   });
 
   it("never makes the affinity worse, and higher is more favourable here", () => {
-    // AFFINITY: strong 50 < same 60 < weak 70 < weakness 90. The blessing only
-    // ever raises the value, so no target picks up a worse affinity from it, and
-    // a target already at the weakness affinity is left exactly as it was.
-    for (const affinity of ["strong", "same", "weak"] as const) {
-      expect(AFFINITY[effectiveTargetAffinity(affinity, true, mark)]).toBeGreaterThanOrEqual(
-        AFFINITY[affinity],
-      );
+    // strong 50 < same 60 < weak 70 < weakness 90. The blessing only ever raises
+    // the value, so no target picks up a worse affinity from it, and a target
+    // already at or above the weakness affinity is left exactly as it was.
+    for (const affinity of [50, 60, 70] as const) {
+      expect(effectiveTargetAffinity(affinity, true, mark)).toBeGreaterThanOrEqual(affinity);
     }
-    expect(effectiveTargetAffinity("weakness", true, mark)).toBe("weakness");
+    expect(effectiveTargetAffinity(90, true, mark)).toBe(90);
+    expect(effectiveTargetAffinity(70, true, mark, 55)).toBe(70);
   });
 
   it("does nothing without the blessing", () => {
-    expect(effectiveTargetAffinity("same", true, rules(["Order"]))).toBe("same");
-    expect(effectiveTargetAffinity("same", true, undefined)).toBe("same");
+    expect(effectiveTargetAffinity(60, true, rules(["Order"]))).toBe(60);
+    expect(effectiveTargetAffinity(60, true, undefined)).toBe(60);
   });
 });
 

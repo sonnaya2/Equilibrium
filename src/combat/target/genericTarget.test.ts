@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
   accuracyCurve,
-  AFFINITY,
+  DEFAULT_AFFINITIES,
   hitChance,
   playerAccuracy,
+  resolveAffinityPercent,
+  sanitizeAffinity,
   targetArmour,
   targetDamagePotential,
   liveTargetDamagePotential,
@@ -34,15 +36,33 @@ describe("genericTarget", () => {
   });
 
   it("post-2026 default affinities are Weak 70 / Same 60 / Strong 50, weakness 90", () => {
-    expect(AFFINITY).toEqual({ weak: 70, same: 60, strong: 50, weakness: 90 });
+    expect(DEFAULT_AFFINITIES).toEqual({ weak: 70, same: 60, strong: 50, weakness: 90 });
+  });
+
+  it("accepts exact numeric affinity including arbitrary 55", () => {
+    expect(sanitizeAffinity(55)).toBe(55);
+    expect(resolveAffinityPercent(55)).toBe(55);
+    expect(resolveAffinityPercent("same")).toBe(60);
+    expect(resolveAffinityPercent(undefined)).toBe(60);
+  });
+
+  it("sanitizes affinity bounds without inventing mid-range values", () => {
+    expect(sanitizeAffinity(0)).toBe(1);
+    expect(sanitizeAffinity(101)).toBe(100);
+    expect(sanitizeAffinity(Number.NaN)).toBe(60);
   });
 
   it("hit chance scales with affinity and caps at 100%", () => {
     const accuracy = 300;
-    const weak = hitChance(accuracy, { defenceLevel: 60, affinity: "weak" });
-    const strong = hitChance(accuracy, { defenceLevel: 60, affinity: "strong" });
+    const weak = hitChance(accuracy, { defenceLevel: 60, affinity: 70 });
+    const strong = hitChance(accuracy, { defenceLevel: 60, affinity: 50 });
+    const exact55 = hitChance(accuracy, { defenceLevel: 60, affinity: 55 });
     expect(weak / strong).toBeCloseTo(70 / 50, 5);
-    expect(hitChance(1_000_000, { defenceLevel: 1, affinity: "weakness" })).toBe(1);
+    expect(exact55 / strong).toBeCloseTo(55 / 50, 5);
+    // 55 is not same(60) with additive faking: pure affinity path only.
+    const same = hitChance(accuracy, { defenceLevel: 60, affinity: 60 });
+    expect(exact55).not.toBeCloseTo(same, 10);
+    expect(hitChance(1_000_000, { defenceLevel: 1, affinity: 90 })).toBe(1);
   });
 
   it("applies additive modifiers and clamps to 0–1", () => {
@@ -54,7 +74,7 @@ describe("genericTarget", () => {
 
   it("damage potential is the hit chance unless overridden", () => {
     const accuracy = 2000;
-    const target = { defenceLevel: 70, affinity: "same" as const };
+    const target = { defenceLevel: 70, affinity: 60 };
     expect(targetDamagePotential(accuracy, target)).toBeCloseTo(hitChance(accuracy, target), 10);
     expect(targetDamagePotential(accuracy, { ...target, damagePotentialOverride: 0.7 })).toBe(0.7);
   });

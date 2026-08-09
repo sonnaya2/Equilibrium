@@ -27,6 +27,7 @@ import { CalculationAssumptions } from "./CalculationAssumptions";
 import { spiritEffectDisplayName } from "./conjurePresentation";
 import { blessingEffectDisplayName } from "./blessingPresentation";
 import { combatEffectDisplayName, combatEffectIconPath } from "./effectPresentation";
+import { abilityTtkLabel } from "./abilityTtkPresentation";
 import { critDamageStats, type CalcStats } from "./loadoutStats";
 import { resolveLoadoutCombat } from "./toResolvedCombatModel";
 import { RevolutionPanel } from "./RevolutionPanel";
@@ -620,11 +621,26 @@ export function RotationPlanner({
                       })
                     : ({ available: true } as const);
                 const lockReason = !slotGate.available ? slotGate.message : undefined;
+                const ttk =
+                  a && !lockReason
+                    ? abilityTtkLabel(
+                        useBuild ? setupStats.base : manualLine.base,
+                        a,
+                        useBuild ? setupStats.dp : manualLine.accuracy,
+                        loadout.target?.maximumLifePoints,
+                      )
+                    : null;
                 return (
                   <button
                     key={`${id}-${index}`}
                     type="button"
-                    title={lockReason ? `${lockReason} · click to remove` : "Remove cast"}
+                    title={
+                      lockReason
+                        ? `${lockReason} · click to remove`
+                        : ttk
+                          ? `${a?.name ?? id} · est. TTK ${ttk} · click to remove`
+                          : "Remove cast"
+                    }
                     onClick={() => updateQueue(queue.filter((_, i) => i !== index))}
                     className={`grid w-full grid-cols-[2rem_1fr_auto] gap-2 border-b border-stone-750/70 px-2 py-1.5 text-left text-xs hover:bg-white/[0.02] ${
                       lockReason
@@ -655,6 +671,13 @@ export function RotationPlanner({
                     {lockReason ? (
                       <span className="max-w-[12rem] truncate font-mono text-[10px] text-parch-300">
                         {lockReason}
+                      </span>
+                    ) : ttk ? (
+                      <span
+                        className="font-mono text-[10px] text-parch-50"
+                        aria-label={`Estimated time to kill ${ttk}`}
+                      >
+                        TTK {ttk}
                       </span>
                     ) : null}
                   </button>

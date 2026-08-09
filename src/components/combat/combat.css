@@ -3520,13 +3520,13 @@ button.setup-status-row:focus-visible {
 .ability-bar-slot {
   position: relative;
   display: flex;
-  flex: 0 0 4.25rem;
-  width: 4.25rem;
+  flex: 0 0 4.35rem;
+  width: 4.35rem;
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
-  gap: 0.1rem;
-  aspect-ratio: 1 / 1.18;
+  gap: 0.08rem;
+  aspect-ratio: 1 / 1.32;
   min-width: 0;
   min-height: 0;
   padding: 0.16rem 0.14rem 0.14rem;
@@ -3615,6 +3615,23 @@ button.setup-status-row:focus-visible {
   color: var(--combat-text);
   font-size: 0.58rem;
   line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ability-bar-slot__ttk {
+  flex: 0 0 auto;
+  max-width: 100%;
+  margin: 0;
+  padding: 0.08rem 0.05rem 0.02rem;
+  overflow: hidden;
+  border-top: 1px solid rgb(133 98 58 / 35%);
+  color: var(--combat-gold-bright);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.55rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  line-height: 1.15;
   text-overflow: ellipsis;
   white-space: nowrap;
 }

@@ -451,6 +451,9 @@ export function RevolutionPanel({
             <h2 id="revo-bar-title">Revolution bar</h2>
             <span>
               {slots.length} slots · {revoSize} active
+              {loadout.target?.maximumLifePoints
+                ? " · est. TTK under each ability"
+                : " · set target LP for TTK"}
             </span>
           </header>
           <div className="ability-bar-row">
@@ -459,7 +462,7 @@ export function RevolutionPanel({
               revoSize={revoSize}
               baseAbilityDamage={stats.base}
               damagePotential={stats.dp}
-              maximumLifePoints={loadout.target?.maximumLifePoints}
+              maximumLifePoints={loadout.target?.maximumLifePoints ?? null}
             />
           </div>
           <div className="revo-toolbar flex flex-wrap items-center gap-2 text-xs">

@@ -953,22 +953,6 @@
   font-size: 0.72rem;
 }
 
-.combat-screen .ability-bar-slot__ttk {
-  position: absolute;
-  right: 0.15rem;
-  bottom: 0.15rem;
-  z-index: 2;
-  padding: 0.05rem 0.2rem;
-  border: 1px solid var(--combat-gold-mid);
-  background: color-mix(in srgb, var(--combat-panel) 92%, black);
-  color: var(--combat-gold-bright, var(--combat-text));
-  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  font-size: 0.58rem;
-  font-variant-numeric: tabular-nums;
-  line-height: 1.15;
-  pointer-events: none;
-}
-
 .combat-screen .gear-prayer-panel {
   margin-top: 0.65rem;
   padding: 0.5rem;

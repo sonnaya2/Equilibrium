@@ -9,23 +9,17 @@ import { abilityTtkLabel } from "./abilityTtkPresentation";
 export function RevoBarGraphic({
   slots,
   revoSize,
-  baseAbilityDamage,
-  damagePotential,
-  maximumLifePoints,
+  baseAbilityDamage = 0,
+  damagePotential = 1,
+  maximumLifePoints = null,
 }: {
   slots: ResolvedSlot[];
   revoSize: number;
-  /** Setup base AD for rough TTK. Omit to hide TTK. */
+  /** Setup base AD for rough TTK. */
   baseAbilityDamage?: number;
   damagePotential?: number;
   maximumLifePoints?: number | null;
 }) {
-  const showTtk =
-    baseAbilityDamage != null &&
-    damagePotential != null &&
-    maximumLifePoints != null &&
-    maximumLifePoints > 0;
-
   return (
     <div className="ability-bar" role="list" aria-label="Revolution bar">
       {slots.map((slot, index) => {
@@ -44,7 +38,7 @@ export function RevoBarGraphic({
                     ? "utility"
                     : undefined;
         const ttk =
-          showTtk && slot.spec
+          !isKeybind && !unmodelled && slot.spec
             ? abilityTtkLabel(
                 baseAbilityDamage,
                 slot.spec as AbilitySpec,
@@ -81,9 +75,9 @@ export function RevoBarGraphic({
               <span className="ability-bar-slot__empty" aria-hidden="true" />
             )}
             <div className="ability-bar-slot__name">{slot.name}</div>
-            {ttk && !isKeybind && !unmodelled ? (
+            {ttk != null ? (
               <div className="ability-bar-slot__ttk" aria-label={`Estimated time to kill ${ttk}`}>
-                {ttk}
+                TTK {ttk}
               </div>
             ) : null}
             {isKeybind ? <div className="ability-bar-slot__tag">keybind</div> : null}

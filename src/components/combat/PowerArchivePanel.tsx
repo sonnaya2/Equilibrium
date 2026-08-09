@@ -21,9 +21,17 @@ import {
   type PowerArchiveShell,
   type PowerArchiveState,
 } from "@/combat/league/powerArchive";
+import { unlockedRegions } from "@/league";
+import { useBuild } from "@/league/useBuild";
 import type { Loadout, SetLoadout } from "./useLoadout";
 
 const BOT_ICON = "/game/blessings/power-archive.webp";
+
+/** Ancient-only offensive perks (no standard shell max). */
+const ANCIENT_ONLY_OFFENSIVE: ReadonlySet<PowerArchivePerkId> = new Set([
+  "relentless",
+  "ruthless",
+]);
 
 function newSlotId(): string {
   return `pa-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
@@ -195,10 +203,21 @@ export function PowerArchivePanel({
   loadout: Loadout;
   setLoadout: SetLoadout;
 }) {
+  const { build } = useBuild();
+  const hasKandarin = useMemo(
+    () => unlockedRegions(build).includes("kandarin"),
+    [build],
+  );
   const archive = loadout.powerArchive;
   const [selectedId, setSelectedId] = useState<string | null>(archive.slots[0]?.id ?? null);
   const [draftShell, setDraftShell] = useState<PowerArchiveShell>("weapon");
   const [draftAncient, setDraftAncient] = useState(true);
+  // Ancient craft needs Kandarin; without it draft stays standard.
+  const ancientAllowed = hasKandarin && draftAncient;
+
+  useEffect(() => {
+    if (!hasKandarin && draftAncient) setDraftAncient(false);
+  }, [hasKandarin, draftAncient]);
 
   useEffect(() => {
     if (selectedId != null && archive.slots.some((s) => s.id === selectedId)) return;
@@ -247,7 +266,7 @@ export function PowerArchivePanel({
     let createdId: string | null = null;
     setLoadout((prev) => {
       if (!canAddPowerArchiveSlot(prev.powerArchive)) return prev;
-      const slot = emptySlot(draftShell, draftAncient);
+      const slot = emptySlot(draftShell, ancientAllowed);
       createdId = slot.id;
       return setArchive(prev, withPowerArchiveSlot(prev.powerArchive, slot));
     });
@@ -294,6 +313,7 @@ export function PowerArchivePanel({
       }
 
       const def = powerArchivePerk(perkId);
+      if (ANCIENT_ONLY_OFFENSIVE.has(perkId) && !ancientAllowed) return prev;
       const withPerk = (slot: PowerArchiveGizmoSlot): PowerArchiveGizmoSlot | null => {
         if (slot.perks.length >= 2) return null;
         if (!gizmoAcceptsPerk(slot.shell, def, slot.ancient)) return null;
@@ -326,10 +346,10 @@ export function PowerArchivePanel({
       if (!canAddPowerArchiveSlot(state)) return prev;
 
       let shell = draftShell;
-      let ancient = draftAncient;
+      let ancient = ancientAllowed;
       if (!gizmoAcceptsPerk(shell, def, ancient)) {
         shell = def.gizmoKind === "armour" ? "armour" : "weapon";
-        if (!gizmoAcceptsPerk(shell, def, ancient)) {
+        if (!gizmoAcceptsPerk(shell, def, ancient) && hasKandarin) {
           ancient = true;
         }
       }
@@ -347,8 +367,17 @@ export function PowerArchivePanel({
   };
 
   const fillMaxDps = () => {
-    const next = buildMaxDpsPowerArchiveState();
-    setLoadout((prev) => setArchive(prev, next));
+    const next = buildMaxDpsPowerArchiveState({ ancient: ancientAllowed });
+    setLoadout((prev) => {
+      let nextLoadout = setArchive(prev, next);
+      if (!ancientAllowed) {
+        nextLoadout = {
+          ...nextLoadout,
+          buffs: { ...nextLoadout.buffs, ruthlessStacks: 0 },
+        };
+      }
+      return nextLoadout;
+    });
     setSelectedId(next.slots[0]?.id ?? null);
   };
 
@@ -359,41 +388,35 @@ export function PowerArchivePanel({
 
   const activeCapacity = 2;
   const activeHeld = selected?.perks.length ?? 0;
-  const dpsCount = POWER_ARCHIVE_PERKS.filter((p) => p.combatScope === "offensive").length;
+  const fillableDpsCount = POWER_ARCHIVE_PERKS.filter(
+    (p) =>
+      p.combatScope === "offensive" &&
+      gizmoAcceptsPerk(p.gizmoKind === "armour" ? "armour" : "weapon", p, ancientAllowed),
+  ).length;
 
   return (
     <div className="loadout-panel loadout-panel-wide power-archive-panel">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2 min-w-0">
-          <GameIcon src={BOT_ICON} size={32} alt="" />
-          <div className="min-w-0">
-            <h2 className="combat-section-title text-sm font-medium text-parch-50">
-              Automaton Control Bot
-            </h2>
-            <p className="gizmo-list__note mt-0.5">
-              Power Archive · {archive.slots.length}/{POWER_ARCHIVE_SLOT_CAP} gizmos · combat ranks
-              doubled
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            className="combat-button px-3 py-1 text-xs"
-            onClick={fillMaxDps}
-            title={`Fill the bot with all ${dpsCount} offensive perks at ancient craft max`}
-          >
-            Add all DPS boosting perks
-          </button>
-          <button
-            type="button"
-            disabled={archive.slots.length === 0}
-            onClick={clearAll}
-            className="combat-button px-3 py-1 text-xs"
-          >
-            Clear all
-          </button>
-        </div>
+      <div className="flex flex-wrap items-center justify-end gap-2">
+        <button
+          type="button"
+          className="combat-button px-3 py-1 text-xs"
+          onClick={fillMaxDps}
+          title={
+            ancientAllowed
+              ? `Fill the bot with ${fillableDpsCount} offensive perks at ancient craft max`
+              : `Fill the bot with ${fillableDpsCount} offensive perks at standard craft max (no Relentless/Ruthless)`
+          }
+        >
+          Add all DPS boosting perks
+        </button>
+        <button
+          type="button"
+          disabled={archive.slots.length === 0}
+          onClick={clearAll}
+          className="combat-button px-3 py-1 text-xs"
+        >
+          Clear all
+        </button>
       </div>
 
       <div className="invention-layout mt-3">
@@ -410,21 +433,29 @@ export function PowerArchivePanel({
           </div>
           <div className="perk-library mt-1.5" role="group" aria-label="Power Archive perks">
             {library.map((perk) => {
-              const assigned = assignedSlotOf(perk.id);
+              const ancientOnlyLocked =
+                ANCIENT_ONLY_OFFENSIVE.has(perk.id) && !ancientAllowed;
               const compatible = selected
                 ? gizmoAcceptsPerk(selected.shell, perk, selected.ancient)
                 : true;
+              const assigned = assignedSlotOf(perk.id);
               const roomOnSelected =
-                selected != null && selected.perks.length < 2 && compatible;
+                selected != null &&
+                selected.perks.length < 2 &&
+                compatible &&
+                !ancientOnlyLocked;
               const roomElsewhere = archive.slots.some(
                 (s) =>
-                  s.perks.length < 2 && gizmoAcceptsPerk(s.shell, perk, s.ancient),
+                  s.perks.length < 2 &&
+                  gizmoAcceptsPerk(s.shell, perk, s.ancient) &&
+                  !(ANCIENT_ONLY_OFFENSIVE.has(perk.id) && !s.ancient),
               );
               const blocked =
-                assigned == null &&
-                !roomOnSelected &&
-                !roomElsewhere &&
-                !canAddPowerArchiveSlot(archive);
+                ancientOnlyLocked ||
+                (assigned == null &&
+                  !roomOnSelected &&
+                  !roomElsewhere &&
+                  !canAddPowerArchiveSlot(archive));
               const meta =
                 assigned != null
                   ? (() => {
@@ -433,17 +464,22 @@ export function PowerArchivePanel({
                       const eff = archiveEffectiveRank(perk.id, entry.rank, true);
                       return `R${entry.rank}→${eff} · Gizmo ${assigned + 1}`;
                     })()
-                  : perk.combatScope === "offensive"
-                    ? `${kindLabel(perk.gizmoKind)} · DPS`
-                    : `${kindLabel(perk.gizmoKind)} · UI only`;
+                  : ancientOnlyLocked
+                    ? hasKandarin
+                      ? "Ancient only"
+                      : "Needs Kandarin · Ancient only"
+                    : perk.combatScope === "offensive"
+                      ? `${kindLabel(perk.gizmoKind)} · DPS`
+                      : `${kindLabel(perk.gizmoKind)} · UI only`;
               return (
                 <button
                   key={perk.id}
                   type="button"
                   aria-pressed={assigned != null}
                   aria-disabled={blocked}
+                  disabled={ancientOnlyLocked && assigned == null}
                   title={`${perk.effectSummary}. ${meta}`}
-                  className="perk-library-row"
+                  className={`perk-library-row${ancientOnlyLocked ? " is-disabled" : ""}`}
                   onClick={() => {
                     if (assigned != null) {
                       setSelectedId(archive.slots[assigned]!.id);
@@ -482,10 +518,18 @@ export function PowerArchivePanel({
                   <option value="armour">Armour</option>
                 </select>
               </label>
-              <label className="power-archive-panel__check text-xs">
+              <label
+                className="power-archive-panel__check text-xs"
+                title={
+                  hasKandarin
+                    ? "Ancient gizmo craft max"
+                    : "Ancient gizmos need Kandarin unlocked"
+                }
+              >
                 <input
                   type="checkbox"
-                  checked={draftAncient}
+                  checked={draftAncient && hasKandarin}
+                  disabled={!hasKandarin}
                   onChange={(e) => setDraftAncient(e.target.checked)}
                 />
                 Ancient
@@ -500,10 +544,6 @@ export function PowerArchivePanel({
               </button>
             </div>
           </div>
-          <p className="gizmo-list__note mt-1">
-            Up to {POWER_ARCHIVE_SLOT_CAP} weapon or armour gizmos. Each holds 2 perks. Stored rank
-            is craftable; Archive doubles combat ranks (R4→8).
-          </p>
           <div className="gizmo-list mt-1.5" role="group" aria-label="Automaton bot gizmos">
             {archive.slots.length === 0 ? (
               <p className="gizmo-list__note">
@@ -537,8 +577,7 @@ export function PowerArchivePanel({
           </div>
 
           <div className="power-archive-scenario mt-3">
-            <h3 className="buff-group__title">Scenario</h3>
-            <div className="flex flex-wrap items-end gap-3 mt-1.5">
+            <div className="flex flex-wrap items-end gap-3">
               <label className="power-archive-panel__check">
                 <input
                   type="checkbox"
@@ -552,13 +591,21 @@ export function PowerArchivePanel({
                 />
                 Flanking: target not facing you
               </label>
-              <label className="power-archive-panel__field">
+              <label
+                className="power-archive-panel__field"
+                title={
+                  ancientAllowed
+                    ? "Ruthless kill stacks (0-5)"
+                    : "Ruthless is ancient-only (needs Kandarin + Ancient)"
+                }
+              >
                 Ruthless stacks
                 <input
                   type="number"
                   min={0}
                   max={5}
-                  value={loadout.buffs.ruthlessStacks}
+                  disabled={!ancientAllowed}
+                  value={ancientAllowed ? loadout.buffs.ruthlessStacks : 0}
                   onChange={(e) =>
                     setLoadout({
                       ...loadout,
@@ -574,9 +621,6 @@ export function PowerArchivePanel({
                 />
               </label>
             </div>
-            <p className="gizmo-list__note mt-1.5">
-              Highest rank wins if a perk appears more than once. Ruthless defaults to 0 stacks.
-            </p>
           </div>
         </section>
       </div>

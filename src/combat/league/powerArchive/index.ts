@@ -20,6 +20,7 @@ export {
   withPowerArchiveEffectivePerks,
   withPowerArchiveSlot,
   withoutPowerArchiveSlot,
+  type BuildMaxDpsPowerArchiveOptions,
 } from "./resolve";
 export {
   POWER_ARCHIVE_BLESSING_ID,

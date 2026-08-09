@@ -219,18 +219,29 @@ export function replacePowerArchiveSlot(
   return { slots };
 }
 
+export type BuildMaxDpsPowerArchiveOptions = {
+  /**
+   * Ancient shells at craft max. When false (Ancient unchecked or no Kandarin),
+   * use standard craft max and skip ancient-only perks (Relentless, Ruthless).
+   */
+  ancient?: boolean;
+};
+
 /**
- * Build a full bot loadout of every combatScope:"offensive" perk at ancient
- * craft max (one perk per gizmo so every DPS perk is present after highest-wins).
+ * Build a full bot loadout of every combatScope:"offensive" perk at craft max
+ * (one perk per gizmo so every DPS perk is present after highest-wins).
  * Replaces any previous Archive contents when applied.
  */
-export function buildMaxDpsPowerArchiveState(): PowerArchiveState {
+export function buildMaxDpsPowerArchiveState(
+  options: BuildMaxDpsPowerArchiveOptions = {},
+): PowerArchiveState {
+  const ancient = options.ancient !== false;
   const offensive = POWER_ARCHIVE_PERKS.filter((p) => p.combatScope === "offensive");
   const rawSlots: PowerArchiveGizmoSlot[] = [];
   for (let i = 0; i < offensive.length && rawSlots.length < POWER_ARCHIVE_SLOT_CAP; i++) {
     const def = offensive[i]!;
-    const ancient = true;
     const shell: PowerArchiveShell = def.gizmoKind === "armour" ? "armour" : "weapon";
+    // Ancient-only perks (standardMaxStored null): Relentless, Ruthless.
     if (!gizmoAcceptsPerk(shell, def, ancient)) continue;
     const rank = storedMaxForShell(def, ancient);
     if (rank == null || rank < 1) continue;

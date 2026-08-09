@@ -291,7 +291,7 @@ describe("Power Archive resolve", () => {
   });
 
   it("buildMaxDpsPowerArchiveState fills every offensive perk at ancient max", () => {
-    const state = buildMaxDpsPowerArchiveState();
+    const state = buildMaxDpsPowerArchiveState({ ancient: true });
     const offensive = POWER_ARCHIVE_PERKS.filter((p) => p.combatScope === "offensive");
     expect(state.slots.length).toBe(offensive.length);
     expect(state.slots.length).toBeLessThanOrEqual(POWER_ARCHIVE_SLOT_CAP);
@@ -299,6 +299,7 @@ describe("Power Archive resolve", () => {
     for (const perk of offensive) {
       expect(ids.has(perk.id), perk.id).toBe(true);
     }
+    expect(state.slots.every((s) => s.ancient)).toBe(true);
     const resolved = resolvePowerArchivePerks({
       equipmentRanks: {},
       archive: state,
@@ -307,6 +308,29 @@ describe("Power Archive resolve", () => {
     expect(resolved.get("caroming")?.effectiveRank).toBe(8);
     expect(resolved.get("precise")?.effectiveRank).toBe(12);
     expect(resolved.get("aftershock")?.effectiveRank).toBe(8);
+    expect(resolved.get("relentless")?.effectiveRank).toBe(10);
+    expect(resolved.get("ruthless")?.effectiveRank).toBe(6);
+  });
+
+  it("buildMaxDpsPowerArchiveState standard fill skips Relentless and Ruthless", () => {
+    const state = buildMaxDpsPowerArchiveState({ ancient: false });
+    const ids = new Set(state.slots.flatMap((s) => s.perks.map((p) => p.perkId)));
+    expect(ids.has("relentless")).toBe(false);
+    expect(ids.has("ruthless")).toBe(false);
+    expect(state.slots.every((s) => !s.ancient)).toBe(true);
+    const caroming = state.slots.find((s) => s.perks.some((p) => p.perkId === "caroming"));
+    expect(caroming?.perks[0]?.rank).toBe(3);
+    const precise = state.slots.find((s) => s.perks.some((p) => p.perkId === "precise"));
+    expect(precise?.perks[0]?.rank).toBe(5);
+    const resolved = resolvePowerArchivePerks({
+      equipmentRanks: {},
+      archive: state,
+      archiveActive: true,
+    });
+    expect(resolved.get("caroming")?.effectiveRank).toBe(6);
+    expect(resolved.get("precise")?.effectiveRank).toBe(10);
+    expect(resolved.get("relentless")).toBeUndefined();
+    expect(resolved.get("ruthless")).toBeUndefined();
   });
 
   it("clears L20 flags when archive effective rank wins over equipment", () => {

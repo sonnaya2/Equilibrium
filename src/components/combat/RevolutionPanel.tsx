@@ -856,9 +856,9 @@ export function RevolutionPanel({
         </div>
         <dl className="revo-status-facts">
           <div>
-            <dt>Horizon</dt>
+            <dt>Total Ticks</dt>
             <dd>
-              {plannedTicks > 0 ? `${plannedTicks} ticks` : "—"}
+              {plannedTicks > 0 ? plannedTicks : "—"}
               <span className="revo-muted"> · {durationSeconds}s</span>
             </dd>
           </div>

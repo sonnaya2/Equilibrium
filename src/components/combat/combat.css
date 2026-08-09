@@ -521,8 +521,12 @@ body:has(.combat-screen) {
   background: var(--combat-shell);
 }
 
-.loadout-editor-dialog__header h2 {
+.loadout-editor-dialog__header h2,
+.loadout-editor-dialog__title {
+  display: inline-flex;
   margin: 0;
+  align-items: center;
+  gap: 0.45rem;
   padding: 0.65rem 0.85rem;
   color: var(--combat-gold-bright);
   font-family: var(--font-display), Cinzel, serif;

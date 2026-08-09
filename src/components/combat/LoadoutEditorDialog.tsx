@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { GameIcon } from "../GameIcon";
 import { ArchPanel } from "./ArchPanel";
 import { BuffsPanel } from "./BuffsPanel";
 import { CombatFrame } from "./CombatFrame";
@@ -27,6 +28,8 @@ const EDITOR_TITLES: Record<LoadoutEditorMode, string> = {
   target: "Edit target",
   "power-archive": "Automaton Control Bot",
 };
+
+const POWER_ARCHIVE_HEADER_ICON = "/game/blessings/power-archive.webp";
 
 export function LoadoutEditorDialog({
   mode,
@@ -59,7 +62,12 @@ export function LoadoutEditorDialog({
       onClose={onDismiss}
     >
       <header className="loadout-editor-dialog__header">
-        <h2 id="loadout-editor-title">{mode ? EDITOR_TITLES[mode] : "Loadout editor"}</h2>
+        <h2 id="loadout-editor-title" className="loadout-editor-dialog__title">
+          {mode === "power-archive" ? (
+            <GameIcon src={POWER_ARCHIVE_HEADER_ICON} size={28} alt="" />
+          ) : null}
+          {mode ? EDITOR_TITLES[mode] : "Loadout editor"}
+        </h2>
         <button
           type="button"
           aria-label="Close loadout editor"

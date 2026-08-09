@@ -1,0 +1,4 @@
+interface:
+  display_name: "Equilibrium Boss Presets"
+  short_description: "Sourced boss target presets for Equilibrium"
+  default_prompt: "Use $equilibrium-boss-presets to add or review sourced boss target presets within Equilibrium generic combat model."

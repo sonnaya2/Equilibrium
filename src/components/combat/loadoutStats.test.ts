@@ -460,6 +460,35 @@ describe("loadoutStats", () => {
         }),
       );
     });
+
+    it("preset apply keeps style Aff; Mark uses catalogue weaknessAffinity", async () => {
+      const { applyTargetPreset } = await import("./targetPresetUi");
+      // Rasial: style Aff 55 + sourced weakness 55 (plumb without bake).
+      const applied = applyTargetPreset("boss:rasial", "melee", {
+        defenceLevel: 1,
+        affinity: 60,
+        hasApplicableWeakness: true,
+      });
+      expect(applied?.affinity).toBe(55);
+      expect(applied?.weaknessAffinity).toBe(55);
+      expect(applied?.hasApplicableWeakness).toBe(true);
+      expect(applied?.targetPresetId).toBe("boss:rasial");
+
+      // QBD melee 70 + weakness 40: Mark must not bake 40 into stored Aff; Aff_eff stays 70.
+      const qbd = applyTargetPreset("boss:queen-black-dragon", "melee", {
+        defenceLevel: 1,
+        affinity: 60,
+        hasApplicableWeakness: true,
+      });
+      expect(qbd?.affinity).toBe(70);
+      expect(qbd?.weaknessAffinity).toBe(40);
+      const stats = loadoutStats(
+        { ...base, target: qbd },
+        { blessingPicks: [...markPicks] },
+      );
+      expect(stats.targetAffinity).toBe(70);
+      expect(stats.damagePotentialSource).toBe("target stats");
+    });
   });
 
   it("always computes base ability damage from the current loadout", () => {

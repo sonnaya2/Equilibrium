@@ -64,12 +64,13 @@ export function TargetPanel({
 
   const selectBoss = (presetId: string) => {
     if (!presetId) {
-      setLoadout({
-        ...loadout,
-        target: target
-          ? { ...target, targetPresetId: undefined }
-          : { ...BLANK_TARGET },
-      });
+      // Custom: drop catalogue identity and Mark fuel from the preset.
+      if (!target) {
+        setLoadout({ ...loadout, target: { ...BLANK_TARGET } });
+        return;
+      }
+      const { targetPresetId: _id, weaknessAffinity: _w, ...rest } = target;
+      setLoadout({ ...loadout, target: { ...rest } });
       return;
     }
     const next = applyTargetPreset(presetId, loadout.style, target);

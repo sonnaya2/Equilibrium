@@ -105,47 +105,6 @@ export function applyTargetPreset(
   };
 }
 
-/** Restyle affinity from the same preset when style changes and target is unmodified. */
-export function restyleTargetFromPreset(
-  target: LoadoutTarget,
-  style: CombatStyle,
-): LoadoutTarget {
-  if (!target.targetPresetId) return target;
-  const preset = targetPresetById(target.targetPresetId);
-  if (!preset) return target;
-  const fields = materializeTargetPreset(preset, { style });
-  if (!fields) return target;
-  if (
-    targetDiffersFromPreset(
-      {
-        defenceLevel: target.defenceLevel,
-        armour: target.armour,
-        affinity: target.affinity,
-        size: target.size,
-        maximumLifePoints: target.maximumLifePoints,
-        poisonImmune: target.poisonImmune,
-        undead: target.undead,
-        demon: target.demon,
-        dragon: target.dragon,
-      },
-      // Compare against previous style materialization is wrong; only restyle if
-      // current matches the stored style-agnostic fields except affinity.
-      {
-        ...fields,
-        affinity: target.affinity,
-      },
-    )
-  ) {
-    // Modified: keep affinity override, still update nothing from style switch
-    return target;
-  }
-  return {
-    ...target,
-    affinity: fields.affinity,
-    ...(fields.weaknessAffinity != null ? { weaknessAffinity: fields.weaknessAffinity } : {}),
-  };
-}
-
 export function isTargetModifiedFromPreset(
   target: LoadoutTarget,
   style: CombatStyle,

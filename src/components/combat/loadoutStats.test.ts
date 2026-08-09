@@ -1120,8 +1120,29 @@ describe("loadoutStats", () => {
         targetSize: 1,
         occupiedTiles: 4,
       });
-      expect(stats.cap).toEqual({ cap: 30_000, bypass: true });
+      // Default hitCapEnabled true; equilibrium no longer forces bypass.
+      expect(stats.cap).toEqual({ cap: 30_000, bypass: false });
       expect(stats.league.blessingIds.has("lord-of-light")).toBe(true);
+    });
+
+    it("hitCapEnabled controls cap bypass under base and equilibrium", () => {
+      const baseOn = loadoutStats({ ...base, hitCapEnabled: true });
+      const baseOff = loadoutStats({ ...base, hitCapEnabled: false });
+      expect(baseOn.cap).toEqual({ cap: 30_000, bypass: false });
+      expect(baseOff.cap).toEqual({ cap: 30_000, bypass: true });
+
+      const leagueOn = loadoutStats(
+        { ...base, hitCapEnabled: true },
+        { ruleset: "equilibrium", blessingPicks: ["Balance"] },
+      );
+      const leagueOff = loadoutStats(
+        { ...base, hitCapEnabled: false },
+        { ruleset: "equilibrium", blessingPicks: ["Balance"] },
+      );
+      expect(leagueOn.league.ruleset).toBe("equilibrium");
+      expect(leagueOff.league.ruleset).toBe("equilibrium");
+      expect(leagueOn.cap).toEqual({ cap: 30_000, bypass: false });
+      expect(leagueOff.cap).toEqual({ cap: 30_000, bypass: true });
     });
 
     it("applies Havoc Born to final displayed stats and the simulator state", () => {

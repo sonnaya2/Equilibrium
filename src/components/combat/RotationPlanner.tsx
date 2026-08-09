@@ -374,12 +374,10 @@ export function RotationPlanner({
             <input
               type="checkbox"
               checked={!setupStats.cap.bypass}
-              disabled={setupStats.league.ruleset === "equilibrium"}
               aria-label="30,000 hit cap"
               onChange={(e) => setLoadout({ ...loadout, hitCapEnabled: e.target.checked })}
             />
             30,000 hit cap
-            {setupStats.league.ruleset === "equilibrium" ? " (removed in League)" : ""}
           </label>
         </div>
         {useBuild ? (

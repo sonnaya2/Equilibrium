@@ -198,6 +198,23 @@ describe("toResolvedCombatModel", () => {
     expect(model.modifierSources.slayer).toEqual({ demon: 1, dragon: 1, undead: 1 });
   });
 
+  it("hitCapEnabled controls bypass under equilibrium (not forced off)", () => {
+    const on = toResolvedCombatModel(withLoadout({ hitCapEnabled: true }), {
+      now: NOW,
+      ruleset: "equilibrium",
+      blessingPicks: ["Balance"],
+    });
+    const off = toResolvedCombatModel(withLoadout({ hitCapEnabled: false }), {
+      now: NOW,
+      ruleset: "equilibrium",
+      blessingPicks: ["Balance"],
+    });
+    expect(on.league.ruleset).toBe("equilibrium");
+    expect(off.league.ruleset).toBe("equilibrium");
+    expect(on.cap).toEqual({ cap: 30_000, bypass: false });
+    expect(off.cap).toEqual({ cap: 30_000, bypass: true });
+  });
+
   it("classifies shield / defender / necromancy conduit configurations", () => {
     const shield = toResolvedCombatModel(
       withLoadout({

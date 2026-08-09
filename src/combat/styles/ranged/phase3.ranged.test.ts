@@ -554,10 +554,15 @@ describe("deathspore / searing winds / shadow imbued regressions", () => {
 });
 
 describe("darkfang basic", () => {
-  it("hasDarkfangWeapon detects catalogue ids", () => {
+  it("hasDarkfangWeapon detects catalogue ids, active weapon, and augmented", () => {
     expect(hasDarkfangWeapon(["item:dark-bow"])).toBe(true);
     expect(hasDarkfangWeapon(["item:gloomfire-bow"])).toBe(true);
     expect(hasDarkfangWeapon(["item:seren-godbow"])).toBe(false);
+    expect(hasDarkfangWeapon(undefined, "item:dark-bow")).toBe(true);
+    expect(hasDarkfangWeapon([], "item:gloomfire-bow")).toBe(true);
+    expect(hasDarkfangWeapon(["item:augmented-dark-bow"])).toBe(true);
+    expect(hasDarkfangWeapon(undefined, "item:augmented-gloomfire-bow")).toBe(true);
+    expect(hasDarkfangWeapon(undefined, "item:seren-godbow")).toBe(false);
   });
 
   it("produces two independent 45-55% hits on the timeline", () => {
@@ -574,6 +579,44 @@ describe("darkfang basic", () => {
     expect(hits[0]!.damage.expected).toBe(500);
     expect(hits[1]!.damage.expected).toBe(500);
     expect(darkfangBasicHits()).toHaveLength(2);
+  });
+
+  it("detects darkfang via activeWeapon when equipmentIds omit the bow", () => {
+    const s = simulate({
+      ...rangedInput,
+      equipmentIds: [],
+      equipmentEffects: {
+        activation: EQUIPMENT_SET_ACTIVATION,
+        setCritChance: { unconditional: 0, conditional: {} },
+        passiveIds: [],
+        enchantments: [],
+        weaponClass: "bow",
+        defenderEquipped: false,
+        passage: { active: false, agonyActive: false },
+        amZiFlatDamage: 0,
+        amHejDamageBonus: 0,
+        vestments: {
+          pieces: 0,
+          heraldOfChaos: false,
+          berserkExtension: false,
+          increasedAdrenalineCap: false,
+        },
+        activeWeapon: {
+          id: "item:dark-bow",
+          slot: "twohand",
+          style: "ranged",
+          specialAttackId: "descent_of_darkness",
+          passiveIds: [],
+        },
+      },
+      rotation: rotationOf("ranged_attack"),
+    });
+    const hits = s.events.filter(
+      (e) => e.abilityId === "ranged_attack" && e.family === "hit" && !e.attached,
+    );
+    expect(hits).toHaveLength(2);
+    expect(hits[0]!.damage.expected).toBe(500);
+    expect(hits[1]!.damage.expected).toBe(500);
   });
 
   it("each darkfang hit participates in deathspore stacks", () => {

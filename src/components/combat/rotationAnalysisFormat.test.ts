@@ -3,7 +3,6 @@ import {
   eventTimelineMarks,
   occurrenceModelNote,
   resolvedEventPreview,
-  RESOLVED_EVENT_PREVIEW_LIMIT,
 } from "./rotationAnalysisFormat";
 
 describe("rotation analysis presentation", () => {
@@ -27,16 +26,16 @@ describe("rotation analysis presentation", () => {
     );
   });
 
-  it("pins the first Perfect Equilibrium hit after the resolved-event preview limit", () => {
+  it("returns every resolved event without a truncated preview", () => {
     const events = Array.from({ length: 20 }, (_, index) => ({
       abilityId: index === 15 ? "perfect_equilibrium" : `ability_${index}`,
     }));
 
     const preview = resolvedEventPreview(events);
 
-    expect(preview.events).toHaveLength(RESOLVED_EVENT_PREVIEW_LIMIT + 1);
-    expect(preview.events.at(-1)?.abilityId).toBe("perfect_equilibrium");
-    expect(preview.pinnedPerfectEquilibrium).toBe(true);
+    expect(preview.events).toHaveLength(20);
+    expect(preview.events[15]?.abilityId).toBe("perfect_equilibrium");
+    expect(preview.pinnedPerfectEquilibrium).toBe(false);
   });
 
   it("marks land-tick and source-cast group starts for timeline chrome", () => {

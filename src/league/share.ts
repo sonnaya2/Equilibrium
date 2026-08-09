@@ -30,6 +30,7 @@ export function decodeBuild(value: string): BuildState | null {
     const keys = [
       "elective",
       "relics",
+      "rejuvenatedPick",
       "blessingPicks",
       "blessingSelections",
       "blessingResetsUsed",

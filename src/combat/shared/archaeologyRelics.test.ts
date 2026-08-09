@@ -6,6 +6,7 @@ import {
   hasAnachronia,
   isRelicActive,
   MONOLITH_ACTIVE_LIMIT,
+  MONOLITH_ENERGY_ANTIQUARIAN,
   MONOLITH_ENERGY_DEFAULT,
   MONOLITH_ENERGY_EXTENDED,
   MONOLITH_EXTENDED_REGION,
@@ -105,6 +106,51 @@ describe("monolith energy cap", () => {
     const state = sanitizeArchaeologyState({ selectedIds: heavy, energyCap: 650 }, ["misthalin"]);
     expect(state.energyCap).toBe(500);
     expect(totalEnergyUsed(state.selectedIds)).toBeLessThanOrEqual(500);
+  });
+
+  it("Antiquarian raises cap to 1000 over Anachronia", () => {
+    expect(
+      resolveMonolithEnergyCap({
+        unlockedRegions: ["anachronia"],
+        leagueRelics: ["Antiquarian"],
+      }),
+    ).toBe(MONOLITH_ENERGY_ANTIQUARIAN);
+    expect(
+      resolveMonolithEnergyCap({
+        unlockedRegions: ["misthalin"],
+        leagueRelics: ["Antiquarian"],
+      }),
+    ).toBe(MONOLITH_ENERGY_ANTIQUARIAN);
+  });
+
+  it("Antiquarian bypasses region gates and keeps 3-slot limit", () => {
+    expect(
+      archaeologySelectBlockReason({
+        relicId: "berserkers_fury",
+        selectedIds: [],
+        energyCap: 500,
+        unlockedRegions: ["misthalin"],
+      }),
+    ).toBe("region_locked");
+    expect(
+      archaeologySelectBlockReason({
+        relicId: "berserkers_fury",
+        selectedIds: [],
+        energyCap: 1000,
+        unlockedRegions: ["misthalin"],
+        ignoreRegionGates: true,
+      }),
+    ).toBeNull();
+    const state = sanitizeArchaeologyState(
+      {
+        selectedIds: ["berserkers_fury", "heightened_senses", "fury_of_the_small"],
+        energyCap: 1000,
+      },
+      ["misthalin"],
+      ["Antiquarian"],
+    );
+    expect(state.energyCap).toBe(1000);
+    expect(state.selectedIds).toHaveLength(3);
   });
 });
 

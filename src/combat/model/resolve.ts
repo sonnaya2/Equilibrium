@@ -53,8 +53,18 @@ function copyEquipmentEffects(
           thresholds: { ...effects.dracolich.thresholds },
         }
       : undefined,
+    chromaticChoir: effects.chromaticChoir
+      ? {
+          ...effects.chromaticChoir,
+          thresholds: { ...effects.chromaticChoir.thresholds },
+          gems: [...effects.chromaticChoir.gems],
+        }
+      : undefined,
     songOfDestruction: effects.songOfDestruction
       ? { ...effects.songOfDestruction }
+      : undefined,
+    attunedCrystalWeaponry: effects.attunedCrystalWeaponry
+      ? { ...effects.attunedCrystalWeaponry }
       : undefined,
     vestments: { ...effects.vestments },
   };
@@ -90,6 +100,11 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
     weaponConfiguration: input.weaponConfiguration,
     nativeSpecialPolicy: {
       useEquippedWeaponSpecial: input.nativeSpecialPolicy?.useEquippedWeaponSpecial === true,
+      afterAbilityId:
+        typeof input.nativeSpecialPolicy?.afterAbilityId === "string" &&
+        input.nativeSpecialPolicy.afterAbilityId.trim().length > 0
+          ? input.nativeSpecialPolicy.afterAbilityId.trim()
+          : null,
     },
     modifierSources: {
       ...modifierSources,

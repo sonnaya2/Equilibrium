@@ -28,7 +28,6 @@ import {
   eventTimelineMarks,
   occurrenceModelNote,
   resolvedEventPreview,
-  RESOLVED_EVENT_PREVIEW_LIMIT,
 } from "./rotationAnalysisFormat";
 import { abilityIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
@@ -388,14 +387,12 @@ export function RotationEventPreview({
   nameForId: (id: string) => string;
 }) {
   const preview = resolvedEventPreview(result.events);
-  const shown = Math.min(RESOLVED_EVENT_PREVIEW_LIMIT, result.events.length);
   return (
     <section className="revo-section revo-event-preview">
       <header className="revo-section-head revo-event-section-head">
         <h3 className="combat-section-title">Resolved events</h3>
         <span className="revo-section-meta">
-          {shown}
-          {preview.pinnedPerfectEquilibrium ? " + PE" : ""} / {result.events.length}
+          {result.events.length} event{result.events.length === 1 ? "" : "s"}
         </span>
       </header>
       <EventTable events={preview.events} nameForId={nameForId} compact />

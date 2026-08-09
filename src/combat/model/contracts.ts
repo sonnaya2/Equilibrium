@@ -74,6 +74,7 @@ export interface ResolvedCombatModel {
   readonly weaponConfiguration: ResolvedWeaponConfiguration;
   readonly nativeSpecialPolicy: {
     readonly useEquippedWeaponSpecial: boolean;
+    readonly afterAbilityId?: string | null;
   };
   /**
    * EoF stored special ability id. Required with Essence of Finality for
@@ -141,6 +142,7 @@ export interface HostCombatResolveInput {
   readonly equipmentEffects: ActiveEquipmentEffects;
   readonly nativeSpecialPolicy?: {
     readonly useEquippedWeaponSpecial: boolean;
+    readonly afterAbilityId?: string | null;
   };
   /** EoF stored special ability id when Essence of Finality is equipped. */
   readonly eofStoredSpecialId?: string | null;

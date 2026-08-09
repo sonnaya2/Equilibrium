@@ -165,6 +165,19 @@ export function needsStochasticLanes(
   ) {
     return true;
   }
+  // 3pc choir: onyx heal / hydrix deathmark+adren change later state.
+  // Local check only - avoid importing styles/ranged/chromaticChoir (cycles via equipment).
+  const choir = input.equipmentEffects?.chromaticChoir;
+  if (
+    choir != null &&
+    choir.crossbowEligible === true &&
+    choir.procChance > 0 &&
+    choir.thresholds.two === true &&
+    choir.thresholds.three === true &&
+    hasBoltDeathmarkApplicationOpportunity(input, abilityIds)
+  ) {
+    return true;
+  }
   for (const abilityId of abilityIds) {
     if (STATEFUL_RNG_ABILITIES.has(abilityId)) return true;
   }

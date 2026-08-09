@@ -1,4 +1,5 @@
 import type { AbilityHit } from "../../pipeline/calculateAbility";
+import { stripAugmentedEquipmentId } from "../../shared/attunedCrystalWeaponry";
 import type { SourceReference } from "../../types";
 
 /**
@@ -20,10 +21,27 @@ export const DARKFANG_SOURCE: SourceReference = {
   verifiedAt: "2026-08-04",
 };
 
-export function hasDarkfangWeapon(equipmentIds: readonly string[] | undefined): boolean {
+const DARKFANG_ID_SET = new Set<string>(DARKFANG_WEAPON_IDS);
+
+export function isDarkfangWeaponId(id: string | null | undefined): boolean {
+  if (!id) return false;
+  if (DARKFANG_ID_SET.has(id)) return true;
+  const base = stripAugmentedEquipmentId(id);
+  return base !== id && DARKFANG_ID_SET.has(base);
+}
+
+/**
+ * True when Dark bow / Gloomfire is wielded.
+ * Prefer activeWeapon id (resolved MH/2H); also scans equipmentIds (legacy flat lists).
+ * Augmented ids match after strip.
+ */
+export function hasDarkfangWeapon(
+  equipmentIds: readonly string[] | undefined,
+  activeWeaponId?: string | null,
+): boolean {
+  if (isDarkfangWeaponId(activeWeaponId)) return true;
   if (!equipmentIds?.length) return false;
-  const set = new Set(equipmentIds);
-  return DARKFANG_WEAPON_IDS.some((id) => set.has(id));
+  return equipmentIds.some((id) => isDarkfangWeaponId(id));
 }
 
 /** Two real hits; each participates independently in per-hit systems. */

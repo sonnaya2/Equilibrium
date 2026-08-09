@@ -77,9 +77,22 @@ export function reviveRevolutionBase(sim: SerializableRevolutionSimBase): Revive
       ...(sim.equipmentEffects.songOfDestruction
         ? { songOfDestruction: { ...sim.equipmentEffects.songOfDestruction } }
         : {}),
+      ...(sim.equipmentEffects.chromaticChoir
+        ? {
+            chromaticChoir: {
+              ...sim.equipmentEffects.chromaticChoir,
+              thresholds: { ...sim.equipmentEffects.chromaticChoir.thresholds },
+              gems: [...sim.equipmentEffects.chromaticChoir.gems],
+            },
+          }
+        : {}),
+      ...(sim.equipmentEffects.attunedCrystalWeaponry
+        ? { attunedCrystalWeaponry: { ...sim.equipmentEffects.attunedCrystalWeaponry } }
+        : {}),
     },
     nativeSpecialPolicy: {
       useEquippedWeaponSpecial: sim.nativeSpecialPolicy?.useEquippedWeaponSpecial === true,
+      afterAbilityId: sim.nativeSpecialPolicy?.afterAbilityId ?? null,
     },
     ...(sim.eofStoredSpecialId != null && sim.eofStoredSpecialId !== ""
       ? { eofStoredSpecialId: sim.eofStoredSpecialId }

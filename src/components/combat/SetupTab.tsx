@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { unlockedRegions } from "@/league";
+import { activeLeagueRelicNames,  unlockedRegions  } from "@/league";
 import { activeBlessings } from "@/league/blessings";
 import { useBuild } from "@/league/useBuild";
 import { POWER_ARCHIVE_BLESSING_ID } from "@/combat/league/powerArchive";
@@ -38,10 +38,10 @@ export function SetupTab({
     () =>
       loadoutStats(loadout, {
         blessingPicks: build.blessingPicks,
-        relics: Object.values(build.relics).filter(Boolean),
+        relics: activeLeagueRelicNames(build),
         unlockedRegions: regions,
       }),
-    [build.blessingPicks, build.relics, loadout, regions],
+    [build, loadout, regions],
   );
 
   return (

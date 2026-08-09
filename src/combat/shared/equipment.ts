@@ -9,9 +9,14 @@ import { equipmentRecordPassiveIds } from "./requirements";
 import { setEffectSupport, type SetEffectSupport } from "../equipmentSets/support";
 import type { DracolichSetSummary } from "../styles/ranged/dracolich";
 import {
+  chromaticChoirSetSummary,
+  type ChromaticChoirSetSummary,
+} from "../styles/ranged/chromaticChoir";
+import {
   IGNEOUS_ULTIMATE_PASSIVE_SET,
   LENG_PASSIVES,
   LENG_PASSIVE_SET,
+  PASSIVE_SOURCE,
   igneousCombinedPresentation,
   lengCombinedPresentation,
   presentPassive,
@@ -22,6 +27,11 @@ import {
   songOfDestructionSummary,
   type SongOfDestructionEquipmentSummary,
 } from "../styles/magic/songOfDestruction";
+import {
+  ATTUNED_CRYSTAL_WEAPONRY_PASSIVE_ID,
+  resolveAttunedCrystalWeaponry,
+  type AttunedCrystalWeaponryState,
+} from "./attunedCrystalWeaponry";
 
 export type { SetEffectSupport, PassiveSupport };
 
@@ -172,8 +182,9 @@ const SET_PIECE_WEIGHTS: Readonly<Record<string, number>> = {
 };
 
 /**
- * Count equipped set pieces from slotted gear (and legacy flat equipmentIds).
- * Uses equipmentById → record.setId. Duplicate item ids count once.
+ * Count equipped set pieces from worn slots only.
+ * Unlock pins in equipmentIds are not worn and must not grant set bonuses.
+ * Uses equipmentById -> record.setId. Duplicate item ids count once.
  */
 export function equippedSetCounts(loadout: LoadoutEquipmentView): Map<string, number> {
   const counts = new Map<string, number>();
@@ -186,7 +197,6 @@ export function equippedSetCounts(loadout: LoadoutEquipmentView): Map<string, nu
     counts.set(setId, (counts.get(setId) ?? 0) + (SET_PIECE_WEIGHTS[id] ?? 1));
   };
   for (const id of Object.values(resolvedEquipmentSlots(loadout))) add(id);
-  for (const id of loadout.equipmentIds ?? []) add(id);
   return counts;
 }
 
@@ -201,7 +211,6 @@ export function equippedSetItemCounts(loadout: LoadoutEquipmentView): Map<string
     counts.set(setId, (counts.get(setId) ?? 0) + 1);
   };
   for (const id of Object.values(resolvedEquipmentSlots(loadout))) add(id);
-  for (const id of loadout.equipmentIds ?? []) add(id);
   return counts;
 }
 
@@ -235,7 +244,13 @@ export interface ActiveEquipmentEffects {
   amHejDamageBonus: number;
   deathdealer?: DeathdealerSetSummary;
   dracolich?: DracolichSetSummary;
+  chromaticChoir?: ChromaticChoirSetSummary;
   songOfDestruction?: SongOfDestructionEquipmentSummary;
+  /**
+   * Attuned crystal weaponry both-hands damage passive when the loadout qualifies.
+   * Absent when inactive (lone 1H, wrong off-hand, etc.).
+   */
+  attunedCrystalWeaponry?: AttunedCrystalWeaponryState;
   vestments: {
     pieces: number;
     heraldOfChaos: boolean;
@@ -336,6 +351,8 @@ export function activeEquipmentEffects(
     enchantments?: readonly EquipmentEnchantmentId[];
     effectiveAttackLevel?: number;
     effectiveStrengthLevel?: number;
+    /** Unboosted Agility for attuned crystal weaponry proc chance (default 99). */
+    agilityLevel?: number;
   },
 ): ActiveEquipmentEffects {
   const setCounts = equippedSetCounts(loadout);
@@ -380,16 +397,23 @@ export function activeEquipmentEffects(
   const offhandId = slots.offhand;
   const offhand = offhandId ? equipmentById(offhandId) : undefined;
   const meleeWeapon = weaponId ? weapon?.style === "melee" : loadout.style === "melee";
+  const attunedCrystalWeaponry = resolveAttunedCrystalWeaponry(
+    loadout,
+    loadout.agilityLevel ?? 99,
+  );
   const passiveIds = [
     ...new Set(
-      Object.values(slots).flatMap((id) => {
-        const item = equipmentById(id);
-        if (!item) return [] as ItemPassiveId[];
-        return [
-          ...equipmentRecordPassiveIds(item),
-          ...(item.defender ? (["defender-accuracy"] as const) : []),
-        ];
-      }),
+      [
+        ...Object.values(slots).flatMap((id) => {
+          const item = equipmentById(id);
+          if (!item) return [] as ItemPassiveId[];
+          return [
+            ...equipmentRecordPassiveIds(item),
+            ...(item.defender ? (["defender-accuracy"] as const) : []),
+          ];
+        }),
+        ...(attunedCrystalWeaponry ? ([ATTUNED_CRYSTAL_WEAPONRY_PASSIVE_ID] as const) : []),
+      ],
     ),
   ];
   const enchantments = [
@@ -423,7 +447,14 @@ export function activeEquipmentEffects(
       : 0,
     ...(deathdealer ? { deathdealer } : {}),
     dracolich: dracolichSetSummary(setCounts, itemCounts, loadout.pieceContribution, weaponClass),
+    chromaticChoir: chromaticChoirSetSummary(
+      setCounts,
+      itemCounts,
+      loadout.pieceContribution,
+      weaponClass,
+    ),
     songOfDestruction,
+    ...(attunedCrystalWeaponry ? { attunedCrystalWeaponry } : {}),
     vestments: {
       pieces,
       heraldOfChaos: meleeWeapon && pieces >= 2,
@@ -557,14 +588,19 @@ export function equipmentCritByHit(
   });
 }
 
+/**
+ * Reckless Assault: multiply uncapped hit chance by 0.95 (wiki: 50% -> 47.5%), then clamp.
+ * Pass uncapped hit chance so overcap can still yield 100% Damage Potential after the multi.
+ * https://runescape.wiki/w/Reaver%27s_ring
+ */
 export function applyEquipmentDamagePotential(
-  damagePotential: number,
+  uncappedHitChance: number,
   effects: ActiveEquipmentEffects,
 ): number {
-  return Math.min(
-    1,
-    Math.max(0, damagePotential - (hasPassive(effects, "reaver-ring") ? 0.05 : 0)),
-  );
+  const modified = hasPassive(effects, "reaver-ring")
+    ? uncappedHitChance * 0.95
+    : uncappedHitChance;
+  return Math.min(1, Math.max(0, modified));
 }
 
 /** Defender-class gear multiplies accuracy before the hit-chance formula. */
@@ -587,6 +623,7 @@ export function equippedPassiveSummaries(
   loadout: LoadoutEquipmentView & {
     style?: CombatStyle;
     enchantments?: readonly EquipmentEnchantmentId[];
+    agilityLevel?: number;
   },
 ): EquippedPassiveSummary[] {
   const effects = activeEquipmentEffects(loadout);
@@ -674,6 +711,32 @@ export function equippedPassiveSummaries(
         ...presentPassive(passiveId, presentCtx),
       });
     }
+  }
+
+  // Loadout-derived: not stamped on individual weapon records.
+  const crystal = effects.attunedCrystalWeaponry;
+  if (crystal && !seenPassives.has(ATTUNED_CRYSTAL_WEAPONRY_PASSIVE_ID)) {
+    const weaponId = effects.activeWeapon?.id;
+    const weapon = weaponId ? equipmentById(weaponId) : undefined;
+    const presented = presentPassive(ATTUNED_CRYSTAL_WEAPONRY_PASSIVE_ID, presentCtx);
+    const chancePct = (crystal.procChance * 100).toFixed(crystal.procChance * 100 % 1 === 0 ? 0 : 2);
+    const armourNote =
+      crystal.armourProcBonus > 0
+        ? ` Includes +${(crystal.armourProcBonus * 100).toFixed(crystal.armourProcBonus * 100 % 1 === 0 ? 0 : 2)}% from crystal armour set.`
+        : "";
+    rows.push({
+      passiveId: ATTUNED_CRYSTAL_WEAPONRY_PASSIVE_ID,
+      itemId: weaponId ?? "item:attuned-crystal-staff",
+      itemName: weapon?.name ?? "Attuned crystal weaponry",
+      source: weapon?.sources[0] ?? PASSIVE_SOURCE.attunedCrystalWeaponry,
+      label: presented.label,
+      support: presented.support,
+      effects: [
+        `${chancePct}% chance per direct hit for +25% bonus damage (Agility ${crystal.agilityLevel}).${armourNote}`,
+        "Both hands must be attuned weapons, or attuned 2H alone, or attuned MH + crystal shield partner.",
+        "EV only; excluded from DoTs, poison, conjures, and recursive procs.",
+      ],
+    });
   }
   return rows;
 }

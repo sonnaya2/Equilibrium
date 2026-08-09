@@ -166,6 +166,31 @@ describe("damage-only enchanted bolts", () => {
     expect(poison?.expectedActivations).toBe(0.55);
     expect(poison?.damage.expected).toBeGreaterThan(0);
 
+    const bakriminel = simulate({
+      ...rangedInput,
+      ammunition: {
+        projectile: {
+          itemId: "item:emerald-bakriminel-bolts-e",
+          label: "Emerald bakriminel bolts (e)",
+          family: "bolts",
+          statTier: 95,
+          mechanicId: "emerald",
+          support: { status: "modeled", label: "Poison-hit mechanic" },
+        },
+        quiver: null,
+        weaponCapability: { mode: "required", acceptedFamily: "bolts" },
+        effectiveStatTier: 95,
+      },
+      rotation: rotationOf("ranged_attack"),
+    });
+    const bakriminelPoison = bakriminel.events.find(
+      (event) => event.abilityId === "ammunition:emerald",
+    );
+    expect(bakriminelPoison?.damage.expected).toBeCloseTo(poison?.damage.expected ?? 0, 10);
+    expect(
+      bakriminel.analysis.byEffect.find((row) => row.id === "ammunition:emerald")?.totalDamage,
+    ).toBeGreaterThan(0);
+
     const immune = simulate({
       ...rangedInput,
       ammunition: boltAmmunition("emerald"),

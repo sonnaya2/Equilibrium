@@ -303,17 +303,17 @@ export function EquipmentColumn({
         style: loadout.style,
         equipmentSlots: slots,
         enchantments: loadout.enchantments,
+        agilityLevel: loadout.agilityLevel,
       }),
-    [loadout.enchantments, loadout.style, slots],
+    [loadout.agilityLevel, loadout.enchantments, loadout.style, slots],
   );
   const sets = useMemo(
     () =>
       setEffectsSummary({
         equipmentSlots: slots,
-        equipmentIds: loadout.equipmentIds,
         pieceContribution,
       }),
-    [loadout.equipmentIds, pieceContribution, slots],
+    [pieceContribution, slots],
   );
   const ammunitionEffect = rangedAmmunitionEffectPresentation(loadout);
   const effectRows = [
@@ -343,7 +343,7 @@ export function EquipmentColumn({
             Equipment
           </h2>
         </header>
-        <div className="setup-equipment-grid" role="list" aria-label="Equipped equipment">
+        <div className="setup-equipment-grid" aria-label="Equipped equipment">
           {EQUIPMENT_SLOTS.map(({ key, label }) => {
             const locked = key === "offhand" && twoHanded;
             const item = locked ? undefined : itemFor(loadout, key);
@@ -461,16 +461,14 @@ export function EquipmentColumn({
                   </li>
                 ))}
                 {ammunitionEffect ? (
-                  <li className={`setup-status-row ${ammunitionEffect.rowClass}`}>
+                  <li className="setup-status-row">
                     <GameIcon
                       src={ammunitionEffect.icon}
-                      alt={ammunitionEffect.itemLabel}
+                      alt={ammunitionEffect.label}
                       size={18}
                     />
                     <span>
                       <strong>{ammunitionEffect.label}</strong>
-                      <em>{ammunitionEffect.statusLabel}</em>
-                      <small>{ammunitionEffect.itemLabel}</small>
                     </span>
                   </li>
                 ) : null}

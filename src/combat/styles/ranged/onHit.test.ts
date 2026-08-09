@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
+import { equipmentById } from "../../data";
 import { rotationOf } from "../../engine/simulation/contracts";
 import { createCastContext, simulate } from "../../engine/simulation/simulate";
+import { activeEquipmentEffects } from "../../shared/equipment";
 import { rangedInput } from "../../test/fixtures/inputs";
 import { lastCast } from "../../test/helpers/summary";
 import { testRangedAmmunition } from "../../testing/rangedAmmunition";
@@ -307,6 +309,8 @@ describe("shadow imbued — adrenaline is per real hit", () => {
 });
 
 describe("Snipe cooldown reduction", () => {
+  // Oracles: Snipe ready tick 100 after cast at 0. Piercing Shot = 2 hits.
+  // Base: 2 * 4 = 8 -> 92. Winds End (Fleeting): 2 * 6 = 12 -> 88.
   function afterPiercing(equipmentIds: readonly string[] = []) {
     const ctx = createCastContext({ ...rangedInput, equipmentIds });
     expect(ctx.performCast(ctx.byId.get("snipe")!, 0, false).ok).toBe(true);
@@ -315,13 +319,27 @@ describe("Snipe cooldown reduction", () => {
     return ctx.getState().cooldowns.snipe;
   }
 
-  it("subtracts 4 ticks per landed Piercing Shot hit", () => {
+  it("piercing without boots: 2 hits * 4 = 8 → ready 92", () => {
     expect(afterPiercing()).toBe(92);
   });
 
-  it("subtracts 6 ticks per Piercing Shot hit with Fleeting boots", () => {
+  it("piercing with Fleeting boots: 2 hits * 6 = 12 → ready 88", () => {
     expect(afterPiercing(["item:fleeting-boots"])).toBe(88);
     expect(afterPiercing(["item:enhanced-fleeting-boots"])).toBe(88);
+  });
+
+  it("two Piercing Shot casts with boots pile reduction (12 + 12 → 76)", () => {
+    // Piercing CD 3s = 5 ticks; second cast at tick 8 after first at 3.
+    const ctx = createCastContext({
+      ...rangedInput,
+      equipmentIds: ["item:fleeting-boots"],
+    });
+    expect(ctx.performCast(ctx.byId.get("snipe")!, 0, false).ok).toBe(true);
+    expect(ctx.getState().cooldowns.snipe).toBe(100);
+    expect(ctx.performCast(ctx.byId.get("piercing_shot")!, 3, false).ok).toBe(true);
+    expect(ctx.getState().cooldowns.snipe).toBe(88);
+    expect(ctx.performCast(ctx.byId.get("piercing_shot")!, 8, false).ok).toBe(true);
+    expect(ctx.getState().cooldowns.snipe).toBe(76);
   });
 
   it("lets a boot-enabled ranged basic subtract 6 ticks and never crosses the land tick", () => {
@@ -342,4 +360,66 @@ describe("Snipe cooldown reduction", () => {
     floor.performCast(floor.byId.get("ranged_attack")!, 98, false);
     expect(floor.getState().cooldowns.snipe).toBe(98);
   });
+
+  it("Winds End via equipmentEffects passive (no boot id in equipmentIds)", () => {
+    const ctx = createCastContext({
+      ...rangedInput,
+      equipmentIds: ["item:noxious-longbow"],
+      equipmentEffects: {
+        ...activeEquipmentEffects({ style: "ranged" }),
+        passiveIds: ["winds-end"],
+      },
+    });
+    expect(ctx.performCast(ctx.byId.get("snipe")!, 0, false).ok).toBe(true);
+    expect(ctx.getState().cooldowns.snipe).toBe(100);
+    expect(ctx.performCast(ctx.byId.get("piercing_shot")!, 3, false).ok).toBe(true);
+    expect(ctx.getState().cooldowns.snipe).toBe(88);
+  });
+
+  it("Winds End from equipmentSlots.boots without equipmentIds", () => {
+    const ctx = createCastContext({
+      ...rangedInput,
+      equipmentIds: [],
+      equipmentSlots: { boots: "item:fleeting-boots" },
+    });
+    expect(ctx.performCast(ctx.byId.get("snipe")!, 0, false).ok).toBe(true);
+    expect(ctx.getState().cooldowns.snipe).toBe(100);
+    expect(ctx.performCast(ctx.byId.get("piercing_shot")!, 3, false).ok).toBe(true);
+    expect(ctx.getState().cooldowns.snipe).toBe(88);
+  });
+
+  const fleetingHasWindsEnd = (() => {
+    const boots = equipmentById("item:fleeting-boots");
+    return boots?.passiveId === "winds-end" || boots?.passiveIds?.includes("winds-end") === true;
+  })();
+
+  it.skipIf(!fleetingHasWindsEnd)(
+    "Winds End from boots slot via activeEquipmentEffects (catalogue passiveId)",
+    () => {
+      const boots = equipmentById("item:fleeting-boots");
+      const enhanced = equipmentById("item:enhanced-fleeting-boots");
+      expect(boots?.passiveId === "winds-end" || boots?.passiveIds?.includes("winds-end")).toBe(
+        true,
+      );
+      expect(
+        enhanced?.passiveId === "winds-end" || enhanced?.passiveIds?.includes("winds-end"),
+      ).toBe(true);
+
+      const effects = activeEquipmentEffects({
+        style: "ranged",
+        equipmentSlots: { boots: "item:fleeting-boots" },
+      });
+      expect(effects.passiveIds).toContain("winds-end");
+
+      // No boot id in equipmentIds; passive arrives only through equipmentEffects.
+      const ctx = createCastContext({
+        ...rangedInput,
+        equipmentIds: ["item:noxious-longbow"],
+        equipmentEffects: effects,
+      });
+      expect(ctx.performCast(ctx.byId.get("snipe")!, 0, false).ok).toBe(true);
+      expect(ctx.performCast(ctx.byId.get("piercing_shot")!, 3, false).ok).toBe(true);
+      expect(ctx.getState().cooldowns.snipe).toBe(88);
+    },
+  );
 });

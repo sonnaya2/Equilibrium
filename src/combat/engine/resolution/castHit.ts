@@ -33,6 +33,7 @@ import { resolveRangedAmmunitionHitEffects } from "../../styles/ranged/ammunitio
 import { enchantedBoltActivationChance } from "../../styles/ranged/enchantedBolt";
 import { enchantedBoltStatefulProcStream } from "../../styles/ranged/enchantedBoltRuntime";
 import { isAmmunitionHitEligible } from "../../styles/ranged/ammunitionEligibility";
+import { chromaticChoirActive } from "../../styles/ranged/chromaticChoir";
 import { dracolichInfusionCritChance } from "../../styles/ranged/dracolich";
 import { WEN_ICY_PRECISION_DAMAGE_POTENTIAL_DELTA } from "../../styles/ranged/wen";
 import {
@@ -83,6 +84,11 @@ import {
   NO_SONG_OF_DESTRUCTION,
   essenceCorruptionFlatBonus,
 } from "../../styles/magic/songOfDestruction";
+import {
+  ATTUNED_CRYSTAL_COMPONENT_ID,
+  attunedCrystalExpectedBonus,
+  isAttunedCrystalWeaponryHitEligible,
+} from "../../shared/attunedCrystalWeaponry";
 
 /** Style level at land tick: temporary override (e.g. Naragi 255) wins when active. */
 function combatLevelAt(rt: SimulationRuntime, landTick: number): number {
@@ -828,8 +834,12 @@ function resolveCastHitUncached(
         });
   const hit = host.baseHit;
 
+  // Choir free DS uses the same mass as ammo dragonstone; build whenever either may need it.
+  const choirNeedsSourceDistribution =
+    chromaticChoirActive(input.equipmentEffects?.chromaticChoir) &&
+    (input.equipmentEffects?.chromaticChoir?.gems.includes("dragonstone") ?? false);
   const ammunitionSourceDistribution =
-    ammunition.mechanicId === "dragonstone" &&
+    (ammunition.mechanicId === "dragonstone" || choirNeedsSourceDistribution) &&
     !isDot &&
     isAmmunitionHitEligible({
       style: ability.style,
@@ -985,6 +995,36 @@ function resolveCastHitUncached(
         },
         attached: true,
         hitCapPolicy: "separate",
+      });
+    }
+  }
+
+  // Attuned crystal weaponry: EV bonus on direct player hits only.
+  // Source is pure host damage; attached riders and this bonus cannot re-proc it.
+  const attunedCrystal = input.equipmentEffects?.attunedCrystalWeaponry;
+  if (
+    attunedCrystal &&
+    isAttunedCrystalWeaponryHitEligible(provenance) &&
+    attunedCrystal.procChance > 0
+  ) {
+    const bonusExpected = attunedCrystalExpectedBonus(
+      host.hit.expected,
+      attunedCrystal.procChance,
+    );
+    if (bonusExpected > 0) {
+      components.push({
+        id: ATTUNED_CRYSTAL_COMPONENT_ID,
+        damage: {
+          min: 0,
+          max: 0,
+          expected: bonusExpected,
+        },
+        attached: true,
+        hitCapPolicy: "separate",
+        analysis: {
+          kind: "equipment-passive",
+          expectedActivations: attunedCrystal.procChance,
+        },
       });
     }
   }

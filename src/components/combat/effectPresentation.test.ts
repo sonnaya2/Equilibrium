@@ -4,6 +4,10 @@ import { combatEffectDisplayName, combatEffectIconPath } from "./effectPresentat
 describe("combat effect presentation", () => {
   it("names procedural ranged and poison damage", () => {
     expect(combatEffectDisplayName("perfect_equilibrium")).toBe("Perfect Equilibrium");
+    expect(combatEffectDisplayName("attuned-crystal-weaponry")).toBe("Attuned crystal weaponry");
+    expect(combatEffectIconPath("attuned-crystal-weaponry")).toBe(
+      "/game/combat/equipment/attuned-crystal-staff.webp",
+    );
     expect(combatEffectDisplayName("ammunition:bik")).toBe("Evolving Toxin");
     expect(combatEffectDisplayName("player_weapon_poison")).toBe("Weapon poison");
     expect(combatEffectDisplayName("song:essence-corruption")).toBe("Essence Corruption");
@@ -22,6 +26,9 @@ describe("combat effect presentation", () => {
       "/game/upgrades/permanent-unlocks/weapon-poison.webp",
     );
     expect(combatEffectIconPath("ammunition:bik")).toBe("/game/combat/equipment/bik-arrows.webp");
+    expect(combatEffectIconPath("ammunition:emerald")).toBe(
+      "/game/combat/equipment/emerald-bakriminel-bolts-e.webp",
+    );
     expect(combatEffectIconPath("crackling")).toBe("/game/combat/perks/crackling.webp");
     expect(combatEffectIconPath("aftershock")).toBe("/game/combat/perks/aftershock.webp");
     expect(combatEffectIconPath("song:essence-corruption")).toBe(

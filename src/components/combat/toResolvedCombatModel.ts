@@ -120,6 +120,7 @@ export function hostInputFromLoadoutStats(
     equipmentEffects: stats.equipmentEffects,
     nativeSpecialPolicy: {
       useEquippedWeaponSpecial: loadout.buffs.useEquippedWeaponSpecial === true,
+      afterAbilityId: loadout.buffs.weaponSpecialAfterAbilityId,
     },
     ...(loadout.eofStoredSpecialId != null && loadout.eofStoredSpecialId !== ""
       ? { eofStoredSpecialId: loadout.eofStoredSpecialId }

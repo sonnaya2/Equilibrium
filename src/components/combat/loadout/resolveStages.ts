@@ -355,6 +355,7 @@ export function resolveEquipment(
     pieceContribution: setPieceContribution,
     effectiveAttackLevel: levels.visibleAttackLevel,
     effectiveStrengthLevel: levels.effectiveDamageLevel,
+    agilityLevel: loadout.agilityLevel,
   });
   const setCounts = equippedSetCounts({ equipmentSlots: loadout.equipmentSlots });
   const tumekensPieces = effectiveTumekenPieces(setCounts, setPieceContribution);
@@ -998,11 +999,12 @@ export function resolveCombatRules(
 
   // selectedIds is the sole runtime source for arch relic activation.
   // Buff booleans are display mirrors only (never re-activate a relic here).
-  // When regions are known, re-clamp energy (650 without Anachronia) and the 3-slot cap.
+  // Re-clamp energy (Antiquarian 1000 / Anachronia 650 / 500) and the 3-slot cap
+  // when league regions and/or relics are known.
   const archState = loadout.archaeology ?? { selectedIds: [], energyCap: 500 as const };
   const effectiveArch =
-    options.unlockedRegions != null
-      ? sanitizeArchaeologyState(archState, options.unlockedRegions)
+    options.unlockedRegions != null || options.relics != null
+      ? sanitizeArchaeologyState(archState, options.unlockedRegions, options.relics)
       : {
           energyCap: archState.energyCap,
           selectedIds: sanitizeSelectedRelics({

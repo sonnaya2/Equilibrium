@@ -152,6 +152,7 @@ export interface SerializableRevolutionSimBase {
   equipmentEffects: ActiveEquipmentEffects;
   nativeSpecialPolicy?: {
     useEquippedWeaponSpecial: boolean;
+    afterAbilityId?: string | null;
   };
   /** EoF stored special ability id; required with Essence of Finality for gated specials. */
   eofStoredSpecialId?: string | null;

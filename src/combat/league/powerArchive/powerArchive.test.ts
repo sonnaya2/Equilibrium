@@ -12,8 +12,10 @@ import {
   normalizePowerArchiveState,
   powerArchivePerk,
   resolvePowerArchivePerks,
+  withPowerArchiveEffectivePerks,
   withPowerArchiveSlot,
 } from "./index";
+import { bitingCritChanceBonus } from "@/combat/shared/perks";
 
 describe("Power Archive catalogue", () => {
   it("lists all 29 Power Archive perks", () => {
@@ -305,5 +307,92 @@ describe("Power Archive resolve", () => {
     expect(resolved.get("caroming")?.effectiveRank).toBe(8);
     expect(resolved.get("precise")?.effectiveRank).toBe(12);
     expect(resolved.get("aftershock")?.effectiveRank).toBe(8);
+  });
+
+  it("clears L20 flags when archive effective rank wins over equipment", () => {
+    const basePerks = {
+      equilibrium: 0,
+      eruptive: 0,
+      biting: 4,
+      bitingLevel20: true,
+      invigorating: 0,
+      impatient: 4,
+      impatientLevel20: true,
+      ultimatums: 0,
+      lunging: 0,
+      caroming: 0,
+      energising: 0,
+      crackling: 0,
+      aftershock: 0,
+      relentless: 4,
+      relentlessLevel20: true,
+      precise: 0,
+      flanking: 0,
+      shieldBashing: 0,
+      spendthrift: 0,
+      ruthless: 0,
+    };
+    const loadout = {
+      perks: basePerks,
+      powerArchive: normalizePowerArchiveState({
+        slots: [
+          {
+            id: "bit",
+            shell: "armour",
+            ancient: true,
+            perks: [{ perkId: "biting", rank: 4 }],
+          },
+          {
+            id: "imp",
+            shell: "armour",
+            ancient: true,
+            perks: [{ perkId: "impatient", rank: 4 }],
+          },
+          {
+            id: "rel",
+            shell: "weapon",
+            ancient: true,
+            perks: [{ perkId: "relentless", rank: 4 }],
+          },
+        ],
+      }),
+    };
+    // archive 4→8 beats equipment 4; L20 must not apply to archive ranks
+    const overlaid = withPowerArchiveEffectivePerks(loadout, true);
+    expect(overlaid.perks.biting).toBe(8);
+    expect(overlaid.perks.bitingLevel20).toBe(false);
+    expect(overlaid.perks.impatient).toBe(8);
+    expect(overlaid.perks.impatientLevel20).toBe(false);
+    expect(overlaid.perks.relentless).toBe(8);
+    expect(overlaid.perks.relentlessLevel20).toBe(false);
+    expect(bitingCritChanceBonus(overlaid.perks.biting, overlaid.perks.bitingLevel20)).toBe(
+      0.16,
+    );
+    expect(bitingCritChanceBonus(8, true)).toBeCloseTo(0.176, 10);
+
+    // equipment wins: keep L20
+    const equipmentWins = withPowerArchiveEffectivePerks(
+      {
+        perks: basePerks,
+        powerArchive: normalizePowerArchiveState({
+          slots: [
+            {
+              id: "bit-low",
+              shell: "armour",
+              ancient: false,
+              perks: [{ perkId: "biting", rank: 1 }],
+            },
+          ],
+        }),
+      },
+      true,
+    );
+    // equipment 4 vs archive 1→2 → equipment wins
+    expect(equipmentWins.perks.biting).toBe(4);
+    expect(equipmentWins.perks.bitingLevel20).toBe(true);
+    expect(bitingCritChanceBonus(equipmentWins.perks.biting, equipmentWins.perks.bitingLevel20)).toBeCloseTo(
+      0.088,
+      10,
+    );
   });
 });

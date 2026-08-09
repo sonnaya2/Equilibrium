@@ -214,14 +214,6 @@ export function mayShowExactProofChrome(source: StochasticLabelSource): boolean 
   return !isApproximatedRun(source);
 }
 
-export function isExactClaimProofLabel(label: string | null | undefined): boolean {
-  return (
-    label === "full-objective-global-optimum" ||
-    label === "globally-optimal" ||
-    label === "search-objective-exhaustive"
-  );
-}
-
 /**
  * Product proof chrome: residual / non-exact never shows Global optimum / Exhaustive.
  * Prefer over bare formatProofLabel at UI call sites.

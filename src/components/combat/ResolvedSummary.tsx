@@ -307,7 +307,7 @@ export function ResolvedBreakdown({
           label="Starting Adrenaline"
           value={
             stats.startingAdrenaline === stats.maxAdrenaline
-              ? "Maximum"
+              ? `Open at max (${stats.maxAdrenaline}%)`
               : `${stats.startingAdrenaline}%`
           }
         />

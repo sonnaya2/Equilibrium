@@ -205,7 +205,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     cooldownSeconds: 10.2,
     supportStatus: "partially-modeled",
     supportNote:
-      "Primary hit only. Next-ability copy to chained targets needs multi-target identity (HP, debuffs, DP, caps, death, events).",
+      "Primary hit only. Next-ability copy to chained targets needs multi-target identity (HP, debuffs, DP, caps, death, events). Caroming Chain secondary bonus unmodeled.",
     source: wikiAbility("Chain"),
   },
   {
@@ -219,7 +219,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     cooldownSeconds: 10.2,
     supportStatus: "partially-modeled",
     supportNote:
-      "Primary hit only. Next-ability copy to chained targets needs multi-target identity (HP, debuffs, DP, caps, death, events).",
+      "Primary hit only. Next-ability copy to chained targets needs multi-target identity (HP, debuffs, DP, caps, death, events). Caroming Chain secondary bonus unmodeled.",
     source: wikiAbility("Greater Chain"),
   },
   {
@@ -505,7 +505,7 @@ export const MAGIC_EFFECTS = [
     id: "chain_spread",
     name: "Chain / Greater Chain follow-up",
     notes:
-      "Next single-target Magic ability within 6s also hits chained targets at 30% (Chain) / 50% (Greater) of that ability's damage range. Caroming extends targets. Not modeled: engine lacks multi-target identity (separate HP, debuffs, DP, caps, death, events). Primary hit bands only; do not inflate primary damage.",
+      "Next single-target Magic ability within 6s also hits chained targets at 30% (Chain) / 50% (Greater) of that ability's damage range. Caroming target count + secondary damage unmodeled: engine lacks multi-target identity (separate HP, debuffs, DP, caps, death, events). Primary hit bands only; do not inflate primary damage.",
     source: wikiAbility("Greater Chain"),
   },
   {

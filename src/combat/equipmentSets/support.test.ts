@@ -8,7 +8,8 @@ describe("equipmentSets/support", () => {
     expect(setEffectSupport({ id: "dracolich" })).toBe("modeled");
     expect(setEffectSupport({ id: "elite-dracolich" })).toBe("modeled");
     expect(setEffectSupport({ id: "first-necromancer" })).toBe("outgoing-only");
-    expect(setEffectSupport({ id: "sirenic" })).toBe("not-modeled");
+    expect(setEffectSupport({ id: "sirenic" })).toBe("modeled");
+    expect(setEffectSupport({ id: "elite-sirenic" })).toBe("modeled");
     expect(setEffectSupport({ id: "trimmed-masterwork" })).toBe("outgoing-only");
     expect(setEffectSupport({ id: "unknown-set-xyz" })).toBe("none");
     expect(setEffectSupport(undefined)).toBe("not-modeled");

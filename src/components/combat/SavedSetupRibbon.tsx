@@ -59,7 +59,7 @@ export function SavedSetupRibbon({
           <span>Saved setups</span>
           <strong>{collection.setups.length}</strong>
         </div>
-        <div className="saved-setup-ribbon__tabs" role="toolbar" aria-label="Select saved setup">
+        <div className="saved-setup-ribbon__tabs" role="group" aria-label="Select saved setup">
           {collection.setups.map((setup) => (
             <button
               key={setup.id}

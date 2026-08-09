@@ -50,6 +50,7 @@ describe("current ability categories", () => {
     ]);
     expect(idsWithCategory(RANGED_ABILITIES, "enhanced")).toEqual([
       "balance_by_force",
+      "descent_of_darkness",
       "snap_shot",
       "snipe",
       "bombardment",

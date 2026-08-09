@@ -16,6 +16,8 @@ import {
   setCritChanceFromDef,
   setDamageModifiers,
   setEffectsSummary,
+  staticEquipmentCritBonus,
+  hasPassive,
   type EquipmentSetDef,
 } from "./equipment";
 
@@ -23,12 +25,12 @@ describe("shared/equipment set effects", () => {
   it("makes the pre-activated static-loadout model explicit", () => {
     const effects = activeEquipmentEffects({
       style: "melee",
-      equipmentIds: [
-        "item:vestments-of-havoc-hood",
-        "item:vestments-of-havoc-robe-top",
-        "item:vestments-of-havoc-robe-bottom",
-        "item:vestments-of-havoc-boots",
-      ],
+      equipmentSlots: {
+        helmet: "item:vestments-of-havoc-hood",
+        body: "item:vestments-of-havoc-robe-top",
+        legs: "item:vestments-of-havoc-robe-bottom",
+        boots: "item:vestments-of-havoc-boots",
+      },
     });
     expect(effects.activation).toBe("pre-activated-static-loadout");
     expect(effects.vestments).toMatchObject({
@@ -37,6 +39,54 @@ describe("shared/equipment set effects", () => {
       berserkExtension: true,
       increasedAdrenalineCap: true,
     });
+  });
+
+  it("does not count unlock pins in equipmentIds toward set bonuses", () => {
+    const pinsOnly = {
+      equipmentIds: [
+        "item:vestments-of-havoc-hood",
+        "item:vestments-of-havoc-robe-top",
+        "item:tectonic-helm",
+        "item:tectonic-body",
+        "item:tectonic-legs",
+      ],
+    };
+    expect(equippedSetCounts(pinsOnly).size).toBe(0);
+    expect(setEffectsSummary(pinsOnly)).toEqual([]);
+    expect(loadoutSetCritChance(pinsOnly)).toBe(0);
+    expect(
+      activeEquipmentEffects({ style: "melee", ...pinsOnly }).vestments,
+    ).toMatchObject({
+      pieces: 0,
+      heraldOfChaos: false,
+      berserkExtension: false,
+      increasedAdrenalineCap: false,
+    });
+
+    const wornPlusPin = {
+      equipmentSlots: {
+        helmet: "item:tectonic-helm",
+        body: "item:tectonic-body",
+      },
+      equipmentIds: [
+        "item:tectonic-helm",
+        "item:tectonic-body",
+        "item:tectonic-legs",
+      ],
+    };
+    // Worn helm+body only: pin legs must not make count 3.
+    expect(equippedSetCounts(wornPlusPin).get("tectonic")).toBe(2);
+    // Tectonic Fracture Point is +1% crit per piece from 1pc; 2 worn = 2%, not 3%.
+    expect(loadoutSetCritChance(wornPlusPin)).toBeCloseTo(0.02, 10);
+    expect(
+      loadoutSetCritChance({
+        equipmentSlots: {
+          helmet: "item:tectonic-helm",
+          body: "item:tectonic-body",
+          legs: "item:tectonic-legs",
+        },
+      }),
+    ).toBeCloseTo(0.03, 10);
   });
 
   it("set crit: catalogue defs, loadout wiring, sunshine gate, empty gear", () => {
@@ -131,18 +181,20 @@ describe("shared/equipment set effects", () => {
   });
 
   it("models Warpriest of Tuska thresholds and Chaotic Insight above maxPieces", () => {
-    const pieces = [
-      "item:warpriest-of-tuska-helm",
-      "item:warpriest-of-tuska-cuirass",
-      "item:warpriest-of-tuska-robe-legs",
-      "item:warpriest-of-tuska-gauntlets",
-      "item:warpriest-of-tuska-boots",
-      "item:warpriest-of-tuska-cape",
+    const pieceSlots = [
+      ["helmet", "item:warpriest-of-tuska-helm"],
+      ["body", "item:warpriest-of-tuska-cuirass"],
+      ["legs", "item:warpriest-of-tuska-robe-legs"],
+      ["gloves", "item:warpriest-of-tuska-gauntlets"],
+      ["boots", "item:warpriest-of-tuska-boots"],
+      ["cape", "item:warpriest-of-tuska-cape"],
     ] as const;
+    const slotsAt = (count: number) =>
+      Object.fromEntries(pieceSlots.slice(0, count)) as Record<string, string>;
     const chanceAt = (count: number, pieceContribution?: { additionalPiecesPerItem: number }) =>
       activeEquipmentEffects({
         style: "melee",
-        equipmentIds: pieces.slice(0, count),
+        equipmentSlots: slotsAt(count),
         pieceContribution,
       }).setCritChance.unconditional;
     expect(chanceAt(2)).toBe(0);
@@ -153,13 +205,13 @@ describe("shared/equipment set effects", () => {
 
     const chaotic = activeEquipmentEffects({
       style: "melee",
-      equipmentIds: pieces.slice(0, 3),
+      equipmentSlots: slotsAt(3),
       pieceContribution: { additionalPiecesPerItem: 2 },
     });
     expect(chaotic.setCritChance).toEqual({ unconditional: 0.09, conditional: {} });
     expect(
       setEffectsSummary({
-        equipmentIds: pieces.slice(0, 3),
+        equipmentSlots: slotsAt(3),
         pieceContribution: { additionalPiecesPerItem: 2 },
       }),
     ).toEqual([
@@ -515,7 +567,6 @@ describe("shared/equipment set effects", () => {
       "vestments-of-havoc",
       "deathdealer-90",
       "trimmed-masterwork",
-      "virtus",
       "anima-core-zaros",
       "anima-core-seren",
       "anima-core-zamorak",
@@ -525,6 +576,9 @@ describe("shared/equipment set effects", () => {
       expect(def, id).toBeDefined();
       expect(def!.source.verifiedAt, id).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     }
+    // Virtus / Nex power armour: items still carry setId for grouping, but there is
+    // no combat set catalogue face (stats-only; no empty set card in Gear).
+    expect(equipmentSetById("virtus")).toBeUndefined();
 
     const fn = equipmentSetById("first-necromancer")!;
     expect(fn.facts?.length).toBeGreaterThan(0);
@@ -539,7 +593,6 @@ describe("shared/equipment set effects", () => {
 
     for (const id of [
       "trimmed-masterwork",
-      "virtus",
       "anima-core-zaros",
       "anima-core-seren",
       "anima-core-zamorak",
@@ -547,5 +600,41 @@ describe("shared/equipment set effects", () => {
     ]) {
       expect(equipmentSetById(id)!.effects, id).toEqual([]);
     }
+  });
+
+  // Wiki Shadow's Mercy: +3% crit when wielding a bow only (not crossbows/thrown).
+  // https://runescape.wiki/w/Stalker%27s_ring verified 2026-08-09 still says bow.
+  it("Stalker's ring Shadow's Mercy is bow-only (not crossbow)", () => {
+    const bow = activeEquipmentEffects({
+      style: "ranged",
+      equipmentSlots: {
+        twohand: "item:bow-of-the-last-guardian",
+        ring: "item:stalkers-ring",
+      },
+    });
+    expect(bow.weaponClass).toBe("bow");
+    expect(staticEquipmentCritBonus(bow)).toEqual({ chance: 0.03, damageBonus: 0 });
+
+    const bowShadows = activeEquipmentEffects({
+      style: "ranged",
+      equipmentSlots: {
+        twohand: "item:bow-of-the-last-guardian",
+        ring: "item:stalkers-ring",
+      },
+      enchantments: ["shadows"],
+    });
+    expect(staticEquipmentCritBonus(bowShadows)).toEqual({ chance: 0.04, damageBonus: 0.03 });
+
+    const crossbow = activeEquipmentEffects({
+      style: "ranged",
+      equipmentSlots: {
+        mainhand: "item:blightbound-crossbow",
+        offhand: "item:off-hand-blightbound-crossbow",
+        ring: "item:stalkers-ring",
+      },
+    });
+    expect(crossbow.weaponClass).toBe("crossbow");
+    expect(hasPassive(crossbow, "stalker-ring")).toBe(true);
+    expect(staticEquipmentCritBonus(crossbow)).toEqual({ chance: 0, damageBonus: 0 });
   });
 });

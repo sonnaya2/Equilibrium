@@ -61,8 +61,16 @@ describe("canonical equipment ammunition adapter", () => {
     const bakriminel = resolveAmmunitionFromEquipment(
       equipmentById("item:emerald-bakriminel-bolts-e"),
     );
-    expect(ordinary).toMatchObject({ mechanicId: "emerald", statTier: 60 });
-    expect(bakriminel).toMatchObject({ mechanicId: "emerald", statTier: 95 });
+    expect(ordinary).toMatchObject({
+      mechanicId: "emerald",
+      statTier: 60,
+      support: { status: "modeled" },
+    });
+    expect(bakriminel).toMatchObject({
+      mechanicId: "emerald",
+      statTier: 95,
+      support: { status: "modeled" },
+    });
     const effects = (projectile: NonNullable<typeof ordinary>) =>
       resolveRangedAmmunitionHitEffects({
         ammunition: {

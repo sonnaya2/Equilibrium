@@ -25,6 +25,7 @@ export * from "./types";
 export * from "./shared/perks";
 export * from "./shared/equipment";
 export * from "./shared/equipmentStats";
+export * from "./shared/attunedCrystalWeaponry";
 export {
   equipmentRecordPassiveIds,
   meetsPassiveRequirement,

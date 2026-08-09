@@ -10,6 +10,7 @@ import {
   STORAGE_KEY,
   toggleElective,
   toggleRelic,
+  toggleRejuvenatedPick,
   type BuildState,
   type RegionId,
 } from "./index";
@@ -50,6 +51,7 @@ export function buildHasContent(b: BuildState): boolean {
   return (
     b.elective.length > 0 ||
     Object.keys(b.relics).length > 0 ||
+    (b.rejuvenatedPick != null && b.rejuvenatedPick.name.length > 0) ||
     b.blessingPicks.length > 0 ||
     b.blessingResetsUsed > 0
   );
@@ -117,6 +119,8 @@ export function useBuild() {
     loaded,
     toggleRegion: (id: RegionId) => setState(toggleElective(state, id)),
     toggleRelic: (tier: number, name: string) => setState(toggleRelic(state, tier, name)),
+    toggleRejuvenatedPick: (tier: number, name: string) =>
+      setState(toggleRejuvenatedPick(state, tier, name)),
     pickBlessing: (pathTier: number, path: BlessingPath) =>
       setState(pickBlessing(state, pathTier, path)),
     resetBlessings: () => setState(resetBlessings(state)),

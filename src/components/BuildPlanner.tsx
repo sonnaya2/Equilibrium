@@ -14,7 +14,16 @@ import {
   useLoadout,
   type Loadout,
 } from "@/components/combat/useLoadout";
-import { canSelectElective, ELECTIVE_CAP, type BuildState, type RegionId } from "@/league";
+import {
+  activeLeagueRelicNames,
+  canSelectElective,
+  ELECTIVE_CAP,
+  REJUVENATED_BONUS_MAX_TIER,
+  REJUVENATED_RELIC,
+  REJUVENATED_TIER,
+  type BuildState,
+  type RegionId,
+} from "@/league";
 import { godTierAlignments, PATH_TIERS, type BlessingPath } from "@/league/blessings";
 import { buildShareUrl } from "@/league/share";
 import { useBuild } from "@/league/useBuild";
@@ -198,7 +207,7 @@ function CharacterLoadout({
     (count, entry) => count + (entry && entry !== "style" && loadout.equipmentSlots[entry] ? 1 : 0),
     0,
   );
-  const pickedRelics = Object.values(build.relics).filter(Boolean);
+  const pickedRelics = activeLeagueRelicNames(build);
   const pickedRegions = build.elective
     .map((id) => regions.find((region) => region.id === id))
     .filter((region): region is PlannerRegion => Boolean(region));
@@ -298,17 +307,21 @@ export function BuildPlanner({
   relicTiers: RelicTier[];
   blessingTiers: BlessingTier[];
 }) {
-  const { build, loaded, toggleRegion, toggleRelic, pickBlessing, clearElectives, resetBuild } =
-    useBuild();
+  const {
+    build,
+    loaded,
+    toggleRegion,
+    toggleRelic,
+    toggleRejuvenatedPick,
+    pickBlessing,
+    clearElectives,
+    resetBuild,
+  } = useBuild();
   const [loadout, setLoadout] = useLoadout();
 
-  const activeRelicNames = useMemo(
-    () =>
-      Object.values(build.relics).filter(
-        (name): name is string => typeof name === "string" && name.length > 0,
-      ),
-    [build.relics],
-  );
+  const activeRelicNames = useMemo(() => activeLeagueRelicNames(build), [build]);
+  const rejuvenatedActive = build.relics[String(REJUVENATED_TIER)] === REJUVENATED_RELIC;
+  const bonusPick = rejuvenatedActive ? build.rejuvenatedPick ?? null : null;
   useEffect(() => {
     if (!loaded) return;
     setLoadout((prev) => syncRelicGrantedEquipmentWithAutoEquip(prev, activeRelicNames));
@@ -438,6 +451,12 @@ export function BuildPlanner({
           <div className="build-board__court-main">
             <section className="build-board__zone" aria-label="Relics">
               <h2 className="build-board__zone-title">Relics</h2>
+              {rejuvenatedActive ? (
+                <p className="build-board__relic-hint text-[11px] text-parch-300">
+                  Rejuvenated: click a T1–T5 seat to set a bonus relic
+                  {bonusPick ? ` (bonus: ${bonusPick.name})` : ""}.
+                </p>
+              ) : null}
               <div className="build-board__relics">
                 {relicTiers.map((tier) => {
                   const open = tier.revealed && tier.choices.length > 0;
@@ -455,6 +474,10 @@ export function BuildPlanner({
                     if (index >= 0 && index < SEATS && !seats[index]) seats[index] = choice;
                     next = Math.max(next, index) + 1;
                   }
+                  const canBonus =
+                    rejuvenatedActive &&
+                    tier.tier >= 1 &&
+                    tier.tier <= REJUVENATED_BONUS_MAX_TIER;
 
                   return (
                     <div
@@ -484,7 +507,9 @@ export function BuildPlanner({
                               </span>
                             );
                           }
-                          const on = seated === relic.name;
+                          const primaryOn = seated === relic.name;
+                          const bonusOn =
+                            bonusPick?.tier === tier.tier && bonusPick.name === relic.name;
                           const icon = relicIcon(relic.name);
                           const mono = relicMono(relic.name);
                           return (
@@ -492,10 +517,29 @@ export function BuildPlanner({
                               key={relic.name}
                               type="button"
                               role="option"
-                              aria-selected={on}
-                              aria-label={relic.name}
-                              className={`build-board__seat${on ? " is-on" : ""}`}
-                              onClick={() => toggleRelic(tier.tier, relic.name)}
+                              aria-selected={primaryOn || bonusOn}
+                              aria-label={
+                                bonusOn ? `${relic.name} (Rejuvenated bonus)` : relic.name
+                              }
+                              className={`build-board__seat${primaryOn ? " is-on" : ""}${
+                                bonusOn ? " is-bonus" : ""
+                              }`}
+                              onClick={() => {
+                                if (primaryOn) {
+                                  toggleRelic(tier.tier, relic.name);
+                                  return;
+                                }
+                                if (bonusOn) {
+                                  toggleRejuvenatedPick(tier.tier, relic.name);
+                                  return;
+                                }
+                                // Tier already has a different primary: Rejuvenated bonus seat.
+                                if (canBonus && seated != null) {
+                                  toggleRejuvenatedPick(tier.tier, relic.name);
+                                  return;
+                                }
+                                toggleRelic(tier.tier, relic.name);
+                              }}
                             >
                               <span className="build-board__seat-emblem" aria-hidden>
                                 {icon ? (
@@ -515,7 +559,10 @@ export function BuildPlanner({
                                 {shortName(relic.name)}
                               </span>
                               <span className="build-board__tip" role="tooltip">
-                                <strong>{relic.name}</strong>
+                                <strong>
+                                  {relic.name}
+                                  {bonusOn ? " · bonus" : ""}
+                                </strong>
                                 <ul>
                                   {relic.effects.map((fx) => (
                                     <li key={fx}>{fx}</li>

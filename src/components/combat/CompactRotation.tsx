@@ -59,6 +59,7 @@ export function CompactRotation({
   }, [stats, style]);
 
   const visibleQueue = useMemo(() => queue.slice(0, DISPLAY_LIMIT), [queue]);
+  const hiddenCount = Math.max(0, queue.length - DISPLAY_LIMIT);
   const maxLp = loadout.target?.maximumLifePoints;
   const dp = stats.dp;
   const base = stats.base;
@@ -94,7 +95,7 @@ export function CompactRotation({
                 <li
                   key={`${id}-${index}`}
                   title={`${index + 1}. ${ability.name} · est. TTK ${ttk} (band midpoint × DP; not full sim)`}
-                  aria-label={`${index + 1}. ${ability.name}, estimated time to kill ${ttk}`}
+                  aria-label={`${index + 1}. ${ability.name}`}
                 >
                   <GameIcon src={abilityIconPath(ability.id, ability.style)} size={30} />
                   <span className="compact-rotation-ttk" aria-hidden>
@@ -104,6 +105,11 @@ export function CompactRotation({
                 </li>
               );
             })}
+            {hiddenCount > 0 ? (
+              <li className="compact-rotation-more" aria-label={`${hiddenCount} more abilities`}>
+                +{hiddenCount} more
+              </li>
+            ) : null}
           </ol>
         ) : (
           <p className="compact-rotation-empty">No bar loaded. Click to open rotation.</p>

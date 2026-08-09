@@ -89,7 +89,8 @@ export const POWER_ARCHIVE_PERKS: readonly PowerArchivePerkDef[] = [
     ancientMaxStored: 4,
     rankScales: true,
     combatScope: "offensive",
-    effectSummary: "Ricochet and Chain secondary-target damage bonuses.",
+    effectSummary:
+      "+4% ability damage per rank per Ricochet hit. Chain secondary unmodeled.",
   }),
   PERK({
     id: "clear-headed",

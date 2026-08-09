@@ -18,14 +18,17 @@ import {
 } from "./bloodlust";
 import { secondsToTicks } from "../../core/ticks";
 
-const VESTMENTS = [
-  "item:vestments-of-havoc-hood",
-  "item:vestments-of-havoc-robe-top",
-  "item:vestments-of-havoc-robe-bottom",
-  "item:vestments-of-havoc-boots",
-];
+const VESTMENT_SLOTS = [
+  ["helmet", "item:vestments-of-havoc-hood"],
+  ["body", "item:vestments-of-havoc-robe-top"],
+  ["legs", "item:vestments-of-havoc-robe-bottom"],
+  ["boots", "item:vestments-of-havoc-boots"],
+] as const;
 const vestments = (pieces: number, style: "melee" | "magic" = "melee") =>
-  activeEquipmentEffects({ style, equipmentIds: VESTMENTS.slice(0, pieces) });
+  activeEquipmentEffects({
+    style,
+    equipmentSlots: Object.fromEntries(VESTMENT_SLOTS.slice(0, pieces)),
+  });
 
 describe("bloodlust", () => {
   it("builds to a cap of 4", () => {

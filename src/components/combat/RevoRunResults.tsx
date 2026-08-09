@@ -435,15 +435,15 @@ export function RevoRunResults({
                             ) : null}
                             {spec &&
                             !isConjureSummonAbilityId(cast.abilityId) &&
-                            !isConjureCommandAbilityId(cast.abilityId) &&
-                            (spec.weaponSpecial ||
-                              spec.category === "ultimate" ||
-                              spec.category === "threshold" ||
-                              spec.category === "enhanced") ? (
+                            !isConjureCommandAbilityId(cast.abilityId) ? (
                               <AbilityCategoryChip
-                                category={spec.category}
+                                category={
+                                  cast.auto && !spec.weaponSpecial ? "basic" : spec.category
+                                }
                                 weaponSpecial={spec.weaponSpecial}
                               />
+                            ) : cast.auto ? (
+                              <AbilityCategoryChip category="basic" />
                             ) : null}
                           </span>
                         </td>

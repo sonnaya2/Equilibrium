@@ -135,7 +135,24 @@ export type ItemPassiveId =
   /** Ek-ZekKil physical weapon passive: outgoing damage against Flamebound Rival. */
   | "ashen-vow"
   /** Bow of the Last Guardian physical passive: Perfect Equilibrium. */
-  | "perfect-equilibrium";
+  | "perfect-equilibrium"
+  /**
+   * Attuned crystal weaponry: chance for +25% damage on a direct hit when loadout
+   * has both hands qualified (derived; not stamped on every weapon record).
+   */
+  | "attuned-crystal-weaponry"
+  /** Fleeting / enhanced fleeting boots: Winds End Snipe CD reduction. */
+  | "winds-end";
+
+/**
+ * Role for attuned-crystal weaponry eligibility and armour set proc bonus.
+ * crystal-armour / attuned-crystal-armour: body-slot pieces only (not shields).
+ */
+export type CrystalWeaponryRole =
+  | "attuned-weapon"
+  | "crystal-shield-partner"
+  | "crystal-armour"
+  | "attuned-crystal-armour";
 
 export type WeaponClass = "bow" | "crossbow" | "thrown" | "other";
 
@@ -196,6 +213,13 @@ export interface EquipmentRecord extends CombatRecordBase {
   };
   /** Melee ammo-harness items carry the 0.26875 damage multiplier. */
   meleeAmmoHarness?: boolean;
+  /**
+   * Crystal weaponry role for the shared attuned damage passive and armour set bonus.
+   * attuned-weapon: attuned weapons (MH/OH/2H).
+   * crystal-shield-partner: T70 or attuned crystal shield/deflector/ward.
+   * crystal-armour / attuned-crystal-armour: hybrid body slots (2+ pieces raise proc chance).
+   */
+  crystalWeaponry?: CrystalWeaponryRole;
   specialAttackId?: string;
 }
 

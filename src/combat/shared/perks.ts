@@ -1,5 +1,6 @@
 import { mulFloor } from "../core/rounding";
-import type { CombatModifier, SourceReference } from "../types";
+import type { CombatContext, CombatModifier, SourceReference } from "../types";
+import { isTrueDotDamage } from "./damageProvenance";
 
 /**
  * Invention perks as staged modifiers / pure helpers.
@@ -245,7 +246,8 @@ export function ruthlessPerkModifier(rank: number, stacks: number): CombatModifi
     id: `perk:ruthless:${rank}:s${Math.min(5, Math.max(0, Math.floor(stacks)))}`,
     stage: "base",
     priority: 100,
-    applies: () => stacks > 0,
+    // Wiki: bleed abilities unaffected. True DoTs only; converted channels keep Ruthless.
+    applies: (context: CombatContext) => stacks > 0 && !isTrueDotDamage(context),
     apply: (state) => ({ ...state, damage: mulFloor(state.damage, mult) }),
     source: wikiPerk("Ruthless (perk)", "Ruthless"),
   };
@@ -346,7 +348,8 @@ export function expectedRelentlessRefund(cost: number, rank: number, level20Gear
 export const PLANTED_FEET_DURATION_MULT = 1.25;
 
 /**
- * Caroming: Ricochet +4%/rank per hit; Chain secondary +5% + 5%/rank.
+ * Caroming: Ricochet +4%/rank per hit (wired at prepare via caroming.ts).
+ * Chain secondary +5% + 5%/rank is wiki-true but unmodeled (no multi-target hits).
  * Archive effective to R8.
  */
 export const CAROMING_FORMULA_MAX_RANK = 8;
@@ -360,6 +363,7 @@ export function caromingRicochetBonus(rank: number): number {
   return 0.04 * rank;
 }
 
+/** Wiki formula only. Not wired; Chain secondaries need multi-target identity. */
 export function caromingChainSecondaryBonus(rank: number): number {
   if (!Number.isInteger(rank) || rank < 1 || rank > CAROMING_FORMULA_MAX_RANK) {
     throw new RangeError(

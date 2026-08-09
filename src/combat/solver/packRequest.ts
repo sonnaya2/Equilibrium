@@ -59,7 +59,10 @@ export interface SolverPackSnapshot {
   conjureDurationMult?: number;
   tumekensPieces?: number;
   equipmentEffects: ActiveEquipmentEffects;
-  nativeSpecialPolicy?: { useEquippedWeaponSpecial: boolean };
+  nativeSpecialPolicy?: {
+    useEquippedWeaponSpecial: boolean;
+    afterAbilityId?: string | null;
+  };
   eofStoredSpecialId?: string | null;
   league: SerializableLeagueRules;
   context?: CombatContext;

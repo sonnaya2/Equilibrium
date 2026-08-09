@@ -292,6 +292,7 @@ export function equipmentRanksFromLoadoutPerks(perks: {
  * Overlay resolved Archive effective ranks onto loadout.perks for combat compile.
  * Leaves non-catalogue ranks (plantedFeet, slayers) untouched.
  * Does not mutate the stored powerArchive slots (stored ranks stay craftable).
+ * L20 gear flags stay only when equipment wins that perk; archive ranks are not L20.
  */
 export function withPowerArchiveEffectivePerks<
   T extends {
@@ -323,6 +324,8 @@ export function withPowerArchiveEffectivePerks<
     archiveActive,
   });
   const rank = (id: PowerArchivePerkId): number => effectiveCombatRank(resolved, id);
+  const archiveWins = (id: PowerArchivePerkId): boolean =>
+    resolved.get(id)?.fromArchive === true;
   return {
     ...loadout,
     perks: {
@@ -344,6 +347,10 @@ export function withPowerArchiveEffectivePerks<
       shieldBashing: rank("shield-bashing"),
       spendthrift: rank("spendthrift"),
       ruthless: rank("ruthless"),
+      // Archive ranks are not item-level-20; clear gear L20 when archive wins.
+      ...(archiveWins("biting") ? { bitingLevel20: false as const } : {}),
+      ...(archiveWins("impatient") ? { impatientLevel20: false as const } : {}),
+      ...(archiveWins("relentless") ? { relentlessLevel20: false as const } : {}),
     },
   };
 }

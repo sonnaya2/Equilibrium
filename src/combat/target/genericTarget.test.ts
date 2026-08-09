@@ -3,13 +3,15 @@ import {
   accuracyCurve,
   DEFAULT_AFFINITIES,
   hitChance,
+  liveTargetDamagePotential,
   playerAccuracy,
+  rawHitChanceForArmour,
   resolveAffinityPercent,
   sanitizeAffinity,
   targetArmour,
   targetDamagePotential,
-  liveTargetDamagePotential,
 } from "./genericTarget";
+import { activeEquipmentEffects } from "../shared/equipment";
 import {
   applyBlackStoneArmourReduction,
   newBlackStoneArmourState,
@@ -98,5 +100,59 @@ describe("genericTarget", () => {
       { blackStone: { state, currentTick: 1 } },
     );
     expect(override).toBe(0.42);
+  });
+
+  it("Reaver Reckless Assault multiplies uncapped hit chance before clamp", () => {
+    const reaver = activeEquipmentEffects({
+      style: "melee",
+      equipmentSlots: { ring: "item:reavers-ring" },
+    });
+    expect(reaver.passiveIds).toContain("reaver-ring");
+
+    // affinity 100%, acc/armour = 0.5 -> H_raw 0.5; wiki example -> 0.475 DP
+    const half = {
+      playerAccuracyRating: 500,
+      originalTargetArmourRating: 1000,
+      affinity: 100,
+      additiveHitChance: 0,
+    };
+    expect(rawHitChanceForArmour(500, 1000, 100, 0)).toBeCloseTo(0.5, 10);
+    expect(liveTargetDamagePotential(half, { equipmentEffects: reaver })).toBeCloseTo(0.475, 10);
+
+    // Exact 100% raw -> 95% DP with Reaver
+    const exact = {
+      playerAccuracyRating: 1000,
+      originalTargetArmourRating: 1000,
+      affinity: 100,
+      additiveHitChance: 0,
+    };
+    expect(rawHitChanceForArmour(1000, 1000, 100, 0)).toBeCloseTo(1, 10);
+    expect(liveTargetDamagePotential(exact)).toBe(1);
+    expect(liveTargetDamagePotential(exact, { equipmentEffects: reaver })).toBeCloseTo(0.95, 10);
+
+    // Overcap 110% * 0.95 = 104.5% -> still 100% DP
+    const overcap = {
+      playerAccuracyRating: 1100,
+      originalTargetArmourRating: 1000,
+      affinity: 100,
+      additiveHitChance: 0,
+    };
+    expect(rawHitChanceForArmour(1100, 1000, 100, 0)).toBeCloseTo(1.1, 10);
+    expect(liveTargetDamagePotential(overcap)).toBe(1);
+    expect(liveTargetDamagePotential(overcap, { equipmentEffects: reaver })).toBe(1);
+
+    // Boundary: need H_raw >= 1/0.95 to keep full DP with Reaver
+    const boundary = {
+      playerAccuracyRating: 1000 / 0.95,
+      originalTargetArmourRating: 1000,
+      affinity: 100,
+      additiveHitChance: 0,
+    };
+    expect(liveTargetDamagePotential(boundary, { equipmentEffects: reaver })).toBe(1);
+    const justUnder = {
+      ...boundary,
+      playerAccuracyRating: 1000 / 0.95 - 1,
+    };
+    expect(liveTargetDamagePotential(justUnder, { equipmentEffects: reaver })).toBeLessThan(1);
   });
 });

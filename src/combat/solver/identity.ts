@@ -155,11 +155,33 @@ export function normalizeEquipmentEffects(effects: ActiveEquipmentEffects): unkn
           },
         }
       : null,
+    chromaticChoir: effects.chromaticChoir
+      ? {
+          setId: effects.chromaticChoir.setId ?? null,
+          physicalPieces: effects.chromaticChoir.physicalPieces ?? 0,
+          effectivePieces: effects.chromaticChoir.effectivePieces ?? 0,
+          crossbowEligible: effects.chromaticChoir.crossbowEligible === true,
+          mixed: effects.chromaticChoir.mixed === true,
+          procChance: roundN(effects.chromaticChoir.procChance ?? 0, 6),
+          thresholds: {
+            two: effects.chromaticChoir.thresholds.two === true,
+            three: effects.chromaticChoir.thresholds.three === true,
+          },
+          gems: sortedStrings(effects.chromaticChoir.gems as readonly string[]),
+        }
+      : null,
     songOfDestruction: effects.songOfDestruction
       ? {
           pieceCount: effects.songOfDestruction.pieceCount,
           enabled: effects.songOfDestruction.enabled === true,
           twoPiece: effects.songOfDestruction.twoPiece === true,
+        }
+      : null,
+    attunedCrystalWeaponry: effects.attunedCrystalWeaponry
+      ? {
+          active: effects.attunedCrystalWeaponry.active === true,
+          procChance: roundN(effects.attunedCrystalWeaponry.procChance, 8),
+          agilityLevel: effects.attunedCrystalWeaponry.agilityLevel,
         }
       : null,
     vestments: {
@@ -239,6 +261,7 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
     equipmentIds: sortedStrings(loadout.equipmentIds),
     nativeSpecialPolicy: {
       useEquippedWeaponSpecial: loadout.nativeSpecialPolicy?.useEquippedWeaponSpecial === true,
+      afterAbilityId: loadout.nativeSpecialPolicy?.afterAbilityId ?? null,
     },
     eofStoredSpecialId:
       loadout.eofStoredSpecialId != null && loadout.eofStoredSpecialId !== ""

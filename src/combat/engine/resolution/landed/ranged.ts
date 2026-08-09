@@ -19,6 +19,12 @@ import type { ScheduledEvent } from "../../runtime/events";
 import { scheduleEvent, type SimulationRuntime } from "../../runtime/runtime";
 import { gainAdrenaline, patchPlayer, patchRanged, patchTarget } from "../../runtime/state";
 import { dracolichAdrenalinePerRapidFireHit } from "../../../styles/ranged/dracolich";
+import {
+  hasFleetingBoots,
+  SNIPE_CDR_FLEETING_TICKS,
+  SNIPE_CDR_PIERCING_BASE_TICKS,
+} from "../../../styles/ranged/fleetingBoots";
+import { reduceCooldown } from "../../cast/effects/cooldowns";
 import { attachedResolutionComponent, resolveLeagueAttachedRawHost } from "../../../league/damage";
 import { targetAndPostHitModifiers } from "../modifiers";
 import {
@@ -41,11 +47,20 @@ import {
   dragonstoneSeparateHitExpected,
   emeraldExternalPoisonModifier,
   emeraldPoisonHit,
+  ONYX_DAMAGE_MULTIPLIER,
   onyxHealingAmount,
   rubyRecoilDamage,
   resolveRangedAmmunitionHitEffects,
 } from "../../../styles/ranged/ammunitionPayloads";
 import { ammunitionAppliedEffectId } from "../../../styles/ranged/ammunitionEffects";
+import {
+  chromaticChoirActive,
+  chromaticChoirAnalysisId,
+  chromaticChoirGemStream,
+  chromaticChoirGems,
+  chromaticChoirProcStream,
+  type ChromaticChoirGem,
+} from "../../../styles/ranged/chromaticChoir";
 import { recordWenBasicHit, wenBasicHitEligible } from "../../../styles/ranged/wen";
 import { recordAppliedEventEffect } from "../accounting";
 import { accountAppliedEffect } from "../../analysis";
@@ -288,6 +303,180 @@ function scheduleDragonstoneHit(
       damage: { min: 0, max: 0, expected: amount, critExpected: 0, capLoss: 0 },
     }),
   });
+}
+
+/** Free DS separate hit owned by Chromatic Choir (set ids; not ammunition:). */
+function scheduleChoirDragonstoneHit(
+  rt: SimulationRuntime,
+  event: ScheduledEvent<SimulationRuntime>,
+  resolution: EventResolution | undefined,
+  chance: number,
+): void {
+  if (
+    !dragonstoneCanHitTarget({
+      targetIsDragon: rt.input.targetClassification?.dragon === true,
+      targetHasDragonfireImmunity: rt.input.targetClassification?.dragonfireImmune === true,
+    })
+  ) {
+    return;
+  }
+  if (chance <= 0) return;
+  const sourceDistribution = resolution?.ammunitionSourceDistribution;
+  if (!sourceDistribution) return;
+  const amount = dragonstoneSeparateHitExpected(
+    sourceDistribution,
+    chance,
+    rt.input.cap?.cap ?? 30_000,
+  );
+  const abilityId = chromaticChoirAnalysisId("dragonstone");
+  const provenance = {
+    kind: "equipment_proc" as const,
+    detail: "chromatic-choir-dragonstone",
+  };
+  scheduleEvent(rt, {
+    tick: event.tick,
+    family: "proc",
+    abilityId,
+    sourceCast: event.sourceCast,
+    hitIndex: 0,
+    attached: false,
+    procEligible: false,
+    recursionAllowed: false,
+    derivedFrom: event.seq,
+    expectedOccurrences: chance,
+    expectedTriggerRolls: 1,
+    expectedActivations: chance,
+    expectedSeparateHits: chance,
+    occurrenceModel: { kind: "bernoulli", probability: chance },
+    originKind: "proc",
+    provenance,
+    combatStyle: "ranged",
+    resourceEligible: false,
+    resolve: () => ({
+      damage: { min: 0, max: 0, expected: amount, critExpected: 0, capLoss: 0 },
+    }),
+  });
+}
+
+function applyChoirOnyx(
+  rt: SimulationRuntime,
+  event: ScheduledEvent<SimulationRuntime>,
+  damage: ResolvedDamage,
+  resolution: EventResolution | undefined,
+): void {
+  const sourceExpected =
+    resolution?.hitDetail?.expected ??
+    resolution?.ammunitionOriginalDamagePotential ??
+    damage.expected;
+  const healing = onyxHealingAmount(sourceExpected);
+  if (healing > 0 && rt.state.player) {
+    rt.totalHealed += healing;
+    if (event.sourceCast >= 0) {
+      const cast = rt.recordBySeq.get(event.sourceCast);
+      if (cast) cast.expectedHeal = (cast.expectedHeal ?? 0) + healing;
+    }
+    const current = rt.state.player.vitality.currentLifePoints;
+    const maximum = rt.state.player.vitality.maximumLifePoints;
+    rt.state = patchPlayer(rt.state, {
+      vitality: {
+        ...rt.state.player.vitality,
+        currentLifePoints: current >= maximum ? current : Math.min(maximum, current + healing),
+      },
+    });
+  }
+  // Landed free-proc cannot re-resolve the host hit; model +25% as same-tick EV bonus.
+  const bonusExpected = Math.max(0, sourceExpected * (ONYX_DAMAGE_MULTIPLIER - 1));
+  if (bonusExpected > 0) {
+    const abilityId = chromaticChoirAnalysisId("onyx");
+    const provenance = { kind: "equipment_proc" as const, detail: "chromatic-choir-onyx" };
+    scheduleEvent(rt, {
+      tick: event.tick,
+      family: "proc",
+      abilityId,
+      sourceCast: event.sourceCast,
+      hitIndex: 0,
+      attached: false,
+      procEligible: false,
+      recursionAllowed: false,
+      derivedFrom: event.seq,
+      expectedOccurrences: 1,
+      expectedTriggerRolls: 1,
+      expectedActivations: 1,
+      expectedSeparateHits: 0,
+      occurrenceModel: { kind: "bernoulli", probability: 1 },
+      originKind: "proc",
+      provenance,
+      combatStyle: "ranged",
+      resourceEligible: false,
+      resolve: () => ({
+        damage: { min: 0, max: 0, expected: bonusExpected, critExpected: 0, capLoss: 0 },
+      }),
+    });
+  }
+  recordAppliedEventEffect(rt, event, { id: chromaticChoirAnalysisId("onyx") });
+}
+
+function applyChoirHydrix(
+  rt: SimulationRuntime,
+  event: ScheduledEvent<SimulationRuntime>,
+): void {
+  const boltDeathmark = activateBoltDeathmark(event.tick);
+  rt.state = patchRanged(rt.state, { boltDeathmark });
+  rt.state = gainAdrenaline(rt.state, BOLT_DEATHMARK_ACTIVATION_ADRENALINE);
+  recordAppliedEventEffect(rt, event, {
+    id: chromaticChoirAnalysisId("hydrix"),
+    remainingTicks: Math.max(0, boltDeathmark.expiresAtTick - event.tick),
+  });
+}
+
+function applyChromaticChoirFreeProc(
+  rt: SimulationRuntime,
+  event: ScheduledEvent<SimulationRuntime>,
+  damage: ResolvedDamage,
+  attackOrigin: AmmunitionAttackOrigin,
+  resolution: EventResolution | undefined,
+): void {
+  const choir = rt.input.equipmentEffects?.chromaticChoir;
+  if (!choir || !chromaticChoirActive(choir)) return;
+  if (damage.max <= 0) return;
+  if (
+    !isAmmunitionHitEligible({
+      style: "ranged",
+      provenance: event.provenance,
+      attackOrigin,
+    })
+  ) {
+    return;
+  }
+  const gems = chromaticChoirGems(choir);
+  if (gems.length === 0 || choir.procChance <= 0) return;
+
+  // 2pc: dragonstone only, damage-only EV (no state change).
+  if (gems.length === 1 && gems[0] === "dragonstone") {
+    scheduleChoirDragonstoneHit(rt, event, resolution, choir.procChance);
+    return;
+  }
+
+  // 3pc: bernoulli + equal gem pick; onyx/hydrix mutate state.
+  const fired = rt.stochastic.bernoulli(
+    chromaticChoirProcStream(event.sourceCast, event.hitIndex),
+    choir.procChance,
+  );
+  if (!fired) return;
+  const gemIndex = rt.stochastic.weightedIndex(
+    chromaticChoirGemStream(event.sourceCast, event.hitIndex),
+    gems.map(() => 1),
+  );
+  const gem: ChromaticChoirGem = gems[gemIndex] ?? gems[0]!;
+  if (gem === "dragonstone") {
+    scheduleChoirDragonstoneHit(rt, event, resolution, 1);
+    return;
+  }
+  if (gem === "onyx") {
+    applyChoirOnyx(rt, event, damage, resolution);
+    return;
+  }
+  applyChoirHydrix(rt, event);
 }
 
 function scheduleEmeraldPoisonHit(
@@ -564,26 +753,17 @@ export function onRangedHitLanded(
     const grant = dracolichAdrenalinePerRapidFireHit(rt.input.equipmentEffects);
     if (grant > 0) rt.state = gainAdrenaline(rt.state, grant);
   }
-  const fleeting = rt.input.equipmentIds?.some(
-    (id) => id === "item:fleeting-boots" || id === "item:enhanced-fleeting-boots",
-  );
+  const fleeting = hasFleetingBoots(rt.input);
   const snipeReduction =
     ability.id === "piercing_shot"
       ? fleeting
-        ? 6
-        : 4
+        ? SNIPE_CDR_FLEETING_TICKS
+        : SNIPE_CDR_PIERCING_BASE_TICKS
       : ability.id === "ranged_attack" && fleeting
-        ? 6
+        ? SNIPE_CDR_FLEETING_TICKS
         : 0;
-  const snipeReady = rt.state.cooldowns.snipe;
-  if (snipeReduction > 0 && snipeReady !== undefined && snipeReady > event.tick) {
-    rt.state = {
-      ...rt.state,
-      cooldowns: {
-        ...rt.state.cooldowns,
-        snipe: Math.max(event.tick, snipeReady - snipeReduction),
-      },
-    };
+  if (snipeReduction > 0) {
+    rt.state = reduceCooldown(rt.state, "snipe", snipeReduction, event.tick);
   }
   const perHit = shadowImbuedAdrenalinePerHit(rt.state.ranged.shadowImbued, event.tick);
   if (perHit > 0) rt.state = gainAdrenaline(rt.state, perHit);
@@ -595,4 +775,6 @@ export function onRangedHitLanded(
   }
 
   applyRangedAmmunitionLandedState(rt, event, damage, "player", ability, resolution);
+  // Free procs independent of equipped ammo mechanicId.
+  applyChromaticChoirFreeProc(rt, event, damage, "player", resolution);
 }

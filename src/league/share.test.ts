@@ -37,6 +37,7 @@ describe("encodeBuild / decodeBuild", () => {
     expect(decodeBuild(dirty)).toEqual({
       elective: ["desert"],
       relics: {},
+      rejuvenatedPick: null,
       blessingPicks: ["Order"],
       blessingSelections: [{ progressionSlot: 1, tier: 1, blessingId: "teragards-aegis" }],
       blessingResetsUsed: 3,

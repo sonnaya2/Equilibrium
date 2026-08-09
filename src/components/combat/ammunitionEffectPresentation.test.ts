@@ -97,6 +97,24 @@ describe("ranged ammunition effect presentation", () => {
     expect(bakriminel?.icon).not.toBe(standard?.icon);
   });
 
+  it("presents Emerald bakriminel bolts as modeled Magical Poison", () => {
+    expect(
+      rangedAmmunitionEffectPresentationFromProfile(
+        resolvedBoltProfile("item:emerald-bakriminel-bolts-e"),
+      ),
+    ).toMatchObject({
+      effectId: "ammunition:emerald",
+      itemId: "item:emerald-bakriminel-bolts-e",
+      itemLabel: "Emerald bakriminel bolts (e)",
+      label: "Emerald bolts · Magical Poison",
+      icon: "/game/combat/equipment/emerald-bakriminel-bolts-e.webp",
+      support: "modeled",
+      statusLabel: "Loaded · Active",
+      fullStatusClass: "modeled",
+      rowClass: "",
+    });
+  });
+
   it("keeps partial and unsupported support visible", () => {
     const partial = rangedAmmunitionEffectPresentationFromProfile(
       resolvedBoltProfile("item:diamond-bolts-e"),

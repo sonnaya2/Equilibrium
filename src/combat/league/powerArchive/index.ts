@@ -5,7 +5,6 @@ export {
   gizmoAcceptsPerk,
   isPowerArchivePerkId,
   powerArchivePerk,
-  powerArchiveWikiUrl,
   storedMaxForShell,
 } from "./catalogue";
 export {

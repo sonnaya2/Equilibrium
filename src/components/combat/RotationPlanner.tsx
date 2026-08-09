@@ -40,7 +40,7 @@ import {
   shouldShowRunScoreChrome,
 } from "./revoStochasticLabels";
 import type { Loadout, SetLoadout } from "./useLoadout";
-import { unlockedRegions } from "@/league";
+import { activeLeagueRelicNames,  unlockedRegions  } from "@/league";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
 import { uiRunFingerprint } from "./uiSimFingerprint";
 import { getUiRunCache, setUiRunCache } from "./uiRunCache";
@@ -175,7 +175,7 @@ export function RotationPlanner({
       useBuild
         ? {
             blessingPicks: build.blessingPicks,
-            relics: Object.values(build.relics).filter(Boolean),
+            relics: activeLeagueRelicNames(build),
             unlockedRegions: unlockedRegions(build),
           }
         : { ruleset: "base" as const },
@@ -420,7 +420,7 @@ export function RotationPlanner({
                   ["Level", setupStats.level],
                   ["Base", setupStats.base],
                   ["DP", `${Math.round(setupStats.dp * 1000) / 10}%`],
-                  ["Start adren", `${setupStats.startingAdrenaline}%`],
+                  ["Start adren", `Open at max (${setupStats.maxAdrenaline}%)`],
                 ] as const
               ).map(([label, value]) => (
                 <div key={label}>
@@ -429,23 +429,6 @@ export function RotationPlanner({
                 </div>
               ))}
             </dl>
-            {setupStats.startingAdrenaline < 100 ? (
-              <p className="rotation-settings__hint">
-                Start adren {setupStats.startingAdrenaline}%. Ultimates need 100%.{" "}
-                <button
-                  type="button"
-                  className="text-gem-300 underline decoration-gem-400/50 underline-offset-2 hover:text-gem-200"
-                  onClick={() =>
-                    setLoadout({
-                      ...loadout,
-                      startingAdrenaline: Math.min(setupStats.maxAdrenaline, 100),
-                    })
-                  }
-                >
-                  Set 100%
-                </button>
-              </p>
-            ) : null}
           </>
         ) : (
           <div className="rotation-settings__manual">

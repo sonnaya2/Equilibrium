@@ -4,6 +4,10 @@
  * is active and the perk is stored in the Automaton bot.
  *
  * Failures mean unwired or broken - not "no visual change in the UI."
+ *
+ * Suites:
+ * - rank wire: catalogue coverage of effective rank / scalar signals (Archive ON vs OFF)
+ * - damage EV: hit expected-value rises for damage-routing perks (sim)
  */
 import { describe, expect, it } from "vitest";
 import { resolveAbilityCatalogue } from "@/combat/abilities/catalogue";
@@ -128,53 +132,19 @@ describe("Power Archive rank wire (blessing on vs off)", () => {
       const on = resolveLoadoutCombat(loadout, { blessingPicks: BALANCE_GOD2 });
       expect(on.stats.league.blessingIds.has("power-archive")).toBe(true);
 
-      const read = (model: typeof on.model, stats: typeof on.stats): number => {
-        switch (perk.id) {
-          case "aftershock":
-            return stats.procs?.aftershockRank ?? 0;
-          case "crackling":
-            return stats.procs?.cracklingRank ?? 0;
-          case "precise":
-            return stats.preciseRank ?? 0;
-          case "caroming":
-            return stats.caromingRank ?? model.caromingRank;
-          case "impatient":
-            return stats.adrenaline?.impatientRank ?? 0;
-          case "relentless":
-            return stats.adrenaline?.relentlessRank ?? 0;
-          case "invigorating":
-            // multiplier encodes rank: 1 + 0.05*rank
-            return stats.adrenaline?.basicGainMultiplier
-              ? Math.round((stats.adrenaline.basicGainMultiplier - 1) / 0.05)
-              : 0;
-          case "biting":
-            // biting only via crit chance; rank 8 = +16% if no other crit
-            return stats.critsDisabled ? 0 : Math.round(stats.critChanceBreakdown.biting / 0.02);
-          case "equilibrium":
-            return stats.critsDisabled ? stored * 2 : 0;
-          case "ultimatums":
-            return model.modifierSources.ultimatums;
-          case "lunging":
-            return model.modifierSources.lunging;
-          case "flanking":
-            return model.modifierSources.flanking ?? 0;
-          case "shield-bashing":
-            return model.modifierSources.shieldBashing ?? 0;
-          case "spendthrift":
-            return model.modifierSources.spendthrift ?? 0;
-          case "ruthless":
-            return model.modifierSources.ruthless ?? 0;
-          case "eruptive":
-          case "energising":
-            return -1; // side-effect checks
-          default:
-            return 0;
-        }
-      };
-
+      // Scalar / side-effect perks: pin public stats, not inverse-decoded ranks.
       if (perk.id === "biting") {
+        // +2% crit per rank; ancient max stored 4 → Archive effective R8 → +16%.
+        expect(stored).toBe(4);
         expect(off.stats.critChanceBreakdown.biting).toBe(0);
-        expect(on.stats.critChanceBreakdown.biting).toBeCloseTo(0.02 * stored * 2, 8);
+        expect(on.stats.critChanceBreakdown.biting).toBeCloseTo(0.16, 8);
+        return;
+      }
+      if (perk.id === "invigorating") {
+        // +5% basic-attack adren per rank; ancient max stored 4 → effective R8 → x1.4.
+        expect(stored).toBe(4);
+        expect(off.stats.adrenaline?.basicGainMultiplier ?? 1).toBe(1);
+        expect(on.stats.adrenaline?.basicGainMultiplier ?? 1).toBeCloseTo(1.4, 8);
         return;
       }
       if (perk.id === "equilibrium") {
@@ -204,14 +174,37 @@ describe("Power Archive rank wire (blessing on vs off)", () => {
         expect(off.stats.accuracyRating).toBe(bare.stats.accuracyRating);
         return;
       }
-      if (perk.id === "invigorating") {
-        expect(off.stats.adrenaline?.basicGainMultiplier ?? 1).toBe(1);
-        expect(on.stats.adrenaline?.basicGainMultiplier ?? 1).toBeCloseTo(
-          1 + 0.05 * stored * 2,
-          8,
-        );
-        return;
-      }
+
+      const read = (model: typeof on.model, stats: typeof on.stats): number => {
+        switch (perk.id) {
+          case "aftershock":
+            return stats.procs?.aftershockRank ?? 0;
+          case "crackling":
+            return stats.procs?.cracklingRank ?? 0;
+          case "precise":
+            return stats.preciseRank ?? 0;
+          case "caroming":
+            return stats.caromingRank ?? model.caromingRank;
+          case "impatient":
+            return stats.adrenaline?.impatientRank ?? 0;
+          case "relentless":
+            return stats.adrenaline?.relentlessRank ?? 0;
+          case "ultimatums":
+            return model.modifierSources.ultimatums;
+          case "lunging":
+            return model.modifierSources.lunging;
+          case "flanking":
+            return model.modifierSources.flanking ?? 0;
+          case "shield-bashing":
+            return model.modifierSources.shieldBashing ?? 0;
+          case "spendthrift":
+            return model.modifierSources.spendthrift ?? 0;
+          case "ruthless":
+            return model.modifierSources.ruthless ?? 0;
+          default:
+            return 0;
+        }
+      };
 
       expect(read(off.model, off.stats), "rank with Archive OFF").toBe(0);
       expect(read(on.model, on.stats), "rank with Archive ON").toBe(stored * 2);
@@ -226,28 +219,18 @@ describe("Power Archive rank wire (blessing on vs off)", () => {
 });
 
 describe("Power Archive damage EV wire (sim)", () => {
+  // Damage-routing perks only. Rank / accuracy / adren scalars live in rank-wire above.
+  // Caroming hit multiplicity magnitude: league caroming / GRico suites elsewhere.
   const cases: Array<{
     perk: PowerArchivePerkId;
     ability: string;
     style: Loadout["style"];
     buffs?: Partial<Loadout["buffs"]>;
-    /** If true, only require Archive ON rank signal, not EV (stochastic/state). */
-    rankOnly?: boolean;
-    /** Ability missing from engine - rank wire only until ability ships. */
-    abilityMissing?: boolean;
   }> = [
-    { perk: "eruptive", ability: "attack", style: "melee" },
-    { perk: "equilibrium", ability: "attack", style: "melee" },
     { perk: "precise", ability: "attack", style: "melee" },
     { perk: "ultimatums", ability: "overpower", style: "melee" },
     { perk: "lunging", ability: "dismember", style: "melee" },
     { perk: "caroming", ability: "greater_ricochet", style: "ranged" },
-    {
-      perk: "shield-bashing",
-      ability: "debilitate",
-      style: "melee",
-      abilityMissing: true,
-    },
     {
       perk: "flanking",
       ability: "backhand",
@@ -261,69 +244,17 @@ describe("Power Archive damage EV wire (sim)", () => {
       buffs: { ruthlessStacks: 5 },
     },
     { perk: "spendthrift", ability: "attack", style: "melee" },
-    { perk: "aftershock", ability: "attack", style: "melee", rankOnly: true },
-    { perk: "crackling", ability: "attack", style: "melee", rankOnly: true },
-    { perk: "biting", ability: "attack", style: "melee", rankOnly: true },
-    { perk: "impatient", ability: "attack", style: "melee", rankOnly: true },
-    { perk: "invigorating", ability: "attack", style: "melee", rankOnly: true },
-    { perk: "relentless", ability: "overpower", style: "melee", rankOnly: true },
-    { perk: "energising", ability: "attack", style: "melee", rankOnly: true },
   ];
 
   for (const c of cases) {
-    it(`${c.perk} on ${c.ability}: Archive ON moves combat vs OFF`, () => {
+    it(`${c.perk} on ${c.ability}: Archive ON raises hit EV vs bare blessing frame`, () => {
       const stored = maxStored(c.perk);
       const loadout = botLoadout(c.perk, stored, {
         style: c.style,
         buffs: { ...DEFAULT_LOADOUT.buffs, ...(c.buffs ?? {}) },
       });
-      const off = resolveLoadoutCombat(loadout, {});
       const on = resolveLoadoutCombat(loadout, { blessingPicks: BALANCE_GOD2 });
       expect(on.stats.league.blessingIds.has("power-archive")).toBe(true);
-
-      if (c.abilityMissing) {
-        // Debilitate is not in the ability catalogue yet - rank must still wire.
-        expect(on.model.modifierSources.shieldBashing).toBe(stored * 2);
-        expect(off.model.modifierSources.shieldBashing ?? 0).toBe(0);
-        return;
-      }
-
-      if (c.rankOnly) {
-        if (c.perk === "aftershock") {
-          expect(on.stats.procs?.aftershockRank).toBe(stored * 2);
-          expect(off.stats.procs?.aftershockRank ?? 0).toBe(0);
-        } else if (c.perk === "crackling") {
-          expect(on.stats.procs?.cracklingRank).toBe(stored * 2);
-          expect(off.stats.procs?.cracklingRank ?? 0).toBe(0);
-        } else if (c.perk === "impatient") {
-          expect(on.stats.adrenaline?.impatientRank).toBe(stored * 2);
-        } else if (c.perk === "relentless") {
-          expect(on.stats.adrenaline?.relentlessRank).toBe(stored * 2);
-        } else if (c.perk === "invigorating") {
-          expect(on.stats.adrenaline?.basicGainMultiplier ?? 1).toBeGreaterThan(1);
-        } else if (c.perk === "energising") {
-          const bare = resolveLoadoutCombat(DEFAULT_LOADOUT, { blessingPicks: BALANCE_GOD2 });
-          expect(on.stats.accuracyRating).toBeGreaterThan(bare.stats.accuracyRating);
-        } else if (c.perk === "biting") {
-          const bare = resolveLoadoutCombat(DEFAULT_LOADOUT, { blessingPicks: BALANCE_GOD2 });
-          expect(on.stats.critChanceBreakdown.biting).toBeGreaterThan(
-            bare.stats.critChanceBreakdown.biting,
-          );
-          expect(on.model.crit.chance).toBeGreaterThan(bare.model.crit.chance);
-        }
-        return;
-      }
-
-      if (c.perk === "equilibrium") {
-        expect(on.stats.base).toBeGreaterThan(off.stats.base);
-        expect(on.stats.critsDisabled).toBe(true);
-        return;
-      }
-      if (c.perk === "eruptive") {
-        const bare = resolveLoadoutCombat(DEFAULT_LOADOUT, { blessingPicks: BALANCE_GOD2 });
-        expect(on.stats.base).toBeGreaterThan(bare.stats.base);
-        return;
-      }
 
       // Same blessing frame: bare vs Archive perk (not blessing OFF vs ON).
       const bare = resolveLoadoutCombat(

@@ -140,5 +140,7 @@ describe("passives registry", () => {
     expect(definitionById("deathtouch-reflect")?.support).toBe("not-modeled");
     expect(definitionById("abyssal-parasite")?.support).toBe("partially-modeled");
     expect(definitionById("ring-of-vigour")?.support).toBe("modeled");
+    expect(definitionById("winds-end")?.support).toBe("modeled");
+    expect(definitionById("winds-end")?.label).toBe("Winds End");
   });
 });

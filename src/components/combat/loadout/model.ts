@@ -20,12 +20,15 @@ import {
 } from "@/combat/league/relicGrantedItems";
 import {
   isRelicActive,
+  MONOLITH_ENERGY_ANTIQUARIAN,
   MONOLITH_ENERGY_DEFAULT,
   MONOLITH_ENERGY_EXTENDED,
+  hasAntiquarianLeagueRelic,
   relicById,
   sanitizeSelectedRelics,
   tryToggleArchaeologyRelic,
   type ArchaeologyToggleResult,
+  type MonolithEnergyCap,
 } from "@/combat/shared/archaeologyRelics";
 import { HEIGHTENED_SENSES_ADRENALINE_BONUS } from "@/combat/shared/heightenedSenses";
 import {
@@ -272,6 +275,11 @@ export type StyleCurseChoice =
 export interface LoadoutBuffs {
   /** Revo++ fires a supported special from the resolved native weapon. */
   useEquippedWeaponSpecial: boolean;
+  /**
+   * When set, auto weapon / EoF special only fires after this bar ability
+   * has been cast on the current revo pass (id match).
+   */
+  weaponSpecialAfterAbilityId: string | null;
   vulnerability: boolean;
   weaponPoison: WeaponPoisonChoice;
   kwuarmPotency: KwuarmPotency;
@@ -349,7 +357,7 @@ export interface LoadoutBuffs {
  */
 export interface LoadoutArchaeology {
   selectedIds: string[];
-  energyCap: 500 | 650;
+  energyCap: MonolithEnergyCap;
 }
 
 /** Legacy buff keys that once toggled full-modeled relics before selectedIds. */
@@ -374,8 +382,10 @@ export function buffsFromArchSelected(
   };
 }
 
-function normalizeArchaeologyEnergyCap(value: unknown): 500 | 650 {
-  return value === MONOLITH_ENERGY_EXTENDED ? MONOLITH_ENERGY_EXTENDED : MONOLITH_ENERGY_DEFAULT;
+function normalizeArchaeologyEnergyCap(value: unknown): MonolithEnergyCap {
+  if (value === MONOLITH_ENERGY_ANTIQUARIAN) return MONOLITH_ENERGY_ANTIQUARIAN;
+  if (value === MONOLITH_ENERGY_EXTENDED) return MONOLITH_ENERGY_EXTENDED;
+  return MONOLITH_ENERGY_DEFAULT;
 }
 
 function normalizeArchaeologySelectedIds(raw: unknown): string[] {
@@ -442,6 +452,11 @@ export interface Loadout {
   /** Unboosted Constitution; current normal range is 10-99. */
   constitutionLevel: number;
   /**
+   * Unboosted Agility for attuned crystal weaponry proc chance (1-99; boosts cap at 12%).
+   * Default 99.
+   */
+  agilityLevel: number;
+  /**
    * Absolute life points before Powerburst doubling.
    * null = derive from currentHealthPercent of temporary max.
    */
@@ -501,6 +516,7 @@ export const DEFAULT_LOADOUT: Loadout = {
   strengthLevel: 120,
   defenceLevel: 99,
   constitutionLevel: 99,
+  agilityLevel: 99,
   currentLife: null,
   currentHealthPercent: 50,
   weaponTier: 90,
@@ -549,6 +565,7 @@ export const DEFAULT_LOADOUT: Loadout = {
   powerArchive: emptyPowerArchiveState(),
   buffs: {
     useEquippedWeaponSpecial: false,
+    weaponSpecialAfterAbilityId: null,
     vulnerability: false,
     weaponPoison: "none",
     kwuarmPotency: 0,
@@ -1074,13 +1091,16 @@ export function withLoadoutBuffs(
 export function withArchaeologySelection(
   loadout: Loadout,
   selectedIds: readonly string[],
-  energyCap: 500 | 650,
+  energyCap: MonolithEnergyCap,
   unlockedRegions?: readonly RegionId[],
+  leagueRelics?: readonly string[] | ReadonlySet<string>,
 ): Loadout {
+  const ignoreRegionGates = hasAntiquarianLeagueRelic(leagueRelics);
   const cleaned = sanitizeSelectedRelics({
     selectedIds,
     energyCap,
     unlockedRegions,
+    ignoreRegionGates,
   });
   return {
     ...loadout,
@@ -1100,21 +1120,25 @@ export function withArchaeologySelection(
 export function applyArchaeologyToggle(
   loadout: Loadout,
   relicId: string,
-  energyCap?: 500 | 650,
+  energyCap?: MonolithEnergyCap,
   unlockedRegions?: readonly RegionId[],
+  leagueRelics?: readonly string[] | ReadonlySet<string>,
 ): { loadout: Loadout; result: ArchaeologyToggleResult } {
   const cap = energyCap ?? loadout.archaeology?.energyCap ?? MONOLITH_ENERGY_DEFAULT;
+  const ignoreRegionGates = hasAntiquarianLeagueRelic(leagueRelics);
   // Effective selection only - raw may still hold region-locked / over-budget ids.
   const baseSelected = sanitizeSelectedRelics({
     selectedIds: loadout.archaeology?.selectedIds ?? [],
     energyCap: cap,
     unlockedRegions,
+    ignoreRegionGates,
   });
   const result = tryToggleArchaeologyRelic({
     relicId,
     selectedIds: baseSelected,
     energyCap: cap,
     unlockedRegions,
+    ignoreRegionGates,
   });
   if (!result.ok) {
     return { loadout, result };
@@ -1123,6 +1147,7 @@ export function applyArchaeologyToggle(
     selectedIds: result.selectedIds,
     energyCap: cap,
     unlockedRegions,
+    ignoreRegionGates,
   });
   return {
     loadout: {
@@ -1298,6 +1323,7 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       MAX_CONSTITUTION_LEVEL,
       DEFAULT_LOADOUT.constitutionLevel,
     ),
+    agilityLevel: clamp(raw.agilityLevel, 1, 99, DEFAULT_LOADOUT.agilityLevel),
     currentLife: Number.isFinite(raw.currentLife) ? Math.max(0, Number(raw.currentLife)) : null,
     currentHealthPercent: clamp(
       raw.currentHealthPercent,
@@ -1434,6 +1460,11 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
     ),
     buffs: {
       useEquippedWeaponSpecial: rawBuffs.useEquippedWeaponSpecial === true,
+      weaponSpecialAfterAbilityId:
+        typeof rawBuffs.weaponSpecialAfterAbilityId === "string" &&
+        rawBuffs.weaponSpecialAfterAbilityId.trim().length > 0
+          ? rawBuffs.weaponSpecialAfterAbilityId.trim()
+          : null,
       vulnerability: rawBuffs.vulnerability === true,
       weaponPoison: normalizeWeaponPoisonChoice(rawBuffs.weaponPoison),
       kwuarmPotency: normalizeKwuarmPotency(rawBuffs.kwuarmPotency),

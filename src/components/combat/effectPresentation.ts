@@ -12,6 +12,7 @@ const PROCEDURAL_EFFECT_LABEL: Readonly<Record<string, string>> = {
   "song:conflagrate": "Conflagrate",
   "surging-storm": "Surging Storm",
   soulfire: "Soulfire",
+  "attuned-crystal-weaponry": "Attuned crystal weaponry",
 };
 
 const EFFECT_ICON_PATH: Readonly<Record<string, string>> = {
@@ -39,8 +40,13 @@ const EFFECT_ICON_PATH: Readonly<Record<string, string>> = {
   "ammunition:dragonbane": "/game/combat/equipment/dragonbane-arrows.webp",
   "ammunition:opal": "/game/combat/equipment/opal-bakriminel-bolts-e.webp",
   "ammunition:pearl": "/game/combat/equipment/pearl-bakriminel-bolts-e.webp",
+  "ammunition:emerald": "/game/combat/equipment/emerald-bakriminel-bolts-e.webp",
+  "ammunition:ruby": "/game/combat/equipment/ruby-bakriminel-bolts-e.webp",
+  "ammunition:dragonstone": "/game/combat/equipment/dragonstone-bakriminel-bolts-e.webp",
+  "ammunition:onyx": "/game/combat/equipment/onyx-bakriminel-bolts-e.webp",
   "ammunition:hydrix": "/game/combat/equipment/hydrix-bakriminel-bolts-e.webp",
   "ammunition:ascendri": "/game/combat/equipment/ascendri-bolts-e.webp",
+  "attuned-crystal-weaponry": "/game/combat/equipment/attuned-crystal-staff.webp",
 };
 
 const BLESSING_EFFECT_SOURCE: Readonly<Record<string, string>> = {

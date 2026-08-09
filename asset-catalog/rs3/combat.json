@@ -6443,6 +6443,123 @@
     "canonicalPage": "https://runescape.wiki/w/Ultimatums"
   },
   {
+    "id": "perk-absorbative",
+    "label": "Absorbative perk",
+    "category": "rs3/combat/perks",
+    "path": "public/game/combat/perks/absorbative",
+    "fileTitle": "Absorbative.png",
+    "search": "Absorbative perk icon",
+    "canonicalPage": "https://runescape.wiki/w/Absorbative"
+  },
+  {
+    "id": "perk-brief-respite",
+    "label": "Brief Respite perk",
+    "category": "rs3/combat/perks",
+    "path": "public/game/combat/perks/brief-respite",
+    "fileTitle": "Brief Respite.png",
+    "search": "Brief Respite perk icon",
+    "canonicalPage": "https://runescape.wiki/w/Brief_Respite"
+  },
+  {
+    "id": "perk-bulwark",
+    "label": "Bulwark perk",
+    "category": "rs3/combat/perks",
+    "path": "public/game/combat/perks/bulwark",
+    "fileTitle": "Bulwark.png",
+    "search": "Bulwark perk icon",
+    "canonicalPage": "https://runescape.wiki/w/Bulwark"
+  },
+  {
+    "id": "perk-clear-headed",
+    "label": "Clear Headed perk",
+    "category": "rs3/combat/perks",
+    "path": "public/game/combat/perks/clear-headed",
+    "fileTitle": "Clear Headed.png",
+    "search": "Clear Headed perk icon",
+    "canonicalPage": "https://runescape.wiki/w/Clear_Headed"
+  },
+  {
+    "id": "perk-crystal-shield",
+    "label": "Crystal Shield perk",
+    "category": "rs3/combat/perks",
+    "path": "public/game/combat/perks/crystal-shield",
+    "fileTitle": "Crystal Shield (perk).png",
+    "search": "Crystal Shield perk icon",
+    "canonicalPage": "https://runescape.wiki/w/Crystal_Shield_(perk)"
+  },
+  {
+    "id": "perk-devoted",
+    "label": "Devoted perk",
+    "category": "rs3/combat/perks",
+    "path": "public/game/combat/perks/devoted",
+    "fileTitle": "Devoted.png",
+    "search": "Devoted perk icon",
+    "canonicalPage": "https://runescape.wiki/w/Devoted"
+  },
+  {
+    "id": "perk-flanking",
+    "label": "Flanking perk",
+    "category": "rs3/combat/perks",
+    "path": "public/game/combat/perks/flanking",
+    "fileTitle": "Flanking.png",
+    "search": "Flanking perk icon",
+    "canonicalPage": "https://runescape.wiki/w/Flanking"
+  },
+  {
+    "id": "perk-preparation",
+    "label": "Preparation perk",
+    "category": "rs3/combat/perks",
+    "path": "public/game/combat/perks/preparation",
+    "fileTitle": "Preparation (perk).png",
+    "search": "Preparation perk icon",
+    "canonicalPage": "https://runescape.wiki/w/Preparation_(perk)"
+  },
+  {
+    "id": "perk-ruthless",
+    "label": "Ruthless perk",
+    "category": "rs3/combat/perks",
+    "path": "public/game/combat/perks/ruthless",
+    "fileTitle": "Ruthless.png",
+    "search": "Ruthless perk icon",
+    "canonicalPage": "https://runescape.wiki/w/Ruthless"
+  },
+  {
+    "id": "perk-scavenging",
+    "label": "Scavenging perk",
+    "category": "rs3/combat/perks",
+    "path": "public/game/combat/perks/scavenging",
+    "fileTitle": "Scavenging.png",
+    "search": "Scavenging perk icon",
+    "canonicalPage": "https://runescape.wiki/w/Scavenging"
+  },
+  {
+    "id": "perk-shield-bashing",
+    "label": "Shield Bashing perk",
+    "category": "rs3/combat/perks",
+    "path": "public/game/combat/perks/shield-bashing",
+    "fileTitle": "Shield Bashing.png",
+    "search": "Shield Bashing perk icon",
+    "canonicalPage": "https://runescape.wiki/w/Shield_Bashing"
+  },
+  {
+    "id": "perk-spendthrift",
+    "label": "Spendthrift perk",
+    "category": "rs3/combat/perks",
+    "path": "public/game/combat/perks/spendthrift",
+    "fileTitle": "Spendthrift.png",
+    "search": "Spendthrift perk icon",
+    "canonicalPage": "https://runescape.wiki/w/Spendthrift"
+  },
+  {
+    "id": "perk-trophy-takers",
+    "label": "Trophy-taker's perk",
+    "category": "rs3/combat/perks",
+    "path": "public/game/combat/perks/trophy-takers",
+    "fileTitle": "Trophy-taker's.png",
+    "search": "Trophy-taker's perk icon",
+    "canonicalPage": "https://runescape.wiki/w/Trophy-taker%27s"
+  },
+  {
     "id": "place-dive-ability",
     "label": "Dive",
     "category": "rs3/combat/abilities/movement",

@@ -23,7 +23,7 @@ import { NumberField } from "./NumberField";
 import { ANALYSIS_ABILITY_ENTRIES, ANALYSIS_ABILITY_ENTRY_BY_ID } from "./analysisAbilityCatalogue";
 import { resolveLoadoutCombat } from "./toResolvedCombatModel";
 import type { Loadout } from "./useLoadout";
-import { unlockedRegions } from "@/league";
+import { activeLeagueRelicNames,  unlockedRegions  } from "@/league";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
 
 function formatNumber(value: number): string {
@@ -88,7 +88,7 @@ export function AnalysisTab({ loadout }: { loadout: Loadout }) {
   const leagueOptions = useMemo(
     () => ({
       blessingPicks: build.blessingPicks,
-      relics: Object.values(build.relics).filter(Boolean),
+      relics: activeLeagueRelicNames(build),
       unlockedRegions: unlockedRegions(build),
     }),
     [build],
@@ -103,7 +103,7 @@ export function AnalysisTab({ loadout }: { loadout: Loadout }) {
     statLineFromModel(
       resolveLoadoutCombat(loadout, {
         blessingPicks: build.blessingPicks,
-        relics: Object.values(build.relics).filter(Boolean),
+        relics: activeLeagueRelicNames(build),
         unlockedRegions: unlockedRegions(build),
       }).model,
     ),

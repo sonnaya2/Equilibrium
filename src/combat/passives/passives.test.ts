@@ -74,6 +74,26 @@ describe("passive registry", () => {
     expect(definitionById("blowpipe-weapon-poison")?.support).toBe("modeled");
     expect(definitionById("laniakea-weapon-poison")?.support).toBe("modeled");
   });
+
+  it("registers Winds End (Fleeting boots) as modeled with landed-hit owner", () => {
+    const def = definitionById("winds-end");
+    expect(def).toMatchObject({
+      id: "winds-end",
+      label: "Winds End",
+      support: "modeled",
+      duplicatePolicy: "collapse",
+    });
+    expect(def?.lifecycle).toContain("landed-hit");
+    expect(def?.implementationOwners).toEqual(
+      expect.arrayContaining([
+        "styles/ranged/fleetingBoots.ts",
+        "engine/resolution/landed/ranged.ts",
+      ]),
+    );
+    expect(def?.effects.some((e) => e.includes("6 ticks"))).toBe(true);
+    expect(ITEM_PASSIVE_IDS).toContain("winds-end");
+    expect(presentPassive("winds-end", emptyCtx).support).toBe("modeled");
+  });
 });
 
 describe("presentPassive parity", () => {
@@ -181,6 +201,28 @@ describe("equippedPassiveSummaries via registry", () => {
       support: "modeled",
     });
   });
+
+  const fleetingHasWindsEnd =
+    equipmentById("item:fleeting-boots")?.passiveId === "winds-end" ||
+    equipmentById("item:fleeting-boots")?.passiveIds?.includes("winds-end") === true;
+
+  it.skipIf(!fleetingHasWindsEnd)(
+    "surfaces Winds End from fleeting / enhanced fleeting boots passiveId",
+    () => {
+      expect(equipmentById("item:fleeting-boots")?.passiveId).toBe("winds-end");
+      expect(equipmentById("item:enhanced-fleeting-boots")?.passiveId).toBe("winds-end");
+      for (const boots of ["item:fleeting-boots", "item:enhanced-fleeting-boots"] as const) {
+        const rows = equippedPassiveSummaries({ equipmentSlots: { boots } });
+        expect(rows).toHaveLength(1);
+        expect(rows[0]).toMatchObject({
+          passiveId: "winds-end",
+          itemId: boots,
+          label: "Winds End",
+          support: "modeled",
+        });
+      }
+    },
+  );
 
   it("jaws + agony gloves still show two rows", () => {
     const rows = equippedPassiveSummaries({

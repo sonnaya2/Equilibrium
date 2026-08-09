@@ -365,14 +365,17 @@ test("prayer state, native weapon special, and resolved engine values remain wir
   await closeLoadoutEditor(page);
 
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
-  const special = page.getByRole("checkbox", { name: /Use equipped weapon special manually/ });
-  await special.check();
-  await expect(special).toBeChecked();
+  const special = page.getByRole("button", { name: /^Weapon special (on|off)$/ });
+  await expect(special).toHaveAttribute("aria-pressed", "false");
+  await special.click();
+  await expect(special).toHaveAttribute("aria-pressed", "true");
+  await expect(special).toHaveAttribute("aria-label", "Weapon special on");
   await page.reload();
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
-  await expect(
-    page.getByRole("checkbox", { name: /Use equipped weapon special manually/ }),
-  ).toBeChecked();
+  await expect(page.getByRole("button", { name: /^Weapon special (on|off)$/ })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
   expect(failures).toEqual([]);
 });
 

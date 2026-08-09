@@ -116,6 +116,11 @@ export interface SimulateInput {
   /** Equipped catalogue ids used by mechanics with verified item requirements. */
   equipmentIds?: readonly string[];
   /**
+   * Optional slot map for item detection when equipmentIds / passiveIds are incomplete
+   * (e.g. boots-only Fleeting fixtures). Not used for full loadout derivation.
+   */
+  equipmentSlots?: Partial<Record<string, string | null>>;
+  /**
    * EoF stored special ability id. Required with Essence of Finality for
    * requiresSpecialAccess weapon specials; EoF alone does not unlock them.
    */
@@ -141,6 +146,8 @@ export interface SimulateInput {
   /** Revo++ policy; native specials remain manual and are disabled by default. */
   nativeSpecialPolicy?: {
     useEquippedWeaponSpecial: boolean;
+    /** Only auto-fire special after this bar ability id has been cast. */
+    afterAbilityId?: string | null;
   };
   league?: ResolvedLeagueRules;
   procs?: ProcRules;

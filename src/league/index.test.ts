@@ -3,6 +3,7 @@ import regionsData from "#shard/league/regions.json";
 import relicsData from "#shard/league/relics.json";
 import { BLESSING_RESET_COUNT, PATH_TIERS } from "./blessings";
 import {
+  activeLeagueRelicNames,
   blessingResetsLeft,
   canSelectElective,
   ELECTIVE_CAP,
@@ -19,6 +20,7 @@ import {
   STARTING_REGIONS,
   toggleElective,
   toggleRelic,
+  toggleRejuvenatedPick,
   UNLOCK_CAP,
   unlockedRegions,
 } from "./index";
@@ -92,6 +94,7 @@ describe("normalizeBuild", () => {
     expect(normalizeBuild({ elective: ["desert", "tirannwn"] })).toEqual({
       elective: ["desert", "tirannwn"],
       relics: {},
+      rejuvenatedPick: null,
       blessingPicks: [],
       blessingSelections: [],
       blessingResetsUsed: 0,
@@ -106,6 +109,7 @@ describe("normalizeBuild", () => {
       {
         elective: ["desert"],
         relics: {},
+        rejuvenatedPick: null,
         blessingPicks: [],
         blessingSelections: [],
         blessingResetsUsed: 0,
@@ -116,6 +120,7 @@ describe("normalizeBuild", () => {
     ).toEqual({
       elective: ["asgarnia", "kandarin", "desert"],
       relics: {},
+      rejuvenatedPick: null,
       blessingPicks: [],
       blessingSelections: [],
       blessingResetsUsed: 0,
@@ -133,6 +138,7 @@ describe("normalizeBuild", () => {
     ).toEqual({
       elective: [],
       relics: { "1": "Survivalist" },
+      rejuvenatedPick: null,
       blessingPicks: ["Order", "Chaos"],
       blessingSelections: [
         { progressionSlot: 1, tier: 1, blessingId: "teragards-aegis" },
@@ -142,28 +148,24 @@ describe("normalizeBuild", () => {
     });
   });
 
-  it("drops relic names outside revealed choices; keeps unrevealed-tier picks", () => {
-    // Tiers come from the data, not pinned numbers: every reveal moves one tier
-    // from the second group to the first, and a hardcoded tier turns that red.
+  it("drops relic names outside revealed choices", () => {
     const revealed = relicsData.records.find((tier) => tier.choices.length > 0);
-    const unrevealed = relicsData.records.find((tier) => tier.choices.length === 0);
-    if (!revealed || !unrevealed) throw new Error("needs one revealed and one unrevealed tier");
+    if (!revealed) throw new Error("needs a revealed tier");
     const open = String(revealed.tier);
-    const closed = String(unrevealed.tier);
     const known = revealed.choices[0]!.name;
 
     expect(
       normalizeBuild({
         elective: [],
-        relics: { [open]: "Not A Real Relic", [closed]: "Placeholder for unrevealed tier" },
+        relics: { [open]: "Not A Real Relic", "99": "Still open" },
       }).relics,
-    ).toEqual({ [closed]: "Placeholder for unrevealed tier" });
+    ).toEqual({ "99": "Still open" });
     expect(
       normalizeBuild({
         elective: [],
-        relics: { [open]: known, [closed]: "Still open" },
+        relics: { [open]: known },
       }).relics,
-    ).toEqual({ [open]: known, [closed]: "Still open" });
+    ).toEqual({ [open]: known });
   });
 
   it("clamps resets to the data-owned count and caps picks at the path tier count", () => {
@@ -192,12 +194,12 @@ describe("toggleRelic", () => {
   it("picks and unpicks one relic per tier, independently across tiers", () => {
     let state = toggleRelic(emptyBuild(), 1, "Survivalist");
     expect(state.relics).toEqual({ "1": "Survivalist" });
-    state = toggleRelic(state, 2, "Unrevealed tier 2 relic");
-    expect(state.relics).toEqual({ "1": "Survivalist", "2": "Unrevealed tier 2 relic" });
+    state = toggleRelic(state, 2, "Animal Wrangler");
+    expect(state.relics).toEqual({ "1": "Survivalist", "2": "Animal Wrangler" });
     state = toggleRelic(state, 1, "Golden Touch");
     expect(state.relics["1"]).toBe("Golden Touch");
     state = toggleRelic(state, 1, "Golden Touch");
-    expect(state.relics).toEqual({ "2": "Unrevealed tier 2 relic" });
+    expect(state.relics).toEqual({ "2": "Animal Wrangler" });
   });
 
   it("Tier 7 is exclusive: Naragi replaces Icyenic and vice versa", () => {
@@ -209,6 +211,46 @@ describe("toggleRelic", () => {
     state = toggleRelic(state, 7, "Icyenic Faith");
     expect(state.relics["7"]).toBe("Icyenic Faith");
     expect(Object.values(state.relics)).not.toContain("Naragi Edict");
+  });
+
+  it("clears rejuvenatedPick when T6 leaves Rejuvenated", () => {
+    let state = toggleRelic(emptyBuild(), 1, "Survivalist");
+    state = toggleRelic(state, 6, "Rejuvenated");
+    state = toggleRejuvenatedPick(state, 4, "Antiquarian");
+    expect(state.rejuvenatedPick).toEqual({ tier: 4, name: "Antiquarian" });
+    state = toggleRelic(state, 6, "Perkfection");
+    expect(state.relics["6"]).toBe("Perkfection");
+    expect(state.rejuvenatedPick).toBeNull();
+  });
+});
+
+describe("Rejuvenated dual-pick", () => {
+  it("adds a bonus T1-T5 name to activeLeagueRelicNames", () => {
+    let state = toggleRelic(emptyBuild(), 1, "Survivalist");
+    state = toggleRelic(state, 6, "Rejuvenated");
+    state = toggleRejuvenatedPick(state, 4, "Antiquarian");
+    expect(activeLeagueRelicNames(state)).toEqual(["Survivalist", "Rejuvenated", "Antiquarian"]);
+  });
+
+  it("rejects bonus when not Rejuvenated, duplicate primary, or wrong tier", () => {
+    const base = toggleRelic(emptyBuild(), 1, "Survivalist");
+    expect(toggleRejuvenatedPick(base, 4, "Antiquarian")).toBe(base);
+    let state = toggleRelic(base, 6, "Rejuvenated");
+    expect(toggleRejuvenatedPick(state, 1, "Survivalist")).toBe(state);
+    expect(toggleRejuvenatedPick(state, 7, "Icyenic Faith")).toBe(state);
+  });
+
+  it("normalizeBuild keeps valid rejuvenatedPick and drops invalid", () => {
+    const ok = normalizeBuild({
+      relics: { "6": "Rejuvenated", "1": "Survivalist" },
+      rejuvenatedPick: { tier: 4, name: "Antiquarian" },
+    });
+    expect(ok.rejuvenatedPick).toEqual({ tier: 4, name: "Antiquarian" });
+    const bad = normalizeBuild({
+      relics: { "6": "Perkfection" },
+      rejuvenatedPick: { tier: 4, name: "Antiquarian" },
+    });
+    expect(bad.rejuvenatedPick).toBeNull();
   });
 });
 

@@ -11,10 +11,17 @@ import {
   type LoadoutEquipmentView,
   type SetEffectSupport,
 } from "@/combat/shared/equipment";
+import type { ChromaticChoirSetSummary } from "@/combat/styles/ranged/chromaticChoir";
 import type { DracolichSetSummary } from "@/combat/styles/ranged/dracolich";
 import { equipmentIconPath } from "@/lib/gameArt";
 import { GameIcon } from "@/components/GameIcon";
 import type { Loadout } from "./useLoadout";
+
+const CHOIR_GEM_LABEL: Record<ChromaticChoirSetSummary["gems"][number], string> = {
+  dragonstone: "Dragonstone",
+  onyx: "Onyx",
+  hydrix: "Hydrix",
+};
 
 const SET_SUPPORT_LABEL: Record<SetEffectSupport, string> = {
   modeled: "Active",
@@ -67,6 +74,16 @@ export function dracolichRuntimeLines(summary: DracolichSetSummary): readonly st
   ];
 }
 
+export function chromaticChoirRuntimeLines(summary: ChromaticChoirSetSummary): readonly string[] {
+  if (summary.mixed) return ["Mixed Sirenic / Elite - inactive"];
+  if (summary.physicalPieces <= 0 && summary.effectivePieces <= 0) return [];
+  if (!summary.crossbowEligible) return ["Needs crossbow"];
+  if (!summary.thresholds.two) return [];
+  const percent = Math.round(summary.procChance * 100);
+  const gems = summary.gems.map((gem) => CHOIR_GEM_LABEL[gem]).join(" / ");
+  return [`Choir ${percent}% · ${gems}`];
+}
+
 /** Equipped item ids per setId (deduped). Visage still one icon while counting 2 pieces. */
 function equippedSetPieceIds(loadout: LoadoutEquipmentView): Map<string, string[]> {
   const bySet = new Map<string, string[]>();
@@ -81,7 +98,6 @@ function equippedSetPieceIds(loadout: LoadoutEquipmentView): Map<string, string[
     else bySet.set(setId, [id]);
   };
   for (const id of Object.values(resolvedEquipmentSlots(loadout))) add(id);
-  for (const id of loadout.equipmentIds ?? []) add(id);
   return bySet;
 }
 
@@ -95,7 +111,6 @@ export function SetEffectsList({
 }) {
   const view: LoadoutEquipmentView = {
     equipmentSlots: loadout.equipmentSlots,
-    equipmentIds: loadout.equipmentIds,
     pieceContribution,
   };
   const sets = setEffectsSummary(view);
@@ -118,32 +133,39 @@ export function SetEffectsList({
             []),
         ];
         const isDracolich = s.setId === "dracolich" || s.setId === "elite-dracolich";
+        const isChoir = s.setId === "sirenic" || s.setId === "elite-sirenic";
         const dracolich = resolvedEffects.dracolich;
+        const choir = resolvedEffects.chromaticChoir;
         const resolvedDracolich =
           isDracolich && dracolich && (dracolich.mixed || dracolich.setId === s.setId)
             ? dracolich
             : undefined;
+        const resolvedChoir =
+          isChoir && choir && (choir.mixed || choir.setId === s.setId) ? choir : undefined;
         const activeThresholds = resolvedDracolich
           ? [
               resolvedDracolich.thresholds.three,
               resolvedDracolich.thresholds.four,
               resolvedDracolich.thresholds.five,
             ].filter(Boolean).length
-          : thresholds.filter((value) => value <= s.effectivePieces).length;
-        const thresholdCount = resolvedDracolich ? 3 : thresholds.length;
-        const state = resolvedDracolich?.mixed
-          ? "Unmodeled"
-          : s.support === "not-modeled"
+          : resolvedChoir
+            ? [resolvedChoir.thresholds.two, resolvedChoir.thresholds.three].filter(Boolean).length
+            : thresholds.filter((value) => value <= s.effectivePieces).length;
+        const thresholdCount = resolvedDracolich ? 3 : resolvedChoir ? 2 : thresholds.length;
+        const state =
+          resolvedDracolich?.mixed || resolvedChoir?.mixed
             ? "Unmodeled"
-            : s.support === "outgoing-only"
-              ? "Partial"
-              : activeThresholds > 0 && activeThresholds < thresholdCount
+            : s.support === "not-modeled"
+              ? "Unmodeled"
+              : s.support === "outgoing-only"
                 ? "Partial"
-                : activeThresholds > 0
-                  ? "Active"
-                  : thresholdCount > 0
-                    ? "Partial"
-                    : "Equipped";
+                : activeThresholds > 0 && activeThresholds < thresholdCount
+                  ? "Partial"
+                  : activeThresholds > 0
+                    ? "Active"
+                    : thresholdCount > 0
+                      ? "Partial"
+                      : "Equipped";
         const pieceIds = piecesBySet.get(s.setId) ?? [];
         return (
           <li key={s.setId} className="set-effect-card">
@@ -179,6 +201,16 @@ export function SetEffectsList({
                 ))}
               </ul>
             ) : null}
+            {isChoir && choir && (choir.mixed || choir.setId === s.setId) ? (
+              <ul className="set-threshold-list">
+                {chromaticChoirRuntimeLines(choir).map((line) => (
+                  <li key={line} className="is-met">
+                    <span className="set-threshold-badge">Resolved</span>
+                    <span>{line}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
             <ul className="set-threshold-list">
               {def?.effects.map((effect) => {
                 const met = s.effectivePieces >= effect.minPieces;
@@ -191,7 +223,7 @@ export function SetEffectsList({
                   </li>
                 );
               })}
-              {!isDracolich
+              {!isDracolich && !isChoir
                 ? def?.facts?.map((fact) => {
                     const required = setFactThreshold(fact);
                     const met = required == null || s.effectivePieces >= required;
@@ -205,7 +237,7 @@ export function SetEffectsList({
                     );
                   })
                 : null}
-              {!isDracolich && !def?.effects.length && !def?.facts?.length ? (
+              {!isDracolich && !isChoir && !def?.effects.length && !def?.facts?.length ? (
                 <li>
                   <span className="set-threshold-badge">Note</span>
                   <span>This set has no combat bonus yet.</span>

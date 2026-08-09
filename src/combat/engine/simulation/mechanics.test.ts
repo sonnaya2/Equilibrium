@@ -356,8 +356,14 @@ describe("item passive timelines", () => {
       chance: 0.05,
       damageBonus: 0,
     });
-    expect(applyEquipmentDamagePotential(1, itemEffects(["reaver-ring"]))).toBe(0.95);
-    expect(applyEquipmentDamagePotential(0.8, itemEffects(["reaver-ring"]))).toBe(0.75);
+    const reaver = itemEffects(["reaver-ring"]);
+    // Reckless Assault is multiplicative on hit chance (wiki: 50% -> 47.5%), not -5pp.
+    expect(applyEquipmentDamagePotential(1, reaver)).toBeCloseTo(0.95, 10);
+    expect(applyEquipmentDamagePotential(0.5, reaver)).toBeCloseTo(0.475, 10);
+    expect(applyEquipmentDamagePotential(0.8, reaver)).toBeCloseTo(0.76, 10);
+    // Overcap: H_raw * 0.95 still >= 1 keeps full DP after clamp.
+    expect(applyEquipmentDamagePotential(1.1, reaver)).toBe(1);
+    expect(applyEquipmentDamagePotential(1 / 0.95, reaver)).toBeCloseTo(1, 12);
   });
 });
 

@@ -145,16 +145,20 @@ export function accountAnalysisEvent(
   const blessingComponents = (resolution.components ?? []).filter(
     (component) => component.analysis?.kind === "league-blessing",
   );
-  const mult = resolveEventMultiplicity({ ...event, components: blessingComponents });
-  const attachedExpected = blessingComponents.reduce(
+  const equipmentPassiveComponents = (resolution.components ?? []).filter(
+    (component) => component.analysis?.kind === "equipment-passive",
+  );
+  const attributedComponents = [...blessingComponents, ...equipmentPassiveComponents];
+  const mult = resolveEventMultiplicity({ ...event, components: attributedComponents });
+  const attachedExpected = attributedComponents.reduce(
     (total, component) => total + component.damage.expected,
     0,
   );
-  const attachedCrit = blessingComponents.reduce(
+  const attachedCrit = attributedComponents.reduce(
     (total, component) => total + (component.damage.critical?.contribution ?? 0),
     0,
   );
-  const attachedCap = blessingComponents.reduce(
+  const attachedCap = attributedComponents.reduce(
     (total, component) => total + (component.damage.capLoss ?? 0),
     0,
   );
@@ -230,6 +234,7 @@ export function accountAnalysisEvent(
 
   for (const component of blessingComponents) {
     const attribution = component.analysis!;
+    if (attribution.kind !== "league-blessing" || !attribution.blessingId) continue;
     const componentLedger =
       analysis.effects.get(component.id) ?? emptyLedger(component.id, "league-blessing");
     componentLedger.kind = "league-blessing";
@@ -255,6 +260,23 @@ export function accountAnalysisEvent(
         : (analysis.effects.get(parentId) ?? emptyLedger(parentId, "league-blessing"));
     parent.bonusDamage += component.damage.expected;
     if (parent !== ledger) analysis.effects.set(parentId, parent);
+  }
+
+  for (const component of equipmentPassiveComponents) {
+    const attribution = component.analysis!;
+    if (attribution.kind !== "equipment-passive") continue;
+    const componentLedger =
+      analysis.effects.get(component.id) ?? emptyLedger(component.id, "equipment-passive");
+    componentLedger.kind = "equipment-passive";
+    componentLedger.totalDamage += component.damage.expected;
+    componentLedger.directDamage += component.damage.expected;
+    componentLedger.criticalContribution += component.damage.critical?.contribution ?? 0;
+    componentLedger.capLoss += component.damage.capLoss ?? 0;
+    componentLedger.expectedActivations += attribution.expectedActivations;
+    componentLedger.expectedAttachedComponents += attribution.expectedActivations;
+    analysis.effects.set(component.id, componentLedger);
+
+    ledger.bonusDamage += component.damage.expected;
   }
 
   // Cast identity is committed once per ability/sourceCast for player-owned

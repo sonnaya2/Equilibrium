@@ -26,7 +26,7 @@ import {
   type BlessingPath,
   type BlessingSupportStatus,
 } from "@/league/blessings";
-import { isRegionUnlocked, REGION_IDS } from "@/league";
+import { activeLeagueRelicNames,  isRegionUnlocked, REGION_IDS  } from "@/league";
 import relicsData from "#shard/league/relics.json";
 import { useBuild } from "@/league/useBuild";
 import { GameIcon } from "../GameIcon";
@@ -84,7 +84,9 @@ const T7_RELIC_CHOICES: readonly Tier7RelicChoice[] = (() => {
         ? c.effects.filter((e): e is string => typeof e === "string")
         : [],
       seat:
-        typeof (c as { seat?: unknown }).seat === "number" ? (c as { seat: number }).seat : null,
+        typeof (c as { seat?: unknown }).seat === "number"
+          ? ((c as unknown as { seat: number }).seat as number)
+          : null,
     }))
     .sort((a, b) => (a.seat ?? 99) - (b.seat ?? 99));
 })();
@@ -253,11 +255,7 @@ export function BuffsPanel({
   const naragiPicked = t7Picked === NARAGI_EDICT_RELIC;
   const tomeEquipped = loadout.equipmentSlots.pocket === TOME_OF_THE_ICYENE_ID;
   const sliverEquipped = loadout.equipmentSlots.pocket === SLIVER_OF_EDICTS_ID;
-  const activeRelicNames = useMemo(
-    () =>
-      Object.values(build.relics).filter((n): n is string => typeof n === "string" && n.length > 0),
-    [build.relics],
-  );
+  const activeRelicNames = useMemo(() => activeLeagueRelicNames(build), [build]);
 
   // Drop relic-granted gear when its T7 relic is not selected (import / deselect / swap).
   useEffect(() => {

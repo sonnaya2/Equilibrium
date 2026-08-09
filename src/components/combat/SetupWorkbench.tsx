@@ -375,7 +375,7 @@ function TargetSummary({
           <strong>{view.name}</strong>
           <span>
             {view.modifiedHint ?? "Custom"}
-            {view.flags.length ? ` ┬╖ ${view.flags.join(" ┬╖ ")}` : ""}
+            {view.flags.length ? ` · ${view.flags.join(" · ")}` : ""}
           </span>
         </div>
       </div>

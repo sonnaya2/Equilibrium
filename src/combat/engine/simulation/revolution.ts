@@ -159,6 +159,8 @@ function simulateRevolutionLane(
   const maxCasts = Math.max(input.durationTicks * 2, 64);
   const nativeSpecialNextAutoTick = new Map<string, number>();
   const autoSpecialSet = new Set(rt.nativeSpecials.map((spec) => spec.id));
+  const specialAfterAbilityId = input.nativeSpecialPolicy?.afterAbilityId ?? null;
+  let barAbilityGateSatisfied = specialAfterAbilityId == null || specialAfterAbilityId === "";
   while (lane.error === undefined && rt.state.tick < input.durationTicks) {
     if (++guard > maxCasts) {
       lane.error = `revolution stalled at tick ${rt.state.tick}: cast guard exceeded`;
@@ -166,26 +168,29 @@ function simulateRevolutionLane(
     }
     let ready: AbilitySpec | undefined;
     // Weapon special first, then distinct EoF store when weapon is on CD / illegal.
-    for (const nativeSpecial of rt.nativeSpecials) {
-      const nativeSpecialAutoTick =
-        nativeSpecialNextAutoTick.get(nativeSpecial.id) ?? rt.state.tick;
-      if (
-        rt.state.tick >= nativeSpecialAutoTick &&
-        revoAbilityLegal(
-          rt.state,
-          nativeSpecial,
-          input.level,
-          input.weaponConfiguration,
-          input.equipmentIds,
-          input.equipmentEffects?.passiveIds,
-          rt.byId,
-          input.league,
-          input.equipmentEffects?.activeWeapon,
-          input.eofStoredSpecialId,
-        )
-      ) {
-        ready = nativeSpecial;
-        break;
+    // When afterAbilityId is set, hold specials until that bar ability has cast.
+    if (barAbilityGateSatisfied) {
+      for (const nativeSpecial of rt.nativeSpecials) {
+        const nativeSpecialAutoTick =
+          nativeSpecialNextAutoTick.get(nativeSpecial.id) ?? rt.state.tick;
+        if (
+          rt.state.tick >= nativeSpecialAutoTick &&
+          revoAbilityLegal(
+            rt.state,
+            nativeSpecial,
+            input.level,
+            input.weaponConfiguration,
+            input.equipmentIds,
+            input.equipmentEffects?.passiveIds,
+            rt.byId,
+            input.league,
+            input.equipmentEffects?.activeWeapon,
+            input.eofStoredSpecialId,
+          )
+        ) {
+          ready = nativeSpecial;
+          break;
+        }
       }
     }
     for (const barAbility of input.bar) {
@@ -211,6 +216,13 @@ function simulateRevolutionLane(
     if (!attempt.ok) lane.error = attempt.error;
     else if (automaticNativeSpecial && ready) {
       nativeSpecialNextAutoTick.set(ready.id, castTick + ready.minimumAutomaticRecastTicks!);
+    } else if (
+      attempt.ok &&
+      !automaticNativeSpecial &&
+      specialAfterAbilityId != null &&
+      ability.id === specialAfterAbilityId
+    ) {
+      barAbilityGateSatisfied = true;
     }
   }
   return lane;

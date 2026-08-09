@@ -107,26 +107,34 @@ export function targetArmour(target: GenericTarget): number {
   return Math.floor((target.armour ?? 0) + accuracyCurve(target.defenceLevel));
 }
 
-/** Hit chance as a fraction 0-1. Armour of 0 with 0 Defence is a wall-less target: full connect. */
-export function hitChance(accuracy: number, target: GenericTarget): number {
-  const armour = targetArmour(target);
-  if (armour <= 0) return 1;
-  const affinity = resolveAffinityPercent(target.affinity) / 100;
-  return Math.min(1, Math.max(0, affinity * (accuracy / armour) + (target.additiveHitChance ?? 0)));
-}
-
-function hitChanceForArmour(
+/**
+ * Uncapped hit chance fraction (may exceed 1). Armour of 0 with 0 Defence is wall-less: full connect.
+ * Reckless Assault multiplies this value before the 0-1 clamp.
+ */
+export function rawHitChanceForArmour(
   accuracy: number,
   armour: number,
   affinityPercent: number,
   additiveHitChance: number,
 ): number {
   if (armour <= 0) return 1;
+  return (
+    (resolveAffinityPercent(affinityPercent) / 100) * (accuracy / armour) + additiveHitChance
+  );
+}
+
+/** Hit chance as a fraction 0-1. Armour of 0 with 0 Defence is a wall-less target: full connect. */
+export function hitChance(accuracy: number, target: GenericTarget): number {
   return Math.min(
     1,
     Math.max(
       0,
-      (resolveAffinityPercent(affinityPercent) / 100) * (accuracy / armour) + additiveHitChance,
+      rawHitChanceForArmour(
+        accuracy,
+        targetArmour(target),
+        resolveAffinityPercent(target.affinity),
+        target.additiveHitChance ?? 0,
+      ),
     ),
   );
 }
@@ -141,25 +149,26 @@ export function targetDamagePotential(accuracy: number, target: GenericTarget): 
 /**
  * Live target Damage Potential before ammunition deltas. Armour changes affect
  * the formula path only; a manual override remains independent of armour.
+ * Order: accuracy rating (defender multi already applied upstream) -> uncapped hit chance
+ * -> Reckless Assault x0.95 -> clamp to DP.
  */
 export function liveTargetDamagePotential(
   profile: ResolvedTargetAccuracyProfile,
   options: LiveTargetDamagePotentialOptions = {},
 ): number {
-  const formulaDp =
+  const uncapped =
     profile.damagePotentialOverride != null
-      ? damagePotential(profile.damagePotentialOverride)
-      : damagePotential(
-          hitChanceForArmour(
-            profile.playerAccuracyRating,
-            options.blackStone
-              ? effectiveBaseArmourAtTick(options.blackStone.state, options.blackStone.currentTick)
-              : profile.originalTargetArmourRating,
-            profile.affinity,
-            profile.additiveHitChance,
-          ),
+      ? profile.damagePotentialOverride
+      : rawHitChanceForArmour(
+          profile.playerAccuracyRating,
+          options.blackStone
+            ? effectiveBaseArmourAtTick(options.blackStone.state, options.blackStone.currentTick)
+            : profile.originalTargetArmourRating,
+          profile.affinity,
+          profile.additiveHitChance,
         );
-  return options.equipmentEffects
-    ? applyEquipmentDamagePotential(formulaDp, options.equipmentEffects)
-    : formulaDp;
+  const afterEquipment = options.equipmentEffects
+    ? applyEquipmentDamagePotential(uncapped, options.equipmentEffects)
+    : uncapped;
+  return damagePotential(afterEquipment);
 }

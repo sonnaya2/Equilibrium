@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
+import { calculateAbility } from "../pipeline/calculateAbility";
 import { runPipeline } from "../pipeline/modifierPipeline";
+import { MELEE_ABILITIES } from "../styles/melee/abilities";
 import {
   ATTACK_CAPE_MELEE_HIT_CHANCE,
   bitingCritChanceBonus,
@@ -16,6 +18,7 @@ import {
   preciseMinHitAddition,
   relentlessProcChance,
   ruthlessDamageBonus,
+  ruthlessPerkModifier,
   SLAYER_PERK_DAMAGE_BONUS,
   STRENGTH_CAPE_DISMEMBER_EXTRA_HITS,
   STRENGTH_CAPE_DISMEMBER_HEAL_BONUS,
@@ -95,6 +98,44 @@ describe("shared/perks", () => {
     expect(cracklingDamageFraction(4)).toBeCloseTo(2.0, 10);
     expect(genocidalDamageBonus(100, 100)).toBe(0);
     expect(genocidalDamageBonus(1, 100)).toBeCloseTo(0.049, 10);
+  });
+
+  // https://runescape.wiki/w/Ruthless - bleed abilities unaffected
+  it("Ruthless multiplies direct hits and skips bleed/true DoT ticks", () => {
+    const mod = ruthlessPerkModifier(3, 5);
+    expect(mod.stage).toBe("base");
+    expect(mod.applies({ style: "melee" })).toBe(true);
+    expect(mod.applies({ style: "melee", provenance: { kind: "player_direct" } })).toBe(true);
+    expect(mod.applies({ style: "melee", dotKind: "bleed" })).toBe(false);
+    expect(mod.applies({ style: "melee", damageSource: "dot" })).toBe(false);
+    expect(
+      mod.applies({ style: "melee", provenance: { kind: "player_dot", detail: "bleed" } }),
+    ).toBe(false);
+    expect(mod.applies({ style: "melee", provenance: { kind: "player_converted_channel" } })).toBe(
+      true,
+    );
+    expect(ruthlessPerkModifier(3, 0).applies({ style: "melee" })).toBe(false);
+    // R3 x 5 stacks = +7.5%; floor(1000 * 1.075) = 1075
+    expect(applyAt(1000, [mod])).toBe(1075);
+    expect(runPipeline({ damage: 1000 }, [mod], { style: "melee", dotKind: "bleed" }).damage).toBe(
+      1000,
+    );
+
+    const hitInput = {
+      base: 1000,
+      level: 90,
+      accuracy: 1,
+      crit: { chance: 0 },
+      modifiers: [mod],
+    };
+    const dismember = MELEE_ABILITIES.find((a) => a.id === "dismember")!;
+    const assault = MELEE_ABILITIES.find((a) => a.id === "assault")!;
+    const bleedPlain = calculateAbility(dismember, { ...hitInput, modifiers: [] });
+    const bleedRuthless = calculateAbility(dismember, hitInput);
+    expect(bleedRuthless.expected).toBe(bleedPlain.expected);
+    const directPlain = calculateAbility(assault, { ...hitInput, modifiers: [] });
+    const directRuthless = calculateAbility(assault, hitInput);
+    expect(directRuthless.expected).toBeGreaterThan(directPlain.expected);
   });
 
   it("skillcape constants match wiki combat modernisation values", () => {

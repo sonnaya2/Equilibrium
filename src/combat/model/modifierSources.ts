@@ -45,7 +45,6 @@ export function resolveSetCounts(
   return [
     ...equippedSetCounts({
       equipmentSlots: input.equipmentSlots,
-      equipmentIds: [...input.equipmentIds],
     }).entries(),
   ].map(([setId, pieces]) => [setId, pieces] as const);
 }

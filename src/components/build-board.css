@@ -542,9 +542,34 @@
   white-space: nowrap;
 }
 
+/* Keep carved inset shadow; only add selection ring. */
 .build-board__seat.is-on {
   border-color: var(--build-gem);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--build-gem) 45%, transparent);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--build-gem) 50%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 30%, transparent),
+    inset 0 -1px 0 rgb(0 0 0 / 48%);
+}
+
+/* Rejuvenated bonus pick (secondary active League relic). */
+.build-board__seat.is-bonus {
+  border-color: color-mix(in srgb, var(--build-gold) 75%, var(--build-gem));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--build-gold) 45%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 30%, transparent),
+    inset 0 -1px 0 rgb(0 0 0 / 48%);
+}
+
+.build-board__seat.is-on.is-bonus {
+  border-color: var(--build-gem);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--build-gem) 50%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--color-stone-carve) 30%, transparent),
+    inset 0 -1px 0 rgb(0 0 0 / 48%);
+}
+
+.build-board__relic-hint {
+  margin: 0 0 0.5rem;
 }
 
 .build-board__seat.is-empty {
@@ -552,10 +577,13 @@
   width: 6.4rem;
   min-width: 6.4rem;
   max-width: 6.4rem;
-  min-height: 2.75rem;
+  min-height: 3.25rem;
   padding: 0;
-  background: var(--color-stone-inset);
-  opacity: 0.7;
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--build-line) 55%, transparent);
+  background: color-mix(in srgb, var(--color-stone-inset) 70%, transparent);
+  box-shadow: none;
+  opacity: 0.55;
   cursor: default;
   pointer-events: none;
 }

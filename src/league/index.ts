@@ -68,10 +68,25 @@ export const ELECTIVE_REGIONS: readonly RegionId[] = idsWithAvailability("electi
 export const ELECTIVE_CAP = 3;
 export const UNLOCK_CAP = STARTING_REGIONS.length + 1 + ELECTIVE_CAP; // 6
 
+export const REJUVENATED_RELIC = "Rejuvenated";
+export const ANTIQUARIAN_RELIC = "Antiquarian";
+export const REJUVENATED_TIER = 6;
+export const REJUVENATED_BONUS_MAX_TIER = 5;
+
+export interface RejuvenatedPick {
+  tier: number;
+  name: string;
+}
+
 export interface BuildState {
   elective: RegionId[];
   /** Relic tier (as string key) -> chosen relic name. Only revealed tiers have choices. */
   relics: Record<string, string>;
+  /**
+   * Extra T1-T5 relic when T6 is Rejuvenated. Counts as active for combat resolve.
+   * Cleared when T6 is not Rejuvenated.
+   */
+  rejuvenatedPick?: RejuvenatedPick | null;
   /**
    * Path picks in PATH_TIERS order, contiguous - god tiers grant, they are never picked.
    * Derived from `blessingSelections` so combat and god derivation stay path-based.
@@ -95,10 +110,67 @@ export function emptyBuild(): BuildState {
   return {
     elective: [],
     relics: {},
+    rejuvenatedPick: null,
     blessingPicks: [],
     blessingSelections: [],
     blessingResetsUsed: 0,
   };
+}
+
+/** Primary tier picks plus optional Rejuvenated bonus name. */
+export function activeLeagueRelicNames(state: BuildState): string[] {
+  const names = Object.values(state.relics).filter(
+    (n): n is string => typeof n === "string" && n.length > 0,
+  );
+  const bonus = state.rejuvenatedPick;
+  if (
+    state.relics[String(REJUVENATED_TIER)] === REJUVENATED_RELIC &&
+    bonus &&
+    typeof bonus.name === "string" &&
+    bonus.name.length > 0 &&
+    !names.includes(bonus.name)
+  ) {
+    names.push(bonus.name);
+  }
+  return names;
+}
+
+export function hasLeagueRelic(state: BuildState, name: string): boolean {
+  return activeLeagueRelicNames(state).includes(name);
+}
+
+function isValidRejuvenatedPick(
+  state: Pick<BuildState, "relics">,
+  pick: RejuvenatedPick,
+): boolean {
+  if (state.relics[String(REJUVENATED_TIER)] !== REJUVENATED_RELIC) return false;
+  if (
+    !Number.isInteger(pick.tier) ||
+    pick.tier < 1 ||
+    pick.tier > REJUVENATED_BONUS_MAX_TIER
+  ) {
+    return false;
+  }
+  if (typeof pick.name !== "string" || pick.name.length === 0 || pick.name.length > MAX_RELIC_NAME_LEN) {
+    return false;
+  }
+  if (Object.values(state.relics).includes(pick.name)) return false;
+  const allowed = REVEALED_RELIC_NAMES_BY_TIER.get(String(pick.tier));
+  if (allowed && !allowed.has(pick.name)) return false;
+  return true;
+}
+
+function normalizeRejuvenatedPick(
+  state: Pick<BuildState, "relics">,
+  raw: unknown,
+): RejuvenatedPick | null {
+  if (state.relics[String(REJUVENATED_TIER)] !== REJUVENATED_RELIC) return null;
+  if (typeof raw !== "object" || raw === null) return null;
+  const tier = (raw as { tier?: unknown }).tier;
+  const name = (raw as { name?: unknown }).name;
+  if (typeof tier !== "number" || typeof name !== "string") return null;
+  const pick = { tier: Math.trunc(tier), name };
+  return isValidRejuvenatedPick(state, pick) ? pick : null;
 }
 
 function isBlessingPath(value: unknown): value is BlessingPath {
@@ -214,6 +286,11 @@ export function normalizeBuild(value: unknown): BuildState {
     base.blessingResetsUsed = Math.min(Math.max(Math.trunc(resets), 0), BLESSING_RESET_COUNT);
   }
 
+  base.rejuvenatedPick = normalizeRejuvenatedPick(
+    base,
+    (value as { rejuvenatedPick?: unknown }).rejuvenatedPick,
+  );
+
   return base;
 }
 
@@ -243,7 +320,37 @@ export function toggleRelic(state: BuildState, tier: number, name: string): Buil
   const relics = { ...state.relics };
   if (relics[key] === name) delete relics[key];
   else relics[key] = name;
-  return { ...state, relics };
+
+  let rejuvenatedPick = state.rejuvenatedPick ?? null;
+  if (relics[String(REJUVENATED_TIER)] !== REJUVENATED_RELIC) {
+    rejuvenatedPick = null;
+  } else if (rejuvenatedPick && Object.values(relics).includes(rejuvenatedPick.name)) {
+    // Primary pick took the bonus name; clear bonus.
+    rejuvenatedPick = null;
+  } else if (rejuvenatedPick && !isValidRejuvenatedPick({ relics }, rejuvenatedPick)) {
+    rejuvenatedPick = null;
+  }
+
+  return { ...state, relics, rejuvenatedPick };
+}
+
+/**
+ * Set or clear the Rejuvenated bonus pick (T1-T5 only). No-op when T6 is not Rejuvenated
+ * or the name is already a primary pick.
+ */
+export function toggleRejuvenatedPick(
+  state: BuildState,
+  tier: number,
+  name: string,
+): BuildState {
+  if (state.relics[String(REJUVENATED_TIER)] !== REJUVENATED_RELIC) return state;
+  const current = state.rejuvenatedPick;
+  if (current && current.tier === tier && current.name === name) {
+    return { ...state, rejuvenatedPick: null };
+  }
+  const pick = { tier: Math.trunc(tier), name };
+  if (!isValidRejuvenatedPick(state, pick)) return state;
+  return { ...state, rejuvenatedPick: pick };
 }
 
 /**

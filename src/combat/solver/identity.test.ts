@@ -258,6 +258,27 @@ describe("fingerprint changes one field at a time", () => {
     );
   });
 
+  it("Chromatic Choir resolved effects", async () => {
+    await expectDiff("ChromaticChoir", (r) =>
+      withSim(r, (s) => ({
+        ...s,
+        equipmentIds: [
+          "item:eldritch-crossbow",
+          "item:sirenic-hauberk",
+          "item:sirenic-chaps",
+        ],
+        equipmentEffects: activeEquipmentEffects({
+          style: "ranged",
+          equipmentSlots: {
+            twohand: "item:eldritch-crossbow",
+            body: "item:sirenic-hauberk",
+            legs: "item:sirenic-chaps",
+          },
+        }),
+      })),
+    );
+  });
+
   it.each([
     ["naturalInstinctUntilTick", { naturalInstinctUntilTick: 20 }],
     ["startingResidualSouls", { startingResidualSouls: 3 }],
@@ -543,6 +564,18 @@ describe("fingerprint changes one field at a time", () => {
         equipmentEffects: {
           ...s.equipmentEffects,
           setCritChance: { unconditional: 0.03, conditional: { sunshine: 0.045 } },
+        },
+      })),
+    );
+  });
+
+  it("attuned crystal weaponry changes the solver identity", async () => {
+    await expectDiff("attunedCrystalWeaponry", (r) =>
+      withSim(r, (s) => ({
+        ...s,
+        equipmentEffects: {
+          ...s.equipmentEffects,
+          attunedCrystalWeaponry: { active: true, procChance: 0.12, agilityLevel: 99 },
         },
       })),
     );

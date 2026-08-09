@@ -250,6 +250,31 @@ describe("ResolvedCombatModel equality", () => {
     expect(projectSerializableSimBase(model).targetAccuracyProfile).toEqual(targetAccuracyProfile);
   });
 
+  it("preserves attunedCrystalWeaponry through buildResolvedCombatModel and sim projection", () => {
+    const crystal = { active: true as const, procChance: 0.12, agilityLevel: 99 };
+    const model = buildResolvedCombatModel(
+      baseInput({
+        equipmentEffects: {
+          ...baseInput().equipmentEffects,
+          attunedCrystalWeaponry: crystal,
+        },
+      }),
+    );
+    expect(model.equipmentEffects.attunedCrystalWeaponry).toEqual(crystal);
+    expect(Object.isFrozen(model.equipmentEffects.attunedCrystalWeaponry)).toBe(true);
+    expect(projectSerializableSimBase(model).equipmentEffects.attunedCrystalWeaponry).toEqual(
+      crystal,
+    );
+    const simulation = buildSimulationInputBase(model, {
+      catalogue: [],
+      byId: new Map(),
+      basicByStyle: new Map(),
+      strengthCape99: false,
+      abilityRegistry: { byId: new Map(), basicByStyle: new Map() },
+    });
+    expect(simulation.equipmentEffects?.attunedCrystalWeaponry).toEqual(crystal);
+  });
+
   it("shield / defender / necromancy configurations stay distinct", () => {
     for (const weaponConfiguration of ["shield", "defender", "necromancy"] as const) {
       const model = buildResolvedCombatModel(baseInput({ weaponConfiguration }));

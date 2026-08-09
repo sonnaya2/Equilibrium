@@ -18,6 +18,7 @@ import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { modifiersFromSources, reviveLeague as hostReviveLeague } from "../../model";
 import { activeEquipmentEffects, EQUIPMENT_SET_ACTIVATION } from "../../shared/equipment";
 import { RANGED_ABILITIES } from "../../styles/ranged/abilities";
+import type { ChromaticChoirGem } from "../../styles/ranged/chromaticChoir";
 import { NECROMANCY_ABILITIES } from "../../styles/necromancy/abilities";
 import { simulateRevolution } from "../../engine/simulation/revolution";
 
@@ -224,6 +225,86 @@ describe("solver worker serializable boundary", () => {
       unconditional: 0.03,
       conditional: { sunshine: 0.045 },
     });
+  });
+
+  it("preserves Chromatic Choir effects through clone and worker revival", () => {
+    const effects = activeEquipmentEffects({
+      style: "ranged",
+      equipmentSlots: {
+        twohand: "item:eldritch-crossbow",
+        body: "item:sirenic-hauberk",
+        legs: "item:sirenic-chaps",
+      },
+    });
+    expect(effects.chromaticChoir).toMatchObject({
+      setId: "sirenic",
+      physicalPieces: 2,
+      effectivePieces: 2,
+      crossbowEligible: true,
+      procChance: 0.06,
+      thresholds: { two: true, three: false },
+      gems: ["dragonstone"],
+    });
+
+    const sim = {
+      ...sampleSimBase(),
+      equipmentIds: [
+        "item:eldritch-crossbow",
+        "item:sirenic-hauberk",
+        "item:sirenic-chaps",
+      ],
+      equipmentEffects: effects,
+    } satisfies SerializableRevolutionSimBase;
+    const cloned = structuredClone(sim);
+    expect(cloned.equipmentEffects.chromaticChoir).toEqual(effects.chromaticChoir);
+
+    // Revive from the live sim (not clone) so deep-copy isolation is meaningful.
+    const revived = reviveRevolutionBase(sim);
+    expect(revived.equipmentEffects?.chromaticChoir).toEqual(effects.chromaticChoir);
+
+    const sourceChoir = sim.equipmentEffects.chromaticChoir!;
+    (sourceChoir.thresholds as { two: boolean }).two = false;
+    (sourceChoir.gems as ChromaticChoirGem[]).push("onyx");
+    (sourceChoir as { procChance: number }).procChance = 0;
+    expect(revived.equipmentEffects?.chromaticChoir).toEqual({
+      setId: "sirenic",
+      physicalPieces: 2,
+      effectivePieces: 2,
+      crossbowEligible: true,
+      mixed: false,
+      procChance: 0.06,
+      thresholds: { two: true, three: false },
+      gems: ["dragonstone"],
+    });
+  });
+
+  it("preserves attunedCrystalWeaponry through clone and worker revival", () => {
+    const effects = activeEquipmentEffects({
+      style: "magic",
+      equipmentSlots: { twohand: "item:attuned-crystal-staff" },
+      agilityLevel: 99,
+    });
+    expect(effects.attunedCrystalWeaponry?.procChance).toBe(0.12);
+
+    const sim = {
+      ...sampleSimBase(),
+      equipmentIds: ["item:attuned-crystal-staff"],
+      equipmentEffects: effects,
+    } satisfies SerializableRevolutionSimBase;
+    const cloned = structuredClone(sim);
+    expect(cloned.equipmentEffects.attunedCrystalWeaponry).toEqual(effects.attunedCrystalWeaponry);
+
+    // Revive from the live sim (not clone) so deep-copy isolation is meaningful.
+    const revived = reviveRevolutionBase(sim);
+    expect(revived.equipmentEffects?.attunedCrystalWeaponry).toEqual({
+      active: true,
+      procChance: 0.12,
+      agilityLevel: 99,
+      armourProcBonus: 0,
+    });
+    const sourceCrystal = sim.equipmentEffects.attunedCrystalWeaponry!;
+    (sourceCrystal as { procChance: number }).procChance = 0;
+    expect(revived.equipmentEffects?.attunedCrystalWeaponry?.procChance).toBe(0.12);
   });
 
   it("preserves Deathdealer target state inputs through clone and worker revival", () => {

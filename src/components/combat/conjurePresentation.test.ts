@@ -6,7 +6,6 @@ import {
   conjurePactAssumptionNote,
   conjureStAreaAssumptionRows,
   conjureUntilOffsetTicks,
-  ensureNecromancyConjureOnBar,
   formatConjureByEffectLabel,
   formatConjureCastDurationNote,
   formatRemainingDurationNote,
@@ -15,12 +14,12 @@ import {
   isConjureEffectRow,
   isConjureSummonAbilityId,
   isSpiritLedgerId,
-  NECRO_BAR_CONJURE_FALLBACK,
   rotationHasAbilityId,
   rotationHasConjureCast,
   spiritEffectDisplayName,
   UNDEAD_ARMY_ASSUMPTION_NOTE,
 } from "./conjurePresentation";
+import { ensureNecroConjuresOnBarIds } from "./revoBarResolve";
 
 describe("conjurePresentation", () => {
   it("derives SP3 exclusive until offset (105 default; First Necro 1.25 -> 130)", () => {
@@ -130,23 +129,22 @@ describe("conjurePresentation", () => {
     expect(army.supportNote).toBe(UNDEAD_ARMY_ASSUMPTION_NOTE);
   });
 
-  it("apply bar without conjure -> after normalize has army or skeleton", () => {
-    const without = ensureNecromancyConjureOnBar(
-      ["touch_of_death", "soul_sap", "volley_of_souls"],
-      "necromancy",
-    );
-    expect(
-      without.some((id) => id === "conjure_undead_army" || id === "conjure_skeleton_warrior"),
-    ).toBe(true);
-    expect(without[0]).toBe(NECRO_BAR_CONJURE_FALLBACK);
-    expect(without.slice(1)).toEqual(["touch_of_death", "soul_sap", "volley_of_souls"]);
+  it("apply bar without conjure -> ensureNecroConjuresOnBarIds injects wiki conjures", () => {
+    const raw = ["touch_of_death", "soul_sap", "volley_of_souls"];
+    const without = ensureNecroConjuresOnBarIds(raw, "necromancy", "necromancy");
+    expect(without.some((id) => id.startsWith("conjure_"))).toBe(true);
+    expect(without.slice(-raw.length)).toEqual(raw);
 
-    const withSkel = ensureNecromancyConjureOnBar(
+    const withSkel = ensureNecroConjuresOnBarIds(
       ["conjure_skeleton_warrior", "touch_of_death"],
+      "necromancy",
       "necromancy",
     );
     expect(withSkel).toEqual(["conjure_skeleton_warrior", "touch_of_death"]);
 
-    expect(ensureNecromancyConjureOnBar(["slice", "fury"], "melee")).toEqual(["slice", "fury"]);
+    expect(ensureNecroConjuresOnBarIds(["slice", "fury"], "melee", "dualwield")).toEqual([
+      "slice",
+      "fury",
+    ]);
   });
 });

@@ -26,7 +26,7 @@ import {
 import type { Loadout, SetLoadout } from "./useLoadout";
 import { withLoadoutBuffs } from "./useLoadout";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
-import { unlockedRegions } from "@/league";
+import { activeLeagueRelicNames,  unlockedRegions  } from "@/league";
 import type { ResolvedCombatModel } from "@/combat/model";
 import { SLIVER_OF_EDICTS_ID } from "@/combat/league/naragiEdict";
 import { hasEssenceOfFinalityEquipped } from "@/combat/shared/requirements";
@@ -42,7 +42,7 @@ import {
   SUPPORTED_BARS,
   type RevoBarView,
 } from "./revoBarResolve";
-import { maySaveVerified } from "./revoPanelFormat";
+import { formatNumber, maySaveVerified } from "./revoPanelFormat";
 import { CombatFrame } from "./CombatFrame";
 import { RevoBarGraphic } from "./RevoBarGraphic";
 import { RevoBarLibraryPanel } from "./RevoBarLibraryPanel";
@@ -58,7 +58,13 @@ import {
 import { isApproximatedRun } from "./revoStochasticLabels";
 import { TargetSummaryCard } from "./TargetSummaryCard";
 import { useRevolutionSolver } from "./useRevolutionSolver";
+import { adrenEconomyAssumptionRows } from "./adrenalinePresentation";
+import { abilityIconPath } from "@/lib/gameArt";
+import { GameIcon } from "../GameIcon";
 import "./revo-solver.css";
+
+const EOF_ICON = "/game/upgrades/permanent-equipment/essence-of-finality.webp";
+const SPEC_ICON = "/game/leagues/catalyst/relics/t7-specialist.webp";
 
 const DEFAULT_DURATION_SECONDS = 60;
 /** Hard cap for manual Run bar horizon (seconds). */
@@ -235,7 +241,7 @@ export function RevolutionPanel({
     if (combatModelProp) return combatModelProp;
     return resolveLoadoutCombat(loadout, {
       blessingPicks: build.blessingPicks,
-      relics: Object.values(build.relics).filter(Boolean),
+      relics: activeLeagueRelicNames(build),
       unlockedRegions: regions,
     }).model;
   }, [combatModelProp, loadout, build, regions]);
@@ -432,6 +438,22 @@ export function RevolutionPanel({
         ? "Complete"
         : "Failed"
       : "Not run";
+  const adrenEconomyRows = useMemo(() => adrenEconomyAssumptionRows(stats), [stats]);
+  const eofEquipped = hasEssenceOfFinalityEquipped(loadout.equipmentIds);
+  const eofStoredSpec = useMemo(() => {
+    if (!loadout.eofStoredSpecialId) return null;
+    return eofStorableSpecials().find((spec) => spec.id === loadout.eofStoredSpecialId) ?? null;
+  }, [loadout.eofStoredSpecialId]);
+  const weaponSpecialId = stats.equipmentEffects.activeWeapon?.specialAttackId ?? null;
+  const weaponSpecialSpec = weaponSpecialId ? ENGINE_SPECS.get(weaponSpecialId) : undefined;
+  const barAbilityOptions = useMemo(
+    () =>
+      modelled.map((spec) => ({
+        id: spec.id,
+        name: spec.name,
+      })),
+    [modelled],
+  );
 
   const targetLp = loadout.target?.maximumLifePoints;
   const runDps = liveResult?.ok ? liveResult.dps : null;
@@ -558,21 +580,6 @@ export function RevolutionPanel({
             runError={runError}
             onCancelRun={cancelRun}
             showControls={false}
-            sliverToggle={
-              loadout.equipmentSlots?.pocket === SLIVER_OF_EDICTS_ID && setLoadout
-                ? {
-                    active: loadout.buffs.sliverOfEdictsActive,
-                    onToggle: () =>
-                      setLoadout((prev) =>
-                        withLoadoutBuffs(prev, {
-                          sliverOfEdictsActive: !prev.buffs.sliverOfEdictsActive,
-                        }),
-                      ),
-                    baseOff: sliverBaseCompare.off,
-                    baseOn: sliverBaseCompare.on,
-                  }
-                : null
-            }
           />
         </section>
       </CombatFrame>
@@ -597,51 +604,173 @@ export function RevolutionPanel({
           </span>
         </label>
         {setLoadout ? (
-          <label className="revo-status-check">
-            <input
-              type="checkbox"
-              checked={loadout.buffs.useEquippedWeaponSpecial}
-              onChange={(event) =>
+          <div className="revo-spec-strip" data-testid="revo-spec-strip">
+            <button
+              type="button"
+              className={`revo-spec-toggle${loadout.buffs.useEquippedWeaponSpecial ? " is-on" : ""}`}
+              aria-pressed={loadout.buffs.useEquippedWeaponSpecial}
+              aria-label={
+                loadout.buffs.useEquippedWeaponSpecial
+                  ? "Weapon special on"
+                  : "Weapon special off"
+              }
+              title={
+                weaponSpecialSpec
+                  ? `Weapon special: ${weaponSpecialSpec.name}`
+                  : "Weapon special (auto when ready)"
+              }
+              onClick={() =>
                 setLoadout((prev) =>
                   withLoadoutBuffs(prev, {
-                    useEquippedWeaponSpecial: event.target.checked,
+                    useEquippedWeaponSpecial: !prev.buffs.useEquippedWeaponSpecial,
                   }),
                 )
               }
-            />
-            <span>
-              <strong>Weapon / EoF special</strong>
-              <small>Weapon special first; EoF when that is on cooldown.</small>
-            </span>
-          </label>
-        ) : null}
-        {setLoadout && hasEssenceOfFinalityEquipped(loadout.equipmentIds) ? (
-          <label className="revo-status-control" data-testid="eof-stored-special">
-            <span>EoF stored special</span>
-            <select
-              value={loadout.eofStoredSpecialId ?? ""}
-              aria-label="Essence of Finality stored special"
-              onChange={(event) => {
-                const next = event.target.value || null;
-                setLoadout((prev) => ({
-                  ...prev,
-                  eofStoredSpecialId: normalizeEofStoredSpecialId(prev.equipmentIds, next),
-                }));
-              }}
             >
-              <option value="">None</option>
-              {eofStorableSpecials().map((spec) => (
-                <option key={spec.id} value={spec.id}>
-                  {spec.name}
-                </option>
-              ))}
-            </select>
-          </label>
+              <GameIcon
+                src={
+                  weaponSpecialSpec
+                    ? abilityIconPath(weaponSpecialSpec.id, weaponSpecialSpec.style)
+                    : SPEC_ICON
+                }
+                size={28}
+              />
+            </button>
+            <label className="revo-spec-after">
+              <span className="sr-only">Spec after ability</span>
+              <select
+                value={loadout.buffs.weaponSpecialAfterAbilityId ?? ""}
+                aria-label="Cast special after ability"
+                disabled={!loadout.buffs.useEquippedWeaponSpecial}
+                onChange={(event) => {
+                  const next = event.target.value || null;
+                  setLoadout((prev) =>
+                    withLoadoutBuffs(prev, {
+                      weaponSpecialAfterAbilityId: next,
+                    }),
+                  );
+                }}
+              >
+                <option value="">Any time</option>
+                {barAbilityOptions.map((ability) => (
+                  <option key={ability.id} value={ability.id}>
+                    After {ability.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            {eofEquipped ? (
+              <label
+                className={`revo-eof-badge${eofStoredSpec ? " is-filled" : " is-empty"}`}
+                data-testid="eof-stored-special"
+                title={
+                  eofStoredSpec
+                    ? `EoF stored: ${eofStoredSpec.name}`
+                    : "EoF equipped · no special stored"
+                }
+              >
+                <span className="revo-eof-badge__well" aria-hidden>
+                  <GameIcon src={EOF_ICON} size={30} />
+                  {eofStoredSpec ? (
+                    <span className="revo-eof-badge__overlay">
+                      <GameIcon
+                        src={abilityIconPath(eofStoredSpec.id, eofStoredSpec.style)}
+                        size={16}
+                      />
+                    </span>
+                  ) : (
+                    <span className="revo-eof-badge__overlay is-empty">?</span>
+                  )}
+                </span>
+                <select
+                  value={loadout.eofStoredSpecialId ?? ""}
+                  aria-label="Essence of Finality stored special"
+                  onChange={(event) => {
+                    const next = event.target.value || null;
+                    setLoadout((prev) => ({
+                      ...prev,
+                      eofStoredSpecialId: normalizeEofStoredSpecialId(prev.equipmentIds, next),
+                    }));
+                  }}
+                >
+                  <option value="">None</option>
+                  {eofStorableSpecials().map((spec) => (
+                    <option key={spec.id} value={spec.id}>
+                      {spec.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ) : null}
+          </div>
+        ) : null}
+        {loadout.equipmentSlots?.pocket === SLIVER_OF_EDICTS_ID && setLoadout ? (
+          <div className="revo-sliver-group" data-testid="revo-sliver-group">
+            <button
+              type="button"
+              className={`combat-button revo-sliver-toggle border text-xs ${
+                loadout.buffs.sliverOfEdictsActive
+                  ? "border-stone-750 bg-stone-850 text-parch-50"
+                  : "border-stone-750 text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
+              }`}
+              aria-pressed={loadout.buffs.sliverOfEdictsActive}
+              data-testid="sliver-buff-toggle"
+              title="Activate Sliver of Edicts on a cycle: at combat start and again every 90s CD (16.8s window)"
+              disabled={runBusy}
+              onClick={() =>
+                setLoadout((prev) =>
+                  withLoadoutBuffs(prev, {
+                    sliverOfEdictsActive: !prev.buffs.sliverOfEdictsActive,
+                  }),
+                )
+              }
+            >
+              <span className="revo-sliver-toggle__label">Sliver</span>
+              <span className="revo-sliver-toggle__state font-mono">
+                {loadout.buffs.sliverOfEdictsActive ? "On" : "Off"}
+              </span>
+            </button>
+            <p
+              className="revo-sliver-base"
+              data-testid="revo-sliver-base-compare"
+              title="Effective base ability damage: loadout level (off) vs Naragi 255 window (on)"
+            >
+              <span className="revo-sliver-base__label">Base AD</span>
+              <span className="revo-sliver-base__row font-mono">
+                <span
+                  className={
+                    loadout.buffs.sliverOfEdictsActive
+                      ? "revo-sliver-base__val is-dim"
+                      : "revo-sliver-base__val is-active"
+                  }
+                  data-testid="revo-sliver-base-off"
+                >
+                  {formatNumber(sliverBaseCompare.off)}
+                </span>
+                <span className="revo-sliver-base__sep" aria-hidden>
+                  /
+                </span>
+                <span
+                  className={
+                    loadout.buffs.sliverOfEdictsActive
+                      ? "revo-sliver-base__val is-active"
+                      : "revo-sliver-base__val is-dim"
+                  }
+                  data-testid="revo-sliver-base-on"
+                >
+                  {formatNumber(sliverBaseCompare.on)}
+                </span>
+              </span>
+              <span className="revo-sliver-base__hint">off / on</span>
+            </p>
+          </div>
         ) : null}
         <div className="revo-status-actions">
           <button
             type="button"
-            className="combat-button revo-run-button"
+            className={`combat-button revo-run-button revo-solver-controls__run${
+              runBusy ? " is-running" : ""
+            }`}
             onClick={run}
             disabled={runBusy || modelled.length === 0}
             data-testid="revo-run-button"
@@ -651,7 +780,7 @@ export function RevolutionPanel({
           {runBusy ? (
             <button
               type="button"
-              className="combat-button revo-run-cancel"
+              className="combat-button revo-solver-controls__cancel revo-run-cancel"
               onClick={cancelRun}
               data-testid="revo-run-cancel"
             >
@@ -668,7 +797,7 @@ export function RevolutionPanel({
             </button>
           ) : null}
         </div>
-        <dl>
+        <dl className="revo-status-facts">
           <div>
             <dt>Horizon</dt>
             <dd>
@@ -687,20 +816,22 @@ export function RevolutionPanel({
             </dd>
           </div>
           <div>
-            <dt>Active bar</dt>
+            <dt>Bar</dt>
             <dd>{currentSaveBar?.length ?? 0} slots</dd>
           </div>
           <div>
-            <dt>Solver proof</dt>
+            <dt>Proof</dt>
             <dd>{solver.solverResult?.proofLabel ?? "—"}</dd>
           </div>
         </dl>
-        <section aria-labelledby="revo-adren-title">
+        <section className="revo-adren-panel" aria-labelledby="revo-adren-title">
           <h2 id="revo-adren-title">Adrenaline</h2>
-          <dl>
+          <dl className="revo-adren-panel__run">
             <div>
               <dt>Start</dt>
-              <dd>{firstCast ? `${firstCast.adrenalineBefore}%` : "—"}</dd>
+              <dd>
+                {firstCast ? `${firstCast.adrenalineBefore}%` : `${stats.startingAdrenaline}%`}
+              </dd>
             </div>
             <div>
               <dt>End</dt>
@@ -710,7 +841,23 @@ export function RevolutionPanel({
               <dt>Gained</dt>
               <dd>{totalAdrenalineGained == null ? "—" : totalAdrenalineGained.toFixed(1)}</dd>
             </div>
+            <div>
+              <dt>Cap</dt>
+              <dd>{stats.maxAdrenaline}%</dd>
+            </div>
           </dl>
+          {adrenEconomyRows.length ? (
+            <ul className="revo-adren-panel__effects">
+              {adrenEconomyRows.map(([label, detail]) => (
+                <li key={label}>
+                  <strong>{label}</strong>
+                  <span>{detail}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="revo-adren-panel__empty">No adren-saving effects on this loadout.</p>
+          )}
         </section>
         <section
           className="revo-status-assumptions"
@@ -752,21 +899,27 @@ export function RevolutionPanel({
           damagePotential={stats.dp}
           className="revo-target-panel__body"
         />
-        <dl className="revo-target-metrics" data-testid="revo-target-metrics">
-          <div>
-            <dt>{liveResult?.ok && isApproximatedRun(liveResult) ? "TTK (approx.)" : "TTK"}</dt>
-            <dd aria-label={`Estimated time to kill ${targetTtkLabel}`}>{targetTtkLabel}</dd>
-          </div>
-          <div>
-            <dt>{liveResult?.ok && isApproximatedRun(liveResult) ? "KPH (approx.)" : "KPH"}</dt>
-            <dd aria-label={`Estimated kills per hour ${targetKphLabel}`}>{targetKphLabel}</dd>
-          </div>
-        </dl>
-        {!targetLp ? (
-          <p className="revo-target-metrics__hint">Set target LP.</p>
-        ) : !liveResult?.ok ? (
-          <p className="revo-target-metrics__hint">Run the bar for TTK / KPH.</p>
-        ) : null}
+        <div className="revo-target-outcome" data-testid="revo-target-metrics">
+          <dl className="revo-target-metrics">
+            <div>
+              <dt>
+                {liveResult?.ok && isApproximatedRun(liveResult) ? "TTK (approx.)" : "TTK"}
+              </dt>
+              <dd aria-label={`Estimated time to kill ${targetTtkLabel}`}>{targetTtkLabel}</dd>
+            </div>
+            <div>
+              <dt>
+                {liveResult?.ok && isApproximatedRun(liveResult) ? "KPH (approx.)" : "KPH"}
+              </dt>
+              <dd aria-label={`Estimated kills per hour ${targetKphLabel}`}>{targetKphLabel}</dd>
+            </div>
+          </dl>
+          {!targetLp ? (
+            <p className="revo-target-metrics__hint">Set target LP.</p>
+          ) : !liveResult?.ok ? (
+            <p className="revo-target-metrics__hint">Run the bar for TTK / KPH.</p>
+          ) : null}
+        </div>
       </CombatFrame>
       </div>
     </div>

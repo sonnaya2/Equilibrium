@@ -244,7 +244,10 @@ describe("Tempered Heart timed adrenaline", () => {
       startingAdrenaline: 100,
       equipmentEffects: activeEquipmentEffects({
         style: "melee",
-        equipmentIds: ["item:vestments-of-havoc-hood", "item:vestments-of-havoc-robe-top"],
+        equipmentSlots: {
+          helmet: "item:vestments-of-havoc-hood",
+          body: "item:vestments-of-havoc-robe-top",
+        },
       }),
     });
     expect(vestmentsContext.performCast(berserk, 0, false).ok).toBe(true);

@@ -40,8 +40,9 @@ export interface AttachedDamageComponent {
   attached: true;
   hitCapPolicy: "separate" | "shared";
   analysis?: {
-    kind: "league-blessing";
-    blessingId: string;
+    kind: "league-blessing" | "equipment-passive";
+    /** League blessing id when kind is league-blessing. */
+    blessingId?: string;
     bonusTargetId?: string;
     expectedActivations: number;
   };
@@ -50,7 +51,7 @@ export interface AttachedDamageComponent {
 export interface EventResolution {
   damage: ResolvedDamage;
   hitDetail?: HitResult;
-  /** Exact source outcomes retained only for ammunition payloads that transform a hit. */
+  /** Exact source outcomes for dragonstone separate-hit EV (ammo and chromatic choir free procs). */
   ammunitionSourceDistribution?: readonly ExactDamageDistribution[];
   ammunitionOriginalDamagePotential?: number;
   postDamagePotentialFlatContribution?: number;

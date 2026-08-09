@@ -40,12 +40,14 @@ export function TargetSummaryCard({
     target?.hasApplicableWeakness && target.weaknessAffinity != null
       ? target.weaknessAffinity
       : null;
+  const revo = className?.includes("revo-target") === true;
+  const artSize = revo ? 96 : 48;
 
   return (
     <div className={root}>
-      <div className="setup-target-identity">
+      <div className={`setup-target-identity${revo ? " setup-target-identity--hero" : ""}`}>
         <span className="setup-target-identity__icon" aria-hidden>
-          <GameIcon src={view.iconSrc} size={className?.includes("revo-target") ? 34 : 48} />
+          <GameIcon src={view.iconSrc} size={artSize} />
         </span>
         <div className="setup-target-identity__copy">
           <strong>{view.name}</strong>
@@ -55,40 +57,42 @@ export function TargetSummaryCard({
           </span>
         </div>
       </div>
-      <dl>
-        <div>
-          <dt>Def</dt>
-          <dd>{view.defenceLevel}</dd>
-        </div>
-        <div>
-          <dt>Armour</dt>
-          <dd>{view.armour}</dd>
-        </div>
-        <div>
-          <dt>Aff</dt>
-          <dd>{view.affinity}</dd>
-        </div>
-        <div>
-          <dt>DP</dt>
-          <dd>{Math.round(damagePotential * 100)}%</dd>
-        </div>
-        <div>
-          <dt>LP</dt>
-          <dd>{formatLifePoints(view.maximumLifePoints)}</dd>
-        </div>
-        {size != null && size > 0 ? (
+      <div className={revo ? "setup-target-stat-plate" : undefined}>
+        <dl>
           <div>
-            <dt>Size</dt>
-            <dd>{size}</dd>
+            <dt>Def</dt>
+            <dd>{view.defenceLevel}</dd>
           </div>
-        ) : null}
-        {weakness != null ? (
           <div>
-            <dt>Weak</dt>
-            <dd>{weakness}</dd>
+            <dt>Armour</dt>
+            <dd>{view.armour}</dd>
           </div>
-        ) : null}
-      </dl>
+          <div>
+            <dt>Aff</dt>
+            <dd>{view.affinity}</dd>
+          </div>
+          <div>
+            <dt>DP</dt>
+            <dd>{Math.round(damagePotential * 100)}%</dd>
+          </div>
+          <div>
+            <dt>LP</dt>
+            <dd>{formatLifePoints(view.maximumLifePoints)}</dd>
+          </div>
+          {size != null && size > 0 ? (
+            <div>
+              <dt>Size</dt>
+              <dd>{size}</dd>
+            </div>
+          ) : null}
+          {weakness != null ? (
+            <div>
+              <dt>Weak</dt>
+              <dd>{weakness}</dd>
+            </div>
+          ) : null}
+        </dl>
+      </div>
     </div>
   );
 }

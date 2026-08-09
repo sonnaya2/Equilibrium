@@ -10,6 +10,10 @@ const statsPatchPath = join(
   process.cwd(),
   "data/patches/2026-08-09-ammunition-wiki-stats.jsonl",
 );
+const runtimeSupportPatchPath = join(
+  process.cwd(),
+  "data/patches/2026-08-09-enchanted-bolt-runtime-support.jsonl",
+);
 
 function equipmentRecords(patchPath = cataloguePatchPath) {
   return readFileSync(patchPath, "utf8")
@@ -28,6 +32,7 @@ function finalEquipmentRecords() {
   for (const operation of [
     ...equipmentRecords(cataloguePatchPath),
     ...equipmentRecords(statsPatchPath),
+    ...equipmentRecords(runtimeSupportPatchPath),
   ]) {
     latest.set((operation.body as { id: string }).id, operation);
   }
@@ -66,6 +71,10 @@ describe("ranged ammunition catalogue patch", () => {
       "jas-demonbane",
       "opal",
       "pearl",
+      "emerald",
+      "ruby",
+      "dragonstone",
+      "onyx",
       "hydrix",
       "ascendri",
     ]);
@@ -79,6 +88,16 @@ describe("ranged ammunition catalogue patch", () => {
         expect(ammunition?.support.status).not.toBe("modeled");
       }
     }
+
+    const emeraldBakriminel = finalEquipmentRecords().find(
+      (operation) => (operation.body as { id?: string }).id === "item:emerald-bakriminel-bolts-e",
+    );
+    expect(emeraldBakriminel?.body).toMatchObject({
+      ammunition: {
+        mechanicId: "emerald",
+        support: { status: "modeled" },
+      },
+    });
 
     const quivers = finalEquipmentRecords()
       .map((operation) => operation.body as { id: string; quiver?: { support: { status: string } } })

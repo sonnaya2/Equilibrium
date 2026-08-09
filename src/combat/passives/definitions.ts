@@ -45,6 +45,8 @@ export const PASSIVE_SOURCE = {
   surgingStorm: wiki("Fractured Staff of Armadyl", "Fractured_Staff_of_Armadyl", "2026-08-08"),
   ashenVow: wiki("Ashen Vow", "Ashen_Vow", "2026-08-08"),
   perfectEquilibrium: wiki("Bow of the Last Guardian", "Bow_of_the_Last_Guardian", "2026-08-09"),
+  attunedCrystalWeaponry: wiki("Crystal equipment", "Crystal_equipment", "2026-08-09"),
+  windsEnd: wiki("Fleeting boots", "Fleeting_boots", "2026-08-09"),
 } as const;
 
 /**
@@ -118,7 +120,10 @@ export const PASSIVE_DEFINITIONS: readonly PassiveDefinition[] = [
     duplicatePolicy: "mutually-exclusive",
     lifecycle: ["crit-provider", "loadout-static"],
     implementationOwners: ["shared/equipment.ts"],
-    effects: ["+5% critical strike chance.", "−5 percentage points Damage Potential."],
+    effects: [
+      "+5% critical strike chance.",
+      "−5% hit chance (multiplicative; e.g. 50% → 47.5%).",
+    ],
     source: PASSIVE_SOURCE.reaver,
   },
   {
@@ -409,6 +414,41 @@ export const PASSIVE_DEFINITIONS: readonly PassiveDefinition[] = [
       "Separate Perfect Equilibrium hits use explicit ammunition-origin and landed-state routing.",
     ],
     source: PASSIVE_SOURCE.perfectEquilibrium,
+  },
+  {
+    id: "attuned-crystal-weaponry",
+    label: "Attuned crystal weaponry",
+    support: "modeled",
+    duplicatePolicy: "collapse",
+    lifecycle: ["loadout-static", "landed-hit"],
+    implementationOwners: [
+      "shared/attunedCrystalWeaponry.ts",
+      "shared/equipment.ts",
+      "engine/resolution/castHit.ts",
+    ],
+    effects: [
+      "When attuned crystal weapons occupy both hands (or 2H alone), each direct hit has a chance to deal 25% bonus damage.",
+      "Proc chance scales with Agility (12% at 99). T70 and attuned crystal shields/deflectors/wards complete the dual-wield setup.",
+      "2+ crystal armour pieces add +3% proc chance; 2+ attuned crystal armour pieces add +6% (additive; no further cap).",
+      "Damage-only EV; does not re-proc from its own bonus or from DoTs, poison, conjures, or equipment procs.",
+    ],
+    source: PASSIVE_SOURCE.attunedCrystalWeaponry,
+  },
+  {
+    id: "winds-end",
+    label: "Winds End",
+    support: "modeled",
+    duplicatePolicy: "collapse",
+    lifecycle: ["landed-hit"],
+    implementationOwners: [
+      "styles/ranged/fleetingBoots.ts",
+      "engine/resolution/landed/ranged.ts",
+    ],
+    effects: [
+      "Piercing Shot reduces Snipe CD by 6 ticks (3.6s) per hit instead of 4 (2.4s).",
+      "Ranged Basic Attack also reduces Snipe CD by 6 ticks (3.6s) per hit.",
+    ],
+    source: PASSIVE_SOURCE.windsEnd,
   },
 ];
 

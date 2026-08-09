@@ -47,6 +47,8 @@ export const RECORD_TO_ENGINE: Readonly<Record<string, string>> = {
   "melee:igneous-showdown": "igneous_showdown",
   // Ranged
   "ranged:balance-by-force": "balance_by_force",
+  "ranged:descent-of-darkness": "descent_of_darkness",
+  "ranged:descent-of-dragons": "descent_of_darkness",
   "ranged:attack": "ranged_attack",
   "ranged:piercing-shot": "piercing_shot",
   "ranged:binding-shot": "binding_shot",
@@ -188,6 +190,10 @@ export const ENGINE_LINK_OVERRIDES: Readonly<Record<string, EngineLinkOverride>>
     forceSolver: false,
   },
   balance_by_force: {
+    linkKind: "canonical",
+    forceSolver: false,
+  },
+  descent_of_darkness: {
     linkKind: "canonical",
     forceSolver: false,
   },

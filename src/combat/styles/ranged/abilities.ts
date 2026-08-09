@@ -45,6 +45,23 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     source: wiki("Balance by Force", "Balance_by_Force"),
   },
   {
+    // Wiki Descent of Darkness: 65% adren, 2 hits 190-230% each (380-460% total, 420% avg).
+    // 0s cooldown. With dragon arrows the live name is Descent of Dragons (animation only).
+    // https://runescape.wiki/w/Descent_of_Darkness
+    id: "descent_of_darkness",
+    name: "Descent of Darkness",
+    style: "ranged",
+    category: "enhanced",
+    weaponSpecial: true,
+    requiresSpecialAccess: true,
+    hits: [
+      { band: { minPct: 190, maxPct: 230 } },
+      { band: { minPct: 190, maxPct: 230 } },
+    ],
+    adrenaline: { cost: 65 },
+    source: wiki("Descent of Darkness", "Descent_of_Darkness"),
+  },
+  {
     id: "ranged_attack",
     name: "Ranged",
     style: "ranged",
@@ -332,7 +349,14 @@ export const RANGED_EFFECTS = [
     id: "darkfang_basic",
     name: "Ranged basic (Dark bow / Gloomfire)",
     notes:
-      "Wiki Ranged (ability) Darkfang row: two hits of 45-55% instead of one 90-110%. Selected in prepare via equipmentIds (item:dark-bow / item:gloomfire-bow); not a separate bar ability.",
+      "Wiki Ranged (ability) Darkfang row: two hits of 45-55% instead of one 90-110%. Selected in prepare via activeWeapon id or equipmentIds (item:dark-bow / item:gloomfire-bow, incl. augmented); not a separate bar ability.",
     source: wiki("Ranged (ability)", "Ranged_(ability)"),
+  },
+  {
+    id: "descent_of_dragons_name",
+    name: "Descent of Dragons (dragon arrows)",
+    notes:
+      "With dragon arrows equipped, Descent of Darkness is named Descent of Dragons and uses an altered animation. Damage bands stay 190-230% x2 (wiki Dark bow / Descent of Darkness).",
+    source: wiki("Dark bow", "Dark_bow"),
   },
 ];

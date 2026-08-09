@@ -1,21 +1,25 @@
-import type { RegionId } from "@/league";
+import { ANTIQUARIAN_RELIC, type RegionId } from "@/league";
 
 /**
  * Archaeology monolith relic powers (Mysterious monolith).
  * https://runescape.wiki/w/Relic_powers
  * Energy: tutorial/research ladder to 500; Mysterious City +150 -> 650.
- * Equilibrium product: 650 when Anachronia is unlocked (Orthen / City path).
+ * Equilibrium: 650 with Anachronia; Antiquarian League relic raises cap to 1000
+ * and unlocks all powers (region gates waived). Active limit stays 3.
  * Active energy budget is simultaneous (not permanently spent).
- * Max 3 active powers at once (MONOLITH_ACTIVE_LIMIT).
  */
 
 export const MONOLITH_ENERGY_DEFAULT = 500 as const;
 export const MONOLITH_ENERGY_EXTENDED = 650 as const;
-export type MonolithEnergyCap = typeof MONOLITH_ENERGY_DEFAULT | typeof MONOLITH_ENERGY_EXTENDED;
+export const MONOLITH_ENERGY_ANTIQUARIAN = 1000 as const;
+export type MonolithEnergyCap =
+  | typeof MONOLITH_ENERGY_DEFAULT
+  | typeof MONOLITH_ENERGY_EXTENDED
+  | typeof MONOLITH_ENERGY_ANTIQUARIAN;
 /** In-game max simultaneous active relic powers (plus energy budget). */
 export const MONOLITH_ACTIVE_LIMIT = 3 as const;
 
-/** League region that unlocks the 650 energy cap. */
+/** League region that unlocks the 650 energy cap (without Antiquarian). */
 export const MONOLITH_EXTENDED_REGION: RegionId = "anachronia";
 
 export type ArchRelicCategory = "combat" | "skilling" | "luck" | "experience" | "other";
@@ -416,11 +420,32 @@ export function hasAnachronia(unlockedRegions: readonly RegionId[]): boolean {
   return unlockedRegions.includes(MONOLITH_EXTENDED_REGION);
 }
 
-/** Cap is derived from Anachronia; requestedCap cannot raise without it. */
+export function hasAntiquarianLeagueRelic(
+  leagueRelics: readonly string[] | ReadonlySet<string> | undefined,
+): boolean {
+  if (!leagueRelics) return false;
+  if (leagueRelics instanceof Set) return leagueRelics.has(ANTIQUARIAN_RELIC);
+  return (leagueRelics as readonly string[]).includes(ANTIQUARIAN_RELIC);
+}
+
+function isKnownEnergyCap(value: unknown): value is MonolithEnergyCap {
+  return (
+    value === MONOLITH_ENERGY_DEFAULT ||
+    value === MONOLITH_ENERGY_EXTENDED ||
+    value === MONOLITH_ENERGY_ANTIQUARIAN
+  );
+}
+
+/**
+ * Cap precedence: Antiquarian (1000) > Anachronia (650) > default (500).
+ * requestedCap cannot raise above the derived maximum.
+ */
 export function resolveMonolithEnergyCap(input: {
   unlockedRegions: readonly RegionId[];
-  requestedCap?: MonolithEnergyCap | null;
+  leagueRelics?: readonly string[] | ReadonlySet<string>;
+  requestedCap?: MonolithEnergyCap | number | null;
 }): MonolithEnergyCap {
+  if (hasAntiquarianLeagueRelic(input.leagueRelics)) return MONOLITH_ENERGY_ANTIQUARIAN;
   if (hasAnachronia(input.unlockedRegions)) return MONOLITH_ENERGY_EXTENDED;
   return MONOLITH_ENERGY_DEFAULT;
 }
@@ -466,8 +491,8 @@ export function relicRegionsMet(
 
 /**
  * Repair path for corrupt persisted state: drop unknown ids, drop region-locked
- * when unlockedRegions is provided, then pop from the end while over energyCap
- * or over active limit. Does not reorder survivors.
+ * when unlockedRegions is provided (unless ignoreRegionGates), then pop from the
+ * end while over energyCap or over active limit. Does not reorder survivors.
  * When unlockedRegions is omitted, no region filter (compat).
  * Interactive toggles must use tryToggleArchaeologyRelic (explicit reject).
  */
@@ -475,9 +500,11 @@ export function sanitizeSelectedRelics(input: {
   selectedIds: readonly string[];
   energyCap: MonolithEnergyCap | number;
   unlockedRegions?: readonly RegionId[];
+  /** Antiquarian: all Archaeology powers available after tutorial. */
+  ignoreRegionGates?: boolean;
 }): string[] {
   let kept = knownSelectedRelics(input.selectedIds);
-  if (input.unlockedRegions != null) {
+  if (input.unlockedRegions != null && input.ignoreRegionGates !== true) {
     const regions = input.unlockedRegions;
     kept = kept.filter((id) => {
       const relic = BY_ID.get(id);
@@ -496,21 +523,23 @@ export function sanitizeSelectedRelics(input: {
 
 export function sanitizeArchaeologyState(
   state: { selectedIds?: readonly string[]; energyCap?: unknown },
-  unlockedRegions: readonly RegionId[],
+  unlockedRegions?: readonly RegionId[],
+  leagueRelics?: readonly string[] | ReadonlySet<string>,
 ): ArchaeologySelectionState {
+  const ignoreRegionGates = hasAntiquarianLeagueRelic(leagueRelics);
   const energyCap = resolveMonolithEnergyCap({
-    unlockedRegions,
-    requestedCap:
-      state.energyCap === MONOLITH_ENERGY_EXTENDED || state.energyCap === MONOLITH_ENERGY_DEFAULT
-        ? state.energyCap
-        : null,
+    unlockedRegions: unlockedRegions ?? [],
+    leagueRelics,
+    requestedCap: isKnownEnergyCap(state.energyCap) ? state.energyCap : null,
   });
   return {
     energyCap,
     selectedIds: sanitizeSelectedRelics({
       selectedIds: state.selectedIds ?? [],
       energyCap,
+      // Omit region filter when regions are unknown; Antiquarian still ignores gates.
       unlockedRegions,
+      ignoreRegionGates,
     }),
   };
 }
@@ -532,11 +561,16 @@ export function archaeologySelectBlockReason(input: {
   selectedIds: readonly string[];
   energyCap: MonolithEnergyCap | number;
   unlockedRegions?: readonly RegionId[];
+  ignoreRegionGates?: boolean;
 }): ArchaeologySelectRejectReason | null {
   if (input.selectedIds.includes(input.relicId)) return null;
   const relic = BY_ID.get(input.relicId);
   if (!relic) return "unknown_relic";
-  if (input.unlockedRegions != null && !relicRegionsMet(relic, input.unlockedRegions)) {
+  if (
+    input.unlockedRegions != null &&
+    input.ignoreRegionGates !== true &&
+    !relicRegionsMet(relic, input.unlockedRegions)
+  ) {
     return "region_locked";
   }
   const activeCount = knownSelectedRelics(input.selectedIds).length;
@@ -569,9 +603,10 @@ export function tryToggleArchaeologyRelic(input: {
   selectedIds: readonly string[];
   energyCap: MonolithEnergyCap | number;
   unlockedRegions?: readonly RegionId[];
+  ignoreRegionGates?: boolean;
 }): ArchaeologyToggleResult {
   const base = knownSelectedRelics(input.selectedIds);
-  const { relicId, energyCap, unlockedRegions } = input;
+  const { relicId, energyCap, unlockedRegions, ignoreRegionGates } = input;
 
   if (base.includes(relicId)) {
     return {
@@ -586,6 +621,7 @@ export function tryToggleArchaeologyRelic(input: {
     selectedIds: base,
     energyCap,
     unlockedRegions,
+    ignoreRegionGates,
   });
   if (reason != null) {
     return { ok: false, reason, selectedIds: base };
@@ -604,6 +640,7 @@ export function toggleArchaeologyRelic(input: {
   selectedIds: readonly string[];
   energyCap: MonolithEnergyCap | number;
   unlockedRegions?: readonly RegionId[];
+  ignoreRegionGates?: boolean;
 }): string[] {
   return tryToggleArchaeologyRelic(input).selectedIds;
 }

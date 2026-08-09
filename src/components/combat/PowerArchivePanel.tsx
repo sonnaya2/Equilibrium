@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { GameIcon } from "../GameIcon";
 import {
   POWER_ARCHIVE_PERKS,
@@ -131,7 +131,7 @@ function ArchiveGizmoCard({
           aria-label={`Remove bot gizmo ${index + 1}`}
           onClick={onClear}
         >
-          Clear
+          Remove
         </button>
       </div>
       <div className="gizmo-card__body" aria-label={`Bot gizmo ${index + 1} perks`}>
@@ -200,6 +200,11 @@ export function PowerArchivePanel({
   const [draftShell, setDraftShell] = useState<PowerArchiveShell>("weapon");
   const [draftAncient, setDraftAncient] = useState(true);
 
+  useEffect(() => {
+    if (selectedId != null && archive.slots.some((s) => s.id === selectedId)) return;
+    setSelectedId(archive.slots[0]?.id ?? null);
+  }, [archive.slots, selectedId]);
+
   const selected = useMemo(
     () => archive.slots.find((s) => s.id === selectedId) ?? null,
     [archive.slots, selectedId],
@@ -223,103 +228,137 @@ export function PowerArchivePanel({
     return idx >= 0 ? idx : null;
   };
 
+  const cleanSlot = (nextSlot: PowerArchiveGizmoSlot): PowerArchiveGizmoSlot => ({
+    ...nextSlot,
+    perks: nextSlot.perks
+      .map((entry) => {
+        const def = powerArchivePerk(entry.perkId);
+        if (!gizmoAcceptsPerk(nextSlot.shell, def, nextSlot.ancient)) return null;
+        const max = storedMaxForShell(def, nextSlot.ancient);
+        if (max == null) return null;
+        const rank = Math.min(Math.max(1, entry.rank), max);
+        return { perkId: entry.perkId, rank };
+      })
+      .filter((e): e is { perkId: PowerArchivePerkId; rank: number } => e != null)
+      .slice(0, 2),
+  });
+
   const addSlot = () => {
-    if (!canAddPowerArchiveSlot(archive)) return;
-    const slot = emptySlot(draftShell, draftAncient);
-    const next = withPowerArchiveSlot(archive, slot);
-    setLoadout(setArchive(loadout, next));
-    setSelectedId(slot.id);
+    let createdId: string | null = null;
+    setLoadout((prev) => {
+      if (!canAddPowerArchiveSlot(prev.powerArchive)) return prev;
+      const slot = emptySlot(draftShell, draftAncient);
+      createdId = slot.id;
+      return setArchive(prev, withPowerArchiveSlot(prev.powerArchive, slot));
+    });
+    if (createdId) setSelectedId(createdId);
   };
 
   const removeSlot = (id: string) => {
-    const next = withoutPowerArchiveSlot(archive, id);
-    setLoadout(setArchive(loadout, next));
-    if (selectedId === id) setSelectedId(next.slots[0]?.id ?? null);
+    setLoadout((prev) => setArchive(prev, withoutPowerArchiveSlot(prev.powerArchive, id)));
   };
 
-  const updateSlot = (slot: PowerArchiveGizmoSlot, patch: Partial<PowerArchiveGizmoSlot>) => {
-    const nextSlot: PowerArchiveGizmoSlot = {
-      ...slot,
-      ...patch,
-      id: slot.id,
-      perks: patch.perks ?? slot.perks,
-    };
-    const cleaned: PowerArchiveGizmoSlot = {
-      ...nextSlot,
-      perks: nextSlot.perks
-        .map((entry) => {
-          const def = powerArchivePerk(entry.perkId);
-          if (!gizmoAcceptsPerk(nextSlot.shell, def, nextSlot.ancient)) return null;
-          const max = storedMaxForShell(def, nextSlot.ancient);
-          if (max == null) return null;
-          const rank = Math.min(Math.max(1, entry.rank), max);
-          return { perkId: entry.perkId, rank };
-        })
-        .filter((e): e is { perkId: PowerArchivePerkId; rank: number } => e != null)
-        .slice(0, 2),
-    };
-    setLoadout(setArchive(loadout, replacePowerArchiveSlot(archive, slot.id, cleaned)));
+  const updateSlot = (
+    slotId: string,
+    patch:
+      | Partial<PowerArchiveGizmoSlot>
+      | ((slot: PowerArchiveGizmoSlot) => Partial<PowerArchiveGizmoSlot>),
+  ) => {
+    setLoadout((prev) => {
+      const slot = prev.powerArchive.slots.find((s) => s.id === slotId);
+      if (!slot) return prev;
+      const applied = typeof patch === "function" ? patch(slot) : patch;
+      const nextSlot: PowerArchiveGizmoSlot = {
+        ...slot,
+        ...applied,
+        id: slot.id,
+        perks: applied.perks ?? slot.perks,
+      };
+      return setArchive(
+        prev,
+        replacePowerArchiveSlot(prev.powerArchive, slotId, cleanSlot(nextSlot)),
+      );
+    });
   };
 
   const placePerkOnActive = (perkId: PowerArchivePerkId) => {
-    const existing = assignedSlotOf(perkId);
-    if (existing != null) {
-      setSelectedId(archive.slots[existing]!.id);
-      return;
-    }
-    let slot = selected;
-    if (!slot || slot.perks.length >= 2) {
+    let nextSelected: string | null | undefined;
+    setLoadout((prev) => {
+      const state = prev.powerArchive;
+      const existingIdx = state.slots.findIndex((s) =>
+        s.perks.some((p) => p.perkId === perkId),
+      );
+      if (existingIdx >= 0) {
+        nextSelected = state.slots[existingIdx]!.id;
+        return prev;
+      }
+
       const def = powerArchivePerk(perkId);
-      const shell: PowerArchiveShell = def.gizmoKind === "armour" ? "armour" : "weapon";
-      if (!canAddPowerArchiveSlot(archive)) return;
-      const created = emptySlot(shell, true);
-      const withSlot = withPowerArchiveSlot(archive, created);
-      const max = storedMaxForShell(def, true) ?? 1;
-      const filled: PowerArchiveGizmoSlot = {
-        ...created,
-        perks: [{ perkId, rank: max }],
+      const withPerk = (slot: PowerArchiveGizmoSlot): PowerArchiveGizmoSlot | null => {
+        if (slot.perks.length >= 2) return null;
+        if (!gizmoAcceptsPerk(slot.shell, def, slot.ancient)) return null;
+        const max = storedMaxForShell(def, slot.ancient) ?? 1;
+        return cleanSlot({
+          ...slot,
+          perks: [...slot.perks, { perkId, rank: max }],
+        });
       };
-      const next = replacePowerArchiveSlot(withSlot, created.id, filled);
-      setLoadout(setArchive(loadout, next));
-      setSelectedId(created.id);
-      return;
-    }
-    if (!gizmoAcceptsPerk(slot.shell, powerArchivePerk(perkId), slot.ancient)) {
-      // Switch shell if needed for compatibility.
-      const def = powerArchivePerk(perkId);
-      const shell: PowerArchiveShell = def.gizmoKind === "armour" ? "armour" : "weapon";
-      if (!canAddPowerArchiveSlot(archive)) return;
-      const created = emptySlot(shell, true);
-      const max = storedMaxForShell(def, true) ?? 1;
-      const next = withPowerArchiveSlot(archive, {
-        ...created,
+
+      const active = selectedId
+        ? (state.slots.find((s) => s.id === selectedId) ?? null)
+        : null;
+      if (active) {
+        const filled = withPerk(active);
+        if (filled) {
+          nextSelected = filled.id;
+          return setArchive(prev, replacePowerArchiveSlot(state, active.id, filled));
+        }
+      }
+
+      for (const slot of state.slots) {
+        const filled = withPerk(slot);
+        if (filled) {
+          nextSelected = filled.id;
+          return setArchive(prev, replacePowerArchiveSlot(state, slot.id, filled));
+        }
+      }
+
+      if (!canAddPowerArchiveSlot(state)) return prev;
+
+      let shell = draftShell;
+      let ancient = draftAncient;
+      if (!gizmoAcceptsPerk(shell, def, ancient)) {
+        shell = def.gizmoKind === "armour" ? "armour" : "weapon";
+        if (!gizmoAcceptsPerk(shell, def, ancient)) {
+          ancient = true;
+        }
+      }
+      if (!gizmoAcceptsPerk(shell, def, ancient)) return prev;
+
+      const max = storedMaxForShell(def, ancient) ?? 1;
+      const created = cleanSlot({
+        ...emptySlot(shell, ancient),
         perks: [{ perkId, rank: max }],
       });
-      setLoadout(setArchive(loadout, next));
-      setSelectedId(created.id);
-      return;
-    }
-    const def = powerArchivePerk(perkId);
-    const max = storedMaxForShell(def, slot.ancient) ?? 1;
-    updateSlot(slot, {
-      perks: [...slot.perks, { perkId, rank: max }],
+      nextSelected = created.id;
+      return setArchive(prev, withPowerArchiveSlot(state, created));
     });
+    if (nextSelected !== undefined) setSelectedId(nextSelected);
   };
 
   const fillMaxDps = () => {
     const next = buildMaxDpsPowerArchiveState();
-    setLoadout(setArchive(loadout, next));
+    setLoadout((prev) => setArchive(prev, next));
     setSelectedId(next.slots[0]?.id ?? null);
   };
 
   const clearAll = () => {
-    setLoadout(setArchive(loadout, emptyPowerArchiveState()));
+    setLoadout((prev) => setArchive(prev, emptyPowerArchiveState()));
     setSelectedId(null);
   };
 
   const activeCapacity = 2;
   const activeHeld = selected?.perks.length ?? 0;
-  const activeFull = activeHeld >= activeCapacity;
   const dpsCount = POWER_ARCHIVE_PERKS.filter((p) => p.combatScope === "offensive").length;
 
   return (
@@ -375,8 +414,16 @@ export function PowerArchivePanel({
               const compatible = selected
                 ? gizmoAcceptsPerk(selected.shell, perk, selected.ancient)
                 : true;
+              const roomOnSelected =
+                selected != null && selected.perks.length < 2 && compatible;
+              const roomElsewhere = archive.slots.some(
+                (s) =>
+                  s.perks.length < 2 && gizmoAcceptsPerk(s.shell, perk, s.ancient),
+              );
               const blocked =
-                assigned == null && selected != null && (!compatible || activeFull) &&
+                assigned == null &&
+                !roomOnSelected &&
+                !roomElsewhere &&
                 !canAddPowerArchiveSlot(archive);
               const meta =
                 assigned != null
@@ -473,16 +520,16 @@ export function PowerArchivePanel({
                   onActivate={() => setSelectedId(slot.id)}
                   onClear={() => removeSlot(slot.id)}
                   onRank={(perkId, rank) => {
-                    updateSlot(slot, {
-                      perks: slot.perks.map((p) =>
+                    updateSlot(slot.id, (current) => ({
+                      perks: current.perks.map((p) =>
                         p.perkId === perkId ? { ...p, rank } : p,
                       ),
-                    });
+                    }));
                   }}
                   onRemovePerk={(perkId) => {
-                    updateSlot(slot, {
-                      perks: slot.perks.filter((p) => p.perkId !== perkId),
-                    });
+                    updateSlot(slot.id, (current) => ({
+                      perks: current.perks.filter((p) => p.perkId !== perkId),
+                    }));
                   }}
                 />
               ))

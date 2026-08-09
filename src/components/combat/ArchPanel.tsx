@@ -7,6 +7,7 @@ import { NumberField } from "./NumberField";
 import {
   archaeologyRejectLabel,
   archaeologySelectBlockReason,
+  hasAntiquarianLeagueRelic,
   isRelicActive,
   MONOLITH_ACTIVE_LIMIT,
   relicsGroupedByCategory,
@@ -30,7 +31,12 @@ import {
   type Loadout,
   type SetLoadout,
 } from "./useLoadout";
-import { isRegionUnlocked, REGION_IDS, type RegionId } from "@/league";
+import {
+  activeLeagueRelicNames,
+  isRegionUnlocked,
+  REGION_IDS,
+  type RegionId,
+} from "@/league";
 import { useBuild } from "@/league/useBuild";
 import { regionDisplayName } from "@/tasks/regionMap";
 import type { TaskRegionId } from "@/tasks";
@@ -133,16 +139,36 @@ export function ArchPanel({ loadout, setLoadout }: { loadout: Loadout; setLoadou
   );
   const unlockedKey = unlockedRegions.join("|");
 
+  const leagueRelics = useMemo(
+    () => activeLeagueRelicNames(build),
+    [build],
+  );
+
+  // Cap is always derived from regions + League relics (Antiquarian -> 1000).
+  // Do not trust stored energyCap alone for display or toggles.
+  const energyCap = useMemo(
+    () =>
+      resolveMonolithEnergyCap({
+        unlockedRegions,
+        leagueRelics,
+      }),
+    [unlockedRegions, leagueRelics],
+  );
+  const antiquarianActive = hasAntiquarianLeagueRelic(leagueRelics);
+
   // Same clamp combat/stats use - tiles and bars never show illegal "selected but dead" relics.
   const effectiveArch = useMemo(
     () =>
       sanitizeArchaeologyState(
-        loadout.archaeology ?? { selectedIds: [], energyCap: 500 },
+        {
+          selectedIds: loadout.archaeology?.selectedIds ?? [],
+          energyCap,
+        },
         unlockedRegions,
+        leagueRelics,
       ),
-    [loadout.archaeology, unlockedRegions],
+    [loadout.archaeology?.selectedIds, energyCap, unlockedRegions, leagueRelics],
   );
-  const energyCap = effectiveArch.energyCap;
   const selectedIds = effectiveArch.selectedIds;
   const used = totalEnergyUsed(selectedIds);
   const remaining = energyCap - used;
@@ -151,30 +177,41 @@ export function ArchPanel({ loadout, setLoadout }: { loadout: Loadout; setLoadou
   const hsSelected = isRelicActive(selectedIds, "heightened_senses");
   const coeSelected = isRelicActive(selectedIds, "conservation_of_energy");
 
-  // Only re-clamp when league regions change (Anachronia 500↔650). Functional update
-  // so a pending relic toggle is not wiped by a stale loadout snapshot.
+  const leagueRelicsKey = leagueRelics.join("|");
+
+  // Persist derived cap (500 / 650 / 1000) when regions or Antiquarian change.
   useEffect(() => {
     setLoadout((prev) => {
       const stored = prev.archaeology ?? { selectedIds: [], energyCap: 500 as const };
-      const next = sanitizeArchaeologyState(stored, unlockedRegions);
+      const next = sanitizeArchaeologyState(
+        { selectedIds: stored.selectedIds, energyCap },
+        unlockedRegions,
+        leagueRelics,
+      );
       const sameCap = stored.energyCap === next.energyCap;
       const sameIds =
         next.selectedIds.length === stored.selectedIds.length &&
         next.selectedIds.every((id, i) => id === stored.selectedIds[i]);
       if (sameCap && sameIds) return prev;
-      return withArchaeologySelection(prev, next.selectedIds, next.energyCap);
+      return withArchaeologySelection(
+        prev,
+        next.selectedIds,
+        next.energyCap,
+        unlockedRegions,
+        leagueRelics,
+      );
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- region key only
-  }, [unlockedKey, setLoadout]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- region + league relic keys only
+  }, [unlockedKey, leagueRelicsKey, energyCap, setLoadout]);
 
   const stats = useMemo(
     () =>
       loadoutStats(loadout, {
         blessingPicks: build.blessingPicks,
-        relics: Object.values(build.relics).filter(Boolean),
+        relics: leagueRelics,
         unlockedRegions,
       }),
-    [loadout, build.blessingPicks, build.relics, unlockedRegions],
+    [loadout, build.blessingPicks, leagueRelics, unlockedRegions],
   );
 
   const healthPercent = sanitizeHealthPercent(loadout.currentHealthPercent ?? 50);
@@ -237,23 +274,21 @@ export function ArchPanel({ loadout, setLoadout }: { loadout: Loadout; setLoadou
   ].filter((line): line is string => line != null);
 
   const toggleRelic = (relicId: string) => {
-    const cap = resolveMonolithEnergyCap({
+    const attempt = applyArchaeologyToggle(
+      loadout,
+      relicId,
+      energyCap,
       unlockedRegions,
-      requestedCap: loadout.archaeology?.energyCap ?? null,
-    });
-    const attempt = applyArchaeologyToggle(loadout, relicId, cap, unlockedRegions);
+      leagueRelics,
+    );
     if (!attempt.result.ok) {
       setRejectHint(archaeologyRejectLabel(attempt.result.reason));
       return;
     }
     setRejectHint(null);
-    setLoadout((prev) => {
-      const currentCap = resolveMonolithEnergyCap({
-        unlockedRegions,
-        requestedCap: prev.archaeology?.energyCap ?? null,
-      });
-      return applyArchaeologyToggle(prev, relicId, currentCap, unlockedRegions).loadout;
-    });
+    setLoadout((prev) =>
+      applyArchaeologyToggle(prev, relicId, energyCap, unlockedRegions, leagueRelics).loadout,
+    );
   };
 
   const energyPct = energyCap > 0 ? Math.min(100, (used / energyCap) * 100) : 0;
@@ -288,8 +323,11 @@ export function ArchPanel({ loadout, setLoadout }: { loadout: Loadout; setLoadou
           <span className="arch-energy__fill" style={{ width: `${energyPct}%` }} />
         </div>
         <p className="arch-energy__note">
-          Cap 500 by default. 650 requires Anachronia
-          {energyCap === 650 ? " (unlocked)" : " (locked)"}.
+          {antiquarianActive
+            ? "Cap 1000 from Antiquarian · all Archaeology powers unlocked · max 3 active."
+            : energyCap === 650
+              ? "Cap 650 with Anachronia. Antiquarian raises it to 1000 and unlocks all powers."
+              : "Cap 500 by default. Anachronia → 650. Antiquarian → 1000 and unlocks all powers."}
         </p>
         {rejectHint ? (
           <p className="arch-energy__reject mt-1 text-[11px] text-ruby-300" role="status">
@@ -324,6 +362,7 @@ export function ArchPanel({ loadout, setLoadout }: { loadout: Loadout; setLoadou
                 selectedIds,
                 energyCap,
                 unlockedRegions,
+                ignoreRegionGates: hasAntiquarianLeagueRelic(leagueRelics),
               });
               return (
                 <RelicRow

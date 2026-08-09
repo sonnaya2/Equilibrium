@@ -8,8 +8,7 @@ import type { CombatStyle } from "@/combat/types";
 import { filterRelicGrantedRecords } from "@/combat/league/relicGrantedItems";
 import { resolveLeagueRules, setPieceContributionModifier } from "@/combat/league/ruleset";
 import { equippedPassiveSummaries, type PassiveSupport } from "@/combat/shared/equipment";
-import type { RegionId } from "@/league";
-import { unlockedRegions } from "@/league";
+import { activeLeagueRelicNames, unlockedRegions, type RegionId } from "@/league";
 import { useBuild } from "@/league/useBuild";
 import { equipmentIconPath, styleIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
@@ -228,17 +227,14 @@ export function GearPanel({ loadout, setLoadout }: { loadout: Loadout; setLoadou
   const { build } = useBuild();
   const unlocked = useMemo(() => unlockedRegions(build), [build]);
   const unlockedSet = useMemo(() => new Set<RegionId>(unlocked), [unlocked]);
-  const activeRelicNames = useMemo(
-    () =>
-      Object.values(build.relics).filter((n): n is string => typeof n === "string" && n.length > 0),
-    [build.relics],
-  );
+  const activeRelicNames = useMemo(() => activeLeagueRelicNames(build), [build]);
 
   const slots = loadout.equipmentSlots ?? {};
   const passives = equippedPassiveSummaries({
     style: loadout.style,
     equipmentSlots: slots,
     enchantments: loadout.enchantments,
+    agilityLevel: loadout.agilityLevel,
   });
   const ammunitionEffect = rangedAmmunitionEffectPresentation(loadout);
   const primaryWeapon = byId(slots.twohand ?? slots.mainhand);
@@ -480,20 +476,12 @@ export function GearPanel({ loadout, setLoadout }: { loadout: Loadout; setLoadou
                 <li key={`ammunition:${ammunitionEffect.itemId}`} className="gear-passive-row">
                   <GameIcon
                     src={ammunitionEffect.icon}
-                    alt={ammunitionEffect.itemLabel}
+                    alt={ammunitionEffect.label}
                     size={28}
                     className="gear-passive-row__icon"
                   />
                   <div className="min-w-0">
-                    <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                      <span className="text-sm text-parch-50">{ammunitionEffect.label}</span>
-                      <span className={`passive-status is-${ammunitionEffect.fullStatusClass}`}>
-                        {ammunitionEffect.statusLabel}
-                      </span>
-                    </div>
-                    <ul className="mt-0.5 space-y-0.5 text-[11px] leading-snug text-parch-300">
-                      <li>{ammunitionEffect.itemLabel}</li>
-                    </ul>
+                    <span className="text-sm text-parch-50">{ammunitionEffect.label}</span>
                   </div>
                 </li>
               ) : null}

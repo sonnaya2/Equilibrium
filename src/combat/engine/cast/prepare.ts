@@ -178,7 +178,10 @@ export function prepareCast(
   }
 
   // Dark bow / Gloomfire: Ranged basic becomes two independent 45-55% hits.
-  if (ability.id === "ranged_attack" && hasDarkfangWeapon(input.equipmentIds)) {
+  if (
+    ability.id === "ranged_attack" &&
+    hasDarkfangWeapon(input.equipmentIds, input.equipmentEffects?.activeWeapon?.id)
+  ) {
     working = { ...working, hits: darkfangBasicHits() };
   }
 

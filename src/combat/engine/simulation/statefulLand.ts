@@ -27,16 +27,26 @@ function tsunamiCritChance(damage: ResolvedDamage): number {
     : 0;
 }
 
+function tsunamiCritProbability(
+  event: ScheduledEvent<SimulationRuntime>,
+  damage: ResolvedDamage,
+): number {
+  const surgeSourceChance = event.lightningSurgeSourceCritChance;
+  const ownChance = tsunamiCritChance(damage);
+  return surgeSourceChance == null ? ownChance : surgeSourceChance * ownChance;
+}
+
 function isTsunamiEligible(
   rt: SimulationRuntime,
   event: ScheduledEvent<SimulationRuntime>,
   ability: AbilitySpec | undefined,
   damage: ResolvedDamage,
 ): boolean {
-  if (!ability || ability.style !== "magic") return false;
-  if (event.attached || !(event.procEligible || event.convertedChannel)) return false;
+  const surge = event.provenance.detail === "lightning_surge";
+  if (!surge && (!ability || ability.style !== "magic")) return false;
+  if (!surge && (event.attached || !(event.procEligible || event.convertedChannel))) return false;
   // Tsunami counts non-necromancy player critical strikes; blessing-origin hits do not grant adren.
-  if (capabilitiesOf(event.provenance).canGenerateResources !== true) return false;
+  if (!surge && capabilitiesOf(event.provenance).canGenerateResources !== true) return false;
   if (damage.max <= 0 && damage.expected <= 0) return false;
   return tsunamiCritAdrenActive(rt.state.magic, event.tick);
 }
@@ -63,9 +73,12 @@ export function applyStatefulLandRng(
   if (grant <= 0) return;
   const actualCrit = damage.critical?.outcome;
   const critical =
-    actualCrit !== undefined
+    actualCrit !== undefined && event.lightningSurgeSourceCritChance == null
       ? actualCrit
-      : rt.stochastic.bernoulli("land:tsunami-crit-adrenaline", tsunamiCritChance(damage));
+      : rt.stochastic.bernoulli(
+          "land:tsunami-crit-adrenaline",
+          tsunamiCritProbability(event, damage),
+        );
   if (critical) {
     rt.state = gainAdrenaline(rt.state, grant);
   }

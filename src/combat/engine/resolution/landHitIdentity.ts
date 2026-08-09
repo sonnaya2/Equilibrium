@@ -151,6 +151,8 @@ export function landHitIdentity(
     snap.firstEligibleHitIndex,
     snap.empowerMult,
     snap.enduringRuinBonus,
+    b(!!snap.magicWeaponAtCast),
+    b(!!snap.surgingStormAtCast),
     snap.critLayers.chance,
     snap.critLayers.damageBonus ?? 0,
     b(!!snap.critLayers.guaranteed),

@@ -129,6 +129,9 @@ export interface SerializableRevolutionSimBase {
   conjureDurationMult?: number;
   tumekensPieces?: number;
   equipmentEffects: ActiveEquipmentEffects;
+  nativeSpecialPolicy?: {
+    useEquippedWeaponSpecial: boolean;
+  };
   league: SerializableLeagueRules;
   context?: CombatContext;
   targetHpPercent?: number;

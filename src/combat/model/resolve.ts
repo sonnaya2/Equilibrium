@@ -35,6 +35,12 @@ function copyEquipmentEffects(
       conditional: { ...effects.setCritChance.conditional },
     },
     passiveIds: [...effects.passiveIds],
+    activeWeapon: effects.activeWeapon
+      ? {
+          ...effects.activeWeapon,
+          passiveIds: [...effects.activeWeapon.passiveIds],
+        }
+      : undefined,
     enchantments: [...effects.enchantments],
     weaponClass: effects.weaponClass,
     defenderEquipped: effects.defenderEquipped,
@@ -76,6 +82,9 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
     equipmentIds: [...input.equipmentIds],
     equipmentEffects: copyEquipmentEffects(input.equipmentEffects),
     weaponConfiguration: input.weaponConfiguration,
+    nativeSpecialPolicy: {
+      useEquippedWeaponSpecial: input.nativeSpecialPolicy?.useEquippedWeaponSpecial === true,
+    },
     modifierSources: {
       ...modifierSources,
       setCounts: [...modifierSources.setCounts].map(([id, n]) => [id, n] as const),

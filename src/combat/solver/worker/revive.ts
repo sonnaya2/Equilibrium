@@ -73,6 +73,9 @@ export function reviveRevolutionBase(sim: SerializableRevolutionSimBase): Revive
         conditional: { ...sim.equipmentEffects.setCritChance.conditional },
       },
     },
+    nativeSpecialPolicy: {
+      useEquippedWeaponSpecial: sim.nativeSpecialPolicy?.useEquippedWeaponSpecial === true,
+    },
     league,
     procs: sim.procs,
     conjureBasicDamageMult: sim.conjureBasicDamageMult,

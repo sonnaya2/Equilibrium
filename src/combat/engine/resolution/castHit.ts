@@ -37,6 +37,7 @@ import {
   type EventResolution,
   type ResolvedDamage,
 } from "./types";
+import { SURGING_STORM_CRIT_DAMAGE_DISTRIBUTION } from "../../styles/magic/effects";
 import { dynamicEquipmentCritBonus } from "../../shared/equipment";
 import { activeBleedCount } from "../../styles/melee/effects";
 import { activeFrostbladesMass } from "../../styles/melee/primordialIce";
@@ -352,6 +353,9 @@ function resolveCastHitUncached(
           level,
           accuracy: isCommand ? CONJURE_DAMAGE_POTENTIAL : input.accuracy,
           crit,
+          ...(snap.surgingStormAtCast
+            ? { critDamageDistribution: SURGING_STORM_CRIT_DAMAGE_DISTRIBUTION }
+            : {}),
           modifiers: isCommand ? conjureEligibleModifiers(modifiers) : modifiers,
           context: hitContext,
           cap: input.cap,

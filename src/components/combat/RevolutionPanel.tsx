@@ -439,6 +439,27 @@ export function RevolutionPanel({
             "No reference bar for this loadout"
           )}
         </span>
+        {setLoadout ? (
+          <label className="flex items-start gap-2 text-parch-300">
+            <input
+              type="checkbox"
+              checked={loadout.buffs.useEquippedWeaponSpecial}
+              onChange={(event) =>
+                setLoadout((prev) =>
+                  withLoadoutBuffs(prev, {
+                    useEquippedWeaponSpecial: event.target.checked,
+                  }),
+                )
+              }
+            />
+            <span>
+              <span className="block text-parch-50">Use equipped weapon special manually</span>
+              <span className="block text-[0.68rem] text-parch-400">
+                Fires it when legal while Revolution controls the bar.
+              </span>
+            </span>
+          </label>
+        ) : null}
       </div>
 
       <div className="ability-bar-row">

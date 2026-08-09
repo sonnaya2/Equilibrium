@@ -120,6 +120,7 @@ export function buildCandidatePoolForRequest(
     includePartial: request.includePartial === true,
     weaponConfiguration: simBase.weaponConfiguration,
     equipmentIds: simBase.equipmentIds,
+    activeWeapon: simBase.equipmentEffects?.activeWeapon,
     passiveIds,
     league,
   } as const;
@@ -270,6 +271,7 @@ export function fitIncumbentBar(
     const availability = resolveAbilityCastAvailability(spec as AbilitySpec, {
       weaponConfiguration: loadout.weaponConfiguration,
       equipmentIds: loadout.equipmentIds,
+      activeWeapon: loadout.equipmentEffects?.activeWeapon,
       passiveIds,
       league,
     });

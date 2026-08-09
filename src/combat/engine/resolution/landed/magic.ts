@@ -27,14 +27,14 @@ export function onMagicHitLanded(
   if (
     event.lightningSurge &&
     snap &&
-    event.sourceCast !== rt.state.magic.instability.grantedByCast &&
+    snap.magicWeaponAtCast &&
     instabilityActive(rt.state.magic.instability, event.tick) &&
     lightningSurgeChance > 0
   ) {
     scheduleEvent(rt, {
       tick: event.tick + LIGHTNING_SURGE_TICK_DELAY,
       family: "proc",
-      abilityId: event.abilityId,
+      abilityId: "instability_lightning_surge",
       sourceCast: event.sourceCast,
       hitIndex: event.hitIndex,
       attached: false,
@@ -44,11 +44,11 @@ export function onMagicHitLanded(
       expectedTriggerRolls: 0,
       expectedActivations: lightningSurgeChance,
       expectedSeparateHits: lightningSurgeChance,
+      lightningSurgeSourceCritChance: lightningSurgeChance,
       originKind: "proc",
       provenance: { kind: "equipment_proc", detail: "lightning_surge" },
       derivedFrom: event.seq,
-      resolve: (eventRt, at) =>
-        resolveLightningSurge(eventRt, at, event.seq, ability, snap, event.hitIndex),
+      resolve: (eventRt, at) => resolveLightningSurge(eventRt, at, event.seq),
     });
   }
   // Concentrated Blast hits stack their crit grant at land time (wiki: each

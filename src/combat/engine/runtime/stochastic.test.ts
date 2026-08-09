@@ -34,6 +34,7 @@ describe("counter-based stochastic oracle", () => {
   it("uses one lane when no RNG can change later state", () => {
     expect(needsStochasticLanes({}, ["attack", "aftershock"])).toBe(false);
     expect(stochasticLaneCount({}, ["attack", "aftershock"])).toBe(1);
+    expect(stochasticLaneCount({}, ["magic_attack"])).toBe(1);
   });
 
   it("uses the fixed ensemble for every supported state-changing RNG source", () => {
@@ -55,6 +56,8 @@ describe("counter-based stochastic oracle", () => {
     expect(stochasticLaneCount({}, ["icy_tempest"])).toBe(128);
     expect(stochasticLaneCount({}, ["spectral_scythe"])).toBe(128);
     expect(stochasticLaneCount({}, ["tsunami"])).toBe(128);
+    expect(stochasticLaneCount({}, ["instability"])).toBe(1);
+    expect(stochasticLaneCount({}, ["instability", "tsunami"])).toBe(128);
   });
 
   it("honors an explicit diagnostic lane count", () => {

@@ -154,6 +154,7 @@ async function solveWithBudget(
     deny: [...denySet],
     weaponConfiguration: simBase.weaponConfiguration,
     equipmentIds: simBase.equipmentIds,
+    activeWeapon: simBase.equipmentEffects?.activeWeapon,
     passiveIds,
     league,
   });
@@ -169,6 +170,7 @@ async function solveWithBudget(
       deny: [...denySet, ...catDeny],
       weaponConfiguration: simBase.weaponConfiguration,
       equipmentIds: simBase.equipmentIds,
+      activeWeapon: simBase.equipmentEffects?.activeWeapon,
       passiveIds,
       league,
     });

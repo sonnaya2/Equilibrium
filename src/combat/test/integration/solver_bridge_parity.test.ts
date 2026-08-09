@@ -103,6 +103,62 @@ describe("solver bridge: model projection identity", () => {
     expect(packed.strengthCape99).toBe(model.strengthCape99);
     expect(packed.startingAdrenaline).toBe(model.startingAdrenaline);
   });
+
+  it("preserves native-special policy and active weapon through the worker payload", () => {
+    const onLoadout = withLoadout({
+      style: "magic",
+      startingAdrenaline: 100,
+      buffs: { ...DEFAULT_LOADOUT.buffs, useEquippedWeaponSpecial: true },
+      equipmentSlots: { twohand: "item:fractured-staff-of-armadyl" },
+    });
+    const offLoadout = withLoadout({
+      ...onLoadout,
+      buffs: { ...onLoadout.buffs, useEquippedWeaponSpecial: false },
+    });
+    const staffLoadout = withLoadout({
+      ...offLoadout,
+      equipmentSlots: { twohand: "item:staff-of-light" },
+    });
+    const onModel = toResolvedCombatModel(onLoadout, { now: NOW });
+    const offModel = toResolvedCombatModel(offLoadout, { now: NOW });
+    const staffModel = toResolvedCombatModel(staffLoadout, { now: NOW });
+    const onIdentity = canonicalSimulationIdentity(packSimBaseFromModel(onModel));
+
+    expect(onModel.nativeSpecialPolicy.useEquippedWeaponSpecial).toBe(true);
+    expect(stableStringify(onIdentity)).not.toBe(
+      stableStringify(canonicalSimulationIdentity(packSimBaseFromModel(offModel))),
+    );
+    expect(stableStringify(onIdentity)).not.toBe(
+      stableStringify(canonicalSimulationIdentity(packSimBaseFromModel(staffModel))),
+    );
+
+    const catalogue = resolveAbilityCatalogue({ strengthCape99: onModel.strengthCape99 });
+    const bar = [catalogue.byId.get("magic_attack")!];
+    const direct = simulateRevolution(
+      toRevolutionInput(buildSimulationInputBase(onModel, catalogue), {
+        bar,
+        style: "magic",
+        durationTicks: 20,
+      }),
+    );
+    const revived = reviveRevolutionBase(packSimBaseFromModel(onModel));
+    const worker = simulateRevolution({
+      ...revived,
+      abilities: catalogue.catalogue,
+      abilityRegistry: catalogue.abilityRegistry,
+      bar,
+      style: "magic",
+      durationTicks: 20,
+    });
+
+    expect(worker.error ?? null).toBe(direct.error ?? null);
+    expect(worker.totalExpected).toBeCloseTo(direct.totalExpected, 8);
+    expect(worker.damageByTick).toEqual(direct.damageByTick);
+    expect(worker.casts.map((cast) => cast.abilityId)).toEqual(
+      direct.casts.map((cast) => cast.abilityId),
+    );
+    expect(worker.casts[0]?.abilityId).toBe("instability");
+  });
 });
 
 describe("solver bridge: multi-path evaluation parity", () => {

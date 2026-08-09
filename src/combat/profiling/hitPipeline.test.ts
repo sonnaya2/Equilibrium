@@ -58,7 +58,7 @@ describe("hitPipeline profiling counters", () => {
     expect(snap.modifierSorts).toBeLessThan(snap.endpointPasses + snap.integerBandPoints);
   });
 
-  it("compiles non-crit and crit lists once each when crit runs", () => {
+  it("compiles one stable list and injects the crit layer at runtime", () => {
     setHitPipelineProfiling(true);
     resetHitPipelineCounters();
 
@@ -66,10 +66,10 @@ describe("hitPipeline profiling counters", () => {
     const snap = snapshotHitPipelineCounters();
     // Endpoints: min, max, critMin, critMax, +2 uncapped max probes = 6.
     // Band: noncrit + crit exactMean = 402.
-    // Sorts: non-crit compile + crit compile = 2 (not 408).
+    // The crit multiplier is inserted at the critical stage without a second sort.
     expect(snap.hitExpectationCalls).toBe(1);
     expect(snap.integerBandPoints).toBe(402);
     expect(snap.endpointPasses).toBe(6);
-    expect(snap.modifierSorts).toBe(2);
+    expect(snap.modifierSorts).toBe(1);
   });
 });

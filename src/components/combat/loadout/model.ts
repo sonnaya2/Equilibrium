@@ -227,6 +227,8 @@ export type StyleCurseChoice =
   | "ruination";
 
 export interface LoadoutBuffs {
+  /** Revo++ fires a supported special from the resolved native weapon. */
+  useEquippedWeaponSpecial: boolean;
   vulnerability: boolean;
   weaponPoison: WeaponPoisonChoice;
   kwuarmPotency: KwuarmPotency;
@@ -473,6 +475,7 @@ export const DEFAULT_LOADOUT: Loadout = {
   },
   gizmos: {},
   buffs: {
+    useEquippedWeaponSpecial: false,
     vulnerability: false,
     weaponPoison: "none",
     kwuarmPotency: 0,
@@ -1251,6 +1254,7 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
     },
     gizmos: normalizeGizmos((raw as { gizmos?: unknown }).gizmos),
     buffs: {
+      useEquippedWeaponSpecial: rawBuffs.useEquippedWeaponSpecial === true,
       vulnerability: rawBuffs.vulnerability === true,
       weaponPoison: normalizeWeaponPoisonChoice(rawBuffs.weaponPoison),
       kwuarmPotency: normalizeKwuarmPotency(rawBuffs.kwuarmPotency),

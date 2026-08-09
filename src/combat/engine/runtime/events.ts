@@ -56,6 +56,7 @@ export interface ScheduledEvent<RT = unknown> {
   bleedId?: BleedId;
   bleedExpiresAtTick?: number;
   lightningSurge?: boolean;
+  lightningSurgeSourceCritChance?: number;
   castSnap?: CastSnapshot;
   resolve: (rt: RT, landTick: number) => EventResolution;
 }

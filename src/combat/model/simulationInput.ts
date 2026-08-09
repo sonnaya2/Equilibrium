@@ -92,6 +92,7 @@ export function projectSerializableSimBase(
     conjureDurationMult: model.conjureDurationMult,
     tumekensPieces: model.tumekensPieces,
     equipmentEffects: model.equipmentEffects,
+    nativeSpecialPolicy: model.nativeSpecialPolicy,
     league: {
       ...model.league,
       blessingIds: [...model.league.blessingIds],

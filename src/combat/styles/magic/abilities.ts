@@ -406,6 +406,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     style: "magic",
     category: "enhanced",
     weaponSpecial: true,
+    requiresSpecialAccess: true,
     hits: [{ band: { minPct: 120, maxPct: 140 } }],
     adrenaline: { cost: 50 },
     cooldownSeconds: 60,
@@ -427,6 +428,17 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     source: wikiAbility("Claws of Guthix"),
   },
 ];
+
+/** Internal proc identity; excluded from the selectable Magic catalogue. */
+export const LIGHTNING_SURGE_ABILITY: MagicAbilitySpec = {
+  id: "instability_lightning_surge",
+  name: "Lightning Surge",
+  style: "magic",
+  category: "enhanced",
+  hits: [{ band: { minPct: 70, maxPct: 90 } }],
+  supportNote: "Instability proc hit; uses its own crit context and cannot recurse.",
+  source: wikiAbility("Fractured Staff of Armadyl"),
+};
 
 /** Sourced mechanics without a full calculable AbilitySpec, or residual notes. */
 export const MAGIC_EFFECTS = [

@@ -32,14 +32,29 @@ export function runOrderedPipeline(
   orderedModifiers: readonly CombatModifier[],
   context: CombatContext,
   preFiltered = false,
+  criticalDamageMultiplier?: number,
 ): DamageState {
   const active = preFiltered
     ? orderedModifiers
     : orderedModifiers.filter((m) => m.applies(context));
-  recordModifierProgramEvaluation(active.length);
+  const hasCriticalDamage = criticalDamageMultiplier != null;
+  recordModifierProgramEvaluation(active.length + (hasCriticalDamage ? 1 : 0));
   let state = initial;
+  let criticalDamageApplied = false;
   for (const m of active) {
+    if (
+      hasCriticalDamage &&
+      !criticalDamageApplied &&
+      (STAGE_ORDER.indexOf(m.stage) > STAGE_ORDER.indexOf("critical") ||
+        (m.stage === "critical" && m.priority > 0))
+    ) {
+      state = { damage: mulFloor(state.damage, criticalDamageMultiplier!) };
+      criticalDamageApplied = true;
+    }
     state = m.apply(state, context);
+  }
+  if (hasCriticalDamage && !criticalDamageApplied) {
+    state = { damage: mulFloor(state.damage, criticalDamageMultiplier!) };
   }
   return state;
 }

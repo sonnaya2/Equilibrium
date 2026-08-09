@@ -55,6 +55,7 @@ export interface SimulationRuntime {
   readonly horizon?: number;
   readonly byId: ReadonlyMap<string, AbilitySpec>;
   readonly basicByStyle: ReadonlyMap<AbilitySpec["style"], AbilitySpec>;
+  readonly nativeSpecial: AbilitySpec | null;
   /**
    * Equipment-static Leng land outcome table (null when no Leng passives).
    * Compiled once in createRuntime; shared across stochastic lanes.
@@ -203,6 +204,11 @@ export function createRuntime(
   // When absent, rebuild from abilities (manual UI / unit tests / one-off sims).
   const byId = input.abilityRegistry?.byId ?? mapAbilitiesById(input.abilities);
   const basicByStyle = input.abilityRegistry?.basicByStyle ?? mapBasicsByStyle(input.abilities);
+  const nativeSpecialId =
+    input.nativeSpecialPolicy?.useEquippedWeaponSpecial === true
+      ? input.equipmentEffects?.activeWeapon?.specialAttackId
+      : undefined;
+  const nativeSpecial = nativeSpecialId ? (byId.get(nativeSpecialId) ?? null) : null;
   const equipment = input.equipmentEffects;
   const lengLandTable = lengLandTableFor(
     hasPassive(equipment, "leng-endless-frost"),
@@ -243,6 +249,7 @@ export function createRuntime(
     horizon: input.horizonTicks,
     byId,
     basicByStyle,
+    nativeSpecial,
     lengLandTable,
     stochastic: createStochasticOracle(
       stochastic ?? { laneIndex: 0, laneCount: DEFAULT_STOCHASTIC_LANES },

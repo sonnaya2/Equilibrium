@@ -33,6 +33,7 @@ export const ITEM_PASSIVE_IDS: readonly ItemPassiveId[] = [
   "cinderbane-weapon-poison",
   "blowpipe-weapon-poison",
   "laniakea-weapon-poison",
+  "surging-storm",
 ];
 
 /** Return validation errors for the passive registry (empty = ok). */

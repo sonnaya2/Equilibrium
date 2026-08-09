@@ -55,6 +55,7 @@ export interface SolverPackSnapshot {
   conjureDurationMult?: number;
   tumekensPieces?: number;
   equipmentEffects: ActiveEquipmentEffects;
+  nativeSpecialPolicy?: { useEquippedWeaponSpecial: boolean };
   league: SerializableLeagueRules;
   context?: CombatContext;
   targetHpPercent?: number;
@@ -166,6 +167,7 @@ export function packSimBase(snapshot: SolverPackSnapshot): SerializableRevolutio
     conjureDurationMult: snapshot.conjureDurationMult,
     tumekensPieces: snapshot.tumekensPieces,
     equipmentEffects: snapshot.equipmentEffects,
+    nativeSpecialPolicy: snapshot.nativeSpecialPolicy,
     league: snapshot.league,
     context: snapshot.context,
     targetHpPercent: snapshot.targetHpPercent,

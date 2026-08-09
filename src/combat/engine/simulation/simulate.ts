@@ -40,6 +40,7 @@ function castableNow(rt: StochasticLane["rt"], ability: AbilitySpec): boolean {
     equipmentIds: rt.input.equipmentIds,
     passiveIds: rt.input.equipmentEffects?.passiveIds,
     league: rt.input.league,
+    activeWeapon: rt.input.equipmentEffects?.activeWeapon,
   });
   return (
     firstLegalTickFor(rt.state, castAbility, rt.input.level) <= rt.state.tick &&
@@ -52,6 +53,7 @@ function castableNow(rt: StochasticLane["rt"], ability: AbilitySpec): boolean {
       rt.input.equipmentEffects?.passiveIds,
       rt.byId,
       rt.input.league,
+      rt.input.equipmentEffects?.activeWeapon,
     ) === null
   );
 }
@@ -104,6 +106,7 @@ function runManualLane(
         rt.input.equipmentEffects?.passiveIds,
         rt.byId,
         rt.input.league,
+        rt.input.equipmentEffects?.activeWeapon,
       );
       if (permanent !== null) {
         lane.error = permanent;

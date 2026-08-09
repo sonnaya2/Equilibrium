@@ -115,6 +115,10 @@ export interface SimulateInput {
   tumekensPieces?: number;
   /** Set bonuses already active before tick 0 for this fixed loadout. */
   equipmentEffects?: ActiveEquipmentEffects;
+  /** Revo++ policy; native specials remain manual and are disabled by default. */
+  nativeSpecialPolicy?: {
+    useEquippedWeaponSpecial: boolean;
+  };
   league?: ResolvedLeagueRules;
   procs?: ProcRules;
   /** Mult on conjure spirit basic autos only (not poison/commands). First Necro set; default 1. */

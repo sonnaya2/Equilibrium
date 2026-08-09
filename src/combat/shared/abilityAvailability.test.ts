@@ -24,6 +24,7 @@ const deadshot = byId(RANGED_ABILITIES, "deadshot");
 const deadshotIgneous = byId(RANGED_ABILITIES, "deadshot_igneous");
 const omnipower = byId(MAGIC_ABILITIES, "omnipower");
 const omnipowerIgneous = byId(MAGIC_ABILITIES, "omnipower_igneous");
+const instability = byId(MAGIC_ABILITIES, "instability");
 const deathSkulls = byId(NECROMANCY_ABILITIES, "death_skulls");
 const deathSkullsIgneous = byId(NECROMANCY_ABILITIES, "death_skulls_igneous");
 
@@ -281,4 +282,41 @@ describe("resolveAbilityCastAvailability — igneous pairs", () => {
       });
     });
   }
+});
+
+describe("native special access", () => {
+  it("requires the resolved native weapon, while EoF remains a separate access path", () => {
+    const fsoa = activeEquipmentEffects({
+      style: "magic",
+      equipmentSlots: { twohand: "item:fractured-staff-of-armadyl" },
+    });
+    expect(fsoa.activeWeapon).toMatchObject({
+      id: "item:fractured-staff-of-armadyl",
+      specialAttackId: "instability",
+      passiveIds: ["surging-storm"],
+    });
+    expect(
+      resolveAbilityCastAvailability(instability, {
+        equipmentIds: ["item:fractured-staff-of-armadyl"],
+        activeWeapon: fsoa.activeWeapon,
+      }),
+    ).toEqual({ available: true });
+
+    const wrongWeapon = activeEquipmentEffects({
+      style: "magic",
+      equipmentSlots: { twohand: "item:staff-of-light" },
+    });
+    expect(
+      resolveAbilityCastAvailability(instability, {
+        equipmentIds: ["item:fractured-staff-of-armadyl"],
+        activeWeapon: wrongWeapon.activeWeapon,
+      }),
+    ).toMatchObject({ available: false, reason: "missing-special-access" });
+    expect(
+      resolveAbilityCastAvailability(instability, {
+        equipmentIds: ["item:staff-of-light", "item:essence-of-finality"],
+        activeWeapon: wrongWeapon.activeWeapon,
+      }),
+    ).toEqual({ available: true });
+  });
 });

@@ -1,10 +1,14 @@
 import { bandOf, type DamageBand } from "../core/abilityDamage";
-import { baseCritDamageMultiplier, critProbability, type CritLayers } from "../core/critical";
+import {
+  baseCritDamageMultiplier,
+  critProbability,
+  discreteUniformCritDamageValues,
+  type CritLayers,
+  type DiscreteUniformCritDamageLayer,
+} from "../core/critical";
 import { applyDamagePotential, damagePotential } from "../core/damagePotential";
 import { applyHitCap, normalizeHitCapRule, standardHitCap, type HitCapRule } from "../core/hitCaps";
-import { mulFloor } from "../core/rounding";
 import { resolveHostDamageInstance } from "../core/hostDamage";
-import { MODERNISATION_WIKI } from "../data/sources";
 import { contextWithProvenance, type DamageProvenance } from "../shared/damageProvenance";
 import { preciseMinHitAddition } from "../shared/perks";
 import {
@@ -28,6 +32,8 @@ export interface HitInput {
   /** Accuracy 0..1, applied as Damage Potential. */
   accuracy: number;
   crit: CritLayers;
+  /** Damage-only crit layer; every point uses the normal floor/cap pipeline. */
+  critDamageDistribution?: DiscreteUniformCritDamageLayer;
   context?: CombatContext;
   /** Explicit provenance; merged into context when set (preferred over legacy flags alone). */
   provenance?: DamageProvenance;
@@ -89,17 +95,6 @@ interface HitPassKits {
   capRule: HitCapRule;
 }
 
-function critModifier(multiplier: number): CombatModifier {
-  return {
-    id: "core:critical-damage",
-    stage: "critical",
-    priority: 0,
-    applies: () => true,
-    apply: (state) => ({ ...state, damage: mulFloor(state.damage, multiplier) }),
-    source: MODERNISATION_WIKI,
-  };
-}
-
 // Soft player_direct default inside contextWithProvenance is unit-test only.
 // Engine land paths (castHit, conjures, lightningSurge, league) pass provenance.
 function resolvedHitContext(input: SharedHitInput): CombatContext {
@@ -110,18 +105,14 @@ function resolvedHitContext(input: SharedHitInput): CombatContext {
  * Compile non-crit and (optional) crit ordered active lists once per hit context.
  * Same identity as per-roll orderModifiers + filter: stage then priority, then applies.
  */
-function compileHitPassKits(input: SharedHitInput, critMult: number | null): HitPassKits {
+function compileHitPassKits(input: SharedHitInput, critLive: boolean | null): HitPassKits {
   const context = resolvedHitContext(input);
   const baseMods = input.modifiers ?? [];
   const nonCrit = compileActiveModifiers(baseMods, context);
-  const crit =
-    critMult === null
-      ? null
-      : compileActiveModifiers([...baseMods, critModifier(critMult)], context);
   return {
     context,
     nonCrit,
-    crit,
+    crit: critLive ? nonCrit : null,
     accuracy: input.accuracy,
     capRule: normalizeHitCapRule(input.cap ?? standardHitCap),
   };
@@ -132,9 +123,16 @@ function runPass(
   orderedActive: readonly CombatModifier[],
   kits: HitPassKits,
   cap = true,
+  criticalDamageMultiplier?: number | null,
 ): number {
   // Pre-filtered + ordered once per pass kind; apply chain identical to runPipeline.
-  const state = runOrderedPipeline({ damage }, orderedActive, kits.context, true);
+  const state = runOrderedPipeline(
+    { damage },
+    orderedActive,
+    kits.context,
+    true,
+    criticalDamageMultiplier ?? undefined,
+  );
   const scaled = applyDamagePotential(state.damage, kits.accuracy);
   const resolved = Math.floor(scaled);
   return cap ? applyHitCap(resolved, kits.capRule) : resolved;
@@ -142,7 +140,6 @@ function runPass(
 
 function activeFor(kits: HitPassKits, critMult: number | null): readonly CombatModifier[] {
   if (critMult === null) return kits.nonCrit;
-  // crit list compiled only when critMult is non-null at kit build time
   return kits.crit ?? kits.nonCrit;
 }
 
@@ -169,7 +166,9 @@ function exactMean(
   recordIntegerBandPoints(count);
   const ordered = activeFor(kits, critMult);
   let total = 0;
-  for (let roll = min; roll <= max; roll++) total += runPass(roll, ordered, kits, cap);
+  for (let roll = min; roll <= max; roll++) {
+    total += runPass(roll, ordered, kits, cap, critMult);
+  }
   return total / count;
 }
 
@@ -288,43 +287,73 @@ export function calculateRawHitBand(input: RawHitBandInput): HitResult {
   assertIntegerBandBounds(input.min, input.max);
   if (input.cap) normalizeHitCapRule(input.cap);
   const p = critProbability(input.crit);
-  const critMult =
-    p > 0 ? baseCritDamageMultiplier(input.level, input.crit.damageBonus ?? 0) : null;
 
-  // Sort + filter once per pass kind (non-crit / crit); reuse across endpoints + band.
-  const kits = compileHitPassKits(input, critMult);
-  const nonCritMods = kits.nonCrit;
-  const critMods = kits.crit;
+  const nonCritKits = compileHitPassKits(input, p > 0);
+  const critBonuses =
+    p > 0
+      ? input.critDamageDistribution
+        ? discreteUniformCritDamageValues(input.critDamageDistribution).map(
+            (bonus) => (input.crit.damageBonus ?? 0) + bonus,
+          )
+        : [input.crit.damageBonus ?? 0]
+      : [];
+  const critPasses = critBonuses.map((damageBonus) => ({
+    kits: nonCritKits,
+    critMult: baseCritDamageMultiplier(input.level, damageBonus),
+  }));
+  const nonCritMods = nonCritKits.nonCrit;
 
   // Endpoint probes (bound display / cap probe).
   recordEndpointPass(2);
-  const min = runPass(input.min, nonCritMods, kits);
-  const max = runPass(input.max, nonCritMods, kits);
+  const min = runPass(input.min, nonCritMods, nonCritKits);
+  const max = runPass(input.max, nonCritMods, nonCritKits);
   let critMin = min;
   let critMax = max;
-  if (critMods !== null) {
-    recordEndpointPass(2);
-    critMin = runPass(input.min, critMods, kits);
-    critMax = runPass(input.max, critMods, kits);
+  if (critPasses.length > 0) {
+    recordEndpointPass(2 * critPasses.length);
+    critMin = Math.min(
+      ...critPasses.map(({ kits, critMult }) =>
+        runPass(input.min, kits.crit!, kits, true, critMult),
+      ),
+    );
+    critMax = Math.max(
+      ...critPasses.map(({ kits, critMult }) =>
+        runPass(input.max, kits.crit!, kits, true, critMult),
+      ),
+    );
   }
-  const nonCritExpected = exactMean(input.min, input.max, null, kits);
+  const nonCritExpected = exactMean(input.min, input.max, null, nonCritKits);
   const critExpected =
-    critMult === null ? nonCritExpected : exactMean(input.min, input.max, critMult, kits);
+    critPasses.length === 0
+      ? nonCritExpected
+      : critPasses.reduce(
+          (total, { kits, critMult: variantMult }) =>
+            total + exactMean(input.min, input.max, variantMult, kits),
+          0,
+        ) / critPasses.length;
   const expected = (1 - p) * nonCritExpected + p * critExpected;
-  const capRule = kits.capRule;
+  const capRule = nonCritKits.capRule;
   recordEndpointPass(2);
-  const uncappedMaxNonCrit = runPass(input.max, nonCritMods, kits, false);
-  // When no crit path, critMult is null and the non-crit ordered list is reused.
-  const uncappedMaxCrit = runPass(
-    input.max,
-    critMods !== null ? critMods : nonCritMods,
-    kits,
-    false,
-  );
+  const uncappedMaxNonCrit = runPass(input.max, nonCritMods, nonCritKits, false);
+  const uncappedMaxCrit =
+    critPasses.length === 0
+      ? uncappedMaxNonCrit
+      : Math.max(
+          ...critPasses.map(({ kits, critMult }) =>
+            runPass(input.max, kits.crit!, kits, false, critMult),
+          ),
+        );
   const canClip = !capRule.bypass && Math.max(uncappedMaxNonCrit, uncappedMaxCrit) > capRule.cap;
   const uncappedExpected = canClip
-    ? (1 - p) * exactMean(input.min, input.max, null, kits, false) +
-      p * exactMean(input.min, input.max, critMult, kits, false)
+    ? (1 - p) * exactMean(input.min, input.max, null, nonCritKits, false) +
+      p *
+        (critPasses.length === 0
+          ? nonCritExpected
+          : critPasses.reduce(
+              (total, { kits, critMult: variantMult }) =>
+                total + exactMean(input.min, input.max, variantMult, kits, false),
+              0,
+            ) / critPasses.length)
     : expected;
 
   return {
@@ -334,7 +363,11 @@ export function calculateRawHitBand(input: RawHitBandInput): HitResult {
     critMin,
     critMax,
     critChance: p,
-    critDamageBonus: input.crit.damageBonus ?? 0,
+    critDamageBonus:
+      (input.crit.damageBonus ?? 0) +
+      (input.critDamageDistribution
+        ? (input.critDamageDistribution.minBonus + input.critDamageDistribution.maxBonus) / 2
+        : 0),
     nonCritExpected,
     critExpected,
     expected,

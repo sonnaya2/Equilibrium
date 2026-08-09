@@ -121,6 +121,7 @@ export function buildCandidatePool(
     const availability = resolveAbilityCastAvailability(effective, {
       weaponConfiguration: options.weaponConfiguration,
       equipmentIds: options.equipmentIds,
+      activeWeapon: options.activeWeapon,
       passiveIds: asPassiveIds(options.passiveIds),
       league: options.league,
       groupPeers: peers,

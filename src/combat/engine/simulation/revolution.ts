@@ -33,6 +33,7 @@ function revoAbilityLegal(
   passiveIds: readonly ItemPassiveId[] | undefined,
   byId: ReadonlyMap<string, AbilitySpec>,
   league: ResolvedLeagueRules | undefined,
+  activeWeapon: { specialAttackId?: string | null } | undefined,
 ): boolean {
   return (
     firstLegalTickFor(state, ability, level) <= state.tick &&
@@ -45,6 +46,7 @@ function revoAbilityLegal(
       passiveIds,
       byId,
       league,
+      activeWeapon,
     ) === null
   );
 }
@@ -73,6 +75,7 @@ function revoReadyCastAbility(
     equipmentIds: input.equipmentIds,
     passiveIds: input.equipmentEffects?.passiveIds,
     league: input.league,
+    activeWeapon: input.equipmentEffects?.activeWeapon,
   });
   const legal = (ability: AbilitySpec) =>
     revoAbilityLegal(
@@ -84,6 +87,7 @@ function revoReadyCastAbility(
       input.equipmentEffects?.passiveIds,
       byId,
       input.league,
+      input.equipmentEffects?.activeWeapon,
     );
 
   const morphIds = REVO_CONJURE_COMMAND_MORPH[castAbility.id];
@@ -151,7 +155,24 @@ function simulateRevolutionLane(
       break;
     }
     let ready: AbilitySpec | undefined;
+    if (
+      rt.nativeSpecial &&
+      revoAbilityLegal(
+        rt.state,
+        rt.nativeSpecial,
+        input.level,
+        input.weaponConfiguration,
+        input.equipmentIds,
+        input.equipmentEffects?.passiveIds,
+        rt.byId,
+        input.league,
+        input.equipmentEffects?.activeWeapon,
+      )
+    ) {
+      ready = rt.nativeSpecial;
+    }
     for (const barAbility of input.bar) {
+      if (ready) break;
       const cast = revoReadyCastAbility(barAbility, rt.state, input, rt.byId);
       if (cast) {
         ready = cast;
@@ -176,7 +197,13 @@ export function simulateRevolution(
 ): RotationSummary {
   const laneCount = stochasticLaneCount(
     input,
-    input.bar.map((ability) => ability.id),
+    [
+      ...input.bar.map((ability) => ability.id),
+      ...(input.nativeSpecialPolicy?.useEquippedWeaponSpecial === true &&
+      input.equipmentEffects?.activeWeapon?.specialAttackId
+        ? [input.equipmentEffects.activeWeapon.specialAttackId]
+        : []),
+    ],
     options?.stochasticLanes,
   );
   return runWithHitReuseScope(() => {

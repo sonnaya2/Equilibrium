@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 import { buildCandidatePool } from "./candidatePool";
 import { canAdd, createEligibilityMemo, exclusiveKey, validateBarEligibility } from "./eligibility";
+import { activeEquipmentEffects } from "../shared/equipment";
+import { MAGIC_ABILITIES } from "../styles/magic/abilities";
 
 function spec(partial: Partial<AbilitySpec> & Pick<AbilitySpec, "id" | "name">): AbilitySpec {
   return {
@@ -141,6 +143,29 @@ describe("manual-only weapon specials", () => {
     const pool = buildCandidatePool(allEngineSpecs(), "magic");
     expect(pool.ids).not.toContain("instability");
     expect(pool.ids).not.toContain("claws_of_guthix");
+  });
+
+  it("uses active weapon authority over stale flat FSoA ids", () => {
+    const staff = activeEquipmentEffects({
+      style: "magic",
+      equipmentSlots: { twohand: "item:staff-of-light" },
+    });
+    const instability = MAGIC_ABILITIES.find((ability) => ability.id === "instability")!;
+    const pool = buildCandidatePool(MAGIC_ABILITIES, "magic", {
+      includePartial: true,
+      equipmentIds: ["item:fractured-staff-of-armadyl"],
+      activeWeapon: staff.activeWeapon,
+    });
+    const issues = validateBarEligibility([instability.id], pool, {
+      includePartial: true,
+      equipmentIds: ["item:fractured-staff-of-armadyl"],
+      activeWeapon: staff.activeWeapon,
+      outsidePoolById: new Map([[instability.id, instability]]),
+      size: { min: 1, max: 1 },
+    });
+    expect(issues).toEqual([
+      expect.objectContaining({ code: "equipment-requirement", abilityId: "instability" }),
+    ]);
   });
 });
 

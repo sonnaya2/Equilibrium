@@ -1,5 +1,6 @@
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 import type { ItemPassiveId } from "../data/records";
+import type { ActiveWeaponCapability } from "../shared/equipment";
 import { resolveAbilityCastAvailability } from "../shared/requirements";
 import { EvalCache } from "./cache";
 import type {
@@ -28,6 +29,7 @@ export interface EligibilityOptions {
   size?: BarSizeBounds;
   weaponConfiguration?: CandidatePool["options"]["weaponConfiguration"];
   equipmentIds?: readonly string[];
+  activeWeapon?: ActiveWeaponCapability;
   passiveIds?: readonly string[];
   league?: CandidatePool["options"]["league"];
   /**
@@ -63,6 +65,16 @@ export function eligibilityOptionKey(
   const weaponConfiguration = options.weaponConfiguration ?? pool.options.weaponConfiguration;
   const equipmentIds = options.equipmentIds ?? pool.options.equipmentIds;
   const passiveIds = options.passiveIds ?? pool.options.passiveIds;
+  const activeWeapon = options.activeWeapon ?? pool.options.activeWeapon;
+  const activeWeaponKey = activeWeapon
+    ? [
+        activeWeapon.id,
+        activeWeapon.slot,
+        activeWeapon.style,
+        activeWeapon.specialAttackId,
+        [...activeWeapon.passiveIds].sort().join(","),
+      ].join(":")
+    : "";
   return [
     pool.style,
     String(size.min),
@@ -70,6 +82,7 @@ export function eligibilityOptionKey(
     includePartial ? "1" : "0",
     weaponConfiguration ?? "",
     equipmentIds?.join(",") ?? "",
+    activeWeaponKey,
     passiveIds?.join(",") ?? "",
     options.league?.ruleset ?? pool.options.league?.ruleset ?? "",
     [...(options.league?.blessingIds ?? pool.options.league?.blessingIds ?? [])]
@@ -176,6 +189,7 @@ function validateBarEligibilityUncached(
   const weaponConfiguration = options.weaponConfiguration ?? pool.options.weaponConfiguration;
   const equipmentIds = options.equipmentIds ?? pool.options.equipmentIds;
   const passiveIds = options.passiveIds ?? pool.options.passiveIds;
+  const activeWeapon = options.activeWeapon ?? pool.options.activeWeapon;
   const league = options.league ?? pool.options.league;
 
   if (!options.skipSizeBounds) {
@@ -256,6 +270,7 @@ function validateBarEligibilityUncached(
     const availability = resolveAbilityCastAvailability(asSpec, {
       weaponConfiguration,
       equipmentIds,
+      activeWeapon,
       passiveIds: passiveIds as readonly ItemPassiveId[] | undefined,
       league,
       groupPeers: peers.map((peer) => ({

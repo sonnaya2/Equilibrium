@@ -61,6 +61,9 @@ export interface ResolvedCombatModel {
   readonly equipmentIds: readonly string[];
   readonly equipmentEffects: ActiveEquipmentEffects;
   readonly weaponConfiguration: ResolvedWeaponConfiguration;
+  readonly nativeSpecialPolicy: {
+    readonly useEquippedWeaponSpecial: boolean;
+  };
 
   readonly modifierSources: ResolvedModifierSources;
   readonly adrenaline: AdrenalineRules;
@@ -120,6 +123,9 @@ export interface HostCombatResolveInput {
   readonly conjureDurationMult?: number;
   readonly tumekensPieces?: number;
   readonly equipmentEffects: ActiveEquipmentEffects;
+  readonly nativeSpecialPolicy?: {
+    readonly useEquippedWeaponSpecial: boolean;
+  };
   readonly league: SerializableLeagueRules;
   readonly context?: CombatContext;
   readonly targetHpPercent?: number;

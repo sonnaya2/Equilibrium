@@ -39,6 +39,7 @@ export function prepareSimulationCast(
     equipmentIds: rt.input.equipmentIds,
     passiveIds: rt.input.equipmentEffects?.passiveIds,
     league: rt.input.league,
+    activeWeapon: rt.input.equipmentEffects?.activeWeapon,
   });
   const candidate = Math.max(
     candidateTick(rt.state, readyTick),
@@ -54,6 +55,7 @@ export function prepareSimulationCast(
     rt.input.equipmentEffects?.passiveIds,
     rt.byId,
     rt.input.league,
+    rt.input.equipmentEffects?.activeWeapon,
   );
   if (rejection) return { ok: false, error: rejection };
   if (castAbility.id === "icy_tempest") {
@@ -133,6 +135,7 @@ export function performCast(
     equipmentIds: rt.input.equipmentIds,
     passiveIds: rt.input.equipmentEffects?.passiveIds,
     league: rt.input.league,
+    activeWeapon: rt.input.equipmentEffects?.activeWeapon,
   });
   const candidate = Math.max(
     candidateTick(rt.state, readyTick),
@@ -148,6 +151,7 @@ export function performCast(
     rt.input.equipmentEffects?.passiveIds,
     rt.byId,
     rt.input.league,
+    rt.input.equipmentEffects?.activeWeapon,
   );
   if (rejection) return { ok: false, error: rejection };
 

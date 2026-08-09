@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { rotationOf } from "../../engine/simulation/contracts";
 import { simulate } from "../../engine/simulation/simulate";
-import { magicInput } from "../../test/fixtures/inputs";
+import { fsoaMagicInput, magicInput } from "../../test/fixtures/inputs";
 import { findCast } from "../../test/helpers/summary";
 import {
   activateGreaterSunshine,
@@ -155,7 +155,7 @@ describe("sunshine — buff window through the simulator", () => {
     ];
     const plain = simulate({ ...magicInput, rotation: rotationOf(...setup) });
     const pf = simulate({
-      ...magicInput,
+      ...fsoaMagicInput,
       plantedFeet: true,
       rotation: rotationOf(...setup),
     });
@@ -191,7 +191,7 @@ describe("sunshine — buff window through the simulator", () => {
     const setup = [...Array(12).fill("magic_attack"), "greater_sunshine", "magic_attack"];
     const plain = simulate({ ...magicInput, rotation: rotationOf(...setup) });
     const pf = simulate({
-      ...magicInput,
+      ...fsoaMagicInput,
       plantedFeet: true,
       rotation: rotationOf(...setup),
     });
@@ -223,7 +223,7 @@ describe("instability — surge damage through the simulator", () => {
   it("instability adds Lightning Surge EV on magic crits (not on 0% crit)", () => {
     const fund = [...Array(6).fill("magic_attack"), "instability", "magic_attack"];
     const noCrit = simulate({
-      ...magicInput,
+      ...fsoaMagicInput,
       crit: { chance: 0 },
       rotation: rotationOf(...fund),
     });
@@ -242,7 +242,7 @@ describe("instability — surge damage through the simulator", () => {
     expect(follow.result.expected).toBeCloseTo(1000);
 
     const allCrit = simulate({
-      ...magicInput,
+      ...fsoaMagicInput,
       crit: { chance: 1 },
       rotation: rotationOf(...fund),
     });
@@ -251,9 +251,9 @@ describe("instability — surge damage through the simulator", () => {
       (cast) => cast.abilityId === "instability",
       "Missing crit Instability cast",
     );
-    // The granting cast's own hit predates the buff: it crits but fires no surge.
-    expect(instCrit.result.expected).toBeCloseTo(1949.7512437810944, 10);
-    expect(allCrit.damageByTick[instCrit.tick + 1]).toBeUndefined();
+    // The cast applies Instability before this abstraction advances its hit.
+    expect(instCrit.result.expected).toBeCloseTo(3409.2565883454017, 10);
+    expect(allCrit.damageByTick[instCrit.tick + 1]).toBeCloseTo(1199.7512437810944, 10);
 
     // A magic hit while the buff is active fires a surge 1 tick after the source hit.
     const followCrit = findCast(
@@ -261,7 +261,8 @@ describe("instability — surge damage through the simulator", () => {
       (cast) => cast.abilityId === "magic_attack" && cast.tick > instCrit.tick,
       "Missing crit follow-up magic attack",
     );
-    expect(followCrit.result.expected).toBeCloseTo(2699.502487562189, 10);
+    expect(followCrit.result.expected).toBeCloseTo(2899.2563913107733, 10);
+    // Surging Storm belongs to the FSoA cast; the separate proc is not that cast.
     expect(allCrit.damageByTick[followCrit.tick + 1]).toBeCloseTo(1199.7512437810944, 10);
   });
 });

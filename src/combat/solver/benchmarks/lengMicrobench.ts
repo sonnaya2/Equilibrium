@@ -116,6 +116,7 @@ function runArm(
     includePartial: request.includePartial === true,
     weaponConfiguration: sim.weaponConfiguration,
     equipmentIds: sim.equipmentIds,
+    activeWeapon: sim.equipmentEffects?.activeWeapon,
     passiveIds: sim.equipmentEffects?.passiveIds,
     league: sim.league,
   });

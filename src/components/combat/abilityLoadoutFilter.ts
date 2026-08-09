@@ -4,6 +4,7 @@
  */
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import type { ItemPassiveId } from "@/combat/data/records";
+import type { ActiveWeaponCapability } from "@/combat/shared/equipment";
 import type { ResolvedLeagueRules } from "@/combat/league/ruleset";
 import {
   resolveAbilityCastAvailability,
@@ -14,6 +15,7 @@ import {
 export type LoadoutAbilityGate = {
   weaponConfiguration?: WeaponConfiguration;
   equipmentIds?: readonly string[];
+  activeWeapon?: ActiveWeaponCapability;
   passiveIds?: readonly ItemPassiveId[];
   league?: ResolvedLeagueRules;
 };
@@ -31,6 +33,7 @@ export function filterAbilitiesForLoadout(
       resolveAbilityCastAvailability(a, {
         weaponConfiguration: gate.weaponConfiguration,
         equipmentIds: gate.equipmentIds,
+        activeWeapon: gate.activeWeapon,
         passiveIds: gate.passiveIds,
         league: gate.league,
         groupPeers: abilities,

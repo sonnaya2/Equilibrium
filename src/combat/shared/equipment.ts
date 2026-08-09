@@ -118,6 +118,14 @@ export type LoadoutEquipmentView = {
   pieceContribution?: SetPieceContributionModifier;
 };
 
+export interface ActiveWeaponCapability {
+  id: string | null;
+  slot: "mainhand" | "twohand" | null;
+  style: CombatStyle | "hybrid" | null;
+  specialAttackId: string | null;
+  passiveIds: readonly ItemPassiveId[];
+}
+
 /** Slots a two-handed weapon overrides: when twohand is occupied, both hands are locked. */
 export const TWOHAND_LOCKED_SLOTS: readonly string[] = ["mainhand", "offhand"];
 
@@ -202,6 +210,8 @@ export interface ActiveEquipmentEffects {
   activation: typeof EQUIPMENT_SET_ACTIVATION;
   setCritChance: ResolvedSetCritChance;
   passiveIds: readonly ItemPassiveId[];
+  /** Capability of the resolved twohand or mainhand weapon only. */
+  activeWeapon?: ActiveWeaponCapability;
   enchantments: readonly EquipmentEnchantmentId[];
   weaponClass: WeaponClass | null;
   defenderEquipped: boolean;
@@ -301,6 +311,13 @@ export function activeEquipmentEffects(
   const slots = resolvedEquipmentSlots(loadout);
   const weaponId = slots.twohand ?? slots.mainhand;
   const weapon = weaponId ? equipmentById(weaponId) : undefined;
+  const activeWeapon: ActiveWeaponCapability = {
+    id: weaponId ?? null,
+    slot: slots.twohand ? "twohand" : slots.mainhand ? "mainhand" : null,
+    style: weapon?.style ?? null,
+    specialAttackId: weapon?.specialAttackId ?? null,
+    passiveIds: weapon ? [...equipmentRecordPassiveIds(weapon)] : [],
+  };
   const weaponClass =
     loadout.style === "ranged" && weapon?.style === "ranged" ? (weapon.weaponClass ?? null) : null;
   const offhandId = slots.offhand;
@@ -330,6 +347,7 @@ export function activeEquipmentEffects(
     activation: EQUIPMENT_SET_ACTIVATION,
     setCritChance,
     passiveIds,
+    activeWeapon,
     enchantments,
     weaponClass,
     defenderEquipped: offhand?.defender === true,
@@ -449,7 +467,7 @@ export function dynamicEquipmentCritBonus(
 ): { chance: number; damageBonus: number } {
   let chance = 0;
   let damageBonus = 0;
-  if (activeBleeds > 0 && hasPassive(effects, "champion-ring")) {
+  if (ability.style === "melee" && activeBleeds > 0 && hasPassive(effects, "champion-ring")) {
     chance += hasEnchantment(effects, "heroism") ? 0.04 : 0.03;
     if (hasEnchantment(effects, "heroism")) damageBonus += activeBleeds * 0.015;
   }

@@ -282,6 +282,7 @@ export function RotationPlanner({
     ? filterAbilitiesForLoadout(stylePool, {
         weaponConfiguration: setupStats.weaponConfiguration,
         equipmentIds: setupStats.equipmentIds,
+        activeWeapon: setupStats.equipmentEffects.activeWeapon,
         passiveIds: setupStats.equipmentEffects.passiveIds,
         league: setupStats.league,
       })
@@ -290,6 +291,7 @@ export function RotationPlanner({
     () => ({
       weaponConfiguration: setupStats.weaponConfiguration,
       equipmentIds: setupStats.equipmentIds,
+      activeWeapon: setupStats.equipmentEffects.activeWeapon,
       passiveIds: setupStats.equipmentEffects.passiveIds,
       league: setupStats.league,
     }),

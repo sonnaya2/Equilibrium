@@ -36,6 +36,30 @@ export interface CritLayers {
   eligible?: boolean;
 }
 
+/** A finite damage-only crit layer; each point is evaluated by the hit pipeline. */
+export interface DiscreteUniformCritDamageLayer {
+  minBonus: number;
+  maxBonus: number;
+  points: number;
+}
+
+export function discreteUniformCritDamageValues(
+  layer: DiscreteUniformCritDamageLayer,
+): readonly number[] {
+  if (
+    !Number.isFinite(layer.minBonus) ||
+    !Number.isFinite(layer.maxBonus) ||
+    layer.maxBonus < layer.minBonus ||
+    !Number.isInteger(layer.points) ||
+    layer.points < 1
+  ) {
+    throw new RangeError("invalid discrete crit-damage layer");
+  }
+  if (layer.points === 1) return [layer.minBonus];
+  const step = (layer.maxBonus - layer.minBonus) / (layer.points - 1);
+  return Array.from({ length: layer.points }, (_, index) => layer.minBonus + index * step);
+}
+
 /**
  * Base crit damage multiplier at a style level: stepwise per BASE_CRIT_DERIVATION.
  * damageBonus stacks on top as its own layer.

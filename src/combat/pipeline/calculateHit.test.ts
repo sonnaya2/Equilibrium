@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { CombatModifier } from "../types";
-import { baseCritDamageMultiplier, critProbability } from "../core/critical";
+import {
+  baseCritDamageMultiplier,
+  critProbability,
+  discreteUniformCritDamageValues,
+} from "../core/critical";
 import { applyDamagePotential } from "../core/damagePotential";
 import { applyHitCap, normalizeHitCapRule, standardHitCap } from "../core/hitCaps";
 import { mulFloor } from "../core/rounding";
@@ -191,6 +195,40 @@ describe("calculateHit", () => {
     expect(r.critMin).toBeGreaterThan(35_000);
     expect(r.expected).toBe(r.critExpected);
     expect(r.capLoss).toBe(0);
+  });
+
+  it("evaluates every Surging Storm point through floors and caps", () => {
+    const distribution = { minBonus: 0.15, maxBonus: 0.25, points: 101 };
+    const input: RawHitBandInput = {
+      min: 17_000,
+      max: 20_000,
+      level: 90,
+      accuracy: 1,
+      crit: { chance: 0, guaranteed: true },
+      cap: { cap: 30_000, bypass: false },
+      critDamageDistribution: distribution,
+    };
+    const exact = calculateRawHitBand(input);
+    const pointwiseMean =
+      discreteUniformCritDamageValues(distribution).reduce(
+        (total, bonus) =>
+          total +
+          calculateRawHitBand({
+            ...input,
+            critDamageDistribution: undefined,
+            crit: { chance: 0, guaranteed: true, damageBonus: bonus },
+          }).critExpected,
+        0,
+      ) / distribution.points;
+    const naiveMean = calculateRawHitBand({
+      ...input,
+      critDamageDistribution: undefined,
+      crit: { chance: 0, guaranteed: true, damageBonus: 0.2 },
+    }).critExpected;
+
+    expect(exact.critExpected).toBe(pointwiseMean);
+    expect(exact.critDamageBonus).toBeCloseTo(0.2, 12);
+    expect(exact.critExpected).not.toBeCloseTo(naiveMean, 12);
   });
 
   it("preserves floors and Damage Potential in the exact expectation", () => {

@@ -3,6 +3,7 @@ import { BLOOMING_BURROW_WIKI_2026_03_30 } from "../../data/sources";
 import { PLANTED_FEET_DURATION_MULT } from "../../shared/perks";
 import { newRunicCharge, type RunicChargeState } from "./runicCharge";
 import type { SourceReference } from "../../types";
+import type { DiscreteUniformCritDamageLayer } from "../../core/critical";
 
 /**
  * Channelled Might (30 Mar 2026): full Asphyxiate channel → +15% magic crit damage
@@ -248,17 +249,22 @@ export const INSTABILITY_DURATION_TICKS = 50;
 export const LIGHTNING_SURGE_BAND = { minPct: 70, maxPct: 90 } as const;
 export const LIGHTNING_SURGE_TICK_DELAY = 1;
 
+/** Surging Storm: 101 equally likely additive crit-damage points, +15.0%..+25.0%. */
+export const SURGING_STORM_CRIT_DAMAGE_DISTRIBUTION: DiscreteUniformCritDamageLayer = {
+  minBonus: 0.15,
+  maxBonus: 0.25,
+  points: 101,
+};
+
 export interface InstabilityState {
   /** Tick the buff expires on; 0 = inactive. Active while tick < expiresAtTick. */
   expiresAtTick: number;
-  /** The granting cast cannot trigger its own Lightning Surge. */
-  grantedByCast: number;
 }
 
-export const newInstability = (): InstabilityState => ({ expiresAtTick: 0, grantedByCast: -1 });
+export const newInstability = (): InstabilityState => ({ expiresAtTick: 0 });
 
-export function activateInstability(tick: number, castSeq: number): InstabilityState {
-  return { expiresAtTick: tick + INSTABILITY_DURATION_TICKS, grantedByCast: castSeq };
+export function activateInstability(tick: number, _castSeq?: number): InstabilityState {
+  return { expiresAtTick: tick + INSTABILITY_DURATION_TICKS };
 }
 
 export function instabilityActive(state: InstabilityState, tick: number): boolean {

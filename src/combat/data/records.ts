@@ -121,7 +121,9 @@ export type ItemPassiveId =
   | "soul-reave"
   | "cinderbane-weapon-poison"
   | "blowpipe-weapon-poison"
-  | "laniakea-weapon-poison";
+  | "laniakea-weapon-poison"
+  /** Fractured Staff of Armadyl cast-time crit-damage distribution. */
+  | "surging-storm";
 
 export type WeaponClass = "bow" | "crossbow" | "thrown" | "other";
 

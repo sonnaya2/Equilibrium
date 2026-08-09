@@ -65,6 +65,7 @@ export function resolveCastAbility(
     weaponConfiguration?: WeaponConfiguration;
     equipmentIds?: readonly string[];
     passiveIds?: readonly ItemPassiveId[];
+    activeWeapon?: { specialAttackId?: string | null };
     league?: ResolvedLeagueRules;
   } = {},
 ): { ability: AbilitySpec; block: string | null } {
@@ -78,6 +79,7 @@ export function resolveCastAbility(
     weaponConfiguration: options.weaponConfiguration,
     equipmentIds: options.equipmentIds,
     passiveIds: options.passiveIds,
+    activeWeapon: options.activeWeapon,
     groupPeers: peers,
     league: options.league,
   });
@@ -171,12 +173,14 @@ export function permanentCastBlock(
   passiveIds?: readonly ItemPassiveId[],
   byId?: ReadonlyMap<string, AbilitySpec>,
   league?: ResolvedLeagueRules,
+  activeWeapon?: { specialAttackId?: string | null },
 ): string | null {
   const peers = byId ? groupPeersFromById(ability, byId) : undefined;
   const loadoutBlock = permanentAvailabilityBlock(ability, {
     weaponConfiguration,
     equipmentIds,
     passiveIds,
+    activeWeapon,
     groupPeers: peers,
     league,
   });
@@ -203,12 +207,14 @@ export function castRejection(
   passiveIds?: readonly ItemPassiveId[],
   byId?: ReadonlyMap<string, AbilitySpec>,
   league?: ResolvedLeagueRules,
+  activeWeapon?: { specialAttackId?: string | null },
 ): string | null {
   const peers = byId ? groupPeersFromById(ability, byId) : undefined;
   const loadoutBlock = permanentAvailabilityBlock(ability, {
     weaponConfiguration,
     equipmentIds,
     passiveIds,
+    activeWeapon,
     groupPeers: peers,
     league,
   });

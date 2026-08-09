@@ -50,7 +50,7 @@ export function applyMagicCastEffects(fx: CastEffectContext): void {
   }
   if (ability.appliesEffect === "instability") {
     rt.state = patchMagic(rt.state, {
-      instability: activateInstability(candidate, fx.prepared.snap.castSeq),
+      instability: activateInstability(candidate),
     });
   }
 

@@ -3,6 +3,7 @@ import { simulateRevolution, type RevolutionInput } from "../engine/simulation/r
 import type { RotationSummary } from "../engine/simulation/contracts";
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 import type { ItemPassiveId } from "../data/records";
+import type { ActiveWeaponCapability } from "../shared/equipment";
 import { resolveEquippedAbilityId, resolveEquippedAbilityVariant } from "../shared/requirements";
 import type {
   CandidatePoolOptions,
@@ -239,6 +240,9 @@ export function evaluateRevolutionBar(
   const equipmentIds = simFields.equipmentIds;
   const passiveIds = (simFields as { equipmentEffects?: { passiveIds?: readonly string[] } })
     .equipmentEffects?.passiveIds;
+  const activeWeapon = (
+    simFields as { equipmentEffects?: { activeWeapon?: ActiveWeaponCapability } }
+  ).equipmentEffects?.activeWeapon;
   const league = simFields.league;
 
   if (pool.style !== style) {
@@ -271,6 +275,7 @@ export function evaluateRevolutionBar(
       size: sizeForElig,
       weaponConfiguration,
       equipmentIds,
+      activeWeapon,
       passiveIds,
       league,
       memo: incumbentBaseline ? undefined : eligibilityMemo,

@@ -1,9 +1,10 @@
 /** Revolution-bar solver contracts. Pure types for evaluate/search layers. */
 import type { AdrenalineRules } from "../engine/simulation/contracts";
 import type { ResolvedLeagueRules } from "../league/ruleset";
+import type { ActiveWeaponCapability } from "../shared/equipment";
 
 /** Bumped when evaluation inputs change shape (e.g. Basic Attack subtype). */
-export const SOLVER_SCHEMA_VERSION = 10 as const;
+export const SOLVER_SCHEMA_VERSION = 12 as const;
 
 /**
  * Bumped when objective math or score tagging semantics change.
@@ -412,6 +413,7 @@ export interface CandidatePoolOptions {
   deny?: readonly string[];
   weaponConfiguration?: "twohand" | "dualwield" | "mainhand" | "shield" | "defender" | "necromancy";
   equipmentIds?: readonly string[];
+  activeWeapon?: ActiveWeaponCapability;
   /** Active equipment passives (capability gates for Igneous upgrades, etc.). */
   passiveIds?: readonly string[];
   league?: ResolvedLeagueRules;

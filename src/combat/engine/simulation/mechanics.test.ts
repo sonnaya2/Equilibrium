@@ -326,6 +326,15 @@ describe("item passive timelines", () => {
     );
     expect(champion).toEqual({ chance: 0.04, damageBonus: 0.045 });
 
+    expect(
+      dynamicEquipmentCritBonus(
+        itemEffects(["champion-ring"], ["heroism"]),
+        { style: "magic" },
+        0,
+        3,
+      ),
+    ).toEqual({ chance: 0, damageBonus: 0 });
+
     const channeller = dynamicEquipmentCritBonus(
       itemEffects(["channeller-ring"], ["metaphysics"]),
       { style: "magic", channelTicks: 8 },

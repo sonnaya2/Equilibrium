@@ -105,6 +105,15 @@ export function normalizeEquipmentEffects(effects: ActiveEquipmentEffects): unkn
       ),
     },
     passiveIds: sortedStrings(effects.passiveIds as readonly string[]),
+    activeWeapon: effects.activeWeapon
+      ? {
+          id: effects.activeWeapon.id,
+          slot: effects.activeWeapon.slot,
+          style: effects.activeWeapon.style,
+          specialAttackId: effects.activeWeapon.specialAttackId,
+          passiveIds: sortedStrings(effects.activeWeapon.passiveIds as readonly string[]),
+        }
+      : null,
     enchantments: sortedStrings(effects.enchantments as readonly string[]),
     weaponClass: effects.weaponClass ?? null,
     defenderEquipped: effects.defenderEquipped === true,
@@ -193,6 +202,9 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
       guaranteed: loadout.crit?.guaranteed === true,
     },
     equipmentIds: sortedStrings(loadout.equipmentIds),
+    nativeSpecialPolicy: {
+      useEquippedWeaponSpecial: loadout.nativeSpecialPolicy?.useEquippedWeaponSpecial === true,
+    },
     weaponConfiguration: loadout.weaponConfiguration,
     startingAdrenaline: loadout.startingAdrenaline ?? 0,
     naturalInstinctUntilTick: loadout.naturalInstinctUntilTick ?? 0,

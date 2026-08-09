@@ -187,7 +187,9 @@ export const ESSENCE_OF_FINALITY_ITEM_ID = "item:essence-of-finality";
 export function equipmentGrantsNativeSpecial(
   abilityId: string,
   equipmentIds?: readonly string[],
+  activeWeapon?: { specialAttackId?: string | null },
 ): boolean {
+  if (activeWeapon !== undefined) return activeWeapon.specialAttackId === abilityId;
   if (!equipmentIds?.length) return false;
   for (const id of equipmentIds) {
     const item = equipmentById(id);
@@ -212,11 +214,13 @@ export function meetsSpecialAccess(
   ability: AbilitySpec,
   options: {
     equipmentIds?: readonly string[];
+    activeWeapon?: { specialAttackId?: string | null };
     eofStoredSpecialId?: string | null;
   } = {},
 ): boolean {
   if (!ability.weaponSpecial || ability.requiresSpecialAccess !== true) return true;
-  if (equipmentGrantsNativeSpecial(ability.id, options.equipmentIds)) return true;
+  if (equipmentGrantsNativeSpecial(ability.id, options.equipmentIds, options.activeWeapon))
+    return true;
   if (!hasEssenceOfFinalityEquipped(options.equipmentIds)) return false;
   if (options.eofStoredSpecialId == null || options.eofStoredSpecialId === "") return true;
   return options.eofStoredSpecialId === ability.id;
@@ -229,6 +233,7 @@ export function specialAccessMessage(ability: AbilitySpec): string {
 export type AbilityAvailabilityOptions = {
   weaponConfiguration?: WeaponConfiguration;
   equipmentIds?: readonly string[];
+  activeWeapon?: { specialAttackId?: string | null };
   /** Prefer resolved ActiveEquipmentEffects.passiveIds when available. */
   passiveIds?: readonly ItemPassiveId[];
   /** EoF stored special ability id when modeled. */
@@ -342,6 +347,7 @@ export function resolveAbilityCastAvailability(
   if (
     !meetsSpecialAccess(ability, {
       equipmentIds: options.equipmentIds,
+      activeWeapon: options.activeWeapon,
       eofStoredSpecialId: options.eofStoredSpecialId,
     })
   ) {

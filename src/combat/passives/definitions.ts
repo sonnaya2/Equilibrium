@@ -42,6 +42,7 @@ export const PASSIVE_SOURCE = {
   cinderbanePoison: wiki("Cinderbane gloves", "Cinderbane_gloves", "2026-08-06"),
   blowpipePoison: wiki("Upgraded bone blowpipe", "Upgraded_bone_blowpipe", "2026-08-06"),
   laniakeaPoison: wiki("Laniakea's spear", "Laniakea%27s_spear", "2026-08-06"),
+  surgingStorm: wiki("Fractured Staff of Armadyl", "Fractured_Staff_of_Armadyl", "2026-08-08"),
 } as const;
 
 /**
@@ -362,6 +363,18 @@ export const PASSIVE_DEFINITIONS: readonly PassiveDefinition[] = [
     implementationOwners: ["poison/mechanics.ts", "engine/simulation/poisonLand.ts"],
     effects: ["Adds 5 percentage points to poison proc chance and 5% poison damage."],
     source: PASSIVE_SOURCE.laniakeaPoison,
+  },
+  {
+    id: "surging-storm",
+    label: "Surging Storm",
+    support: "modeled",
+    duplicatePolicy: "mutually-exclusive",
+    lifecycle: ["cast-preparation", "modifier-provider"],
+    implementationOwners: ["engine/resolution/castHit.ts", "shared/equipment.ts"],
+    effects: [
+      "+15.0% to +25.0% critical strike damage in 0.1 percentage-point steps on FSoA casts.",
+    ],
+    source: PASSIVE_SOURCE.surgingStorm,
   },
 ];
 

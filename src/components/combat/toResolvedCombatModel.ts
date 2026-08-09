@@ -107,6 +107,9 @@ export function hostInputFromLoadoutStats(
     conjureDurationMult: stats.conjureDurationMult,
     tumekensPieces: stats.tumekensPieces,
     equipmentEffects: stats.equipmentEffects,
+    nativeSpecialPolicy: {
+      useEquippedWeaponSpecial: loadout.buffs.useEquippedWeaponSpecial === true,
+    },
     league: serializeLeague(stats.league),
     context: stats.combatContext,
     targetHpPercent: loadout.target?.hpPercent,

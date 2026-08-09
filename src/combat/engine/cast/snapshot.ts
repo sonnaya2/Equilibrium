@@ -8,7 +8,7 @@ import type { CombatModifier } from "../../types";
  * Haunted is snapshotted for event identity; damage eligibility is land-time.
  */
 export interface CastSnapshot {
-  /** Owning cast sequence - buff-granting casts exclude their own hits. */
+  /** Owning cast sequence for event identity. */
   castSeq: number;
   critLayers: CritLayers;
   baseMods: CombatModifier[];
@@ -30,6 +30,9 @@ export interface CastSnapshot {
   hauntedCapAd: number;
   /** Enduring Ruin's next-attack additive bonus captured for every hit in this cast. */
   enduringRuinBonus: number;
+  /** Resolved weapon state captured by this cast. */
+  magicWeaponAtCast: boolean;
+  surgingStormAtCast: boolean;
   /**
    * Tuska's Wrath on-task empowered flat damage (100x Slayer, 15k cap).
    * Absent = off-task AD band path.

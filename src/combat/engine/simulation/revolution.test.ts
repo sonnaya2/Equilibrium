@@ -18,6 +18,7 @@ import { simulate } from "./simulate";
 import { secondsToTicks, TICK_SECONDS } from "../../core/ticks";
 import { NO_PLAYER_POISON } from "../../poison/mechanics";
 import { leagueModifiers, resolveLeagueRules } from "../../league/ruleset";
+import { activeEquipmentEffects } from "../../shared/equipment";
 
 function required<T>(value: T | null | undefined, label: string): T {
   if (value == null) throw new Error(label);
@@ -131,6 +132,88 @@ describe("specFromRecord", () => {
 });
 
 describe("simulateRevolution", () => {
+  it("keeps native specials external to the bar and fires them only when opted in", () => {
+    const fsoaEffects = activeEquipmentEffects({
+      style: "magic",
+      equipmentSlots: { twohand: "item:fractured-staff-of-armadyl" },
+    });
+    const common = {
+      ...baseInput,
+      abilities: [...ENGINE_SPECS.values()],
+      bar: [abilitySpec("magic_attack")],
+      style: "magic" as const,
+      durationTicks: 20,
+      startingAdrenaline: 100,
+      equipmentIds: ["item:fractured-staff-of-armadyl"],
+      weaponConfiguration: "twohand" as const,
+      equipmentEffects: fsoaEffects,
+    };
+    const off = simulateRevolution(common);
+    const on = simulateRevolution({
+      ...common,
+      nativeSpecialPolicy: { useEquippedWeaponSpecial: true },
+    });
+
+    expect(off.casts[0]).toMatchObject({ abilityId: "magic_attack" });
+    expect(off.casts[0]!.auto).not.toBe(true);
+    expect(off.casts.some((cast) => cast.abilityId === "instability")).toBe(false);
+    expect(on.casts[0]).toMatchObject({
+      abilityId: "instability",
+      tick: 0,
+      adrenalineAfter: 50,
+    });
+    expect(on.casts[0]!.auto).not.toBe(true);
+    expect(on.casts.some((cast) => cast.abilityId === "magic_attack")).toBe(true);
+    expect(on.casts.find((cast) => cast.abilityId === "magic_attack")!.tick).toBeGreaterThanOrEqual(
+      3,
+    );
+
+    const noSpecialEffects = activeEquipmentEffects({
+      style: "magic",
+      equipmentSlots: { twohand: "item:staff-of-light" },
+    });
+    const noSpecial = {
+      ...common,
+      equipmentIds: ["item:staff-of-light"],
+      equipmentEffects: noSpecialEffects,
+    };
+    const noSpecialOff = simulateRevolution(noSpecial);
+    const noSpecialOn = simulateRevolution({
+      ...noSpecial,
+      nativeSpecialPolicy: { useEquippedWeaponSpecial: true },
+    });
+    expect(noSpecialOn.casts.map((cast) => cast.abilityId)).toEqual(
+      noSpecialOff.casts.map((cast) => cast.abilityId),
+    );
+  });
+
+  it("uses the same policy for a second native special", () => {
+    const lengEffects = activeEquipmentEffects({
+      style: "melee",
+      equipmentSlots: {
+        mainhand: "item:dark-shard-of-leng",
+        offhand: "item:dark-sliver-of-leng",
+      },
+    });
+    const s = simulateRevolution({
+      ...baseInput,
+      abilities: [...ENGINE_SPECS.values()],
+      bar: [abilitySpec("attack")],
+      style: "melee",
+      durationTicks: 20,
+      startingAdrenaline: 100,
+      equipmentIds: ["item:dark-shard-of-leng", "item:dark-sliver-of-leng"],
+      weaponConfiguration: "dualwield",
+      equipmentEffects: lengEffects,
+      nativeSpecialPolicy: { useEquippedWeaponSpecial: true },
+    });
+
+    expect(s.ok).toBe(true);
+    expect(s.rng?.lanes).toBe(128);
+    expect(s.casts[0]).toMatchObject({ abilityId: "icy_tempest", tick: 0 });
+    expect(s.casts[0]!.auto).not.toBe(true);
+  });
+
   it("rejects off-GCD utility abilities with a useful error", () => {
     const s = simulateRevolution({
       ...baseInput,

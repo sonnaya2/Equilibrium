@@ -3,6 +3,7 @@ import { MELEE_ABILITIES } from "../../styles/melee/abilities";
 import { NECROMANCY_ABILITIES, volleyOfSouls } from "../../styles/necromancy/abilities";
 import { RANGED_ABILITIES } from "../../styles/ranged/abilities";
 import type { SimulateInput } from "../../engine/simulation/simulate";
+import { activeEquipmentEffects } from "../../shared/equipment";
 
 /**
  * The neutral loadout engine tests start from: base ability damage 1000, level
@@ -32,6 +33,16 @@ export const magicInput: Omit<SimulateInput, "rotation"> = {
   ...baseInput,
   abilities: MAGIC_ABILITIES,
   context: { style: "magic" },
+};
+
+export const fsoaMagicInput: Omit<SimulateInput, "rotation"> = {
+  ...magicInput,
+  equipmentIds: ["item:fractured-staff-of-armadyl"],
+  weaponConfiguration: "twohand",
+  equipmentEffects: activeEquipmentEffects({
+    style: "magic",
+    equipmentSlots: { twohand: "item:fractured-staff-of-armadyl" },
+  }),
 };
 
 /** Volley's hit count is fixed at cast time, so the 3-soul form is a separate spec. */

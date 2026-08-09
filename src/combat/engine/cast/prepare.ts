@@ -365,6 +365,9 @@ export function prepareCast(
     hauntedAtCast,
     hauntedCapAd,
     enduringRuinBonus: enduringRuinConsume ? rt.state.melee.enduringRuin.nextAttackBonus : 0,
+    magicWeaponAtCast: input.equipmentEffects?.activeWeapon?.style === "magic",
+    surgingStormAtCast:
+      input.equipmentEffects?.activeWeapon?.passiveIds.includes("surging-storm") === true,
     ...(tuskasEmpoweredFlat !== undefined ? { tuskasEmpoweredDamage: tuskasEmpoweredFlat } : {}),
   };
 

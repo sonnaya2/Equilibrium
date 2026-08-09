@@ -106,7 +106,10 @@ export function scheduleCastEvents(
             bleedExpiresAtTick: bleedExpires.get(hitSpec.bleedId),
           }
         : {}),
-      ...(ability.style === "magic" && !isDot && hitSpec.critEligible !== false
+      ...(ability.style === "magic" &&
+      snap.magicWeaponAtCast &&
+      !isDot &&
+      hitSpec.critEligible !== false
         ? { lightningSurge: true as const }
         : {}),
       resolve: (eventRt, at) =>

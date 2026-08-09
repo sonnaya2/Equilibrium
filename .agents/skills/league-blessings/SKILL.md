@@ -278,9 +278,10 @@ the fixed 128-lane stochastic ensemble: a successful Cinders roll or Critual par
 integer-multiplicity Inferno events, and an Inferno crit can continue the Critual chain. Every
 materialized event has `expectedOccurrences`, `expectedActivations`, and `expectedSeparateHits` of
 1 with no occurrence model wrapper. The terminal event is noncritical; continuing events are
-critical. Inferno may roll weapon poison once and host Big Boned, but its blessing provenance does
-not grant Tsunami adrenaline and it never reopens Cinders. A Cinders-origin continuation is
-attributed to Unholy Critual after the independent Cinders start.
+critical. Inferno may roll weapon poison once and host Big Boned. A separate Inferno hit can grant
+Tsunami adrenaline only when its resolved combat style is Magic; ranged, melee, and Necromancy
+Infernos cannot. Inferno never reopens Cinders. A Cinders-origin continuation is attributed to
+Unholy Critual after the independent Cinders start.
 
 Still unverified:
 

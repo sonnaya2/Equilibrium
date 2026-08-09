@@ -171,6 +171,8 @@ function scheduleConcreteInfernoChain(
       expectedTriggerRolls: index === 0 ? 1 : 0,
       expectedActivations: 1,
       expectedSeparateHits: 1,
+      combatStyle: style,
+      resourceEligible: true,
       resolve: (runtime) =>
         resolveConcreteInferno(
           runtime,

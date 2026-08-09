@@ -2,9 +2,11 @@ import { describe, expect, it } from "vitest";
 import { performCast } from "../cast";
 import { advanceTo } from "../runtime/clock";
 import { createRuntime } from "../runtime/runtime";
+import { patchMagic } from "../runtime/state";
 import { rotationOf, type SimulateInput } from "./contracts";
 import { simulate } from "./simulate";
 import { resolveLeagueRules } from "../../league/ruleset";
+import { MAGIC_ABILITIES } from "../../styles/magic/abilities";
 import { baseInput, necroInput, rangedInput } from "../../test/fixtures/inputs";
 
 const unholy = resolveLeagueRules({
@@ -36,6 +38,27 @@ function laneRun(
   return rt;
 }
 
+function scheduledInfernoRun(style: "magic" | "ranged", laneIndex: number, tsunamiActive = true) {
+  const input = style === "magic" ? { ...baseInput, abilities: MAGIC_ABILITIES } : rangedInput;
+  const rt = createRuntime(
+    {
+      ...input,
+      league: unholy,
+      crit: { chance: 0.5 },
+      startingAdrenaline: 0,
+      context: { style, ruleset: "equilibrium" },
+    },
+    { laneIndex, laneCount: 128 },
+  );
+  if (tsunamiActive) rt.state = patchMagic(rt.state, { tsunamiCritAdrenUntilTick: 50 });
+  const ability = rt.byId.get(style === "magic" ? "magic_attack" : "ranged_attack");
+  if (!ability) throw new Error(`missing ${style} basic ability`);
+  const attempt = performCast(rt, ability, 0, false);
+  if (!attempt.ok) throw new Error(attempt.error);
+  advanceTo(rt, rt.endTick);
+  return rt;
+}
+
 describe("concrete Unholy Critual runtime", () => {
   it("matches p/(1-q) across 128 concrete single-parent histories", () => {
     const lanes = Array.from({ length: 128 }, (_, laneIndex) =>
@@ -53,6 +76,8 @@ describe("concrete Unholy Critual runtime", () => {
         expect(event.expectedActivations).toBe(1);
         expect(event.expectedSeparateHits).toBe(1);
         expect(event.occurrenceModel).toBeUndefined();
+        expect(event.combatStyle).toBe("melee");
+        expect(event.resourceEligible).toBe(true);
       }
     }
   });
@@ -63,6 +88,7 @@ describe("concrete Unholy Critual runtime", () => {
       (event) => event.abilityId === "greater_ricochet" && event.family === "hit",
     );
     const infernos = rt.events.filter((event) => event.abilityId === "inferno-of-zamorak");
+    expect(infernos.every((event) => event.combatStyle === "ranged")).toBe(true);
     expect(parents).toHaveLength(7);
     expect(parents.every((event) => event.damage.critical?.outcome !== undefined)).toBe(true);
     expect(infernos.filter((event) => event.expectedTriggerRolls === 1).length).toBe(
@@ -78,6 +104,49 @@ describe("concrete Unholy Critual runtime", () => {
       expect(chain.at(-1)?.damage.critical?.outcome).toBe(false);
       expect(chain.slice(0, -1).every((event) => event.damage.critical?.outcome)).toBe(true);
     }
+  });
+
+  it("uses resolved style for scheduled Inferno Tsunami adrenaline", () => {
+    const magicLane = Array.from({ length: 128 }, (_, laneIndex) => laneIndex).find((laneIndex) =>
+      scheduledInfernoRun("magic", laneIndex).events.some(
+        (event) =>
+          event.abilityId === "inferno-of-zamorak" && event.damage.critical?.outcome === true,
+      ),
+    );
+    if (magicLane === undefined) throw new Error("no Magic lane produced a critical Inferno");
+    const magic = scheduledInfernoRun("magic", magicLane);
+    const magicBaseline = scheduledInfernoRun("magic", magicLane, false);
+    const magicInfernos = magic.events.filter((event) => event.abilityId === "inferno-of-zamorak");
+    const magicCriticalInfernos = magicInfernos.filter(
+      (event) => event.damage.critical?.outcome === true,
+    );
+    const magicCriticalEvents = magic.events.filter(
+      (event) =>
+        (event.abilityId === "magic_attack" || event.abilityId === "inferno-of-zamorak") &&
+        event.damage.critical?.outcome === true,
+    );
+    expect(magicCriticalInfernos.length).toBeGreaterThan(0);
+    expect(magicInfernos.at(-1)?.damage.critical?.outcome).toBe(false);
+    expect(magic.state.adrenaline - magicBaseline.state.adrenaline).toBe(
+      magicCriticalEvents.length * 8,
+    );
+
+    const rangedLane = Array.from({ length: 128 }, (_, laneIndex) => laneIndex).find((laneIndex) =>
+      scheduledInfernoRun("ranged", laneIndex).events.some(
+        (event) =>
+          event.abilityId === "inferno-of-zamorak" && event.damage.critical?.outcome === true,
+      ),
+    );
+    if (rangedLane === undefined) throw new Error("no ranged lane produced a critical Inferno");
+    const ranged = scheduledInfernoRun("ranged", rangedLane);
+    const rangedBaseline = scheduledInfernoRun("ranged", rangedLane, false);
+    expect(
+      ranged.events.some(
+        (event) =>
+          event.abilityId === "inferno-of-zamorak" && event.damage.critical?.outcome === true,
+      ),
+    ).toBe(true);
+    expect(ranged.state.adrenaline - rangedBaseline.state.adrenaline).toBe(0);
   });
 
   it("inherits one parent result across Death Skulls bounces", () => {

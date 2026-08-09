@@ -12,6 +12,9 @@ import type { ResolvedDamage } from "../resolution/types";
 import { applyStatefulLandRng } from "./statefulLand";
 import { simulateRevolution } from "./revolution";
 import { MAGIC_ABILITIES } from "../../styles/magic/abilities";
+import { NECROMANCY_ABILITIES } from "../../styles/necromancy/abilities";
+import { RANGED_ABILITIES } from "../../styles/ranged/abilities";
+import type { CombatStyle } from "../../types";
 
 const lengIds = ["item:dark-shard-of-leng", "item:dark-sliver-of-leng"] as const;
 
@@ -26,6 +29,53 @@ function lengInput() {
       equipmentSlots: { mainhand: lengIds[0], offhand: lengIds[1] },
     }),
     weaponConfiguration: "dualwield" as const,
+  };
+}
+
+function infernoRuntime(style: CombatStyle, naturalInstinctUntilTick = 0) {
+  const abilities =
+    style === "magic"
+      ? MAGIC_ABILITIES
+      : style === "ranged"
+        ? RANGED_ABILITIES
+        : style === "necromancy"
+          ? NECROMANCY_ABILITIES
+          : MELEE_ABILITIES;
+  const rt = createRuntime(
+    {
+      ...baseInput,
+      abilities,
+      context: { style },
+      startingAdrenaline: 0,
+      naturalInstinctUntilTick,
+    },
+    { laneIndex: 0, laneCount: 1 },
+  );
+  rt.state = patchMagic(rt.state, { tsunamiCritAdrenUntilTick: 50 });
+  return rt;
+}
+
+function infernoEvent(style: CombatStyle, outcome: boolean): ScheduledEvent<SimulationRuntime> {
+  const damage: ResolvedDamage = {
+    min: 1,
+    max: 1,
+    expected: 1,
+    critical: { mode: "expected", chance: 0.5, contribution: 0, outcome },
+  };
+  return {
+    tick: 10,
+    seq: 1,
+    family: "blessing",
+    abilityId: "inferno-of-zamorak",
+    sourceCast: 0,
+    hitIndex: 0,
+    attached: false,
+    procEligible: false,
+    recursionAllowed: false,
+    combatStyle: style,
+    resourceEligible: true,
+    provenance: { kind: "blessing", detail: "inferno-of-zamorak" },
+    resolve: () => ({ damage }),
   };
 }
 
@@ -104,6 +154,45 @@ describe("bounded state-changing land RNG", () => {
       applyStatefulLandRng(rt, event, damage);
       expect(rt.state.adrenaline).toBe(outcome ? 8 : 0);
     }
+  });
+
+  it("grants Tsunami adrenaline for a critical Magic Inferno", () => {
+    const rt = infernoRuntime("magic");
+    const event = infernoEvent("magic", true);
+
+    applyStatefulLandRng(rt, event, event.resolve(rt, event.tick).damage);
+
+    expect(rt.state.adrenaline).toBe(8);
+  });
+
+  it("does not grant Tsunami adrenaline for a noncritical Magic Inferno", () => {
+    const rt = infernoRuntime("magic");
+    const event = infernoEvent("magic", false);
+
+    applyStatefulLandRng(rt, event, event.resolve(rt, event.tick).damage);
+
+    expect(rt.state.adrenaline).toBe(0);
+  });
+
+  it.each(["melee", "ranged", "necromancy"] as const)(
+    "does not grant Tsunami adrenaline for a critical %s Inferno",
+    (style) => {
+      const rt = infernoRuntime(style);
+      const event = infernoEvent(style, true);
+
+      applyStatefulLandRng(rt, event, event.resolve(rt, event.tick).damage);
+
+      expect(rt.state.adrenaline).toBe(0);
+    },
+  );
+
+  it("doubles the Magic Inferno Tsunami grant under Natural Instinct", () => {
+    const rt = infernoRuntime("magic", 50);
+    const event = infernoEvent("magic", true);
+
+    applyStatefulLandRng(rt, event, event.resolve(rt, event.tick).damage);
+
+    expect(rt.state.adrenaline).toBe(16);
   });
 
   it("samples Icy Tempest's coupled integer outcome across fixed lanes", () => {

@@ -1,5 +1,5 @@
 import type { AttachedDamageComponent, EventResolution, ResolvedDamage } from "../resolution/types";
-import type { BleedId, DamageOverTimeKind } from "../../types";
+import type { BleedId, CombatStyle, DamageOverTimeKind } from "../../types";
 import type { BlessingId } from "../../../league/blessings";
 import type { BlessingDamageTag } from "../../league/damage";
 import type { DamageProvenance } from "../../shared/damageProvenance";
@@ -55,6 +55,10 @@ export interface ScheduledEvent<RT = unknown> {
   dotKind?: DamageOverTimeKind;
   bleedId?: BleedId;
   bleedExpiresAtTick?: number;
+  /** Resolved combat style for separate events without an AbilitySpec. */
+  combatStyle?: CombatStyle;
+  /** Explicit resource eligibility for a separate hit; provenance remains the default. */
+  resourceEligible?: boolean;
   lightningSurge?: boolean;
   lightningSurgeSourceCritChance?: number;
   castSnap?: CastSnapshot;

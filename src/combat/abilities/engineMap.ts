@@ -178,6 +178,10 @@ export const ENGINE_LINK_OVERRIDES: Readonly<Record<string, EngineLinkOverride>>
     linkKind: "canonical",
     forceSolver: false,
   },
+  soulfire: {
+    linkKind: "canonical",
+    forceSolver: false,
+  },
   balance_by_force: {
     linkKind: "canonical",
     forceSolver: false,

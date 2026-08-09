@@ -73,6 +73,9 @@ export function reviveRevolutionBase(sim: SerializableRevolutionSimBase): Revive
         unconditional: sim.equipmentEffects.setCritChance.unconditional,
         conditional: { ...sim.equipmentEffects.setCritChance.conditional },
       },
+      ...(sim.equipmentEffects.songOfDestruction
+        ? { songOfDestruction: { ...sim.equipmentEffects.songOfDestruction } }
+        : {}),
     },
     nativeSpecialPolicy: {
       useEquippedWeaponSpecial: sim.nativeSpecialPolicy?.useEquippedWeaponSpecial === true,

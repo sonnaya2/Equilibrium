@@ -280,6 +280,16 @@ export function createRuntime(
       },
     };
   }
+  const analysis = emptyAnalysisState();
+  const song = input.equipmentEffects?.songOfDestruction;
+  if (song) {
+    analysis.song = {
+      ...analysis.song,
+      pieceCount: song.pieceCount,
+      enabled: song.enabled,
+      twoPiece: song.twoPiece,
+    };
+  }
   const rt: SimulationRuntime = {
     input: runtimeInput,
     detailLevel: resolveDetailLevel(input.detailLevel),
@@ -309,7 +319,7 @@ export function createRuntime(
     totalMax: 0,
     totalExpected: 0,
     totalHealed: 0,
-    analysis: emptyAnalysisState(),
+    analysis,
     nextSeq: 0,
     nextCastSeq: 0,
     finalized: false,

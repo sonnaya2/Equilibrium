@@ -92,7 +92,12 @@ export function projectSerializableSimBase(
     conjureBasicDamageMult: model.conjureBasicDamageMult,
     conjureDurationMult: model.conjureDurationMult,
     tumekensPieces: model.tumekensPieces,
-    equipmentEffects: model.equipmentEffects,
+    equipmentEffects: {
+      ...model.equipmentEffects,
+      ...(model.equipmentEffects.songOfDestruction
+        ? { songOfDestruction: { ...model.equipmentEffects.songOfDestruction } }
+        : {}),
+    },
     nativeSpecialPolicy: model.nativeSpecialPolicy,
     league: {
       ...model.league,

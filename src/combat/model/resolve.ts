@@ -53,6 +53,9 @@ function copyEquipmentEffects(
           thresholds: { ...effects.dracolich.thresholds },
         }
       : undefined,
+    songOfDestruction: effects.songOfDestruction
+      ? { ...effects.songOfDestruction }
+      : undefined,
     vestments: { ...effects.vestments },
   };
 }

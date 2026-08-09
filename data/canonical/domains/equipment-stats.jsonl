@@ -683,6 +683,7 @@
 {"entityId":"item:occultists-ring","stat":"damage","value":34.5}
 {"entityId":"item:occultists-ring","stat":"prayer","value":5}
 {"entityId":"item:ode-to-deceit","stat":"accuracy","value":2765}
+{"entityId":"item:ode-to-deceit","stat":"damage","value":456}
 {"entityId":"item:off-hand-armadyl-crossbow","stat":"accuracy","value":1694}
 {"entityId":"item:off-hand-armadyl-crossbow","stat":"prayer","value":1}
 {"entityId":"item:off-hand-ascension-crossbow","stat":"accuracy","value":2458}
@@ -802,6 +803,7 @@
 {"entityId":"item:ripper-claw","stat":"accuracy","value":2178}
 {"entityId":"item:ripper-claw","stat":"damage","value":816}
 {"entityId":"item:roar-of-awakening","stat":"accuracy","value":2765}
+{"entityId":"item:roar-of-awakening","stat":"damage","value":912}
 {"entityId":"item:royal-crossbow","stat":"accuracy","value":1924}
 {"entityId":"item:royal-crossbow","stat":"damage","value":1020}
 {"entityId":"item:ruinous-crossbow","stat":"accuracy","value":3100}

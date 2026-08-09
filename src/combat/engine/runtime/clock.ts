@@ -2,7 +2,7 @@ import { endBerserk } from "../../styles/melee/bloodlust";
 import { METEOR_STRIKE_PASSIVE_ADREN_PER_TICK } from "../../styles/melee/effects";
 import { processSpiritEvent } from "../schedulers/conjures";
 import { recordResolved } from "../resolution";
-import { gainAdrenaline, patchMelee } from "./state";
+import { gainAdrenaline, patchMagic, patchMelee } from "./state";
 import type { SimulationRuntime } from "./runtime";
 import { playerPoisonPrecedes } from "../schedulers/playerPoison";
 import {
@@ -14,6 +14,11 @@ import { temperedHeartAdrenalineGain } from "../../league/ruleset";
 import { clockAdvanceBounds } from "./clockBounds";
 import { applyStatefulLandRng } from "../simulation/statefulLand";
 import { expirePrimordialIce } from "../../styles/melee/primordialIce";
+import {
+  advanceSongAdrenalineStream,
+  normalizeEssenceCorruptionState,
+  normalizeSongAdrenalineStream,
+} from "../../styles/magic/songOfDestruction";
 
 /**
  * The canonical simulation clock. Time moves only through advanceTo: it lands
@@ -87,6 +92,71 @@ function grantTemperedHeart(
   if (gain > 0) rt.state = gainAdrenaline(rt.state, gain);
 }
 
+function grantSongAdrenaline(
+  rt: SimulationRuntime,
+  fromTick: number,
+  toTickExclusive: number,
+): void {
+  const stream = rt.state.magic.song.adrenalineStream;
+  if (rt.input.equipmentEffects?.songOfDestruction?.enabled !== true) {
+    if (stream.remainingPulses > 0 || stream.nextPulseTick > 0) {
+      rt.state = patchMagic(rt.state, {
+        song: {
+          ...rt.state.magic.song,
+          adrenalineStream: { nextPulseTick: 0, remainingPulses: 0 },
+        },
+      });
+    }
+    return;
+  }
+  const result = advanceSongAdrenalineStream(stream, fromTick, toTickExclusive);
+  if (
+    result.stream.nextPulseTick !== stream.nextPulseTick ||
+    result.stream.remainingPulses !== stream.remainingPulses
+  ) {
+    rt.state = patchMagic(rt.state, {
+      song: { ...rt.state.magic.song, adrenalineStream: result.stream },
+    });
+  }
+  if (result.pulses > 0) {
+    rt.analysis.song.timedAdrenalineGained += result.pulses;
+    rt.state = gainAdrenaline(rt.state, result.pulses);
+  }
+}
+
+function normalizeSongClocks(rt: SimulationRuntime, tick: number): void {
+  const current = rt.state.magic.song;
+  const essenceCorruption = normalizeEssenceCorruptionState(
+    current.essenceCorruption,
+    tick,
+  );
+  const conflagrateUntilTick =
+    current.conflagrateUntilTick > 0 && current.conflagrateUntilTick <= tick
+      ? 0
+      : current.conflagrateUntilTick;
+  const adrenalineStream =
+    rt.input.equipmentEffects?.songOfDestruction?.enabled === true
+      ? normalizeSongAdrenalineStream(current.adrenalineStream, tick)
+      : { nextPulseTick: 0, remainingPulses: 0 };
+  rt.analysis.song.finalStacks = essenceCorruption.stacks;
+  if (
+    essenceCorruption.stacks !== current.essenceCorruption.stacks ||
+    essenceCorruption.expiresAtTick !== current.essenceCorruption.expiresAtTick ||
+    conflagrateUntilTick !== current.conflagrateUntilTick ||
+    adrenalineStream.nextPulseTick !== current.adrenalineStream.nextPulseTick ||
+    adrenalineStream.remainingPulses !== current.adrenalineStream.remainingPulses
+  ) {
+    rt.state = patchMagic(rt.state, {
+      song: {
+        ...current,
+        essenceCorruption,
+        conflagrateUntilTick,
+        adrenalineStream,
+      },
+    });
+  }
+}
+
 export function advanceTo(rt: SimulationRuntime, targetTick: number): void {
   if (targetTick < rt.state.tick) return;
   const bounds = clockAdvanceBounds(targetTick, rt.horizon);
@@ -94,6 +164,7 @@ export function advanceTo(rt: SimulationRuntime, targetTick: number): void {
   processDueEvents(rt, bounds.eventEndInclusive);
   grantMeteorPassive(rt, rt.state.tick, bounds.perTickEndExclusive);
   grantVestmentsPassive(rt, rt.state.tick, bounds.perTickEndExclusive);
+  grantSongAdrenaline(rt, rt.state.tick, bounds.perTickEndExclusive);
   grantTemperedHeart(rt, rt.state.tick, bounds.eventEndInclusive);
   if (rt.state.melee.bloodlust.berserk && targetTick >= rt.state.melee.berserkUntilTick) {
     rt.state = patchMelee(rt.state, {
@@ -102,6 +173,7 @@ export function advanceTo(rt: SimulationRuntime, targetTick: number): void {
     });
   }
   if (targetTick > rt.state.tick) rt.state = { ...rt.state, tick: targetTick };
+  normalizeSongClocks(rt, rt.state.tick);
   const ice = expirePrimordialIce(rt.state.melee.primordialIce, rt.state.tick);
   if (ice !== rt.state.melee.primordialIce) {
     rt.state = patchMelee(rt.state, { primordialIce: ice });

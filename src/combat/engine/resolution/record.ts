@@ -78,6 +78,18 @@ export function recordResolved(
         );
   noteAttachedTermsResolved(composed.components?.length ?? 0);
   recordEventAccounting(rt, event, composed);
+  if (event.castSnap?.songEmpowered === true && !event.attached) {
+    rt.analysis.song.immediateHitCount += 1;
+  }
+  if (!event.attached) {
+    const ability = rt.byId.get(event.abilityId);
+    if (ability?.style === "magic") {
+      rt.analysis.song.essenceFlatBonusDamage +=
+        composed.postDamagePotentialFlatContribution ??
+        composed.hitDetail?.postDamagePotentialFlatContribution ??
+        0;
+    }
+  }
   applyDeathMarkLanded(rt, event, composed.damage.expected);
 
   if (event.family === "status") {
@@ -97,7 +109,13 @@ export function recordResolved(
   // Endless Assault damage is not proc-eligible, but it is still the original
   // channel hit for ability-owned landed effects such as Greater Flurry's
   // Berserk extension.
-  if ((event.procEligible || event.convertedChannel || event.bleedId != null) && !event.attached) {
+  if (
+    !event.attached &&
+    ((event.family === "dot" && rt.byId.get(event.abilityId)?.style === "magic") ||
+      event.procEligible ||
+      event.convertedChannel ||
+      event.bleedId != null)
+  ) {
     applyLandedHitEffects(rt, event, damage);
   }
 

@@ -83,6 +83,11 @@ export interface AbilitySpec {
   hits: AbilityHit[];
   /** Canonical player DoT metadata used by Tearing Thorns. */
   tearingThornsEligible?: boolean;
+  /** Song of Destruction Essence Corruption stack and flat-damage capability. */
+  essenceCorruptionEligible?: boolean;
+  essenceCorruptionMagicHitEligible?: boolean;
+  /** Song two-piece modifier applies to this ability's DoT hits. */
+  songAffectedDot?: boolean;
   /**
    * Weapon special attack (including Essence of Finality stored specs).
    * Ring of Vigour reduces requirement and spend to 90% of original cost.

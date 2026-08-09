@@ -47,6 +47,20 @@ export function canApplyDeathMark(ability: AbilitySpec | undefined): boolean {
   return directHit || bounce;
 }
 
+export function canActivateSongEmpowerment(ability: AbilitySpec | undefined): boolean {
+  return ability?.style === "magic" && ability.essenceCorruptionEligible === true;
+}
+
+function hasSongEmpowermentOpportunity(
+  input: StatefulRngInput,
+  activeAbilityIds: Iterable<string>,
+): boolean {
+  for (const abilityId of activeAbilityIds) {
+    if (canActivateSongEmpowerment(abilityForId(input, abilityId))) return true;
+  }
+  return false;
+}
+
 function abilityForId(input: StatefulRngInput, abilityId: string): AbilitySpec | undefined {
   return (
     input.abilityRegistry?.byId.get(abilityId) ??
@@ -98,6 +112,12 @@ export function needsStochasticLanes(
   if (
     deathdealerApplicationChance(input.equipmentEffects) > 0 &&
     hasRevolutionDeathMarkApplicationOpportunity(input, abilityIds)
+  ) {
+    return true;
+  }
+  if (
+    input.equipmentEffects?.songOfDestruction?.enabled === true &&
+    hasSongEmpowermentOpportunity(input, abilityIds)
   ) {
     return true;
   }

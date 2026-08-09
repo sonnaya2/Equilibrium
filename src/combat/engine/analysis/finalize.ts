@@ -220,6 +220,7 @@ export function finalizeAnalysis(
     dotDamage: analysis.dotDamage,
     criticalContribution: analysis.criticalContribution,
     capLoss: analysis.capLoss,
+    song: { ...analysis.song },
   };
 }
 

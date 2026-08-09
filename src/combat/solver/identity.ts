@@ -147,6 +147,13 @@ export function normalizeEquipmentEffects(effects: ActiveEquipmentEffects): unkn
           },
         }
       : null,
+    songOfDestruction: effects.songOfDestruction
+      ? {
+          pieceCount: effects.songOfDestruction.pieceCount,
+          enabled: effects.songOfDestruction.enabled === true,
+          twoPiece: effects.songOfDestruction.twoPiece === true,
+        }
+      : null,
     vestments: {
       pieces: effects.vestments?.pieces ?? 0,
       heraldOfChaos: effects.vestments?.heraldOfChaos === true,

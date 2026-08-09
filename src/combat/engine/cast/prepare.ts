@@ -48,6 +48,11 @@ import type { SimulationRuntime } from "../runtime/runtime";
 import { secondsToTicks } from "../../core/ticks";
 import { GLOBAL_COOLDOWN_TICKS } from "../runtime/timing";
 import { balanceByForceTriggersPerfectEquilibrium } from "../../styles/ranged/botlg";
+import {
+  activeEssenceCorruptionStacks,
+  conflagrateActive,
+  prepareEssenceCorruptionEmpowerment,
+} from "../../styles/magic/songOfDestruction";
 
 /** Explicit Greater Barge opener idle policy when lastAttackTick is unset (default 0). */
 export const GREATER_BARGE_OPENER_IDLE_TICKS = 0;
@@ -96,7 +101,11 @@ export type PreparedTransition =
   /** Icy Tempest spends all Primordial Ice stacks on cast. */
   | { kind: "consumePrimordialIce"; next: PrimordialIceDistribution }
   /** Balance by Force consumes the pre-cast Perfect Equilibrium trigger. */
-  | { kind: "consumePerfectEquilibrium" };
+  | { kind: "consumePerfectEquilibrium" }
+  /** The next Combust cast consumes its Soulfire Conflagrate window. */
+  | { kind: "consumeSongConflagrate" }
+  /** A qualifying Basic replaces the timed Song adrenaline stream. */
+  | { kind: "armSongAdrenaline"; stacks: number };
 
 /**
  * Everything one atomic cast needs, computed once against the advanced state
@@ -145,6 +154,7 @@ export function prepareCast(
   ability: AbilitySpec,
   candidate: number,
   icyTempestOutcome?: IcyTempestOutcome,
+  songEmpowered = false,
 ): PreparedCast {
   const input = rt.input;
   let selectedIcyTempestOutcome = icyTempestOutcome;
@@ -272,6 +282,35 @@ export function prepareCast(
     working = { ...working, hits: [] };
   }
 
+  const songSummary = input.equipmentEffects?.songOfDestruction;
+  const songPreCastStacks = activeEssenceCorruptionStacks(
+    songSummary ?? { pieceCount: 0, enabled: false, twoPiece: false },
+    rt.state.magic.song.essenceCorruption,
+    candidate,
+  );
+  const songEmpowerment = prepareEssenceCorruptionEmpowerment(
+    songSummary ?? { pieceCount: 0, enabled: false, twoPiece: false },
+    rt.state.magic.song.essenceCorruption,
+    candidate,
+    working,
+    songEmpowered ? 0 : 1,
+  );
+  if (songEmpowerment.empowered) {
+    working = {
+      ...working,
+      hits: working.hits.map((hit) => ({ ...hit, tickOffset: 0 })),
+      ...(working.derivedHits
+        ? {
+            derivedHits: {
+              ...working.derivedHits,
+              firstOffset: 0,
+              intervalTicks: 0,
+            },
+          }
+        : {}),
+    };
+  }
+
   // Target-HP variants (sourced thresholds; absent HP → no bonus, never invented).
   const hp = input.targetHpPercent;
   if (hp != null) {
@@ -355,6 +394,14 @@ export function prepareCast(
   // Haunted snap: scheduled-event identity / forensics. Damage uses land-time in resolveCastHit.
   const hauntedAtCast = damaging && hauntedActive(rt.state.target.haunted, candidate);
   const hauntedCapAd = hauntedAtCast ? rt.state.target.haunted.capAbilityDamage : 0;
+  const songConflagrateActive =
+    songSummary?.enabled === true &&
+    ability.id === "combust" &&
+    conflagrateActive(rt.state.magic.song.conflagrateUntilTick, candidate);
+  const songBasicStreamEligible =
+    songSummary?.enabled === true &&
+    songPreCastStacks >= 25 &&
+    ability.category === "basic";
 
   const snap: CastSnapshot = {
     castSeq: rt.nextCastSeq,
@@ -380,6 +427,10 @@ export function prepareCast(
       input.equipmentEffects?.activeWeapon?.passiveIds.includes("surging-storm") === true,
     perfectEquilibriumAtCast,
     perfectEquilibriumTrigger,
+    songEmpowered: songEmpowerment.empowered,
+    songConflagrateActive,
+    songTwoPieceActive: songSummary?.twoPiece === true,
+    songPreCastStacks,
     ...(tuskasEmpoweredFlat !== undefined ? { tuskasEmpoweredDamage: tuskasEmpoweredFlat } : {}),
   };
 
@@ -400,6 +451,8 @@ export function prepareCast(
     });
   }
   if (perfectEquilibriumTrigger) transitions.push({ kind: "consumePerfectEquilibrium" });
+  if (songConflagrateActive) transitions.push({ kind: "consumeSongConflagrate" });
+  if (songBasicStreamEligible) transitions.push({ kind: "armSongAdrenaline", stacks: songPreCastStacks });
 
   const sonic = ability.id === "sonic_wave" || ability.id === "greater_sonic_wave";
   const flowReduction = sonic

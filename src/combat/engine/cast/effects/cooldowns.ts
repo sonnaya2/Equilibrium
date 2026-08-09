@@ -34,6 +34,7 @@ function baseCooldownTicks(fx: CastEffectContext): number {
  */
 export function applyCastCooldown(fx: CastEffectContext): void {
   const { rt, ability, working, candidate } = fx;
+  if (fx.prepared.snap.songEmpowered) return;
   if (!(working.cooldownSeconds ?? ability.cooldownSeconds)) return;
   const cdKey = ability.cooldownGroup ?? ability.replacementGroup ?? ability.id;
   const ticks = effectiveCooldownTicks(baseCooldownTicks(fx), rt.input.league);

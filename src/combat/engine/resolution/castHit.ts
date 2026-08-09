@@ -59,6 +59,10 @@ import {
 import { recordResolutionCache } from "../../profiling/hitPipeline";
 import { resolveLeagueCritAtLand } from "../../league/ruleset";
 import { liveTargetDamagePotential as resolveLiveTargetDamagePotential } from "../../target/genericTarget";
+import {
+  NO_SONG_OF_DESTRUCTION,
+  essenceCorruptionFlatBonus,
+} from "../../styles/magic/songOfDestruction";
 
 /** Style level at land tick: temporary override (e.g. Naragi 255) wins when active. */
 function combatLevelAt(rt: SimulationRuntime, landTick: number): number {
@@ -102,6 +106,16 @@ function mixHit(a: HitResult, b: HitResult, weight: number): HitResult {
     expected: mix(a.expected, b.expected, weight),
     uncappedExpected: mix(a.uncappedExpected, b.uncappedExpected, weight),
     capLoss: mix(a.capLoss, b.capLoss, weight),
+    ...(a.postDamagePotentialFlatContribution !== undefined ||
+    b.postDamagePotentialFlatContribution !== undefined
+      ? {
+          postDamagePotentialFlatContribution: mix(
+            a.postDamagePotentialFlatContribution ?? 0,
+            b.postDamagePotentialFlatContribution ?? 0,
+            weight,
+          ),
+        }
+      : {}),
   };
 }
 
@@ -156,6 +170,16 @@ function mixResolution(a: EventResolution, b: EventResolution, weight: number): 
   return {
     damage: mixDamage(a.damage, b.damage, weight),
     ...(a.hitDetail && b.hitDetail ? { hitDetail: mixHit(a.hitDetail, b.hitDetail, weight) } : {}),
+    ...(a.postDamagePotentialFlatContribution !== undefined ||
+    b.postDamagePotentialFlatContribution !== undefined
+      ? {
+          postDamagePotentialFlatContribution: mix(
+            a.postDamagePotentialFlatContribution ?? 0,
+            b.postDamagePotentialFlatContribution ?? 0,
+            weight,
+          ),
+        }
+      : {}),
     ...(components ? { components } : {}),
     ...(a.sourcePrecritDistribution
       ? { sourcePrecritDistribution: a.sourcePrecritDistribution }
@@ -414,6 +438,14 @@ function resolveCastHitUncached(
   };
   const level = combatLevelAt(rt, at);
   const base = combatBaseAt(rt, at, level);
+  const essenceFlat = essenceCorruptionFlatBonus(
+    input.equipmentEffects?.songOfDestruction ?? NO_SONG_OF_DESTRUCTION,
+    state.magic.song.essenceCorruption,
+    at,
+    level,
+    ability,
+    provenance,
+  );
   // Tuska on-task: flat 100x Slayer (15k cap); keep only Havoc's global final multiplier.
   // https://runescape.wiki/w/Tuska%27s_Wrath
   const tuskaFinalModifiers = modifiers.filter(
@@ -451,6 +483,7 @@ function resolveCastHitUncached(
           context: hitContext,
           cap: input.cap,
           preciseRank: input.preciseRank,
+          ...(essenceFlat > 0 ? { postDamagePotentialFlat: essenceFlat } : {}),
         });
   const hit = host.baseHit;
 
@@ -472,6 +505,7 @@ function resolveCastHitUncached(
         provenance,
         cap: input.cap,
         preciseRank: input.preciseRank,
+        ...(essenceFlat > 0 ? { postDamagePotentialFlat: essenceFlat } : {}),
       })
     : undefined;
   if (sourcePrecritDistribution) {

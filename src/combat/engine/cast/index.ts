@@ -12,6 +12,30 @@ import type { SimulationRuntime } from "../runtime/runtime";
 import { patchMagic } from "../runtime/state";
 import { noteCastsGrowth } from "../../profiling/allocation";
 import { resolveIcyTempest } from "../../styles/melee/icyTempest";
+import {
+  ESSENCE_CORRUPTION_EMPOWERMENT_CHANCE,
+  activeEssenceCorruptionStacks,
+} from "../../styles/magic/songOfDestruction";
+
+function songEmpowermentForCast(
+  rt: SimulationRuntime,
+  ability: AbilitySpec,
+  candidate: number,
+  rng: CastRng | undefined,
+): boolean {
+  const summary = rt.input.equipmentEffects?.songOfDestruction;
+  if (summary?.enabled !== true || ability.essenceCorruptionEligible !== true) return false;
+  if (
+    activeEssenceCorruptionStacks(summary, rt.state.magic.song.essenceCorruption, candidate) < 1
+  ) {
+    return false;
+  }
+  const forced = rng?.["essence-corruption-empowerment"];
+  return forced ?? rt.stochastic.bernoulli(
+    "cast:essence-corruption-empowerment",
+    ESSENCE_CORRUPTION_EMPOWERMENT_CHANCE,
+  );
+}
 
 function emptyAbilityResult(): AbilityResult {
   return { hits: [], min: 0, max: 0, expected: 0, listedAdrenalineDelta: 0, adrenalineDelta: 0 };
@@ -155,6 +179,8 @@ export function performCast(
   );
   if (rejection) return { ok: false, error: rejection };
 
+  const songEmpowered = songEmpowermentForCast(rt, castAbility, candidate, rng);
+
   const prepared =
     castAbility.id === "icy_tempest"
       ? (() => {
@@ -167,9 +193,9 @@ export function performCast(
             "cast:icy-tempest-outcome",
             resolved.outcomes.map((outcome) => outcome.probability),
           );
-          return prepareCast(rt, castAbility, candidate, resolved.outcomes[index]!);
+          return prepareCast(rt, castAbility, candidate, resolved.outcomes[index]!, songEmpowered);
         })()
-      : prepareCast(rt, castAbility, candidate);
+      : prepareCast(rt, castAbility, candidate, undefined, songEmpowered);
   const sampledRng: Record<string, boolean> = {};
   for (const point of rngPointsFor(
     rt.state,

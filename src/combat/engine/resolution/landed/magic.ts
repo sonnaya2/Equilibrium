@@ -11,6 +11,10 @@ import { scheduleEvent, type SimulationRuntime } from "../../runtime/runtime";
 import { patchMagic } from "../../runtime/state";
 import type { ResolvedDamage } from "../types";
 import { resolveLightningSurge } from "../lightningSurge";
+import {
+  NO_SONG_OF_DESTRUCTION,
+  landEssenceCorruptionHit,
+} from "../../../styles/magic/songOfDestruction";
 
 /**
  * Magic state a real landed hit changes: Conc Blast crit ledger, Sonic Flow,
@@ -71,5 +75,25 @@ export function onMagicHitLanded(
     rt.state = patchMagic(rt.state, {
       tsunamiCritAdrenUntilTick: armTsunamiCritAdren(event.tick),
     });
+  }
+  const nextEssence = landEssenceCorruptionHit(
+    rt.input.equipmentEffects?.songOfDestruction ?? NO_SONG_OF_DESTRUCTION,
+    rt.state.magic.song.essenceCorruption,
+    event.tick,
+    ability,
+    event.provenance,
+  );
+  const currentEssence = rt.state.magic.song.essenceCorruption;
+  rt.analysis.song.finalStacks = currentEssence.stacks;
+  rt.analysis.song.peakStacks = Math.max(rt.analysis.song.peakStacks, currentEssence.stacks);
+  if (
+    nextEssence.stacks !== currentEssence.stacks ||
+    nextEssence.expiresAtTick !== currentEssence.expiresAtTick
+  ) {
+    rt.state = patchMagic(rt.state, {
+      song: { ...rt.state.magic.song, essenceCorruption: nextEssence },
+    });
+    rt.analysis.song.finalStacks = nextEssence.stacks;
+    rt.analysis.song.peakStacks = Math.max(rt.analysis.song.peakStacks, nextEssence.stacks);
   }
 }

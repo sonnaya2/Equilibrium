@@ -30,6 +30,12 @@ export function applyCastEffects(
   rng?: CastRng,
 ): void {
   const fx = castEffectContext(rt, prepared, rng);
+  const song = rt.analysis.song;
+  if (prepared.snap.songPreCastStacks >= 1 && prepared.ability.essenceCorruptionEligible === true) {
+    song.empowermentRolls += 1;
+    if (prepared.snap.songEmpowered) song.empowermentActivations += 1;
+  }
+  if (prepared.ability.id === "soulfire") song.soulfireCasts += 1;
   applyPreparedTransitions(fx);
   applyCastCooldown(fx);
   applyCastResources(fx);

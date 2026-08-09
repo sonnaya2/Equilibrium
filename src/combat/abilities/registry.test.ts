@@ -59,6 +59,7 @@ describe("ability registry single authority", () => {
   it("marks FSoA Instability and Guthix Claws as manual-only (not Revo++ solver)", () => {
     expect(entryByEngineId("instability")?.solverEligibleDefault).toBe(false);
     expect(entryByEngineId("claws_of_guthix")?.solverEligibleDefault).toBe(false);
+    expect(entryByEngineId("soulfire")?.solverEligibleDefault).toBe(false);
   });
 
   it("keeps Basic Attacks implicit in Revolution rather than generated bar slots", () => {

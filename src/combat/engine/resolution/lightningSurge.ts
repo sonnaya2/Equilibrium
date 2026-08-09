@@ -12,6 +12,11 @@ import { attachedResolutionComponent, resolveLeagueAttachedHost } from "../../le
 import { resolveLeagueCritAtLand } from "../../league/ruleset";
 import { dynamicEquipmentCritBonus } from "../../shared/equipment";
 import { activeBleedCount } from "../../styles/melee/effects";
+import { resolveEffectiveCombatLevel } from "../../core/effectiveLevel";
+import {
+  NO_SONG_OF_DESTRUCTION,
+  essenceCorruptionFlatBonus,
+} from "../../styles/magic/songOfDestruction";
 
 /**
  * Resolve an Instability Lightning Surge proc at its own land tick: EV = the
@@ -50,6 +55,10 @@ export function resolveLightningSurge(
     enduringRuinBonus: 0,
     magicWeaponAtCast: false,
     surgingStormAtCast: false,
+    songEmpowered: false,
+    songConflagrateActive: false,
+    songTwoPieceActive: false,
+    songPreCastStacks: 0,
   } as const;
   const equipmentCrit = dynamicEquipmentCritBonus(
     input.equipmentEffects,
@@ -60,6 +69,15 @@ export function resolveLightningSurge(
   const modifiers = landTimeModifiers(rt, at, LIGHTNING_SURGE_ABILITY, surgeSnap, 0, false);
   // Equipment proc: never onHitGear (Slayer/Salve). Not recursive proc-eligible.
   const provenance = { kind: "equipment_proc" as const, detail: "lightning_surge" };
+  const level = resolveEffectiveCombatLevel(input.level, state.player?.levelOverride, at);
+  const essenceFlat = essenceCorruptionFlatBonus(
+    input.equipmentEffects?.songOfDestruction ?? NO_SONG_OF_DESTRUCTION,
+    state.magic.song.essenceCorruption,
+    at,
+    level,
+    LIGHTNING_SURGE_ABILITY,
+    provenance,
+  );
   const rawCrit = {
     ...surgeSnap.critLayers,
     chance:
@@ -81,7 +99,7 @@ export function resolveLightningSurge(
     landTick: at,
     base: input.base,
     band: LIGHTNING_SURGE_BAND,
-    level: input.level,
+    level,
     accuracy: input.accuracy,
     crit,
     modifiers,
@@ -95,6 +113,7 @@ export function resolveLightningSurge(
       provenance,
     },
     cap: input.cap,
+    ...(essenceFlat > 0 ? { postDamagePotentialFlat: essenceFlat } : {}),
   });
   return {
     damage: {
@@ -110,6 +129,14 @@ export function resolveLightningSurge(
       ),
     },
     hitDetail: host.hit,
+    ...(host.hit.postDamagePotentialFlatContribution !== undefined
+      ? {
+          postDamagePotentialFlatContribution: lightningSurgeExpected(
+            sourceCritChance,
+            host.hit.postDamagePotentialFlatContribution,
+          ),
+        }
+      : {}),
     ...(host.components.length > 0
       ? {
           components: host.components.map((component) =>

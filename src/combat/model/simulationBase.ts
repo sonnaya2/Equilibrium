@@ -64,7 +64,12 @@ export function buildSimulationInputBase(
     ammunition: model.ammunition,
     caromingRank: model.caromingRank,
     tumekensPieces: model.tumekensPieces,
-    equipmentEffects: model.equipmentEffects,
+    equipmentEffects: {
+      ...model.equipmentEffects,
+      ...(model.equipmentEffects.songOfDestruction
+        ? { songOfDestruction: { ...model.equipmentEffects.songOfDestruction } }
+        : {}),
+    },
     nativeSpecialPolicy: model.nativeSpecialPolicy,
     league,
     procs: model.procs,
@@ -164,7 +169,12 @@ export function toHybridManualCombatModel(
     conjureBasicDamageMult: scaffold.conjureBasicDamageMult,
     conjureDurationMult: scaffold.conjureDurationMult,
     tumekensPieces: scaffold.tumekensPieces,
-    equipmentEffects: scaffold.equipmentEffects,
+    equipmentEffects: {
+      ...scaffold.equipmentEffects,
+      ...(scaffold.equipmentEffects.songOfDestruction
+        ? { songOfDestruction: { ...scaffold.equipmentEffects.songOfDestruction } }
+        : {}),
+    },
     nativeSpecialPolicy: scaffold.nativeSpecialPolicy,
     league: scaffold.league,
     context: { ...scaffold.context, style: scaffold.style },

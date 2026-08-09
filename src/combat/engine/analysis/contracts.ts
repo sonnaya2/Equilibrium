@@ -1,4 +1,4 @@
-import type { DamageSourceKind } from "../simulation/contracts";
+import type { DamageSourceKind, SongDamageAnalysis } from "../simulation/contracts";
 
 export interface EffectAnalysisSourceLedger {
   blessingId: string;
@@ -50,6 +50,7 @@ export interface RuntimeAnalysisState {
   castKeys: Set<string>;
   supportMinOffset: number;
   supportMaxOffset: number;
+  song: SongDamageAnalysis;
 }
 
 export function emptyAnalysisState(): RuntimeAnalysisState {
@@ -65,6 +66,20 @@ export function emptyAnalysisState(): RuntimeAnalysisState {
     castKeys: new Set(),
     supportMinOffset: 0,
     supportMaxOffset: 0,
+    song: {
+      pieceCount: 0,
+      enabled: false,
+      twoPiece: false,
+      finalStacks: 0,
+      peakStacks: 0,
+      empowermentRolls: 0,
+      empowermentActivations: 0,
+      immediateHitCount: 0,
+      soulfireCasts: 0,
+      conflagrateConsumptions: 0,
+      essenceFlatBonusDamage: 0,
+      timedAdrenalineGained: 0,
+    },
   };
 }
 
@@ -95,5 +110,6 @@ export function cloneAnalysisState(state: RuntimeAnalysisState): RuntimeAnalysis
     castKeys: new Set(state.castKeys),
     supportMinOffset: state.supportMinOffset,
     supportMaxOffset: state.supportMaxOffset,
+    song: { ...state.song },
   };
 }

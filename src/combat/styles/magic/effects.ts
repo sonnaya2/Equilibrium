@@ -2,6 +2,10 @@ import { secondsToTicks } from "../../core/ticks";
 import { BLOOMING_BURROW_WIKI_2026_03_30 } from "../../data/sources";
 import { PLANTED_FEET_DURATION_MULT } from "../../shared/perks";
 import { newRunicCharge, type RunicChargeState } from "./runicCharge";
+import {
+  newSongOfDestructionRotationState,
+  type SongOfDestructionRotationState,
+} from "./songOfDestruction";
 import type { SourceReference } from "../../types";
 import type { DiscreteUniformCritDamageLayer } from "../../core/critical";
 
@@ -98,6 +102,7 @@ export const BLAST_INFUSED_SOURCE: SourceReference = {
 
 /** Mutable magic between-cast state. Combust burn lives on the target, not here. */
 export interface MagicRotationState {
+  song: SongOfDestructionRotationState;
   /** Runic Charge / Anima Charged window. */
   runicCharge: RunicChargeState;
   /** Sunshine / Greater Sunshine zone buff window (starts 1 tick after cast). */
@@ -118,6 +123,7 @@ export interface MagicRotationState {
 }
 
 export const newMagicRotationState = (): MagicRotationState => ({
+  song: newSongOfDestructionRotationState(),
   runicCharge: newRunicCharge(),
   sunshine: newSunshine(),
   instability: newInstability(),

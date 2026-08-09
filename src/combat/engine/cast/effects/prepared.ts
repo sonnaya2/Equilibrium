@@ -1,5 +1,9 @@
 import { spendBloodlust } from "../../../styles/melee/bloodlust";
-import { patchMelee, patchRanged } from "../../runtime/state";
+import { patchMagic, patchMelee, patchRanged } from "../../runtime/state";
+import {
+  armSongAdrenalineStream,
+  consumeConflagrate,
+} from "../../../styles/magic/songOfDestruction";
 import type { CastEffectContext } from "./context";
 
 /**
@@ -44,6 +48,33 @@ export function applyPreparedTransitions(fx: CastEffectContext): void {
       case "consumePerfectEquilibrium":
         rt.state = patchRanged(rt.state, {
           perfectEquilibriumStacks: 0,
+        });
+        break;
+      case "consumeSongConflagrate":
+        rt.analysis.song.conflagrateConsumptions += 1;
+        rt.state = patchMagic(rt.state, {
+          song: {
+            ...rt.state.magic.song,
+            conflagrateUntilTick: consumeConflagrate(
+              rt.state.magic.song.conflagrateUntilTick,
+              fx.ability.id,
+              fx.candidate,
+            ).nextUntilTick,
+          },
+        });
+        break;
+      case "armSongAdrenaline":
+        rt.state = patchMagic(rt.state, {
+          song: {
+            ...rt.state.magic.song,
+            adrenalineStream: armSongAdrenalineStream(
+              rt.input.equipmentEffects!.songOfDestruction!,
+              transition.stacks,
+              fx.ability,
+              fx.candidate,
+              rt.state.magic.song.adrenalineStream,
+            ),
+          },
         });
         break;
     }

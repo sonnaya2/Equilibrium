@@ -41,6 +41,8 @@ export interface HitInput {
   cap?: HitCapRule;
   /** Precise perk rank 1-6; raises min hit by 1.5% of max per rank. */
   preciseRank?: number;
+  /** Integer added after Damage Potential and before the hit cap. */
+  postDamagePotentialFlat?: number;
 }
 
 export interface HitResult {
@@ -58,6 +60,8 @@ export interface HitResult {
   /** Same expectation before the hit cap, for analysis attribution. */
   uncappedExpected: number;
   capLoss: number;
+  /** Expected marginal damage from the post-Damage-Potential flat term after the cap. */
+  postDamagePotentialFlatContribution?: number;
   /** Concrete land-time outcome; absent on deterministic expected-value hit details. */
   critOutcome?: boolean;
 }
@@ -93,6 +97,7 @@ interface HitPassKits {
   crit: readonly CombatModifier[] | null;
   accuracy: number;
   capRule: HitCapRule;
+  postDamagePotentialFlat: number;
 }
 
 // Soft player_direct default inside contextWithProvenance is unit-test only.
@@ -109,12 +114,19 @@ function compileHitPassKits(input: SharedHitInput, critLive: boolean | null): Hi
   const context = resolvedHitContext(input);
   const baseMods = input.modifiers ?? [];
   const nonCrit = compileActiveModifiers(baseMods, context);
+  const postDamagePotentialFlat = input.postDamagePotentialFlat ?? 0;
+  if (!Number.isInteger(postDamagePotentialFlat) || postDamagePotentialFlat < 0) {
+    throw new RangeError(
+      `calculateHit: postDamagePotentialFlat must be a non-negative integer, got ${postDamagePotentialFlat}`,
+    );
+  }
   return {
     context,
     nonCrit,
     crit: critLive ? nonCrit : null,
     accuracy: input.accuracy,
     capRule: normalizeHitCapRule(input.cap ?? standardHitCap),
+    postDamagePotentialFlat,
   };
 }
 
@@ -134,7 +146,7 @@ function runPass(
     criticalDamageMultiplier ?? undefined,
   );
   const scaled = applyDamagePotential(state.damage, kits.accuracy);
-  const resolved = Math.floor(scaled);
+  const resolved = Math.floor(scaled) + kits.postDamagePotentialFlat;
   return cap ? applyHitCap(resolved, kits.capRule) : resolved;
 }
 
@@ -219,6 +231,14 @@ function hitDelta(after: HitResult, before: HitResult): HitResult {
     expected: after.expected - before.expected,
     uncappedExpected: after.uncappedExpected - before.uncappedExpected,
     capLoss: after.capLoss - before.capLoss,
+    ...(after.postDamagePotentialFlatContribution !== undefined ||
+    before.postDamagePotentialFlatContribution !== undefined
+      ? {
+          postDamagePotentialFlatContribution:
+            (after.postDamagePotentialFlatContribution ?? 0) -
+            (before.postDamagePotentialFlatContribution ?? 0),
+        }
+      : {}),
   };
 }
 
@@ -332,6 +352,29 @@ export function calculateRawHitBand(input: RawHitBandInput): HitResult {
           0,
         ) / critPasses.length;
   const expected = (1 - p) * nonCritExpected + p * critExpected;
+  const postDamagePotentialFlatContribution =
+    nonCritKits.postDamagePotentialFlat > 0
+      ? (() => {
+          const baselineKits = { ...nonCritKits, postDamagePotentialFlat: 0 };
+          const baselineNonCritExpected = exactMean(
+            input.min,
+            input.max,
+            null,
+            baselineKits,
+          );
+          const baselineCritExpected =
+            critPasses.length === 0
+              ? baselineNonCritExpected
+              : critPasses.reduce(
+                  (total, { critMult: variantMult }) =>
+                    total + exactMean(input.min, input.max, variantMult, baselineKits),
+                  0,
+                ) / critPasses.length;
+          const baselineExpected =
+            (1 - p) * baselineNonCritExpected + p * baselineCritExpected;
+          return Math.max(0, expected - baselineExpected);
+        })()
+      : undefined;
   const capRule = nonCritKits.capRule;
   recordEndpointPass(2);
   const uncappedMaxNonCrit = runPass(input.max, nonCritMods, nonCritKits, false);
@@ -373,5 +416,8 @@ export function calculateRawHitBand(input: RawHitBandInput): HitResult {
     expected,
     uncappedExpected,
     capLoss: Math.max(0, uncappedExpected - expected),
+    ...(postDamagePotentialFlatContribution !== undefined
+      ? { postDamagePotentialFlatContribution }
+      : {}),
   };
 }

@@ -42,6 +42,7 @@ export const MODELLED_WEAPON_SPECIAL_IDS = [
   "instability",
   "claws_of_guthix",
   "death_grasp",
+  "soulfire",
 ] as const;
 
 export type ModelledWeaponSpecialId = (typeof MODELLED_WEAPON_SPECIAL_IDS)[number];

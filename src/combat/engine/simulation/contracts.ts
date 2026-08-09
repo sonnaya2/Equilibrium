@@ -45,7 +45,11 @@ export interface AdrenalineRules {
 
 /** State-changing RNG outcomes for one stochastic lane; missing = no proc. */
 export type CastRngPointId =
-  "impatient" | "relentless" | "avernic-rampage" | "spectral_scythe_soul";
+  | "impatient"
+  | "relentless"
+  | "avernic-rampage"
+  | "spectral_scythe_soul"
+  | "essence-corruption-empowerment";
 export type CastRng = Readonly<Partial<Record<CastRngPointId, boolean>>>;
 
 export function rngProc(rng: CastRng | undefined, id: CastRngPointId): boolean {
@@ -338,6 +342,22 @@ export interface RotationDamageAnalysis {
   dotDamage: number;
   criticalContribution: number;
   capLoss: number;
+  song: SongDamageAnalysis;
+}
+
+export interface SongDamageAnalysis {
+  pieceCount: number;
+  enabled: boolean;
+  twoPiece: boolean;
+  finalStacks: number;
+  peakStacks: number;
+  empowermentRolls: number;
+  empowermentActivations: number;
+  immediateHitCount: number;
+  soulfireCasts: number;
+  conflagrateConsumptions: number;
+  essenceFlatBonusDamage: number;
+  timedAdrenalineGained: number;
 }
 
 export interface PlayerPoisonTargetState {

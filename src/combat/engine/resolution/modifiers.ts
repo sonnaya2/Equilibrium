@@ -24,6 +24,11 @@ import {
 } from "../../shared/equipment";
 import { FROSTBLADES_AD_FRACTION } from "../../styles/melee/effects";
 import { activeFrostbladesMass } from "../../styles/melee/primordialIce";
+import {
+  NO_SONG_OF_DESTRUCTION,
+  songOfDestructionModifiers,
+  songOfDestructionSummary,
+} from "../../styles/magic/songOfDestruction";
 
 /** Applies flat buffs at onCast so intermediate rounding follows stage order. */
 export function buffMultiplier(
@@ -179,6 +184,16 @@ export function landTimeModifiers(
       buffMultiplier("buff:blast_infused", BLAST_INFUSED_BASIC_DAMAGE_MULT, BLAST_INFUSED_SOURCE),
     );
   }
+  modifiers.push(
+    ...songOfDestructionModifiers({
+      summary: snap.songTwoPieceActive
+        ? songOfDestructionSummary(2)
+        : NO_SONG_OF_DESTRUCTION,
+      ability,
+      conflagrateActive: snap.songConflagrateActive,
+      scope: ability.id === "corruption_blast" ? "parent" : "hit",
+    }),
+  );
   if (!isDot || convertedChannel) return modifiers;
   return modifiers.filter(
     (m) => !m.id.startsWith("prayer:") && !DOT_IGNORED_MODIFIER_IDS.has(m.id),

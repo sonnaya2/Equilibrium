@@ -10,6 +10,12 @@ import type { DamageProvenance } from "../../shared/damageProvenance";
 import { outgoingSourceOf } from "../../shared/damageProvenance";
 import { abilityDamageAt } from "./castHit";
 import { targetAndPostHitModifiers } from "./modifiers";
+import { applyHitCap, normalizeHitCapRule, standardHitCap } from "../../core/hitCaps";
+import { resolveEffectiveCombatLevel } from "../../core/effectiveLevel";
+import {
+  NO_SONG_OF_DESTRUCTION,
+  essenceCorruptionFlatBonus,
+} from "../../styles/magic/songOfDestruction";
 import {
   appendAttachedComponents,
   NO_DAMAGE,
@@ -39,10 +45,33 @@ export function resolveDerivedHit(
 ): EventResolution {
   const source = rt.hitDetails.get(sourceSeq);
   if (!source) return NO_DAMAGE;
-  const min = Math.floor((source.min * fractionPct) / 100);
-  const max = Math.floor((source.critMax * fractionPct) / 100);
-  const expected = (source.expected * fractionPct) / 100;
-  const capLoss = (source.capLoss * fractionPct) / 100;
+  const tick = landTick ?? rt.state.tick;
+  const ability = provenance.detail ? rt.byId.get(provenance.detail) : undefined;
+  const level = resolveEffectiveCombatLevel(
+    rt.input.level,
+    rt.state.player?.levelOverride,
+    tick,
+  );
+  const flat = essenceCorruptionFlatBonus(
+    rt.input.equipmentEffects?.songOfDestruction ?? NO_SONG_OF_DESTRUCTION,
+    rt.state.magic.song.essenceCorruption,
+    tick,
+    level,
+    ability,
+    provenance,
+  );
+  const uncappedMin = Math.floor((source.min * fractionPct) / 100) + flat;
+  const uncappedMax = Math.floor((source.critMax * fractionPct) / 100) + flat;
+  const baseExpected = (source.expected * fractionPct) / 100;
+  const uncappedExpected = baseExpected + flat;
+  const capRule = normalizeHitCapRule(rt.input.cap ?? standardHitCap);
+  const min = flat > 0 ? applyHitCap(uncappedMin, capRule) : uncappedMin;
+  const max = flat > 0 ? applyHitCap(uncappedMax, capRule) : uncappedMax;
+  const expected = flat > 0 ? applyHitCap(uncappedExpected, capRule) : uncappedExpected;
+  const postDamagePotentialFlatContribution =
+    flat > 0 ? Math.max(0, expected - applyHitCap(baseExpected, capRule)) : undefined;
+  const capLoss =
+    (source.capLoss * fractionPct) / 100 + Math.max(0, uncappedExpected - expected);
   const inheritedCrit = resolveLeagueCritAtLand(rt.input.league, {
     chance: source.critChance,
     damageBonus: source.critDamageBonus,
@@ -61,9 +90,13 @@ export function resolveDerivedHit(
     }),
   };
 
-  const tick = landTick ?? rt.state.tick;
   const haunted = rt.state.target.haunted;
-  let resolution: EventResolution = { damage };
+  let resolution: EventResolution = {
+    damage,
+    ...(postDamagePotentialFlatContribution !== undefined
+      ? { postDamagePotentialFlatContribution }
+      : {}),
+  };
 
   if (hauntedActive(haunted, tick)) {
     // Fraction is of post-DP parent; reverse source potential so 10% ignores accuracy.
@@ -83,7 +116,6 @@ export function resolveDerivedHit(
     }
   }
 
-  const ability = provenance.detail ? rt.byId.get(provenance.detail) : undefined;
   const attached = resolveLeagueAttachedRawHost({
     rules: rt.input.league,
     source: provenance,

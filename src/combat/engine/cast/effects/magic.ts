@@ -13,6 +13,13 @@ import { animaCharged, consumeAnima } from "../../../styles/magic/runicCharge";
 import { hasPassive } from "../../../shared/equipment";
 import { patchMagic, patchTarget } from "../../runtime/state";
 import type { CastEffectContext } from "./context";
+import { armConflagrate } from "../../../styles/magic/songOfDestruction";
+
+function clearCombust(state: import("../../../styles/magic/burn").BurnState) {
+  const active = { ...state.active };
+  delete active.combust;
+  return { active };
+}
 
 /** Per-stack crit grant a Concentrated Blast cast sets for its channel. */
 function concCritPerStackPct(abilityId: string, empowered: boolean): number {
@@ -82,7 +89,19 @@ export function applyMagicCastEffects(fx: CastEffectContext): void {
     rt.state = patchMagic(rt.state, { concCritStacks: 0 });
   }
   if (ability.id === "combust") {
-    rt.state = patchTarget(rt.state, { burns: applyCombust(rt.state.target.burns, candidate) });
+    rt.state = patchTarget(rt.state, {
+      burns: prepared.snap.songEmpowered
+        ? clearCombust(rt.state.target.burns)
+        : applyCombust(rt.state.target.burns, candidate),
+    });
+  }
+  if (ability.id === "soulfire" && rt.input.equipmentEffects?.songOfDestruction?.enabled === true) {
+    rt.state = patchMagic(rt.state, {
+      song: {
+        ...rt.state.magic.song,
+        conflagrateUntilTick: armConflagrate(candidate),
+      },
+    });
   }
   // Flow is consumed by a listed positive-cost Magic spender even when Flow
   // reduced the actual cost to zero. Listed zero-cost abilities do not use it.

@@ -18,6 +18,10 @@ import {
   presentationContextFromEffects,
   type PassiveSupport,
 } from "../passives";
+import {
+  songOfDestructionSummary,
+  type SongOfDestructionEquipmentSummary,
+} from "../styles/magic/songOfDestruction";
 
 export type { SetEffectSupport, PassiveSupport };
 
@@ -201,6 +205,14 @@ export function equippedSetItemCounts(loadout: LoadoutEquipmentView): Map<string
   return counts;
 }
 
+export function songOfDestructionEquipmentSummary(
+  loadout: LoadoutEquipmentView,
+): SongOfDestructionEquipmentSummary {
+  return songOfDestructionSummary(
+    equippedSetItemCounts(loadout).get("song-of-destruction") ?? 0,
+  );
+}
+
 export const EQUIPMENT_SET_ACTIVATION = "pre-activated-static-loadout" as const;
 
 export const EQUIPMENT_ENCHANTMENTS = ["agony", "heroism", "shadows", "metaphysics"] as const;
@@ -223,6 +235,7 @@ export interface ActiveEquipmentEffects {
   amHejDamageBonus: number;
   deathdealer?: DeathdealerSetSummary;
   dracolich?: DracolichSetSummary;
+  songOfDestruction?: SongOfDestructionEquipmentSummary;
   vestments: {
     pieces: number;
     heraldOfChaos: boolean;
@@ -327,6 +340,7 @@ export function activeEquipmentEffects(
 ): ActiveEquipmentEffects {
   const setCounts = equippedSetCounts(loadout);
   const itemCounts = equippedSetItemCounts(loadout);
+  const songOfDestruction = songOfDestructionEquipmentSummary(loadout);
   const setCritChance = resolveSetCritChance({ setCounts, itemCounts }, loadout.pieceContribution);
   const pieces = effectiveSetPieces(
     setCounts.get("vestments-of-havoc") ?? 0,
@@ -409,6 +423,7 @@ export function activeEquipmentEffects(
       : 0,
     ...(deathdealer ? { deathdealer } : {}),
     dracolich: dracolichSetSummary(setCounts, itemCounts, loadout.pieceContribution, weaponClass),
+    songOfDestruction,
     vestments: {
       pieces,
       heraldOfChaos: meleeWeapon && pieces >= 2,

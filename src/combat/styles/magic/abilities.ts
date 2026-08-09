@@ -6,6 +6,7 @@ import {
   REFINEMENTS_WIKI_2026_03_09,
   RUNIC_CHARGE_WIKI,
 } from "../../data/sources";
+import { SOULFIRE_ABILITY } from "./songOfDestruction";
 
 /**
  * Post-modernisation magic abilities (wiki bands/timing, 2026-07-26).
@@ -181,6 +182,8 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     tearingThornsEligible: true,
     style: "magic",
     category: "basic",
+    essenceCorruptionEligible: true,
+    songAffectedDot: true,
     hits: Array.from({ length: 10 }, (_, i) => ({
       band: { minPct: 27, maxPct: 33 },
       critEligible: false,
@@ -273,6 +276,8 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     tearingThornsEligible: true,
     style: "magic",
     category: "enhanced",
+    essenceCorruptionEligible: true,
+    songAffectedDot: true,
     hits: [
       {
         band: { ...CORRUPTION_BLAST_INITIAL_BAND },
@@ -427,6 +432,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
       "Cast band modeled. Defence -5% / affinity +2 for 60s not modeled (no dynamic DP recompute).",
     source: wikiAbility("Claws of Guthix"),
   },
+  SOULFIRE_ABILITY,
 ];
 
 /** Internal proc identity; excluded from the selectable Magic catalogue. */
@@ -436,7 +442,9 @@ export const LIGHTNING_SURGE_ABILITY: MagicAbilitySpec = {
   style: "magic",
   category: "enhanced",
   hits: [{ band: { minPct: 70, maxPct: 90 } }],
-  supportNote: "Instability proc hit; uses its own crit context and cannot recurse.",
+  essenceCorruptionMagicHitEligible: true,
+  supportNote:
+    "Instability proc hit; uses its own crit context and cannot recurse. Song Essence on Lightning Surge is an inferred capability exception, not directly sourced.",
   source: wikiAbility("Fractured Staff of Armadyl"),
 };
 

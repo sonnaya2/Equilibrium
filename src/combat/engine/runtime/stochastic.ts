@@ -3,6 +3,7 @@ import {
   hasBlessing,
   type ResolvedLeagueRules,
 } from "../../league/ruleset";
+import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { resolvePoisonApplication, type PlayerPoisonProfile } from "../../poison/mechanics";
 import type { ActiveEquipmentEffects } from "../../shared/equipment";
 import { deathdealerApplicationChance } from "../../shared/equipment";
@@ -19,6 +20,11 @@ interface StatefulRngInput {
   readonly playerPoison?: PlayerPoisonProfile;
   readonly targetPoisonImmune?: boolean;
   readonly equipmentEffects?: ActiveEquipmentEffects;
+  readonly abilities?: readonly AbilitySpec[];
+  readonly abilityRegistry?: {
+    readonly byId: ReadonlyMap<string, AbilitySpec>;
+    readonly basicByStyle: ReadonlyMap<AbilitySpec["style"], AbilitySpec>;
+  };
 }
 
 const STATEFUL_RNG_ABILITIES = new Set([
@@ -28,10 +34,32 @@ const STATEFUL_RNG_ABILITIES = new Set([
   "tsunami",
 ]);
 
+export function canActivateSongEmpowerment(ability: AbilitySpec | undefined): boolean {
+  return ability?.style === "magic" && ability.essenceCorruptionEligible === true;
+}
+
+function abilityForId(input: StatefulRngInput, abilityId: string): AbilitySpec | undefined {
+  return (
+    input.abilityRegistry?.byId.get(abilityId) ??
+    input.abilities?.find((ability) => ability.id === abilityId)
+  );
+}
+
+function hasSongEmpowermentOpportunity(
+  input: StatefulRngInput,
+  activeAbilityIds: Iterable<string>,
+): boolean {
+  for (const abilityId of activeAbilityIds) {
+    if (canActivateSongEmpowerment(abilityForId(input, abilityId))) return true;
+  }
+  return false;
+}
+
 export function needsStochasticLanes(
   input: StatefulRngInput,
   activeAbilityIds: Iterable<string>,
 ): boolean {
+  const abilityIds = [...activeAbilityIds];
   if ((input.adrenaline?.impatientRank ?? 0) > 0) return true;
   if ((input.adrenaline?.relentlessRank ?? 0) > 0) return true;
   if (hasBlessing(input.league, "avernic-rampage")) return true;
@@ -45,7 +73,13 @@ export function needsStochasticLanes(
     return true;
   }
   if (deathdealerApplicationChance(input.equipmentEffects) > 0) return true;
-  for (const abilityId of activeAbilityIds) {
+  if (
+    input.equipmentEffects?.songOfDestruction?.enabled === true &&
+    hasSongEmpowermentOpportunity(input, abilityIds)
+  ) {
+    return true;
+  }
+  for (const abilityId of abilityIds) {
     if (STATEFUL_RNG_ABILITIES.has(abilityId)) return true;
   }
   return false;

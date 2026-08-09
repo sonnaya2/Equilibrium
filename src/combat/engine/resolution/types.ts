@@ -50,6 +50,7 @@ export interface AttachedDamageComponent {
 export interface EventResolution {
   damage: ResolvedDamage;
   hitDetail?: HitResult;
+  postDamagePotentialFlatContribution?: number;
   components?: readonly AttachedDamageComponent[];
 }
 

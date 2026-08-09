@@ -1,5 +1,9 @@
 import { spendBloodlust } from "../../../styles/melee/bloodlust";
-import { patchMelee } from "../../runtime/state";
+import {
+  armSongAdrenalineStream,
+  consumeConflagrate,
+} from "../../../styles/magic/songOfDestruction";
+import { patchMagic, patchMelee } from "../../runtime/state";
 import type { CastEffectContext } from "./context";
 
 /**
@@ -39,6 +43,33 @@ export function applyPreparedTransitions(fx: CastEffectContext): void {
       case "consumePrimordialIce":
         rt.state = patchMelee(rt.state, {
           primordialIce: transition.next,
+        });
+        break;
+      case "consumeSongConflagrate":
+        rt.analysis.song.conflagrateConsumptions += 1;
+        rt.state = patchMagic(rt.state, {
+          song: {
+            ...rt.state.magic.song,
+            conflagrateUntilTick: consumeConflagrate(
+              rt.state.magic.song.conflagrateUntilTick,
+              fx.ability.id,
+              fx.candidate,
+            ).nextUntilTick,
+          },
+        });
+        break;
+      case "armSongAdrenaline":
+        rt.state = patchMagic(rt.state, {
+          song: {
+            ...rt.state.magic.song,
+            adrenalineStream: armSongAdrenalineStream(
+              rt.input.equipmentEffects!.songOfDestruction!,
+              transition.stacks,
+              fx.ability,
+              fx.candidate,
+              rt.state.magic.song.adrenalineStream,
+            ),
+          },
         });
         break;
     }

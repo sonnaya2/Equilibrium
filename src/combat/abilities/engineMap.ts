@@ -177,6 +177,10 @@ export const ENGINE_LINK_OVERRIDES: Readonly<Record<string, EngineLinkOverride>>
     linkKind: "canonical",
     forceSolver: false,
   },
+  soulfire: {
+    linkKind: "canonical",
+    forceSolver: false,
+  },
 };
 
 /** Record id -> engine id when mapped, else undefined. */

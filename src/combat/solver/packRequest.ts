@@ -167,7 +167,12 @@ export function packSimBase(snapshot: SolverPackSnapshot): SerializableRevolutio
     conjureBasicDamageMult: snapshot.conjureBasicDamageMult,
     conjureDurationMult: snapshot.conjureDurationMult,
     tumekensPieces: snapshot.tumekensPieces,
-    equipmentEffects: snapshot.equipmentEffects,
+    equipmentEffects: {
+      ...snapshot.equipmentEffects,
+      ...(snapshot.equipmentEffects.songOfDestruction
+        ? { songOfDestruction: { ...snapshot.equipmentEffects.songOfDestruction } }
+        : {}),
+    },
     nativeSpecialPolicy: snapshot.nativeSpecialPolicy,
     league: snapshot.league,
     context: snapshot.context,

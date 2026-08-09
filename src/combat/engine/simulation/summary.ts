@@ -65,6 +65,20 @@ const EMPTY_ANALYSIS = {
   dotDamage: 0,
   criticalContribution: 0,
   capLoss: 0,
+  song: {
+    pieceCount: 0,
+    enabled: false,
+    twoPiece: false,
+    finalStacks: 0,
+    peakStacks: 0,
+    empowermentRolls: 0,
+    empowermentActivations: 0,
+    immediateHitCount: 0,
+    soulfireCasts: 0,
+    conflagrateConsumptions: 0,
+    essenceFlatBonusDamage: 0,
+    timedAdrenalineGained: 0,
+  },
 };
 
 /** Public analysis from engine-owned ledgers - never rescanned from events. */
@@ -274,6 +288,11 @@ export function finish(
 
   const detail = resolveDetailLevel(rt.detailLevel);
   const presentHistory = keepsPresentationHistory(detail);
+  rt.analysis.song.finalStacks = rt.state.magic.song.essenceCorruption.stacks;
+  rt.analysis.song.peakStacks = Math.max(
+    rt.analysis.song.peakStacks,
+    rt.state.magic.song.essenceCorruption.stacks,
+  );
   const analysis = buildAnalysis(rt);
   const playerPoison = buildPlayerPoisonAnalysis(rt, analysis);
   const targetStatus = buildTargetStatusSummary(rt);
@@ -499,6 +518,7 @@ export function combineStochasticSummaries(
         dotDamage: 0,
         criticalContribution: 0,
         capLoss: 0,
+        song: { ...EMPTY_ANALYSIS.song },
       },
       failure,
     };
@@ -935,6 +955,23 @@ export function combineStochasticSummaries(
           dotDamage: toKnownMass(mix((s) => s.analysis.dotDamage)),
           criticalContribution: toKnownMass(mix((s) => s.analysis.criticalContribution)),
           capLoss: toKnownMass(mix((s) => s.analysis.capLoss)),
+          song: {
+            ...modal.analysis.song,
+            pieceCount: modal.analysis.song.pieceCount,
+            enabled: modal.analysis.song.enabled,
+            twoPiece: modal.analysis.song.twoPiece,
+            finalStacks: mix((s) => s.analysis.song.finalStacks),
+            peakStacks: mix((s) => s.analysis.song.peakStacks),
+            empowermentRolls: mix((s) => s.analysis.song.empowermentRolls),
+            empowermentActivations: mix((s) => s.analysis.song.empowermentActivations),
+            immediateHitCount: mix((s) => s.analysis.song.immediateHitCount),
+            soulfireCasts: mix((s) => s.analysis.song.soulfireCasts),
+            conflagrateConsumptions: mix((s) => s.analysis.song.conflagrateConsumptions),
+            essenceFlatBonusDamage: toKnownMass(
+              mix((s) => s.analysis.song.essenceFlatBonusDamage),
+            ),
+            timedAdrenalineGained: mix((s) => s.analysis.song.timedAdrenalineGained),
+          },
         }
       : EMPTY_ANALYSIS,
     ...(targetStatus ? { targetStatus } : {}),

@@ -33,6 +33,11 @@ export interface CastSnapshot {
   /** Resolved weapon state captured by this cast. */
   magicWeaponAtCast: boolean;
   surgingStormAtCast: boolean;
+  /** Song of Destruction cast-owned state and one-roll empowerment outcome. */
+  songEmpowered: boolean;
+  songConflagrateActive: boolean;
+  songTwoPieceActive: boolean;
+  songPreCastStacks: number;
   /**
    * Tuska's Wrath on-task empowered flat damage (100x Slayer, 15k cap).
    * Absent = off-task AD band path.

@@ -154,6 +154,7 @@ export function scheduleCastEvents(
         originKind: derived.dot ? "dot" : "direct",
         provenance,
         cancelOwner: castSeq,
+        castSnap: snap,
         derivedFrom: sourceSeq,
         resolve: (eventRt, landTick) =>
           resolveDerivedHit(eventRt, sourceSeq, pct, landTick, provenance),

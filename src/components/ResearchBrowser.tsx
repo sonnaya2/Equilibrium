@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useSyncExternalStore, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import type {
   ResearchRegion,
   ResearchRegionSummary,
@@ -539,20 +539,16 @@ export function DataRegionRail({
 }) {
   const { build, loaded } = useBuild();
   const [mineOnly, setMineOnly] = useState(false);
-  // Hydration-safe client flag: getServerSnapshot is always false so SSR HTML and
-  // the hydrate pass share disabled=true. Never pass null/undefined to `disabled`.
-  const isClient = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
+  // Keep SSR HTML and first client paint identical: no disabled/title/className
+  // that depend on post-mount load state. Click is a no-op until picks load.
+  const picksReady = loaded;
 
   const unlockedIds = useMemo(() => {
-    if (!isClient || !loaded || !mineOnly) return null;
+    if (!picksReady || !mineOnly) return null;
     return new Set(
       regions.map((r) => r.id as RegionId).filter((id) => isRegionUnlocked(build, id)),
     );
-  }, [build, isClient, loaded, mineOnly, regions]);
+  }, [build, picksReady, mineOnly, regions]);
 
   const filteredRegions = useMemo(() => {
     if (!unlockedIds) return regions;
@@ -560,7 +556,7 @@ export function DataRegionRail({
   }, [regions, unlockedIds]);
 
   const toggleMineOnly = () => {
-    if (!isClient || !loaded) return;
+    if (!picksReady) return;
     const next = !mineOnly;
     setMineOnly(next);
     if (next && !isRegionUnlocked(build, regionId as RegionId)) {
@@ -568,8 +564,6 @@ export function DataRegionRail({
       if (first) onChange(first.id);
     }
   };
-
-  const mineFilterDisabled = isClient === false || loaded === false;
 
   return (
     <div className="data-selector-frame">
@@ -600,9 +594,8 @@ export function DataRegionRail({
         type="button"
         onClick={toggleMineOnly}
         aria-pressed={mineOnly}
-        disabled={mineFilterDisabled}
-        title={mineFilterDisabled ? "Loading your picks…" : "Only regions you've unlocked"}
-        className={`chip data-selector-frame__mine disabled:cursor-not-allowed disabled:opacity-40${mineOnly ? " is-on" : ""}`}
+        title="Only regions you've unlocked"
+        className={`chip data-selector-frame__mine${mineOnly ? " is-on" : ""}`}
       >
         My regions
       </button>

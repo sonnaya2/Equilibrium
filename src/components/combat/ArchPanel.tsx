@@ -404,7 +404,7 @@ export function ArchPanel({ loadout, setLoadout }: { loadout: Loadout; setLoadou
               <strong className="arch-relic-bonus__value">+{BONUS_FORMAT.format(liveBonus)}</strong>
               {maximumLife > 0 ? (
                 <span className="arch-relic-bonus__basis">
-                  {currentLifePoints.toLocaleString()} / {maximumLife.toLocaleString()} Hitpoints
+                  {currentLifePoints.toLocaleString("en-US")} / {maximumLife.toLocaleString("en-US")} Hitpoints
                 </span>
               ) : null}
             </div>
@@ -412,8 +412,8 @@ export function ArchPanel({ loadout, setLoadout }: { loadout: Loadout; setLoadou
           {Math.abs(liveBonus - engineBonus) > 1e-9 ? (
             <p className="arch-relic-meta__note">
               Engine bonus is +{BONUS_FORMAT.format(engineBonus)} from resolved Hitpoints (
-              {stats.berserkersFury.currentLifePoints.toLocaleString()} /{" "}
-              {stats.berserkersFury.maximumLifePoints.toLocaleString()}).
+              {stats.berserkersFury.currentLifePoints.toLocaleString("en-US")} /{" "}
+              {stats.berserkersFury.maximumLifePoints.toLocaleString("en-US")}).
             </p>
           ) : null}
         </div>

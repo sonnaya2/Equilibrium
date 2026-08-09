@@ -218,7 +218,8 @@ export function useRevolutionSolver({
   const [stoppedPreview, setStoppedPreview] = useState<SolverStoppedPreview | null>(null);
   const [solverError, setSolverError] = useState<string | null>(null);
   const [bestPulse, setBestPulse] = useState(false);
-  const [solverAgents, setSolverAgents] = useState(() => preferredAgentCount("thorough"));
+  // Seed with a fixed tier default so SSR/hydrate match; read hardware after mount.
+  const [solverAgents, setSolverAgents] = useState(() => preferredAgentCount("thorough", 4));
   const [barLibrary, setBarLibrary] = useState<RevoBarLibrary>(() => ({
     version: 2,
     recents: [],
@@ -318,6 +319,7 @@ export function useRevolutionSolver({
 
   useEffect(() => {
     setBarLibrary(loadBarLibrary());
+    setSolverAgents(preferredAgentCount("thorough"));
   }, []);
 
   useEffect(() => {

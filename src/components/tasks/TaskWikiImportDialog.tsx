@@ -55,8 +55,8 @@ export function TaskWikiImportDialog({
       const imported = onImportWikiTasks(parsed.completedTaskIds);
       setNotice(
         imported.added > 0
-          ? `${imported.added.toLocaleString()} ${imported.added === 1 ? "task" : "tasks"} imported · ${imported.matched.toLocaleString()} matched.`
-          : `All ${imported.matched.toLocaleString()} matched tasks were already complete.`,
+          ? `${imported.added.toLocaleString("en-US")} ${imported.added === 1 ? "task" : "tasks"} imported · ${imported.matched.toLocaleString("en-US")} matched.`
+          : `All ${imported.matched.toLocaleString("en-US")} matched tasks were already complete.`,
       );
     } catch {
       setNotice("Could not read that HTML file.");

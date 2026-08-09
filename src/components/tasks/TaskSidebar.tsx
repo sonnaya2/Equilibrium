@@ -116,10 +116,10 @@ export function TaskSidebar({
             <div key={entry.tier}>
               <dt className={`tasks-tier tasks-tier--${entry.tier}`}>{TIER_LABEL[entry.tier]}</dt>
               <dd className="tasks-difficulty__tasks">
-                {entry.count.toLocaleString()} <small>tasks</small>
+                {entry.count.toLocaleString("en-US")} <small>tasks</small>
               </dd>
               <dd className="tasks-difficulty__points">
-                {entry.pointsPerTask.toLocaleString()} <small>pts</small>
+                {entry.pointsPerTask.toLocaleString("en-US")} <small>pts</small>
               </dd>
               <dd className="tasks-difficulty__percent">{formatPercent(entry.percentage)}</dd>
               <dd className="tasks-difficulty-meter" aria-hidden>

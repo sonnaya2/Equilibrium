@@ -365,15 +365,15 @@ export function BuildPlanner({
           </span>
           <span className="build-board__pips" aria-hidden>
             {Array.from({ length: ELECTIVE_CAP }, (_, i) => (
-              <span key={i} className={`build-board__pip${i < picks.length ? " is-on" : ""}`} />
+              <span key={i} className={`build-board__pip${loaded && i < picks.length ? " is-on" : ""}`} />
             ))}
           </span>
           <div className="build-board__actions">
             <button
               type="button"
               className="build-board__btn"
-              // Elective count only (empty server snapshot) - same as RegionPicker.
-              disabled={Boolean(picks.length === 0)}
+              // Gate on loaded so SSR empty snapshot and hydrate stay aligned.
+              disabled={Boolean(!loaded || picks.length === 0)}
               onClick={clearElectives}
             >
               Clear picks

@@ -73,7 +73,7 @@ export function TaskCard({
           {record.name}
         </button>
         <strong className="task-card__points">
-          {points?.toLocaleString() ?? "—"}
+          {points?.toLocaleString("en-US") ?? "—"}
           {provisional ? (
             <>
               <span aria-hidden>*</span>

@@ -159,7 +159,7 @@ export function TaskRecords({
               {dataset.provisional ? `${dataset.label} reference` : dataset.label}
             </strong>
             <span>
-              {records.length.toLocaleString()} tasks
+              {records.length.toLocaleString("en-US")} tasks
               {showComp ? ` · completion ${completionLive ? "live" : "snapshot"}` : ""}
             </span>
             <a href={dataset.sourceUrl} target="_blank" rel="noreferrer">
@@ -345,11 +345,11 @@ export function TaskRecords({
 
             <div className="tasks-results" aria-live="polite">
               <div className="tasks-results__counts">
-                <strong>{visible.length.toLocaleString()} results</strong>
-                <span>{records.length.toLocaleString()} total</span>
+                <strong>{visible.length.toLocaleString("en-US")} results</strong>
+                <span>{records.length.toLocaleString("en-US")} total</span>
                 {difficultyBreakdown.map((entry) => (
                   <span key={entry.tier} className={`tasks-tier tasks-tier--${entry.tier}`}>
-                    {TIER_LABEL[entry.tier]} {entry.count.toLocaleString()} (
+                    {TIER_LABEL[entry.tier]} {entry.count.toLocaleString("en-US")} (
                     {formatPercent(entry.percentage)})
                   </span>
                 ))}
@@ -405,8 +405,8 @@ export function TaskRecords({
 
             <nav className="tasks-pagination" aria-label="Task pages">
               <span>
-                {rangeStart.toLocaleString()}–{rangeEnd.toLocaleString()} of{" "}
-                {visible.length.toLocaleString()}
+                {rangeStart.toLocaleString("en-US")}–{rangeEnd.toLocaleString("en-US")} of{" "}
+                {visible.length.toLocaleString("en-US")}
               </span>
               <div>
                 <button type="button" disabled={page <= 1} onClick={() => goToPage(page - 1)}>
@@ -458,17 +458,17 @@ function TaskStatsStrip({ stats }: { stats: TaskPageStats }) {
   const cells = [
     {
       label: "Tasks completed",
-      value: `${stats.completedTasks.toLocaleString()} / ${stats.totalTasks.toLocaleString()}`,
+      value: `${stats.completedTasks.toLocaleString("en-US")} / ${stats.totalTasks.toLocaleString("en-US")}`,
       hint: formatPercent(stats.completionRate),
     },
     {
       label: "Total points",
-      value: `${stats.completedPoints.toLocaleString()} / ${stats.totalPoints.toLocaleString()}`,
+      value: `${stats.completedPoints.toLocaleString("en-US")} / ${stats.totalPoints.toLocaleString("en-US")}`,
       hint: formatPercent(stats.pointCompletionRate),
     },
     {
       label: "In my build",
-      value: `${stats.completedBuildTaskCount.toLocaleString()} / ${stats.buildTaskCount.toLocaleString()}`,
+      value: `${stats.completedBuildTaskCount.toLocaleString("en-US")} / ${stats.buildTaskCount.toLocaleString("en-US")}`,
       hint: "Completed / available",
     },
   ];

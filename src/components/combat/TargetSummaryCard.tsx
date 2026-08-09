@@ -45,7 +45,7 @@ export function TargetSummaryCard({
     <div className={root}>
       <div className="setup-target-identity">
         <span className="setup-target-identity__icon" aria-hidden>
-          <GameIcon src={view.iconSrc} size={48} />
+          <GameIcon src={view.iconSrc} size={className?.includes("revo-target") ? 34 : 48} />
         </span>
         <div className="setup-target-identity__copy">
           <strong>{view.name}</strong>
@@ -57,7 +57,7 @@ export function TargetSummaryCard({
       </div>
       <dl>
         <div>
-          <dt>Defence</dt>
+          <dt>Def</dt>
           <dd>{view.defenceLevel}</dd>
         </div>
         <div>
@@ -65,27 +65,27 @@ export function TargetSummaryCard({
           <dd>{view.armour}</dd>
         </div>
         <div>
-          <dt>Affinity</dt>
+          <dt>Aff</dt>
           <dd>{view.affinity}</dd>
         </div>
-        {weakness != null ? (
-          <div>
-            <dt>Weakness Aff</dt>
-            <dd>{weakness}</dd>
-          </div>
-        ) : null}
         <div>
-          <dt>Damage Potential</dt>
+          <dt>DP</dt>
           <dd>{Math.round(damagePotential * 100)}%</dd>
         </div>
         <div>
-          <dt>Life points</dt>
+          <dt>LP</dt>
           <dd>{formatLifePoints(view.maximumLifePoints)}</dd>
         </div>
         {size != null && size > 0 ? (
           <div>
             <dt>Size</dt>
             <dd>{size}</dd>
+          </div>
+        ) : null}
+        {weakness != null ? (
+          <div>
+            <dt>Weak</dt>
+            <dd>{weakness}</dd>
           </div>
         ) : null}
       </dl>

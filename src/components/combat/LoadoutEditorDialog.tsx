@@ -6,11 +6,18 @@ import { BuffsPanel } from "./BuffsPanel";
 import { CombatFrame } from "./CombatFrame";
 import { GearPanel } from "./GearPanel";
 import { PerksPanel } from "./PerksPanel";
+import { PowerArchivePanel } from "./PowerArchivePanel";
 import type { ResolvedStats } from "./ResolvedSummary";
 import { TargetPanel } from "./TargetPanel";
 import type { Loadout, SetLoadout } from "./useLoadout";
 
-export type LoadoutEditorMode = "equipment" | "effects" | "perks" | "relics" | "target";
+export type LoadoutEditorMode =
+  | "equipment"
+  | "effects"
+  | "perks"
+  | "relics"
+  | "target"
+  | "power-archive";
 
 const EDITOR_TITLES: Record<LoadoutEditorMode, string> = {
   equipment: "Change equipment",
@@ -18,6 +25,7 @@ const EDITOR_TITLES: Record<LoadoutEditorMode, string> = {
   perks: "Change perks",
   relics: "Archaeology",
   target: "Edit target",
+  "power-archive": "Automaton Control Bot",
 };
 
 export function LoadoutEditorDialog({
@@ -68,6 +76,9 @@ export function LoadoutEditorDialog({
         {mode === "perks" ? <PerksPanel loadout={loadout} setLoadout={setLoadout} /> : null}
         {mode === "relics" ? <ArchPanel loadout={loadout} setLoadout={setLoadout} /> : null}
         {mode === "target" ? <TargetPanel loadout={loadout} setLoadout={setLoadout} /> : null}
+        {mode === "power-archive" ? (
+          <PowerArchivePanel loadout={loadout} setLoadout={setLoadout} />
+        ) : null}
       </div>
     </CombatFrame>
   );

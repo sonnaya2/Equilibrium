@@ -69,8 +69,8 @@ describe("canonical two-handed weapon slots", () => {
   });
 });
 
-describe("manual accuracy is a final Damage Potential override", () => {
-  it("does not apply defender accuracy mult to the no-target slider", () => {
+describe("Damage Potential without a target", () => {
+  it("assumes 100% Damage Potential when no NPC target is set", () => {
     const defender: Loadout = {
       ...base,
       accuracy: 50,
@@ -80,9 +80,9 @@ describe("manual accuracy is a final Damage Potential override", () => {
       },
     };
     const stats = loadoutStats(defender);
-    expect(stats.dp).toBe(0.5);
-    expect(stats.damagePotentialSource).toBe("manual override");
-    // Rating path still multiplies; only the slider is final.
+    // Product contract: DP comes from the target model only (no loadout.accuracy slider).
+    expect(stats.dp).toBe(1);
+    expect(stats.damagePotentialSource).toBe("100% assumption");
     expect(stats.accuracyRating).toBeGreaterThan(0);
   });
 });

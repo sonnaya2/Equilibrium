@@ -76,6 +76,18 @@ export interface SerializableModifierSources {
   lunging: number;
   /** Caroming rank 1-4 (weapon gizmo); 0 = off. */
   caroming?: number;
+  /** Flanking rank; only applies when flankingActive. */
+  flanking?: number;
+  /** True when the loadout asserts the target is not facing the player. */
+  flankingActive?: boolean;
+  /** Shield Bashing rank (Debilitate only when that ability exists). */
+  shieldBashing?: number;
+  /** Spendthrift rank (EV extra damage). */
+  spendthrift?: number;
+  /** Ruthless rank; stacks in ruthlessStacks. */
+  ruthless?: number;
+  /** Ruthless kill stacks 0-5 at fight open. */
+  ruthlessStacks?: number;
   /**
    * Precomputed Berserker's Fury damage bonus fraction (0.03 = +3%).
    * 0 / omit = inactive. Resolved on the host from LP vs max (incl. Powerburst).
@@ -409,6 +421,12 @@ export function emptyModifierSources(): SerializableModifierSources {
     ultimatums: 0,
     lunging: 0,
     caroming: 0,
+    flanking: 0,
+    flankingActive: false,
+    shieldBashing: 0,
+    spendthrift: 0,
+    ruthless: 0,
+    ruthlessStacks: 0,
     berserkersFuryBonus: 0,
   };
 }

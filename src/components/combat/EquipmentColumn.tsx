@@ -8,10 +8,15 @@ import {
   setEffectsSummary,
   type SetEffectSupport,
 } from "@/combat/shared/equipment";
+import { eofStorableSpecials } from "@/combat/shared/eofStoredSpecials";
+import {
+  ESSENCE_OF_FINALITY_ITEM_ID,
+  hasEssenceOfFinalityEquipped,
+} from "@/combat/shared/requirements";
 import { resolveLeagueRules, setPieceContributionModifier } from "@/combat/league/ruleset";
 import { useBuild } from "@/league/useBuild";
-import { blessingIconPath, equipmentIconPath } from "@/lib/gameArt";
-import { useMemo, type ReactNode } from "react";
+import { abilityIconPath, blessingIconPath, equipmentIconPath } from "@/lib/gameArt";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { GameIcon } from "../GameIcon";
 import { CombatFrame } from "./CombatFrame";
 import { NumberField } from "./NumberField";
@@ -24,8 +29,6 @@ import {
   type Loadout,
   type SetLoadout,
 } from "./useLoadout";
-import { hasEssenceOfFinalityEquipped } from "@/combat/shared/requirements";
-import { eofStorableSpecials } from "@/combat/shared/eofStoredSpecials";
 import { rangedAmmunitionEffectPresentation } from "./ammunitionEffectPresentation";
 
 const DAMAGE_SKILL: Record<CombatStyle, string> = {
@@ -50,22 +53,6 @@ const EQUIPMENT_SLOTS = [
   { key: "boots", label: "Boots" },
 ] as const;
 
-const MODEL_SLOT_KEYS = [
-  "mainhand",
-  "offhand",
-  "twohand",
-  "helmet",
-  "body",
-  "legs",
-  "gloves",
-  "boots",
-  "cape",
-  "amulet",
-  "ring",
-  "pocket",
-  "ammo",
-] as const;
-
 const SET_STATUS: Record<SetEffectSupport, string> = {
   modeled: "Active",
   "outgoing-only": "Partial",
@@ -84,6 +71,11 @@ function itemFor(
 
 function hasTwoHandedWeapon(loadout: Loadout): boolean {
   return Boolean(loadout.equipmentSlots?.twohand);
+}
+
+function isEssenceOfFinality(item: EquipmentRecord | undefined): boolean {
+  if (!item) return false;
+  return item.id === ESSENCE_OF_FINALITY_ITEM_ID || item.id.includes("essence-of-finality");
 }
 
 function prayerLabel(loadout: Loadout): string {
@@ -166,6 +158,120 @@ function EquipmentLevels({ loadout, setLoadout }: { loadout: Loadout; setLoadout
   );
 }
 
+function EofSpecialDialog({
+  open,
+  loadout,
+  setLoadout,
+  onDismiss,
+  onChangeAmulet,
+}: {
+  open: boolean;
+  loadout: Loadout;
+  setLoadout: SetLoadout;
+  onDismiss: () => void;
+  onChangeAmulet: () => void;
+}) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const specials = useMemo(() => eofStorableSpecials(), []);
+  const selectedId = loadout.eofStoredSpecialId ?? "";
+  const selected = specials.find((spec) => spec.id === selectedId) ?? null;
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (open && !dialog.open) dialog.showModal();
+    if (!open && dialog.open) dialog.close();
+  }, [open]);
+
+  const setSpecial = (id: string | null) => {
+    setLoadout((prev) => ({
+      ...prev,
+      eofStoredSpecialId: normalizeEofStoredSpecialId(prev.equipmentIds, id),
+    }));
+  };
+
+  return (
+    <CombatFrame
+      as="dialog"
+      frameRef={dialogRef}
+      className="loadout-editor-dialog eof-special-dialog"
+      aria-labelledby="eof-special-dialog-title"
+      onClose={onDismiss}
+    >
+      <header className="loadout-editor-dialog__header">
+        <h2 id="eof-special-dialog-title">EoF stored special</h2>
+        <button type="button" aria-label="Close EoF special picker" onClick={onDismiss}>
+          ×
+        </button>
+      </header>
+      <div className="loadout-editor-dialog__body eof-special-dialog__body">
+        <p className="eof-special-dialog__current">
+          {selected ? (
+            <>
+              <GameIcon src={abilityIconPath(selected.id, selected.style)} size={32} />
+              <span>
+                <strong>{selected.name}</strong>
+                <small>Stored special</small>
+              </span>
+            </>
+          ) : (
+            <span>
+              <strong>None</strong>
+              <small>Fail-closed until a special is stored</small>
+            </span>
+          )}
+        </p>
+        <ul className="eof-special-picker" aria-label="Storable weapon specials">
+          <li>
+            <button
+              type="button"
+              className={`eof-special-picker__option${selectedId === "" ? " is-selected" : ""}`}
+              onClick={() => setSpecial(null)}
+              aria-pressed={selectedId === ""}
+            >
+              <span className="eof-special-picker__well" aria-hidden>
+                ×
+              </span>
+              <span>None</span>
+            </button>
+          </li>
+          {specials.map((spec) => {
+            const active = selectedId === spec.id;
+            return (
+              <li key={spec.id}>
+                <button
+                  type="button"
+                  className={`eof-special-picker__option${active ? " is-selected" : ""}`}
+                  onClick={() => {
+                    setSpecial(spec.id);
+                    onDismiss();
+                  }}
+                  aria-pressed={active}
+                >
+                  <span className="eof-special-picker__well">
+                    <GameIcon src={abilityIconPath(spec.id, spec.style)} size={30} />
+                  </span>
+                  <span>{spec.name}</span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+        <button
+          type="button"
+          className="setup-card-action eof-special-dialog__gear"
+          onClick={() => {
+            onDismiss();
+            onChangeAmulet();
+          }}
+        >
+          Change amulet
+        </button>
+      </div>
+    </CombatFrame>
+  );
+}
+
 export function EquipmentColumn({
   loadout,
   setLoadout,
@@ -180,15 +286,17 @@ export function EquipmentColumn({
   onOpenPrayers: () => void;
 }) {
   const { build } = useBuild();
+  const [eofPickerOpen, setEofPickerOpen] = useState(false);
   const slots = useMemo(() => loadout.equipmentSlots ?? {}, [loadout.equipmentSlots]);
   const pieceContribution = setPieceContributionModifier(
     resolveLeagueRules({ ruleset: "equilibrium", blessingPicks: build.blessingPicks }),
   );
-  const filled = useMemo(
-    () => MODEL_SLOT_KEYS.filter((key) => Boolean(slots[key])).length,
-    [slots],
-  );
   const twoHanded = hasTwoHandedWeapon(loadout);
+  const eofEquipped = hasEssenceOfFinalityEquipped(loadout.equipmentIds);
+  const storedSpecial = useMemo(() => {
+    if (!loadout.eofStoredSpecialId) return null;
+    return eofStorableSpecials().find((spec) => spec.id === loadout.eofStoredSpecialId) ?? null;
+  }, [loadout.eofStoredSpecialId]);
   const passives = useMemo(
     () =>
       equippedPassiveSummaries({
@@ -224,7 +332,7 @@ export function EquipmentColumn({
   ];
 
   return (
-    <aside className="setup-equipment-column">
+    <>
       <CombatFrame
         as="section"
         className="setup-equipment-card"
@@ -234,29 +342,48 @@ export function EquipmentColumn({
           <h2 id="equipment-column-title" className="combat-section-title">
             Equipment
           </h2>
-          <span>{filled} / 13 slots</span>
         </header>
         <div className="setup-equipment-grid" role="list" aria-label="Equipped equipment">
           {EQUIPMENT_SLOTS.map(({ key, label }) => {
             const locked = key === "offhand" && twoHanded;
             const item = locked ? undefined : itemFor(loadout, key);
+            const eofSlot = isEssenceOfFinality(item);
             const detail = locked
               ? "2H"
-              : item?.tier != null
-                ? `T${item.tier}${key === "mainhand" && twoHanded ? " · 2H" : ""}`
-                : "None";
+              : eofSlot
+                ? (storedSpecial?.name ?? "No special")
+                : item?.tier != null
+                  ? `T${item.tier}${key === "mainhand" && twoHanded ? " · 2H" : ""}`
+                  : "None";
+            const displayName = locked
+              ? "Locked"
+              : eofSlot
+                ? (item?.name ?? "Essence of Finality")
+                : (item?.name ?? "Empty");
+            const ariaExtra =
+              key === "mainhand" && genesisActive
+                ? ", Genesis Essence active"
+                : eofSlot
+                  ? `, stored special ${storedSpecial?.name ?? "none"}`
+                  : "";
             return (
               <button
                 key={key}
                 type="button"
-                className={`setup-equipment-item setup-equipment-item--${key}${item || locked ? " is-filled" : ""}`}
-                onClick={onEdit}
-                aria-label={`${label}: ${locked ? "Locked, two-handed weapon" : (item?.name ?? "Empty")}${key === "mainhand" && genesisActive ? ", Genesis Essence active" : ""}`}
+                className={`setup-equipment-item setup-equipment-item--${key}${item || locked ? " is-filled" : ""}${eofSlot ? " is-eof" : ""}`}
+                onClick={() => {
+                  if (eofSlot) {
+                    setEofPickerOpen(true);
+                    return;
+                  }
+                  onEdit();
+                }}
+                aria-label={`${label}: ${locked ? "Locked, two-handed weapon" : (item?.name ?? "Empty")}${ariaExtra}`}
               >
                 <span className="setup-equipment-item__label">{label}</span>
                 <span className="setup-equipment-item__well">
                   {item ? (
-                    <GameIcon src={equipmentIconPath(item.id)} size={30} />
+                    <GameIcon src={equipmentIconPath(item.id)} size={36} />
                   ) : locked ? (
                     <span className="setup-equipment-item__locked" aria-hidden="true">
                       Locked
@@ -270,10 +397,31 @@ export function EquipmentColumn({
                       <span className="sr-only">Genesis Essence active</span>
                     </span>
                   ) : null}
+                  {eofSlot ? (
+                    <span
+                      className={`setup-equipment-item__eof${storedSpecial ? " is-filled" : " is-empty"}`}
+                      title={
+                        storedSpecial ? `Stored: ${storedSpecial.name}` : "No special stored"
+                      }
+                    >
+                      {storedSpecial ? (
+                        <GameIcon
+                          src={abilityIconPath(storedSpecial.id, storedSpecial.style)}
+                          size={18}
+                          alt=""
+                        />
+                      ) : (
+                        <span aria-hidden="true">?</span>
+                      )}
+                      <span className="sr-only">
+                        {storedSpecial
+                          ? `Stored special ${storedSpecial.name}`
+                          : "No special stored"}
+                      </span>
+                    </span>
+                  ) : null}
                 </span>
-                <span className="setup-equipment-item__name">
-                  {locked ? "Locked" : (item?.name ?? "Empty")}
-                </span>
+                <span className="setup-equipment-item__name">{displayName}</span>
                 <span className="setup-equipment-item__tier">{detail}</span>
               </button>
             );
@@ -281,38 +429,32 @@ export function EquipmentColumn({
         </div>
         <div className="setup-equipment-footer">
           <EquipmentLevels loadout={loadout} setLoadout={setLoadout} />
-          {hasEssenceOfFinalityEquipped(loadout.equipmentIds) ? (
-            <label className="setup-eof-special" data-testid="eof-stored-special-setup">
-              <span>EoF stored special</span>
-              <select
-                value={loadout.eofStoredSpecialId ?? ""}
-                aria-label="Essence of Finality stored special"
-                onChange={(event) => {
-                  const next = event.target.value || null;
-                  setLoadout((prev) => ({
-                    ...prev,
-                    eofStoredSpecialId: normalizeEofStoredSpecialId(prev.equipmentIds, next),
-                  }));
-                }}
-              >
-                <option value="">None (fail-closed)</option>
-                {eofStorableSpecials().map((spec) => (
-                  <option key={spec.id} value={spec.id}>
-                    {spec.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-          ) : null}
           <section className="setup-equipment-passives" aria-labelledby="passives-card-title">
             <header className="setup-equipment-passives__heading setup-subsection-header">
-              <h3 id="passives-card-title">Passives &amp; Set Effects</h3>
+              <h3 id="passives-card-title">Passives &amp; set effects</h3>
+              <button
+                type="button"
+                className="setup-prayer-compact"
+                onClick={onOpenPrayers}
+                aria-label={`Prayer: ${prayerLabel(loadout)}`}
+                title={prayerLabel(loadout)}
+              >
+                <GameIcon
+                  src={
+                    loadout.buffs.styleCurse === "none"
+                      ? "/game/skills/prayer.webp"
+                      : prayerIconPath(loadout.buffs.styleCurse)
+                  }
+                  size={22}
+                />
+                <span className="sr-only">{prayerLabel(loadout)}</span>
+              </button>
             </header>
             {effectRows.length > 0 || ammunitionEffect ? (
               <ul className="setup-passive-list">
                 {effectRows.map((effect) => (
                   <li key={effect.id} className="setup-status-row">
-                    <GameIcon src={effect.icon} size={22} />
+                    <GameIcon src={effect.icon} size={18} />
                     <span>
                       <strong>{effect.label}</strong>
                     </span>
@@ -323,7 +465,7 @@ export function EquipmentColumn({
                     <GameIcon
                       src={ammunitionEffect.icon}
                       alt={ammunitionEffect.itemLabel}
-                      size={22}
+                      size={18}
                     />
                     <span>
                       <strong>{ammunitionEffect.label}</strong>
@@ -333,27 +475,21 @@ export function EquipmentColumn({
                   </li>
                 ) : null}
               </ul>
-            ) : null}
-            <button
-              type="button"
-              className="setup-prayer-compact"
-              onClick={onOpenPrayers}
-              aria-label={`Prayer: ${prayerLabel(loadout)}`}
-              title={prayerLabel(loadout)}
-            >
-              <GameIcon
-                src={
-                  loadout.buffs.styleCurse === "none"
-                    ? "/game/skills/prayer.webp"
-                    : prayerIconPath(loadout.buffs.styleCurse)
-                }
-                size={22}
-              />
-              <span className="sr-only">{prayerLabel(loadout)}</span>
-            </button>
+            ) : (
+              <p className="setup-empty-copy">No passives or set effects from equipped gear.</p>
+            )}
           </section>
         </div>
       </CombatFrame>
-    </aside>
+      {eofEquipped ? (
+        <EofSpecialDialog
+          open={eofPickerOpen}
+          loadout={loadout}
+          setLoadout={setLoadout}
+          onDismiss={() => setEofPickerOpen(false)}
+          onChangeAmulet={onEdit}
+        />
+      ) : null}
+    </>
   );
 }

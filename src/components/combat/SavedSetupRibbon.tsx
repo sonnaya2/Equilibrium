@@ -82,27 +82,49 @@ export function SavedSetupRibbon({
         <div className="saved-setup-ribbon__actions" role="group" aria-label="Setup actions">
           <button
             type="button"
+            className="saved-setup-ribbon__icon-btn"
+            aria-label="New setup"
+            title="New setup"
             onClick={() => {
               actions.create();
               setStatus("New setup created.");
             }}
           >
-            + New setup
-          </button>
-          <button type="button" onClick={() => openModal({ type: "rename", setupId: active.id })}>
-            Rename
+            <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" fill="currentColor">
+              <path d="M8 2a.75.75 0 0 1 .75.75v4.5h4.5a.75.75 0 0 1 0 1.5h-4.5v4.5a.75.75 0 0 1-1.5 0v-4.5h-4.5a.75.75 0 0 1 0-1.5h4.5v-4.5A.75.75 0 0 1 8 2z" />
+            </svg>
           </button>
           <button
             type="button"
+            className="saved-setup-ribbon__icon-btn"
+            aria-label="Rename"
+            title="Rename"
+            onClick={() => openModal({ type: "rename", setupId: active.id })}
+          >
+            <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" fill="currentColor">
+              <path d="M11.74 1.34a1.75 1.75 0 0 1 2.47 2.47l-.44.44-2.47-2.47.44-.44zm-1.15 1.15-7.7 7.7a1 1 0 0 0-.26.47l-.7 2.8a.4.4 0 0 0 .48.48l2.8-.7a1 1 0 0 0 .47-.26l7.7-7.7-2.79-2.79z" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            className="saved-setup-ribbon__icon-btn"
+            aria-label="Duplicate"
+            title="Duplicate"
             onClick={() => {
               actions.duplicate(active.id);
               setStatus(`${active.name} duplicated.`);
             }}
           >
-            Duplicate
+            <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" fill="currentColor">
+              <path d="M5.5 2.5A1.5 1.5 0 0 1 7 1h6.5A1.5 1.5 0 0 1 15 2.5V10a1.5 1.5 0 0 1-1.5 1.5H13V5a2 2 0 0 0-2-2H5.5v-.5z" />
+              <path d="M1 5.5A1.5 1.5 0 0 1 2.5 4H10A1.5 1.5 0 0 1 11.5 5.5v8A1.5 1.5 0 0 1 10 15H2.5A1.5 1.5 0 0 1 1 13.5v-8z" />
+            </svg>
           </button>
           <button
             type="button"
+            className="saved-setup-ribbon__icon-btn"
+            aria-label="Delete"
+            title="Delete"
             aria-disabled={collection.setups.length === 1}
             onClick={() => {
               if (collection.setups.length === 1) {
@@ -112,10 +134,21 @@ export function SavedSetupRibbon({
               openModal({ type: "delete", setupId: active.id });
             }}
           >
-            Delete
+            <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" fill="currentColor">
+              <path d="M6 1.75A.75.75 0 0 1 6.75 1h2.5a.75.75 0 0 1 0 1.5h-.5v.25H12a.75.75 0 0 1 0 1.5H4a.75.75 0 0 1 0-1.5h3.25V2.5h-.5A.75.75 0 0 1 6 1.75z" />
+              <path d="M4.5 5.5a.75.75 0 0 1 .75.75v6a.75.75 0 0 1-1.5 0v-6A.75.75 0 0 1 4.5 5.5zm3.25.75a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0v-6zm2.5-.75a.75.75 0 0 1 .75.75v6a.75.75 0 0 1-1.5 0v-6a.75.75 0 0 1 .75-.75zM3.5 4.75 4 13.25A1.75 1.75 0 0 0 5.74 15h4.52A1.75 1.75 0 0 0 12 13.25L12.5 4.75h-9z" />
+            </svg>
           </button>
-          <button type="button" onClick={() => openModal({ type: "templates" })}>
-            Presets / Templates
+          <button
+            type="button"
+            className="saved-setup-ribbon__icon-btn"
+            aria-label="Presets / Templates"
+            title="Presets / Templates"
+            onClick={() => openModal({ type: "templates" })}
+          >
+            <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" fill="currentColor">
+              <path d="M2.5 2.5h4v4h-4v-4zm7 0h4v4h-4v-4zm-7 7h4v4h-4v-4zm7 0h4v4h-4v-4z" />
+            </svg>
           </button>
         </div>
         <p className="saved-setup-ribbon__status" aria-live="polite" aria-atomic="true">

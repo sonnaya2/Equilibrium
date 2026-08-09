@@ -90,6 +90,12 @@ export function solverSnapshotFromResolvedModel(model: ResolvedCombatModel): Sol
     salve: sources.salve ?? null,
     ultimatums: sources.ultimatums ?? 0,
     lunging: sources.lunging ?? 0,
+    flanking: sources.flanking ?? 0,
+    flankingActive: sources.flankingActive === true,
+    shieldBashing: sources.shieldBashing ?? 0,
+    spendthrift: sources.spendthrift ?? 0,
+    ruthless: sources.ruthless ?? 0,
+    ruthlessStacks: sources.ruthlessStacks ?? 0,
     berserkersFuryBonus: sources.berserkersFuryBonus ?? 0,
   };
 }

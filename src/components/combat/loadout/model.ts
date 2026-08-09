@@ -46,6 +46,11 @@ import {
 import { STYLE_CURSES as STYLE_CURSE_BOOSTS, styleCurseById } from "@/combat/shared/prayers";
 import { targetPresetById } from "@/combat/data";
 import {
+  emptyPowerArchiveState,
+  normalizePowerArchiveState,
+  type PowerArchiveState,
+} from "@/combat/league/powerArchive";
+import {
   isAffinityKind,
   resolveAffinityPercent,
   sanitizeAffinity,
@@ -155,6 +160,14 @@ export interface LoadoutPerks {
   relentlessLevel20: boolean;
   /** Precise: raises min hit by 1.5% of max per rank. Rank 0 = off, max 6. */
   precise: number;
+  /** Flanking: listed stuns; +40%/rank when target is not facing the player. */
+  flanking: number;
+  /** Shield Bashing: Debilitate damage +15%/rank. */
+  shieldBashing: number;
+  /** Spendthrift: rank% chance of rank% extra damage. */
+  spendthrift: number;
+  /** Ruthless: kill-stack damage; stacks come from buffs.ruthlessStacks. */
+  ruthless: number;
   /** Planted Feet: base Sunshine / Death's Swiftness ×1.25 duration. Rank 0/1. */
   plantedFeet: number;
   /** Race slayer perks: +7% damage when the target matches. Rank 0/1. */
@@ -186,6 +199,10 @@ export const PERK_GIZMO_KIND: Record<PerkRankKey, "weapon" | "armour" | "both"> 
   aftershock: "weapon",
   relentless: "both",
   precise: "weapon",
+  flanking: "weapon",
+  shieldBashing: "both",
+  spendthrift: "weapon",
+  ruthless: "weapon",
   plantedFeet: "weapon",
   demonSlayer: "both",
   dragonSlayer: "both",
@@ -311,6 +328,16 @@ export interface LoadoutBuffs {
    * UI only when pocket has the Sliver; cleared when unequipped.
    */
   sliverOfEdictsActive: boolean;
+  /**
+   * Ruthless kill stacks at fight open (0-5). Default 0 - never pre-stack silently.
+   * Used only when Ruthless rank is active (equipment or Power Archive).
+   */
+  ruthlessStacks: number;
+  /**
+   * Flanking facing assumption: target is not facing the player.
+   * Default false - Flanking damage only applies when explicitly enabled.
+   */
+  targetNotFacing: boolean;
 }
 
 /**
@@ -446,6 +473,11 @@ export interface Loadout {
   perks: LoadoutPerks;
   /** Which perks the player keeps on which gizmo. Display grouping, not engine input. */
   gizmos: GizmoLayout;
+  /**
+   * Power Archive Automaton Control Bot gizmos (max 20).
+   * Applied only when the power-archive blessing is active.
+   */
+  powerArchive: PowerArchiveState;
   buffs: LoadoutBuffs;
   /** Archaeology monolith powers (selection + energy budget). */
   archaeology: LoadoutArchaeology;
@@ -504,12 +536,17 @@ export const DEFAULT_LOADOUT: Loadout = {
     relentless: 0,
     relentlessLevel20: false,
     precise: 0,
+    flanking: 0,
+    shieldBashing: 0,
+    spendthrift: 0,
+    ruthless: 0,
     plantedFeet: 0,
     demonSlayer: 0,
     dragonSlayer: 0,
     undeadSlayer: 0,
   },
   gizmos: {},
+  powerArchive: emptyPowerArchiveState(),
   buffs: {
     useEquippedWeaponSpecial: false,
     vulnerability: false,
@@ -541,6 +578,8 @@ export const DEFAULT_LOADOUT: Loadout = {
     slayerHelmetStand: null,
     ensouledSpectralLens: false,
     sliverOfEdictsActive: false,
+    ruthlessStacks: 0,
+    targetNotFacing: false,
   },
   archaeology: {
     selectedIds: [],
@@ -1379,6 +1418,10 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       relentless: clampRank(rawPerks.relentless, 5),
       relentlessLevel20: rawPerks.relentlessLevel20 === true,
       precise: clampRank(rawPerks.precise, 6),
+      flanking: clampRank(rawPerks.flanking, 4),
+      shieldBashing: clampRank(rawPerks.shieldBashing, 4),
+      spendthrift: clampRank(rawPerks.spendthrift, 6),
+      ruthless: clampRank(rawPerks.ruthless, 3),
       // Legacy boolean saves (pre-gizmo placement) migrate to rank 1.
       plantedFeet: legacyToggleRank(rawPerks.plantedFeet),
       demonSlayer: legacyToggleRank(rawPerks.demonSlayer),
@@ -1386,6 +1429,9 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       undeadSlayer: legacyToggleRank(rawPerks.undeadSlayer),
     },
     gizmos: normalizeGizmos((raw as { gizmos?: unknown }).gizmos),
+    powerArchive: normalizePowerArchiveState(
+      (raw as { powerArchive?: unknown }).powerArchive,
+    ),
     buffs: {
       useEquippedWeaponSpecial: rawBuffs.useEquippedWeaponSpecial === true,
       vulnerability: rawBuffs.vulnerability === true,
@@ -1414,6 +1460,8 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       eliteSeersVillage: rawBuffs.eliteSeersVillage === true,
       protectionPrayer: rawBuffs.protectionPrayer === true,
       sliverOfEdictsActive: rawBuffs.sliverOfEdictsActive === true,
+      ruthlessStacks: clamp(rawBuffs.ruthlessStacks, 0, 5, 0),
+      targetNotFacing: rawBuffs.targetNotFacing === true,
       ringOfVigourPassive: rawBuffs.ringOfVigourPassive === true,
       slayerHelmetStand: normalizeSlayerHelmetStand(rawBuffs.slayerHelmetStand),
       ensouledSpectralLens: rawBuffs.ensouledSpectralLens === true,

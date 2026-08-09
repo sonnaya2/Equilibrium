@@ -220,6 +220,17 @@ export function CalculationAssumptions({
           [string, string | number]
         >)
       : []),
+    ...((stats.caromingRank ?? 0) > 0
+      ? ([
+          [
+            "Caroming",
+            `rank ${stats.caromingRank} · +${(stats.caromingRank ?? 0) * 4}% AD per Ricochet/GRico hit`,
+          ],
+        ] as Array<[string, string | number]>)
+      : []),
+    ...((stats.preciseRank ?? 0) > 0
+      ? ([["Precise", `rank ${stats.preciseRank}`]] as Array<[string, string | number]>)
+      : []),
     ...(rotationHasConjureCast(result?.casts)
       ? ([["Spirit Pact III", conjurePactAssumptionNote(stats.conjureDurationMult ?? 1)]] as Array<
           [string, string | number]

@@ -6,10 +6,12 @@ import { capabilitiesOf } from "../../../shared/damageProvenance";
 import {
   AFTERSHOCK_DAMAGE_STEP_PER_RANK,
   AFTERSHOCK_DAMAGE_THRESHOLD,
+  AFTERSHOCK_FORMULA_MAX_RANK,
   AFTERSHOCK_MAX_AD_FRACTION_PER_RANK,
   AFTERSHOCK_MIN_AD_FRACTION_PER_RANK,
   AFTERSHOCK_MIN_PROC_INTERVAL_SECONDS,
   CRACKLING_COOLDOWN_SECONDS,
+  CRACKLING_FORMULA_MAX_RANK,
   cracklingDamageFraction,
 } from "../../../shared/perks";
 import type { ResolvedDamage } from "../types";
@@ -147,7 +149,7 @@ export function applyInventionProcs(
   event: ScheduledEvent<SimulationRuntime>,
   damage: ResolvedDamage,
 ): void {
-  const cracklingRank = procRank(rt.input.procs?.cracklingRank, 4);
+  const cracklingRank = procRank(rt.input.procs?.cracklingRank, CRACKLING_FORMULA_MAX_RANK);
   // Family hit|dot|command; also require canTriggerProcs (player_dot true, conjure auto false).
   const cracklingEligible =
     (event.family === "hit" || event.family === "dot" || event.family === "command") &&
@@ -181,7 +183,7 @@ export function applyInventionProcs(
     });
   }
 
-  const aftershockRank = procRank(rt.input.procs?.aftershockRank, 4);
+  const aftershockRank = procRank(rt.input.procs?.aftershockRank, AFTERSHOCK_FORMULA_MAX_RANK);
   if (aftershockRank === 0 || damage.expected <= 0) return;
 
   const invention = rt.state.invention;

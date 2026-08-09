@@ -44,7 +44,7 @@ export function CombatTabs() {
       </CombatFrame>
 
       <div className="combat-tab-stage">
-        <WorkbenchPanel id="Setup" active={tab}>
+        <WorkbenchPanel id="Setup" active={tab} clip>
           <SetupTab
             loadout={loadout}
             setLoadout={setLoadout}

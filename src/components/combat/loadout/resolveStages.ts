@@ -15,9 +15,13 @@ import {
   ATTACK_CAPE_MELEE_HIT_CHANCE,
   bitingCritChanceBonus,
   energisingAccuracyBonus,
+  flankingDamageBonus,
   invigoratingAdrenalineMultiplier,
   lungingPerkModifier,
   raceSlayerPerkModifier,
+  ruthlessPerkModifier,
+  shieldBashingDamageBonus,
+  spendthriftExpectedDamageMultiplier,
   ultimatumsPerkModifier,
 } from "@/combat/shared/perks";
 import {
@@ -939,6 +943,8 @@ export interface ResolvedCombatRules {
   procs: ProcRules;
   plantedFeet: boolean;
   preciseRank: number;
+  /** Caroming rank after Power Archive merge (cast-time Ricochet/GRico band rewrite). */
+  caromingRank: number;
   conjureBasicDamageMult: number;
   conjureDurationMult: number;
   maxAdrenaline: number;
@@ -1075,19 +1081,99 @@ export function resolveCombatRules(
 
   return {
     globalModifiers,
-    castModifiersFor: (ability) => [
-      ...globalModifiers,
-      ...(loadout.perks.ultimatums > 0
-        ? [ultimatumsPerkModifier(loadout.perks.ultimatums, ability.category)]
-        : []),
-      ...(loadout.perks.lunging > 0
-        ? [lungingPerkModifier(loadout.perks.lunging, ability.id)]
-        : []),
-    ],
+    castModifiersFor: (ability) => {
+      const mods: CombatModifier[] = [
+        ...globalModifiers,
+        ...(loadout.perks.ultimatums > 0
+          ? [ultimatumsPerkModifier(loadout.perks.ultimatums, ability.category)]
+          : []),
+        ...(loadout.perks.lunging > 0
+          ? [lungingPerkModifier(loadout.perks.lunging, ability.id)]
+          : []),
+      ];
+      // Shield Bashing: Debilitate only.
+      if (loadout.perks.shieldBashing > 0) {
+        const id = ability.id;
+        const isDebilitate = id === "debilitate" || id.endsWith(":debilitate");
+        if (isDebilitate) {
+          const mult = 1 + shieldBashingDamageBonus(loadout.perks.shieldBashing);
+          mods.push({
+            id: `perk:shield-bashing:${loadout.perks.shieldBashing}`,
+            stage: "base",
+            priority: 100,
+            applies: () => true,
+            apply: (state) => ({ ...state, damage: mulFloor(state.damage, mult) }),
+            source: {
+              source: "runescape-wiki",
+              url: "https://runescape.wiki/w/Shield_Bashing",
+              title: "Shield Bashing",
+              verifiedAt: "2026-08-09",
+            },
+          });
+        }
+      }
+      // Flanking: only when the user asserts the target is not facing them.
+      if (loadout.perks.flanking > 0 && loadout.buffs.targetNotFacing) {
+        const id = ability.id;
+        const flankingIds = new Set([
+          "soul-strike",
+          "backhand",
+          "impact",
+          "binding-shot",
+          "melee:backhand",
+          "magic:impact",
+          "ranged:binding-shot",
+          "necromancy:soul-strike",
+        ]);
+        if (flankingIds.has(id) || id.endsWith(":soul-strike") || id.endsWith(":backhand") || id.endsWith(":impact") || id.endsWith(":binding-shot")) {
+          const mult = 1 + flankingDamageBonus(loadout.perks.flanking);
+          mods.push({
+            id: `perk:flanking:${loadout.perks.flanking}`,
+            stage: "base",
+            priority: 100,
+            applies: () => true,
+            apply: (state) => ({ ...state, damage: mulFloor(state.damage, mult) }),
+            source: {
+              source: "runescape-wiki",
+              url: "https://runescape.wiki/w/Flanking",
+              title: "Flanking",
+              verifiedAt: "2026-08-09",
+            },
+          });
+        }
+      }
+      if (loadout.perks.spendthrift > 0) {
+        const mult = spendthriftExpectedDamageMultiplier(loadout.perks.spendthrift);
+        if (mult > 1) {
+          mods.push({
+            id: `perk:spendthrift:${loadout.perks.spendthrift}`,
+            stage: "postHit",
+            priority: 50,
+            applies: () => true,
+            apply: (state) => ({ ...state, damage: mulFloor(state.damage, mult) }),
+            source: {
+              source: "runescape-wiki",
+              url: "https://runescape.wiki/w/Spendthrift",
+              title: "Spendthrift",
+              verifiedAt: "2026-08-09",
+            },
+          });
+        }
+      }
+      if (loadout.perks.ruthless > 0 && loadout.buffs.ruthlessStacks > 0) {
+        const ruthless = ruthlessPerkModifier(
+          loadout.perks.ruthless,
+          loadout.buffs.ruthlessStacks,
+        );
+        mods.push(ruthless);
+      }
+      return mods;
+    },
     adrenaline,
     procs,
     plantedFeet: loadout.perks.plantedFeet > 0,
     preciseRank: loadout.perks.precise > 0 ? loadout.perks.precise : 0,
+    caromingRank: loadout.perks.caroming > 0 ? loadout.perks.caroming : 0,
     conjureBasicDamageMult: loadoutFirstNecromancerConjureDamageMult({
       equipmentSlots: loadout.equipmentSlots,
       pieceContribution: setPieceContribution,

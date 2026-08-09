@@ -22,7 +22,7 @@ function BlessingCard({ choice }: { choice?: BlessingChoice }) {
   return (
     <div className={`setup-league-blessing${choice ? " is-active" : " is-empty"}`}>
       <div className="setup-league-blessing__icon">
-        {choice ? <GameIcon src={blessingIconPath(choice.name)} size={30} /> : <span>+</span>}
+        {choice ? <GameIcon src={blessingIconPath(choice.name)} size={40} /> : <span>+</span>}
       </div>
       <div className="setup-league-blessing__copy">
         <span className="setup-league-blessing__tier">{choice ? `T${choice.tier}` : "NEXT"}</span>
@@ -88,7 +88,7 @@ export function LeagueLoadoutDisplay({
                   className={`setup-league-relic${name ? " is-filled" : " is-empty"}`}
                 >
                   <span className="setup-league-relic__icon">
-                    {name ? <GameIcon src={relicIconPath(name)} size={34} /> : <span>R{tier}</span>}
+                    {name ? <GameIcon src={relicIconPath(name)} size={40} /> : <span>R{tier}</span>}
                   </span>
                   <span className="setup-league-relic__copy">
                     <small>RELIC {tier}</small>

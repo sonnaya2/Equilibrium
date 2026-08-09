@@ -95,6 +95,12 @@ export interface SolverPackSnapshot {
   ultimatums?: number;
   lunging?: number;
   caroming?: number;
+  flanking?: number;
+  flankingActive?: boolean;
+  shieldBashing?: number;
+  spendthrift?: number;
+  ruthless?: number;
+  ruthlessStacks?: number;
   /** Precomputed Berserker's Fury damage bonus fraction; 0 / omit = off. */
   berserkersFuryBonus?: number;
   /** Precomputed set counts; when omitted derived from equipmentSlots + equipmentIds. */
@@ -150,6 +156,12 @@ function modifierSourcesFrom(snapshot: SolverPackSnapshot): SerializableModifier
     ultimatums: snapshot.ultimatums,
     lunging: snapshot.lunging,
     caroming: snapshot.caroming,
+    flanking: snapshot.flanking,
+    flankingActive: snapshot.flankingActive,
+    shieldBashing: snapshot.shieldBashing,
+    spendthrift: snapshot.spendthrift,
+    ruthless: snapshot.ruthless,
+    ruthlessStacks: snapshot.ruthlessStacks,
     berserkersFuryBonus: snapshot.berserkersFuryBonus,
   });
 }

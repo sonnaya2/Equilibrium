@@ -38,9 +38,22 @@ describe("shared/perks", () => {
     expect(equilibriumBlocksCrits(0)).toBe(false);
   });
 
+  it("Equilibrium accepts Power Archive effective ranks (R6 +18%, R8 +22%)", () => {
+    // https://runescape.wiki/w/Power_Archive
+    expect(equilibriumDamageBonus(6)).toBeCloseTo(0.18, 10);
+    expect(equilibriumDamageBonus(8)).toBeCloseTo(0.22, 10);
+  });
+
   it("Eruptive is +0.5%/rank AD (R4 +2%)", () => {
     expect(eruptiveDamageBonus(4)).toBeCloseTo(0.02, 10);
     expect(applyAt(1000, [eruptivePerkModifier(4)])).toBe(1020);
+  });
+
+  it("Eruptive remains distinct from Equilibrium at Archive ranks", () => {
+    // Power Archive: Eruptive R6 +3%, R8 +4%; Equilibrium R6 +18% no crit
+    expect(eruptiveDamageBonus(6)).toBeCloseTo(0.03, 10);
+    expect(eruptiveDamageBonus(8)).toBeCloseTo(0.04, 10);
+    expect(equilibriumDamageBonus(6)).not.toBeCloseTo(eruptiveDamageBonus(6), 10);
   });
 
   it("Biting is +2%/rank crit (+2.2% on level-20 gear)", () => {

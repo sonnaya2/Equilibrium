@@ -482,9 +482,6 @@ export function RevolutionPanel({
                 </div>
               ) : null}
             </div>
-            <span>
-              {slots.length} slots · {revoSize} active
-            </span>
           </header>
           <div className="ability-bar-row">
             <RevoBarGraphic slots={slots} revoSize={revoSize} />
@@ -766,9 +763,9 @@ export function RevolutionPanel({
           </div>
         </dl>
         {!targetLp ? (
-          <p className="revo-target-metrics__hint">Set target LP for TTK / KPH.</p>
+          <p className="revo-target-metrics__hint">Set target LP.</p>
         ) : !liveResult?.ok ? (
-          <p className="revo-target-metrics__hint">Run the bar for TTK / KPH from sim DPS.</p>
+          <p className="revo-target-metrics__hint">Run the bar for TTK / KPH.</p>
         ) : null}
       </CombatFrame>
       </div>

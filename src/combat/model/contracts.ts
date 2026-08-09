@@ -178,6 +178,12 @@ export interface HostCombatResolveInput {
   readonly ultimatums?: number;
   readonly lunging?: number;
   readonly caroming?: number;
+  readonly flanking?: number;
+  readonly flankingActive?: boolean;
+  readonly shieldBashing?: number;
+  readonly spendthrift?: number;
+  readonly ruthless?: number;
+  readonly ruthlessStacks?: number;
   readonly berserkersFuryBonus?: number;
   readonly setCounts?: readonly (readonly [string, number])[];
   readonly diagnostics: ResolvedCombatDiagnostics;

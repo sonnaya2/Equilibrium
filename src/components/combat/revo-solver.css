@@ -358,16 +358,20 @@
   padding-inline: 0.95rem;
   border-color: var(--combat-gem);
   background:
-    linear-gradient(180deg, rgb(46 203 143 / 12%), transparent 80%),
-    color-mix(in srgb, var(--combat-gem-dark) 30%, var(--combat-inset));
+    linear-gradient(180deg, rgb(46 203 143 / 16%), transparent 80%),
+    color-mix(in srgb, var(--combat-gem-dark, #0d5c44) 34%, var(--combat-inset));
   color: var(--combat-gem-bright);
   font-size: 0.75rem;
+  font-weight: 600;
 }
 
 .combat-screen .revo-solver-controls__run:hover:not(:disabled) {
+  border-color: var(--combat-gem-bright);
   background:
-    linear-gradient(180deg, rgb(46 203 143 / 18%), transparent 80%),
-    color-mix(in srgb, var(--combat-gem-dark) 38%, var(--combat-inset));
+    linear-gradient(180deg, rgb(46 203 143 / 24%), transparent 80%),
+    color-mix(in srgb, var(--combat-gem-dark, #0d5c44) 44%, var(--combat-inset));
+  background-color: transparent;
+  color: var(--combat-gem-bright);
 }
 
 .combat-screen .revo-solver-controls__run:disabled {
@@ -397,14 +401,15 @@
   margin-left: auto;
   min-height: 2.15rem;
   padding: 0.22rem 0.65rem 0.22rem 0.4rem;
-  border: 1px solid color-mix(in srgb, var(--combat-gem) 45%, var(--combat-gold-dim));
+  border: 1px solid color-mix(in srgb, var(--combat-gem) 55%, var(--combat-gold-mid));
   border-radius: 1px;
   background:
-    linear-gradient(180deg, rgb(46 203 143 / 8%), transparent 80%),
-    color-mix(in srgb, var(--combat-gem-dark) 14%, var(--combat-inset));
+    linear-gradient(180deg, rgb(46 203 143 / 12%), transparent 80%),
+    color-mix(in srgb, var(--combat-gem-dark, #0d5c44) 20%, var(--combat-inset));
   box-shadow: inset 0 0 0 1px rgb(0 0 0 / 35%);
   color: var(--combat-gem-bright);
   font-size: 0.72rem;
+  font-weight: 600;
   cursor: pointer;
   user-select: none;
   white-space: nowrap;
@@ -439,20 +444,22 @@
 }
 
 .revo-solver-controls__regions:hover:not(:has(input:disabled)) {
-  border-color: var(--combat-gem);
+  border-color: var(--combat-gem-bright);
   background:
-    linear-gradient(180deg, rgb(46 203 143 / 14%), transparent 80%),
-    color-mix(in srgb, var(--combat-gem-dark) 22%, var(--combat-inset));
+    linear-gradient(180deg, rgb(46 203 143 / 18%), transparent 80%),
+    color-mix(in srgb, var(--combat-gem-dark, #0d5c44) 28%, var(--combat-inset));
+  color: var(--combat-gem-bright);
 }
 
 .revo-solver-controls__regions.is-on {
   border-color: var(--combat-gem);
   background:
-    linear-gradient(180deg, rgb(46 203 143 / 18%), transparent 75%),
-    color-mix(in srgb, var(--combat-gem-dark) 28%, var(--combat-inset));
+    linear-gradient(180deg, rgb(46 203 143 / 22%), transparent 75%),
+    color-mix(in srgb, var(--combat-gem-dark, #0d5c44) 34%, var(--combat-inset));
   box-shadow:
     inset 0 0 0 1px rgb(0 0 0 / 30%),
-    0 0 8px rgb(46 203 143 / 12%);
+    0 0 8px rgb(46 203 143 / 14%);
+  color: var(--combat-gem-bright);
 }
 
 .revo-solver-controls__regions:has(input:disabled) {

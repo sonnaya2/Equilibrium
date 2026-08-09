@@ -191,7 +191,7 @@ test("saved setup header supports defaults, scrollable overflow, and CRUD", asyn
   await expect(page.getByRole("dialog")).toHaveCount(0);
 
   for (let index = 0; index < 4; index += 1) {
-    await manage.getByRole("button", { name: "+ New setup", exact: true }).click();
+    await manage.getByRole("button", { name: "New setup", exact: true }).click();
   }
   await expect(manage.locator(".saved-setup-ribbon__label strong")).toHaveText("8");
   const rail = manage.locator(".saved-setup-ribbon__tabs");
@@ -435,7 +435,7 @@ test("focus treatment and reduced motion are explicit", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await openCombat(page);
 
-  const create = page.getByRole("button", { name: "+ New setup", exact: true });
+  const create = page.getByRole("button", { name: "New setup", exact: true });
   await create.focus();
   expect(await create.evaluate((element) => getComputedStyle(element).outlineStyle)).not.toBe(
     "none",

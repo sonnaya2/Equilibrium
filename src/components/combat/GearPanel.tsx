@@ -334,9 +334,7 @@ export function GearPanel({ loadout, setLoadout }: { loadout: Loadout; setLoadou
   };
 
   const countLine =
-    styleBrowse === "setup"
-      ? `Showing ${visiblePickerRows.length} of ${pickerRows.length} · ${STYLE_LABELS[loadout.style]} + hybrid`
-      : `Showing ${visiblePickerRows.length} of ${pickerRows.length} · all styles`;
+    styleBrowse === "setup" ? `${STYLE_LABELS[loadout.style]} + hybrid` : "All styles";
 
   return (
     <div className="gear-layout">

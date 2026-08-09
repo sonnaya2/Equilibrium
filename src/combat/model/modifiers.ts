@@ -9,8 +9,12 @@ import type { ResolvedLeagueRules } from "../league/ruleset";
 import { leagueModifiers, setPieceContributionModifier } from "../league/ruleset";
 import { additiveMeleeDamageModifier, amZiModifier, setDamageModifiers } from "../shared/equipment";
 import {
+  flankingPerkModifier,
   lungingPerkModifier,
   raceSlayerPerkModifier,
+  ruthlessPerkModifier,
+  shieldBashingPerkModifier,
+  spendthriftPerkModifier,
   ultimatumsPerkModifier,
 } from "../shared/perks";
 import { prayerDamageModifier, styleCurseById } from "../shared/prayers";
@@ -121,12 +125,26 @@ export function modifiersFromSources(
   league: ResolvedLeagueRules,
 ): (ability: AbilitySpec) => CombatModifier[] {
   const global = buildGlobalModifiersFromSources(sources, league);
+  const spendthrift =
+    (sources.spendthrift ?? 0) > 0 ? [spendthriftPerkModifier(sources.spendthrift!)] : [];
+  const ruthless =
+    (sources.ruthless ?? 0) > 0 && (sources.ruthlessStacks ?? 0) > 0
+      ? [ruthlessPerkModifier(sources.ruthless!, sources.ruthlessStacks!)]
+      : [];
   return (ability: AbilitySpec) => [
     ...global,
+    ...spendthrift,
+    ...ruthless,
     ...(sources.ultimatums > 0
       ? [ultimatumsPerkModifier(sources.ultimatums, ability.category)]
       : []),
     ...(sources.lunging > 0 ? [lungingPerkModifier(sources.lunging, ability.id)] : []),
+    ...(sources.flankingActive === true && (sources.flanking ?? 0) > 0
+      ? [flankingPerkModifier(sources.flanking!, ability.id)]
+      : []),
+    ...((sources.shieldBashing ?? 0) > 0
+      ? [shieldBashingPerkModifier(sources.shieldBashing!, ability.id)]
+      : []),
   ];
 }
 

@@ -19,15 +19,21 @@ function wikiPerk(title: string, page: string): SourceReference {
 }
 
 /**
- * Equilibrium: R1 +8% ability damage, +2%/rank (R4 +14%). Blocks crits while equipped
- * (wiki also has 30s post-unequip; model is hard no-crit while active only).
+ * Equilibrium: R1 +8% ability damage, +2%/rank (R4 +14%, Archive R8 +22%).
+ * Blocks crits while equipped (wiki also has 30s post-unequip; model is hard
+ * no-crit while active only). Formula domain allows Power Archive ranks.
  * https://runescape.wiki/w/Equilibrium
+ * https://runescape.wiki/w/Power_Archive
  */
+export const EQUILIBRIUM_FORMULA_MAX_RANK = 8;
+
 export function equilibriumDamageBonus(rank: number): number {
-  if (!Number.isInteger(rank) || rank < 1 || rank > 4) {
-    throw new RangeError(`equilibriumDamageBonus: rank ${rank} outside 1-4`);
+  if (!Number.isInteger(rank) || rank < 1 || rank > EQUILIBRIUM_FORMULA_MAX_RANK) {
+    throw new RangeError(
+      `equilibriumDamageBonus: rank ${rank} outside 1-${EQUILIBRIUM_FORMULA_MAX_RANK}`,
+    );
   }
-  // Rank 1 = 8%; +2% per rank after that (not "6% + 2%*rank" in the UI sense).
+  // Rank 1 = 8%; +2% per rank (wiki table: 6% + 2%*rank).
   return 0.08 + 0.02 * (rank - 1);
 }
 
@@ -49,14 +55,21 @@ export function equilibriumBlocksCrits(rank: number): boolean {
 }
 
 /**
- * Eruptive: R1 +0.5% ability damage, +0.5%/rank (R4 +2%). Applies to AD-derived damage
- * (DoTs, poison, conjures, Aftershock, Crackling). https://runescape.wiki/w/Eruptive
+ * Eruptive: +0.5% ability damage per rank (R4 +2%, Archive R8 +4%).
+ * Formerly named Equilibrium (pre-2024). Distinct from the modern Equilibrium perk.
+ * Applies to AD-derived damage (DoTs, poison, conjures, Aftershock, Crackling).
+ * https://runescape.wiki/w/Eruptive
+ * https://runescape.wiki/w/Power_Archive
  */
+export const ERUPTIVE_FORMULA_MAX_RANK = 8;
+
 export function eruptiveDamageBonus(rank: number): number {
-  if (!Number.isInteger(rank) || rank < 1 || rank > 4) {
-    throw new RangeError(`eruptiveDamageBonus: rank ${rank} outside 1-4`);
+  if (!Number.isInteger(rank) || rank < 1 || rank > ERUPTIVE_FORMULA_MAX_RANK) {
+    throw new RangeError(
+      `eruptiveDamageBonus: rank ${rank} outside 1-${ERUPTIVE_FORMULA_MAX_RANK}`,
+    );
   }
-  return 0.005 + 0.005 * (rank - 1);
+  return 0.005 * rank;
 }
 
 export function eruptivePerkModifier(rank: number): CombatModifier {
@@ -72,24 +85,35 @@ export function eruptivePerkModifier(rank: number): CombatModifier {
 }
 
 /**
- * Biting: R1 +2% crit chance, +2%/rank (lvl20: +2.2%/rank). Max R4; not on DoTs.
+ * Biting: +2% crit chance per rank (lvl20: +2.2%/rank). Archive R8 +16%.
  * https://runescape.wiki/w/Biting
+ * https://runescape.wiki/w/Power_Archive
  */
+export const BITING_FORMULA_MAX_RANK = 8;
+
 export function bitingCritChanceBonus(rank: number, level20Gear = false): number {
-  if (!Number.isInteger(rank) || rank < 1 || rank > 4) {
-    throw new RangeError(`bitingCritChanceBonus: rank ${rank} outside 1-4`);
+  if (!Number.isInteger(rank) || rank < 1 || rank > BITING_FORMULA_MAX_RANK) {
+    throw new RangeError(
+      `bitingCritChanceBonus: rank ${rank} outside 1-${BITING_FORMULA_MAX_RANK}`,
+    );
   }
   const perRank = level20Gear ? 0.022 : 0.02;
-  return perRank + perRank * (rank - 1);
+  return perRank * rank;
 }
 
 /**
- * Precise: newMin = min + rank x 0.015 x max. Max R6. Band-level, not a uniform mult.
+ * Precise: newMin = min + rank x 0.015 x max. Stored max 6; Archive effective to 12.
+ * Band-level, not a uniform mult.
  * https://runescape.wiki/w/Precise
+ * https://runescape.wiki/w/Power_Archive
  */
+export const PRECISE_FORMULA_MAX_RANK = 12;
+
 export function preciseMinHitAddition(maxDamage: number, rank: number): number {
-  if (!Number.isInteger(rank) || rank < 1 || rank > 6) {
-    throw new RangeError(`preciseMinHitAddition: rank ${rank} outside 1-6`);
+  if (!Number.isInteger(rank) || rank < 1 || rank > PRECISE_FORMULA_MAX_RANK) {
+    throw new RangeError(
+      `preciseMinHitAddition: rank ${rank} outside 1-${PRECISE_FORMULA_MAX_RANK}`,
+    );
   }
   if (!Number.isFinite(maxDamage) || maxDamage < 0) {
     throw new RangeError(`preciseMinHitAddition: bad maxDamage ${maxDamage}`);
@@ -97,10 +121,14 @@ export function preciseMinHitAddition(maxDamage: number, rank: number): number {
   return 0.015 * rank * maxDamage;
 }
 
-/** Ultimatums: rank 1 +4% ultimate damage; +1% per rank (R4 +7%). */
+/** Ultimatums: rank 1 +4% ultimate damage; +1% per rank (R4 +7%, Archive R8 +11%). */
+export const ULTIMATUMS_FORMULA_MAX_RANK = 8;
+
 export function ultimatumsDamageBonus(rank: number): number {
-  if (!Number.isInteger(rank) || rank < 1 || rank > 4) {
-    throw new RangeError(`ultimatumsDamageBonus: rank ${rank} outside 1-4`);
+  if (!Number.isInteger(rank) || rank < 1 || rank > ULTIMATUMS_FORMULA_MAX_RANK) {
+    throw new RangeError(
+      `ultimatumsDamageBonus: rank ${rank} outside 1-${ULTIMATUMS_FORMULA_MAX_RANK}`,
+    );
   }
   return 0.04 + 0.01 * (rank - 1);
 }
@@ -120,10 +148,14 @@ export function ultimatumsPerkModifier(rank: number, castCategory: string): Comb
 /** Engine and record ids both accepted (adapter uses either form). */
 const LUNGING_ABILITY_IDS = new Set(["dismember", "melee:dismember", "combust", "magic:combust"]);
 
-/** Lunging: Combust/Dismember rank 1 +13%; +3% per rank (R4 +22%). */
+/** Lunging: Combust/Dismember rank 1 +13%; +3% per rank (R4 +22%, Archive R8 +34%). */
+export const LUNGING_FORMULA_MAX_RANK = 8;
+
 export function lungingDamageBonus(rank: number): number {
-  if (!Number.isInteger(rank) || rank < 1 || rank > 4) {
-    throw new RangeError(`lungingDamageBonus: rank ${rank} outside 1-4`);
+  if (!Number.isInteger(rank) || rank < 1 || rank > LUNGING_FORMULA_MAX_RANK) {
+    throw new RangeError(
+      `lungingDamageBonus: rank ${rank} outside 1-${LUNGING_FORMULA_MAX_RANK}`,
+    );
   }
   return 0.13 + 0.03 * (rank - 1);
 }
@@ -140,12 +172,20 @@ export function lungingPerkModifier(rank: number, abilityId: string): CombatModi
   };
 }
 
-/** Energising: rank 1 +75 accuracy; +25 per rank (R4 +150). */
+/**
+ * Energising: rank 1 +75 accuracy; +25 per rank (R4 +150, Archive R8 +250).
+ * https://runescape.wiki/w/Energising
+ * https://runescape.wiki/w/Power_Archive
+ */
+export const ENERGISING_FORMULA_MAX_RANK = 8;
+
 export function energisingAccuracyBonus(rank: number): number {
-  if (!Number.isInteger(rank) || rank < 1 || rank > 4) {
-    throw new RangeError(`energisingAccuracyBonus: rank ${rank} outside 1-4`);
+  if (!Number.isInteger(rank) || rank < 1 || rank > ENERGISING_FORMULA_MAX_RANK) {
+    throw new RangeError(
+      `energisingAccuracyBonus: rank ${rank} outside 1-${ENERGISING_FORMULA_MAX_RANK}`,
+    );
   }
-  return 75 + 25 * (rank - 1);
+  return 50 + 25 * rank;
 }
 
 /** Undead / Demon / Dragon Slayer: +7% damage to matching race. Rankless. */
@@ -182,13 +222,20 @@ export function raceSlayerPerkModifier(
 
 /**
  * Ruthless: +0.5% damage per rank per kill stack, max 5 stacks, 20s (not on bleeds).
- * Max R3 -> 1.5%/stack -> 7.5% at 5. Caller supplies stacks. https://runescape.wiki/w/Ruthless
+ * Stored max R3; Archive effective R6. Caller supplies stacks (default 0).
+ * https://runescape.wiki/w/Ruthless
+ * https://runescape.wiki/w/Power_Archive
  */
+export const RUTHLESS_FORMULA_MAX_RANK = 6;
+export const RUTHLESS_MAX_STACKS = 5;
+
 export function ruthlessDamageBonus(rank: number, stacks: number): number {
-  if (!Number.isInteger(rank) || rank < 1 || rank > 3) {
-    throw new RangeError(`ruthlessDamageBonus: rank ${rank} outside 1-3`);
+  if (!Number.isInteger(rank) || rank < 1 || rank > RUTHLESS_FORMULA_MAX_RANK) {
+    throw new RangeError(
+      `ruthlessDamageBonus: rank ${rank} outside 1-${RUTHLESS_FORMULA_MAX_RANK}`,
+    );
   }
-  const s = Math.min(5, Math.max(0, Math.floor(stacks)));
+  const s = Math.min(RUTHLESS_MAX_STACKS, Math.max(0, Math.floor(stacks)));
   return 0.005 * rank * s;
 }
 
@@ -217,10 +264,14 @@ export function genocidalDamageBonus(remaining: number, original: number): numbe
   return Math.floor(5 * (1 - a / original) * 10) / 10 / 100;
 }
 
-/** Crackling PvM zap: 50% ability damage x rank, 60s cooldown. Max rank 4. */
+/** Crackling PvM zap: 50% ability damage x rank, 60s cooldown. Archive effective to R8. */
+export const CRACKLING_FORMULA_MAX_RANK = 8;
+
 export function cracklingDamageFraction(rank: number): number {
-  if (!Number.isInteger(rank) || rank < 1 || rank > 4) {
-    throw new RangeError(`cracklingDamageFraction: rank ${rank} outside 1-4`);
+  if (!Number.isInteger(rank) || rank < 1 || rank > CRACKLING_FORMULA_MAX_RANK) {
+    throw new RangeError(
+      `cracklingDamageFraction: rank ${rank} outside 1-${CRACKLING_FORMULA_MAX_RANK}`,
+    );
   }
   return 0.5 * rank;
 }
@@ -228,37 +279,52 @@ export function cracklingDamageFraction(rank: number): number {
 export const CRACKLING_COOLDOWN_SECONDS = 60;
 
 /**
- * Aftershock: after 50_000 damage, AoE 24-39.6% AD per rank in 0.4% steps; max R4, min 6s.
+ * Aftershock: after 50_000 damage, AoE 24-39.6% AD per rank in 0.4% steps; min 6s.
+ * Stored max R4; Archive effective to R8 (320% max band).
  * https://runescape.wiki/w/Aftershock
+ * https://runescape.wiki/w/Power_Archive
  */
 export const AFTERSHOCK_DAMAGE_THRESHOLD = 50_000;
 export const AFTERSHOCK_MIN_AD_FRACTION_PER_RANK = 0.24;
 export const AFTERSHOCK_MAX_AD_FRACTION_PER_RANK = 0.396;
 export const AFTERSHOCK_DAMAGE_STEP_PER_RANK = 0.004;
 export const AFTERSHOCK_MIN_PROC_INTERVAL_SECONDS = 6;
+export const AFTERSHOCK_FORMULA_MAX_RANK = 8;
 
-/** Impatient: 9% chance per rank for basics to grant +3 adrenaline (base 9 -> 12). Max 4. */
+/** Impatient: 9% chance per rank for basics to grant +3 adrenaline. Archive to R8. */
+export const IMPATIENT_FORMULA_MAX_RANK = 8;
+
 export function impatientProcChance(rank: number, level20Gear = false): number {
-  if (!Number.isInteger(rank) || rank < 1 || rank > 4) {
-    throw new RangeError(`impatientProcChance: rank ${rank} outside 1-4`);
+  if (!Number.isInteger(rank) || rank < 1 || rank > IMPATIENT_FORMULA_MAX_RANK) {
+    throw new RangeError(
+      `impatientProcChance: rank ${rank} outside 1-${IMPATIENT_FORMULA_MAX_RANK}`,
+    );
   }
   return (level20Gear ? 0.099 : 0.09) * rank;
 }
 
 export const IMPATIENT_EXTRA_ADRENALINE = 3;
 
-/** Invigorating: basic-attack adrenaline x (1 + 0.05 x rank). Max 4. */
+/** Invigorating: basic-attack adrenaline x (1 + 0.05 x rank). Archive to R8. */
+export const INVIGORATING_FORMULA_MAX_RANK = 8;
+
 export function invigoratingAdrenalineMultiplier(rank: number): number {
-  if (!Number.isInteger(rank) || rank < 1 || rank > 4) {
-    throw new RangeError(`invigoratingAdrenalineMultiplier: rank ${rank} outside 1-4`);
+  if (!Number.isInteger(rank) || rank < 1 || rank > INVIGORATING_FORMULA_MAX_RANK) {
+    throw new RangeError(
+      `invigoratingAdrenalineMultiplier: rank ${rank} outside 1-${INVIGORATING_FORMULA_MAX_RANK}`,
+    );
   }
   return 1 + 0.05 * rank;
 }
 
-/** Relentless: 1% chance per rank to refund adrenaline cost; 30s internal CD. Max rank 5. */
+/** Relentless: 1% chance per rank to refund adrenaline cost; 30s CD. Archive to R10. */
+export const RELENTLESS_FORMULA_MAX_RANK = 10;
+
 export function relentlessProcChance(rank: number, level20Gear = false): number {
-  if (!Number.isInteger(rank) || rank < 1 || rank > 5) {
-    throw new RangeError(`relentlessProcChance: rank ${rank} outside 1-5`);
+  if (!Number.isInteger(rank) || rank < 1 || rank > RELENTLESS_FORMULA_MAX_RANK) {
+    throw new RangeError(
+      `relentlessProcChance: rank ${rank} outside 1-${RELENTLESS_FORMULA_MAX_RANK}`,
+    );
   }
   return (level20Gear ? 0.011 : 0.01) * rank;
 }
@@ -272,7 +338,7 @@ export const RELENTLESS_INTERNAL_CD_SECONDS = 30;
  */
 export function expectedRelentlessRefund(cost: number, rank: number, level20Gear = false): number {
   if (!Number.isFinite(cost) || cost <= 0) return 0;
-  if (!Number.isInteger(rank) || rank < 1 || rank > 5) return 0;
+  if (!Number.isInteger(rank) || rank < 1 || rank > RELENTLESS_FORMULA_MAX_RANK) return 0;
   return cost * relentlessProcChance(rank, level20Gear);
 }
 
@@ -280,31 +346,158 @@ export function expectedRelentlessRefund(cost: number, rank: number, level20Gear
 export const PLANTED_FEET_DURATION_MULT = 1.25;
 
 /**
- * Caroming: Ricochet +4%/rank per hit; Chain secondary +5% + 5%/rank. Max std 3 / ancient 4.
+ * Caroming: Ricochet +4%/rank per hit; Chain secondary +5% + 5%/rank.
+ * Archive effective to R8.
  */
+export const CAROMING_FORMULA_MAX_RANK = 8;
+
 export function caromingRicochetBonus(rank: number): number {
-  if (!Number.isInteger(rank) || rank < 1 || rank > 4) {
-    throw new RangeError(`caromingRicochetBonus: rank ${rank} outside 1-4`);
+  if (!Number.isInteger(rank) || rank < 1 || rank > CAROMING_FORMULA_MAX_RANK) {
+    throw new RangeError(
+      `caromingRicochetBonus: rank ${rank} outside 1-${CAROMING_FORMULA_MAX_RANK}`,
+    );
   }
   return 0.04 * rank;
 }
 
 export function caromingChainSecondaryBonus(rank: number): number {
-  if (!Number.isInteger(rank) || rank < 1 || rank > 4) {
-    throw new RangeError(`caromingChainSecondaryBonus: rank ${rank} outside 1-4`);
+  if (!Number.isInteger(rank) || rank < 1 || rank > CAROMING_FORMULA_MAX_RANK) {
+    throw new RangeError(
+      `caromingChainSecondaryBonus: rank ${rank} outside 1-${CAROMING_FORMULA_MAX_RANK}`,
+    );
   }
   return 0.05 + 0.05 * rank;
 }
 
 /**
  * Flanking: listed stuns lose stun; +40%/rank vs targets not facing the player.
- * Soul Strike, Backhand, Impact, Binding Shot. Max std 3 / ancient 4.
+ * Soul Strike, Backhand, Impact, Binding Shot. Archive to R8.
  */
+export const FLANKING_FORMULA_MAX_RANK = 8;
+
 export function flankingDamageBonus(rank: number): number {
-  if (!Number.isInteger(rank) || rank < 1 || rank > 4) {
-    throw new RangeError(`flankingDamageBonus: rank ${rank} outside 1-4`);
+  if (!Number.isInteger(rank) || rank < 1 || rank > FLANKING_FORMULA_MAX_RANK) {
+    throw new RangeError(
+      `flankingDamageBonus: rank ${rank} outside 1-${FLANKING_FORMULA_MAX_RANK}`,
+    );
   }
   return 0.4 * rank;
+}
+
+/**
+ * Shield Bashing: Debilitate damage +15% per rank (R4 +60% base game text;
+ * Power Archive R6 +90%, R8 +120% => 15%/rank).
+ * https://runescape.wiki/w/Shield_Bashing
+ * https://runescape.wiki/w/Power_Archive
+ */
+export const SHIELD_BASHING_FORMULA_MAX_RANK = 8;
+
+export function shieldBashingDamageBonus(rank: number): number {
+  if (!Number.isInteger(rank) || rank < 1 || rank > SHIELD_BASHING_FORMULA_MAX_RANK) {
+    throw new RangeError(
+      `shieldBashingDamageBonus: rank ${rank} outside 1-${SHIELD_BASHING_FORMULA_MAX_RANK}`,
+    );
+  }
+  return 0.15 * rank;
+}
+
+const SHIELD_BASHING_ABILITY_IDS = new Set([
+  "debilitate",
+  "melee:debilitate",
+  "constitution:debilitate",
+  "defence:debilitate",
+]);
+
+export function shieldBashingPerkModifier(
+  rank: number,
+  abilityId: string,
+): CombatModifier {
+  const mult = 1 + shieldBashingDamageBonus(rank);
+  return {
+    id: `perk:shield-bashing:${rank}`,
+    stage: "base",
+    priority: 100,
+    applies: () =>
+      SHIELD_BASHING_ABILITY_IDS.has(abilityId) || abilityId.endsWith(":debilitate"),
+    apply: (state) => ({ ...state, damage: mulFloor(state.damage, mult) }),
+    source: wikiPerk("Shield Bashing", "Shield_Bashing"),
+  };
+}
+
+const FLANKING_ABILITY_IDS = new Set([
+  "soul-strike",
+  "backhand",
+  "impact",
+  "binding-shot",
+  "melee:backhand",
+  "magic:impact",
+  "ranged:binding-shot",
+  "necromancy:soul-strike",
+]);
+
+export function flankingPerkModifier(rank: number, abilityId: string): CombatModifier {
+  const mult = 1 + flankingDamageBonus(rank);
+  const eligible =
+    FLANKING_ABILITY_IDS.has(abilityId) ||
+    abilityId.endsWith(":soul-strike") ||
+    abilityId.endsWith(":backhand") ||
+    abilityId.endsWith(":impact") ||
+    abilityId.endsWith(":binding-shot");
+  return {
+    id: `perk:flanking:${rank}`,
+    stage: "base",
+    priority: 100,
+    applies: () => eligible,
+    apply: (state) => ({ ...state, damage: mulFloor(state.damage, mult) }),
+    source: wikiPerk("Flanking", "Flanking"),
+  };
+}
+
+/**
+ * Spendthrift: rank% chance to deal rank% extra damage (coins cost out of scope).
+ * EV multiplier = 1 + (rank/100)^2 when treated as independent roll.
+ * Archive effective to R12.
+ * https://runescape.wiki/w/Spendthrift
+ * https://runescape.wiki/w/Power_Archive
+ */
+export const SPENDTHRIFT_FORMULA_MAX_RANK = 12;
+
+export function spendthriftProcChance(rank: number): number {
+  if (!Number.isInteger(rank) || rank < 1 || rank > SPENDTHRIFT_FORMULA_MAX_RANK) {
+    throw new RangeError(
+      `spendthriftProcChance: rank ${rank} outside 1-${SPENDTHRIFT_FORMULA_MAX_RANK}`,
+    );
+  }
+  return rank / 100;
+}
+
+export function spendthriftExtraDamageFraction(rank: number): number {
+  if (!Number.isInteger(rank) || rank < 1 || rank > SPENDTHRIFT_FORMULA_MAX_RANK) {
+    throw new RangeError(
+      `spendthriftExtraDamageFraction: rank ${rank} outside 1-${SPENDTHRIFT_FORMULA_MAX_RANK}`,
+    );
+  }
+  return rank / 100;
+}
+
+/** Expected damage multiplier if Spendthrift only affects the hitsplat EV. */
+export function spendthriftExpectedDamageMultiplier(rank: number): number {
+  if (!Number.isInteger(rank) || rank < 1) return 1;
+  const p = spendthriftProcChance(rank);
+  const extra = spendthriftExtraDamageFraction(rank);
+  return 1 + p * extra;
+}
+
+export function spendthriftPerkModifier(rank: number): CombatModifier {
+  const mult = spendthriftExpectedDamageMultiplier(rank);
+  return {
+    id: `perk:spendthrift:${rank}`,
+    stage: "postHit",
+    priority: 50,
+    applies: () => mult > 1,
+    apply: (state) => ({ ...state, damage: mulFloor(state.damage, mult) }),
+    source: wikiPerk("Spendthrift", "Spendthrift"),
+  };
 }
 
 /**

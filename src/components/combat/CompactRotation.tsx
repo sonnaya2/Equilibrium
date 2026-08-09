@@ -10,7 +10,6 @@ import { CombatFrame } from "./CombatFrame";
 import type { CalcStats } from "./loadoutStats";
 import { loadActiveRevoBar, loadRotationMode } from "./revoBarLibrary";
 import { defaultRevoBarIds } from "./revoBarResolve";
-import { RotationTargetChip } from "./RotationTargetChip";
 import type { Loadout } from "./useLoadout";
 
 const STORAGE_KEY = "eq:rotation:v1";
@@ -39,13 +38,11 @@ export function CompactRotation({
   stats,
   loadout,
   onOpenRotation,
-  onOpenTarget,
 }: {
   style: string;
   stats: CalcStats;
   loadout: Loadout;
   onOpenRotation: () => void;
-  onOpenTarget?: () => void;
 }) {
   const [queue, setQueue] = useState<string[]>([]);
   useEffect(() => {
@@ -76,38 +73,42 @@ export function CompactRotation({
         <h2 id="compact-rotation-title" className="combat-section-title">
           Rotation
         </h2>
-        {queue.length ? <span>{queue.length} abilities</span> : null}
       </header>
-      {visibleQueue.length ? (
-        <ol className="compact-rotation-list">
-          {visibleQueue.map((id, index) => {
-            const ability = CATALOGUE.byId.get(id);
-            if (!ability) return null;
-            const ttk = abilityTtkLabel(base, ability, dp, maxLp);
-            return (
-              <li
-                key={`${id}-${index}`}
-                title={`${index + 1}. ${ability.name} · est. TTK ${ttk} (band midpoint × DP; not full sim)`}
-                aria-label={`${index + 1}. ${ability.name}, estimated time to kill ${ttk}`}
-              >
-                <GameIcon src={abilityIconPath(ability.id, ability.style)} size={30} />
-                <span className="compact-rotation-ttk" aria-hidden>
-                  {ttk}
-                </span>
-                <span className="sr-only">{ability.name}</span>
-              </li>
-            );
-          })}
-        </ol>
-      ) : (
-        <p className="compact-rotation-empty">No bar loaded. Open rotation to set one.</p>
-      )}
-      <footer className="compact-rotation-footer">
-        <button type="button" className="setup-card-action" onClick={onOpenRotation}>
-          Open rotation
-        </button>
-        <RotationTargetChip loadout={loadout} onOpenTarget={onOpenTarget} />
-      </footer>
+      <button
+        type="button"
+        className="compact-rotation-surface"
+        onClick={onOpenRotation}
+        aria-label={
+          visibleQueue.length
+            ? `Open rotation editor, ${queue.length} abilities loaded`
+            : "Open rotation editor"
+        }
+      >
+        {visibleQueue.length ? (
+          <ol className="compact-rotation-list">
+            {visibleQueue.map((id, index) => {
+              const ability = CATALOGUE.byId.get(id);
+              if (!ability) return null;
+              const ttk = abilityTtkLabel(base, ability, dp, maxLp);
+              return (
+                <li
+                  key={`${id}-${index}`}
+                  title={`${index + 1}. ${ability.name} · est. TTK ${ttk} (band midpoint × DP; not full sim)`}
+                  aria-label={`${index + 1}. ${ability.name}, estimated time to kill ${ttk}`}
+                >
+                  <GameIcon src={abilityIconPath(ability.id, ability.style)} size={30} />
+                  <span className="compact-rotation-ttk" aria-hidden>
+                    {ttk}
+                  </span>
+                  <span className="sr-only">{ability.name}</span>
+                </li>
+              );
+            })}
+          </ol>
+        ) : (
+          <p className="compact-rotation-empty">No bar loaded. Click to open rotation.</p>
+        )}
+      </button>
     </CombatFrame>
   );
 }

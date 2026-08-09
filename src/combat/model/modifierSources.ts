@@ -28,6 +28,12 @@ export type ModifierSourcesHostInput = Pick<
   | "ultimatums"
   | "lunging"
   | "caroming"
+  | "flanking"
+  | "flankingActive"
+  | "shieldBashing"
+  | "spendthrift"
+  | "ruthless"
+  | "ruthlessStacks"
   | "berserkersFuryBonus"
 >;
 
@@ -84,6 +90,12 @@ export function resolveModifierSourcesFromHost(
     ultimatums: input.ultimatums ?? 0,
     lunging: input.lunging ?? 0,
     caroming: input.caroming ?? 0,
+    flanking: input.flanking ?? 0,
+    flankingActive: input.flankingActive === true,
+    shieldBashing: input.shieldBashing ?? 0,
+    spendthrift: input.spendthrift ?? 0,
+    ruthless: input.ruthless ?? 0,
+    ruthlessStacks: input.ruthlessStacks ?? 0,
     berserkersFuryBonus: fury,
   };
 }

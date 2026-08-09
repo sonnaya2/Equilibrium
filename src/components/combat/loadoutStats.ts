@@ -22,6 +22,10 @@ import type { AegisArmourBonus, ResolvedLeagueRules } from "@/combat/league/rule
 import type { BarkscalesOutcome } from "@/combat/league/barkscales";
 import type { IcyenicFaithBonuses, IcyenicProtectionOutcome } from "@/combat/league/icyenicFaith";
 import type { RegionId } from "@/league";
+import {
+  POWER_ARCHIVE_BLESSING_ID,
+  withPowerArchiveEffectivePerks,
+} from "@/combat/league/powerArchive";
 import { type Loadout } from "./useLoadout";
 import {
   equippedRecordIds,
@@ -196,6 +200,8 @@ export interface CalcStats {
   attackCape120?: boolean;
   /** Precise perk rank 1-6 for sim hit bands. */
   preciseRank?: number;
+  /** Caroming effective rank (Archive-doubled when applicable) for Ricochet/GRico. */
+  caromingRank?: number;
   /**
    * First Necromancer set mult on conjure spirit basic autos (1 if set inactive).
    * Pass to SimulateInput.conjureBasicDamageMult.
@@ -271,8 +277,12 @@ function withAutomaticLoadoutEffects(loadout: Loadout, options: LoadoutStatsOpti
 export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}): CalcStats {
   loadout = withAutomaticLoadoutEffects(loadout, options);
   const now = options.now ?? Date.now();
-  const levels = resolveLevels(loadout);
   const leagueSelection = resolveLeagueSelection(options);
+  // Compile Archive effective ranks once for the combat path. Stored slots stay
+  // craftable ranks in loadout.powerArchive; only perks.* is overwritten here.
+  const archiveActive = leagueSelection.blessingIds.has(POWER_ARCHIVE_BLESSING_ID);
+  loadout = withPowerArchiveEffectivePerks(loadout, archiveActive);
+  const levels = resolveLevels(loadout);
   const equipment = resolveEquipment(loadout, levels, options, leagueSelection);
   const defenceLife = resolveDefenceLife(
     loadout,
@@ -372,6 +382,7 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     strengthCape99: loadout.buffs.strengthCape99 === true,
     attackCape120: loadout.buffs.attackCape120 === true && loadout.style === "melee",
     preciseRank: combat.preciseRank,
+    caromingRank: combat.caromingRank,
     conjureBasicDamageMult: combat.conjureBasicDamageMult,
     conjureDurationMult: combat.conjureDurationMult,
     tumekensPieces: equipment.tumekensPieces,

@@ -21,6 +21,10 @@ import {
   sanitizeArchaeologyState,
   sanitizeSelectedRelics,
 } from "@/combat/shared/archaeologyRelics";
+import {
+  POWER_ARCHIVE_BLESSING_ID,
+  withPowerArchiveEffectivePerks,
+} from "@/combat/league/powerArchive";
 import { type Loadout } from "./useLoadout";
 import { loadoutStats, type CalcStats, type LoadoutStatsOptions } from "./loadoutStats";
 import { computedLoadoutBase, loadoutWeaponConfig } from "./loadout/weaponConfiguration";
@@ -83,6 +87,10 @@ export function hostInputFromLoadoutStats(
     stats.league.relicNames?.has(NARAGI_EDICT_RELIC) === true;
   const activateNaragiAtStart =
     loadout.buffs.sliverOfEdictsActive === true && sliverWorn && naragiPicked;
+
+  // Match loadoutStats: Archive effective ranks for cast-scoped perk fields.
+  const archiveActive = stats.league.blessingIds.has(POWER_ARCHIVE_BLESSING_ID);
+  const combatLoadout = withPowerArchiveEffectivePerks(loadout, archiveActive);
 
   return {
     style: loadout.style,
@@ -163,9 +171,15 @@ export function hostInputFromLoadoutStats(
       : {}),
     slayerHelmet: stats.slayerHelmet,
     salve: stats.salve,
-    ultimatums: loadout.perks.ultimatums ?? 0,
-    lunging: loadout.perks.lunging ?? 0,
-    caroming: loadout.perks.caroming ?? 0,
+    ultimatums: combatLoadout.perks.ultimatums ?? 0,
+    lunging: combatLoadout.perks.lunging ?? 0,
+    caroming: combatLoadout.perks.caroming ?? 0,
+    flanking: combatLoadout.perks.flanking ?? 0,
+    flankingActive: combatLoadout.buffs.targetNotFacing === true,
+    shieldBashing: combatLoadout.perks.shieldBashing ?? 0,
+    spendthrift: combatLoadout.perks.spendthrift ?? 0,
+    ruthless: combatLoadout.perks.ruthless ?? 0,
+    ruthlessStacks: combatLoadout.buffs.ruthlessStacks ?? 0,
     berserkersFuryBonus: stats.berserkersFury.active ? stats.berserkersFury.bonus : 0,
     diagnostics: {
       slayerHelmet: stats.slayerHelmet,

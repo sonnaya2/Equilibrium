@@ -15,6 +15,7 @@ import {
   targetSummaryView,
 } from "./targetSummaryPresentation";
 import { isTargetModifiedFromPreset } from "./targetPresetUi";
+import { PowerArchiveLoadoutButton } from "./PowerArchivePanel";
 import { GIZMO_SLOTS, gizmoCapacity, type Loadout, type PerkRankKey } from "./useLoadout";
 const PERK_LABELS: Record<PerkRankKey, string> = {
   equilibrium: "Equilibrium",
@@ -30,6 +31,10 @@ const PERK_LABELS: Record<PerkRankKey, string> = {
   aftershock: "Aftershock",
   relentless: "Relentless",
   precise: "Precise",
+  flanking: "Flanking",
+  shieldBashing: "Shield Bashing",
+  spendthrift: "Spendthrift",
+  ruthless: "Ruthless",
   plantedFeet: "Planted Feet",
   demonSlayer: "Demon Slayer",
   dragonSlayer: "Dragon Slayer",
@@ -40,6 +45,7 @@ const EFFECT_ICONS = {
   vulnerability: "/game/upgrades/combat-utility/vulnerability-bomb.webp",
   overload: "/game/upgrades/skilling-production/elder-overload-potion.webp",
   weaponPoison: "/game/upgrades/skilling-production/weapon-poison-plus-plus.webp",
+  kwuarmIncense: "/game/upgrades/permanent-unlocks/kwuarm-incense-sticks.webp",
   protectionPrayer: "/game/combat/prayers/standard/protect-from-necromancy.webp",
   fortitude: "/game/combat/prayers/ancient-curses/fortitude.webp",
   reaperCrew: "/game/upgrades/permanent-unlocks/reaper-crew.webp",
@@ -146,7 +152,7 @@ function ActiveEffects({
           id: "kwuarm",
           label: "Kwuarm incense",
           detail: `Potency ${buffs.kwuarmPotency}`,
-          icon: EFFECT_ICONS.weaponPoison,
+          icon: EFFECT_ICONS.kwuarmIncense,
         }
       : null,
     buffs.protectionPrayer
@@ -208,12 +214,16 @@ function ActiveEffects({
   ];
   const selectedEffects = effects.filter((effect): effect is ActiveEffect => effect !== null);
 
-  return selectedEffects.length ? (
+  if (!selectedEffects.length) {
+    return <p className="setup-inline-note">No active effects selected.</p>;
+  }
+
+  return (
     <>
       <ul className="setup-effect-strip">
-        {selectedEffects.slice(0, 4).map((effect) => (
+        {selectedEffects.slice(0, 6).map((effect) => (
           <li key={effect.id} className="setup-effect-tile">
-            <GameIcon src={effect.icon} size={24} />
+            <GameIcon src={effect.icon} size={28} />
             <span>
               <strong>{effect.label}</strong>
               <small>{effect.detail}</small>
@@ -221,11 +231,11 @@ function ActiveEffects({
           </li>
         ))}
       </ul>
-      {selectedEffects.length > 4 ? (
-        <p className="setup-inline-note">+{selectedEffects.length - 4} more selected</p>
+      {selectedEffects.length > 6 ? (
+        <p className="setup-inline-note">+{selectedEffects.length - 6} more selected</p>
       ) : null}
     </>
-  ) : null;
+  );
 }
 
 function InventionSummary({ loadout, onEdit }: { loadout: Loadout; onEdit: () => void }) {
@@ -317,9 +327,11 @@ function ArchaeologySummary({ loadout, onEdit }: { loadout: Loadout; onEdit: () 
             aria-label={relic ? `Change relic ${relic.name}` : "Click here to update relic"}
           >
             {relic ? (
-              <GameIcon src={relic.icon} size={32} />
+              <GameIcon src={relic.icon} size={30} />
             ) : (
-              <span className="setup-relic-slot__empty">Click here to update relic</span>
+              <span className="setup-relic-slot__empty" aria-hidden>
+                Empty slot
+              </span>
             )}
             {relic ? (
               <span className="setup-relic-slot__copy">
@@ -397,20 +409,24 @@ export function SetupWorkbench({
   loadout,
   stats,
   ringOfVigourPassive,
+  powerArchiveActive = false,
   onOpenEffects,
   onOpenPerks,
   onOpenRelics,
   onOpenTarget,
   onOpenRotation,
+  onOpenPowerArchive,
 }: {
   loadout: Loadout;
   stats: CalcStats;
   ringOfVigourPassive: boolean;
+  powerArchiveActive?: boolean;
   onOpenEffects: () => void;
   onOpenPerks: () => void;
   onOpenRelics: () => void;
   onOpenTarget: () => void;
   onOpenRotation: () => void;
+  onOpenPowerArchive?: () => void;
 }) {
   return (
     <div className="setup-workbench-column">
@@ -424,36 +440,40 @@ export function SetupWorkbench({
       </WorkbenchCard>
 
       <div className="setup-workbench-duo">
-        <WorkbenchCard cardId="invention-perks" title="Invention" meta="4 Gizmos">
+        <WorkbenchCard cardId="invention-perks" title="Invention">
           <InventionSummary loadout={loadout} onEdit={onOpenPerks} />
         </WorkbenchCard>
-        <WorkbenchCard
-          cardId="archaeology-relics"
-          title="Archaeology"
-          meta={`${loadout.archaeology.selectedIds.length} / ${MONOLITH_ACTIVE_LIMIT} Active`}
-        >
+        <WorkbenchCard cardId="archaeology-relics" title="Archaeology">
           <ArchaeologySummary loadout={loadout} onEdit={onOpenRelics} />
         </WorkbenchCard>
       </div>
+
+      {powerArchiveActive && onOpenPowerArchive ? (
+        <WorkbenchCard
+          cardId="power-archive"
+          title="Power Archive"
+          action="Open Automaton Control Bot"
+          onAction={onOpenPowerArchive}
+          actionLabel="Open Automaton Control Bot"
+        >
+          <PowerArchiveLoadoutButton
+            active
+            onOpen={onOpenPowerArchive}
+            slotCount={loadout.powerArchive.slots.length}
+          />
+        </WorkbenchCard>
+      ) : null}
 
       <CompactRotation
         style={loadout.style}
         stats={stats}
         loadout={loadout}
         onOpenRotation={onOpenRotation}
-        onOpenTarget={onOpenTarget}
       />
 
       <WorkbenchCard
         cardId="target"
         title="Target"
-        meta={
-          loadout.target?.targetPresetId
-            ? (targetSummaryView(loadout.target)?.name ?? "Boss")
-            : loadout.target
-              ? "Custom"
-              : "None"
-        }
         action="Edit target"
         onAction={onOpenTarget}
         actionLabel="Edit target"

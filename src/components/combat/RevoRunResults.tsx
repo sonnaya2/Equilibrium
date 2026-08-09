@@ -474,9 +474,6 @@ export function RevoRunResults({
             <section className="revo-section revo-damage">
               <header className="revo-section-head">
                 <h3 className="combat-section-title">Ability damage</h3>
-                <span className="revo-section-meta">
-                  {groups.length + contributions.length} sources
-                </span>
               </header>
               <div className="revo-contributions">
                 {[

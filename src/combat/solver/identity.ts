@@ -91,6 +91,12 @@ export function normalizeModifierSources(sources: SerializableModifierSources): 
     ultimatums: sources.ultimatums ?? 0,
     lunging: sources.lunging ?? 0,
     caroming: sources.caroming ?? 0,
+    flanking: sources.flanking ?? 0,
+    flankingActive: sources.flankingActive === true,
+    shieldBashing: sources.shieldBashing ?? 0,
+    spendthrift: sources.spendthrift ?? 0,
+    ruthless: sources.ruthless ?? 0,
+    ruthlessStacks: sources.ruthlessStacks ?? 0,
     berserkersFuryBonus: roundN(sources.berserkersFuryBonus ?? 0, 6),
   };
 }

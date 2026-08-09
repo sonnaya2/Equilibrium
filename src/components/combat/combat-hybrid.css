@@ -77,7 +77,7 @@ body:has(.combat-screen) .site-source:focus-visible {
   background: #050b0c;
 }
 
-/* Top workbench strip — same geometry as the attachment, with a darker teal
+/* Top workbench strip - same geometry as the attachment, with a darker teal
    black shell and brass framing. */
 .combat-toolbar {
   position: relative;

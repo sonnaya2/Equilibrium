@@ -1,5 +1,42 @@
 import { describe, expect, it } from "vitest";
-import { createStochasticOracle, needsStochasticLanes, stochasticLaneCount } from "./stochastic";
+import type { AbilitySpec } from "../../pipeline/calculateAbility";
+import { activeEquipmentEffects } from "../../shared/equipment";
+import {
+  createStochasticOracle,
+  hasDeathMarkApplicationOpportunity,
+  hasRevolutionDeathMarkApplicationOpportunity,
+  needsStochasticLanes,
+  stochasticLaneCount,
+} from "./stochastic";
+
+const necromancyDirect: AbilitySpec = {
+  id: "necro_direct",
+  name: "Necromancy direct",
+  style: "necromancy",
+  category: "basic",
+  hits: [{ band: { minPct: 90, maxPct: 110 } }],
+};
+const necromancyBounce: AbilitySpec = {
+  id: "necro_bounce",
+  name: "Necromancy bounce",
+  style: "necromancy",
+  category: "basic",
+  hits: [{ band: { minPct: 90, maxPct: 110 }, dot: true }],
+  derivedHits: { count: 1, intervalTicks: 1, firstOffset: 1, fractionPct: 50, dot: false },
+};
+const necromancyBasic: AbilitySpec = {
+  id: "necro_basic",
+  name: "Necromancy basic",
+  style: "necromancy",
+  category: "basic",
+  basicAttack: true,
+  hits: [{ band: { minPct: 90, maxPct: 110 } }],
+};
+const magicDirect: AbilitySpec = { ...necromancyDirect, id: "magic_direct", style: "magic" };
+const deathdealer = {
+  ...activeEquipmentEffects({ style: "necromancy" }),
+  deathdealer: { physicalPieces: 5, effectivePieces: 5, applicationChance: 0.5 },
+};
 
 describe("counter-based stochastic oracle", () => {
   it("stratifies each Bernoulli opportunity across the fixed lanes", () => {
@@ -35,6 +72,42 @@ describe("counter-based stochastic oracle", () => {
     expect(needsStochasticLanes({}, ["attack", "aftershock"])).toBe(false);
     expect(stochasticLaneCount({}, ["attack", "aftershock"])).toBe(1);
     expect(stochasticLaneCount({}, ["magic_attack"])).toBe(1);
+  });
+
+  it("requires a real active Necromancy application opportunity for Deathdealer", () => {
+    expect(
+      stochasticLaneCount({ abilities: [necromancyDirect], equipmentEffects: deathdealer }, []),
+    ).toBe(1);
+    expect(
+      stochasticLaneCount({ abilities: [magicDirect], equipmentEffects: deathdealer }, [
+        "magic_direct",
+      ]),
+    ).toBe(1);
+    expect(
+      stochasticLaneCount({ abilities: [necromancyDirect], equipmentEffects: deathdealer }, [
+        "necro_direct",
+      ]),
+    ).toBe(128);
+    expect(
+      stochasticLaneCount({ abilities: [necromancyBounce], equipmentEffects: deathdealer }, [
+        "necro_bounce",
+      ]),
+    ).toBe(128);
+    expect(
+      hasDeathMarkApplicationOpportunity({ abilities: [necromancyBasic], style: "necromancy" }, []),
+    ).toBe(false);
+    expect(
+      hasRevolutionDeathMarkApplicationOpportunity(
+        { abilities: [necromancyBasic], style: "necromancy" },
+        [],
+      ),
+    ).toBe(true);
+    expect(
+      stochasticLaneCount(
+        { abilities: [necromancyBasic], style: "necromancy", equipmentEffects: deathdealer },
+        [],
+      ),
+    ).toBe(128);
   });
 
   it("uses the fixed ensemble for every supported state-changing RNG source", () => {

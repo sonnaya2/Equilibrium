@@ -2,9 +2,10 @@ import { describe, expect, it } from "vitest";
 import { activeEquipmentEffects, type ActiveEquipmentEffects } from "../../../shared/equipment";
 import { equipmentById } from "../../../data";
 import { NECROMANCY_ABILITIES } from "../../../styles/necromancy/abilities";
-import { necroInput } from "../../../test/fixtures/inputs";
+import { magicInput, necroInput } from "../../../test/fixtures/inputs";
 import { rotationOf } from "../../simulation/contracts";
 import { simulate } from "../../simulation/simulate";
+import { simulateRevolution } from "../../simulation/revolution";
 import { createRuntime, type SimulationRuntime } from "../../runtime/runtime";
 import type { ScheduledEvent } from "../../runtime/events";
 import { stochasticLaneCount } from "../../runtime/stochastic";
@@ -241,6 +242,10 @@ describe("Deathdealer equipment and timed Death Mark", () => {
       ]),
     );
     expect(result.targetStatus?.deathMark).toMatchObject({ active: false, currentLifePoints: 0 });
+    expect(result.analysis.byEffect.find((effect) => effect.id === "deathdealer")).toMatchObject({
+      expectedTriggerRolls: 1,
+      expectedActivations: 1,
+    });
   });
 
   it("does not execute a mark on the application event and does not require a target maximum", () => {
@@ -309,6 +314,65 @@ describe("Deathdealer equipment and timed Death Mark", () => {
       rotationOf("necromancy_basic", "necromancy_basic"),
     );
     expect(deadTarget.events.some((event) => event.abilityId === "death_mark")).toBe(false);
+    expect(deadTarget.targetStatus?.deathMark).toMatchObject({ active: false });
+    expect(
+      deadTarget.analysis.byEffect.find((effect) => effect.id === "deathdealer"),
+    ).toBeUndefined();
+
+    const noOpScoreOnly = simulate(
+      {
+        ...necroInput,
+        equipmentEffects: deathdealerEffects(1),
+        targetMaximumLifePoints: 100_000,
+        rotation: [],
+      },
+      { detailLevel: "score-only" },
+    );
+    expect(noOpScoreOnly.damage.eligibleForRanking).toBe(true);
+    expect(noOpScoreOnly.rng).toBeUndefined();
+
+    const nonNecromancyScoreOnly = simulate(
+      {
+        ...magicInput,
+        equipmentEffects: deathdealerEffects(1),
+        targetMaximumLifePoints: 100_000,
+        rotation: rotationOf("magic_attack"),
+      },
+      { detailLevel: "score-only" },
+    );
+    expect(nonNecromancyScoreOnly.damage.eligibleForRanking).toBe(true);
+    expect(nonNecromancyScoreOnly.rng).toBeUndefined();
+
+    const zeroDurationRevolution = simulateRevolution(
+      {
+        ...necroInput,
+        equipmentEffects: deathdealerEffects(0.5),
+        targetMaximumLifePoints: 100_000,
+        bar: [],
+        style: "necromancy",
+        durationTicks: 0,
+      },
+      { detailLevel: "score-only" },
+    );
+    expect(zeroDurationRevolution.damage.eligibleForRanking).toBe(true);
+    expect(zeroDurationRevolution.rng).toMatchObject({ lanes: 128, exactness: "exact" });
+
+    const revolutionFallback = simulateRevolution(
+      {
+        ...necroInput,
+        equipmentEffects: deathdealerEffects(0.5),
+        targetMaximumLifePoints: 100_000,
+        bar: [],
+        style: "necromancy",
+        durationTicks: 3,
+      },
+      { detailLevel: "score-only" },
+    );
+    expect(revolutionFallback.rng).toMatchObject({
+      lanes: 128,
+      exactness: "approximated",
+    });
+    expect(revolutionFallback.damage.eligibleForRanking).toBe(false);
 
     const partial = runDeathMark({ accuracy: 0.1 });
     expect(partial.perAbility.death_mark).toBe(10_000);
@@ -342,6 +406,7 @@ describe("Deathdealer equipment and timed Death Mark", () => {
       residualWeight: 0,
       exactness: "approximated",
     });
+    expect(first.damage.eligibleForRanking).toBe(false);
     expect(first.targetStatus?.deathMark?.expected?.activeProbability).toBeCloseTo(0.5, 12);
   });
 

@@ -210,6 +210,10 @@ export function applyDeathMarkLanded(
   const target = rt.state.target;
   const vitality = subtractTargetVitality(target.vitality, damageExpected);
   if (vitality !== target.vitality) rt.state = patchTarget(rt.state, { vitality });
+  if (vitality?.currentLifePoints === 0) {
+    if (target.deathMark !== undefined) rt.state = patchTarget(rt.state, { deathMark: undefined });
+    return;
+  }
   if (event.statusEffect === "death-mark-execution") return;
 
   const normalized = normalizeTimedTargetStatus(target.deathMark, tick);

@@ -35,6 +35,8 @@ import { cloneRuntime, type SimulationRuntime } from "../runtime/runtime";
 import { activeTimedTargetStatus } from "../../target/timedStatus";
 import { lastPlayerPoisonTick } from "../schedulers/playerPoisonState";
 import { TICK_SECONDS } from "../../core/ticks";
+import { deathdealerApplicationChance } from "../../shared/equipment";
+import { hasDeathMarkApplicationOpportunity } from "../runtime/stochastic";
 import {
   finiteOrZero,
   PROB_TOLERANCE,
@@ -437,7 +439,8 @@ export function combineStochasticSummaries(
   options: SimulateOptions | undefined,
 ): RotationSummary {
   const terminalLanes = [...lanes];
-  const stochastic = terminalLanes.length > 1;
+  const stochastic =
+    terminalLanes.length > 1 && terminalLanes.some((lane) => lane.rt.casts.length > 0);
 
   if (terminalLanes.length === 0) {
     const failure = emptyFailure("no lanes", 1);
@@ -795,12 +798,19 @@ export function combineStochasticSummaries(
   const ok = failure === undefined;
   const error = failure?.primaryReason;
 
-  const usesExpectedDamageApproximation = terminalLanes.some(
-    (lane) =>
-      (lane.rt.input.procs?.aftershockRank ?? 0) > 0 ||
-      ((lane.rt.input.targetMaximumLifePoints ?? 0) > 0 &&
-        (lane.rt.input.equipmentEffects?.deathdealer?.applicationChance ?? 0) > 0),
-  );
+  const usesExpectedDamageApproximation = terminalLanes.some((lane) => {
+    if ((lane.rt.input.procs?.aftershockRank ?? 0) > 0) return true;
+    if (
+      (lane.rt.input.targetMaximumLifePoints ?? 0) <= 0 ||
+      deathdealerApplicationChance(lane.rt.input.equipmentEffects) <= 0
+    ) {
+      return false;
+    }
+    return hasDeathMarkApplicationOpportunity(
+      lane.rt.input,
+      lane.rt.casts.map((cast) => cast.abilityId),
+    );
+  });
   // Aftershock and Death Mark threshold timing use expected damage.
   const resolvedExactness: StochasticExactness = usesExpectedDamageApproximation
     ? "approximated"
@@ -811,7 +821,7 @@ export function combineStochasticSummaries(
   const eligibleForRanking =
     !hasResidual && (resolvedExactness === "exact" || resolvedExactness === "estimated") && ok;
 
-  // One lane is exact when no supported RNG can change later state.
+  // No completed cast means no stochastic outcome can change later state.
   // probabilityMass/concreteMass = expanded measure only.
   const rng: StochasticRngSummary | undefined =
     stochastic || multiLane || resolvedExactness !== "exact"

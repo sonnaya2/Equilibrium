@@ -51,9 +51,19 @@ export function CombatTabs() {
             onOpenRotation={() => setTab("Rotation")}
           />
         </WorkbenchPanel>
-        <WorkbenchPanel id="Rotation" active={tab}>
+        {/* Keep Rotation mounted so Limit-to-regions / solver prefs survive tab switches. */}
+        <div
+          role="tabpanel"
+          aria-labelledby="tab-Rotation"
+          hidden={tab !== "Rotation"}
+          className={
+            tab === "Rotation"
+              ? "flex h-full min-h-0 flex-1 flex-col overflow-auto overscroll-contain pt-1"
+              : "hidden"
+          }
+        >
           <RotationPlanner loadout={loadout} setLoadout={setLoadout} />
-        </WorkbenchPanel>
+        </div>
         <WorkbenchPanel id="Analysis" active={tab}>
           <AnalysisTab loadout={loadout} />
         </WorkbenchPanel>

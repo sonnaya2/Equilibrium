@@ -1,7 +1,11 @@
 import type { ScheduledEvent } from "../../runtime/events";
 import { scheduleEvent, type SimulationRuntime } from "../../runtime/runtime";
 import { patchLeague } from "../../runtime/state";
-import { blessingRule, hasBlessing } from "../../../league/ruleset";
+import {
+  blessingRule,
+  hasBlessing,
+  targetPoisonImmuneForBlessingPoison,
+} from "../../../league/ruleset";
 import { graspOfGuthixComponents } from "../../../league/damage";
 import type { ResolvedDamage } from "../types";
 
@@ -56,7 +60,10 @@ export function applyLeagueLandedHitEffects(
     },
     cap: rt.input.cap,
     landTick: event.tick,
-    poisonImmune: rt.input.targetPoisonImmune === true,
+    poisonImmune: targetPoisonImmuneForBlessingPoison(
+      rt.input.targetPoisonImmune,
+      rt.input.league,
+    ),
   });
   for (const component of components) {
     scheduleEvent(rt, {

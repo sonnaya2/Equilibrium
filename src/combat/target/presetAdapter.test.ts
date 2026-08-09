@@ -58,6 +58,35 @@ describe("presetAdapter", () => {
     });
   });
 
+  it("materializes interval from attackRateTicks without affecting Modified", () => {
+    const fields = materializeTargetPreset(
+      basePreset({
+        stats: {
+          defenceLevel: 80,
+          armour: 500,
+          affinities: { melee: 70, ranged: 60, magic: 50 },
+          size: 3,
+          attackRateTicks: 4,
+        },
+      }),
+      { style: "melee" },
+    );
+    expect(fields?.incomingHitIntervalSeconds).toBe(2.4);
+    expect(fields?.attackRateTicks).toBe(4);
+    // Interval is scenario seed only; Modified compares defence/aff/race, not cadence.
+    expect(
+      targetDiffersFromPreset(
+        {
+          defenceLevel: 80,
+          armour: 500,
+          affinity: 70,
+          size: 3,
+        },
+        fields!,
+      ),
+    ).toBe(false);
+  });
+
   it("exposes weaknessAffinity without rewriting style affinity", () => {
     const fields = materializeTargetPreset(basePreset(), { style: "melee" });
     expect(fields?.affinity).toBe(70);

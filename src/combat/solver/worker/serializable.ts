@@ -163,6 +163,8 @@ export interface SerializableRevolutionSimBase {
   playerVitality?: PlayerVitalityInput;
   playerPoison?: PlayerPoisonProfile;
   targetPoisonImmune?: boolean;
+  /** Barkscales / Icyenic incoming auto cadence (seconds). */
+  incomingHitIntervalSeconds?: number;
   cap?: HitCapRule;
   startingAdrenaline?: number;
   naturalInstinctUntilTick?: number;

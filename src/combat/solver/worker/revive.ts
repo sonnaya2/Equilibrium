@@ -114,6 +114,9 @@ export function reviveRevolutionBase(sim: SerializableRevolutionSimBase): Revive
     playerPoison: sim.playerPoison,
     playerPoisonModifiers: playerPoisonModifiersFromSources(sim.modifierSources, league),
     targetPoisonImmune: sim.targetPoisonImmune === true,
+    ...(sim.incomingHitIntervalSeconds != null && sim.incomingHitIntervalSeconds > 0
+      ? { incomingHitIntervalSeconds: sim.incomingHitIntervalSeconds }
+      : {}),
     naturalInstinctUntilTick: sim.naturalInstinctUntilTick,
     startingResidualSouls: sim.startingResidualSouls,
     slayerOnTask: sim.slayerOnTask,

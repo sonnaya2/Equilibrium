@@ -45,7 +45,8 @@ export const combatTargetPresetsData: CombatDataset<TargetPresetRecord> = {
       "weaknessClass": "magic",
       "size": null,
       "lifePoints": 78000,
-      "poisonImmune": false
+      "poisonImmune": false,
+      "attackRateTicks": 4
     }
   },
   {
@@ -83,7 +84,8 @@ export const combatTargetPresetsData: CombatDataset<TargetPresetRecord> = {
       "weaknessClass": "magic",
       "size": 5,
       "lifePoints": 45000,
-      "poisonImmune": false
+      "poisonImmune": false,
+      "attackRateTicks": 4
     }
   },
   {
@@ -122,7 +124,8 @@ export const combatTargetPresetsData: CombatDataset<TargetPresetRecord> = {
       },
       "size": 5,
       "lifePoints": 100000,
-      "poisonImmune": true
+      "poisonImmune": true,
+      "attackRateTicks": 6
     }
   },
   {
@@ -161,7 +164,8 @@ export const combatTargetPresetsData: CombatDataset<TargetPresetRecord> = {
       },
       "size": 3,
       "lifePoints": 40000,
-      "poisonImmune": true
+      "poisonImmune": true,
+      "attackRateTicks": 6
     }
   },
   {
@@ -201,7 +205,8 @@ export const combatTargetPresetsData: CombatDataset<TargetPresetRecord> = {
       "weaknessClass": "melee",
       "size": null,
       "lifePoints": 40000,
-      "poisonImmune": true
+      "poisonImmune": true,
+      "attackRateTicks": 3
     }
   },
   {
@@ -241,7 +246,8 @@ export const combatTargetPresetsData: CombatDataset<TargetPresetRecord> = {
       "weaknessClass": "magic",
       "size": null,
       "lifePoints": 100000,
-      "poisonImmune": true
+      "poisonImmune": true,
+      "attackRateTicks": 2
     }
   },
   {
@@ -283,7 +289,8 @@ export const combatTargetPresetsData: CombatDataset<TargetPresetRecord> = {
       "weaknessClass": "magic",
       "size": 5,
       "lifePoints": 55000,
-      "poisonImmune": true
+      "poisonImmune": true,
+      "attackRateTicks": 6
     }
   },
   {
@@ -321,7 +328,8 @@ export const combatTargetPresetsData: CombatDataset<TargetPresetRecord> = {
       },
       "size": null,
       "lifePoints": 200000,
-      "poisonImmune": true
+      "poisonImmune": true,
+      "attackRateTicks": 4
     }
   },
   {
@@ -361,7 +369,8 @@ export const combatTargetPresetsData: CombatDataset<TargetPresetRecord> = {
       "weaknessClass": "melee",
       "size": 5,
       "lifePoints": 100000,
-      "poisonImmune": true
+      "poisonImmune": true,
+      "attackRateTicks": 4
     }
   },
   {
@@ -398,7 +407,8 @@ export const combatTargetPresetsData: CombatDataset<TargetPresetRecord> = {
       },
       "size": null,
       "lifePoints": 100000,
-      "poisonImmune": true
+      "poisonImmune": true,
+      "attackRateTicks": 3
     }
   },
   {
@@ -437,7 +447,8 @@ export const combatTargetPresetsData: CombatDataset<TargetPresetRecord> = {
       "weaknessClass": "magic",
       "size": 5,
       "lifePoints": 1200000,
-      "poisonImmune": true
+      "poisonImmune": true,
+      "attackRateTicks": 3
     }
   },
   {
@@ -476,7 +487,8 @@ export const combatTargetPresetsData: CombatDataset<TargetPresetRecord> = {
       },
       "size": 8,
       "lifePoints": 370000,
-      "poisonImmune": false
+      "poisonImmune": false,
+      "attackRateTicks": 7
     }
   },
   {
@@ -515,7 +527,8 @@ export const combatTargetPresetsData: CombatDataset<TargetPresetRecord> = {
       },
       "size": null,
       "lifePoints": 800000,
-      "poisonImmune": true
+      "poisonImmune": true,
+      "attackRateTicks": 3
     }
   },
   {
@@ -554,7 +567,8 @@ export const combatTargetPresetsData: CombatDataset<TargetPresetRecord> = {
       },
       "size": 3,
       "lifePoints": 800000,
-      "poisonImmune": true
+      "poisonImmune": true,
+      "attackRateTicks": 5
     }
   },
   {
@@ -592,7 +606,8 @@ export const combatTargetPresetsData: CombatDataset<TargetPresetRecord> = {
       },
       "size": 5,
       "lifePoints": 400000,
-      "poisonImmune": true
+      "poisonImmune": true,
+      "attackRateTicks": 4
     }
   },
   ],

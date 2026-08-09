@@ -153,6 +153,9 @@ export type UseRevolutionSolverArgs = {
   modelled: AbilitySpec[];
   onActiveBar: (ids: string[] | null) => void;
   onClearSimResult: () => void;
+  /** Controlled Limit-to-regions (parent owns persistence). */
+  limitToRegions: boolean;
+  setLimitToRegions: (value: boolean) => void;
 };
 
 type MaterialSolveInputs = {
@@ -200,10 +203,11 @@ export function useRevolutionSolver({
   modelled,
   onActiveBar,
   onClearSimResult,
+  limitToRegions,
+  setLimitToRegions,
 }: UseRevolutionSolverArgs) {
   const [solverTier, setSolverTier] = useState<SolverSearchTier>("thorough");
   const [solverProfile, setSolverProfile] = useState<ObjectiveProfileId>("balanced");
-  const [limitToRegions, setLimitToRegions] = useState(false);
   const [barSizePreset, setBarSizePreset] = useState<BarSizePresetId>(DEFAULT_BAR_SIZE_PRESET);
   const [solving, setSolving] = useState(false);
   const [stopping, setStopping] = useState(false);

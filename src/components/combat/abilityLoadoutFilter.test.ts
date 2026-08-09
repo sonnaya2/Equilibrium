@@ -21,6 +21,57 @@ function capeGate(cape: string) {
   };
 }
 
+describe("filterAbilitiesForLoadout — region gate (Limit to regions)", () => {
+  it("hides Corruption Shot without Desert; shows it with Desert", () => {
+    const pool = byStyle("ranged");
+    const noDesert = filterAbilitiesForLoadout(pool, {
+      unlockedRegions: ["misthalin", "asgarnia"],
+      includeUnknownAvailability: false,
+    }).map((a) => a.id);
+    expect(noDesert).not.toContain("corruption_shot");
+
+    const withDesert = filterAbilitiesForLoadout(pool, {
+      unlockedRegions: ["misthalin", "asgarnia", "desert"],
+      includeUnknownAvailability: false,
+    }).map((a) => a.id);
+    expect(withDesert).toContain("corruption_shot");
+  });
+
+  it("gates every codex ability by its unlock region", () => {
+    const cases = [
+      { style: "ranged" as const, id: "greater_deaths_swiftness", region: "misthalin" },
+      { style: "magic" as const, id: "greater_sunshine", region: "misthalin" },
+      { style: "melee" as const, id: "chaos_roar", region: "misthalin" },
+      { style: "magic" as const, id: "greater_chain", region: "anachronia" },
+      { style: "melee" as const, id: "greater_barge", region: "forinthry" },
+      { style: "melee" as const, id: "greater_flurry", region: "forinthry" },
+      { style: "magic" as const, id: "magma_tempest", region: "misthalin" },
+      { style: "ranged" as const, id: "corruption_shot", region: "desert" },
+      { style: "magic" as const, id: "corruption_blast", region: "desert" },
+      { style: "ranged" as const, id: "greater_ricochet", region: "anachronia" },
+      { style: "melee" as const, id: "greater_fury", region: "forinthry" },
+    ];
+    for (const c of cases) {
+      const pool = byStyle(c.style);
+      const without = filterAbilitiesForLoadout(pool, {
+        unlockedRegions: ["asgarnia", "kandarin"],
+        includeUnknownAvailability: false,
+      }).map((a) => a.id);
+      expect(without).not.toContain(c.id);
+      const withRegion = filterAbilitiesForLoadout(pool, {
+        unlockedRegions: ["asgarnia", "kandarin", c.region],
+        includeUnknownAvailability: false,
+      }).map((a) => a.id);
+      expect(withRegion).toContain(c.id);
+    }
+  });
+
+  it("without unlockedRegions leaves regional abilities visible", () => {
+    const ids = filterAbilitiesForLoadout(byStyle("ranged"), { passiveIds: [] }).map((a) => a.id);
+    expect(ids).toContain("corruption_shot");
+  });
+});
+
 describe("filterAbilitiesForLoadout — igneous only-version", () => {
   const cases = [
     {

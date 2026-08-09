@@ -45,6 +45,8 @@ export interface ResolvedTargetScenario {
   readonly poisonImmune?: boolean;
   readonly elementalWeakness?: "water" | "fire" | "other" | "unknown";
   readonly dragonfireImmune?: boolean;
+  /** Incoming auto cadence for Barkscales Grasp scenario (wiki attack rate or manual). */
+  readonly incomingHitIntervalSeconds?: number;
 }
 
 export type ResolvedWeaponConfiguration = SerializableRevolutionSimBase["weaponConfiguration"];
@@ -173,6 +175,7 @@ export interface HostCombatResolveInput {
     poisonImmune?: boolean;
     elementalWeakness?: "water" | "fire" | "other" | "unknown";
     dragonfireImmune?: boolean;
+    incomingHitIntervalSeconds?: number;
   };
   readonly playerPoison?: PlayerPoisonProfile;
   readonly slayerHelmet?: SerializableModifierSources["slayerHelmet"];

@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { blessingChoice } from "../../league/blessings";
-import { barkscalesGraspNote, barkscalesOutcome } from "./barkscales";
+import {
+  barkscalesGraspNote,
+  barkscalesMinGraspDamage,
+  barkscalesMinGraspNote,
+  barkscalesOutcome,
+} from "./barkscales";
 import { graspOfGuthixComponent } from "./damage";
 import { resolveLeagueRules } from "./ruleset";
 
@@ -243,5 +248,37 @@ describe("Barkscales with a bounded incoming scenario", () => {
     expect(barkscalesOutcome(undefined, 1_000, 60, { incomingHitIntervalSeconds: 6 }).perHit).toBe(
       0,
     );
+  });
+});
+
+describe("Barkscales min Grasp damage (scenario floor)", () => {
+  it("uses band min 80% of ability base per application", () => {
+    // 30s / 6s = 5 hits = 1 trigger; floor(1000 * 0.8) * 1 * 1 = 800
+    const outcome = barkscalesOutcome(BARKSCALES, 1_000, 30, {
+      incomingHitIntervalSeconds: 6,
+    });
+    expect(outcome.triggers).toBe(1);
+    expect(barkscalesMinGraspDamage(outcome, 1_000)).toBe(800);
+    expect(barkscalesMinGraspNote(outcome, 1_000)).toMatch(/Grasp min 800/);
+  });
+
+  it("scales with triggers and targets", () => {
+    const outcome = barkscalesOutcome(BARKSCALES, 1_000, 60, {
+      incomingHitIntervalSeconds: 6,
+      targetsStruck: 2,
+    });
+    // 10 hits / 5 = 2 triggers * 2 targets * 800 = 3200
+    expect(outcome.triggers).toBe(2);
+    expect(barkscalesMinGraspDamage(outcome, 1_000)).toBe(3_200);
+  });
+
+  it("is null without a scenario or on poison-immune", () => {
+    const noScenario = barkscalesOutcome(BARKSCALES, 1_000, 60);
+    expect(barkscalesMinGraspDamage(noScenario, 1_000)).toBeNull();
+    const immune = barkscalesOutcome(BARKSCALES, 1_000, 60, {
+      incomingHitIntervalSeconds: 6,
+      poisonImmune: true,
+    });
+    expect(barkscalesMinGraspDamage(immune, 1_000)).toBeNull();
   });
 });

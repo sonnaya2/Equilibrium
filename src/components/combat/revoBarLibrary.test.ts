@@ -6,6 +6,7 @@ import {
   libraryForStyle,
   loadBarLibrary,
   loadActiveRevoBar,
+  loadLimitToRegions,
   loadRevoRunDuration,
   loadRotationMode,
   MAX_RECENT_BARS,
@@ -14,6 +15,7 @@ import {
   ROTATION_WORKSPACE_KEY,
   resetBarLibraryForTests,
   saveActiveRevoBar,
+  saveLimitToRegions,
   saveRevoRunDuration,
   saveRotationMode,
   barScoreContext,
@@ -76,15 +78,31 @@ describe("revoBarLibrary", () => {
   it("restores the last Rotation mode and active bar per weapon context", () => {
     saveRotationMode("manual");
     saveRevoRunDuration(6);
+    saveLimitToRegions(true);
     saveActiveRevoBar("melee", "dualwield", BAR_A);
     saveActiveRevoBar("melee", "twohand", BAR_B);
 
     expect(loadRotationMode()).toBe("manual");
     expect(loadRevoRunDuration()).toBe(6);
+    expect(loadLimitToRegions()).toBe(true);
     expect(loadActiveRevoBar("melee", "dualwield")).toEqual(BAR_A);
     expect(loadActiveRevoBar("melee", "twohand")).toEqual(BAR_B);
     expect(loadActiveRevoBar("magic", "dualwield")).toBeNull();
     expect(window.localStorage.getItem(ROTATION_WORKSPACE_KEY)).not.toBeNull();
+  });
+
+  it("persists Limit to regions; default ON when unset", () => {
+    expect(loadLimitToRegions()).toBe(true);
+    saveLimitToRegions(true);
+    expect(loadLimitToRegions()).toBe(true);
+    // Workspace bar save must not clear the dedicated flag.
+    saveActiveRevoBar("melee", "dualwield", BAR_A);
+    saveRotationMode("manual");
+    expect(loadLimitToRegions()).toBe(true);
+    saveLimitToRegions(false);
+    expect(loadLimitToRegions()).toBe(false);
+    saveLimitToRegions(true);
+    expect(loadLimitToRegions()).toBe(true);
   });
 
   it("drops corrupt active bars and falls back to Revolution mode", () => {

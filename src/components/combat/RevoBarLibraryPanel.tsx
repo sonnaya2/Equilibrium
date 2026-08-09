@@ -42,7 +42,7 @@ function BarIcons({ bar, limit }: { bar: readonly string[]; limit: number }) {
           <GameIcon
             key={`${id}-${i}`}
             src={abilityIconPath(spec.id, spec.style)}
-            size={18}
+            size={32}
             className="revo-bar-library__icon"
           />
         ) : (
@@ -201,7 +201,7 @@ export function RevoBarLibraryPanel({
                 <GameIcon
                   key={`${id}-${index}`}
                   src={abilityIconPath(spec.id, spec.style)}
-                  size={20}
+                  size={32}
                   className="revo-bar-library__icon"
                 />
               ) : (

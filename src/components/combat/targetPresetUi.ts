@@ -87,15 +87,18 @@ export function applyTargetPreset(
     ...(fields.undead === true ? { undead: true } : {}),
     ...(fields.demon === true ? { demon: true } : {}),
     ...(fields.dragon === true ? { dragon: true } : {}),
-    // Scenario fields stay player-owned (Mark applicability is not baked into Aff)
+    // Scenario fields stay player-owned (Mark applicability is not baked into Aff).
+    // Wiki auto-attack rate seeds interval when known; manual edit overrides.
     ...(previous?.hasApplicableWeakness ? { hasApplicableWeakness: true } : {}),
     ...(previous?.onSlayerTask ? { onSlayerTask: true } : {}),
     ...(previous?.hpPercent != null ? { hpPercent: previous.hpPercent } : {}),
     ...(previous?.occupiedTiles != null ? { occupiedTiles: previous.occupiedTiles } : {}),
     ...(previous?.areaTargets != null ? { areaTargets: previous.areaTargets } : {}),
-    ...(previous?.incomingHitIntervalSeconds != null
-      ? { incomingHitIntervalSeconds: previous.incomingHitIntervalSeconds }
-      : {}),
+    ...(fields.incomingHitIntervalSeconds != null
+      ? { incomingHitIntervalSeconds: fields.incomingHitIntervalSeconds }
+      : previous?.incomingHitIntervalSeconds != null
+        ? { incomingHitIntervalSeconds: previous.incomingHitIntervalSeconds }
+        : {}),
     ...(previous?.incomingHitDamage != null
       ? { incomingHitDamage: previous.incomingHitDamage }
       : {}),

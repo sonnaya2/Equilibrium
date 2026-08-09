@@ -59,6 +59,7 @@ import { isApproximatedRun } from "./revoStochasticLabels";
 import { TargetSummaryCard } from "./TargetSummaryCard";
 import { useRevolutionSolver } from "./useRevolutionSolver";
 import { adrenEconomyAssumptionRows } from "./adrenalinePresentation";
+import { filterAbilitiesForLoadout } from "./abilityLoadoutFilter";
 import { abilityIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import "./revo-solver.css";
@@ -86,6 +87,8 @@ export function RevolutionPanel({
   onOpenTarget,
   rotationMode = "revolution",
   onRotationModeChange,
+  limitToRegions,
+  setLimitToRegions,
 }: {
   stats: CalcStats;
   loadout: Loadout;
@@ -100,6 +103,8 @@ export function RevolutionPanel({
   onOpenTarget?: () => void;
   rotationMode?: "revolution" | "manual";
   onRotationModeChange?: (mode: "revolution" | "manual") => void;
+  limitToRegions: boolean;
+  setLimitToRegions: (value: boolean) => void;
 }) {
   const { build } = useLeagueBuild();
   const [durationSeconds, setDurationSeconds] = useState(DEFAULT_DURATION_SECONDS);
@@ -186,17 +191,52 @@ export function RevolutionPanel({
     return applyLoadoutVariantsToSlots(raw, igneousGate);
   }, [effectiveActiveBarIds, igneousGate]);
 
+  const regions = useMemo(() => unlockedRegions(build), [build]);
+  const regionGate = useMemo(
+    () =>
+      limitToRegions
+        ? {
+            unlockedRegions: regions,
+            includeUnknownAvailability: false as const,
+            league: stats.league,
+            passiveIds: stats.equipmentEffects.passiveIds,
+            equipmentIds: stats.equipmentIds,
+            weaponConfiguration,
+            eofStoredSpecialId: loadout.eofStoredSpecialId,
+          }
+        : {
+            league: stats.league,
+            passiveIds: stats.equipmentEffects.passiveIds,
+            equipmentIds: stats.equipmentIds,
+            weaponConfiguration,
+            eofStoredSpecialId: loadout.eofStoredSpecialId,
+          },
+    [
+      limitToRegions,
+      regions,
+      stats.league,
+      stats.equipmentEffects.passiveIds,
+      stats.equipmentIds,
+      weaponConfiguration,
+      loadout.eofStoredSpecialId,
+    ],
+  );
   const slots = useMemo(() => {
     if (solvedSlots) return solvedSlots;
     if (!bar) return [];
-    return applyLoadoutVariantsToSlots(
+    const resolved = applyLoadoutVariantsToSlots(
       resolveBar(bar, ENGINE_SPECS, weaponConfiguration),
       igneousGate,
     );
-  }, [solvedSlots, bar, weaponConfiguration, igneousGate]);
+    if (!limitToRegions) return resolved;
+    return resolved.filter((slot) => {
+      if (!slot.spec) return true;
+      return filterAbilitiesForLoadout([slot.spec], regionGate).length > 0;
+    });
+  }, [solvedSlots, bar, weaponConfiguration, igneousGate, limitToRegions, regionGate]);
   const revoSize = solvedSlots ? solvedSlots.length : (bar?.revolutionSize ?? slots.length);
   const managedSlots = useMemo(
-    () => (solvedSlots ? solvedSlots : bar ? slots.slice(0, bar.revolutionSize) : []),
+    () => (solvedSlots ? solvedSlots : bar ? slots.slice(0, Math.min(bar.revolutionSize, slots.length)) : []),
     [solvedSlots, bar, slots],
   );
   const modelled = useMemo(() => {
@@ -205,11 +245,26 @@ export function RevolutionPanel({
       : bar
         ? revoManagedModelled(bar, weaponConfiguration, igneousGate)
         : [];
-    return ensureNecroConjuresOnSpecs(base, loadout.style, weaponConfiguration, igneousGate);
-  }, [solvedSlots, bar, weaponConfiguration, igneousGate, loadout.style]);
+    const withConjures = ensureNecroConjuresOnSpecs(
+      base,
+      loadout.style,
+      weaponConfiguration,
+      igneousGate,
+    );
+    // Same cast gate as Higher Power: strip region-locked ids from the live bar.
+    if (!limitToRegions) return withConjures;
+    return filterAbilitiesForLoadout(withConjures, regionGate);
+  }, [
+    solvedSlots,
+    bar,
+    weaponConfiguration,
+    igneousGate,
+    loadout.style,
+    limitToRegions,
+    regionGate,
+  ]);
   const unmodelled = managedSlots.filter((slot) => slot.modelledBy === "unmodelled");
   const keybindCount = Math.max(0, slots.length - revoSize);
-  const regions = useMemo(() => unlockedRegions(build), [build]);
 
   const nameById = useMemo(() => {
     const map = new Map(
@@ -277,6 +332,8 @@ export function RevolutionPanel({
     modelled,
     onActiveBar,
     onClearSimResult,
+    limitToRegions,
+    setLimitToRegions,
   });
 
   useEffect(() => {

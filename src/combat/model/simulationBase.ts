@@ -94,6 +94,10 @@ export function buildSimulationInputBase(
     playerPoison: model.playerPoison,
     playerPoisonModifiers: playerPoisonModifiersFromSources(model.modifierSources, league),
     targetPoisonImmune: model.target.poisonImmune === true,
+    ...(model.target.incomingHitIntervalSeconds != null &&
+    model.target.incomingHitIntervalSeconds > 0
+      ? { incomingHitIntervalSeconds: model.target.incomingHitIntervalSeconds }
+      : {}),
     ...(model.naturalInstinctUntilTick != null
       ? { naturalInstinctUntilTick: model.naturalInstinctUntilTick }
       : {}),

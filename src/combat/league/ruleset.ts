@@ -464,6 +464,17 @@ export function envenomedPoisonImmunityDisableTicks(
 }
 
 /**
+ * Whether Grasp / poison damage treats the target as immune.
+ * Envenomed disables poison immunity (card: 30s override; product: while active).
+ */
+export function targetPoisonImmuneForBlessingPoison(
+  targetPoisonImmune: boolean | undefined,
+  rules: ResolvedLeagueRules | undefined,
+): boolean {
+  return targetPoisonImmune === true && !hasBlessing(rules, "envenomed");
+}
+
+/**
  * Sacred Fervor: floor(defaultCooldown * multiplier). Positive base floors to
  * min 1 tick; non-positive/non-finite base clamps to 0.
  */

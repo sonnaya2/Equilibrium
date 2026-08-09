@@ -10,6 +10,8 @@ export const REVO_BAR_LIBRARY_KEY = "eq:revo-bars:v2";
 /** @deprecated read-only migration from pre-context storage */
 const REVO_BAR_LIBRARY_KEY_V1 = "eq:revo-bars:v1";
 export const ROTATION_WORKSPACE_KEY = "eq:rotation-workspace:v1";
+/** Own key so workspace bar/mode saves cannot drop the flag. */
+export const LIMIT_TO_REGIONS_KEY = "eq:rotation-limit-regions:v1";
 
 export const MAX_RECENT_BARS = 5;
 export const MAX_SAVED_BARS = 40;
@@ -52,6 +54,8 @@ type RotationWorkspace = {
   mode: RotationMode;
   activeBars: Record<string, string[]>;
   runDurationSeconds: number;
+  /** Solver + ability: only Build regions when true. */
+  limitToRegions: boolean;
 };
 
 export interface RememberBarInput {
@@ -74,6 +78,7 @@ const EMPTY_WORKSPACE: RotationWorkspace = {
   mode: "revolution",
   activeBars: {},
   runDurationSeconds: 60,
+  limitToRegions: true,
 };
 
 export function emptyBarLibrary(): RevoBarLibrary {
@@ -102,7 +107,13 @@ function normalizeRotationWorkspace(raw: unknown): RotationWorkspace {
       if (isStringArray(bar) && bar.length > 0) activeBars[context] = [...bar];
     }
   }
-  return { version: 1, mode, activeBars, runDurationSeconds };
+  return {
+    version: 1,
+    mode,
+    activeBars,
+    runDurationSeconds,
+    limitToRegions: record.limitToRegions === true,
+  };
 }
 
 function loadRotationWorkspace(): RotationWorkspace {
@@ -136,6 +147,47 @@ export function loadRevoRunDuration(): number {
 export function saveRevoRunDuration(runDurationSeconds: number): void {
   const workspace = loadRotationWorkspace();
   saveRotationWorkspace(normalizeRotationWorkspace({ ...workspace, runDurationSeconds }));
+}
+
+export function loadLimitToRegions(): boolean {
+  // Dedicated key first (survives partial workspace overwrites).
+  if (typeof window !== "undefined") {
+    try {
+      const raw = window.localStorage.getItem(LIMIT_TO_REGIONS_KEY);
+      if (raw === "1" || raw === "true") return true;
+      if (raw === "0" || raw === "false") return false;
+      // No key yet: default ON (league build regions only).
+      if (raw === null) return true;
+    } catch {
+      // fall through
+    }
+  }
+  // Workspace-only: true when set; default ON when field absent on old blobs.
+  const ws = loadRotationWorkspace();
+  if (typeof window !== "undefined") {
+    try {
+      const raw = window.localStorage.getItem(ROTATION_WORKSPACE_KEY);
+      if (raw == null) return true;
+      const parsed = JSON.parse(raw) as { limitToRegions?: unknown };
+      if (!("limitToRegions" in parsed)) return true;
+    } catch {
+      return true;
+    }
+  }
+  return ws.limitToRegions === true;
+}
+
+export function saveLimitToRegions(limitToRegions: boolean): void {
+  const on = limitToRegions === true;
+  try {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(LIMIT_TO_REGIONS_KEY, on ? "1" : "0");
+    }
+  } catch {
+    // Quota / privacy mode
+  }
+  const workspace = loadRotationWorkspace();
+  saveRotationWorkspace({ ...workspace, limitToRegions: on });
 }
 
 export function loadActiveRevoBar(style: string, weaponConfiguration: string): string[] | null {
@@ -284,6 +336,7 @@ export function resetBarLibraryForTests(): void {
     window.localStorage?.removeItem(REVO_BAR_LIBRARY_KEY);
     window.localStorage?.removeItem(REVO_BAR_LIBRARY_KEY_V1);
     window.localStorage?.removeItem(ROTATION_WORKSPACE_KEY);
+    window.localStorage?.removeItem(LIMIT_TO_REGIONS_KEY);
   } catch {
     // ignore
   }

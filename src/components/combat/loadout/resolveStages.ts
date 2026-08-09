@@ -121,6 +121,7 @@ import {
   resolveLeagueCritualStats,
   resolveMaximumAdrenaline,
   setPieceContributionModifier,
+  targetPoisonImmuneForBlessingPoison,
   weaponTierOverride,
   type AegisArmourBonus,
   type ResolvedLeagueRules,
@@ -567,7 +568,10 @@ export function resolveLeagueBundle(
     {
       incomingHitIntervalSeconds: loadout.target?.incomingHitIntervalSeconds,
       targetsStruck: loadout.target?.areaTargets,
-      poisonImmune: loadout.target?.poisonImmune === true && !hasBlessing(league, "envenomed"),
+      poisonImmune: targetPoisonImmuneForBlessingPoison(
+        loadout.target?.poisonImmune,
+        league,
+      ),
     },
     blessingRule(league, "perfidious")?.perfidious?.barkscalesHitsPerTrigger,
   );

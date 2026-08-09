@@ -24,6 +24,30 @@ const restrictedAbilities = [
   [MAGIC_ABILITIES, "magic", "greater_sunshine"],
 ] as const;
 
+describe("region-locked ability availability (Limit to regions)", () => {
+  it("blocks Corruption Shot without Desert through the shared cast gate", () => {
+    const ability = RANGED_ABILITIES.find((entry) => entry.id === "corruption_shot");
+    expect(ability).toBeDefined();
+    if (!ability) return;
+    expect(
+      resolveAbilityCastAvailability(ability, {
+        unlockedRegions: ["misthalin", "havenhythe", "karamja"],
+        includeUnknownAvailability: false,
+      }),
+    ).toEqual({
+      available: false,
+      reason: "region-locked",
+      message: expect.stringMatching(/Corruption Shot requires desert/i),
+    });
+    expect(
+      resolveAbilityCastAvailability(ability, {
+        unlockedRegions: ["misthalin", "desert"],
+        includeUnknownAvailability: false,
+      }),
+    ).toEqual({ available: true });
+  });
+});
+
 describe("Higher Power ability availability", () => {
   it("blocks each base and replacement ultimate through the shared cast gate", () => {
     for (const [catalogue, , id] of restrictedAbilities) {

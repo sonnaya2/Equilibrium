@@ -141,6 +141,10 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
       poisonImmune: input.target?.poisonImmune === true,
       elementalWeakness: input.target?.elementalWeakness ?? "unknown",
       dragonfireImmune: input.target?.dragonfireImmune === true,
+      ...(input.target?.incomingHitIntervalSeconds != null &&
+      input.target.incomingHitIntervalSeconds > 0
+        ? { incomingHitIntervalSeconds: input.target.incomingHitIntervalSeconds }
+        : {}),
     },
     ...(input.playerVitality
       ? {

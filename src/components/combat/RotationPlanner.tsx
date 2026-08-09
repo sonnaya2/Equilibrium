@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import {
   resolveAbilityCastAvailability,
@@ -44,7 +44,12 @@ import { activeLeagueRelicNames,  unlockedRegions  } from "@/league";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
 import { uiRunFingerprint } from "./uiSimFingerprint";
 import { getUiRunCache, setUiRunCache } from "./uiRunCache";
-import { loadRotationMode, saveRotationMode } from "./revoBarLibrary";
+import {
+  loadLimitToRegions,
+  loadRotationMode,
+  saveLimitToRegions,
+  saveRotationMode,
+} from "./revoBarLibrary";
 import {
   equipAbilityForLoadout,
   filterAbilitiesForLoadout,
@@ -160,9 +165,17 @@ export function RotationPlanner({
   const [result, setResult] = useState<RotationSummary | null>(null);
   const [analysisOpen, setAnalysisOpen] = useState(false);
   const [editorMode, setEditorMode] = useState<LoadoutEditorMode | null>(null);
+  // Default true (league regions); rehydrate from storage after mount.
+  const [limitToRegions, setLimitToRegionsState] = useState(true);
+  const setLimitToRegions = useCallback((value: boolean) => {
+    setLimitToRegionsState(value);
+    saveLimitToRegions(value);
+  }, []);
+  const buildRegions = useMemo(() => unlockedRegions(build), [build]);
 
   useEffect(() => {
     setMode(loadRotationMode());
+    setLimitToRegionsState(loadLimitToRegions());
     const stored = loadState<unknown>(STORAGE_KEY, []);
     const list = Array.isArray(stored) ? stored : [];
     setQueue(
@@ -297,8 +310,8 @@ export function RotationPlanner({
   const stylePool = sortAbilitiesForDisplay(
     DISPLAY_CATALOGUE.catalogue.filter((a) => a.style === paletteStyle),
   );
-  // Use-build: only the legal ultimate (base or Igneous), never both.
-  const palette = useBuild
+  // Use-build: cast legality (Igneous pairs, etc.). Limit-to-regions: same gate as solver.
+  const palette = useBuild || limitToRegions
     ? filterAbilitiesForLoadout(stylePool, {
         weaponConfiguration: setupStats.weaponConfiguration,
         equipmentIds: setupStats.equipmentIds,
@@ -306,6 +319,12 @@ export function RotationPlanner({
         passiveIds: setupStats.equipmentEffects.passiveIds,
         eofStoredSpecialId: loadout.eofStoredSpecialId,
         league: setupStats.league,
+        ...(limitToRegions
+          ? {
+              unlockedRegions: buildRegions,
+              includeUnknownAvailability: false,
+            }
+          : {}),
       })
     : stylePool;
   const loadoutGateOpts = useMemo(
@@ -316,16 +335,27 @@ export function RotationPlanner({
       passiveIds: setupStats.equipmentEffects.passiveIds,
       eofStoredSpecialId: loadout.eofStoredSpecialId,
       league: setupStats.league,
+      ...(limitToRegions
+        ? {
+            unlockedRegions: buildRegions,
+            includeUnknownAvailability: false as const,
+          }
+        : {}),
     }),
-    [setupStats, loadout.eofStoredSpecialId],
+    [setupStats, loadout.eofStoredSpecialId, limitToRegions, buildRegions],
   );
   useEffect(() => {
-    if (!useBuild) return;
+    if (!useBuild && !limitToRegions) return;
     setQueue((current) => {
       const legal = current.filter((id) => {
         const raw = abilityById(id);
         if (!raw) return false;
         const resolved = equipAbilityForLoadout(raw, DISPLAY_CATALOGUE.byId, loadoutGateOpts);
+        if (limitToRegions) {
+          const gated = filterAbilitiesForLoadout([resolved], loadoutGateOpts);
+          if (gated.length === 0) return false;
+        }
+        if (!useBuild) return true;
         return resolveAbilityCastAvailability(resolved, {
           ...loadoutGateOpts,
           groupPeers: DISPLAY_CATALOGUE.catalogue,
@@ -551,6 +581,8 @@ export function RotationPlanner({
             onOpenTarget={() => setEditorMode("target")}
             rotationMode={mode}
             onRotationModeChange={setRotationMode}
+            limitToRegions={limitToRegions}
+            setLimitToRegions={setLimitToRegions}
           />
         </div>
       ) : (

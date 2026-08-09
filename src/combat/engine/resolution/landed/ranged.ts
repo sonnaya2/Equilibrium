@@ -36,6 +36,7 @@ import {
   newBlackStoneArmourState,
   resetBlackStoneOnTargetDeath,
 } from "../../../styles/ranged/blackStone";
+import { envenomedPoisonImmunityDisableTicks } from "../../../league/ruleset";
 import { enchantedBoltActivationChance } from "../../../styles/ranged/enchantedBolt";
 import {
   activateBoltDeathmark,
@@ -479,6 +480,20 @@ function applyChromaticChoirFreeProc(
   applyChoirHydrix(rt, event);
 }
 
+function emeraldPlayerPoisonModifiers(rt: SimulationRuntime): CombatModifier[] {
+  const configured =
+    rt.input.playerPoisonModifiers ??
+    (() => {
+      const ability = rt.byId.values().next().value;
+      return typeof rt.input.modifiers === "function"
+        ? ability
+          ? rt.input.modifiers(ability)
+          : []
+        : (rt.input.modifiers ?? []);
+    })();
+  return configured.filter((modifier) => modifier.appliesToPlayerPoison === true);
+}
+
 function scheduleEmeraldPoisonHit(
   rt: SimulationRuntime,
   event: ScheduledEvent<SimulationRuntime>,
@@ -492,10 +507,24 @@ function scheduleEmeraldPoisonHit(
       style: "ranged",
       provenance: event.provenance,
       attackOrigin,
-    }) ||
+    })
+  ) {
+    return;
+  }
+  // Same land as Envenomed immunity disable (weapon poison order): the triggering
+  // hit can apply Magical Poison after the override is projected for this tick.
+  // https://runescape.wiki/w/Enchant_Crossbow_Bolt_%28Emerald%29
+  const envenomedDisableTicks = envenomedPoisonImmunityDisableTicks(rt.input.league);
+  const immunityDisabledUntilTick = Math.max(
+    rt.state.target.weaponPoison.immunityDisabledUntilTick,
+    damage.expected > 0 && envenomedDisableTicks > 0
+      ? event.tick + envenomedDisableTicks
+      : 0,
+  );
+  if (
     isTargetPoisonImmune(
       rt.input.targetPoisonImmune,
-      rt.state.target.weaponPoison.immunityDisabledUntilTick,
+      immunityDisabledUntilTick,
       event.tick,
     )
   ) {
@@ -513,14 +542,14 @@ function scheduleEmeraldPoisonHit(
     evolvingToxinPoisonModifier(
       activeEvolvingToxinStacks(toxin.stacks, toxin.expiresAtTick, event.tick),
     ),
-    ...(rt.input.playerPoisonModifiers ?? []).filter(
-      (modifier) => modifier.appliesToPlayerPoison === true,
-    ),
+    ...emeraldPlayerPoisonModifiers(rt),
   ].filter((modifier): modifier is CombatModifier => modifier != null);
   const provenance = { kind: "equipment_proc" as const, detail: "emerald" };
   const context = {
     ...(rt.input.context ?? { style: "ranged" as const }),
     style: "ranged" as const,
+    // League poison modifiers gate on ruleset; never drop it when league is set.
+    ruleset: rt.input.context?.ruleset ?? rt.input.league?.ruleset,
     dotKind: "poison" as const,
     damageSource: "proc" as const,
     provenance,

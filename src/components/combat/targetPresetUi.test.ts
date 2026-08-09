@@ -40,7 +40,18 @@ describe("targetPresetUi", () => {
       defenceLevel: 60,
       armour: 1132,
       affinity: 50,
+      // Wiki attack rate 4t -> 2.4s seeds Barkscales/Icyenic scenario.
+      incomingHitIntervalSeconds: 2.4,
     });
+  });
+
+  it("seeds Zilyana 2t and Graardor 6t intervals", () => {
+    expect(applyTargetPreset("boss:commander-zilyana", "melee", null)?.incomingHitIntervalSeconds).toBe(
+      1.2,
+    );
+    expect(applyTargetPreset("boss:general-graardor", "melee", null)?.incomingHitIntervalSeconds).toBe(
+      3.6,
+    );
   });
 
   it("marks modified when affinity is edited, reset restores", () => {

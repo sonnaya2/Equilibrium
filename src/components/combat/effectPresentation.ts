@@ -52,10 +52,11 @@ const EFFECT_ICON_PATH: Readonly<Record<string, string>> = {
 const BLESSING_EFFECT_SOURCE: Readonly<Record<string, string>> = {
   "abyssal-cinders": "abyssal-cinders",
   "big-boned": "big-boned",
-  "grasp-of-guthix": "tearing-thorns",
+  "grasp-of-guthix": "barkscales",
   "grasp-of-guthix-big-boned": "big-boned",
   "grasp-of-guthix-max-life": "tearing-thorns",
-  "grasp-of-guthix-poison": "tearing-thorns",
+  // Shared Grasp poison id; UI prefers event.blessingId (barkscales or tearing-thorns).
+  "grasp-of-guthix-poison": "barkscales",
   "inferno-of-zamorak": "abyssal-cinders",
   "light-of-saradomin": "striking-light",
 };

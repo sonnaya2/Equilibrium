@@ -71,6 +71,7 @@ export interface SolverPackSnapshot {
   playerVitality?: SerializableRevolutionSimBase["playerVitality"];
   playerPoison?: PlayerPoisonProfile;
   targetPoisonImmune?: boolean;
+  incomingHitIntervalSeconds?: number;
   cap?: HitCapRule;
   startingAdrenaline?: number;
   naturalInstinctUntilTick?: number;
@@ -215,6 +216,9 @@ export function packSimBase(snapshot: SolverPackSnapshot): SerializableRevolutio
     ...(snapshot.playerVitality ? { playerVitality: { ...snapshot.playerVitality } } : {}),
     ...(snapshot.playerPoison ? { playerPoison: { ...snapshot.playerPoison } } : {}),
     targetPoisonImmune: snapshot.targetPoisonImmune === true,
+    ...(snapshot.incomingHitIntervalSeconds != null && snapshot.incomingHitIntervalSeconds > 0
+      ? { incomingHitIntervalSeconds: snapshot.incomingHitIntervalSeconds }
+      : {}),
     cap: snapshot.cap,
     startingAdrenaline: snapshot.startingAdrenaline,
     ...(snapshot.naturalInstinctUntilTick != null

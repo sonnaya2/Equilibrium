@@ -3,7 +3,7 @@ import type { RotationSummary } from "@/combat/engine/simulation/simulate";
 import type { CalcStats } from "./loadoutStats";
 import { adrenEconomyAssumptionRows } from "./adrenalinePresentation";
 import { BIG_BONED_OUTGOING_ASSUMPTIONS } from "@/combat/league/ruleset";
-import { barkscalesGraspNote } from "@/combat/league/barkscales";
+import { barkscalesGraspNote, barkscalesMinGraspNote } from "@/combat/league/barkscales";
 import {
   icyenicProtectionNote,
   icyenicSoulSplitHeal,
@@ -159,8 +159,12 @@ export function CalculationAssumptions({
           ["Barkscales", barkscalesGraspNote(stats.barkscales)],
           [
             "Barkscales mit.",
-            `−${formatNumber(stats.barkscales.perHit)} / hit · ${stats.barkscales.hitsPerTrigger} to trigger`,
+            `-${formatNumber(stats.barkscales.perHit)} / hit · ${stats.barkscales.hitsPerTrigger} to trigger`,
           ],
+          ...((): Array<[string, string | number]> => {
+            const minNote = barkscalesMinGraspNote(stats.barkscales, stats.base);
+            return minNote ? [["Grasp min", minNote]] : [];
+          })(),
         ] as Array<[string, string | number]>)
       : []),
     ...(icyenicActive

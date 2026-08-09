@@ -162,6 +162,10 @@ export function hostInputFromLoadoutStats(
       poisonImmune: loadout.target?.poisonImmune,
       elementalWeakness: loadout.target?.elementalWeakness ?? "unknown",
       dragonfireImmune: loadout.target?.dragonfireImmune === true,
+      ...(loadout.target?.incomingHitIntervalSeconds != null &&
+      loadout.target.incomingHitIntervalSeconds > 0
+        ? { incomingHitIntervalSeconds: loadout.target.incomingHitIntervalSeconds }
+        : {}),
     },
     // Tuska empower: both required; never invent level when on-task alone.
     ...(loadout.target?.onSlayerTask === true ? { slayerOnTask: true } : {}),

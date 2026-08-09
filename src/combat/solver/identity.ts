@@ -325,6 +325,10 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
       laniakea: loadout.playerPoison?.laniakea === true,
     },
     targetPoisonImmune: loadout.targetPoisonImmune === true,
+    incomingHitIntervalSeconds:
+      loadout.incomingHitIntervalSeconds != null && loadout.incomingHitIntervalSeconds > 0
+        ? loadout.incomingHitIntervalSeconds
+        : null,
     cap: normalizeHitCap(loadout.cap),
     adrenaline: loadout.adrenaline
       ? {

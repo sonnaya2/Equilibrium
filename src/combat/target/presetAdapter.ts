@@ -1,5 +1,6 @@
 import type { TargetAffinityProfile, TargetPresetRecord } from "../data/records";
 import type { CombatStyle } from "../types";
+import { attackRateTicksToIntervalSeconds } from "./attackRate";
 import { resolveAffinityPercent, sanitizeAffinity } from "./genericTarget";
 
 export interface MaterializedTargetFields {
@@ -14,6 +15,13 @@ export interface MaterializedTargetFields {
   undead?: boolean;
   demon?: boolean;
   dragon?: boolean;
+  /**
+   * Derived from wiki attackRateTicks (ticks * 0.6s). Seeds Barkscales/Icyenic
+   * scenario only; not part of Modified defence/affinity comparison.
+   */
+  incomingHitIntervalSeconds?: number;
+  /** Sourced wiki ticks when present; for UI rate labels. */
+  attackRateTicks?: number;
 }
 
 export interface MaterializeTargetPresetOptions {
@@ -78,6 +86,11 @@ export function materializeTargetPreset(
   if (preset.stats.undead === true) fields.undead = true;
   if (preset.stats.demon === true) fields.demon = true;
   if (preset.stats.dragon === true) fields.dragon = true;
+  const interval = attackRateTicksToIntervalSeconds(preset.stats.attackRateTicks);
+  if (interval != null) {
+    fields.incomingHitIntervalSeconds = interval;
+    fields.attackRateTicks = Math.floor(preset.stats.attackRateTicks!);
+  }
   return fields;
 }
 

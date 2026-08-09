@@ -68,22 +68,53 @@ export function barkscalesGraspNote(outcome: BarkscalesOutcome): string {
       outcome.missingInputs.length > 0
         ? outcome.missingInputs.join(", ").toLowerCase()
         : "incoming scenario inputs";
-    return `No outgoing damage calculated — needs ${need}`;
+    return `No outgoing damage calculated - needs ${need}`;
   }
   if (outcome.unavailability === "invalid-interval") {
-    return "No outgoing damage calculated — invalid incoming-hit interval";
+    return "No outgoing damage calculated - invalid incoming-hit interval";
   }
   if (outcome.unavailability === "invalid-duration") {
-    return "No outgoing damage calculated — invalid scenario duration";
+    return "No outgoing damage calculated - invalid scenario duration";
   }
   if (outcome.unavailability === "poison-immune") {
-    return "Grasp of Guthix unavailable — target is poison-immune (mitigation counter still advances)";
+    return "Grasp of Guthix unavailable - target is poison-immune (mitigation counter still advances)";
   }
   if (outcome.unavailability === "zero-targets") {
-    return "Grasp of Guthix unavailable — no valid targets in the 3×3";
+    return "Grasp of Guthix unavailable - no valid targets in the 3x3";
   }
   // Fully modeled: triggers is a real count, but still scenario-only (not rotation DPM).
-  return `${outcome.triggers} Grasp triggers · one per ${outcome.secondsPerTrigger}s (scenario only — not in rotation damage)`;
+  return `${outcome.triggers} Grasp triggers · one per ${outcome.secondsPerTrigger}s (scenario only - not in rotation damage)`;
+}
+
+/**
+ * Scenario min Grasp damage: band floor (80% AD) x triggers x targets.
+ * Null when Grasp cannot deal damage or outcome is not modeled. Not rotation DPM.
+ */
+export function barkscalesMinGraspDamage(
+  outcome: BarkscalesOutcome,
+  abilityBase: number,
+  bandMinPct: number = 80,
+): number | null {
+  if (outcome.support !== "modeled" || outcome.triggers == null) return null;
+  if (outcome.unavailability === "poison-immune" || outcome.unavailability === "zero-targets") {
+    return null;
+  }
+  if (outcome.targetsStruck <= 0 || outcome.triggers <= 0) return null;
+  if (!Number.isFinite(abilityBase) || abilityBase < 0) return null;
+  if (!Number.isFinite(bandMinPct) || bandMinPct < 0) return null;
+  const perApplication = Math.floor(abilityBase * (bandMinPct / 100));
+  return perApplication * outcome.triggers * outcome.targetsStruck;
+}
+
+/** Short scenario line for min Grasp; null when unavailable. */
+export function barkscalesMinGraspNote(
+  outcome: BarkscalesOutcome,
+  abilityBase: number,
+  bandMinPct: number = 80,
+): string | null {
+  const min = barkscalesMinGraspDamage(outcome, abilityBase, bandMinPct);
+  if (min == null || outcome.triggers == null) return null;
+  return `Grasp min ${min} · ${outcome.triggers} triggers (scenario, auto rate - not rotation)`;
 }
 
 function unavailable(

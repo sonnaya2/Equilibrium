@@ -79,18 +79,18 @@
 .revo-bar-library__list--rail {
   flex: 1 1 auto;
   min-height: 0;
-  gap: 0.28rem;
+  gap: 0.32rem;
 }
 
 .revo-bar-library__list--rail > .revo-bar-library__item {
   flex: 1 1 0;
-  min-height: 2.35rem;
+  min-height: 3.1rem;
 }
 
 .revo-bar-library__item {
   display: flex;
   align-items: stretch;
-  gap: 0.15rem;
+  gap: 0.2rem;
   min-width: 0;
 }
 
@@ -200,9 +200,10 @@
   display: flex;
   flex: 1 1 auto;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.4rem;
   min-width: 0;
-  padding: 0.22rem 0.35rem;
+  min-height: 100%;
+  padding: 0.28rem 0.4rem;
   border: 1px solid transparent;
   border-radius: 1px;
   background: color-mix(in srgb, var(--combat-panel) 55%, transparent);
@@ -221,9 +222,10 @@
   display: flex;
   flex: 1 1 auto;
   align-items: center;
-  gap: 2px;
+  gap: 0.18rem;
   min-width: 0;
   height: 100%;
+  min-height: 1.7rem;
 }
 
 .revo-bar-library__icon,
@@ -233,9 +235,9 @@
   flex: 1 1 0;
   width: auto;
   min-width: 0;
-  max-width: 1.55rem;
+  max-width: 1.9rem;
   height: auto;
-  max-height: 1.55rem;
+  max-height: 1.9rem;
   aspect-ratio: 1 / 1;
   object-fit: contain;
   border-radius: 1px;
@@ -246,10 +248,40 @@
   display: block;
   flex: 1 1 0;
   min-width: 0;
-  max-width: 1.55rem;
+  max-width: 1.9rem;
   aspect-ratio: 1 / 1;
   border: 1px dashed var(--combat-gold-dim);
   opacity: 0.45;
+}
+
+/* Rail rows stretch to fill the left column - icons grow with the row. */
+.revo-bar-library__list--rail .revo-bar-library__apply {
+  padding: 0.35rem 0.45rem;
+}
+
+.revo-bar-library__list--rail .revo-bar-library__icons {
+  align-self: stretch;
+  min-height: 0;
+  height: 100%;
+  gap: 0.22rem;
+}
+
+.revo-bar-library__list--rail .revo-bar-library__icon,
+.revo-bar-library__list--rail .revo-bar-library__icon.game-icon,
+.revo-bar-library__list--rail .revo-bar-library__icons img.revo-bar-library__icon,
+.revo-bar-library__list--rail .revo-bar-library__icon-empty {
+  flex: 1 1 0;
+  width: auto;
+  max-width: min(2.85rem, 14%);
+  height: 100%;
+  max-height: 2.85rem;
+  min-height: 1.85rem;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+}
+
+.revo-bar-library__list--rail .revo-bar-library__score {
+  font-size: 0.78rem;
 }
 
 .revo-bar-library__score {

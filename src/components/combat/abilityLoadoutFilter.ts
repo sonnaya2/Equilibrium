@@ -1,6 +1,7 @@
 /**
  * Loadout-gated ability lists for Quick / Manual palette / Revo display.
  * Under use-build, hide locked upgrades and superseded bases (Igneous pairs).
+ * Optional region gate matches solver "Limit to regions".
  */
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import type { ItemPassiveId } from "@/combat/data/records";
@@ -20,6 +21,12 @@ export type LoadoutAbilityGate = {
   /** EoF stored special ability id for gated weapon specials. */
   eofStoredSpecialId?: string | null;
   league?: ResolvedLeagueRules;
+  /**
+   * When set, only abilities obtainable in these regions (same rule as regionDenyList
+   * and Higher Power cast gates).
+   */
+  unlockedRegions?: readonly string[];
+  includeUnknownAvailability?: boolean;
 };
 
 export function sortAbilitiesForDisplay(abilities: readonly AbilitySpec[]): AbilitySpec[] {
@@ -66,6 +73,8 @@ export function filterAbilitiesForLoadout(
         eofStoredSpecialId: gate.eofStoredSpecialId,
         league: gate.league,
         groupPeers: abilities,
+        unlockedRegions: gate.unlockedRegions,
+        includeUnknownAvailability: gate.includeUnknownAvailability,
       }).available,
   );
 }

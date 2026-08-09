@@ -1,11 +1,21 @@
-import { equipmentById } from "../data";
-import type { EquipmentRecord, ItemPassiveId } from "../data/records";
+import { pickPrimaryRecord, recordsForEngineId } from "../abilities/engineMap";
+import { abilityById, equipmentById } from "../data";
+import { isObtainableInRegions } from "../data/availability";
+import type { EquipmentRecord, ItemPassiveId, UnlockInfo } from "../data/records";
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 import {
   resolveLeagueAbilityAvailability,
   type LeagueAbilityAvailability,
 } from "../league/abilityAvailability";
 import type { ResolvedLeagueRules } from "../league/ruleset";
+
+/** Unlock for an engine ability via record map - no registry import (cycle with data). */
+function unlockForEngineAbility(engineId: string): UnlockInfo | undefined {
+  const mapped = recordsForEngineId(engineId);
+  if (mapped.length === 0) return undefined;
+  const recordId = pickPrimaryRecord(engineId, mapped);
+  return abilityById(recordId)?.unlock;
+}
 
 export type WeaponConfiguration =
   "twohand" | "dualwield" | "mainhand" | "shield" | "defender" | "necromancy";
@@ -25,6 +35,7 @@ export type AbilityCastAvailability =
         | "missing-equipment"
         | "missing-special-access"
         | "league-restriction"
+        | "region-locked"
         | "other";
       message: string;
     };
@@ -247,6 +258,12 @@ export type AbilityAvailabilityOptions = {
     "id" | "name" | "replacementGroup" | "requiredPassiveAnyOf"
   >[];
   league?: ResolvedLeagueRules;
+  /**
+   * When set (Limit to regions), same obtainability gate as solver regionDenyList.
+   * Omit to skip region filtering (all regions).
+   */
+  unlockedRegions?: readonly string[];
+  includeUnknownAvailability?: boolean;
 };
 
 /**
@@ -335,6 +352,23 @@ export function resolveAbilityCastAvailability(
       reason: "league-restriction",
       message: leagueAvailability.message,
     };
+  }
+  // Same shape as Higher Power: permanent loadout gate, not mid-fight state.
+  if (options.unlockedRegions != null) {
+    const unlock = unlockForEngineAbility(ability.id);
+    const region = isObtainableInRegions(unlock, options.unlockedRegions, {
+      includeUnknown: options.includeUnknownAvailability === true,
+    });
+    if (!region.obtainable) {
+      const needed = unlock?.regions?.length
+        ? unlock.regions.join(" or ")
+        : "a matching league region";
+      return {
+        available: false,
+        reason: "region-locked",
+        message: `${ability.name} requires ${needed}`,
+      };
+    }
   }
   if (!meetsWeaponRequirement(ability, options.weaponConfiguration)) {
     return {

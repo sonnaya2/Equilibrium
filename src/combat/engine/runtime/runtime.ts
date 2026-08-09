@@ -50,6 +50,7 @@ import { lengLandTableFor, type CompiledLengLandTable } from "../../styles/melee
 import { MAX_SOULS } from "../../styles/necromancy/abilities";
 import { residualSoulCapFor } from "../../styles/necromancy/effects";
 import { normalizeKwuarmPotency, normalizeWeaponPoisonChoice } from "../../poison/mechanics";
+import { scheduleBarkscalesScenarioGrasps } from "../resolution/landed/barkscalesScenario";
 import {
   createStochasticOracle,
   DEFAULT_STOCHASTIC_LANES,
@@ -419,6 +420,8 @@ export function createRuntime(
       maximumLifePoints: input.league?.maximumLife ?? 15_000,
     });
   }
+  // Barkscales Grasp needs incoming cadence; schedule when interval + horizon are stated.
+  scheduleBarkscalesScenarioGrasps(rt);
   return rt;
 }
 

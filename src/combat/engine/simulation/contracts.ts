@@ -170,6 +170,11 @@ export interface SimulateInput {
   /** Canonical target/global modifiers explicitly eligible for player poison. */
   playerPoisonModifiers?: readonly CombatModifier[];
   targetPoisonImmune?: boolean;
+  /**
+   * Seconds between qualifying incoming hits (Barkscales / Icyenic scenario).
+   * From target manual field or wiki boss attack rate. Absent = no scenario Grasps.
+   */
+  incomingHitIntervalSeconds?: number;
   /** Optional fixed manual window; landed damage uses the half-open [0, horizonTicks) interval. */
   horizonTicks?: number;
   /** Optional pre-active Natural Instinct window for Jaws adrenaline. */

@@ -74,6 +74,12 @@ export function assertTargetPresetRecords(records: readonly TargetPresetRecord[]
     if (record.stats.armour != null && record.stats.armour < 0) {
       throw new Error(`target-preset ${record.id}: armour must be nonnegative`);
     }
+    const rate = record.stats.attackRateTicks;
+    if (rate != null && (!Number.isFinite(rate) || rate < 1 || rate > 20 || !Number.isInteger(rate))) {
+      throw new Error(
+        `target-preset ${record.id}: attackRateTicks must be integer 1-20 or null (got ${rate})`,
+      );
+    }
     const aff = record.stats.affinities;
     if (aff) {
       assertAffinityInRange(aff.melee, `target-preset ${record.id} melee`);

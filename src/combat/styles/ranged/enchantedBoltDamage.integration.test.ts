@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { rotationOf } from "../../engine/simulation/contracts";
 import { simulate } from "../../engine/simulation/simulate";
+import {
+  envenomedPoisonDamageMultiplier,
+  leagueModifiers,
+  resolveLeagueRules,
+} from "../../league/ruleset";
 import { rangedInput } from "../../test/fixtures/inputs";
 import { testRangedAmmunition } from "../../testing/rangedAmmunition";
 import { resolveAmmunitionProfile } from "./ammunitionProfile";
@@ -213,6 +218,56 @@ describe("damage-only enchanted bolts", () => {
       rotation: rotationOf("ranged_attack"),
     });
     expect(cinderbanes.totalExpected).toBeGreaterThan(emerald.totalExpected);
+  });
+
+  it("buffs Emerald Magical Poison with Envenomed and lands on poison-immune targets", () => {
+    const envenomed = resolveLeagueRules(
+      {
+        ruleset: "equilibrium",
+        blessingPicks: ["Chaos", "Order", "Chaos", "Order", "Order", "Balance"],
+      },
+      { herbloreLevel: 99 },
+    );
+    const poisonMods = leagueModifiers(envenomed).filter(
+      (modifier) => modifier.appliesToPlayerPoison === true,
+    );
+    // 1.5 + 0.02*99 = 3.48; mulFloor trims the band before chance weighting.
+    expect(envenomedPoisonDamageMultiplier(envenomed)).toBeCloseTo(3.48, 5);
+
+    const plain = simulate({
+      ...rangedInput,
+      ammunition: boltAmmunition("emerald"),
+      rotation: rotationOf("ranged_attack"),
+    });
+    // League ruleset is carried only on `league`; emerald must still see Envenomed.
+    const buffed = simulate({
+      ...rangedInput,
+      league: envenomed,
+      context: { style: "ranged" },
+      playerPoisonModifiers: poisonMods,
+      ammunition: boltAmmunition("emerald"),
+      rotation: rotationOf("ranged_attack"),
+    });
+    const plainPoison =
+      plain.events.find((event) => event.abilityId === "ammunition:emerald")?.damage.expected ?? 0;
+    const buffedPoison =
+      buffed.events.find((event) => event.abilityId === "ammunition:emerald")?.damage.expected ?? 0;
+    expect(plainPoison).toBeGreaterThan(0);
+    expect(buffedPoison).toBeGreaterThan(plainPoison * 3.4);
+
+    const immuneWithEnvenomed = simulate({
+      ...rangedInput,
+      league: envenomed,
+      context: { style: "ranged" },
+      playerPoisonModifiers: poisonMods,
+      ammunition: boltAmmunition("emerald"),
+      targetPoisonImmune: true,
+      rotation: rotationOf("ranged_attack"),
+    });
+    const immunePoison = immuneWithEnvenomed.events.find(
+      (event) => event.abilityId === "ammunition:emerald",
+    );
+    expect(immunePoison?.damage.expected).toBeCloseTo(buffedPoison, 8);
   });
 
   it("keeps Jade, Topaz, and Sapphire control effects explicit", () => {

@@ -322,6 +322,12 @@ export interface TargetPresetRecord extends CombatRecordBase {
     undead?: boolean | null;
     demon?: boolean | null;
     dragon?: boolean | null;
+    /**
+     * Wiki auto-attack rate in game ticks (interval = ticks * 0.6s).
+     * Null/omit when unknown, n/a, or random - never invent.
+     * https://runescape.wiki/w/Attack_rate
+     */
+    attackRateTicks?: number | null;
   };
 }
 

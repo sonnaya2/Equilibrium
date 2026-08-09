@@ -127,7 +127,7 @@ function damagePotentialNote(
   storedTargetAffinity?: number,
 ): string | undefined {
   if (stats.targetAffinity == null) return undefined;
-  const parts = [stats.damagePotentialSource];
+  const parts: string[] = [stats.damagePotentialSource];
   if (storedTargetAffinity != null && storedTargetAffinity !== stats.targetAffinity) {
     parts.push(`Aff_eff ${stats.targetAffinity}`, `stored ${storedTargetAffinity}`);
   } else {

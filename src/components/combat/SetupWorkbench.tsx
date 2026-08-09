@@ -342,7 +342,7 @@ function TargetSummary({ target }: { target: Loadout["target"] }) {
     <div className="setup-target-summary">
       <div className="setup-target-heading">
         <strong>Custom NPC</strong>
-        <span>{titleCase(target.affinity)} affinity</span>
+        <span>{target.affinity}% affinity</span>
       </div>
       {flags.length ? <p className="setup-target-flags">{flags.join(" · ")}</p> : null}
     </div>

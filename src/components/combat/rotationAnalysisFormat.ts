@@ -14,6 +14,24 @@ export function resolvedEventPreview<T extends Pick<ResolvedEvent, "abilityId">>
   return { events: [...initial, perfectEquilibrium], pinnedPerfectEquilibrium: true };
 }
 
+export type EventTimelineMark = {
+  isTickStart: boolean;
+  isCastStart: boolean;
+};
+
+/** Presentation marks for land-tick / source-cast grouping in the event table. */
+export function eventTimelineMarks(
+  events: readonly Pick<ResolvedEvent, "tick" | "sourceCast">[],
+): EventTimelineMark[] {
+  return events.map((event, index) => {
+    const prev = index > 0 ? events[index - 1] : undefined;
+    const isTickStart = !prev || prev.tick !== event.tick;
+    const isCastStart =
+      isTickStart || (prev != null && prev.sourceCast !== event.sourceCast);
+    return { isTickStart, isCastStart };
+  });
+}
+
 function percent(value: number): string {
   return `${(value * 100).toFixed(1)}%`;
 }

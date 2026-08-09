@@ -49,6 +49,14 @@ import { RevoBarLibraryPanel } from "./RevoBarLibraryPanel";
 import { RevoSolverSection } from "./RevoSolverSection";
 import { CalculationAssumptions } from "./CalculationAssumptions";
 import { RevoRunResults } from "./RevoRunResults";
+import {
+  formatKph,
+  formatTtkSeconds,
+  killsPerHour,
+  runTtkSeconds,
+} from "./abilityTtkPresentation";
+import { isApproximatedRun } from "./revoStochasticLabels";
+import { TargetSummaryCard } from "./TargetSummaryCard";
 import { useRevolutionSolver } from "./useRevolutionSolver";
 import "./revo-solver.css";
 
@@ -69,6 +77,9 @@ export function RevolutionPanel({
   setLoadout,
   combatModel: combatModelProp,
   useBuild: _useLoadoutBuild = true,
+  onOpenTarget,
+  rotationMode = "revolution",
+  onRotationModeChange,
 }: {
   stats: CalcStats;
   loadout: Loadout;
@@ -80,6 +91,9 @@ export function RevolutionPanel({
   combatModel?: ResolvedCombatModel;
   /** UI chrome only; model already encodes use-build vs hybrid. */
   useBuild?: boolean;
+  onOpenTarget?: () => void;
+  rotationMode?: "revolution" | "manual";
+  onRotationModeChange?: (mode: "revolution" | "manual") => void;
 }) {
   const { build } = useLeagueBuild();
   const [durationSeconds, setDurationSeconds] = useState(DEFAULT_DURATION_SECONDS);
@@ -418,12 +432,12 @@ export function RevolutionPanel({
         ? "Complete"
         : "Failed"
       : "Not run";
-  const statusWarnings = [
-    modelled.length === 0 ? "No modelled abilities available." : null,
-    unmodelled.length > 0 ? `${unmodelled.length} bar slot(s) are unmodelled.` : null,
-    solver.solverError,
-    runError,
-  ].filter((warning): warning is string => warning != null);
+
+  const targetLp = loadout.target?.maximumLifePoints;
+  const runDps = liveResult?.ok ? liveResult.dps : null;
+  const targetTtkSec = runTtkSeconds(targetLp, runDps);
+  const targetTtkLabel = formatTtkSeconds(targetTtkSec);
+  const targetKphLabel = formatKph(killsPerHour(targetTtkSec));
 
   return (
     <div className="revolution-panel">
@@ -448,30 +462,40 @@ export function RevolutionPanel({
       <CombatFrame as="main" className="revo-main-column">
         <section className="revo-bar-frame" aria-labelledby="revo-bar-title">
           <header className="revo-bar-heading">
-            <h2 id="revo-bar-title">Revolution bar</h2>
+            <div className="revo-bar-heading__title">
+              <h2 id="revo-bar-title">Revolution bar</h2>
+              {onRotationModeChange ? (
+                <div className="revo-mode-toggle" role="group" aria-label="Rotation mode">
+                  {(["revolution", "manual"] as const).map((candidate) => (
+                    <button
+                      key={candidate}
+                      type="button"
+                      onClick={() => onRotationModeChange(candidate)}
+                      aria-pressed={rotationMode === candidate}
+                      className={`revo-mode-toggle__btn${
+                        rotationMode === candidate ? " is-active" : ""
+                      }`}
+                    >
+                      {candidate === "revolution" ? "Revolution" : "Manual"}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
+            </div>
             <span>
               {slots.length} slots · {revoSize} active
-              {loadout.target?.maximumLifePoints
-                ? " · est. TTK under each ability"
-                : " · set target LP for TTK"}
             </span>
           </header>
           <div className="ability-bar-row">
-            <RevoBarGraphic
-              slots={slots}
-              revoSize={revoSize}
-              baseAbilityDamage={stats.base}
-              damagePotential={stats.dp}
-              maximumLifePoints={loadout.target?.maximumLifePoints ?? null}
-            />
+            <RevoBarGraphic slots={slots} revoSize={revoSize} />
           </div>
-          <div className="revo-toolbar flex flex-wrap items-center gap-2 text-xs">
-            <span className="text-parch-300" data-testid="revo-reference-bar">
+          <div className="revo-toolbar">
+            <span className="revo-toolbar__meta" data-testid="revo-reference-bar">
               {activeBarIds ? (
                 <>Solved bar · {modelled.length} abilities</>
               ) : bar ? (
                 <>
-                  <span className="text-parch-50">{barOptionLabel(bar)}</span>
+                  <span className="revo-toolbar__emphasis">{barOptionLabel(bar)}</span>
                   <span className="revo-solver-status__dot" aria-hidden>
                     ·
                   </span>
@@ -556,8 +580,9 @@ export function RevolutionPanel({
         </section>
       </CombatFrame>
 
-      <CombatFrame as="aside" className="revo-status-rail" aria-label="Run status">
-        <h2>Run status</h2>
+      <div className="revo-right-stack">
+      <CombatFrame as="aside" className="revo-status-rail" aria-label="Settings">
+        <h2>Settings</h2>
         <label className="revo-status-control">
           <span>Duration</span>
           <span>
@@ -588,10 +613,8 @@ export function RevolutionPanel({
               }
             />
             <span>
-              <strong>Use equipped / EoF stored special</strong>
-              <small>
-                Weapon special first; EoF store when the weapon special is on cooldown.
-              </small>
+              <strong>Weapon / EoF special</strong>
+              <small>Weapon special first; EoF when that is on cooldown.</small>
             </span>
           </label>
         ) : null}
@@ -609,7 +632,7 @@ export function RevolutionPanel({
                 }));
               }}
             >
-              <option value="">None (fail-closed)</option>
+              <option value="">None</option>
               {eofStorableSpecials().map((spec) => (
                 <option key={spec.id} value={spec.id}>
                   {spec.name}
@@ -692,31 +715,63 @@ export function RevolutionPanel({
             </div>
           </dl>
         </section>
-        <section aria-labelledby="revo-warnings-title">
-          <h2 id="revo-warnings-title">Warnings / limits</h2>
-          {statusWarnings.length ? (
-            <ul>
-              {statusWarnings.map((warning) => (
-                <li key={warning}>{warning}</li>
-              ))}
-            </ul>
-          ) : (
-            <small>None</small>
-          )}
+        <section
+          className="revo-status-assumptions"
+          aria-labelledby="revo-information-title"
+          data-testid="revo-status-assumptions"
+        >
+          <h2 id="revo-information-title" className="sr-only">
+            Information
+          </h2>
+          <CalculationAssumptions
+            stats={stats}
+            result={liveResult}
+            heading="Information"
+          />
         </section>
-        {liveResult ? (
-          <section
-            className="revo-status-assumptions"
-            aria-labelledby="revo-assumptions-title"
-            data-testid="revo-status-assumptions"
-          >
-            <h2 id="revo-assumptions-title" className="sr-only">
-              Assumptions
-            </h2>
-            <CalculationAssumptions stats={stats} result={liveResult} />
-          </section>
+      </CombatFrame>
+
+      <CombatFrame
+        as="aside"
+        className="revo-target-panel"
+        aria-labelledby="revo-target-title"
+        data-testid="revo-target-panel"
+      >
+        <header className="revo-target-panel__header">
+          <h2 id="revo-target-title">Target</h2>
+          {onOpenTarget ? (
+            <button
+              type="button"
+              className="combat-button revo-target-panel__edit"
+              onClick={onOpenTarget}
+            >
+              Edit
+            </button>
+          ) : null}
+        </header>
+        <TargetSummaryCard
+          target={loadout.target}
+          style={loadout.style}
+          damagePotential={stats.dp}
+          className="revo-target-panel__body"
+        />
+        <dl className="revo-target-metrics" data-testid="revo-target-metrics">
+          <div>
+            <dt>{liveResult?.ok && isApproximatedRun(liveResult) ? "TTK (approx.)" : "TTK"}</dt>
+            <dd aria-label={`Estimated time to kill ${targetTtkLabel}`}>{targetTtkLabel}</dd>
+          </div>
+          <div>
+            <dt>{liveResult?.ok && isApproximatedRun(liveResult) ? "KPH (approx.)" : "KPH"}</dt>
+            <dd aria-label={`Estimated kills per hour ${targetKphLabel}`}>{targetKphLabel}</dd>
+          </div>
+        </dl>
+        {!targetLp ? (
+          <p className="revo-target-metrics__hint">Set target LP for TTK / KPH.</p>
+        ) : !liveResult?.ok ? (
+          <p className="revo-target-metrics__hint">Run the bar for TTK / KPH from sim DPS.</p>
         ) : null}
       </CombatFrame>
+      </div>
     </div>
   );
 }

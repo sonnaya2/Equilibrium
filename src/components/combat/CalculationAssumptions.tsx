@@ -39,20 +39,25 @@ const PERCENT_FORMAT = new Intl.NumberFormat("en-US", {
 const formatNumber = (value: number) =>
   new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(value);
 
-/** scenario-dependent: implemented but waiting on an input; not a zero-damage claim. */
 const SUPPORT_LABEL: Record<string, string> = {
-  modeled: "active",
+  modeled: "on",
   "partially-modeled": "partial",
-  "scenario-dependent": "scenario",
-  "not-modeled": "unmodeled",
+  "scenario-dependent": "needs input",
+  "not-modeled": "off",
 };
 
 export function CalculationAssumptions({
   stats,
   result,
+  variant = "details",
+  heading = "Assumptions",
 }: {
   stats: CalcStats;
   result?: RotationSummary | null;
+  /** details = collapsible; panel = always open, fills parent. */
+  variant?: "details" | "panel";
+  /** Null hides the inner title (parent supplies one). */
+  heading?: string | null;
 }) {
   const manualInputsOnly = stats.baseDamageMode === "manual" && stats.mainhandTier === 0;
   const barkscalesPicked = stats.league.blessings.some((choice) => choice.id === "barkscales");
@@ -70,25 +75,25 @@ export function CalculationAssumptions({
     protectionActive: protectOn,
   });
   const rows: Array<[string, string | number]> = [
-    ["Style / effective level", `${stats.combatStyle} · ${stats.effectiveDamageLevel}`],
-    ["Weapon", manualInputsOnly ? "Not applied" : stats.weaponConfiguration],
+    ["Style", `${stats.combatStyle} · ${stats.effectiveDamageLevel}`],
+    ["Weapon", manualInputsOnly ? "—" : stats.weaponConfiguration],
     ...(manualInputsOnly
       ? []
       : ([
           [
-            stats.weaponConfiguration === "twohand" ? "Two-hand tier" : "Main-hand tier",
+            stats.weaponConfiguration === "twohand" ? "Two-hand" : "Main-hand",
             stats.mainhandTier,
           ],
           [
-            stats.combatStyle === "necromancy" ? "Conduit tier" : "Off-hand tier",
-            stats.offhandTier ?? "Not set",
+            stats.combatStyle === "necromancy" ? "Conduit" : "Off-hand",
+            stats.offhandTier ?? "—",
           ],
         ] as Array<[string, string | number]>)),
-    ["Equipment style damage", stats.equipmentStyleDamageBonus],
-    ["Base-damage mode", stats.baseDamageMode],
-    ["Effective base damage", stats.base],
-    ["Starting adrenaline", `${stats.startingAdrenaline}%`],
-    ["Max adrenaline", `${stats.maxAdrenaline}%`],
+    ["Style damage", stats.equipmentStyleDamageBonus],
+    ["Base mode", stats.baseDamageMode],
+    ["Base damage", stats.base],
+    ["Start adren", `${stats.startingAdrenaline}%`],
+    ["Max adren", `${stats.maxAdrenaline}%`],
     ...adrenEconomyAssumptionRows(stats),
     [
       "Damage Potential",
@@ -96,53 +101,44 @@ export function CalculationAssumptions({
         ? PERCENT_FORMAT.format(stats.dp)
         : `${PERCENT_FORMAT.format(stats.dp)} · ${stats.damagePotentialSource}`,
     ],
-    ["Critical chance", PERCENT_FORMAT.format(stats.critChance)],
+    ["Crit chance", PERCENT_FORMAT.format(stats.critChance)],
     ...(unholyPicked
       ? ([
-          ["Uncapped critical chance", PERCENT_FORMAT.format(stats.uncappedCritChance)],
-          ["Effective critical chance", PERCENT_FORMAT.format(stats.critChance)],
-          [
-            "Converted critical chance",
-            `+${PERCENT_FORMAT.format(stats.convertedCritChance)} damage`,
-          ],
+          ["Uncapped crit", PERCENT_FORMAT.format(stats.uncappedCritChance)],
+          ["Crit (capped)", PERCENT_FORMAT.format(stats.critChance)],
+          ["Crit → damage", `+${PERCENT_FORMAT.format(stats.convertedCritChance)}`],
         ] as Array<[string, string | number]>)
       : []),
-    ["Critical damage", `+${PERCENT_FORMAT.format(stats.totalCritDamageBonus)}`],
+    ["Crit damage", `+${PERCENT_FORMAT.format(stats.totalCritDamageBonus)}`],
     ...(result?.playerPoison?.targetState
       ? ([
-          ["Current Bik-arrow stacks", formatNumber(result.playerPoison.targetState.bikStacks)],
+          ["Bik stacks", formatNumber(result.playerPoison.targetState.bikStacks)],
         ] as Array<[string, string | number]>)
       : []),
-    ["30,000 cap", stats.cap.bypass ? "Off" : "On · effect exceptions"],
+    ["Hit cap", stats.cap.bypass ? "Off" : "On (30k)"],
     ...(stats.league.blessings.length > 0
       ? ([
-          ["Equilibrium blessings", stats.league.blessings.map((choice) => choice.name).join(", ")],
+          ["Blessings", stats.league.blessings.map((choice) => choice.name).join(", ")],
           [
-            "Blessing support",
+            "Blessing status",
             stats.league.blessings
               .map(
                 (choice) =>
-                  `${choice.name}: ${SUPPORT_LABEL[choice.support.status]}${
-                    choice.support.mechanicsUnverified ? " (unverified)" : ""
-                  }`,
+                  `${choice.name}: ${SUPPORT_LABEL[choice.support.status] ?? choice.support.status}`,
               )
               .join("; "),
           ],
         ] as Array<[string, string | number]>)
       : []),
-    // Aegis converts Total Armour Value into flat base damage.
     ...(stats.aegis.armourPercent > 0
       ? ([
           [
-            "Aegis Total Armour Value",
+            "Aegis armour",
             `${formatNumber(stats.defence.blockArmourRating)} · ${PERCENT_FORMAT.format(
               stats.aegis.armourPercent,
-            )} · off-hand ${stats.aegis.offhand}`,
+            )}`,
           ],
-          [
-            "Aegis base-damage bonus",
-            `+${formatNumber(stats.aegis.baseAbilityDamageBonus)} (Total Armour Value)`,
-          ],
+          ["Aegis base", `+${formatNumber(stats.aegis.baseAbilityDamageBonus)}`],
         ] as Array<[string, string | number]>)
       : []),
     ...strikingLightAssumptionRows(stats.league.blessings, stats.defence.totalArmour),
@@ -154,7 +150,7 @@ export function CalculationAssumptions({
     ),
     ...temperedHeartAssumptionRows(stats.league.blessings),
     ...(bigBonedPicked
-      ? ([["Big Boned outgoing", BIG_BONED_OUTGOING_ASSUMPTIONS.join("; ")]] as Array<
+      ? ([["Big Boned", BIG_BONED_OUTGOING_ASSUMPTIONS.join("; ")]] as Array<
           [string, string | number]
         >)
       : []),
@@ -162,8 +158,8 @@ export function CalculationAssumptions({
       ? ([
           ["Barkscales", barkscalesGraspNote(stats.barkscales)],
           [
-            "Barkscales mitigation",
-            `−${formatNumber(stats.barkscales.perHit)} per incoming hit · ${stats.barkscales.hitsPerTrigger} to trigger (incoming damage only)`,
+            "Barkscales mit.",
+            `−${formatNumber(stats.barkscales.perHit)} / hit · ${stats.barkscales.hitsPerTrigger} to trigger`,
           ],
         ] as Array<[string, string | number]>)
       : []),
@@ -172,12 +168,12 @@ export function CalculationAssumptions({
           [
             "Icyenic Faith",
             stats.tomeOfTheIcyeneWorn
-              ? `Tome worn · Prayer ${formatNumber(stats.icyenic.totalPrayerBonus)} · +${PERCENT_FORMAT.format(
+              ? `Tome · Prayer ${formatNumber(stats.icyenic.totalPrayerBonus)} · +${PERCENT_FORMAT.format(
                   stats.icyenic.critChanceBonus,
-                )} crit · ×${stats.icyenic.baseAbilityDamageMultiplier.toFixed(3)} base AD`
-              : "Tome of the Icyene not equipped (pocket) - no prayer scaling",
+                )} crit · ×${stats.icyenic.baseAbilityDamageMultiplier.toFixed(3)} base`
+              : "No Tome of the Icyene",
           ],
-          ["Icyenic protection", icyenicProtectionNote(stats.icyenicProtection)],
+          ["Icyenic protect", icyenicProtectionNote(stats.icyenicProtection)],
           [
             "Icyenic Soul Split",
             icyenicSoulSplitNote(icyenicSoulSplit, {
@@ -192,14 +188,14 @@ export function CalculationAssumptions({
           [
             "Naragi Edict",
             sliverWorn
-              ? `Sliver worn · +${SLIVER_PASSIVE.armour} armour · +${SLIVER_PASSIVE.styleDamage} style damage · +${formatNumber(SLIVER_PASSIVE.life)} Hitpoints · +${SLIVER_PASSIVE.prayer} prayer`
-              : "Sliver of Edicts not equipped (pocket) - no passive or activation",
+              ? `Sliver · +${SLIVER_PASSIVE.armour} armour · +${SLIVER_PASSIVE.styleDamage} style · +${formatNumber(SLIVER_PASSIVE.life)} LP · +${SLIVER_PASSIVE.prayer} prayer`
+              : "No Sliver of Edicts",
           ],
           [
-            "Sliver activation",
+            "Sliver use",
             sliverWorn
-              ? `${NARAGI_COOLDOWN_SECONDS}s CD · ${NARAGI_ACTIVE_DURATION_SECONDS}s · ${NARAGI_HEAL_COUNT}×${formatNumber(NARAGI_HEAL_AMOUNT)} Hitpoints · levels ${NARAGI_LEVEL_OVERRIDE} · one revive · auto re-use when toggle On`
-              : "Equip Sliver to activate in sim",
+              ? `${NARAGI_COOLDOWN_SECONDS}s CD · ${NARAGI_ACTIVE_DURATION_SECONDS}s · ${NARAGI_HEAL_COUNT}×${formatNumber(NARAGI_HEAL_AMOUNT)} LP · lv ${NARAGI_LEVEL_OVERRIDE}`
+              : "Equip Sliver",
           ],
         ] as Array<[string, string | number]>)
       : []),
@@ -209,27 +205,20 @@ export function CalculationAssumptions({
             "Berserker's Fury",
             `+${PERCENT_FORMAT.format(stats.berserkersFury.bonus)} · ${formatNumber(
               stats.berserkersFury.currentLifePoints,
-            )}/${formatNumber(stats.berserkersFury.maximumLifePoints)} Hitpoints (${stats.berserkersFury.currentHealthPercent.toFixed(0)}%) · after roll, before crit · not bleeds`,
+            )}/${formatNumber(stats.berserkersFury.maximumLifePoints)} LP`,
           ],
         ] as Array<[string, string | number]>)
       : []),
     ...(stats.league.relics?.length
-      ? ([["Equilibrium relics", stats.league.relics.join(", ")]] as Array<
-          [string, string | number]
-        >)
+      ? ([["Relics", stats.league.relics.join(", ")]] as Array<[string, string | number]>)
       : []),
     ...(stats.activePassives.length > 0
-      ? ([["Equipment passives", stats.activePassives.join(", ")]] as Array<
-          [string, string | number]
-        >)
+      ? ([["Passives", stats.activePassives.join(", ")]] as Array<[string, string | number]>)
       : []),
     ...(stats.procs?.cracklingRank || stats.procs?.aftershockRank
-      ? ([
-          [
-            "Invention proc timing",
-            "Crackling ready at tick 0; Aftershock starts at 0/50,000 and charges from expected landed damage",
-          ],
-        ] as Array<[string, string | number]>)
+      ? ([["Invention", "Crackling ready t0; Aftershock charges from damage"]] as Array<
+          [string, string | number]
+        >)
       : []),
     ...(rotationHasConjureCast(result?.casts)
       ? ([["Spirit Pact III", conjurePactAssumptionNote(stats.conjureDurationMult ?? 1)]] as Array<
@@ -239,24 +228,24 @@ export function CalculationAssumptions({
     ...conjureStAreaAssumptionRows(result?.casts),
   ];
   if (!manualInputsOnly && stats.combatStyle === "magic")
-    rows.splice(4, 0, ["Spell tier", stats.spellTier ?? "Not set"]);
+    rows.splice(4, 0, ["Spell tier", stats.spellTier ?? "—"]);
   if (!manualInputsOnly && stats.combatStyle === "ranged")
-    rows.splice(4, 0, ["Ammunition tier", stats.ammunitionTier ?? "Not set"]);
+    rows.splice(4, 0, ["Ammo tier", stats.ammunitionTier ?? "—"]);
   if (result) {
     const denominator = Math.round(result.metric.denominatorTicks * 100) / 100;
     rows.push(
-      ["DPM metric", result.metric.type],
-      ["Damage counted", Math.round(result.metric.damageCounted)],
+      ["Metric", result.metric.type],
+      ["Damage", Math.round(result.metric.damageCounted)],
       [
-        "Denominator",
+        "Window",
         `${denominator} ticks · ${ticksToSeconds(result.metric.denominatorTicks).toFixed(1)}s`,
       ],
-      ["Post-window tails", result.metric.tails],
+      ["Tails", result.metric.tails],
     );
     if (result.rng) {
       rows.push([
-        "Timeline path",
-        `${result.rng.representative.ticks} ticks · ${(result.rng.representative.historyWeight * 100).toFixed(1)}% representative history`,
+        "Path",
+        `${result.rng.representative.ticks} ticks · ${(result.rng.representative.historyWeight * 100).toFixed(1)}%`,
       ]);
     }
     for (const row of stochasticAssumptionRows(result)) {
@@ -264,24 +253,37 @@ export function CalculationAssumptions({
     }
   }
 
+  const body = (
+    <div className="calculation-assumptions__body">
+      <dl>
+        {rows.map(([label, value]) => (
+          <div key={label}>
+            <dt>{label}</dt>
+            <dd>{value}</dd>
+          </div>
+        ))}
+      </dl>
+      {stats.combatStyle.includes("necromancy") ? (
+        <p className="calculation-assumptions__note">
+          Necro: Phantom Guardian defence off; Ghost heal uses final basic.
+        </p>
+      ) : null}
+    </div>
+  );
+
+  if (variant === "panel") {
+    return (
+      <div className="calculation-assumptions calculation-assumptions--panel">
+        {heading ? <h3 className="calculation-assumptions__title">{heading}</h3> : null}
+        {body}
+      </div>
+    );
+  }
+
   return (
     <details className="calculation-assumptions">
-      <summary>Assumptions</summary>
-      <div className="calculation-assumptions__body">
-        <dl>
-          {rows.map(([label, value]) => (
-            <div key={label}>
-              <dt>{label}</dt>
-              <dd>{value}</dd>
-            </div>
-          ))}
-        </dl>
-        {stats.combatStyle.includes("necromancy") ? (
-          <p className="calculation-assumptions__note">
-            Partial: Phantom Guardian defence is unmodeled; Ghost heal uses final basic damage.
-          </p>
-        ) : null}
-      </div>
+      <summary>{heading ?? "Assumptions"}</summary>
+      {body}
     </details>
   );
 }

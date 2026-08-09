@@ -288,28 +288,6 @@ export function TargetPanel({
             <label className="loadout-check">
               <input
                 type="checkbox"
-                checked={target.damagePotentialOverride !== undefined}
-                onChange={(event) =>
-                  updateTarget({ damagePotentialOverride: event.target.checked ? 1 : undefined })
-                }
-              />
-              Manual Damage Potential
-            </label>
-            {target.damagePotentialOverride !== undefined ? (
-              <NumberField
-                label="Damage Potential"
-                value={target.damagePotentialOverride * 100}
-                onChange={(value) =>
-                  updateTarget({
-                    damagePotentialOverride: Math.min(1, Math.max(0, value / 100)),
-                  })
-                }
-                suffix="%"
-              />
-            ) : null}
-            <label className="loadout-check">
-              <input
-                type="checkbox"
                 checked={target.hpPercent !== undefined}
                 onChange={(event) =>
                   updateTarget({ hpPercent: event.target.checked ? 100 : undefined })

@@ -55,13 +55,13 @@ describe("manual rotation timeline", () => {
     });
   });
 
-  it("rejects starting adrenaline outside 0-100", () => {
+  it("rejects starting adrenaline outside 0-cap (base cap 100)", () => {
     expect(() =>
       simulate({ ...baseInput, startingAdrenaline: -1, rotation: rotationOf("attack") }),
     ).toThrow(RangeError);
     expect(() =>
       simulate({ ...baseInput, startingAdrenaline: 101, rotation: rotationOf("attack") }),
-    ).toThrow(RangeError);
+    ).toThrow(/startingAdrenaline outside 0-100: 101/);
   });
 
   it("applies the shared 30,000 cap in simulation and bypasses it only when disabled", () => {

@@ -27,8 +27,8 @@ import { CalculationAssumptions } from "./CalculationAssumptions";
 import { spiritEffectDisplayName } from "./conjurePresentation";
 import { blessingEffectDisplayName } from "./blessingPresentation";
 import { combatEffectDisplayName, combatEffectIconPath } from "./effectPresentation";
-import { abilityTtkLabel } from "./abilityTtkPresentation";
 import { critDamageStats, type CalcStats } from "./loadoutStats";
+import { LoadoutEditorDialog, type LoadoutEditorMode } from "./LoadoutEditorDialog";
 import { resolveLoadoutCombat } from "./toResolvedCombatModel";
 import { RevolutionPanel } from "./RevolutionPanel";
 import { RotationAnalysisModal, RotationEventPreview } from "./RotationAnalysis";
@@ -159,6 +159,7 @@ export function RotationPlanner({
   const [queue, setQueue] = useState<string[]>([]);
   const [result, setResult] = useState<RotationSummary | null>(null);
   const [analysisOpen, setAnalysisOpen] = useState(false);
+  const [editorMode, setEditorMode] = useState<LoadoutEditorMode | null>(null);
 
   useEffect(() => {
     setMode(loadRotationMode());
@@ -270,14 +271,16 @@ export function RotationPlanner({
       setUiRunCache(runKey, { summary });
       return;
     }
-    // Manual-stat mode: pure slider constructor (no gear/league/mods).
-    // Revolution hybrid (adren+league scaffold) lives on combatModel for Optimize/Revo Run.
+    // Manual-stat mode: slider damage line only. League + vestments for adren cap
+    // so start-at-max (T4 125 / Vestments 120) does not fail createRuntime.
     const catalogue = resolveAbilityCatalogue();
     const simBase = buildManualStatSimulationInputBase(manualLine, catalogue, {
       cap: setupStats.cap,
       startingAdrenaline: setupStats.startingAdrenaline,
       adrenaline: setupStats.adrenaline,
       procs: setupStats.procs,
+      league: setupStats.league,
+      equipmentEffects: setupStats.equipmentEffects,
     });
     const summary = simulate(
       toManualSimulateInput(simBase, {
@@ -369,38 +372,49 @@ export function RotationPlanner({
   const inputCls =
     "w-full border border-stone-750 bg-transparent px-2 py-1 text-right font-mono text-xs text-parch-50";
 
+  const setRotationMode = (next: "revolution" | "manual") => {
+    setMode(next);
+    saveRotationMode(next);
+  };
+
   return (
     <div className="rotation-layout">
       <CombatFrame className="rotation-settings">
-        <h2 className="combat-page-title text-sm font-medium text-parch-50">Rotation setup</h2>
-        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
-          <label className="flex items-center gap-2 text-xs text-parch-300">
-            <input
-              type="checkbox"
-              checked={useBuild}
-              onChange={(e) => setUseBuild(e.target.checked)}
-            />
-            Use Loadout
-          </label>
-          {mode === "manual" ? (
-            <label className="flex items-center gap-2 text-xs text-parch-300">
-              <input type="checkbox" checked={weave} onChange={(e) => setWeave(e.target.checked)} />
-              Automatically use Basic Attacks
+        <div className="rotation-settings__row">
+          <h2>Setup</h2>
+          <div className="rotation-settings__checks">
+            <label>
+              <input
+                type="checkbox"
+                checked={useBuild}
+                onChange={(e) => setUseBuild(e.target.checked)}
+              />
+              Use Loadout
             </label>
-          ) : null}
-          <label className="flex items-center gap-2 text-xs text-parch-300">
-            <input
-              type="checkbox"
-              checked={!setupStats.cap.bypass}
-              aria-label="30,000 hit cap"
-              onChange={(e) => setLoadout({ ...loadout, hitCapEnabled: e.target.checked })}
-            />
-            30,000 hit cap
-          </label>
+            {mode === "manual" ? (
+              <label>
+                <input
+                  type="checkbox"
+                  checked={weave}
+                  onChange={(e) => setWeave(e.target.checked)}
+                />
+                Auto Basic Attacks
+              </label>
+            ) : null}
+            <label>
+              <input
+                type="checkbox"
+                checked={!setupStats.cap.bypass}
+                aria-label="30,000 hit cap"
+                onChange={(e) => setLoadout({ ...loadout, hitCapEnabled: e.target.checked })}
+              />
+              30k hit cap
+            </label>
+          </div>
         </div>
         {useBuild ? (
           <>
-            <dl className="rotation-facts mt-2 grid grid-cols-2 gap-x-4 border-t border-stone-750 text-xs sm:grid-cols-4">
+            <dl className="rotation-facts">
               {(
                 [
                   ["Level", setupStats.level],
@@ -409,17 +423,15 @@ export function RotationPlanner({
                   ["Start adren", `${setupStats.startingAdrenaline}%`],
                 ] as const
               ).map(([label, value]) => (
-                <div key={label} className="border-b border-stone-750/70 py-1.5">
-                  <dt className="text-parch-300">{label}</dt>
-                  <dd className="font-mono text-parch-50">{value}</dd>
+                <div key={label}>
+                  <dt>{label}</dt>
+                  <dd>{value}</dd>
                 </div>
               ))}
             </dl>
             {setupStats.startingAdrenaline < 100 ? (
-              <p className="mt-1.5 text-[11px] leading-snug text-parch-300">
-                Starting adren is {setupStats.startingAdrenaline}%. Ultimates like Death&apos;s
-                Swiftness need 100% (or automatic Basic Attacks to bank it). Set Starting adrenaline
-                under Loadout → Stats, or{" "}
+              <p className="rotation-settings__hint">
+                Start adren {setupStats.startingAdrenaline}%. Ultimates need 100%.{" "}
                 <button
                   type="button"
                   className="text-gem-300 underline decoration-gem-400/50 underline-offset-2 hover:text-gem-200"
@@ -430,15 +442,14 @@ export function RotationPlanner({
                     })
                   }
                 >
-                  start at 100%
+                  Set 100%
                 </button>
-                .
               </p>
             ) : null}
           </>
         ) : (
-          <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-parch-300">
-            <label className="grid gap-1">
+          <div className="rotation-settings__manual">
+            <label>
               <span>Base damage</span>
               <input
                 type="number"
@@ -447,7 +458,7 @@ export function RotationPlanner({
                 className={inputCls}
               />
             </label>
-            <label className="grid gap-1">
+            <label>
               <span>Level</span>
               <input
                 type="number"
@@ -456,7 +467,7 @@ export function RotationPlanner({
                 className={inputCls}
               />
             </label>
-            <label className="grid gap-1">
+            <label>
               <span>Damage Potential %</span>
               <input
                 type="number"
@@ -465,7 +476,7 @@ export function RotationPlanner({
                 className={inputCls}
               />
             </label>
-            <label className="grid gap-1">
+            <label>
               <span>Crit %</span>
               <input
                 type="number"
@@ -476,26 +487,6 @@ export function RotationPlanner({
             </label>
           </div>
         )}
-        <div className="mt-3 flex gap-1 border-t border-stone-750 pt-3">
-          {(["revolution", "manual"] as const).map((candidate) => (
-            <button
-              key={candidate}
-              type="button"
-              onClick={() => {
-                setMode(candidate);
-                saveRotationMode(candidate);
-              }}
-              aria-pressed={mode === candidate}
-              className={`combat-button border px-3 py-1.5 text-xs capitalize ${
-                mode === candidate
-                  ? "border-stone-750 bg-stone-850 text-parch-50"
-                  : "border-stone-750 text-parch-300 hover:bg-white/[0.02] hover:text-parch-50"
-              }`}
-            >
-              {candidate}
-            </button>
-          ))}
-        </div>
 
         {mode === "manual" ? (
           <>
@@ -574,15 +565,33 @@ export function RotationPlanner({
             setLoadout={setLoadout}
             combatModel={combatModel}
             useBuild={useBuild}
+            onOpenTarget={() => setEditorMode("target")}
+            rotationMode={mode}
+            onRotationModeChange={setRotationMode}
           />
         </div>
       ) : (
         <CombatFrame className="rotation-workbench rotation-manual">
-          <div className="flex flex-wrap items-baseline justify-between gap-3">
-            <h2 className="text-sm font-medium text-parch-50">
-              Queue · {queue.length} casts · 60s fixed window
-            </h2>
-            <div className="flex gap-2">
+          <div className="rotation-manual-header">
+            <div className="revo-bar-heading__title">
+              <h2>
+                Queue · {queue.length} casts · 60s
+              </h2>
+              <div className="revo-mode-toggle" role="group" aria-label="Rotation mode">
+                {(["revolution", "manual"] as const).map((candidate) => (
+                  <button
+                    key={candidate}
+                    type="button"
+                    onClick={() => setRotationMode(candidate)}
+                    aria-pressed={mode === candidate}
+                    className={`revo-mode-toggle__btn${mode === candidate ? " is-active" : ""}`}
+                  >
+                    {candidate === "revolution" ? "Revolution" : "Manual"}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="rotation-manual-header__actions">
               <button
                 type="button"
                 onClick={() => updateQueue([])}
@@ -621,15 +630,6 @@ export function RotationPlanner({
                       })
                     : ({ available: true } as const);
                 const lockReason = !slotGate.available ? slotGate.message : undefined;
-                const ttk =
-                  a && !lockReason
-                    ? abilityTtkLabel(
-                        useBuild ? setupStats.base : manualLine.base,
-                        a,
-                        useBuild ? setupStats.dp : manualLine.accuracy,
-                        loadout.target?.maximumLifePoints,
-                      )
-                    : null;
                 return (
                   <button
                     key={`${id}-${index}`}
@@ -637,9 +637,7 @@ export function RotationPlanner({
                     title={
                       lockReason
                         ? `${lockReason} · click to remove`
-                        : ttk
-                          ? `${a?.name ?? id} · est. TTK ${ttk} · click to remove`
-                          : "Remove cast"
+                        : "Remove cast"
                     }
                     onClick={() => updateQueue(queue.filter((_, i) => i !== index))}
                     className={`grid w-full grid-cols-[2rem_1fr_auto] gap-2 border-b border-stone-750/70 px-2 py-1.5 text-left text-xs hover:bg-white/[0.02] ${
@@ -671,13 +669,6 @@ export function RotationPlanner({
                     {lockReason ? (
                       <span className="max-w-[12rem] truncate font-mono text-[10px] text-parch-300">
                         {lockReason}
-                      </span>
-                    ) : ttk ? (
-                      <span
-                        className="font-mono text-[10px] text-parch-50"
-                        aria-label={`Estimated time to kill ${ttk}`}
-                      >
-                        TTK {ttk}
                       </span>
                     ) : null}
                   </button>
@@ -894,6 +885,13 @@ export function RotationPlanner({
           onClose={() => setAnalysisOpen(false)}
         />
       ) : null}
+      <LoadoutEditorDialog
+        mode={editorMode}
+        loadout={loadout}
+        setLoadout={setLoadout}
+        stats={setupStats}
+        onDismiss={() => setEditorMode(null)}
+      />
     </div>
   );
 }

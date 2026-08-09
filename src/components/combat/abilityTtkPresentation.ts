@@ -78,3 +78,30 @@ export function abilityTtkLabel(
     }),
   );
 }
+
+/**
+ * Bar-run TTK from sim DPS and target LP: LP / dps.
+ * Null when LP or dps missing/zero.
+ */
+export function runTtkSeconds(
+  maximumLifePoints: number | null | undefined,
+  dps: number | null | undefined,
+): number | null {
+  const lp = maximumLifePoints;
+  if (lp == null || !Number.isFinite(lp) || lp <= 0) return null;
+  if (dps == null || !Number.isFinite(dps) || dps <= 0) return null;
+  return lp / dps;
+}
+
+/** Kills per hour from TTK seconds. */
+export function killsPerHour(ttkSeconds: number | null | undefined): number | null {
+  if (ttkSeconds == null || !Number.isFinite(ttkSeconds) || ttkSeconds <= 0) return null;
+  return 3600 / ttkSeconds;
+}
+
+export function formatKph(kph: number | null | undefined): string {
+  if (kph == null || !Number.isFinite(kph) || kph <= 0) return "—";
+  if (kph >= 100) return String(Math.round(kph));
+  if (kph >= 10) return (Math.round(kph * 10) / 10).toFixed(1);
+  return (Math.round(kph * 100) / 100).toFixed(2);
+}

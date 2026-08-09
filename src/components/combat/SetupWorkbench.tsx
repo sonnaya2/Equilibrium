@@ -349,7 +349,7 @@ function TargetSummary({
   if (!view) {
     return (
       <div className="setup-target-summary setup-target-summary--empty">
-        <p>No NPC target. Damage Potential uses the manual accuracy slider.</p>
+        <p>No NPC target. Damage Potential assumes 100% until a target is set.</p>
       </div>
     );
   }

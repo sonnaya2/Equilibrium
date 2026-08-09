@@ -189,11 +189,6 @@ function CombatValues({
   setLoadout: SetLoadout;
   stats: ResolvedStats;
 }) {
-  const damagePotential =
-    loadout.target?.damagePotentialOverride == null
-      ? loadout.accuracy
-      : loadout.target.damagePotentialOverride * 100;
-
   return (
     <section className="buff-combat-values" role="group" aria-label="Combat values">
       <NumberField
@@ -216,36 +211,6 @@ function CombatValues({
                 : loadout.currentHealthPercent,
           });
         }}
-      />
-      <NumberField
-        label={
-          <CombatValueLabel icon="/game/skills/attack.webp">Damage Potential</CombatValueLabel>
-        }
-        value={damagePotential}
-        min={0}
-        max={100}
-        suffix="%"
-        onChange={(value) => {
-          if (loadout.target) {
-            setLoadout({
-              ...loadout,
-              target: {
-                ...loadout.target,
-                damagePotentialOverride: Math.min(1, Math.max(0, value / 100)),
-              },
-            });
-            return;
-          }
-          setLoadout({ ...loadout, accuracy: value });
-        }}
-      />
-      <NumberField
-        label={
-          <CombatValueLabel icon="/game/combat/critical-strike.webp">Crit chance</CombatValueLabel>
-        }
-        value={loadout.critChance}
-        suffix="%"
-        onChange={(value) => setLoadout({ ...loadout, critChance: value })}
       />
       <label className="loadout-check setup-input-check">
         <input

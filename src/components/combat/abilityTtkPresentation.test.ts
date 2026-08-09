@@ -5,7 +5,10 @@ import {
   abilityExpectedDamage,
   abilityTtkLabel,
   abilityTtkSeconds,
+  formatKph,
   formatTtkSeconds,
+  killsPerHour,
+  runTtkSeconds,
 } from "./abilityTtkPresentation";
 
 const slash: AbilitySpec = {
@@ -53,5 +56,15 @@ describe("abilityTtkPresentation", () => {
   it("formats compact TTK labels", () => {
     expect(abilityTtkLabel(1000, slash, 1, 3000)).toBe("9s");
     expect(formatTtkSeconds(75)).toBe("1:15");
+  });
+
+  it("run TTK is LP / dps; KPH is 3600 / TTK", () => {
+    // 100_000 LP at 10_000 dps -> 10s TTK -> 360 KPH
+    expect(runTtkSeconds(100_000, 10_000)).toBe(10);
+    expect(killsPerHour(10)).toBe(360);
+    expect(formatKph(360)).toBe("360");
+    expect(runTtkSeconds(null, 10_000)).toBeNull();
+    expect(runTtkSeconds(100_000, 0)).toBeNull();
+    expect(formatKph(null)).toBe("—");
   });
 });

@@ -18,6 +18,8 @@ import type { HostCombatResolveInput, ResolvedCombatModel } from "./contracts";
 import { buildResolvedCombatModel } from "./resolve";
 import { modifiersFromSources, playerPoisonModifiersFromSources } from "./modifiers";
 import { reviveLeague } from "./simulationInput";
+import type { ResolvedLeagueRules } from "../league/ruleset";
+import type { ActiveEquipmentEffects } from "../shared/equipment";
 
 /** Shared fields for Manual simulate() and Revolution simulateRevolution(). */
 export type SimulationInputBase = Omit<
@@ -115,19 +117,21 @@ export interface ManualStatLine {
 
 /**
  * Scaffold from a resolved model (or partial) for adren economy kept in manual-stat mode.
- * Matches prior RotationPlanner behavior: cap / startingAdren / adrenaline / procs only.
+ * League + equipmentEffects are for adren cap only (start-at-max with T4 / Vestments / HS).
+ * Still no cast modifiers or Strength Cape catalogue patch.
  */
 export interface ManualStatScaffold {
   readonly cap?: HitCapRule;
   readonly startingAdrenaline?: number;
   readonly adrenaline?: AdrenalineRules;
   readonly procs?: ProcRules;
+  readonly league?: ResolvedLeagueRules;
+  readonly equipmentEffects?: ActiveEquipmentEffects;
 }
 
 /**
  * Manual custom-stat constructor - deliberately separate from full loadout path.
- * Does not grant cast modifiers, equipmentEffects, league, or Strength Cape catalogue patch
- * unless the caller already put cape on the catalogue.
+ * No cast modifiers or Strength Cape catalogue patch. League / vestments only for adren cap.
  */
 export function buildManualStatSimulationInputBase(
   line: ManualStatLine,
@@ -141,11 +145,22 @@ export function buildManualStatSimulationInputBase(
     crit: { chance: Math.min(Math.max(0, line.critChance), 1) },
     abilities: catalogue.catalogue,
     abilityRegistry: catalogue.abilityRegistry,
-    // Intentionally no modifiers / equipment / league / plantedFeet / precise / conjure.
+    // No cast modifiers / plantedFeet / precise / conjure.
     cap: scaffold.cap,
     startingAdrenaline: scaffold.startingAdrenaline,
     adrenaline: scaffold.adrenaline,
     procs: scaffold.procs,
+    ...(scaffold.league ? { league: scaffold.league } : {}),
+    ...(scaffold.equipmentEffects
+      ? {
+          equipmentEffects: {
+            ...scaffold.equipmentEffects,
+            ...(scaffold.equipmentEffects.songOfDestruction
+              ? { songOfDestruction: { ...scaffold.equipmentEffects.songOfDestruction } }
+              : {}),
+          },
+        }
+      : {}),
   };
 }
 

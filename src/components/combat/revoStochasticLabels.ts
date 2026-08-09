@@ -245,44 +245,42 @@ export function formatProofChrome(
 export function stochasticAssumptionRows(source: StochasticLabelSource): Array<[string, string]> {
   const rows: Array<[string, string]> = [];
   const exactness = exactnessLabel(stochasticExactnessOf(source));
-  if (exactness) rows.push(["Stochastic model", exactness]);
+  if (exactness) rows.push(["Model", exactness]);
 
   const residual = residualWeightOf(source);
-  if (residual > 0) rows.push(["Residual mass", formatPercentMass(residual)]);
+  if (residual > 0) rows.push(["Residual", formatPercentMass(residual)]);
 
   const concrete = concreteMassOf(source);
   if (residual > 0 && concrete > 0) {
-    rows.push(["Concrete mass", formatPercentMass(concrete)]);
+    rows.push(["Concrete", formatPercentMass(concrete)]);
   }
 
   const basis = totalsBasisOf(source);
   if (basis === "concrete-terminals") {
-    rows.push(["Totals basis", "Concrete terminals (E[D|concrete])"]);
+    rows.push(["Totals", "Concrete terminals"]);
   } else if (basis === "unit-mass") {
-    rows.push(["Totals basis", "Unit mass"]);
+    rows.push(["Totals", "Unit mass"]);
   }
 
   const failed = failedWeightOf(source);
   if (failed > 0) {
-    rows.push(["Failed path mass", formatPercentMass(failed)]);
+    rows.push(["Failed paths", formatPercentMass(failed)]);
     const success = successfulWeightOf(source);
-    if (success > 0) rows.push(["Success path mass", formatPercentMass(success)]);
+    if (success > 0) rows.push(["Success paths", formatPercentMass(success)]);
   }
 
   const scope = source.failure?.totalsScope ?? source.rng?.failure?.totalsScope;
   if (scope === "unconditional-all-mass") {
     rows.push([
-      "Totals scope",
-      residual > 0
-        ? "Unconditional over concrete path mass (residual excluded)"
-        : "Unconditional over concrete path mass",
+      "Scope",
+      residual > 0 ? "Concrete paths only" : "All concrete paths",
     ]);
   } else if (scope === "none" && failed > 0) {
-    rows.push(["Totals scope", "None (all paths failed)"]);
+    rows.push(["Scope", "All paths failed"]);
   }
 
   const reason = source.failure?.primaryReason ?? source.rng?.failure?.primaryReason;
-  if (reason && failed > 0) rows.push(["Failure reason", reason]);
+  if (reason && failed > 0) rows.push(["Fail reason", reason]);
 
   return rows;
 }

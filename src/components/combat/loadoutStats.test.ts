@@ -266,10 +266,10 @@ describe("loadoutStats", () => {
     );
   });
 
-  it("passes accuracy% through as Damage Potential when no target is set", () => {
+  it("uses full Damage Potential when no target is set", () => {
     const stats = loadoutStats({ ...base, attackLevel: 119, accuracy: 70 });
-    expect(stats.dp).toBeCloseTo(0.7, 10);
-    expect(stats.damagePotentialSource).toBe("manual override");
+    expect(stats.dp).toBeCloseTo(1, 10);
+    expect(stats.damagePotentialSource).toBe("100% assumption");
     expect(loadoutStats(base).damagePotentialSource).toBe("100% assumption");
   });
 

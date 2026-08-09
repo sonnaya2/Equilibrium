@@ -607,8 +607,7 @@ export function resolveAccuracyDp(
   slayerSalve: ResolvedSlayerSalve,
 ): ResolvedAccuracyDp {
   // Target model: level+tier curve + Energising + non-weapon flat accuracy only.
-  // Without a target, the manual accuracy% slider is the FINAL override - no
-  // equipment accuracy/DP passives on that path.
+  // Damage Potential comes only from the current target (or 100% with no target).
   const weaponAccuracy = playerAccuracy(levels.attackLevel, equipment.weaponTier);
   const accuracyBeforeEffects = weaponAccuracy + levels.energising + equipment.accessoryAccuracy;
   const accuracyRating = applyEquipmentAccuracy(accuracyBeforeEffects, equipment.equipmentEffects);
@@ -638,27 +637,20 @@ export function resolveAccuracyDp(
         }),
         affinity: targetAffinity ?? loadout.target.affinity,
         additiveHitChance: (loadout.target.additiveHitChance ?? 0) / 100 + attackCapeHit,
-        ...(loadout.target.damagePotentialOverride != null
-          ? { damagePotentialOverride: loadout.target.damagePotentialOverride }
-          : {}),
       })
     : undefined;
+  // Damage Potential is only from the current target model (no manual override).
+  // Without a target, assume full DP (+ attack cape hit chance when active).
   const dp = loadout.target
     ? liveTargetDamagePotential(targetAccuracyProfile!, {
         equipmentEffects: equipment.equipmentEffects,
       })
-    : // Manual slider is final DP; skillcape hit chance still stacks on top.
-      // Target-specific accuracy mults (slayer/salve) need a target model.
-      clamp01(loadout.accuracy / 100 + attackCapeHit);
+    : clamp01(1 + attackCapeHit);
   const damagePotentialSource: DamagePotentialSource = loadout.target
-    ? loadout.target.damagePotentialOverride != null
-      ? "manual override"
-      : targetAffinity !== loadout.target.affinity
-        ? "target weakness"
-        : "target stats"
-    : loadout.accuracy === 100
-      ? "100% assumption"
-      : "manual override";
+    ? targetAffinity !== loadout.target.affinity
+      ? "target weakness"
+      : "target stats"
+    : "100% assumption";
   const accuracyBreakdown: BreakdownRow[] = [
     { label: "Weapon", value: weaponAccuracy },
     { label: "Energising", value: levels.energising },
@@ -883,7 +875,8 @@ export function resolveCrit(
       ? bitingCritChanceBonus(loadout.perks.biting, loadout.perks.bitingLevel20)
       : 0;
   const setCrit = equipment.equipmentEffects.setCritChance.unconditional;
-  const configuredCrit = loadout.critChance / 100;
+  // No manual crit slider - only gear, perks, sets, and league layers.
+  const configuredCrit = 0;
   const critSubtotal =
     configuredCrit + biting + setCrit + equipmentCrit.chance + icyenicCrit + trueEquilibriumCrit;
   // Invention perk Equilibrium zeros crit - not the League.
@@ -1104,7 +1097,8 @@ export function resolveCombatRules(
       pieceContribution: setPieceContribution,
     }),
     maxAdrenaline,
-    startingAdrenaline: Math.min(maxAdrenaline, loadout.startingAdrenaline),
+    // Always open at max adren (Vestments 120, T4/HS 125, stacked caps, etc.).
+    startingAdrenaline: maxAdrenaline,
     cap: {
       cap: STANDARD_HIT_CAP,
       // User toggle only; league does not force bypass under equilibrium.

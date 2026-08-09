@@ -484,7 +484,8 @@ export const DEFAULT_LOADOUT: Loadout = {
   loadoutSchemaVersion: LOADOUT_SCHEMA_VERSION,
   hitCapEnabled: false,
   accuracy: 100,
-  critChance: 10,
+  // Manual crit removed from loadout UI; resolveCrit ignores this (gear/perks only).
+  critChance: 0,
   target: null,
   perks: {
     equilibrium: 0,

@@ -10,11 +10,7 @@ import { CombatFrame } from "./CombatFrame";
 import type { CalcStats } from "./loadoutStats";
 import { loadActiveRevoBar, loadRotationMode } from "./revoBarLibrary";
 import { defaultRevoBarIds } from "./revoBarResolve";
-import {
-  formatLifePoints,
-  targetSummaryView,
-} from "./targetSummaryPresentation";
-import { isTargetModifiedFromPreset } from "./targetPresetUi";
+import { RotationTargetChip } from "./RotationTargetChip";
 import type { Loadout } from "./useLoadout";
 
 const STORAGE_KEY = "eq:rotation:v1";
@@ -69,15 +65,6 @@ export function CompactRotation({
   const maxLp = loadout.target?.maximumLifePoints;
   const dp = stats.dp;
   const base = stats.base;
-  const targetView = useMemo(
-    () =>
-      targetSummaryView(loadout.target, {
-        modified:
-          loadout.target != null &&
-          isTargetModifiedFromPreset(loadout.target, loadout.style),
-      }),
-    [loadout.target, loadout.style],
-  );
 
   return (
     <CombatFrame
@@ -119,35 +106,7 @@ export function CompactRotation({
         <button type="button" className="setup-card-action" onClick={onOpenRotation}>
           Open rotation
         </button>
-        {targetView ? (
-          <button
-            type="button"
-            className="compact-rotation-target"
-            onClick={onOpenTarget}
-            title={`${targetView.name} · Def ${targetView.defenceLevel} · Aff ${targetView.affinity}`}
-          >
-            <span className="compact-rotation-target__icon" aria-hidden>
-              <GameIcon src={targetView.iconSrc} size={22} />
-            </span>
-            <span className="compact-rotation-target__copy">
-              <strong>{targetView.name}</strong>
-              <small>
-                Def {targetView.defenceLevel} · Aff {targetView.affinity}
-                {targetView.maximumLifePoints != null
-                  ? ` · LP ${formatLifePoints(targetView.maximumLifePoints)}`
-                  : ""}
-              </small>
-            </span>
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="compact-rotation-target compact-rotation-target--empty"
-            onClick={onOpenTarget}
-          >
-            Set target
-          </button>
-        )}
+        <RotationTargetChip loadout={loadout} onOpenTarget={onOpenTarget} />
       </footer>
     </CombatFrame>
   );

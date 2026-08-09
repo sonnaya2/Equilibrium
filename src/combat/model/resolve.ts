@@ -145,6 +145,8 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
     league: {
       ruleset: input.league.ruleset,
       blessings: [...input.league.blessings],
+      // T4 maximum-adrenaline lives on tierPassives; drop this and start=max (125) fails createRuntime.
+      tierPassives: [...(input.league.tierPassives ?? [])],
       blessingIds: [...input.league.blessingIds],
       relics: [...(input.league.relics ?? [])],
       totalArmour: input.league.totalArmour,

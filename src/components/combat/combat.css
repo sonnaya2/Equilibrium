@@ -2533,8 +2533,9 @@ button.setup-status-row:focus-visible {
 .rotation-analysis-dialog {
   width: min(94vw, 76rem);
   max-width: none;
-  max-height: 92vh;
+  max-height: min(92vh, calc(100svh - 1.5rem));
   padding: 0;
+  overflow: hidden;
   border: 1px solid var(--combat-gold);
   background: var(--combat-panel);
   color: var(--combat-text);
@@ -2546,12 +2547,657 @@ button.setup-status-row:focus-visible {
   backdrop-filter: blur(3px);
 }
 
+.rotation-analysis-dialog button:focus-visible {
+  outline: 1px solid var(--combat-gold-bright);
+  outline-offset: 2px;
+}
+
 .rotation-analysis-shell {
+  display: flex;
+  flex-direction: column;
+  max-height: min(92vh, calc(100svh - 1.5rem));
+  min-height: 0;
+  overflow: hidden;
+}
+
+.rotation-analysis-header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--combat-gold-mid);
+  background: var(--combat-shell, var(--combat-raised));
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+
+.rotation-analysis-header__copy {
+  min-width: 0;
+}
+
+.rotation-analysis-kicker {
+  margin: 0;
+  color: var(--combat-gold-bright);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.rotation-analysis-title {
+  margin: 0.15rem 0 0;
+  color: var(--combat-text);
+  font-family: var(--combat-display, var(--font-display), Cinzel, serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+}
+
+.rotation-analysis-subtitle {
+  margin: 0.2rem 0 0;
+  color: var(--combat-muted);
+  font-size: 0.72rem;
+  line-height: 1.3;
+}
+
+.rotation-analysis-close {
+  flex-shrink: 0;
+  min-height: 2rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--combat-gold-mid);
+  background: var(--combat-inset);
+  color: var(--combat-text);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.rotation-analysis-close:hover {
+  border-color: var(--combat-gold);
+  color: var(--combat-gold-bright);
+}
+
+.rotation-analysis-body {
   display: grid;
-  gap: 1.2rem;
-  max-height: 92vh;
-  padding: 1.2rem;
+  gap: 0.85rem;
+  min-height: 0;
+  flex: 1 1 auto;
   overflow: auto;
+  overscroll-behavior: contain;
+  padding: 0.75rem 0.9rem 0.95rem;
+}
+
+.rotation-analysis-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+  border: 1px solid var(--combat-gold-mid);
+  background: var(--combat-inset);
+}
+
+@media (min-width: 40rem) {
+  .rotation-analysis-metrics {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.rotation-analysis-metric {
+  min-width: 0;
+  padding: 0.45rem 0.6rem;
+  border-right: 1px solid var(--combat-gold-dim);
+  border-bottom: 1px solid var(--combat-gold-dim);
+}
+
+.rotation-analysis-metric:nth-child(2n) {
+  border-right: 0;
+}
+
+.rotation-analysis-metric:nth-last-child(-n + 2) {
+  border-bottom: 0;
+}
+
+@media (min-width: 40rem) {
+  .rotation-analysis-metric {
+    border-bottom: 0;
+  }
+
+  .rotation-analysis-metric:nth-child(2n) {
+    border-right: 1px solid var(--combat-gold-dim);
+  }
+
+  .rotation-analysis-metric:nth-child(4n),
+  .rotation-analysis-metric:last-child {
+    border-right: 0;
+  }
+
+  .rotation-analysis-metric:nth-last-child(-n + 2) {
+    border-bottom: 0;
+  }
+}
+
+.rotation-analysis-metric dt {
+  margin: 0;
+  color: var(--combat-muted);
+  font-size: 0.66rem;
+  line-height: 1.2;
+}
+
+.rotation-analysis-metric dd {
+  margin: 0.15rem 0 0;
+  color: var(--combat-text);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.rotation-analysis-metric:first-child dd {
+  color: var(--combat-gold-bright);
+  font-weight: 650;
+}
+
+.rotation-analysis-section {
+  min-width: 0;
+}
+
+.rotation-analysis-section__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 0.75rem;
+  margin: 0 0 0.35rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--combat-gold-dim);
+}
+
+.rotation-analysis-section__head .combat-section-title,
+.rotation-analysis-section__title {
+  margin: 0;
+  color: var(--combat-text);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.rotation-analysis-section__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 0.75rem;
+  margin: 0 0 0.35rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--combat-gold-dim);
+}
+
+.rotation-analysis-section__meta {
+  color: var(--combat-muted);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.rotation-analysis-poison__line {
+  margin: 0 0 0.35rem;
+  color: var(--combat-muted);
+  font-size: 0.72rem;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.rotation-analysis-poison-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+  border: 1px solid var(--combat-gold-mid);
+  background: var(--combat-inset);
+}
+
+@media (min-width: 40rem) {
+  .rotation-analysis-poison-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.rotation-analysis-poison-grid > div {
+  min-width: 0;
+  padding: 0.35rem 0.5rem;
+  border-right: 1px solid var(--combat-gold-dim);
+  border-bottom: 1px solid var(--combat-gold-dim);
+}
+
+.rotation-analysis-poison-grid > div:nth-child(2n) {
+  border-right: 0;
+}
+
+.rotation-analysis-poison-grid > div:nth-last-child(-n + 2) {
+  border-bottom: 0;
+}
+
+@media (min-width: 40rem) {
+  .rotation-analysis-poison-grid > div {
+    border-bottom: 0;
+  }
+
+  .rotation-analysis-poison-grid > div:nth-child(2n) {
+    border-right: 1px solid var(--combat-gold-dim);
+  }
+
+  .rotation-analysis-poison-grid > div:nth-child(4n),
+  .rotation-analysis-poison-grid > div:last-child {
+    border-right: 0;
+  }
+
+  .rotation-analysis-poison-grid__wide {
+    border-top: 1px solid var(--combat-gold-dim);
+  }
+}
+
+.rotation-analysis-poison-grid__wide {
+  grid-column: 1 / -1;
+  border-right: 0 !important;
+}
+
+.rotation-analysis-poison-grid dt {
+  margin: 0;
+  color: var(--combat-muted);
+  font-size: 0.66rem;
+  line-height: 1.2;
+}
+
+.rotation-analysis-poison-grid dd {
+  margin: 0.12rem 0 0;
+  color: var(--combat-text);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.rotation-analysis-notes {
+  margin: 0.35rem 0 0;
+}
+
+.rotation-analysis-notes > summary {
+  cursor: pointer;
+  color: var(--combat-muted);
+  font-size: 0.66rem;
+  line-height: 1.3;
+  list-style: none;
+}
+
+.rotation-analysis-notes > summary::-webkit-details-marker {
+  display: none;
+}
+
+.rotation-analysis-notes > summary::before {
+  content: "▸ ";
+  color: var(--combat-muted);
+}
+
+.rotation-analysis-notes[open] > summary::before {
+  content: "▾ ";
+}
+
+.rotation-analysis-notes > summary:hover {
+  color: var(--combat-text);
+}
+
+.rotation-analysis-notes > summary:focus-visible {
+  outline: 1px solid var(--combat-gem);
+  outline-offset: 2px;
+}
+
+.rotation-analysis-notes p {
+  margin: 0.3rem 0 0;
+  padding: 0.35rem 0.45rem;
+  border: 1px solid var(--combat-gold-dim);
+  background: var(--combat-inset);
+  color: var(--combat-muted);
+  font-size: 0.66rem;
+  line-height: 1.35;
+}
+
+.rotation-analysis-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem;
+  margin: 0;
+}
+
+@media (min-width: 40rem) {
+  .rotation-analysis-stat-grid:not(.is-pair) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.rotation-analysis-stat-grid .combat-subpanel {
+  min-width: 0;
+  padding: 0.35rem 0.45rem;
+}
+
+.rotation-analysis-stat-grid dt {
+  margin: 0;
+  color: var(--combat-muted);
+  font-size: 0.66rem;
+}
+
+.rotation-analysis-stat-grid dd {
+  margin: 0.15rem 0 0;
+  color: var(--combat-text);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+
+.rotation-analysis-breakdown {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.85rem;
+  min-width: 0;
+}
+
+@media (min-width: 64rem) {
+  .rotation-analysis-breakdown {
+    grid-template-columns: minmax(11rem, 0.72fr) minmax(0, 1.28fr);
+    gap: 0.9rem 1rem;
+    align-items: start;
+  }
+}
+
+.rotation-analysis-source-list {
+  border-top: 1px solid var(--combat-gold-dim);
+}
+
+.rotation-analysis-source-row {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--combat-gold-dim) 70%, transparent);
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+
+.rotation-analysis-source-row__meta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: baseline;
+  gap: 0.45rem;
+}
+
+.rotation-analysis-source-row__label {
+  min-width: 0;
+  color: var(--combat-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rotation-analysis-source-row__damage {
+  color: var(--combat-text);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.rotation-analysis-source-row__share {
+  min-width: 2.75rem;
+  color: var(--combat-muted);
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.rotation-analysis-source-row__bar {
+  display: block;
+  height: 0.28rem;
+  overflow: hidden;
+  border: 1px solid var(--combat-gold-dim);
+  background: rgb(0 0 0 / 28%);
+}
+
+.rotation-analysis-source-row__bar > span {
+  display: block;
+  width: var(--share, 0%);
+  height: 100%;
+  background: color-mix(in srgb, var(--combat-gem) 58%, var(--combat-gem-bright));
+}
+
+.rotation-analysis-source-row[data-source-kind="league-blessing"] .rotation-analysis-source-row__label,
+.rotation-analysis-source-row[data-source-kind="league-blessing"] .rotation-analysis-source-row__damage {
+  color: var(--combat-gold-bright);
+}
+
+.rotation-analysis-source-row[data-source-kind="league-blessing"] .rotation-analysis-source-row__bar > span {
+  background: color-mix(in srgb, var(--combat-gold-bright) 72%, var(--combat-gold));
+}
+
+.rotation-analysis-source-row[data-source-kind="conjure-or-familiar"] .rotation-analysis-source-row__label {
+  color: var(--combat-gem-bright);
+}
+
+.rotation-analysis-source-row[data-source-kind="conjure-or-familiar"] .rotation-analysis-source-row__bar > span {
+  background: color-mix(in srgb, var(--combat-gem-bright) 55%, var(--combat-gem));
+}
+
+.rotation-analysis-group {
+  margin-top: 0.35rem;
+  border-top: 1px solid var(--combat-gold-dim);
+  font-size: 0.75rem;
+}
+
+.rotation-analysis-group__head,
+.rotation-analysis-group__component {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
+  gap: 0.35rem 0.55rem;
+  align-items: center;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--combat-gold-dim) 65%, transparent);
+}
+
+.rotation-analysis-group__component {
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  padding-left: 0.65rem;
+  font-size: 0.7rem;
+}
+
+.rotation-analysis-group__name {
+  display: inline-flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.35rem;
+  color: var(--combat-text);
+}
+
+.rotation-analysis-group__name.is-muted {
+  color: var(--combat-muted);
+}
+
+.rotation-analysis-group__tag {
+  color: var(--combat-gold-bright);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.62rem;
+}
+
+.rotation-analysis-group__note {
+  margin: 0;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--combat-gold-dim) 65%, transparent);
+  color: var(--combat-muted);
+  font-size: 0.62rem;
+  line-height: 1.3;
+}
+
+.rotation-analysis-effect-scroll {
+  margin-top: 0.35rem;
+  max-width: 100%;
+  max-height: min(22rem, 46vh);
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--combat-gold-dim);
+  background: var(--combat-inset);
+  -webkit-overflow-scrolling: touch;
+}
+
+.rotation-analysis-effect-table {
+  width: 100%;
+  min-width: 36rem;
+  border-collapse: collapse;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  text-align: left;
+}
+
+.rotation-analysis-effect-table.is-wide {
+  min-width: 44rem;
+}
+
+.rotation-analysis-effect-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--combat-raised);
+  color: var(--combat-muted);
+  box-shadow: 0 1px 0 var(--combat-gold-dim);
+}
+
+.rotation-analysis-effect-table th {
+  height: 1.45rem;
+  padding: 0.18rem 0.45rem;
+  border-bottom: 1px solid var(--combat-gold-mid);
+  font-family: var(--combat-display);
+  font-size: 0.64rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.rotation-analysis-effect-table th:not(:first-child),
+.rotation-analysis-effect-table td:not(:first-child) {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.rotation-analysis-effect-table td {
+  padding: 0.2rem 0.45rem;
+  border-bottom: 1px solid var(--combat-gold-dim);
+  color: var(--combat-text);
+  vertical-align: middle;
+}
+
+.rotation-analysis-effect-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.rotation-analysis-effect-table tbody tr:hover {
+  background: color-mix(in srgb, var(--combat-gold-dim) 28%, transparent);
+}
+
+.rotation-analysis-effect-name {
+  display: inline-flex;
+  max-width: 100%;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.2rem 0.35rem;
+}
+
+.rotation-analysis-poison-hits {
+  color: var(--color-emerald-300, #6ee7b7);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.62rem;
+  white-space: nowrap;
+}
+
+.rotation-analysis-basic-mark {
+  color: var(--combat-gem-bright, var(--color-gem-300));
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.62rem;
+  white-space: nowrap;
+}
+
+.rotation-analysis-timeline {
+  min-width: 0;
+}
+
+.rotation-analysis-timeline .rotation-analysis-section__title {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  margin: 0 0 0.35rem;
+  padding: 0.15rem 0 0.3rem;
+  border-bottom: 1px solid var(--combat-gold-dim);
+  background: var(--combat-panel);
+}
+
+.rotation-analysis-timeline__table {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--combat-gold-dim);
+  background: var(--combat-inset);
+}
+
+.rotation-analysis-timeline__table .revo-event-scroll {
+  max-height: min(22rem, 40vh);
+  overscroll-behavior: contain;
+}
+
+.rotation-analysis-body > .calculation-assumptions {
+  margin-top: 0.15rem;
+  padding-top: 0.35rem;
+  border-top: 1px solid var(--combat-gold-dim);
+}
+
+@media (max-width: 40rem) {
+  .rotation-analysis-dialog {
+    width: min(100vw - 0.75rem, 76rem);
+    max-height: calc(100svh - 0.75rem);
+  }
+
+  .rotation-analysis-shell {
+    max-height: calc(100svh - 0.75rem);
+  }
+
+  .rotation-analysis-header {
+    padding: 0.55rem 0.65rem;
+  }
+
+  .rotation-analysis-body {
+    gap: 0.7rem;
+    padding: 0.55rem 0.65rem 0.75rem;
+  }
+
+  .rotation-analysis-title {
+    font-size: 0.95rem;
+  }
+
+  .rotation-analysis-effect-table {
+    min-width: 32rem;
+  }
+
+  .rotation-analysis-effect-table.is-wide {
+    min-width: 38rem;
+  }
+
+  .rotation-analysis-timeline__table .revo-event-table {
+    min-width: 22rem;
+  }
 }
 
 .rotation-crit {
@@ -2559,6 +3205,7 @@ button.setup-status-row:focus-visible {
   font-weight: 650;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  flex-shrink: 0;
 }
 
 .icon-tip__hint {
@@ -3408,27 +4055,69 @@ button.setup-status-row:focus-visible {
   max-height: min(24rem, 46vh);
 }
 
-.rotation-settings > p {
+.rotation-settings > p,
+.rotation-settings__hint {
+  margin: 0.3rem 0 0;
   color: var(--combat-muted);
+  font-size: var(--revo-meta-size, 0.66rem);
+  line-height: 1.35;
 }
 
 .rotation-settings label {
-  color: var(--combat-text);
+  color: var(--combat-muted);
+  font-size: var(--revo-meta-size, 0.66rem);
 }
 
-.rotation-settings > div,
-.rotation-settings > dl {
-  border-color: var(--combat-gold-dim);
+.rotation-settings__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.3rem 0.65rem;
+  margin-bottom: 0.35rem;
+}
+
+.rotation-settings__checks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 0.75rem;
+}
+
+.rotation-settings__manual {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem 0.55rem;
+  margin-top: 0.3rem;
+}
+
+.rotation-settings__manual label {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.rotation-settings__checks label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 .rotation-facts {
-  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0.3rem 0 0;
   border: 1px solid var(--combat-gold-dim);
   background: var(--combat-inset);
 }
 
+@media (max-width: 720px) {
+  .rotation-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .rotation-facts > div {
-  padding: 0.75rem 0.55rem;
+  padding: 0.28rem 0.4rem;
   border: 0;
   border-right: 1px solid var(--combat-gold-dim);
 }
@@ -3437,9 +4126,65 @@ button.setup-status-row:focus-visible {
   border-right: 0;
 }
 
-.rotation-settings > .border-t {
-  margin-top: 1rem;
-  padding-top: 1rem;
+.rotation-facts dt {
+  margin: 0;
+  color: var(--combat-muted);
+  font-size: var(--revo-meta-size, 0.66rem);
+  line-height: 1.2;
+}
+
+.rotation-facts dd {
+  margin: 0.04rem 0 0;
+  color: var(--combat-text);
+  font-family: var(--revo-mono, ui-monospace, SFMono-Regular, Consolas, monospace);
+  font-size: var(--revo-body-size, 0.72rem);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.revo-bar-heading__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.55rem;
+  min-width: 0;
+}
+
+.revo-mode-toggle {
+  display: inline-flex;
+  align-items: stretch;
+  gap: 0;
+  border: 1px solid var(--combat-gold-mid);
+  background: var(--combat-inset);
+}
+
+.revo-mode-toggle__btn {
+  padding: 0.16rem 0.5rem;
+  border: 0;
+  border-right: 1px solid var(--combat-gold-dim);
+  background: transparent;
+  color: var(--combat-muted);
+  font-family: inherit;
+  font-size: var(--revo-meta-size, 0.66rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  text-transform: none;
+  cursor: pointer;
+}
+
+.revo-mode-toggle__btn:last-child {
+  border-right: 0;
+}
+
+.revo-mode-toggle__btn:hover {
+  color: var(--combat-text);
+}
+
+.revo-mode-toggle__btn.is-active {
+  background: color-mix(in srgb, var(--combat-panel) 70%, black);
+  color: var(--combat-gold-bright);
 }
 
 .rotation-manual {
@@ -3454,8 +4199,273 @@ button.setup-status-row:focus-visible {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--c-gap);
-  margin-top: var(--c-gap);
+  justify-content: space-between;
+  gap: 0.35rem 0.55rem;
+  margin-top: 0.35rem;
+  padding: 0 0.15rem;
+}
+
+.revo-toolbar__meta {
+  min-width: 0;
+  color: var(--combat-muted);
+  font-size: var(--revo-meta-size, 0.66rem);
+  line-height: 1.3;
+}
+
+.revo-toolbar__emphasis {
+  color: var(--combat-text);
+}
+
+/* Standalone Target stats frame (sibling of Run status, not nested). */
+.revo-right-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--revo-gap, 0.75rem);
+  min-width: 0;
+  min-height: 0;
+}
+
+.revo-target-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+}
+
+.revo-target-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.4rem 0.55rem;
+  border-bottom: 1px solid var(--combat-gold-dim);
+}
+
+.revo-target-panel__header h2 {
+  margin: 0;
+  color: var(--combat-gold-bright);
+  font-family: var(--combat-display, ui-serif, Georgia, serif);
+  font-size: var(--revo-title-size, 0.78rem);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.revo-target-panel__edit {
+  padding: 0.2rem 0.55rem;
+  font-size: 0.7rem;
+}
+
+.revo-target-panel__body.setup-target-summary {
+  min-width: 0;
+}
+
+/* Single bar-run TTK + KPH under target stats. */
+.revo-target-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin: 0.35rem 0 0;
+  border-top: 1px solid var(--combat-gold-mid);
+  padding: 0.35rem 0 0;
+}
+
+.revo-target-metrics > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+  padding: 0.2rem 0.45rem;
+}
+
+.revo-target-metrics > div + div {
+  border-left: 1px solid var(--combat-gold-dim);
+}
+
+.revo-target-metrics dt {
+  margin: 0;
+  color: var(--combat-muted);
+  font-size: var(--revo-meta-size, 0.66rem);
+  line-height: 1.2;
+}
+
+.revo-target-metrics dd {
+  margin: 0;
+  color: var(--combat-gold-bright);
+  font-family: var(--revo-mono, ui-monospace, SFMono-Regular, Consolas, monospace);
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.revo-target-metrics__hint {
+  margin: 0.25rem 0 0;
+  padding: 0 0.45rem 0.1rem;
+  color: var(--combat-muted);
+  font-size: var(--revo-meta-size, 0.66rem);
+  line-height: 1.3;
+}
+
+.revo-target-panel .setup-target-identity {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.55rem 0.65rem 0.35rem;
+}
+
+.revo-target-panel .setup-target-identity__icon {
+  display: flex;
+  width: 3rem;
+  height: 3rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--combat-gold-mid);
+  background: var(--combat-inset);
+}
+
+.revo-target-panel .setup-target-identity__copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.12rem;
+}
+
+.revo-target-panel .setup-target-identity__copy strong {
+  color: var(--combat-text);
+  font-size: 0.92rem;
+  line-height: 1.2;
+}
+
+.revo-target-panel .setup-target-identity__copy span {
+  color: var(--combat-muted);
+  font-size: 0.72rem;
+  line-height: 1.3;
+}
+
+.revo-target-panel .setup-target-summary dl {
+  display: grid;
+  margin: 0;
+  padding: 0.15rem 0.65rem 0.55rem;
+  gap: 0;
+}
+
+.revo-target-panel .setup-target-summary dl > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.32rem 0;
+  border-bottom: 1px solid rgb(160 130 77 / 22%);
+}
+
+.revo-target-panel .setup-target-summary dl > div:last-child {
+  border-bottom: 0;
+}
+
+.revo-target-panel .setup-target-summary dt {
+  margin: 0;
+  color: var(--combat-muted);
+  font-size: 0.78rem;
+}
+
+.revo-target-panel .setup-target-summary dd {
+  margin: 0;
+  color: var(--combat-text);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.revo-target-panel .setup-target-summary--empty {
+  padding: 0.65rem;
+  color: var(--combat-muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.rotation-manual-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 0.75rem;
+}
+
+.rotation-manual-header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: auto;
+}
+
+/* Boss / NPC face under the revo bar (and Setup compact rotation). */
+.rotation-target-chip {
+  display: flex;
+  max-width: min(100%, 15.5rem);
+  min-width: 0;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: auto;
+  padding: 0.28rem 0.4rem;
+  border: 1px solid var(--combat-gold-mid);
+  background: var(--combat-inset);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.rotation-target-chip:hover:not(:disabled) {
+  border-color: var(--combat-gold-bright);
+}
+
+.rotation-target-chip:disabled {
+  cursor: default;
+}
+
+.rotation-target-chip__icon {
+  display: flex;
+  width: 1.85rem;
+  height: 1.85rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  background: var(--combat-panel);
+}
+
+.rotation-target-chip__copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.05rem;
+}
+
+.rotation-target-chip__copy strong {
+  overflow: hidden;
+  color: var(--combat-text);
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rotation-target-chip__copy small {
+  overflow: hidden;
+  color: var(--combat-muted);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.6rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rotation-target-chip--empty {
+  color: var(--combat-muted);
+  font-size: 0.74rem;
 }
 
 .ability-bar-row {
@@ -3517,16 +4527,17 @@ button.setup-status-row:focus-visible {
     inset 0 1px 0 rgb(201 154 89 / 10%);
 }
 
+/* Slot + TTK under it; TTK sits outside the tile chrome. */
 .ability-bar-slot {
   position: relative;
   display: flex;
-  flex: 0 0 4.35rem;
-  width: 4.35rem;
+  flex: 0 0 4.25rem;
+  width: 4.25rem;
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
-  gap: 0.08rem;
-  aspect-ratio: 1 / 1.32;
+  gap: 0.1rem;
+  aspect-ratio: 1 / 1.18;
   min-width: 0;
   min-height: 0;
   padding: 0.16rem 0.14rem 0.14rem;
@@ -3615,23 +4626,6 @@ button.setup-status-row:focus-visible {
   color: var(--combat-text);
   font-size: 0.58rem;
   line-height: 1.1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.ability-bar-slot__ttk {
-  flex: 0 0 auto;
-  max-width: 100%;
-  margin: 0;
-  padding: 0.08rem 0.05rem 0.02rem;
-  overflow: hidden;
-  border-top: 1px solid rgb(133 98 58 / 35%);
-  color: var(--combat-gold-bright);
-  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  font-size: 0.55rem;
-  font-variant-numeric: tabular-nums;
-  font-weight: 600;
-  line-height: 1.15;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -4341,16 +5335,31 @@ button.setup-status-row:focus-visible {
   white-space: nowrap;
 }
 
+.revo-event-preview {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.revo-event-section-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  flex: 0 0 auto;
+  background: var(--combat-panel);
+}
+
 .revo-event-scroll {
   min-height: 0;
-  max-height: min(30rem, 55vh);
+  max-height: min(22rem, 40vh);
   overflow: auto;
   border: 0;
   background: var(--combat-inset);
+  overscroll-behavior: contain;
 }
 
 .revo-event-scroll.is-compact {
-  max-height: min(20rem, 36vh);
+  max-height: min(18rem, 32vh);
 }
 
 .revo-event-table {
@@ -4392,12 +5401,33 @@ button.setup-status-row:focus-visible {
   min-height: 1.75rem;
   height: auto;
   padding: 0.22rem 0.4rem;
-  border-bottom: 1px solid var(--combat-gold-dim);
+  border-bottom: 1px solid color-mix(in srgb, var(--combat-gold-dim) 55%, transparent);
   color: var(--combat-text);
   vertical-align: middle;
 }
 
+.revo-event-table tbody tr.is-tick-start td {
+  border-top: 1px solid color-mix(in srgb, var(--combat-gold-dim) 88%, transparent);
+  background: color-mix(in srgb, var(--combat-raised) 22%, transparent);
+}
+
+.revo-event-table tbody tr.is-tick-start:first-child td {
+  border-top: 0;
+}
+
+.revo-event-table tbody tr.is-cast-start:not(.is-tick-start) td {
+  border-top: 1px solid color-mix(in srgb, var(--combat-gold-dim) 40%, transparent);
+}
+
+.revo-event-table tbody tr.is-cast-cont td {
+  border-bottom-color: color-mix(in srgb, var(--combat-gold-dim) 35%, transparent);
+}
+
 .revo-event-table tbody tr:hover {
+  background: color-mix(in srgb, var(--combat-gold-dim) 28%, transparent);
+}
+
+.revo-event-table tbody tr.is-tick-start:hover td {
   background: color-mix(in srgb, var(--combat-gold-dim) 28%, transparent);
 }
 
@@ -4502,9 +5532,65 @@ button.setup-status-row:focus-visible {
   max-width: 0;
 }
 
+.revo-event-table .revo-dmg-cell {
+  color: var(--combat-text);
+  font-weight: 500;
+}
+
 .revo-event-type {
-  color: var(--combat-muted);
   white-space: nowrap;
+}
+
+.revo-event-type-chips {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.revo-event-kind {
+  color: color-mix(in srgb, var(--combat-muted) 78%, transparent);
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+}
+
+.revo-event-table tr.is-cast-start .revo-ability-name {
+  font-weight: 600;
+}
+
+.revo-event-table tr.is-cast-cont .revo-ability-name {
+  color: color-mix(in srgb, var(--combat-text) 88%, transparent);
+}
+
+.revo-tick-cell {
+  white-space: nowrap;
+  color: var(--combat-muted);
+  vertical-align: top;
+}
+
+.revo-tick-value {
+  color: var(--combat-text);
+  font-weight: 500;
+}
+
+.revo-tick-cont {
+  display: inline-block;
+  color: color-mix(in srgb, var(--combat-muted) 55%, transparent);
+  font-size: 0.7rem;
+}
+
+.revo-no-crit {
+  color: color-mix(in srgb, var(--combat-muted) 55%, var(--combat-text));
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  flex-shrink: 0;
+}
+
+.revo-event-secondary {
+  color: color-mix(in srgb, var(--combat-muted) 88%, transparent);
+  font-weight: 400;
 }
 
 .revo-event-state {
@@ -4512,20 +5598,55 @@ button.setup-status-row:focus-visible {
   font-size: 0.72rem;
 }
 
+.revo-event-state .revo-state-meta {
+  margin-left: 0.4rem;
+  font-size: 0.66rem;
+  color: color-mix(in srgb, var(--combat-muted) 82%, transparent);
+}
+
+.revo-event-state .revo-state-meta:first-child {
+  margin-left: 0;
+}
+
+.revo-event-state .revo-occurrence-note {
+  color: color-mix(in srgb, var(--combat-gold) 45%, var(--combat-muted));
+}
+
+.revo-event-state .revo-remaining-note {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.64rem;
+}
+
+.revo-event-state .revo-applied-effect {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
 .revo-time-sub {
-  color: color-mix(in srgb, var(--combat-muted) 75%, transparent);
-  font-size: 0.68rem;
+  color: color-mix(in srgb, var(--combat-muted) 70%, transparent);
+  font-size: 0.66rem;
 }
 
 .revo-cap-loss {
   margin-left: 0.25rem;
-  color: var(--combat-chaos, #e07070);
-  font-size: 0.68rem;
+  color: color-mix(in srgb, var(--combat-chaos, #e07070) 80%, var(--combat-muted));
+  font-size: 0.64rem;
+  font-weight: 400;
 }
 
 .calculation-assumptions {
   border: 0;
   padding: 0;
+}
+
+.calculation-assumptions__title {
+  margin: 0 0 0.3rem;
+  color: var(--combat-gold-bright);
+  font-family: var(--combat-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .calculation-assumptions > summary {
@@ -4539,20 +5660,8 @@ button.setup-status-row:focus-visible {
   list-style: none;
 }
 
-.revo-status-assumptions .calculation-assumptions__body dd {
-  max-width: none;
-  overflow: visible;
-  white-space: normal;
-  overflow-wrap: anywhere;
-}
-
-.revo-status-assumptions .calculation-assumptions__body dt {
-  white-space: normal;
-}
-
-.revo-status-rail .revo-status-assumptions dd,
-.revo-status-assumptions .calculation-assumptions__body dd {
-  text-overflow: unset;
+.calculation-assumptions--panel .calculation-assumptions__body {
+  margin-top: 0;
 }
 
 .calculation-assumptions > summary::-webkit-details-marker {
@@ -4579,6 +5688,22 @@ button.setup-status-row:focus-visible {
   border: 1px solid var(--combat-gold-dim);
   background: var(--combat-inset);
   padding: 0.25rem 0.4rem;
+}
+
+.revo-status-assumptions .calculation-assumptions__body dd {
+  max-width: none;
+  overflow: visible;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.revo-status-assumptions .calculation-assumptions__body dt {
+  white-space: normal;
+}
+
+.revo-status-rail .revo-status-assumptions dd,
+.revo-status-assumptions .calculation-assumptions__body dd {
+  text-overflow: unset;
 }
 
 .calculation-assumptions__body dl {

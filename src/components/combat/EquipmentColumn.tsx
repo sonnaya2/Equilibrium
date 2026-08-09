@@ -166,60 +166,6 @@ function EquipmentLevels({ loadout, setLoadout }: { loadout: Loadout; setLoadout
   );
 }
 
-/** Loadout combat assumptions - migrated from dead StatsPanel so e2e/UI still edit them. */
-function EquipmentCombatAssumptions({
-  loadout,
-  setLoadout,
-  maxAdrenaline,
-}: {
-  loadout: Loadout;
-  setLoadout: SetLoadout;
-  maxAdrenaline: number;
-}) {
-  return (
-    <section
-      className="setup-equipment-assumptions"
-      aria-labelledby="equipment-assumptions-title"
-      data-testid="equipment-combat-assumptions"
-    >
-      <header className="setup-equipment-levels__heading setup-subsection-header">
-        <h3 id="equipment-assumptions-title">Combat assumptions</h3>
-      </header>
-      <div className="setup-equipment-levels__fields">
-        <NumberField
-          label="Starting adrenaline"
-          value={loadout.startingAdrenaline}
-          min={0}
-          max={maxAdrenaline}
-          suffix="%"
-          onChange={(startingAdrenaline) =>
-            setLoadout({
-              ...loadout,
-              startingAdrenaline: Math.min(maxAdrenaline, Math.max(0, startingAdrenaline)),
-            })
-          }
-        />
-        <NumberField
-          label="Assumed Damage Potential"
-          value={loadout.accuracy}
-          min={0}
-          max={100}
-          suffix="%"
-          onChange={(accuracy) => setLoadout({ ...loadout, accuracy })}
-        />
-        <NumberField
-          label="Crit chance"
-          value={loadout.critChance}
-          min={0}
-          max={100}
-          suffix="%"
-          onChange={(critChance) => setLoadout({ ...loadout, critChance })}
-        />
-      </div>
-    </section>
-  );
-}
-
 export function EquipmentColumn({
   loadout,
   setLoadout,
@@ -335,11 +281,6 @@ export function EquipmentColumn({
         </div>
         <div className="setup-equipment-footer">
           <EquipmentLevels loadout={loadout} setLoadout={setLoadout} />
-          <EquipmentCombatAssumptions
-            loadout={loadout}
-            setLoadout={setLoadout}
-            maxAdrenaline={100}
-          />
           {hasEssenceOfFinalityEquipped(loadout.equipmentIds) ? (
             <label className="setup-eof-special" data-testid="eof-stored-special-setup">
               <span>EoF stored special</span>

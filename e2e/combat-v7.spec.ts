@@ -302,8 +302,6 @@ test("contextual owners open one loadout editor for equipment, effects, perks, r
   await expectCenteredDialog(page, effectsDialog);
   await expect(effectsDialog.getByRole("group", { name: "Combat values" })).toBeVisible();
   await expect(effectsDialog.getByRole("spinbutton", { name: "Current Hitpoints" })).toBeVisible();
-  await expect(effectsDialog.getByRole("spinbutton", { name: "Damage Potential" })).toBeVisible();
-  await expect(effectsDialog.getByRole("spinbutton", { name: "Crit chance" })).toBeVisible();
   await expect(effectsDialog.getByRole("checkbox", { name: "Hit cap" })).toBeVisible();
   await page.screenshot({ path: ".shots/combat-v7-active-effects-dialog-1536x1024.png" });
   await closeLoadoutEditor(page);

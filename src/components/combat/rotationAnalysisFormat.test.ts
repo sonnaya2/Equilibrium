@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  eventTimelineMarks,
   occurrenceModelNote,
   resolvedEventPreview,
   RESOLVED_EVENT_PREVIEW_LIMIT,
@@ -36,5 +37,22 @@ describe("rotation analysis presentation", () => {
     expect(preview.events).toHaveLength(RESOLVED_EVENT_PREVIEW_LIMIT + 1);
     expect(preview.events.at(-1)?.abilityId).toBe("perfect_equilibrium");
     expect(preview.pinnedPerfectEquilibrium).toBe(true);
+  });
+
+  it("marks land-tick and source-cast group starts for timeline chrome", () => {
+    const marks = eventTimelineMarks([
+      { tick: 0, sourceCast: 0 },
+      { tick: 0, sourceCast: 0 },
+      { tick: 0, sourceCast: 1 },
+      { tick: 3, sourceCast: 1 },
+      { tick: 3, sourceCast: 2 },
+    ]);
+    expect(marks).toEqual([
+      { isTickStart: true, isCastStart: true },
+      { isTickStart: false, isCastStart: false },
+      { isTickStart: false, isCastStart: true },
+      { isTickStart: true, isCastStart: true },
+      { isTickStart: false, isCastStart: true },
+    ]);
   });
 });

@@ -30,7 +30,7 @@ describe("revoStochasticLabels", () => {
     expect(primaryDamageLabel(source)).toBe("Damage (approx.)");
     expect(residualNote(source)).toBeNull();
     expect(stochasticAssumptionRows(source)).toContainEqual([
-      "Stochastic model",
+      "Model",
       "Fixed-lane estimate",
     ]);
   });

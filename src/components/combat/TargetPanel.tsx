@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { DEFAULT_AFFINITIES, sanitizeAffinity } from "@/combat/target/genericTarget";
+import { GameIcon } from "../GameIcon";
 import { NumberField } from "./NumberField";
 import type { Loadout, LoadoutTarget } from "./useLoadout";
 import {
@@ -11,6 +12,7 @@ import {
   listTargetPresetOptions,
   presetLabel,
   resetTargetToPreset,
+  targetPresetIconPath,
 } from "./targetPresetUi";
 
 const NAMED_AFFINITY_OPTIONS = [
@@ -22,6 +24,13 @@ const NAMED_AFFINITY_OPTIONS = [
 
 const NAMED_AFFINITY_VALUES = new Set<number>(NAMED_AFFINITY_OPTIONS.map((o) => o.value));
 
+const BLANK_TARGET: LoadoutTarget = {
+  defenceLevel: 80,
+  armour: 0,
+  affinity: DEFAULT_AFFINITIES.same,
+  additiveHitChance: 0,
+};
+
 export function TargetPanel({
   loadout,
   setLoadout,
@@ -31,16 +40,40 @@ export function TargetPanel({
 }) {
   const target = loadout.target;
   const [presetQuery, setPresetQuery] = useState("");
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const presetOptions = useMemo(() => listTargetPresetOptions(), []);
   const filteredPresets = useMemo(
     () => filterTargetPresetOptions(presetOptions, presetQuery),
     [presetOptions, presetQuery],
   );
-  const modified =
-    target != null && isTargetModifiedFromPreset(target, loadout.style);
+  const modified = target != null && isTargetModifiedFromPreset(target, loadout.style);
+  const selectedPresetId = target?.targetPresetId ?? "";
+  const selectedName = selectedPresetId
+    ? (presetLabel(selectedPresetId) ?? selectedPresetId)
+    : target
+      ? "Custom target"
+      : null;
+  const selectedIconSrc = selectedPresetId
+    ? targetPresetIconPath(presetLabel(selectedPresetId) ?? "")
+    : null;
+
   const updateTarget = (patch: Partial<LoadoutTarget>) => {
     if (!target) return;
     setLoadout({ ...loadout, target: { ...target, ...patch } });
+  };
+
+  const selectBoss = (presetId: string) => {
+    if (!presetId) {
+      setLoadout({
+        ...loadout,
+        target: target
+          ? { ...target, targetPresetId: undefined }
+          : { ...BLANK_TARGET },
+      });
+      return;
+    }
+    const next = applyTargetPreset(presetId, loadout.style, target);
+    if (next) setLoadout({ ...loadout, target: next });
   };
 
   const affinitySelectValue =
@@ -50,9 +83,134 @@ export function TargetPanel({
     <div className="loadout-panel">
       <h2 className="combat-section-title text-sm font-medium text-parch-50">Target</h2>
       <p className="mt-1 text-xs text-parch-300">
-        Damage Potential from NPC stats. Death Mark uses expected landed damage and does not model
-        boss phase nullification, special soft caps, Resonance, reflection, or phase replacement.
+        Pick a boss plate for Wiki Defence, armour, and style affinity. Advanced fields stay
+        editable. Death Mark does not model phase soft caps or reflection.
       </p>
+
+      <div className="target-boss-picker mt-3">
+        <div className="target-boss-picker__head">
+          <label className="target-boss-picker__search">
+            <span className="sr-only">Search bosses</span>
+            <input
+              type="search"
+              className="loadout-input"
+              placeholder="Search bosses (KBD, Rax, Amascut…)"
+              value={presetQuery}
+              onChange={(event) => setPresetQuery(event.target.value)}
+            />
+          </label>
+          {selectedName ? (
+            <div className="target-boss-picker__selected">
+              <span className="target-boss-picker__selected-icon" aria-hidden>
+                <GameIcon src={selectedIconSrc} size={28} />
+              </span>
+              <div>
+                <p className="target-boss-picker__selected-name">{selectedName}</p>
+                <p className="text-xs text-parch-300">
+                  {selectedPresetId
+                    ? modified
+                      ? "Modified from Wiki"
+                      : "Wiki values"
+                    : "Manual target"}
+                  {selectedPresetId && modified ? (
+                    <>
+                      {" · "}
+                      <button
+                        type="button"
+                        className="underline"
+                        onClick={() => {
+                          if (!target) return;
+                          setLoadout({
+                            ...loadout,
+                            target: resetTargetToPreset(target, loadout.style),
+                          });
+                        }}
+                      >
+                        Reset to Wiki
+                      </button>
+                    </>
+                  ) : null}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <p className="text-xs text-parch-300">No NPC target · 100% Damage Potential assumption</p>
+          )}
+        </div>
+
+        <div className="icon-tile-grid target-boss-picker__grid" role="listbox" aria-label="Boss presets">
+          {filteredPresets.map((option) => {
+            const pressed = selectedPresetId === option.id;
+            const disabled = !option.applyable;
+            return (
+              <button
+                key={option.id}
+                type="button"
+                role="option"
+                aria-selected={pressed}
+                aria-pressed={pressed}
+                aria-disabled={disabled}
+                disabled={disabled}
+                title={
+                  disabled
+                    ? `${option.name} (incomplete stats)`
+                    : `${option.name}${option.aliases[0] ? ` · ${option.aliases[0]}` : ""}`
+                }
+                onClick={() => {
+                  if (disabled) return;
+                  if (pressed) {
+                    setLoadout({ ...loadout, target: null });
+                    return;
+                  }
+                  selectBoss(option.id);
+                }}
+                className={`icon-tile${option.iconSrc ? "" : " icon-tile--text"}${
+                  disabled ? " is-disabled" : ""
+                }${pressed ? " is-on" : ""}`}
+              >
+                {option.iconSrc ? (
+                  <GameIcon src={option.iconSrc} size={34} className="icon-tile__icon" />
+                ) : (
+                  <span>{option.aliases[0] ?? option.name.slice(0, 4)}</span>
+                )}
+                <span className="sr-only">
+                  {option.name}
+                  {option.support === "provisional" ? ", provisional" : ""}
+                </span>
+                <span className="icon-tip" role="tooltip">
+                  <strong>{option.name}</strong>
+                  {option.aliases.length ? option.aliases.join(", ") : option.encounter}
+                  {option.support === "provisional" ? " · provisional" : ""}
+                  {disabled ? " · incomplete stats" : ""}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+        {filteredPresets.length === 0 ? (
+          <p className="mt-2 text-xs text-parch-300">No bosses match that search.</p>
+        ) : null}
+
+        {target ? (
+          <div className="target-boss-picker__stats" aria-label="Applied target stats">
+            <span>
+              Def <strong>{target.defenceLevel}</strong>
+            </span>
+            <span>
+              Armour <strong>{target.armour ?? 0}</strong>
+            </span>
+            <span>
+              Aff <strong>{target.affinity}</strong>
+            </span>
+            {target.size != null ? (
+              <span>
+                Size <strong>{target.size}</strong>
+              </span>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
+
       <div className="loadout-fields mt-3">
         <label className="loadout-check">
           <input
@@ -62,75 +220,24 @@ export function TargetPanel({
               setLoadout({
                 ...loadout,
                 target: event.target.checked
-                  ? {
-                      defenceLevel: 80,
-                      armour: 0,
-                      affinity: DEFAULT_AFFINITIES.same,
-                      additiveHitChance: 0,
-                    }
+                  ? target ?? { ...BLANK_TARGET }
                   : null,
               })
             }
           />
           Use NPC target
         </label>
-        {target ? (
+        <label className="loadout-check">
+          <input
+            type="checkbox"
+            checked={showAdvanced || (target != null && !selectedPresetId)}
+            onChange={(event) => setShowAdvanced(event.target.checked)}
+          />
+          Advanced target fields
+        </label>
+
+        {target && (showAdvanced || !selectedPresetId) ? (
           <>
-            <label className="loadout-select loadout-select--wide">
-              <span>Boss preset</span>
-              <input
-                type="search"
-                className="loadout-input"
-                placeholder="Search bosses (KBD, Rax, Amascut…)"
-                value={presetQuery}
-                onChange={(event) => setPresetQuery(event.target.value)}
-                aria-label="Search boss presets"
-              />
-              <select
-                value={target.targetPresetId ?? ""}
-                onChange={(event) => {
-                  const id = event.target.value;
-                  if (!id) {
-                    updateTarget({ targetPresetId: undefined });
-                    return;
-                  }
-                  const next = applyTargetPreset(id, loadout.style, target);
-                  if (next) setLoadout({ ...loadout, target: next });
-                }}
-              >
-                <option value="">Custom</option>
-                {filteredPresets.map((option) => (
-                  <option key={option.id} value={option.id}>
-                    {option.name}
-                    {option.support === "provisional" ? " (provisional)" : ""}
-                    {option.aliases.length ? ` · ${option.aliases[0]}` : ""}
-                  </option>
-                ))}
-              </select>
-            </label>
-            {target.targetPresetId ? (
-              <p className="text-xs text-parch-300">
-                {presetLabel(target.targetPresetId)}
-                {modified ? " · Modified" : " · Wiki values"}
-                {modified ? (
-                  <>
-                    {" "}
-                    <button
-                      type="button"
-                      className="underline"
-                      onClick={() =>
-                        setLoadout({
-                          ...loadout,
-                          target: resetTargetToPreset(target, loadout.style),
-                        })
-                      }
-                    >
-                      Reset to Wiki
-                    </button>
-                  </>
-                ) : null}
-              </p>
-            ) : null}
             <NumberField
               label="Defence level"
               value={target.defenceLevel}
@@ -192,7 +299,9 @@ export function TargetPanel({
                 label="Damage Potential"
                 value={target.damagePotentialOverride * 100}
                 onChange={(value) =>
-                  updateTarget({ damagePotentialOverride: Math.min(1, Math.max(0, value / 100)) })
+                  updateTarget({
+                    damagePotentialOverride: Math.min(1, Math.max(0, value / 100)),
+                  })
                 }
                 suffix="%"
               />
@@ -317,8 +426,6 @@ export function TargetPanel({
               />
               Poison immune
             </label>
-            {/* Barkscales counts incoming hits, which an outgoing rotation never
-                sees. Zero means no scenario stated, not a zero-damage result. */}
             <NumberField
               label="Incoming hit interval (s)"
               value={target.incomingHitIntervalSeconds ?? 0}

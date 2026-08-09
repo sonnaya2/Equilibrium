@@ -1947,6 +1947,85 @@ button.setup-status-row:focus-visible {
   margin-top: 0.4rem;
 }
 
+/* Boss preset plate grid on Target loadout (Jagex /game/bosses art). */
+.target-boss-picker {
+  padding: 0.55rem 0.65rem 0.7rem;
+  border: 1px solid rgb(133 98 58 / 40%);
+  background: color-mix(in srgb, var(--combat-inset) 88%, transparent);
+}
+
+.target-boss-picker__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.55rem 0.85rem;
+}
+
+.target-boss-picker__search {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+.target-boss-picker__search .loadout-input,
+.target-boss-picker__search input[type="search"] {
+  width: 100%;
+  min-height: 2.25rem;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid var(--combat-gold-dim);
+  background: color-mix(in srgb, var(--combat-panel) 90%, black);
+  color: var(--combat-cream, var(--color-parch-50));
+  font-size: 0.78rem;
+}
+
+.target-boss-picker__selected {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.target-boss-picker__selected-icon {
+  display: flex;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--combat-gold-mid);
+  background: var(--combat-panel);
+}
+
+.target-boss-picker__selected-name {
+  margin: 0;
+  color: var(--combat-gold-bright, var(--color-parch-50));
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.target-boss-picker__grid {
+  max-height: 12.5rem;
+  margin-top: 0.55rem;
+  overflow: auto;
+  padding-right: 0.15rem;
+}
+
+.target-boss-picker__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 1rem;
+  margin-top: 0.55rem;
+  color: var(--combat-muted);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.target-boss-picker__stats strong {
+  color: var(--combat-cream, var(--color-parch-50));
+  font-weight: 600;
+}
+
 /* Same tile vocabulary as .ability-bar-slot, sized for a bare icon. */
 .icon-tile {
   position: relative;

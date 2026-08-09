@@ -567,27 +567,31 @@ export const combatTargetPresetsData: CombatDataset<TargetPresetRecord> = {
     "category": "boss",
     "wiki": {
       "pageName": "Telos, the Warden",
-      "pageNameSub": "Telos, the Warden#Dormant",
-      "versionAnchor": "Dormant",
+      "pageNameSub": "Telos, the Warden#Standard",
+      "versionAnchor": "Standard",
       "npcIds": [
         22892
       ]
     },
-    "support": "provisional",
+    "support": "supported",
     "sources": [
       {
         "source": "runescape-wiki",
-        "url": "https://runescape.wiki/w/Telos%2C_the_Warden",
+        "url": "https://runescape.wiki/w/Telos,_the_Warden",
         "title": "Telos, the Warden",
         "verifiedAt": "2026-08-09"
       }
     ],
     "stats": {
       "defenceLevel": 80,
-      "armour": null,
-      "affinities": null,
+      "armour": 1924,
+      "affinities": {
+        "melee": 40,
+        "ranged": 40,
+        "magic": 40
+      },
       "size": 5,
-      "lifePoints": 0,
+      "lifePoints": 400000,
       "poisonImmune": true
     }
   },

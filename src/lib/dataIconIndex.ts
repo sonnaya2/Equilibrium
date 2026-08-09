@@ -1740,6 +1740,7 @@ export const BOSS_ICON_SLUGS = new Set([
   "kalphite-queen",
   "kerapac",
   "kezalam",
+  "king-black-dragon",
   "kreearra",
   "kril-tsutsaroth",
   "lava-strykewyrm",

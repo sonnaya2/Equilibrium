@@ -5,6 +5,7 @@ import {
   targetDiffersFromPreset,
 } from "@/combat/target/presetAdapter";
 import type { CombatStyle } from "@/combat/types";
+import { bossIconPath } from "@/lib/gameArt";
 import type { LoadoutTarget } from "./loadout/model";
 
 export interface TargetPresetOption {
@@ -14,12 +15,26 @@ export interface TargetPresetOption {
   aliases: string[];
   support: TargetPresetRecord["support"];
   searchText: string;
+  /** Published /game/bosses plate when indexed; null means empty well. */
+  iconSrc: string | null;
+  /** False when materialize refuses (missing Aff profile). */
+  applyable: boolean;
 }
 
 function searchable(record: TargetPresetRecord): string {
   return [record.name, record.encounter, ...(record.aliases ?? []), record.id]
     .join(" ")
     .toLowerCase();
+}
+
+/** Resolve Jagex boss plate from catalogue name (never invent art). */
+export function targetPresetIconPath(name: string): string | null {
+  return bossIconPath(name);
+}
+
+function isApplyable(record: TargetPresetRecord): boolean {
+  if (record.support === "unsupported") return false;
+  return materializeTargetPreset(record, { style: "melee" }) != null;
 }
 
 /** Supported and provisional presets available in the selector. */
@@ -33,6 +48,8 @@ export function listTargetPresetOptions(): TargetPresetOption[] {
       aliases: r.aliases ?? [],
       support: r.support,
       searchText: searchable(r),
+      iconSrc: targetPresetIconPath(r.name),
+      applyable: isApplyable(r),
     }))
     .sort((a, b) => a.name.localeCompare(b.name));
 }

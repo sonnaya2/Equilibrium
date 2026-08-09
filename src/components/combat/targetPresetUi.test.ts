@@ -15,12 +15,22 @@ describe("targetPresetUi", () => {
     expect(options.length).toBeGreaterThanOrEqual(10);
     const kbd = options.find((o) => o.id === "boss:king-black-dragon");
     expect(kbd).toBeDefined();
+    expect(kbd?.applyable).toBe(true);
+    expect(kbd?.iconSrc).toBe("/game/bosses/king-black-dragon.webp");
     expect(filterTargetPresetOptions(options, "kbd").map((o) => o.id)).toContain(
       "boss:king-black-dragon",
     );
     expect(filterTargetPresetOptions(options, "amascut").map((o) => o.id)).toContain(
       "boss:amascut",
     );
+    const telos = options.find((o) => o.id === "boss:telos");
+    expect(telos?.applyable).toBe(true);
+    expect(telos?.iconSrc).toBe("/game/bosses/telos.webp");
+    // Every shippable boss must apply and ship a published plate (no empty wells).
+    for (const option of options) {
+      expect(option.applyable, option.id).toBe(true);
+      expect(option.iconSrc, option.id).toMatch(/^\/game\/bosses\//);
+    }
   });
 
   it("applies KBD stats for ranged style", () => {

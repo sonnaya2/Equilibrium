@@ -10,6 +10,7 @@ import type { ScheduledEvent } from "../../runtime/events";
 import { scheduleEvent, type SimulationRuntime } from "../../runtime/runtime";
 import { patchMagic } from "../../runtime/state";
 import type { ResolvedDamage } from "../types";
+import { recordAppliedEventEffect } from "../accounting";
 import { resolveLightningSurge } from "../lightningSurge";
 import {
   NO_SONG_OF_DESTRUCTION,
@@ -95,5 +96,10 @@ export function onMagicHitLanded(
     });
     rt.analysis.song.finalStacks = nextEssence.stacks;
     rt.analysis.song.peakStacks = Math.max(rt.analysis.song.peakStacks, nextEssence.stacks);
+    recordAppliedEventEffect(rt, event, {
+      id: "song:essence-corruption",
+      stackCount: nextEssence.stacks,
+      remainingTicks: Math.max(0, nextEssence.expiresAtTick - event.tick),
+    });
   }
 }

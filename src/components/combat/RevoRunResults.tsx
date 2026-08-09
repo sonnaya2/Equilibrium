@@ -326,6 +326,29 @@ export function RevoRunResults({
             })}
           </p>
 
+          {result.analysis.song.enabled ? (
+            <dl
+              className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-xs"
+              data-testid="revo-song-state"
+              title="Probability-weighted across simulation lanes"
+            >
+              <div className="flex items-baseline gap-1.5">
+                <dt className="text-parch-300">Essence Corruption</dt>
+                <dd className="font-mono text-parch-50">
+                  {formatCount(result.analysis.song.finalStacks)} end ·{" "}
+                  {formatCount(result.analysis.song.peakStacks)} peak
+                </dd>
+              </div>
+              <div className="flex items-baseline gap-1.5">
+                <dt className="text-parch-300">Empowered DoTs</dt>
+                <dd className="font-mono text-parch-50">
+                  {formatCount(result.analysis.song.empowermentActivations)} /{" "}
+                  {formatCount(result.analysis.song.empowermentRolls)} rolls
+                </dd>
+              </div>
+            </dl>
+          ) : null}
+
           {scoreNote ? (
             <p className="mt-2 text-xs text-chaos-300" data-testid="revo-score-note" role="note">
               {hasResidual ? (
@@ -369,7 +392,12 @@ export function RevoRunResults({
                     >
                       Adren (before → resources → end)
                     </th>
-                    <th className="py-1.5 font-medium">Damage</th>
+                    <th
+                      className="py-1.5 font-medium"
+                      title="Damage from this cast that lands before the selected horizon ends"
+                    >
+                      In-window damage
+                    </th>
                   </tr>
                 </thead>
                 <tbody>

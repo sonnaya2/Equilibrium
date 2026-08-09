@@ -190,6 +190,13 @@ describe("Song of Destruction adrenaline stream", () => {
     });
     expect(rt.state.magic.song.essenceCorruption.stacks).toBe(10);
     expect(rt.casts[0]!.result.hits[0]!.expected).toBe(429);
+    expect(rt.events.find((event) => event.abilityId === "combust")?.appliedEffects).toEqual([
+      {
+        id: "song:essence-corruption",
+        stackCount: 10,
+        remainingTicks: 50,
+      },
+    ]);
     expect(rt.analysis.song).toMatchObject({
       finalStacks: 10,
       peakStacks: 10,
@@ -429,8 +436,9 @@ describe("Song of Destruction adrenaline stream", () => {
     });
     const soulfire = rt.byId.get("soulfire")!;
     expect(performCast(rt, soulfire, 0, false)).toEqual({ ok: true });
-    advanceTo(rt, 22);
-    expect(rt.events.filter((event) => event.abilityId === "soulfire")).toHaveLength(8);
+    advanceTo(rt, 16);
+    // 1 direct + 6 DoT (last DoT at tickOffset 15).
+    expect(rt.events.filter((event) => event.abilityId === "soulfire")).toHaveLength(7);
     expect(rt.state.magic.song.conflagrateUntilTick).toBe(25);
     expect(rt.state.cooldowns.soulfire).toBe(75);
 
@@ -445,6 +453,43 @@ describe("Song of Destruction adrenaline stream", () => {
       soulfireCasts: 1,
       conflagrateConsumptions: 1,
     });
+  });
+
+  // Pipeline pin: Song 2pc multiplies DoT only; Soulfire opener expected matches 1pc.
+  it("does not multiply Soulfire direct opener damage under Song 2pc", () => {
+    const castSoulfire = (pieceCount: number) => {
+      const effects = {
+        ...activeEquipmentEffects({ style: "magic" }),
+        activeWeapon: {
+          id: "item:roar-of-awakening",
+          slot: "mainhand" as const,
+          style: "magic" as const,
+          specialAttackId: "soulfire",
+          passiveIds: [],
+        },
+        songOfDestruction: songOfDestructionSummary(pieceCount),
+      };
+      const rt = createRuntime({
+        ...baseInput,
+        abilities: MAGIC_ABILITIES,
+        context: { style: "magic" },
+        equipmentIds: ["item:roar-of-awakening"],
+        weaponConfiguration: "mainhand",
+        equipmentEffects: effects,
+        startingAdrenaline: 100,
+      });
+      expect(performCast(rt, rt.byId.get("soulfire")!, 0, false)).toEqual({ ok: true });
+      advanceTo(rt, 16);
+      return rt.events
+        .filter((event) => event.abilityId === "soulfire")
+        .sort((a, b) => a.hitIndex - b.hitIndex);
+    };
+    const onePieceHits = castSoulfire(1);
+    const twoPieceHits = castSoulfire(2);
+    expect(onePieceHits).toHaveLength(7);
+    expect(twoPieceHits).toHaveLength(7);
+    expect(twoPieceHits[0]!.damage.expected).toBe(onePieceHits[0]!.damage.expected);
+    expect(twoPieceHits[1]!.damage.expected).toBeGreaterThan(onePieceHits[1]!.damage.expected);
   });
 
   it("requires Roar for Soulfire and applies Vigour plus native-special policy", () => {

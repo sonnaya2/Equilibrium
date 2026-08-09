@@ -6,6 +6,7 @@ describe("combat effect presentation", () => {
     expect(combatEffectDisplayName("perfect_equilibrium")).toBe("Perfect Equilibrium");
     expect(combatEffectDisplayName("ammunition:bik")).toBe("Evolving Toxin");
     expect(combatEffectDisplayName("player_weapon_poison")).toBe("Weapon poison");
+    expect(combatEffectDisplayName("song:essence-corruption")).toBe("Essence Corruption");
   });
 
   it("uses local icons for PE, poison, ammunition, and damaging perks", () => {
@@ -18,6 +19,9 @@ describe("combat effect presentation", () => {
     expect(combatEffectIconPath("ammunition:bik")).toBe("/game/combat/equipment/bik-arrows.webp");
     expect(combatEffectIconPath("crackling")).toBe("/game/combat/perks/crackling.webp");
     expect(combatEffectIconPath("aftershock")).toBe("/game/combat/perks/aftershock.webp");
+    expect(combatEffectIconPath("song:essence-corruption")).toBe(
+      "/game/combat/equipment/roar-of-awakening.webp",
+    );
   });
 
   it("uses the originating blessing icon when the effect id is shared", () => {

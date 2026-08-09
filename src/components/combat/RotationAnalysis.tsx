@@ -225,7 +225,12 @@ function EventTable({
             <th className="py-1.5 pr-3 font-medium">Effect</th>
             <th className="py-1.5 pr-3 font-medium">Event</th>
             <th className="py-1.5 pr-3 font-medium">Hit</th>
-            <th className="py-1.5 pr-3 text-right font-medium">Expected</th>
+            <th
+              className="py-1.5 pr-3 text-right font-medium"
+              title="Damage for this landed event; DoTs show one tick, not the full ability"
+            >
+              Event damage
+            </th>
             <th className="py-1.5 font-medium">State</th>
           </tr>
         </thead>
@@ -303,6 +308,19 @@ function EventTable({
                       {formatRemainingDurationNote(event.tick, event.remainingTicks)}
                     </span>
                   ) : null}
+                  {event.appliedEffects?.map((effect) => (
+                    <span
+                      key={effect.id}
+                      className="ml-2 inline-flex items-center gap-1 text-gold-300"
+                    >
+                      <GameIcon src={effectIconPath(effect.id)} size={16} />
+                      {effectName(effect.id, nameForId)}
+                      {effect.stackCount != null ? ` · ${effect.stackCount} stacks` : ""}
+                      {effect.remainingTicks != null
+                        ? ` · ${ticksToSeconds(effect.remainingTicks).toFixed(1)}s remaining`
+                        : ""}
+                    </span>
+                  ))}
                 </td>
               </tr>
             );

@@ -7,6 +7,7 @@ const PROCEDURAL_EFFECT_LABEL: Readonly<Record<string, string>> = {
   aftershock: "Aftershock",
   crackling: "Crackling",
   player_weapon_poison: "Weapon poison",
+  "song:essence-corruption": "Essence Corruption",
 };
 
 const EFFECT_ICON_PATH: Readonly<Record<string, string>> = {
@@ -15,6 +16,7 @@ const EFFECT_ICON_PATH: Readonly<Record<string, string>> = {
   perfect_equilibrium: "/game/combat/equipment/bow-of-the-last-guardian.webp",
   player_weapon_poison: "/game/upgrades/permanent-unlocks/weapon-poison.webp",
   puncture: "/game/combat/equipment/splintering-arrows.webp",
+  "song:essence-corruption": "/game/combat/equipment/roar-of-awakening.webp",
   "ammunition:black-stone": "/game/combat/equipment/black-stone-arrows.webp",
   "ammunition:deathspore": "/game/combat/equipment/deathspore-arrows.webp",
   "ammunition:splintering": "/game/combat/equipment/splintering-arrows.webp",

@@ -3,6 +3,7 @@
  */
 import { describe, expect, it } from "vitest";
 import { emptyBuild } from "@/league";
+import { targetDamagePotential } from "../../target/genericTarget";
 import { resolveAbilityCatalogue } from "../../abilities/catalogue";
 import {
   buildSimulationInputBase,
@@ -21,6 +22,7 @@ import { engineSpecs } from "../../abilities/registry";
 import { buildMemoContext, createEvaluateFn } from "../../solver/evaluationSession";
 import type { ProgressState } from "../../solver/progressReporter";
 import { DEFAULT_LOADOUT, type Loadout } from "../../../components/combat/loadout/model";
+import { loadoutStats } from "../../../components/combat/loadoutStats";
 import {
   resolveLoadoutCombat,
   toResolvedCombatModel,
@@ -462,5 +464,71 @@ describe("hybrid manual model: Run === Optimize pack", () => {
     const { stats, model } = resolveLoadoutCombat(loadout, { now: NOW });
     expect(model.league.powerburstUntilTick).toBe(stats.league.powerburstUntilTick);
     expect(model.diagnostics.powerburstRemainingTicks).toBe(stats.league.powerburstUntilTick);
+  });
+});
+
+/**
+ * Host folds Aff + Demon's Mark into model.accuracy (DP) before pack.
+ * Worker payload carries that DP only; no Aff / Mark re-derive on revive.
+ */
+describe("solver bridge: Aff/Mark collapses into packed accuracy", () => {
+  // Two Chaos picks grant Demon's Mark (Chaos god tier).
+  const MARK_PICKS = ["Balance", "Chaos", "Chaos"] as const;
+  const NO_MARK_PICKS = ["Order"] as const;
+  // High Defence keeps hit chance under 100% so Aff 60 vs 90 actually moves DP.
+  const targetBase = {
+    defenceLevel: 170,
+    affinity: 60,
+    hasApplicableWeakness: true,
+  } as const;
+
+  it("Mark upgrades Aff 60 to weakness 90 DP; pack uses that accuracy only", () => {
+    const loadout = withLoadout({ target: { ...targetBase } });
+    const markOpts = { blessingPicks: [...MARK_PICKS], now: NOW };
+    const stats = loadoutStats(loadout, markOpts);
+    const model = toResolvedCombatModel(loadout, markOpts, stats);
+    const packed = packSimBaseFromModel(model);
+    const revived = reviveRevolutionBase(packed);
+
+    expect(stats.targetAffinity).toBe(90);
+    expect(stats.damagePotentialSource).toBe("target weakness");
+    expect(stats.dp).toBeCloseTo(
+      targetDamagePotential(stats.accuracyRating, {
+        defenceLevel: 170,
+        affinity: 90,
+      }),
+      10,
+    );
+    // model.accuracy is stats.dp; pack copies it for the worker.
+    expect(model.accuracy).toBe(stats.dp);
+    expect(packed.accuracy).toBe(model.accuracy);
+    expect(revived.accuracy).toBe(packed.accuracy);
+    expect(packed).not.toHaveProperty("affinity");
+    expect(packed).not.toHaveProperty("hasApplicableWeakness");
+    expect(revived).not.toHaveProperty("affinity");
+    expect(revived).not.toHaveProperty("hasApplicableWeakness");
+  });
+
+  it("without Mark, Aff 60 DP stays even when hasApplicableWeakness is true", () => {
+    const loadout = withLoadout({ target: { ...targetBase } });
+    const plainOpts = { blessingPicks: [...NO_MARK_PICKS], now: NOW };
+    const stats = loadoutStats(loadout, plainOpts);
+    const model = toResolvedCombatModel(loadout, plainOpts, stats);
+    const packed = packSimBaseFromModel(model);
+
+    expect(stats.targetAffinity).toBe(60);
+    expect(stats.damagePotentialSource).toBe("target stats");
+    expect(stats.dp).toBeCloseTo(
+      targetDamagePotential(stats.accuracyRating, {
+        defenceLevel: 170,
+        affinity: 60,
+      }),
+      10,
+    );
+    expect(model.accuracy).toBe(stats.dp);
+    expect(packed.accuracy).toBe(model.accuracy);
+    // Mark path must produce higher DP than Aff-60 for the same target/rating setup.
+    const markStats = loadoutStats(loadout, { blessingPicks: [...MARK_PICKS], now: NOW });
+    expect(markStats.dp).toBeGreaterThan(stats.dp);
   });
 });

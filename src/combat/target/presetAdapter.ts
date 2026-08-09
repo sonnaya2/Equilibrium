@@ -1,6 +1,6 @@
 import type { TargetAffinityProfile, TargetPresetRecord } from "../data/records";
 import type { CombatStyle } from "../types";
-import { DEFAULT_AFFINITIES, resolveAffinityPercent, sanitizeAffinity } from "./genericTarget";
+import { resolveAffinityPercent, sanitizeAffinity } from "./genericTarget";
 
 export interface MaterializedTargetFields {
   defenceLevel: number;
@@ -19,11 +19,6 @@ export interface MaterializedTargetFields {
 export interface MaterializeTargetPresetOptions {
   /** Player combat style for style affinity selection. */
   style: CombatStyle;
-  /**
-   * When true and the preset has a weakness affinity, use that value.
-   * Never inferred from weakness class alone; caller decides applicability.
-   */
-  useWeaknessAffinity?: boolean;
 }
 
 /** Middle of three style affinities for Necromancy (no Wiki necro column). */
@@ -47,7 +42,7 @@ export function affinityForStyle(
 
 /**
  * Materialize a supported/provisional preset into loadout target fields.
- * Returns null when the preset cannot supply Defence (unsupported or incomplete).
+ * Returns null when the preset cannot supply Defence or style affinities.
  */
 export function materializeTargetPreset(
   preset: TargetPresetRecord,
@@ -58,24 +53,19 @@ export function materializeTargetPreset(
   if (defenceLevel == null || !Number.isFinite(defenceLevel) || defenceLevel < 0) {
     return null;
   }
+  const profile = preset.stats.affinities;
+  if (!profile) return null;
   const armour =
     preset.stats.armour != null && Number.isFinite(preset.stats.armour) && preset.stats.armour >= 0
       ? preset.stats.armour
       : 0;
-  const profile = preset.stats.affinities;
-  let affinity = DEFAULT_AFFINITIES.same;
-  if (profile) {
-    affinity = affinityForStyle(profile, options.style);
-    if (options.useWeaknessAffinity && profile.weakness != null) {
-      affinity = resolveAffinityPercent(profile.weakness);
-    }
-  }
+  const affinity = affinityForStyle(profile, options.style);
   const fields: MaterializedTargetFields = {
     defenceLevel,
     armour,
     affinity,
   };
-  if (profile?.weakness != null) {
+  if (profile.weakness != null) {
     fields.weaknessAffinity = resolveAffinityPercent(profile.weakness);
   }
   if (preset.stats.size != null && preset.stats.size >= 1) {

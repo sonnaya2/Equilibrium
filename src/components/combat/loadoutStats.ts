@@ -115,6 +115,11 @@ export interface CalcStats {
   accuracyRating: number;
   /** Host-resolved target facts for live land-time Damage Potential. */
   targetAccuracyProfile?: ResolvedTargetAccuracyProfile;
+  /**
+   * Effective target affinity after Mark / league weakness (from resolveAccuracyDp).
+   * Undefined when no target model is active.
+   */
+  targetAffinity?: number;
   /** Named sources for the setup summary dropdowns - zero rows are filtered in the UI. */
   baseAbilityDamageBreakdown: readonly { label: string; value: number }[];
   equipmentDamageBreakdown: readonly { label: string; value: number }[];
@@ -313,6 +318,7 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     dp: accuracyDp.dp,
     accuracyRating: accuracyDp.accuracyRating,
     targetAccuracyProfile: accuracyDp.targetAccuracyProfile,
+    ...(accuracyDp.targetAffinity != null ? { targetAffinity: accuracyDp.targetAffinity } : {}),
     baseAbilityDamageBreakdown: baseDamage.baseAbilityDamageBreakdown,
     equipmentDamageBreakdown: baseDamage.equipmentDamageBreakdown,
     accuracyBreakdown: accuracyDp.accuracyBreakdown,

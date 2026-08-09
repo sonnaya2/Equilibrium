@@ -58,12 +58,10 @@ describe("presetAdapter", () => {
     });
   });
 
-  it("applies exact weakness when requested", () => {
-    const fields = materializeTargetPreset(basePreset(), {
-      style: "melee",
-      useWeaknessAffinity: true,
-    });
-    expect(fields?.affinity).toBe(90);
+  it("exposes weaknessAffinity without rewriting style affinity", () => {
+    const fields = materializeTargetPreset(basePreset(), { style: "melee" });
+    expect(fields?.affinity).toBe(70);
+    expect(fields?.weaknessAffinity).toBe(90);
   });
 
   it("returns null for unsupported or incomplete presets", () => {
@@ -80,6 +78,22 @@ describe("presetAdapter", () => {
             armour: null,
             affinities: null,
             size: null,
+          },
+        }),
+        { style: "melee" },
+      ),
+    ).toBeNull();
+  });
+
+  it("returns null when affinities are missing with valid Def", () => {
+    expect(
+      materializeTargetPreset(
+        basePreset({
+          stats: {
+            defenceLevel: 80,
+            armour: 500,
+            affinities: null,
+            size: 3,
           },
         }),
         { style: "melee" },

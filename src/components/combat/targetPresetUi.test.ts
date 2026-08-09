@@ -65,4 +65,20 @@ describe("targetPresetUi", () => {
     );
     expect(modified.target?.affinity).toBe(55);
   });
+
+  it("restyles style Aff with hasApplicableWeakness still set (KBD melee 60 -> ranged 50)", () => {
+    // Mark scenario must not bake weakness into stored Aff; restyle uses style column only.
+    const target = applyTargetPreset("boss:king-black-dragon", "melee", {
+      defenceLevel: 1,
+      armour: 0,
+      affinity: 55,
+      hasApplicableWeakness: true,
+    })!;
+    expect(target.affinity).toBe(60);
+    expect(target.hasApplicableWeakness).toBe(true);
+    const next = withCombatStyle({ ...DEFAULT_LOADOUT, style: "melee", target }, "ranged");
+    expect(next.target?.affinity).toBe(50);
+    expect(next.target?.hasApplicableWeakness).toBe(true);
+    expect(isTargetModifiedFromPreset(next.target!, "ranged")).toBe(false);
+  });
 });

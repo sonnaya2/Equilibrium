@@ -54,10 +54,8 @@ export function applyTargetPreset(
 ): LoadoutTarget | null {
   const preset = targetPresetById(presetId);
   if (!preset) return previous;
-  const fields = materializeTargetPreset(preset, {
-    style,
-    useWeaknessAffinity: previous?.hasApplicableWeakness === true,
-  });
+  // Style affinity only; Mark uses hasApplicableWeakness + weaknessAffinity at DP time.
+  const fields = materializeTargetPreset(preset, { style });
   if (!fields) return previous;
   return {
     defenceLevel: fields.defenceLevel,
@@ -72,7 +70,7 @@ export function applyTargetPreset(
     ...(fields.undead === true ? { undead: true } : {}),
     ...(fields.demon === true ? { demon: true } : {}),
     ...(fields.dragon === true ? { dragon: true } : {}),
-    // Scenario fields stay player-owned
+    // Scenario fields stay player-owned (Mark applicability is not baked into Aff)
     ...(previous?.hasApplicableWeakness ? { hasApplicableWeakness: true } : {}),
     ...(previous?.onSlayerTask ? { onSlayerTask: true } : {}),
     ...(previous?.hpPercent != null ? { hpPercent: previous.hpPercent } : {}),
@@ -98,10 +96,7 @@ export function restyleTargetFromPreset(
   if (!target.targetPresetId) return target;
   const preset = targetPresetById(target.targetPresetId);
   if (!preset) return target;
-  const fields = materializeTargetPreset(preset, {
-    style,
-    useWeaknessAffinity: target.hasApplicableWeakness === true,
-  });
+  const fields = materializeTargetPreset(preset, { style });
   if (!fields) return target;
   if (
     targetDiffersFromPreset(
@@ -141,10 +136,7 @@ export function isTargetModifiedFromPreset(
   if (!target.targetPresetId) return false;
   const preset = targetPresetById(target.targetPresetId);
   if (!preset) return true;
-  const fields = materializeTargetPreset(preset, {
-    style,
-    useWeaknessAffinity: target.hasApplicableWeakness === true,
-  });
+  const fields = materializeTargetPreset(preset, { style });
   if (!fields) return true;
   return targetDiffersFromPreset(target, fields);
 }

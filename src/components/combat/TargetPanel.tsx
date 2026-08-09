@@ -246,8 +246,16 @@ export function TargetPanel({
                   updateTarget({ hasApplicableWeakness: event.target.checked || undefined })
                 }
               />
-              Has an applicable weakness
+              Applicable specific weakness (Demon&apos;s Mark)
             </label>
+            {target.weaknessAffinity != null ? (
+              <p className="text-xs text-parch-300">
+                Sourced weakness affinity {target.weaknessAffinity}
+                {target.hasApplicableWeakness
+                  ? " · Mark may raise effective Aff at Damage Potential resolve"
+                  : ""}
+              </p>
+            ) : null}
             <label className="loadout-check">
               <input
                 type="checkbox"

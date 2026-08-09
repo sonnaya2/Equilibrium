@@ -935,12 +935,8 @@ export function withCombatStyle(loadout: Loadout, style: CombatStyle): Loadout {
     if (preset) {
       const previousStyleFields = materializeTargetPreset(preset, {
         style: loadout.style,
-        useWeaknessAffinity: target.hasApplicableWeakness === true,
       });
-      const nextStyleFields = materializeTargetPreset(preset, {
-        style,
-        useWeaknessAffinity: target.hasApplicableWeakness === true,
-      });
+      const nextStyleFields = materializeTargetPreset(preset, { style });
       if (
         previousStyleFields &&
         nextStyleFields &&

@@ -350,6 +350,118 @@ describe("loadoutStats", () => {
     expect(stats.damagePotentialSource).toBe("manual override");
   });
 
+  /**
+   * Unbake contract: stored Aff is style Aff; Demon's Mark upgrades Aff_eff at resolve only.
+   * Goldens use known Aff_eff percents (60 / 90 / stay-60), not materialize bake.
+   * Chaos god tier (two Chaos picks) grants Demon's Mark; default weakness Aff is 90.
+   * High Defence keeps hit chance under the 100% cap so Aff_eff changes DP.
+   */
+  describe("Demon's Mark Aff_eff (unbake; Mark-only)", () => {
+    const markPicks = ["Balance", "Chaos", "Chaos"] as const;
+    const noMarkPicks = ["Order", "Order"] as const;
+    const hardDef = 170;
+    const styleStored = {
+      defenceLevel: hardDef,
+      affinity: 60,
+      hasApplicableWeakness: true as const,
+    };
+
+    it("checkbox alone keeps Aff_eff at stored style Aff (no Mark)", () => {
+      const stats = loadoutStats(
+        { ...base, target: styleStored },
+        { blessingPicks: [...noMarkPicks] },
+      );
+      expect(stats.league.blessingIds.has("demons-mark")).toBe(false);
+      expect(stats.damagePotentialSource).toBe("target stats");
+      expect(stats.dp).toBeCloseTo(
+        targetDamagePotential(stats.accuracyRating, {
+          defenceLevel: hardDef,
+          affinity: 60,
+        }),
+        10,
+      );
+      expect(stats.dp).toBeLessThan(1);
+    });
+
+    it("Mark + applicable + stored 60 uses Aff_eff 90 and labels target weakness", () => {
+      const stats = loadoutStats(
+        { ...base, target: styleStored },
+        { blessingPicks: [...markPicks] },
+      );
+      expect(stats.league.blessingIds.has("demons-mark")).toBe(true);
+      expect(stats.damagePotentialSource).toBe("target weakness");
+      expect(stats.dp).toBeCloseTo(
+        targetDamagePotential(stats.accuracyRating, {
+          defenceLevel: hardDef,
+          affinity: 90,
+        }),
+        10,
+      );
+      // Upgrade is resolve-time only: DP with stored Aff 60 is strictly worse.
+      expect(stats.dp).toBeGreaterThan(
+        targetDamagePotential(stats.accuracyRating, {
+          defenceLevel: hardDef,
+          affinity: 60,
+        }),
+      );
+    });
+
+    it("Mark + weakness 55 + stored 60 keeps Aff_eff 60 (better-only)", () => {
+      const stats = loadoutStats(
+        {
+          ...base,
+          target: { ...styleStored, weaknessAffinity: 55 },
+        },
+        { blessingPicks: [...markPicks] },
+      );
+      expect(stats.league.blessingIds.has("demons-mark")).toBe(true);
+      expect(stats.damagePotentialSource).toBe("target stats");
+      expect(stats.dp).toBeCloseTo(
+        targetDamagePotential(stats.accuracyRating, {
+          defenceLevel: hardDef,
+          affinity: 60,
+        }),
+        10,
+      );
+      // Must not bake/use the worse weakness as Aff_eff.
+      expect(stats.dp).toBeGreaterThan(
+        targetDamagePotential(stats.accuracyRating, {
+          defenceLevel: hardDef,
+          affinity: 55,
+        }),
+      );
+    });
+
+    it("Mark upgrades sourced weakness without baking stored Aff (50 -> Aff_eff 55)", () => {
+      const stats = loadoutStats(
+        {
+          ...base,
+          target: {
+            defenceLevel: hardDef,
+            affinity: 50,
+            weaknessAffinity: 55,
+            hasApplicableWeakness: true,
+          },
+        },
+        { blessingPicks: [...markPicks] },
+      );
+      expect(stats.damagePotentialSource).toBe("target weakness");
+      expect(stats.dp).toBeCloseTo(
+        targetDamagePotential(stats.accuracyRating, {
+          defenceLevel: hardDef,
+          affinity: 55,
+        }),
+        10,
+      );
+      expect(stats.dp).toBeGreaterThan(
+        targetDamagePotential(stats.accuracyRating, {
+          defenceLevel: hardDef,
+          affinity: 50,
+        }),
+      );
+    });
+  });
+
   it("always computes base ability damage from the current loadout", () => {
     const automatic = loadoutStats({ ...base, level: 110, strengthLevel: 110 });
     expect(automatic.rawBase).toBe(

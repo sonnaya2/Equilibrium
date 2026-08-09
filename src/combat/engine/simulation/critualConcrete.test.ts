@@ -3,7 +3,7 @@ import { performCast } from "../cast";
 import { advanceTo } from "../runtime/clock";
 import { createRuntime } from "../runtime/runtime";
 import { patchMagic } from "../runtime/state";
-import { rotationOf, type SimulateInput } from "./contracts";
+import { rotationOf, type SimulationDetailLevel, type SimulateInput } from "./contracts";
 import { simulate } from "./simulate";
 import { resolveLeagueRules } from "../../league/ruleset";
 import { MAGIC_ABILITIES } from "../../styles/magic/abilities";
@@ -38,7 +38,12 @@ function laneRun(
   return rt;
 }
 
-function scheduledInfernoRun(style: "magic" | "ranged", laneIndex: number, tsunamiActive = true) {
+function scheduledInfernoRun(
+  style: "magic" | "ranged",
+  laneIndex: number,
+  tsunamiActive = true,
+  detailLevel: SimulationDetailLevel = "full-analysis",
+) {
   const input = style === "magic" ? { ...baseInput, abilities: MAGIC_ABILITIES } : rangedInput;
   const rt = createRuntime(
     {
@@ -46,6 +51,7 @@ function scheduledInfernoRun(style: "magic" | "ranged", laneIndex: number, tsuna
       league: unholy,
       crit: { chance: 0.5 },
       startingAdrenaline: 0,
+      detailLevel,
       context: { style, ruleset: "equilibrium" },
     },
     { laneIndex, laneCount: 128 },
@@ -147,6 +153,15 @@ describe("concrete Unholy Critual runtime", () => {
       ),
     ).toBe(true);
     expect(ranged.state.adrenaline - rangedBaseline.state.adrenaline).toBe(0);
+  });
+
+  it("preserves landed Tsunami adrenaline across full and score-only lanes", () => {
+    for (let laneIndex = 0; laneIndex < 128; laneIndex++) {
+      const full = scheduledInfernoRun("magic", laneIndex, true, "full-analysis");
+      const scoreOnly = scheduledInfernoRun("magic", laneIndex, true, "score-only");
+
+      expect(scoreOnly.state.adrenaline, `lane ${laneIndex}`).toBe(full.state.adrenaline);
+    }
   });
 
   it("inherits one parent result across Death Skulls bounces", () => {

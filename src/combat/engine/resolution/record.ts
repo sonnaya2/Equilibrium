@@ -63,7 +63,7 @@ export function recordResolved(
   rt: SimulationRuntime,
   event: ScheduledEvent<SimulationRuntime>,
   resolution: EventResolution,
-): void {
+): EventResolution {
   const landed = materializeCriticalOutcome(rt, event, resolution);
   const composed = materializeCriticalOutcome(
     rt,
@@ -89,4 +89,5 @@ export function recordResolved(
   }
 
   releaseScoreOnlyHitDetails(rt, event);
+  return composed;
 }

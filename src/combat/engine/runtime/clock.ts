@@ -45,9 +45,9 @@ function processDueEvents(rt: SimulationRuntime, bound: number): void {
       continue;
     }
     const resolution = event.resolve(rt, event.tick);
-    recordResolved(rt, event, resolution);
+    const landed = recordResolved(rt, event, resolution);
     applyPoisonLandEffects(rt, event, resolution.damage);
-    applyStatefulLandRng(rt, event, resolution.damage);
+    applyStatefulLandRng(rt, event, landed.damage);
   }
 }
 

@@ -36,18 +36,6 @@ function tsunamiCritProbability(
   return surgeSourceChance == null ? ownChance : surgeSourceChance * ownChance;
 }
 
-function landedCriticalOutcome(
-  rt: SimulationRuntime,
-  event: ScheduledEvent<SimulationRuntime>,
-  damage: ResolvedDamage,
-): boolean | undefined {
-  if (damage.critical?.outcome !== undefined) return damage.critical.outcome;
-  const retained = rt.hitDetails.get(event.seq)?.critOutcome;
-  if (retained !== undefined) return retained;
-  const last = rt.events[rt.events.length - 1];
-  return last?.seq === event.seq ? last.damage.critical?.outcome : undefined;
-}
-
 function isTsunamiEligible(
   rt: SimulationRuntime,
   event: ScheduledEvent<SimulationRuntime>,
@@ -89,7 +77,7 @@ export function applyStatefulLandRng(
   if (rt.state.adrenaline >= rt.state.adrenalineCap) return;
   const grant = tsunamiCritAdrenGrant(rt.state.naturalInstinctUntilTick, event.tick);
   if (grant <= 0) return;
-  const actualCrit = landedCriticalOutcome(rt, event, damage);
+  const actualCrit = damage.critical?.outcome;
   const critical =
     actualCrit !== undefined && event.lightningSurgeSourceCritChance == null
       ? actualCrit

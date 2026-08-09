@@ -5,10 +5,17 @@ import { resolveAbilityCatalogue } from "@/combat/abilities/catalogue";
 import { abilityIconPath } from "@/lib/gameArt";
 import { loadState } from "@/lib/storage";
 import { GameIcon } from "../GameIcon";
+import { abilityTtkLabel } from "./abilityTtkPresentation";
 import { CombatFrame } from "./CombatFrame";
 import type { CalcStats } from "./loadoutStats";
 import { loadActiveRevoBar, loadRotationMode } from "./revoBarLibrary";
 import { defaultRevoBarIds } from "./revoBarResolve";
+import {
+  formatLifePoints,
+  targetSummaryView,
+} from "./targetSummaryPresentation";
+import { isTargetModifiedFromPreset } from "./targetPresetUi";
+import type { Loadout } from "./useLoadout";
 
 const STORAGE_KEY = "eq:rotation:v1";
 const DISPLAY_LIMIT = 14;
@@ -34,11 +41,15 @@ function readRotation(style: string, stats: CalcStats): string[] {
 export function CompactRotation({
   style,
   stats,
+  loadout,
   onOpenRotation,
+  onOpenTarget,
 }: {
   style: string;
   stats: CalcStats;
+  loadout: Loadout;
   onOpenRotation: () => void;
+  onOpenTarget?: () => void;
 }) {
   const [queue, setQueue] = useState<string[]>([]);
   useEffect(() => {
@@ -55,6 +66,18 @@ export function CompactRotation({
   }, [stats, style]);
 
   const visibleQueue = useMemo(() => queue.slice(0, DISPLAY_LIMIT), [queue]);
+  const maxLp = loadout.target?.maximumLifePoints;
+  const dp = stats.dp;
+  const base = stats.base;
+  const targetView = useMemo(
+    () =>
+      targetSummaryView(loadout.target, {
+        modified:
+          loadout.target != null &&
+          isTargetModifiedFromPreset(loadout.target, loadout.style),
+      }),
+    [loadout.target, loadout.style],
+  );
 
   return (
     <CombatFrame
@@ -73,22 +96,59 @@ export function CompactRotation({
           {visibleQueue.map((id, index) => {
             const ability = CATALOGUE.byId.get(id);
             if (!ability) return null;
+            const ttk = abilityTtkLabel(base, ability, dp, maxLp);
             return (
               <li
                 key={`${id}-${index}`}
-                title={`${index + 1}. ${ability.name}`}
-                aria-label={`${index + 1}. ${ability.name}`}
+                title={`${index + 1}. ${ability.name} · est. TTK ${ttk} (band midpoint × DP; not full sim)`}
+                aria-label={`${index + 1}. ${ability.name}, estimated time to kill ${ttk}`}
               >
                 <GameIcon src={abilityIconPath(ability.id, ability.style)} size={30} />
+                <span className="compact-rotation-ttk" aria-hidden>
+                  {ttk}
+                </span>
                 <span className="sr-only">{ability.name}</span>
               </li>
             );
           })}
         </ol>
-      ) : null}
-      <button type="button" className="setup-card-action" onClick={onOpenRotation}>
-        Open rotation
-      </button>
+      ) : (
+        <p className="compact-rotation-empty">No bar loaded. Open rotation to set one.</p>
+      )}
+      <footer className="compact-rotation-footer">
+        <button type="button" className="setup-card-action" onClick={onOpenRotation}>
+          Open rotation
+        </button>
+        {targetView ? (
+          <button
+            type="button"
+            className="compact-rotation-target"
+            onClick={onOpenTarget}
+            title={`${targetView.name} · Def ${targetView.defenceLevel} · Aff ${targetView.affinity}`}
+          >
+            <span className="compact-rotation-target__icon" aria-hidden>
+              <GameIcon src={targetView.iconSrc} size={22} />
+            </span>
+            <span className="compact-rotation-target__copy">
+              <strong>{targetView.name}</strong>
+              <small>
+                Def {targetView.defenceLevel} · Aff {targetView.affinity}
+                {targetView.maximumLifePoints != null
+                  ? ` · LP ${formatLifePoints(targetView.maximumLifePoints)}`
+                  : ""}
+              </small>
+            </span>
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="compact-rotation-target compact-rotation-target--empty"
+            onClick={onOpenTarget}
+          >
+            Set target
+          </button>
+        )}
+      </footer>
     </CombatFrame>
   );
 }

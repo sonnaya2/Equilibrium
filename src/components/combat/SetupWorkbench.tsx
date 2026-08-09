@@ -10,6 +10,11 @@ import { GameIcon } from "../GameIcon";
 import { CombatFrame } from "./CombatFrame";
 import { CompactRotation } from "./CompactRotation";
 import type { CalcStats } from "./loadoutStats";
+import {
+  formatLifePoints,
+  targetSummaryView,
+} from "./targetSummaryPresentation";
+import { isTargetModifiedFromPreset } from "./targetPresetUi";
 import { GIZMO_SLOTS, gizmoCapacity, type Loadout, type PerkRankKey } from "./useLoadout";
 const PERK_LABELS: Record<PerkRankKey, string> = {
   equilibrium: "Equilibrium",
@@ -330,21 +335,61 @@ function ArchaeologySummary({ loadout, onEdit }: { loadout: Loadout; onEdit: () 
   );
 }
 
-function TargetSummary({ target }: { target: Loadout["target"] }) {
-  if (!target) return null;
-  const flags = [
-    target.dragon ? "Dragon" : null,
-    target.undead ? "Undead" : null,
-    target.demon ? "Demon" : null,
-    target.onSlayerTask ? "Slayer task" : null,
-  ].filter((value): value is string => value != null);
+function TargetSummary({
+  target,
+  style,
+  damagePotential,
+}: {
+  target: Loadout["target"];
+  style: Loadout["style"];
+  damagePotential: number;
+}) {
+  const view = targetSummaryView(target, {
+    modified: target != null && isTargetModifiedFromPreset(target, style),
+  });
+  if (!view) {
+    return (
+      <div className="setup-target-summary setup-target-summary--empty">
+        <p>No NPC target. Damage Potential uses the manual accuracy slider.</p>
+      </div>
+    );
+  }
   return (
     <div className="setup-target-summary">
-      <div className="setup-target-heading">
-        <strong>Custom NPC</strong>
-        <span>{target.affinity}% affinity</span>
+      <div className="setup-target-identity">
+        <span className="setup-target-identity__icon" aria-hidden>
+          <GameIcon src={view.iconSrc} size={40} />
+        </span>
+        <div className="setup-target-identity__copy">
+          <strong>{view.name}</strong>
+          <span>
+            {view.modifiedHint ?? "Custom"}
+            {view.flags.length ? ` · ${view.flags.join(" · ")}` : ""}
+          </span>
+        </div>
       </div>
-      {flags.length ? <p className="setup-target-flags">{flags.join(" · ")}</p> : null}
+      <dl>
+        <div>
+          <dt>Defence</dt>
+          <dd>{view.defenceLevel}</dd>
+        </div>
+        <div>
+          <dt>Armour</dt>
+          <dd>{view.armour}</dd>
+        </div>
+        <div>
+          <dt>Affinity</dt>
+          <dd>{view.affinity}</dd>
+        </div>
+        <div>
+          <dt>Damage Potential</dt>
+          <dd>{Math.round(damagePotential * 100)}%</dd>
+        </div>
+        <div>
+          <dt>Life points</dt>
+          <dd>{formatLifePoints(view.maximumLifePoints)}</dd>
+        </div>
+      </dl>
     </div>
   );
 }
@@ -392,16 +437,33 @@ export function SetupWorkbench({
         </WorkbenchCard>
       </div>
 
-      <CompactRotation style={loadout.style} stats={stats} onOpenRotation={onOpenRotation} />
+      <CompactRotation
+        style={loadout.style}
+        stats={stats}
+        loadout={loadout}
+        onOpenRotation={onOpenRotation}
+        onOpenTarget={onOpenTarget}
+      />
 
       <WorkbenchCard
         cardId="target"
-        title="Target & Scenario"
-        meta={loadout.target ? "Custom NPC" : undefined}
+        title="Target"
+        meta={
+          loadout.target?.targetPresetId
+            ? (targetSummaryView(loadout.target)?.name ?? "Boss")
+            : loadout.target
+              ? "Custom"
+              : "None"
+        }
         action="Edit target"
         onAction={onOpenTarget}
+        actionLabel="Edit target"
       >
-        <TargetSummary target={loadout.target} />
+        <TargetSummary
+          target={loadout.target}
+          style={loadout.style}
+          damagePotential={stats.dp}
+        />
       </WorkbenchCard>
     </div>
   );

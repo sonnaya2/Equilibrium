@@ -454,7 +454,13 @@ export function RevolutionPanel({
             </span>
           </header>
           <div className="ability-bar-row">
-            <RevoBarGraphic slots={slots} revoSize={revoSize} />
+            <RevoBarGraphic
+              slots={slots}
+              revoSize={revoSize}
+              baseAbilityDamage={stats.base}
+              damagePotential={stats.dp}
+              maximumLifePoints={loadout.target?.maximumLifePoints}
+            />
           </div>
           <div className="revo-toolbar flex flex-wrap items-center gap-2 text-xs">
             <span className="text-parch-300" data-testid="revo-reference-bar">

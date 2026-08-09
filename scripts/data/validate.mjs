@@ -1,6 +1,6 @@
-import { existsSync, mkdirSync, readFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { CHANGED, REPORTS, SCHEMA_VERSION, TRANSFORM_BY_NAME } from "./config.mjs";
+import { CHANGED, PATCHES, REPORTS, SCHEMA_VERSION, TRANSFORM_BY_NAME } from "./config.mjs";
 import { recordTransform } from "./database.mjs";
 import { atomicWrite, hash, stableJson } from "./utilities.mjs";
 
@@ -85,9 +85,34 @@ const UNUSABLE_TIER_OVERRIDES = `SELECT stable_id, record_path ${EQUIPMENT_RECOR
    ORDER BY stable_id`;
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+const PATCH_DATE_PREFIX = /^(\d{4}-\d{2}-\d{2})-/;
 
+/** Latest YYYY-MM-DD stamped on a patch filename under data/patches/. */
+export function latestPatchDate(patchesDir = PATCHES) {
+  if (!existsSync(patchesDir)) return null;
+  let latest = null;
+  for (const name of readdirSync(patchesDir)) {
+    const match = PATCH_DATE_PREFIX.exec(name);
+    if (!match) continue;
+    if (!latest || match[1] > latest) latest = match[1];
+  }
+  return latest;
+}
+
+/**
+ * "Today" for verification metadata.
+ * Prefer EQUILIBRIUM_DATA_DATE; otherwise max(UTC today, latest patch date) so
+ * authored patches with verified_at matching their filename date do not fail
+ * when the host clock lags the patch series.
+ */
 export function currentDataDate(value = process.env.EQUILIBRIUM_DATA_DATE) {
-  const date = value ?? new Date().toISOString().slice(0, 10);
+  if (value != null && value !== "") {
+    if (!ISO_DATE.test(value)) throw new Error(`invalid data current date: ${value}`);
+    return value;
+  }
+  const today = new Date().toISOString().slice(0, 10);
+  const patchDate = latestPatchDate();
+  const date = patchDate && patchDate > today ? patchDate : today;
   if (!ISO_DATE.test(date)) throw new Error(`invalid data current date: ${date}`);
   return date;
 }
@@ -234,7 +259,25 @@ export function validate(db, changedOnly = false, currentDate = currentDataDate(
     )}\n`,
   );
   if (failures.length) {
-    throw new Error(`Data validation failed: ${failures.map(({ name, count }) => `${name} (${count})`).join(", ")}`);
+    const summary = failures
+      .map(({ name, count, samples }) => {
+        const head = `${name} (${count})`;
+        if (!Array.isArray(samples) || samples.length === 0) return head;
+        const detail = samples
+          .slice(0, 3)
+          .map((sample) => {
+            if (sample?.verifiedAt && sample?.currentDate) {
+              return `${sample.record_path ?? sample.source_file ?? "?"} verifiedAt=${sample.verifiedAt} > ${sample.currentDate}`;
+            }
+            if (sample?.id) return String(sample.id);
+            if (sample?.source_file) return `${sample.source_file}${sample.record_path ? ` ${sample.record_path}` : ""}`;
+            return JSON.stringify(sample);
+          })
+          .join("; ");
+        return `${head}: ${detail}`;
+      })
+      .join(" | ");
+    throw new Error(`Data validation failed: ${summary}`);
   }
   const total = Object.values(counts).reduce((sum, count) => sum + count, 0);
   recordTransform(db, TRANSFORM_BY_NAME.get("relational-validation"), hash(stableJson(counts)), total);

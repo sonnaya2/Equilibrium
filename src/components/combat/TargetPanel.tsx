@@ -173,8 +173,21 @@ export function TargetPanel({
                   updateTarget({ onSlayerTask: event.target.checked || undefined })
                 }
               />
-              On Slayer task (helmet)
+              On Slayer task (helmet / Tuska)
             </label>
+            <NumberField
+              label="Slayer level (Tuska)"
+              value={loadout.slayerLevel ?? 0}
+              min={0}
+              max={200}
+              onChange={(value) => {
+                const floor = Math.floor(value);
+                setLoadout({
+                  ...loadout,
+                  slayerLevel: floor > 0 ? Math.min(200, floor) : undefined,
+                });
+              }}
+            />
             <NumberField
               label="Target size"
               value={target.size ?? 1}

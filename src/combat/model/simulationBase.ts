@@ -80,6 +80,8 @@ export function buildSimulationInputBase(
     playerPoison: model.playerPoison,
     playerPoisonModifiers: playerPoisonModifiersFromSources(model.modifierSources, league),
     targetPoisonImmune: model.target.poisonImmune === true,
+    ...(model.slayerOnTask != null ? { slayerOnTask: model.slayerOnTask } : {}),
+    ...(model.slayerLevel != null ? { slayerLevel: model.slayerLevel } : {}),
   };
 }
 

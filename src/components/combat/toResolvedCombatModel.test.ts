@@ -7,11 +7,21 @@ import { FULL_SLAYER_HELMET_ITEM_ID } from "@/combat/shared/slayerHelmet";
 import { SALVE_AMULET_E_ITEM_ID } from "@/combat/shared/salveAmulet";
 import { RING_OF_VIGOUR_ITEM_ID } from "@/combat/shared/ringOfVigour";
 import { FURY_OF_THE_SMALL_ID } from "@/combat/shared/furyOfTheSmall";
-import { projectSerializableSimBase, toHybridManualCombatModel } from "@/combat/model";
+import {
+  analyzeSingleCast,
+  hostInputFromResolvedModel,
+  projectSerializableSimBase,
+  toHybridManualCombatModel,
+} from "@/combat/model";
 import { packSimBase, packSimBaseFromModel } from "@/combat/solver/packRequest";
 import { buildCandidatePool } from "@/combat/solver/candidatePool";
 import { evaluateRevolutionBar } from "@/combat/solver/evaluate";
 import { NECROMANCY_ABILITIES } from "@/combat/styles/necromancy/abilities";
+import {
+  abilityStyleForBar,
+  TUSKAS_EMPOWERED_COOLDOWN_SECONDS,
+  TUSKAS_WRATH,
+} from "@/combat/styles/shared/constitutionAbilities";
 import { POWERBURST_DURATION_MS } from "@/combat";
 import { DEFAULT_LOADOUT, equipInSlot, type Loadout } from "./loadout/model";
 import { loadoutStats } from "./loadoutStats";
@@ -417,5 +427,83 @@ describe("toResolvedCombatModel", () => {
       { now: NOW },
     );
     expect(blowpipe.playerPoison.blowpipe).toBe(true);
+  });
+});
+
+describe("Tuska slayer task UI → sim wiring", () => {
+  it("maps onSlayerTask + slayerLevel onto model, sim base, and snapshot", () => {
+    const loadout = withLoadout({
+      slayerLevel: 99,
+      target: { ...TARGET_DEFAULTS, onSlayerTask: true },
+    });
+    const model = toResolvedCombatModel(loadout, { now: NOW });
+    expect(model.slayerOnTask).toBe(true);
+    expect(model.slayerLevel).toBe(99);
+
+    const simBase = projectSerializableSimBase(model);
+    expect(simBase.slayerOnTask).toBe(true);
+    expect(simBase.slayerLevel).toBe(99);
+
+    const snap = solverSnapshotFromResolvedModel(model);
+    expect(snap.slayerOnTask).toBe(true);
+    expect(snap.slayerLevel).toBe(99);
+    expect(packSimBase(snap)).toMatchObject({ slayerOnTask: true, slayerLevel: 99 });
+    expect(packSimBaseFromModel(model)).toMatchObject({ slayerOnTask: true, slayerLevel: 99 });
+  });
+
+  it("does not invent slayerLevel when only on-task is set", () => {
+    const loadout = withLoadout({
+      target: { ...TARGET_DEFAULTS, onSlayerTask: true },
+    });
+    const model = toResolvedCombatModel(loadout, { now: NOW });
+    expect(model.slayerOnTask).toBe(true);
+    expect(model.slayerLevel).toBeUndefined();
+    expect(projectSerializableSimBase(model).slayerLevel).toBeUndefined();
+  });
+
+  it("does not set slayerOnTask when only level is present", () => {
+    const loadout = withLoadout({ slayerLevel: 120 });
+    const model = toResolvedCombatModel(loadout, { now: NOW });
+    expect(model.slayerOnTask).toBeUndefined();
+    expect(model.slayerLevel).toBe(120);
+  });
+
+  it("hostInputFromResolvedModel preserves Tuska slayer fields through overlay", () => {
+    const loadout = withLoadout({
+      slayerLevel: 99,
+      target: { ...TARGET_DEFAULTS, onSlayerTask: true },
+    });
+    const model = toResolvedCombatModel(loadout, { now: NOW });
+    const rehosted = hostInputFromResolvedModel(model);
+    expect(rehosted.slayerOnTask).toBe(true);
+    expect(rehosted.slayerLevel).toBe(99);
+  });
+
+  it("empowers tuskas_wrath from loadout on-task + level 99", () => {
+    const loadout = withLoadout({
+      slayerLevel: 99,
+      target: { ...TARGET_DEFAULTS, onSlayerTask: true },
+    });
+    const model = toResolvedCombatModel(loadout, { now: NOW });
+    const ability = abilityStyleForBar(TUSKAS_WRATH, model.style);
+    const analysis = analyzeSingleCast(model, ability);
+    expect(analysis.ok, analysis.error).toBe(true);
+    expect(analysis.expected).toBe(9900);
+    expect(ability.cooldownSeconds).toBe(15);
+    // Empowered cast uses 120s CD on the cast path (spec default stays 15).
+    expect(TUSKAS_EMPOWERED_COOLDOWN_SECONDS).toBe(120);
+  });
+
+  it("stays off-task without level even when onSlayerTask is true", () => {
+    const loadout = withLoadout({
+      target: { ...TARGET_DEFAULTS, onSlayerTask: true },
+    });
+    const model = toResolvedCombatModel(loadout, { now: NOW });
+    const ability = abilityStyleForBar(TUSKAS_WRATH, model.style);
+    const analysis = analyzeSingleCast(model, ability);
+    expect(analysis.ok, analysis.error).toBe(true);
+    // Off-task band 75-85% AD, not 100x Slayer.
+    expect(analysis.expected).not.toBe(9900);
+    expect(analysis.expected).toBeLessThan(5000);
   });
 });

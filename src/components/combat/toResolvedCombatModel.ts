@@ -144,6 +144,13 @@ export function hostInputFromLoadoutStats(
       undead: loadout.target?.undead,
       poisonImmune: loadout.target?.poisonImmune,
     },
+    // Tuska empower: both required; never invent level when on-task alone.
+    ...(loadout.target?.onSlayerTask === true ? { slayerOnTask: true } : {}),
+    ...(loadout.slayerLevel != null &&
+    Number.isFinite(loadout.slayerLevel) &&
+    loadout.slayerLevel > 0
+      ? { slayerLevel: Math.floor(loadout.slayerLevel) }
+      : {}),
     slayerHelmet: stats.slayerHelmet,
     salve: stats.salve,
     ultimatums: loadout.perks.ultimatums ?? 0,

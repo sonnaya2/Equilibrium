@@ -117,6 +117,8 @@ export function hostInputFromResolvedModel(
     targetMaximumLifePoints: model.target.maximumLifePoints,
     cap: model.cap,
     startingAdrenaline: model.startingAdrenaline,
+    ...(model.slayerOnTask != null ? { slayerOnTask: model.slayerOnTask } : {}),
+    ...(model.slayerLevel != null ? { slayerLevel: model.slayerLevel } : {}),
     equipmentIds: model.equipmentIds,
     weaponConfiguration: model.weaponConfiguration,
     setCounts: src.setCounts,

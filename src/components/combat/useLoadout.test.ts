@@ -48,6 +48,15 @@ describe("normalizeLoadout", () => {
     expect(normalizeLoadout("nope")).toEqual(DEFAULT_LOADOUT);
   });
 
+  it("keeps explicit slayerLevel only when positive; never invents default", () => {
+    expect(normalizeLoadout({}).slayerLevel).toBeUndefined();
+    expect(normalizeLoadout({ slayerLevel: 99 }).slayerLevel).toBe(99);
+    expect(normalizeLoadout({ slayerLevel: 150 }).slayerLevel).toBe(150);
+    expect(normalizeLoadout({ slayerLevel: 999 }).slayerLevel).toBe(200);
+    expect(normalizeLoadout({ slayerLevel: 0 }).slayerLevel).toBeUndefined();
+    expect(normalizeLoadout({ slayerLevel: -3 }).slayerLevel).toBeUndefined();
+  });
+
   it("defaults stored loadouts to automatic base damage and drops legacy overrides", () => {
     const legacy = normalizeLoadout({ base: 777, startingAdrenaline: 140 });
     expect(legacy.baseDamage).toEqual({ mode: "automatic" });
@@ -237,6 +246,7 @@ describe("normalizeLoadout", () => {
   it("fills missing buffs and equipmentSlots", () => {
     const next = normalizeLoadout({ style: "magic", level: 99 });
     expect(next.buffs).toEqual({
+      useEquippedWeaponSpecial: false,
       vulnerability: false,
       weaponPoison: "none",
       kwuarmPotency: 0,

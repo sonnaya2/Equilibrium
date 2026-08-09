@@ -53,6 +53,8 @@ export function solverSnapshotFromResolvedModel(model: ResolvedCombatModel): Sol
     targetPoisonImmune: model.target.poisonImmune === true,
     cap: model.cap,
     startingAdrenaline: model.startingAdrenaline,
+    ...(model.slayerOnTask != null ? { slayerOnTask: model.slayerOnTask } : {}),
+    ...(model.slayerLevel != null ? { slayerLevel: model.slayerLevel } : {}),
     equipmentIds: model.equipmentIds,
     weaponConfiguration: model.weaponConfiguration,
     // Precomputed sources only - pack must not re-scan slots for these.

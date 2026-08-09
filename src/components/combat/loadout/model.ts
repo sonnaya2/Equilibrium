@@ -87,7 +87,7 @@ export interface LoadoutTarget {
   dragon?: boolean;
   /**
    * Current Slayer assignment (scenario). Independent of undead race.
-   * Gates Full Slayer Helmet damage/accuracy.
+   * Gates Full Slayer Helmet damage/accuracy and Tuska's Wrath empower.
    */
   onSlayerTask?: boolean;
   /** Poison-immune targets take no Grasp of Guthix damage; absent = poisonable. */
@@ -390,6 +390,12 @@ export interface Loadout {
   defenceLevel: number;
   /** Unboosted Constitution; current normal range is 10-99. */
   constitutionLevel: number;
+  /**
+   * Player Slayer level for Tuska's Wrath on-task empower (100x, 15k cap).
+   * Optional; absent/non-positive is omitted (never invented for the sim).
+   * May include temporary boosts; UI allows above soft skill cap.
+   */
+  slayerLevel?: number;
   /**
    * Absolute life points before Powerburst doubling.
    * null = derive from currentHealthPercent of temporary max.
@@ -1174,6 +1180,10 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       MAX_CONSTITUTION_LEVEL,
       DEFAULT_LOADOUT.constitutionLevel,
     ),
+    // Tuska empower needs an explicit level; omit when missing/invalid (no invent).
+    ...(Number.isFinite(raw.slayerLevel) && Number(raw.slayerLevel) > 0
+      ? { slayerLevel: Math.min(200, Math.max(1, Math.floor(Number(raw.slayerLevel)))) }
+      : {}),
     currentLife: Number.isFinite(raw.currentLife) ? Math.max(0, Number(raw.currentLife)) : null,
     currentHealthPercent: clamp(
       raw.currentHealthPercent,

@@ -12,6 +12,7 @@ import { SetupTab } from "./SetupTab";
 import { useSavedSetups } from "./useLoadout";
 import "./combat.css";
 import "./combat-v7.css";
+import "./combat-hybrid.css";
 
 const COMBAT_TABS = [
   { id: "Setup", label: "Loadout" },

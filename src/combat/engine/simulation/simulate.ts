@@ -2,7 +2,13 @@ import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { runicChargeReady } from "../../styles/magic/runicCharge";
 import { performCast, performOffGcdCast } from "../cast";
 import { castRejection, permanentCastBlock, resolveCastAbility } from "../cast/rules";
-import { createRuntime } from "../runtime/runtime";
+import { runWithHitReuseScope } from "../resolution/hitReuse";
+import {
+  createRuntime,
+  createRuntimeSharedCaches,
+  prepareRuntimeInput,
+  type RuntimeSharedCaches,
+} from "../runtime/runtime";
 import { stochasticLaneCount } from "../runtime/stochastic";
 import { firstLegalTickFor } from "../runtime/state";
 import { combineStochasticSummaries, type StochasticLane } from "./summary";
@@ -63,10 +69,12 @@ function runManualLane(
   options: SimulateOptions | undefined,
   laneIndex: number,
   laneCount: number,
+  sharedCaches: RuntimeSharedCaches,
 ): StochasticLane {
   const rt = createRuntime(
-    { ...input, detailLevel: options?.detailLevel },
+    input,
     { laneIndex, laneCount, seed: options?.stochasticSeed },
+    sharedCaches,
   );
   const lane: StochasticLane = { weight: 1 / laneCount, rt };
   const selectedGroups = new Map<string, string>();
@@ -147,8 +155,12 @@ export function simulate(input: SimulateInput, options?: SimulateOptions): Rotat
     input.rotation.map((action) => action.abilityId),
     options?.stochasticLanes,
   );
-  const lanes = Array.from({ length: laneCount }, (_, laneIndex) =>
-    runManualLane(input, options, laneIndex, laneCount),
-  );
-  return combineStochasticSummaries(lanes, input.horizonTicks, options);
+  const runtimeInput = prepareRuntimeInput({ ...input, detailLevel: options?.detailLevel });
+  const sharedCaches = createRuntimeSharedCaches();
+  return runWithHitReuseScope(() => {
+    const lanes = Array.from({ length: laneCount }, (_, laneIndex) =>
+      runManualLane(runtimeInput, options, laneIndex, laneCount, sharedCaches),
+    );
+    return combineStochasticSummaries(lanes, input.horizonTicks, options);
+  });
 }

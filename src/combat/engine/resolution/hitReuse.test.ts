@@ -12,9 +12,11 @@ import { hitReuseSize, runWithHitReuseScope } from "./hitReuse";
 import { patchMelee } from "../runtime/state";
 import { recordResolved } from ".";
 import { resolveLeagueRules } from "../../league/ruleset";
-import { createStochasticOracle } from "../runtime/stochastic";
+import { createStochasticOracle, DEFAULT_STOCHASTIC_LANES } from "../runtime/stochastic";
+import { simulateRevolution } from "../simulation/revolution";
 
 const assault = MELEE_ABILITIES.find((a) => a.id === "assault")!;
+const attack = MELEE_ABILITIES.find((a) => a.id === "attack")!;
 
 function runtimeWithAssault() {
   const rt = createRuntime({
@@ -67,6 +69,48 @@ describe("hit reuse across stochastic lanes", () => {
     const snapCounters = snapshotHitPipelineCounters();
     expect(snapCounters.hitExpectationCalls).toBe(1);
     setHitPipelineProfiling(false);
+  });
+
+  it("reuses deterministic hit math across Cinderbane lanes", () => {
+    let modifierBuilds = 0;
+    setHitPipelineProfiling(true);
+    resetHitPipelineCounters();
+    try {
+      const result = simulateRevolution(
+        {
+          base: 1000,
+          level: 99,
+          accuracy: 1,
+          crit: { chance: 0 },
+          abilities: MELEE_ABILITIES,
+          modifiers: () => {
+            modifierBuilds += 1;
+            return [];
+          },
+          context: { style: "melee" },
+          playerPoison: {
+            potion: "weapon-plus-plus-plus",
+            potionUntilTick: 1_200,
+            kwuarmPotency: 4,
+            cinderbane: true,
+            blowpipe: false,
+            laniakea: true,
+          },
+          bar: [attack],
+          style: "melee",
+          durationTicks: 10,
+        },
+        { detailLevel: "score-only" },
+      );
+      const counters = snapshotHitPipelineCounters();
+
+      expect(result.rng?.lanes).toBe(DEFAULT_STOCHASTIC_LANES);
+      expect(modifierBuilds).toBe(1);
+      expect(counters.resolutionCacheHits).toBeGreaterThan(0);
+      expect(counters.resolutionCacheMisses).toBeLessThan(DEFAULT_STOCHASTIC_LANES);
+    } finally {
+      setHitPipelineProfiling(false);
+    }
   });
 
   it("does not reuse when frostblades window differs", () => {

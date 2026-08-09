@@ -35,6 +35,32 @@ import {
   type StochasticOracleConfig,
 } from "./stochastic";
 
+const preparedModifierResolver = Symbol("preparedModifierResolver");
+
+type PreparedModifierResolver = ((ability: AbilitySpec) => CombatModifier[]) & {
+  [preparedModifierResolver]: true;
+};
+
+export function prepareRuntimeInput<T extends CastContextInput>(input: T): T {
+  if (
+    typeof input.modifiers !== "function" ||
+    (input.modifiers as Partial<PreparedModifierResolver>)[preparedModifierResolver] === true
+  ) {
+    return input;
+  }
+  const source = input.modifiers;
+  const modifiersByAbility = new WeakMap<AbilitySpec, CombatModifier[]>();
+  const modifiers = ((ability: AbilitySpec) => {
+    const cached = modifiersByAbility.get(ability);
+    if (cached) return cached;
+    const resolved = source(ability);
+    modifiersByAbility.set(ability, resolved);
+    return resolved;
+  }) as PreparedModifierResolver;
+  Object.defineProperty(modifiers, preparedModifierResolver, { value: true });
+  return { ...input, modifiers };
+}
+
 /** Spirit event identity: a pending auto/poison event is live only for its summon instance. */
 export interface SpiritEventMeta {
   id: ConjureId;
@@ -42,11 +68,7 @@ export interface SpiritEventMeta {
   kind: "auto" | "poison";
 }
 
-/**
- * All per-run mutable simulation state. Created once per simulation by
- * createCastContext and threaded through every runtime function - never a
- * module-level singleton, so concurrent simulations cannot interfere.
- */
+/** Mutable simulation state for one stochastic lane. */
 export interface SimulationRuntime {
   readonly input: CastContextInput;
   /** Bookkeeping depth (default full-analysis). */
@@ -95,6 +117,19 @@ export interface SimulationRuntime {
   lastCastAdrenalineTransaction: AdrenalineTransaction | null;
 }
 
+/** Invocation-local memo tables shared by lanes. */
+export interface RuntimeSharedCaches {
+  readonly playerPoisonDamageCache: Map<string, unknown>;
+  readonly leagueDamageCache: Map<string, unknown>;
+}
+
+export function createRuntimeSharedCaches(): RuntimeSharedCaches {
+  return {
+    playerPoisonDamageCache: new Map(),
+    leagueDamageCache: new Map(),
+  };
+}
+
 export function mapAbilitiesById(abilities: readonly AbilitySpec[]): Map<string, AbilitySpec> {
   const byId = new Map<string, AbilitySpec>();
   for (const ability of abilities) {
@@ -133,25 +168,12 @@ function mapBasicsByStyle(
 export function createRuntime(
   input: CastContextInput,
   stochastic?: StochasticOracleConfig,
+  sharedCaches?: RuntimeSharedCaches,
 ): SimulationRuntime {
   noteRuntimeCreated();
   const ammo = resolveStyleAmmo(input.ammo, input.equipmentIds, input.context?.style);
   const withAmmo = ammo === input.ammo ? input : { ...input, ammo };
-  let runtimeInput = withAmmo;
-  if (typeof withAmmo.modifiers === "function") {
-    const source = withAmmo.modifiers;
-    const modifiersByAbility = new WeakMap<AbilitySpec, CombatModifier[]>();
-    runtimeInput = {
-      ...withAmmo,
-      modifiers: (ability) => {
-        const cached = modifiersByAbility.get(ability);
-        if (cached) return cached;
-        const modifiers = source(ability);
-        modifiersByAbility.set(ability, modifiers);
-        return modifiers;
-      },
-    };
-  }
+  const runtimeInput = prepareRuntimeInput(withAmmo);
   const adrenalineCap = resolveMaximumAdrenaline(
     input.equipmentEffects?.vestments.increasedAdrenalineCap ? 120 : ADRENALINE_CAP,
     input.league,
@@ -269,8 +291,8 @@ export function createRuntime(
     stochastic: createStochasticOracle(
       stochastic ?? { laneIndex: 0, laneCount: DEFAULT_STOCHASTIC_LANES },
     ),
-    playerPoisonDamageCache: new Map(),
-    leagueDamageCache: new Map(),
+    playerPoisonDamageCache: sharedCaches?.playerPoisonDamageCache ?? new Map(),
+    leagueDamageCache: sharedCaches?.leagueDamageCache ?? new Map(),
     queue: new EventQueue<SimulationRuntime>(),
     state,
     casts: [],

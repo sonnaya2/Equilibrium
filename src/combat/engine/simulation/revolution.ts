@@ -7,7 +7,12 @@ import {
   findConjure,
 } from "../../styles/necromancy/conjures";
 import { castRejection, resolveCastAbility, type WeaponConfiguration } from "../cast/rules";
-import { createRuntime } from "../runtime/runtime";
+import {
+  createRuntime,
+  createRuntimeSharedCaches,
+  prepareRuntimeInput,
+  type RuntimeSharedCaches,
+} from "../runtime/runtime";
 import type { RotationState } from "../runtime/state";
 import { firstLegalTickFor } from "../runtime/state";
 import type { CastRecord, RotationSummary, SimulateInput, SimulateOptions } from "./simulate";
@@ -121,14 +126,12 @@ function simulateRevolutionLane(
   options: SimulateOptions | undefined,
   laneIndex: number,
   laneCount: number,
+  sharedCaches: RuntimeSharedCaches,
 ): StochasticLane {
   const rt = createRuntime(
-    {
-      ...input,
-      horizonTicks: input.durationTicks,
-      detailLevel: options?.detailLevel,
-    },
+    input,
     { laneIndex, laneCount, seed: options?.stochasticSeed },
+    sharedCaches,
   );
   const lane: StochasticLane = { weight: 1 / laneCount, rt };
   const offGcd = input.bar.find((ability) => ability.offGcd);
@@ -206,9 +209,15 @@ export function simulateRevolution(
     ],
     options?.stochasticLanes,
   );
+  const runtimeInput = prepareRuntimeInput({
+    ...input,
+    horizonTicks: input.durationTicks,
+    detailLevel: options?.detailLevel,
+  });
+  const sharedCaches = createRuntimeSharedCaches();
   return runWithHitReuseScope(() => {
     const lanes = Array.from({ length: laneCount }, (_, laneIndex) =>
-      simulateRevolutionLane(input, options, laneIndex, laneCount),
+      simulateRevolutionLane(runtimeInput, options, laneIndex, laneCount, sharedCaches),
     );
     return combineStochasticSummaries(lanes, input.durationTicks, options);
   });

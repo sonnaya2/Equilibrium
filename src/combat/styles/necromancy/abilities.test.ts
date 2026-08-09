@@ -129,6 +129,16 @@ describe("necromancy ability data", () => {
 
     const phantom = NECROMANCY_ABILITIES.find((a) => a.id === "command_phantom_guardian")!;
     expect(phantom.hits[0]!.band).toEqual({ ...COMMAND_PHANTOM_GUARDIAN_BAND });
+    expect(phantom.name).toBe("Command Phantom Guardian");
+    expect(phantom.category).toBe("enhanced");
+  });
+
+  it("uses the Wiki name for every Spectral Scythe sequence cast", () => {
+    expect(
+      NECROMANCY_ABILITIES.filter((ability) => ability.id.startsWith("spectral_scythe")).map(
+        (ability) => ability.name,
+      ),
+    ).toEqual(["Spectral Scythe", "Spectral Scythe", "Spectral Scythe"]);
   });
 
   it("undead army supportNote documents default three spirits only", () => {

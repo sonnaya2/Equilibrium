@@ -121,6 +121,7 @@ export function buildCandidatePoolForRequest(
     weaponConfiguration: simBase.weaponConfiguration,
     equipmentIds: simBase.equipmentIds,
     activeWeapon: simBase.equipmentEffects?.activeWeapon,
+    eofStoredSpecialId: simBase.eofStoredSpecialId,
     passiveIds,
     league,
   } as const;
@@ -272,6 +273,7 @@ export function fitIncumbentBar(
       weaponConfiguration: loadout.weaponConfiguration,
       equipmentIds: loadout.equipmentIds,
       activeWeapon: loadout.equipmentEffects?.activeWeapon,
+      eofStoredSpecialId: loadout.eofStoredSpecialId,
       passiveIds,
       league,
     });

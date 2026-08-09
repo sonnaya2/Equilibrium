@@ -200,10 +200,11 @@ export function resolveSlayerSalve(
   loadout: Loadout,
   options: LoadoutStatsOptions = {},
 ): ResolvedSlayerSalve {
+  const assassinInsight = options.relics?.includes("Assassin's Insight") === true;
   const helmet = resolveSlayerHelmet({
     equipmentSlots: loadout.equipmentSlots,
-    standTier: loadout.buffs.slayerHelmetStand,
-    unlockedRegions: options.unlockedRegions,
+    standTier: assassinInsight ? "corrupted" : loadout.buffs.slayerHelmetStand,
+    unlockedRegions: assassinInsight ? undefined : options.unlockedRegions,
     onSlayerTask: loadout.target?.onSlayerTask === true,
     style: loadout.style,
     ensouledSpectralLens: loadout.buffs.ensouledSpectralLens,
@@ -888,8 +889,9 @@ export function resolveCrit(
   const critsDisabled = loadout.perks.equilibrium > 0;
   const critual = resolveLeagueCritualStats(leagueBundle?.league, critSubtotal, critsDisabled);
   const unholyRule = blessingRule(leagueBundle?.league, "unholy-critual")?.unholyCritual;
-  if (unholyRule?.chanceBonus) {
-    critChanceSources.push({ label: "Unholy Critual", value: unholyRule.chanceBonus });
+  const unholyBonus = unholyRule?.chanceBonus ?? 0;
+  if (unholyBonus) {
+    critChanceSources.push({ label: "Unholy Critual", value: unholyBonus });
   }
   if (critual.convertedChance > 0) {
     critDamageSources.push({ label: "Unholy Critual excess", value: critual.convertedChance });
@@ -897,6 +899,8 @@ export function resolveCrit(
   const critDamageBonus = critDamageBonusWithoutUnholy + critual.convertedChance;
   const critDamage = critDamageStats(levels.level, critDamageBonus);
   const critChance = critual.effectiveChance;
+  // Cap/disable residual only: include Unholy in pre-cap so breakdown rows sum to total.
+  const preCapChance = critsDisabled ? critSubtotal + unholyBonus : critual.uncappedChance;
   return {
     critChance,
     uncappedCritChance: critual.uncappedChance,
@@ -908,8 +912,8 @@ export function resolveCrit(
       equipment: equipmentCrit.chance,
       icyenic: icyenicCrit,
       trueEquilibrium: trueEquilibriumCrit,
-      unholyCritual: unholyRule?.chanceBonus ?? 0,
-      adjustment: critChance - critSubtotal,
+      unholyCritual: unholyBonus,
+      adjustment: critChance - preCapChance,
     },
     critChanceSources,
     critDamageSources,
@@ -1102,7 +1106,8 @@ export function resolveCombatRules(
     startingAdrenaline: Math.min(maxAdrenaline, loadout.startingAdrenaline),
     cap: {
       cap: STANDARD_HIT_CAP,
-      bypass: !loadout.hitCapEnabled || leagueBundle.league.ruleset === "equilibrium",
+      // User toggle only; league does not force bypass under equilibrium.
+      bypass: !loadout.hitCapEnabled,
     },
     activePassives: (() => {
       // Equipment list may already include "Ring of Vigour"; collapse to one

@@ -226,6 +226,16 @@ describe("modelled weapon special catalogue", () => {
     ...NECROMANCY_ABILITIES,
   ];
 
+  const expectedCosts = {
+    balance_by_force: 30,
+    claws_of_guthix: 25,
+    death_grasp: 25,
+    igneous_showdown: 50,
+    instability: 50,
+    icy_tempest: 30,
+    soulfire: 35,
+  } as const;
+
   it("every MODELLED_WEAPON_SPECIAL_IDS entry is tagged weaponSpecial", () => {
     for (const id of MODELLED_WEAPON_SPECIAL_IDS) {
       const specs = allSpecs.filter((a) => a.id === id);
@@ -240,5 +250,16 @@ describe("modelled weapon special catalogue", () => {
     const flagged = allSpecs.filter((a) => isWeaponSpecialAbility(a)).map((a) => a.id);
     const unique = [...new Set(flagged)].sort();
     expect(unique).toEqual([...MODELLED_WEAPON_SPECIAL_IDS].sort());
+  });
+
+  it("keeps every special attack on its sourced base adrenaline cost", () => {
+    for (const [id, cost] of Object.entries(expectedCosts)) {
+      const specs = allSpecs.filter((ability) => ability.id === id);
+      expect(specs.length, id).toBeGreaterThan(0);
+      for (const spec of specs) {
+        expect(spec.weaponSpecial, id).toBe(true);
+        expect(spec.adrenaline?.cost, id).toBe(cost);
+      }
+    }
   });
 });

@@ -14,6 +14,7 @@ import {
   cancelSolverAgentPool,
   disposeSolverAgentPool,
   getSolverAgentPool,
+  liveSolverPoolWorkerCount,
   resetSolverAgentPoolForTests,
   solverPoolSize,
 } from "./pool";
@@ -28,6 +29,11 @@ import {
   SolverExecutionError,
   solverFailureFromWorkerMessage,
 } from "./failure";
+import {
+  clearSolverHostDiagnostics,
+  getSolverHostDiagnostics,
+  noteSolverHost,
+} from "./hostDiagnostics";
 
 export type { SolveFn, SolveProgressHandler, SolveRuntimeOptions } from "./solveTypes";
 export { solverPoolSize } from "./pool";
@@ -140,11 +146,26 @@ export type RunOptimizeOptions = {
   isCancelled?: () => boolean;
   signal?: AbortSignal;
   forceMainThread?: boolean;
-  /** Override parallel agent count (tier ceilings: 4 / 6 / 8). */
+  /** Override parallel agent count (tier ceilings: 4 / 6 / 6). */
   agents?: number;
   profile?: boolean;
   onProfile?: (snapshot: SolverProfileSnapshot) => void;
 };
+
+export {
+  clearSolverHostDiagnostics,
+  getSolverHostDiagnostics,
+  isSolverHostDebugEnabled,
+  noteSolverHost,
+  snapshotSolverHostHeap,
+  type SolverHostDiagEvent,
+  type SolverHostHeapSnapshot,
+} from "./hostDiagnostics";
+
+/** Live diagnostics: ring buffer + optional Chromium heap + live pool size. */
+export function solverHostDiagnostics() {
+  return getSolverHostDiagnostics(liveSolverPoolWorkerCount());
+}
 
 export type PauseResumeResult =
   { ok: true } | { ok: false; reason: "no-active-run" | "main-thread" | "worker-unavailable" };
@@ -164,29 +185,41 @@ export async function runOptimize(
 
   const token: ProductRunToken = { cancelled: false };
   productRun = token;
+  const startedAt = Date.now();
+  const requestedAgents = options?.agents ?? solverPoolSize();
+  noteSolverHost("optimize-start", {
+    tier: request.tier,
+    agents: requestedAgents,
+    forceMainThread: options?.forceMainThread === true,
+    poolWorkers: liveSolverPoolWorkerCount(),
+  });
 
   const cancelled = () =>
     token.cancelled || options?.isCancelled?.() === true || options?.signal?.aborted === true;
 
   const onAbort = () => {
     token.cancelled = true;
+    noteSolverHost("optimize-abort-signal", { poolWorkers: liveSolverPoolWorkerCount() });
     cancelSolverAgentPool();
     sharedClient?.cancel();
   };
   options?.signal?.addEventListener("abort", onAbort, { once: true });
 
+  let outcome: "ok" | "abort" | "error" = "error";
   try {
     if (cancelled()) throw abortError();
 
     if (!isSerializableSimBase(request.loadout)) {
       if (options?.forceMainThread === true) {
-        return await runTrackedMain(
+        const result = await runTrackedMain(
           request,
           onProgress,
           cancelled,
           options?.profile,
           options?.onProfile,
         );
+        outcome = "ok";
+        return result;
       }
       throw new Error("revolution solver requires a worker-safe combat model");
     }
@@ -196,13 +229,15 @@ export async function runOptimize(
       payload = structuredClone(request);
     } catch (err) {
       if (options?.forceMainThread === true) {
-        return await runTrackedMain(
+        const result = await runTrackedMain(
           request,
           onProgress,
           cancelled,
           options?.profile,
           options?.onProfile,
         );
+        outcome = "ok";
+        return result;
       }
       throw new Error(
         `revolution solver request cannot be sent to a worker: ${err instanceof Error ? err.message : String(err)}`,
@@ -210,13 +245,15 @@ export async function runOptimize(
     }
 
     if (options?.forceMainThread === true) {
-      return await runTrackedMain(
+      const result = await runTrackedMain(
         payload,
         onProgress,
         cancelled,
         options?.profile,
         options?.onProfile,
       );
+      outcome = "ok";
+      return result;
     }
     if (!canCreateSolverWorker()) {
       throw new Error("revolution solver workers are unavailable in this browser");
@@ -226,38 +263,55 @@ export async function runOptimize(
     try {
       const pool = getSolverAgentPool();
       const agents = options?.agents ?? solverPoolSize();
-      return await pool.run(payload, onProgress, {
+      noteSolverHost("optimize-pool-run", {
+        agents,
+        poolWorkersBefore: liveSolverPoolWorkerCount(),
+      });
+      const result = await pool.run(payload, onProgress, {
         isCancelled: cancelled,
         signal: options?.signal,
         agents,
         profile: options?.profile,
         onProfile: options?.onProfile,
       });
+      outcome = "ok";
+      return result;
     } catch (err) {
       if (cancelled() || isAbortError(err)) {
+        outcome = "abort";
         throw isAbortError(err) ? err : abortError();
       }
       if (!isInfrastructureFailure(err)) throw err;
+      noteSolverHost("optimize-pool-infra-fallback", {
+        message: err instanceof Error ? err.message : String(err),
+      });
       if (typeof console !== "undefined") {
         console.warn("[revo-solver] agent pool failed, trying single worker", err);
       }
     }
 
-    if (cancelled()) throw abortError();
+    if (cancelled()) {
+      outcome = "abort";
+      throw abortError();
+    }
 
     // Single-worker fallback - terminate pool agents first so work does not overlap.
     const client = getRevolutionSolverClient();
     try {
       disposeSolverAgentPool();
-      return await client.start(payload, onProgress, {
+      noteSolverHost("optimize-single-worker", {});
+      const result = await client.start(payload, onProgress, {
         isCancelled: cancelled,
         signal: options?.signal,
         preferWorker: true,
         profile: options?.profile,
         onProfile: options?.onProfile,
       });
+      outcome = "ok";
+      return result;
     } catch (err2) {
       if (cancelled() || isAbortError(err2)) {
+        outcome = "abort";
         throw isAbortError(err2) ? err2 : abortError();
       }
       try {
@@ -270,9 +324,25 @@ export async function runOptimize(
         `revolution solver worker failed: ${err2 instanceof Error ? err2.message : String(err2)}`,
       );
     }
+  } catch (err) {
+    if (outcome !== "abort" && (cancelled() || isAbortError(err))) outcome = "abort";
+    throw err;
   } finally {
     options?.signal?.removeEventListener("abort", onAbort);
     if (productRun === token) productRun = null;
+    // Idle combat tabs must not keep N agent workers hot after the product run ends.
+    disposeSolverAgentPool();
+    try {
+      sharedClient?.disposeQuiet();
+    } catch {
+      // ignore
+    }
+    sharedClient = null;
+    noteSolverHost("optimize-end", {
+      outcome,
+      wallMs: Date.now() - startedAt,
+      poolWorkers: liveSolverPoolWorkerCount(),
+    });
   }
 }
 
@@ -286,6 +356,8 @@ export async function runOptimize(
  * between candidates (and after the current sim finishes).
  */
 export function cancelOptimize(): void {
+  const hadProductRun = productRun != null;
+  const workersBefore = liveSolverPoolWorkerCount();
   if (productRun) productRun.cancelled = true;
   // Soft cancel first so awaiters settle as AbortError, then hard-kill workers
   // so a long finalize sim cannot keep burning CPU after the user hit Cancel.
@@ -298,6 +370,12 @@ export function cancelOptimize(): void {
     // ignore
   }
   sharedClient = null;
+  if (hadProductRun || workersBefore > 0) {
+    noteSolverHost("optimize-cancel", {
+      workersBefore,
+      poolWorkers: liveSolverPoolWorkerCount(),
+    });
+  }
 }
 
 export function getRevolutionSolverClient(): RevolutionSolverClient {

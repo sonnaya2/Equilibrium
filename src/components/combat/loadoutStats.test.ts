@@ -158,40 +158,91 @@ describe("loadoutStats", () => {
     );
   });
 
-  it("Attack cape (120) adds 2% melee hit chance to Damage Potential", () => {
+  it("derives Strength and Attack cape perks from unboosted levels", () => {
+    expect(
+      loadoutStats({ ...base, strengthLevel: 98, buffs: { ...base.buffs, strengthCape99: true } })
+        .strengthCape99,
+    ).toBe(false);
+    expect(
+      loadoutStats({ ...base, strengthLevel: 99, buffs: { ...base.buffs, strengthCape99: false } })
+        .strengthCape99,
+    ).toBe(true);
+
     // Strong target so hit chance is below the 100% cap and the cape is visible.
-    const target = { defenceLevel: 120, affinity: "strong" as const };
+    const target = { defenceLevel: 120, armour: 5000, affinity: "strong" as const };
     const plain = loadoutStats({
       ...base,
       style: "melee",
-      attackLevel: 99,
-      strengthLevel: 99,
-      weaponTier: 90,
-      target,
-    });
-    const withCape = loadoutStats({
-      ...base,
-      style: "melee",
-      attackLevel: 99,
+      attackLevel: 119,
       strengthLevel: 99,
       weaponTier: 90,
       target,
       buffs: { ...base.buffs, attackCape120: true },
     });
+    const withCape = loadoutStats({
+      ...base,
+      style: "melee",
+      attackLevel: 120,
+      strengthLevel: 99,
+      weaponTier: 90,
+      target,
+      buffs: { ...base.buffs, attackCape120: false },
+    });
     expect(withCape.attackCape120).toBe(true);
     expect(plain.dp).toBeLessThan(1);
     expect(withCape.dp).toBeGreaterThan(plain.dp);
-    expect(withCape.dp - plain.dp).toBeCloseTo(0.02, 5);
+    expect(plain.targetAccuracyProfile?.additiveHitChance).toBe(0);
+    expect(withCape.targetAccuracyProfile?.additiveHitChance).toBe(0.02);
     // Non-melee styles ignore the cape for hit chance.
     const ranged = loadoutStats({
       ...base,
       style: "ranged",
       level: 99,
+      attackLevel: 120,
       weaponTier: 90,
       target,
-      buffs: { ...base.buffs, attackCape120: true },
+      buffs: { ...base.buffs, attackCape120: false },
     });
     expect(ranged.attackCape120).toBe(false);
+  });
+
+  it("derives account effects from regions and Assassin's Insight", () => {
+    const none = loadoutStats(
+      { ...base, style: "ranged", level: 99 },
+      { ruleset: "equilibrium", unlockedRegions: [] },
+    );
+    expect(none.enchantedBoltChanceModifiers.eliteSeersVillage).toBe(false);
+    expect(none.adrenaline?.ringOfVigour).not.toBe(true);
+
+    const regions = loadoutStats(
+      {
+        ...base,
+        style: "ranged",
+        level: 99,
+        buffs: { ...base.buffs, eliteSeersVillage: true },
+      },
+      {
+        ruleset: "equilibrium",
+        unlockedRegions: ["anachronia", "kandarin", "desert"],
+      },
+    );
+    expect(regions.enchantedBoltChanceModifiers.eliteSeersVillage).toBe(true);
+    expect(regions.adrenaline?.ringOfVigour).toBe(true);
+    expect(regions.life.normalMaxLife).toBeGreaterThan(none.life.normalMaxLife);
+
+    const assassin = loadoutStats(
+      {
+        ...base,
+        style: "melee",
+        target: { defenceLevel: 1, affinity: "same", onSlayerTask: true },
+      },
+      {
+        ruleset: "equilibrium",
+        relics: ["Assassin's Insight"],
+        unlockedRegions: [],
+      },
+    );
+    expect(assassin.slayerHelmet).toMatchObject({ tierId: "corrupted", source: "stand" });
   });
 
   it("non-melee styles use a single style level for both accuracy and damage", () => {
@@ -216,7 +267,7 @@ describe("loadoutStats", () => {
   });
 
   it("passes accuracy% through as Damage Potential when no target is set", () => {
-    const stats = loadoutStats({ ...base, accuracy: 70 });
+    const stats = loadoutStats({ ...base, attackLevel: 119, accuracy: 70 });
     expect(stats.dp).toBeCloseTo(0.7, 10);
     expect(stats.damagePotentialSource).toBe("manual override");
     expect(loadoutStats(base).damagePotentialSource).toBe("100% assumption");
@@ -224,7 +275,7 @@ describe("loadoutStats", () => {
 
   it("derives Damage Potential from the target model when set", () => {
     const target = { defenceLevel: 80, armour: 500, affinity: "same" as const };
-    const stats = loadoutStats({ ...base, target });
+    const stats = loadoutStats({ ...base, attackLevel: 99, target });
     const expected = hitChance(playerAccuracy(99, 90), target);
     expect(stats.dp).toBeCloseTo(expected, 10);
     expect(stats.damagePotentialSource).toBe("target stats");
@@ -278,6 +329,12 @@ describe("loadoutStats", () => {
     expect(stats.critChanceSources).toEqual(
       expect.arrayContaining([{ label: "Unholy Critual", value: 0.15 }]),
     );
+    // Cap residual only: configured + Unholy + adjustment = effective (no double-count).
+    expect(stats.critChanceBreakdown.unholyCritual).toBeCloseTo(0.15, 10);
+    expect(stats.critChanceBreakdown.adjustment).toBeCloseTo(-0.05, 10);
+    expect(
+      Object.values(stats.critChanceBreakdown).reduce((sum, value) => sum + value, 0),
+    ).toBeCloseTo(stats.critChance, 10);
   });
 
   it("surfaces manual target DP override provenance", () => {
@@ -1148,6 +1205,7 @@ describe("loadoutStats", () => {
         targetSize: 1,
         occupiedTiles: 4,
       });
+      // Default product: hit cap off (bypass). Toggle hitCapEnabled to re-enable.
       expect(stats.cap).toEqual({ cap: 30_000, bypass: true });
       expect(stats.league.blessingIds.has("lord-of-light")).toBe(true);
     });

@@ -6,8 +6,11 @@ import {
   type AbilitySpec,
 } from "../pipeline/calculateAbility";
 import {
+  calculateNonCriticalHitDistribution,
+  calculateRawNonCriticalHitDistribution,
   calculateHitWithAttached,
   calculateRawHitBandWithAttached,
+  type ExactDamageDistribution,
   type HitInput,
   type HitResult,
   type RawHitBandInput,
@@ -68,6 +71,7 @@ export interface LeagueDamageComponent {
   occurrenceModel?: StatefulOccurrenceModel;
   damage: ResolvedDamage;
   hitDetail?: HitResult;
+  sourcePrecritDistribution?: readonly ExactDamageDistribution[];
   components?: readonly AttachedDamageComponent[];
 }
 
@@ -235,6 +239,8 @@ export interface LeagueAttachedHostInput extends HitInput {
   attached?: boolean;
   landTick?: number;
   bonusTargetId?: string;
+  /** Optional unmodified base used only to price fixed attached League terms. */
+  attachedTermBase?: number;
 }
 
 export interface LeagueAttachedHostResult {
@@ -342,7 +348,7 @@ export function resolveLeagueAttachedHost(
   const terms = resolveLeagueAttachedTerms({
     ...input,
     rules: input.rules,
-    abilityBase: prepared.base,
+    abilityBase: input.attachedTermBase ?? prepared.base,
   });
   const composed = calculateHitWithAttached(
     {
@@ -550,6 +556,17 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
       },
       crit: infernoCrit,
     });
+    const sourcePrecritDistribution = calculateNonCriticalHitDistribution({
+      ...separateShared,
+      base: input.base,
+      band: {
+        minPct: cinders.inferno.abilityDamageBand[0],
+        maxPct: cinders.inferno.abilityDamageBand[1],
+      },
+      crit: { ...infernoCrit, chance: 0, guaranteed: false, eligible: false },
+      provenance: prov,
+      context: { ...separateShared.context, provenance: prov },
+    });
     const expectedActivations = chainExpected(infernoChance);
     const maxActivations = unholy ? expectedActivations : 1;
     components.push({
@@ -566,6 +583,7 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
       },
       damage: weightedDamage(inferno.hit, expectedActivations, 0, maxActivations),
       hitDetail: inferno.hit,
+      sourcePrecritDistribution,
       components: inferno.components.map((component) =>
         attachedResolutionComponent(component, expectedActivations, 0, maxActivations),
       ),
@@ -591,6 +609,14 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
       band: { minPct: unholyBand[0], maxPct: unholyBand[1] },
       crit: infernoCrit,
     });
+    const sourcePrecritDistribution = calculateNonCriticalHitDistribution({
+      ...separateShared,
+      base: input.base,
+      band: { minPct: unholyBand[0], maxPct: unholyBand[1] },
+      crit: { ...infernoCrit, chance: 0, guaranteed: false, eligible: false },
+      provenance: prov,
+      context: { ...separateShared.context, provenance: prov },
+    });
     const expectedActivations = chainExpected(unholyTriggerChance);
     components.push({
       effectId: "inferno-of-zamorak",
@@ -606,6 +632,7 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
       },
       damage: weightedDamage(inferno.hit, expectedActivations, 0, expectedActivations),
       hitDetail: inferno.hit,
+      sourcePrecritDistribution,
       components: inferno.components.map((component) =>
         attachedResolutionComponent(component, expectedActivations, 0, expectedActivations),
       ),
@@ -650,6 +677,17 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
         crit: { ...input.crit, eligible: true },
         modifiers: prayerModifier ? [prayerModifier, ...targetModifiers] : targetModifiers,
       });
+      const sourcePrecritDistribution = calculateRawNonCriticalHitDistribution({
+        min: rawMin,
+        max: rawMax,
+        level: input.level,
+        accuracy: input.accuracy,
+        crit: { ...input.crit, chance: 0, guaranteed: false, eligible: false },
+        modifiers: prayerModifier ? [prayerModifier, ...targetModifiers] : targetModifiers,
+        context: { ...separateShared.context, provenance: prov },
+        provenance: prov,
+        cap: input.cap,
+      });
       for (let i = 0; i < count; i++) {
         components.push({
           effectId: "light-of-saradomin",
@@ -661,6 +699,7 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
           expectedSeparateHits: 1,
           damage: damageOf(resolved.hit),
           hitDetail: resolved.hit,
+          sourcePrecritDistribution,
           components: resolved.components.map((component) =>
             attachedResolutionComponent(component),
           ),

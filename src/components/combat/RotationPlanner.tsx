@@ -26,6 +26,7 @@ import { CombatFrame } from "./CombatFrame";
 import { CalculationAssumptions } from "./CalculationAssumptions";
 import { spiritEffectDisplayName } from "./conjurePresentation";
 import { blessingEffectDisplayName } from "./blessingPresentation";
+import { combatEffectDisplayName, combatEffectIconPath } from "./effectPresentation";
 import { critDamageStats, type CalcStats } from "./loadoutStats";
 import { resolveLoadoutCombat } from "./toResolvedCombatModel";
 import { RevolutionPanel } from "./RevolutionPanel";
@@ -48,7 +49,11 @@ import {
   filterAbilitiesForLoadout,
   sortAbilitiesForDisplay,
 } from "./abilityLoadoutFilter";
-import { formatAdrenalineTimeline, formatCritContext } from "./revoPanelFormat";
+import {
+  castCritLabel,
+  formatAdrenalineTimeline,
+  formatCritContext,
+} from "./revoPanelFormat";
 
 const STORAGE_KEY = "eq:rotation:v1";
 const MANUAL_HORIZON_TICKS = 100;
@@ -77,14 +82,12 @@ function abilityById(id: string): AbilitySpec | undefined {
 
 function abilityName(id: string): string {
   return (
-    blessingEffectDisplayName(id) ?? abilityById(id)?.name ?? spiritEffectDisplayName(id) ?? id
+    combatEffectDisplayName(id) ??
+    blessingEffectDisplayName(id) ??
+    abilityById(id)?.name ??
+    spiritEffectDisplayName(id) ??
+    id
   );
-}
-
-function castCritLabel(result: RotationSummary["casts"][number]["result"]): string | null {
-  const chance = Math.max(0, ...result.hits.map((hit) => hit.critChance));
-  if (chance >= 1) return "Crit";
-  return chance > 0 ? `${Math.round(chance * 1000) / 10}% crit EV` : null;
 }
 
 /** Assumptions scaffold only; sim path builds SimulateInput directly. */
@@ -247,12 +250,7 @@ export function RotationPlanner({
 
   const run = () => {
     setAnalysisOpen(false);
-    const cached = getUiRunCache(runKey);
-    if (cached) {
-      setResult(cached.summary);
-      setResultKey(runKey);
-      return;
-    }
+    // Always re-sim on click; cache only hydrates when the run key changes.
     const rotation = rotationOf(...queue);
     if (useBuild) {
       const catalogue = resolveAbilityCatalogue({
@@ -302,6 +300,7 @@ export function RotationPlanner({
         equipmentIds: setupStats.equipmentIds,
         activeWeapon: setupStats.equipmentEffects.activeWeapon,
         passiveIds: setupStats.equipmentEffects.passiveIds,
+        eofStoredSpecialId: loadout.eofStoredSpecialId,
         league: setupStats.league,
       })
     : stylePool;
@@ -311,9 +310,10 @@ export function RotationPlanner({
       equipmentIds: setupStats.equipmentIds,
       activeWeapon: setupStats.equipmentEffects.activeWeapon,
       passiveIds: setupStats.equipmentEffects.passiveIds,
+      eofStoredSpecialId: loadout.eofStoredSpecialId,
       league: setupStats.league,
     }),
-    [setupStats],
+    [setupStats, loadout.eofStoredSpecialId],
   );
   useEffect(() => {
     if (!useBuild) return;
@@ -769,21 +769,42 @@ export function RotationPlanner({
                       >
                         <td className="py-2 pr-4 font-mono text-xs text-parch-300">{cast.tick}</td>
                         <td className="py-2 pr-4 text-parch-50">
-                          {abilityName(cast.abilityId)}
-                          {cast.auto ? (
-                            <span className="ml-1.5 text-xs text-parch-300">automatic</span>
-                          ) : null}
-                          {castCritLabel(cast.result) ? (
-                            <span
-                              className={`ml-1.5 text-xs ${
-                                castCritLabel(cast.result) === "Crit"
-                                  ? "rotation-crit"
-                                  : "text-parch-300"
-                              }`}
-                            >
-                              {castCritLabel(cast.result)}
-                            </span>
-                          ) : null}
+                          <span className="inline-flex min-w-0 items-center gap-1.5">
+                            <span>{abilityName(cast.abilityId)}</span>
+                            {cast.auto ? (
+                              <span className="text-xs text-parch-300">automatic</span>
+                            ) : null}
+                            {castCritLabel(cast.result) ? (
+                              <span
+                                className={`text-xs ${
+                                  castCritLabel(cast.result) === "Crit"
+                                    ? "rotation-crit"
+                                    : "text-parch-300"
+                                }`}
+                              >
+                                {castCritLabel(cast.result)}
+                              </span>
+                            ) : null}
+                            {cast.surgingStormAtCast ? (
+                              <span
+                                className="revo-status-chip"
+                                title="Surging Storm: +15% to +25% critical strike damage (FSoA casts)"
+                                data-testid="timeline-surging-storm"
+                              >
+                                <GameIcon
+                                  src={
+                                    combatEffectIconPath("surging-storm") ??
+                                    "/game/combat/status/surging-storm.webp"
+                                  }
+                                  size={14}
+                                  className="shrink-0"
+                                />
+                                <span className="revo-status-chip-label">
+                                  {combatEffectDisplayName("surging-storm") ?? "Surging Storm"}
+                                </span>
+                              </span>
+                            ) : null}
+                          </span>
                         </td>
                         <td className="py-2 pr-4 font-mono text-xs text-parch-50">
                           {formatNumber(cast.result.expected)}

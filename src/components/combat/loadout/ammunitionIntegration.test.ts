@@ -114,7 +114,8 @@ describe("loadout-owned ranged ammunition resolution", () => {
     expect(summary.ok).toBe(true);
     expect(summary.totalExpected).toBeGreaterThan(0);
     expect(
-      summary.analysis.byEffect.find(({ id }) => id === "ammunition:ruby")?.expectedActivations,
+      summary.analysis.byEffect.find(({ id }) => id === "ammunition:ruby")
+        ?.expectedActivations,
     ).toBeGreaterThan(0);
   });
 
@@ -169,10 +170,7 @@ describe("loadout-owned ranged ammunition resolution", () => {
       }),
     ).toEqual({ mode: "optional", acceptedFamily: "arrows" });
     expect(
-      weaponAmmunitionCapabilityFromEquipment({
-        id: "item:test-thrown-weapon",
-        weaponClass: "thrown",
-      }),
+      weaponAmmunitionCapabilityFromEquipment({ id: "item:test-thrown-weapon", weaponClass: "thrown" }),
     ).toEqual({
       mode: "none",
       acceptedFamily: null,

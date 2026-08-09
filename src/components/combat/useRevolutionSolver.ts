@@ -13,6 +13,7 @@ import {
   planWorkers,
   preferredAgentCount,
   rememberSolvedBar,
+  noteSolverHost,
   runOptimize,
   seedBarsFromSolveCache,
   solveContextPayload,
@@ -484,6 +485,12 @@ export function useRevolutionSolver({
         maxBarSize: baseRequest.maxBarSize,
         tier: baseRequest.tier,
         baseSeed: baseRequest.seed,
+      });
+      noteSolverHost("ui-optimize-plan", {
+        tier: baseRequest.tier,
+        agents: plan.agentCount,
+        minBarSize: baseRequest.minBarSize,
+        maxBarSize: baseRequest.maxBarSize,
       });
       setSolverAgents(plan.agentCount);
       const seedProgress = seedProgressFromPlan(plan, solverTier);

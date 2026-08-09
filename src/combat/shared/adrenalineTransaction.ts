@@ -43,6 +43,8 @@ export interface AdrenalineTransaction {
 
   conservationOfEnergyRefund: number;
   ringOfVigourRefund: number;
+  /** Fixed mechanic refund, separate from Ring of Vigour and Relentless. */
+  specialRefund: number;
   /**
    * Same-cast immediate grants folded by the caller before commit:
    * Jaws, Vestments Herald refresh (+20), Living Death Touch of Death (+6).
@@ -50,7 +52,7 @@ export interface AdrenalineTransaction {
    */
   otherImmediateGrants: number;
 
-  /** clamp(before + gain + other - spend + coe + vigour, 0, cap) */
+  /** clamp(before + gain + other - spend + coe + vigour + special, 0, cap) */
   afterResources: number;
   /** Unclamped intermediate for tests. */
   afterResourcesUnclamped: number;
@@ -67,6 +69,7 @@ export interface AdrenalineTransactionInput extends AbilityAdrenalineGainInput {
   conservationOfEnergyRefund?: number;
   /** 0 or 10; never double equipped+passive. */
   ringOfVigourRefund?: number;
+  specialRefund?: number;
   otherImmediateGrants?: number;
   /**
    * prepared.spend === 0 while cost > 0 (Deathspore free cast, etc.).
@@ -102,6 +105,7 @@ export function resolveAdrenalineTransaction(
 
   const conservationOfEnergyRefund = Math.max(0, input.conservationOfEnergyRefund ?? 0);
   const ringOfVigourRefund = Math.max(0, input.ringOfVigourRefund ?? 0);
+  const specialRefund = Math.max(0, input.specialRefund ?? 0);
   const otherImmediateGrants = Math.max(0, input.otherImmediateGrants ?? 0);
 
   const afterResourcesUnclamped =
@@ -110,7 +114,8 @@ export function resolveAdrenalineTransaction(
     otherImmediateGrants -
     actualSpend +
     conservationOfEnergyRefund +
-    ringOfVigourRefund;
+    ringOfVigourRefund +
+    specialRefund;
 
   const afterResources = clampAdrenaline(afterResourcesUnclamped, input.cap);
 
@@ -124,6 +129,7 @@ export function resolveAdrenalineTransaction(
     spendPreventedBy,
     conservationOfEnergyRefund,
     ringOfVigourRefund,
+    specialRefund,
     otherImmediateGrants,
     afterResources,
     afterResourcesUnclamped,
@@ -137,7 +143,8 @@ export function netAdrenalineDeltaFromTransaction(tx: AdrenalineTransaction): nu
     tx.otherImmediateGrants -
     tx.actualSpend +
     tx.conservationOfEnergyRefund +
-    tx.ringOfVigourRefund
+    tx.ringOfVigourRefund +
+    tx.specialRefund
   );
 }
 

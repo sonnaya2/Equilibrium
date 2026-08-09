@@ -234,6 +234,10 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
     nativeSpecialPolicy: {
       useEquippedWeaponSpecial: loadout.nativeSpecialPolicy?.useEquippedWeaponSpecial === true,
     },
+    eofStoredSpecialId:
+      loadout.eofStoredSpecialId != null && loadout.eofStoredSpecialId !== ""
+        ? loadout.eofStoredSpecialId
+        : null,
     weaponConfiguration: loadout.weaponConfiguration,
     startingAdrenaline: loadout.startingAdrenaline ?? 0,
     naturalInstinctUntilTick: loadout.naturalInstinctUntilTick ?? 0,
@@ -277,16 +281,16 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
     tumekensPieces: loadout.tumekensPieces ?? 0,
     targetHpPercent: loadout.targetHpPercent ?? null,
     targetMaximumLifePoints: loadout.targetMaximumLifePoints ?? null,
+    playerVitality: loadout.playerVitality
+      ? {
+          maximumLifePoints: loadout.playerVitality.maximumLifePoints,
+          currentLifePoints: loadout.playerVitality.currentLifePoints,
+        }
+      : null,
     playerPoison: {
       potion: loadout.playerPoison?.potion ?? "none",
       potionUntilTick: loadout.playerPoison?.potionUntilTick ?? 0,
       kwuarmPotency: loadout.playerPoison?.kwuarmPotency ?? 0,
-      playerVitality: loadout.playerVitality
-        ? {
-            maximumLifePoints: loadout.playerVitality.maximumLifePoints,
-            currentLifePoints: loadout.playerVitality.currentLifePoints,
-          }
-        : null,
       cinderbane: loadout.playerPoison?.cinderbane === true,
       blowpipe: loadout.playerPoison?.blowpipe === true,
       laniakea: loadout.playerPoison?.laniakea === true,

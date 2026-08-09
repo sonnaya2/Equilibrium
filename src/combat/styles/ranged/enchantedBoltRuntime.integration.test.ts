@@ -7,7 +7,10 @@ import { rotationOf } from "../../engine/simulation/contracts";
 import { simulate } from "../../engine/simulation/simulate";
 import { rangedInput } from "../../test/fixtures/inputs";
 import { testRangedAmmunition } from "../../testing/rangedAmmunition";
-import { activateBoltDeathmark, enchantedBoltStatefulProcStream } from "./enchantedBoltRuntime";
+import {
+  activateBoltDeathmark,
+  enchantedBoltStatefulProcStream,
+} from "./enchantedBoltRuntime";
 import { enchantedBoltActivationChance } from "./enchantedBolt";
 import { resolveAmmunitionProfile } from "./ammunitionProfile";
 
@@ -254,7 +257,9 @@ describe("Hydrix and Ascendri Deathmark runtime", () => {
         },
         { stochasticSeed: seed },
       );
-      const effect = summary.analysis.byEffect.find((row) => row.id === `ammunition:${mechanicId}`);
+      const effect = summary.analysis.byEffect.find(
+        (row) => row.id === `ammunition:${mechanicId}`,
+      );
       expect(summary.rng?.lanes).toBe(DEFAULT_STOCHASTIC_LANES);
       expect(effect?.expectedActivations).toBeCloseTo(
         expectedActivations / DEFAULT_STOCHASTIC_LANES,

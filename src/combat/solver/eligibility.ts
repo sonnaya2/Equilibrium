@@ -31,6 +31,7 @@ export interface EligibilityOptions {
   equipmentIds?: readonly string[];
   activeWeapon?: ActiveWeaponCapability;
   passiveIds?: readonly string[];
+  eofStoredSpecialId?: string | null;
   league?: CandidatePool["options"]["league"];
   /**
    * Optional per-solve memo. Only used when `memo.pool === pool` and the call's
@@ -66,6 +67,10 @@ export function eligibilityOptionKey(
   const equipmentIds = options.equipmentIds ?? pool.options.equipmentIds;
   const passiveIds = options.passiveIds ?? pool.options.passiveIds;
   const activeWeapon = options.activeWeapon ?? pool.options.activeWeapon;
+  const eofStoredSpecialId =
+    options.eofStoredSpecialId !== undefined
+      ? options.eofStoredSpecialId
+      : pool.options.eofStoredSpecialId;
   const activeWeaponKey = activeWeapon
     ? [
         activeWeapon.id,
@@ -83,6 +88,7 @@ export function eligibilityOptionKey(
     weaponConfiguration ?? "",
     equipmentIds?.join(",") ?? "",
     activeWeaponKey,
+    eofStoredSpecialId ?? "",
     passiveIds?.join(",") ?? "",
     options.league?.ruleset ?? pool.options.league?.ruleset ?? "",
     [...(options.league?.blessingIds ?? pool.options.league?.blessingIds ?? [])]
@@ -190,6 +196,10 @@ function validateBarEligibilityUncached(
   const equipmentIds = options.equipmentIds ?? pool.options.equipmentIds;
   const passiveIds = options.passiveIds ?? pool.options.passiveIds;
   const activeWeapon = options.activeWeapon ?? pool.options.activeWeapon;
+  const eofStoredSpecialId =
+    options.eofStoredSpecialId !== undefined
+      ? options.eofStoredSpecialId
+      : pool.options.eofStoredSpecialId;
   const league = options.league ?? pool.options.league;
 
   if (!options.skipSizeBounds) {
@@ -271,6 +281,7 @@ function validateBarEligibilityUncached(
       weaponConfiguration,
       equipmentIds,
       activeWeapon,
+      eofStoredSpecialId,
       passiveIds: passiveIds as readonly ItemPassiveId[] | undefined,
       league,
       groupPeers: peers.map((peer) => ({

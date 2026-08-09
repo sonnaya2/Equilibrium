@@ -197,7 +197,7 @@ describe("Adaptive Strike cast legality", () => {
     expect(tempest.weaponSpecial).toBe(true);
     expect(tempest.requiresSpecialAccess).toBe(true);
     expect(tempest.weaponRequirement).toBeUndefined();
-    // No shape gate: EoF path may cast on 2h; access is equipment specialAttackId / EoF.
+    // No shape gate: EoF path may cast on 2h; access is native specialAttackId or EoF + stored id.
     for (const shape of ["mainhand", "shield", "defender", "dualwield", "twohand"] as const) {
       expect(meetsWeaponRequirement(tempest, shape)).toBe(true);
     }
@@ -216,11 +216,19 @@ describe("Adaptive Strike cast legality", () => {
         equipmentIds: ["item:dark-shard-of-leng"],
       }).available,
     ).toBe(true);
-    // EoF unlocks without Leng MH.
+    // EoF alone without a matching stored special is fail-closed.
     expect(
       resolveAbilityCastAvailability(tempest, {
         weaponConfiguration: "twohand",
         equipmentIds: ["item:essence-of-finality"],
+      }),
+    ).toMatchObject({ available: false, reason: "missing-special-access" });
+    // EoF with matching stored special unlocks without Leng MH.
+    expect(
+      resolveAbilityCastAvailability(tempest, {
+        weaponConfiguration: "twohand",
+        equipmentIds: ["item:essence-of-finality"],
+        eofStoredSpecialId: "icy_tempest",
       }).available,
     ).toBe(true);
   });

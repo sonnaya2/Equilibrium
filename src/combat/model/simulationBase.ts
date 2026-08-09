@@ -72,6 +72,9 @@ export function buildSimulationInputBase(
         : {}),
     },
     nativeSpecialPolicy: model.nativeSpecialPolicy,
+    ...(model.eofStoredSpecialId != null && model.eofStoredSpecialId !== ""
+      ? { eofStoredSpecialId: model.eofStoredSpecialId }
+      : {}),
     league,
     procs: model.procs,
     conjureBasicDamageMult: model.conjureBasicDamageMult,
@@ -89,6 +92,14 @@ export function buildSimulationInputBase(
     playerPoison: model.playerPoison,
     playerPoisonModifiers: playerPoisonModifiersFromSources(model.modifierSources, league),
     targetPoisonImmune: model.target.poisonImmune === true,
+    ...(model.naturalInstinctUntilTick != null
+      ? { naturalInstinctUntilTick: model.naturalInstinctUntilTick }
+      : {}),
+    ...(model.startingResidualSouls != null
+      ? { startingResidualSouls: model.startingResidualSouls }
+      : {}),
+    ...(model.slayerOnTask != null ? { slayerOnTask: model.slayerOnTask } : {}),
+    ...(model.slayerLevel != null ? { slayerLevel: model.slayerLevel } : {}),
   };
 }
 
@@ -170,6 +181,7 @@ export function toHybridManualCombatModel(
     strengthCape99: scaffold.strengthCape99,
     preciseRank: scaffold.preciseRank,
     ammunition: scaffold.ammunition,
+    enchantedBoltChanceModifiers: scaffold.enchantedBoltChanceModifiers,
     conjureBasicDamageMult: scaffold.conjureBasicDamageMult,
     conjureDurationMult: scaffold.conjureDurationMult,
     tumekensPieces: scaffold.tumekensPieces,
@@ -180,8 +192,10 @@ export function toHybridManualCombatModel(
         : {}),
     },
     nativeSpecialPolicy: scaffold.nativeSpecialPolicy,
+    ...(scaffold.eofStoredSpecialId != null && scaffold.eofStoredSpecialId !== ""
+      ? { eofStoredSpecialId: scaffold.eofStoredSpecialId }
+      : {}),
     league: scaffold.league,
-    enchantedBoltChanceModifiers: scaffold.enchantedBoltChanceModifiers,
     context: { ...scaffold.context, style: scaffold.style },
     targetHpPercent: scaffold.target.hpPercent,
     targetMaximumLifePoints: scaffold.target.maximumLifePoints,

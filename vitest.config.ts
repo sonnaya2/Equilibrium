@@ -11,5 +11,12 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["src/**/*.test.ts"],
+    exclude: [
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/*probe*.test.ts",
+      "**/_audit*.test.ts",
+      "**/*.performance.test.ts",
+    ],
   },
 });

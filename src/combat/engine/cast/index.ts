@@ -64,6 +64,7 @@ export function prepareSimulationCast(
     passiveIds: rt.input.equipmentEffects?.passiveIds,
     league: rt.input.league,
     activeWeapon: rt.input.equipmentEffects?.activeWeapon,
+    eofStoredSpecialId: rt.input.eofStoredSpecialId,
   });
   const candidate = Math.max(
     candidateTick(rt.state, readyTick),
@@ -80,8 +81,10 @@ export function prepareSimulationCast(
     rt.byId,
     rt.input.league,
     rt.input.equipmentEffects?.activeWeapon,
+    rt.input.eofStoredSpecialId,
   );
   if (rejection) return { ok: false, error: rejection };
+
   if (castAbility.id === "icy_tempest") {
     const resolved = resolveIcyTempest(
       rt.state.melee.primordialIce,
@@ -125,13 +128,15 @@ export function commitCast(
       tx.totalAbilityGain +
       tx.otherImmediateGrants +
       tx.conservationOfEnergyRefund +
-      tx.ringOfVigourRefund;
+      tx.ringOfVigourRefund +
+      tx.specialRefund;
     const economyDelta =
       tx.totalAbilityGain +
       tx.otherImmediateGrants -
       tx.actualSpend +
       tx.conservationOfEnergyRefund +
-      tx.ringOfVigourRefund;
+      tx.ringOfVigourRefund +
+      tx.specialRefund;
     record.result = {
       ...record.result,
       listedAdrenalineDelta: tx.listedGain - tx.listedCost,
@@ -160,6 +165,7 @@ export function performCast(
     passiveIds: rt.input.equipmentEffects?.passiveIds,
     league: rt.input.league,
     activeWeapon: rt.input.equipmentEffects?.activeWeapon,
+    eofStoredSpecialId: rt.input.eofStoredSpecialId,
   });
   const candidate = Math.max(
     candidateTick(rt.state, readyTick),
@@ -176,6 +182,7 @@ export function performCast(
     rt.byId,
     rt.input.league,
     rt.input.equipmentEffects?.activeWeapon,
+    rt.input.eofStoredSpecialId,
   );
   if (rejection) return { ok: false, error: rejection };
 

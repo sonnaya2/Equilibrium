@@ -135,6 +135,8 @@ const DEFAULT_SAVED_SETUPS: readonly SavedSetup[] = [
     loadout: normalizedLoadout({
       ...DEFAULT_LOADOUT,
       style: "magic",
+      // FSoA is T95; weapon AD term uses min(weaponTier, spellTier).
+      spellTier: 95,
       buffs: {
         ...DEFAULT_LOADOUT.buffs,
         herbloreLevel: 120,

@@ -1,5 +1,6 @@
 import type { CombatContext, CombatModifier, SourceReference } from "../types";
 import { mulFloor } from "../core/rounding";
+import { isTrueDotDamage } from "./damageProvenance";
 
 /**
  * Berserker's Fury (Archaeology monolith relic).
@@ -95,7 +96,8 @@ export function berserkersFuryModifier(bonus: number): CombatModifier | null {
     id: `relic:${BERSERKERS_FURY_ID}`,
     stage: "roll",
     priority: 200,
-    applies: (context: CombatContext) => context.dotKind !== "bleed",
+    // All true DoTs (not only bleed). Converted channels keep BF.
+    applies: (context: CombatContext) => !isTrueDotDamage(context),
     apply: (state) => ({ ...state, damage: mulFloor(state.damage, mult) }),
     source: BERSERKERS_FURY_SOURCE,
   };

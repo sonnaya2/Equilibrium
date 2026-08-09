@@ -17,6 +17,8 @@ export type LoadoutAbilityGate = {
   equipmentIds?: readonly string[];
   activeWeapon?: ActiveWeaponCapability;
   passiveIds?: readonly ItemPassiveId[];
+  /** EoF stored special ability id for gated weapon specials. */
+  eofStoredSpecialId?: string | null;
   league?: ResolvedLeagueRules;
 };
 
@@ -61,6 +63,7 @@ export function filterAbilitiesForLoadout(
         equipmentIds: gate.equipmentIds,
         activeWeapon: gate.activeWeapon,
         passiveIds: gate.passiveIds,
+        eofStoredSpecialId: gate.eofStoredSpecialId,
         league: gate.league,
         groupPeers: abilities,
       }).available,

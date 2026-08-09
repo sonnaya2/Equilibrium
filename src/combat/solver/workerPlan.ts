@@ -5,15 +5,15 @@ import { agentBarSizeBounds, clampSolverBarSizes, type SolverBarSizeBounds } fro
 
 export type WorkerRecipe = "default" | "evolutionary" | "anneal_local";
 
-/** Tier MAX agent ceilings - Thorough 4 · Extreme 6 · Unhinged 8. */
+/** Tier MAX agent ceilings - Thorough 4 · Extreme 6 · Unhinged 6. */
 export const TIER_MAX_AGENTS: Record<SearchTier, number> = {
   thorough: 4,
   extreme: 6,
-  unhinged: 8,
+  unhinged: 6,
 };
 
 /** Hard cap across every tier (matches Unhinged ceiling). */
-export const SAFE_GLOBAL_AGENT_CEILING = 8;
+export const SAFE_GLOBAL_AGENT_CEILING = 6;
 
 /**
  * Whether preferredAgentCount may hold back a logical core for the UI main thread.

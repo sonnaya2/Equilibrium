@@ -33,6 +33,10 @@ export interface CastSnapshot {
   /** Resolved weapon state captured by this cast. */
   magicWeaponAtCast: boolean;
   surgingStormAtCast: boolean;
+  /** Physical Ek-ZekKil passive ownership captured at cast time. */
+  ashenVowAtCast: boolean;
+  /** Repeat Showdown variant selected from the pre-cast Rival state. */
+  igneousShowdownRepeat: boolean;
   /** Perfect Equilibrium passive ownership captured from the physical weapon. */
   perfectEquilibriumAtCast: boolean;
   /** Balance by Force crosses the pre-cast Perfect Equilibrium threshold. */

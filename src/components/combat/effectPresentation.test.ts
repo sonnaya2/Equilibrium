@@ -9,6 +9,11 @@ describe("combat effect presentation", () => {
     expect(combatEffectDisplayName("song:essence-corruption")).toBe("Essence Corruption");
   });
 
+  it("names FSoA Lightning Surge proc and Surging Storm passive ids", () => {
+    expect(combatEffectDisplayName("instability_lightning_surge")).toBe("Lightning Surge");
+    expect(combatEffectDisplayName("surging-storm")).toBe("Surging Storm");
+  });
+
   it("uses local icons for PE, poison, ammunition, and damaging perks", () => {
     expect(combatEffectIconPath("perfect_equilibrium")).toBe(
       "/game/combat/equipment/bow-of-the-last-guardian.webp",
@@ -22,6 +27,15 @@ describe("combat effect presentation", () => {
     expect(combatEffectIconPath("song:essence-corruption")).toBe(
       "/game/combat/equipment/roar-of-awakening.webp",
     );
+    expect(combatEffectIconPath("instability_lightning_surge")).toBe(
+      "/game/combat/equipment/fractured-staff-of-armadyl.webp",
+    );
+    expect(combatEffectIconPath("surging-storm")).toBe("/game/combat/status/surging-storm.webp");
+    expect(combatEffectDisplayName("song:conflagrate")).toBe("Conflagrate");
+    expect(combatEffectIconPath("soulfire")).toBe(
+      "/game/combat/equipment/roar-of-awakening.webp",
+    );
+    expect(combatEffectIconPath("song:conflagrate")).toBe("/game/combat/status/soulfire.webp");
   });
 
   it("uses the originating blessing icon when the effect id is shared", () => {

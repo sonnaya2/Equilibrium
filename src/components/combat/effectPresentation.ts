@@ -6,17 +6,27 @@ import { blessingEffectDisplayName, isBlessingDamageEffectId } from "./blessingP
 const PROCEDURAL_EFFECT_LABEL: Readonly<Record<string, string>> = {
   aftershock: "Aftershock",
   crackling: "Crackling",
+  instability_lightning_surge: "Lightning Surge",
   player_weapon_poison: "Weapon poison",
   "song:essence-corruption": "Essence Corruption",
+  "song:conflagrate": "Conflagrate",
+  "surging-storm": "Surging Storm",
+  soulfire: "Soulfire",
 };
 
 const EFFECT_ICON_PATH: Readonly<Record<string, string>> = {
   aftershock: "/game/combat/perks/aftershock.webp",
   crackling: "/game/combat/perks/crackling.webp",
   perfect_equilibrium: "/game/combat/equipment/bow-of-the-last-guardian.webp",
+  // Proc plate: FSoA equipment (wiki Instability status has an opaque teal badge fill).
+  instability_lightning_surge: "/game/combat/equipment/fractured-staff-of-armadyl.webp",
   player_weapon_poison: "/game/upgrades/permanent-unlocks/weapon-poison.webp",
   puncture: "/game/combat/equipment/splintering-arrows.webp",
   "song:essence-corruption": "/game/combat/equipment/roar-of-awakening.webp",
+  "song:conflagrate": "/game/combat/status/soulfire.webp",
+  soulfire: "/game/combat/equipment/roar-of-awakening.webp",
+  // https://runescape.wiki/w/File:Surging_Storm_(status).png (green plate keyed)
+  "surging-storm": "/game/combat/status/surging-storm.webp",
   "ammunition:black-stone": "/game/combat/equipment/black-stone-arrows.webp",
   "ammunition:deathspore": "/game/combat/equipment/deathspore-arrows.webp",
   "ammunition:splintering": "/game/combat/equipment/splintering-arrows.webp",

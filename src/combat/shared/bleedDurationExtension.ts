@@ -4,10 +4,12 @@ import { hasPassive } from "./equipment";
 
 /**
  * Masterwork Spear of Annihilation (and any future same-rule passive):
- * additional eligible bleed hits = floor(base eligible bleed-hit count × 0.5).
+ * additional eligible bleed hits = floor(base eligible bleed-hit count * 0.5).
  * Fractional remainder is discarded. Applied once to the base list only.
-
- * Source: https://runescape.wiki/w/Masterwork_Spear_of_Annihilation (verified 2026-08-02).
+ * Flat bonuses (Strength cape flatBleedHitBonus) are not part of that base:
+ * Dismember is 8 + floor(8*0.5) + 3 cape = 15, not floor(11*0.5) on top of cape.
+ *
+ * Source: https://runescape.wiki/w/Masterwork_Spear_of_Annihilation (verified 2026-08-09).
  */
 export const MASTERWORK_SPEAR_BLEED_EXTENSION_PASSIVE = "masterwork-spear-bleed-extension" as const;
 
@@ -24,6 +26,22 @@ export function isExtendableBleedHit(hit: AbilityHit): boolean {
  */
 export function eligibleBleedHitCount(hits: readonly AbilityHit[]): number {
   return hits.reduce((n, hit) => n + (isExtendableBleedHit(hit) ? 1 : 0), 0);
+}
+
+/**
+ * Bleed count that feeds floor(n * 0.5). Subtracts flatBleedHitBonus so Strength
+ * cape +3 stays additive with spear (wiki total 15).
+ */
+export function extensionBaseBleedHitCount(
+  hits: readonly AbilityHit[],
+  flatBleedHitBonus = 0,
+): number {
+  const eligible = eligibleBleedHitCount(hits);
+  const flat =
+    Number.isFinite(flatBleedHitBonus) && flatBleedHitBonus > 0
+      ? Math.floor(flatBleedHitBonus)
+      : 0;
+  return Math.max(0, eligible - flat);
 }
 
 /**
@@ -53,14 +71,23 @@ export function bleedCadenceTicks(bleedHits: readonly AbilityHit[]): number {
   return 1;
 }
 
+export type ExtendBleedHitListOptions = {
+  /** Flat hits already in the list (Strength cape); excluded from 50% base. */
+  flatBleedHitBonus?: number;
+};
+
 /**
  * Pure hit-list extension for an equipped duration passive.
  * Returns a new array; never mutates `hits`. Idempotent only when fed base hits
  * - callers must not re-apply against an already-extended list.
  */
-export function extendBleedHitList(hits: readonly AbilityHit[]): AbilityHit[] {
+export function extendBleedHitList(
+  hits: readonly AbilityHit[],
+  options?: ExtendBleedHitListOptions,
+): AbilityHit[] {
   const bleedHits = hits.filter(isExtendableBleedHit);
-  const extra = additionalBleedHitsFromExtension(bleedHits.length);
+  const baseCount = extensionBaseBleedHitCount(hits, options?.flatBleedHitBonus ?? 0);
+  const extra = additionalBleedHitsFromExtension(baseCount);
   if (extra === 0) return hits.map((h) => ({ ...h, band: { ...h.band } }));
 
   const cadence = bleedCadenceTicks(bleedHits);
@@ -85,6 +112,7 @@ export function extendBleedHitList(hits: readonly AbilityHit[]): AbilityHit[] {
  * Resolve equipment-adjusted ability hits for Quick and simulation.
  * Applies only when the ability declares `bleedDurationExtension` for a passive
  * that is active on the loadout. Canonical ability tables are never mutated.
+ * Preserves flatBleedHitBonus so re-reads keep cape/spear composition.
  */
 export function resolveAbilityWithEquipment(
   ability: AbilitySpec,
@@ -99,5 +127,10 @@ export function resolveAbilityWithEquipment(
     return ability;
   }
   if (eligibleBleedHitCount(ability.hits) === 0) return ability;
-  return { ...ability, hits: extendBleedHitList(ability.hits) };
+  return {
+    ...ability,
+    hits: extendBleedHitList(ability.hits, {
+      flatBleedHitBonus: ability.flatBleedHitBonus,
+    }),
+  };
 }

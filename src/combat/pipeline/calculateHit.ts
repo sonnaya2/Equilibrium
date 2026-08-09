@@ -9,7 +9,11 @@ import {
 import { applyDamagePotential, damagePotential } from "../core/damagePotential";
 import { applyHitCap, normalizeHitCapRule, standardHitCap, type HitCapRule } from "../core/hitCaps";
 import { resolveHostDamageInstance } from "../core/hostDamage";
-import { contextWithProvenance, type DamageProvenance } from "../shared/damageProvenance";
+import {
+  contextWithProvenance,
+  isTrueDotDamage,
+  type DamageProvenance,
+} from "../shared/damageProvenance";
 import { preciseMinHitAddition } from "../shared/perks";
 import {
   recordEndpointPass,
@@ -216,7 +220,9 @@ function rawHitBand(input: HitInput): { min: number; max: number } {
   let min = band.min;
   const max = band.max;
   const precise = input.preciseRank ?? 0;
-  if (precise > 0) {
+  // Wiki Precise: true DoTs ignore Precise. Converted channels keep it.
+  // Bloat parent is player_direct so it still receives Precise.
+  if (precise > 0 && !isTrueDotDamage(resolvedHitContext(input))) {
     min = Math.min(max, Math.floor(min + preciseMinHitAddition(max, precise)));
   }
   return { min, max };

@@ -212,12 +212,12 @@ describe("mergeProgress dual scores", () => {
 });
 
 describe("solverPoolSize", () => {
-  it("returns safe global ceiling (8) matching Unhinged max", () => {
-    expect(solverPoolSize()).toBe(8);
+  it("returns safe global ceiling (6) matching Unhinged max", () => {
+    expect(solverPoolSize()).toBe(6);
     vi.stubGlobal("navigator", { hardwareConcurrency: 4 });
-    expect(solverPoolSize()).toBe(8);
+    expect(solverPoolSize()).toBe(6);
     vi.stubGlobal("navigator", undefined);
-    expect(solverPoolSize()).toBe(8);
+    expect(solverPoolSize()).toBe(6);
   });
 });
 

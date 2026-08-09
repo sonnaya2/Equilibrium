@@ -141,13 +141,15 @@ export interface SerializableRevolutionSimBase {
   nativeSpecialPolicy?: {
     useEquippedWeaponSpecial: boolean;
   };
+  /** EoF stored special ability id; required with Essence of Finality for gated specials. */
+  eofStoredSpecialId?: string | null;
   league: SerializableLeagueRules;
   context?: CombatContext;
   targetHpPercent?: number;
   targetMaximumLifePoints?: number;
+  playerVitality?: PlayerVitalityInput;
   playerPoison?: PlayerPoisonProfile;
   targetPoisonImmune?: boolean;
-  playerVitality?: PlayerVitalityInput;
   cap?: HitCapRule;
   startingAdrenaline?: number;
   naturalInstinctUntilTick?: number;

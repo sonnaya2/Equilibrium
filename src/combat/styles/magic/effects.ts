@@ -278,9 +278,27 @@ export function instabilityActive(state: InstabilityState, tick: number): boolea
 }
 
 /**
+ * LS schedule/resolve weight for one source hit.
+ * Concrete critOutcome (stochastic lanes) is 0 or 1; EV path uses post-league
+ * critChance (includes Unholy Critual cap/conversion already applied at land).
+ */
+export function lightningSurgeSourceWeight(detail: {
+  critChance: number;
+  critOutcome?: boolean;
+} | undefined): number {
+  if (!detail) return 0;
+  if (detail.critOutcome === true) return 1;
+  if (detail.critOutcome === false) return 0;
+  const chance = detail.critChance;
+  if (!Number.isFinite(chance) || chance <= 0) return 0;
+  return Math.min(1, chance);
+}
+
+/**
  * Expected Lightning Surge contribution for one source hit.
- * `sourceCritChance` is that hit's crit probability; `surgeHitExpected` is the
- * full expected of a 70-90% ability-damage hit (including its own crit layer).
+ * `sourceCritChance` is that hit's crit weight (EV chance or concrete 0/1);
+ * `surgeHitExpected` is the full expected of a 70-90% ability-damage hit
+ * (including its own crit layer).
  */
 export function lightningSurgeExpected(sourceCritChance: number, surgeHitExpected: number): number {
   if (sourceCritChance <= 0 || surgeHitExpected <= 0) return 0;

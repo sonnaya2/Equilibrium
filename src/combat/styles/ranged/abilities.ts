@@ -67,7 +67,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
   },
   {
     // Wiki: 65-75% + stun 1.2s / bind 9.6s. Damage below a basic - CC utility.
-    // 2 charges at 54 Ranged; independent 15s recovery per charge.
+    // 2 charges at 70 Ranged; independent 15s recovery per charge.
     id: "binding_shot",
     name: "Binding Shot",
     style: "ranged",
@@ -75,6 +75,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     hits: [{ band: { minPct: 65, maxPct: 75 } }],
     adrenaline: { gain: 9 },
     cooldownSeconds: 15,
+    // Ability page: second charge at 54 Ranged (peers Backhand/Impact).
     charges: { max: 2, secondChargeLevel: 54 },
     source: wiki("Binding Shot", "Binding_Shot"),
   },
@@ -129,14 +130,13 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     source: wiki("Greater Ricochet", "Greater_Ricochet"),
   },
   {
-    // Wiki: 2 hits 135-155% each; GCD-only CD (1.8s / 3 ticks).
+    // Wiki: 2 hits 135-155% each; GCD only (2 Mar 2026 removed dedicated CD).
     id: "snap_shot",
     name: "Snap Shot",
     style: "ranged",
     category: "enhanced",
     hits: [{ band: { minPct: 135, maxPct: 155 } }, { band: { minPct: 135, maxPct: 155 } }],
     adrenaline: { cost: 25 },
-    cooldownSeconds: 1.8,
     source: wiki("Snap Shot", "Snap_Shot"),
   },
   {
@@ -151,7 +151,7 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     source: wiki("Snipe", "Snipe"),
   },
   {
-    // Wiki: single 220-260% hit to target + up to 9 in 2 tiles; no ability CD (GCD only).
+    // Wiki: single 220-260% hit to target + up to 9 in 2 tiles; GCD only (9 Mar 2026).
     id: "bombardment",
     name: "Bombardment",
     style: "ranged",
@@ -159,7 +159,6 @@ export const RANGED_ABILITIES: RangedAbilitySpec[] = [
     area: "aoe",
     hits: [{ band: { minPct: 220, maxPct: 260 } }],
     adrenaline: { cost: 25 },
-    cooldownSeconds: 1.8,
     source: wiki("Bombardment", "Bombardment"),
   },
   {

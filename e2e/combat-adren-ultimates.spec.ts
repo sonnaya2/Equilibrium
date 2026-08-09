@@ -7,14 +7,25 @@ import { expect, test, type Page } from "@playwright/test";
 
 async function openArch(page: Page) {
   await page.getByRole("tab", { name: "Loadout", exact: true }).click();
+  // Workbench Archaeology slots open the Archaeology editor dialog.
   await page
-    .getByRole("navigation", { name: "Loadout sections" })
-    .getByRole("button", { name: "Arch", exact: true })
+    .getByRole("button", { name: /^(Click here to update relic|Change relic )/ })
+    .first()
     .click();
+  await expect(page.getByRole("dialog", { name: "Archaeology" })).toBeVisible();
+}
+
+async function closeArch(page: Page) {
+  const dialog = page.getByRole("dialog", { name: "Archaeology" });
+  if (await dialog.isVisible().catch(() => false)) {
+    await dialog.getByRole("button", { name: "Close loadout editor" }).click();
+    await expect(dialog).toBeHidden();
+  }
 }
 
 async function selectRelicIfNeeded(page: Page, name: RegExp) {
-  const tile = page.getByRole("button", { name }).first();
+  const dialog = page.getByRole("dialog", { name: "Archaeology" });
+  const tile = dialog.getByRole("button", { name }).first();
   await expect(tile).toBeVisible({ timeout: 15_000 });
   const pressed = await tile.getAttribute("aria-pressed");
   if (pressed !== "true") {
@@ -35,18 +46,17 @@ test.beforeEach(async ({ page }) => {
 test("manual rotation casts Death's Swiftness with CoE + FotS at 100 start adren", async ({
   page,
 }) => {
-  // Stats: force full open adren (ultimates need 100).
+  // Loadout Equipment column: force full open adren (ultimates need 100).
   await page.getByRole("tab", { name: "Loadout", exact: true }).click();
-  await page
-    .getByRole("navigation", { name: "Loadout sections" })
-    .getByRole("button", { name: "Stats", exact: true })
-    .click();
-  await page.getByRole("spinbutton", { name: /Starting adrenaline/i }).fill("100");
+  const startAdren = page.getByRole("spinbutton", { name: /Starting adrenaline/i });
+  await startAdren.fill("100");
+  await expect(startAdren).toHaveValue("100");
 
-  // Arch: Fury of the Small + Conservation of Energy (500 energy exactly).
+  // Archaeology dialog: Fury of the Small + Conservation of Energy (500 energy exactly).
   await openArch(page);
   await selectRelicIfNeeded(page, /Fury of the Small/i);
   await selectRelicIfNeeded(page, /Conservation of Energy/i);
+  await closeArch(page);
 
   // Rotation → manual → ranged → queue DS → Run
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
@@ -69,8 +79,8 @@ test("manual rotation casts Death's Swiftness with CoE + FotS at 100 start adren
 
   await page.getByRole("button", { name: "Run", exact: true }).click();
 
-  // Success: fixed-window DPS metrics and DS row in the cast table.
-  await expect(page.getByText("Fixed-window DPS", { exact: true })).toBeVisible({ timeout: 15_000 });
+  // Success: DPS metrics and DS row in the cast table.
+  await expect(page.getByText("DPS", { exact: true })).toBeVisible({ timeout: 15_000 });
   const dsRow = page
     .locator("tbody tr")
     .filter({ hasText: /Death's Swiftness/i })
@@ -84,14 +94,16 @@ test("FotS + CoE stay selected at 500 energy after reload", async ({ page }) => 
   await openArch(page);
   await selectRelicIfNeeded(page, /Fury of the Small/i);
   await selectRelicIfNeeded(page, /Conservation of Energy/i);
+  await closeArch(page);
 
   await page.reload();
   await openArch(page);
-  await expect(page.getByRole("button", { name: /Fury of the Small/i }).first()).toHaveAttribute(
+  const dialog = page.getByRole("dialog", { name: "Archaeology" });
+  await expect(dialog.getByRole("button", { name: /Fury of the Small/i }).first()).toHaveAttribute(
     "aria-pressed",
     "true",
   );
   await expect(
-    page.getByRole("button", { name: /Conservation of Energy/i }).first(),
+    dialog.getByRole("button", { name: /Conservation of Energy/i }).first(),
   ).toHaveAttribute("aria-pressed", "true");
 });

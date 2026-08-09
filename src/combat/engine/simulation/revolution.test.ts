@@ -185,6 +185,18 @@ describe("simulateRevolution", () => {
     expect(noSpecialOn.casts.map((cast) => cast.abilityId)).toEqual(
       noSpecialOff.casts.map((cast) => cast.abilityId),
     );
+
+    // EoF store fills nativeSpecial when policy on and weapon has no special.
+    // revoAbilityLegal must pass eofStoredSpecialId so cast is not rejected.
+    const eofOn = simulateRevolution({
+      ...noSpecial,
+      equipmentIds: ["item:staff-of-light", "item:essence-of-finality"],
+      nativeSpecialPolicy: { useEquippedWeaponSpecial: true },
+      eofStoredSpecialId: "instability",
+      startingAdrenaline: 100,
+    });
+    expect(eofOn.ok).toBe(true);
+    expect(eofOn.casts[0]).toMatchObject({ abilityId: "instability", tick: 0 });
   });
 
   it("uses the same policy for a second native special", () => {

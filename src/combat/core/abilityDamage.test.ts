@@ -102,17 +102,18 @@ describe("baseAbilityDamage golden fixtures", () => {
   });
 
   it("keeps the style-bonus floor boundary exact", () => {
+    // Single 14.4 floor: floor(14.4*99 + 1.5*b) steps at b=0.27 (1.5*0.26=0.39, 1.5*0.27=0.405).
     const below = baseAbilityDamage(99, {
       kind: "twohand",
       style: "melee",
       weapon: t99,
-      styleBonus: 0.59,
+      styleBonus: 0.26,
     });
     const above = baseAbilityDamage(99, {
       kind: "twohand",
       style: "melee",
       weapon: t99,
-      styleBonus: 0.6,
+      styleBonus: 0.27,
     });
     expect(above - below).toBe(1);
   });

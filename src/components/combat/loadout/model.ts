@@ -8,7 +8,11 @@ import {
 } from "@/combat";
 import { equipmentById } from "@/combat/data";
 import type { EquipmentSlot } from "@/combat/data/records";
-import { normalizeSavedEquipmentId, normalizeSelectedAmmunitionId } from "./ammunitionSelection";
+import { hasEssenceOfFinalityEquipped } from "@/combat/shared/requirements";
+import {
+  normalizeSavedEquipmentId,
+  normalizeSelectedAmmunitionId,
+} from "./ammunitionSelection";
 import {
   isRelicGrantedItemAvailable,
   relicGrantedItemForRelic,
@@ -417,6 +421,8 @@ export interface Loadout {
    */
   loadoutSchemaVersion: number;
   hitCapEnabled: boolean;
+  /** Slayer skill level for Tuska's Wrath empower (with onSlayerTask). */
+  slayerLevel?: number;
   accuracy: number;
   critChance: number;
   target: LoadoutTarget | null;
@@ -428,6 +434,11 @@ export interface Loadout {
   archaeology: LoadoutArchaeology;
   equipmentSlots: Partial<Record<EquipmentSlot, string | null>>;
   selectedAmmunitionId: string | null;
+  /**
+   * EoF stored special ability id (engine ability id). Required with Essence of
+   * Finality for requiresSpecialAccess weapon specials. Cleared when amulet is not EoF.
+   */
+  eofStoredSpecialId: string | null;
   enchantments: EquipmentEnchantmentId[];
   /** Derived: slotted ids + unlock pins. */
   equipmentIds: string[];
@@ -454,7 +465,7 @@ export const DEFAULT_LOADOUT: Loadout = {
   // (Death's Swiftness, Sunshine, Berserk) look "broken" until Stats was touched.
   startingAdrenaline: 100,
   loadoutSchemaVersion: LOADOUT_SCHEMA_VERSION,
-  hitCapEnabled: true,
+  hitCapEnabled: false,
   accuracy: 100,
   critChance: 10,
   target: null,
@@ -519,6 +530,7 @@ export const DEFAULT_LOADOUT: Loadout = {
   },
   equipmentSlots: {},
   selectedAmmunitionId: null,
+  eofStoredSpecialId: null,
   enchantments: [...EQUIPMENT_ENCHANTMENTS],
   equipmentIds: [],
 };
@@ -651,6 +663,17 @@ function mergeEquipmentIds(
   return out;
 }
 
+/** Keep store id only when EoF is equipped and the string is non-empty. */
+export function normalizeEofStoredSpecialId(
+  equipmentIds: readonly string[] | undefined,
+  raw: unknown,
+): string | null {
+  if (!hasEssenceOfFinalityEquipped(equipmentIds)) return null;
+  if (typeof raw !== "string") return null;
+  const id = raw.trim();
+  return id.length > 0 ? id : null;
+}
+
 /**
  * Equip or clear one slot. Two-hand clears MH/OH; MH/OH clears two-hand.
  * When activeRelicNames is provided, relic-granted items cannot be equipped
@@ -687,6 +710,7 @@ export function equipInSlot(
   }
   const unlocks = unlockOnlyIds(loadout);
   const ammoRecord = equipmentById(slots.ammo ?? "");
+  const equipmentIds = mergeEquipmentIds(slots, unlocks);
   const next: Loadout = {
     ...loadout,
     equipmentSlots: slots,
@@ -694,7 +718,8 @@ export function equipInSlot(
       ammoRecord?.quiver != null,
       loadout.selectedAmmunitionId,
     ),
-    equipmentIds: mergeEquipmentIds(slots, unlocks),
+    equipmentIds,
+    eofStoredSpecialId: normalizeEofStoredSpecialId(equipmentIds, loadout.eofStoredSpecialId),
     buffs:
       loadout.buffs.sliverOfEdictsActive && slots.pocket !== "item:sliver-of-edicts"
         ? { ...loadout.buffs, sliverOfEdictsActive: false }
@@ -725,6 +750,7 @@ export function syncRelicGrantedEquipment(
     isRelicGrantedItemAvailable(id, activeRelicNames),
   );
   const ammoRecord = equipmentById(nextSlots.ammo ?? "");
+  const equipmentIds = mergeEquipmentIds(nextSlots, unlocks);
   return {
     ...loadout,
     equipmentSlots: nextSlots,
@@ -732,7 +758,8 @@ export function syncRelicGrantedEquipment(
       ammoRecord?.quiver != null,
       loadout.selectedAmmunitionId,
     ),
-    equipmentIds: mergeEquipmentIds(nextSlots, unlocks),
+    equipmentIds,
+    eofStoredSpecialId: normalizeEofStoredSpecialId(equipmentIds, loadout.eofStoredSpecialId),
     buffs: clearSliverActive ? { ...loadout.buffs, sliverOfEdictsActive: false } : loadout.buffs,
   };
 }
@@ -793,6 +820,7 @@ export function clearEquipment(loadout: Loadout): Loadout {
     ...loadout,
     equipmentSlots: {},
     selectedAmmunitionId: null,
+    eofStoredSpecialId: null,
     equipmentIds: [],
   };
 }
@@ -822,6 +850,7 @@ export function pruneUnknownEquipment(
   // Only original unlock pins - never convert a pruned slot orphan into a pin.
   const unlocks = unlockOnlyIds(loadout).filter((id) => known(id));
   const ammoRecord = equipmentById(slots.ammo ?? "");
+  const equipmentIds = mergeEquipmentIds(slots, unlocks);
   return {
     ...loadout,
     equipmentSlots: slots,
@@ -829,7 +858,8 @@ export function pruneUnknownEquipment(
       ammoRecord?.quiver != null,
       loadout.selectedAmmunitionId,
     ),
-    equipmentIds: mergeEquipmentIds(slots, unlocks),
+    equipmentIds,
+    eofStoredSpecialId: normalizeEofStoredSpecialId(equipmentIds, loadout.eofStoredSpecialId),
   };
 }
 
@@ -1210,7 +1240,10 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
     baseDamage: { mode: "automatic" },
     startingAdrenaline,
     loadoutSchemaVersion: LOADOUT_SCHEMA_VERSION,
-    hitCapEnabled: raw.hitCapEnabled !== false,
+    hitCapEnabled: raw.hitCapEnabled === true,
+    ...(typeof raw.slayerLevel === 'number' && Number.isFinite(raw.slayerLevel) && raw.slayerLevel > 0
+      ? { slayerLevel: Math.min(200, Math.floor(raw.slayerLevel)) }
+      : {}),
     accuracy: clamp(raw.accuracy, 0, 100, DEFAULT_LOADOUT.accuracy),
     critChance: clamp(raw.critChance, 0, 100, DEFAULT_LOADOUT.critChance),
     target:
@@ -1339,5 +1372,9 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
     ),
     enchantments,
     equipmentIds: mergeEquipmentIds(equipmentSlots, unlocks),
+    eofStoredSpecialId: normalizeEofStoredSpecialId(
+      mergeEquipmentIds(equipmentSlots, unlocks),
+      raw.eofStoredSpecialId,
+    ),
   };
 }

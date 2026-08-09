@@ -39,6 +39,7 @@ import {
   SolverExecutionError,
   solverFailureFromWorkerMessage,
 } from "./failure";
+import { noteSolverHost } from "./hostDiagnostics";
 
 const MAX_POOL = SAFE_GLOBAL_AGENT_CEILING;
 
@@ -569,6 +570,7 @@ export class SolverAgentPool {
   /** Grow or shrink the pool to exactly n workers (capped at MAX_POOL). */
   ensure(n: number): number {
     const want = Math.max(1, Math.min(MAX_POOL, Math.floor(n) || 1));
+    const before = this.slots.length;
     while (this.slots.length < want) {
       const worker = createWorker();
       if (!worker) break;
@@ -583,12 +585,18 @@ export class SolverAgentPool {
         // ignore
       }
     }
+    if (before !== this.slots.length) {
+      noteSolverHost("pool-ensure", { before, after: this.slots.length, want });
+    }
     return this.slots.length;
   }
 
   cancel(): void {
     const hooks = this.activeCancels;
     this.activeCancels = [];
+    if (hooks.length > 0) {
+      noteSolverHost("pool-cancel", { hooks: hooks.length, workers: this.slots.length });
+    }
     for (const cancel of hooks) {
       try {
         cancel();
@@ -599,6 +607,7 @@ export class SolverAgentPool {
   }
 
   dispose(): void {
+    const workers = this.slots.length;
     this.cancel();
     for (const slot of this.slots) {
       try {
@@ -608,6 +617,9 @@ export class SolverAgentPool {
       }
     }
     this.slots = [];
+    if (workers > 0) {
+      noteSolverHost("pool-dispose", { terminated: workers });
+    }
   }
 
   private replaceDeadWorker(slot: Slot, requestId: number): void {
@@ -1127,6 +1139,11 @@ export class SolverAgentPool {
 
 let sharedPool: SolverAgentPool | null = null;
 
+/** Live agent workers in the shared pool (0 when disposed / never created). */
+export function liveSolverPoolWorkerCount(): number {
+  return sharedPool?.size() ?? 0;
+}
+
 export function getSolverAgentPool(): SolverAgentPool {
   if (!sharedPool) sharedPool = new SolverAgentPool();
   return sharedPool;
@@ -1138,7 +1155,8 @@ export function cancelSolverAgentPool(): void {
 
 /** Terminate all agent workers and drop the shared pool (hard failure / fallback). */
 export function disposeSolverAgentPool(): void {
-  sharedPool?.dispose();
+  if (!sharedPool) return;
+  sharedPool.dispose();
   sharedPool = null;
 }
 

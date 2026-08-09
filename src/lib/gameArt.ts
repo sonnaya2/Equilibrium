@@ -57,6 +57,22 @@ const ABILITY_ICON_VARIANT_SUFFIX = /[_-]igneous$/i;
  */
 const ABILITY_ICON_FORM_FALLBACK: Record<string, string> = {
   "adaptive-strike-mh": "adaptive-strike",
+  // Engine id instability_lightning_surge → lightning-surge.webp (keyed Instability status art).
+  "instability-lightning-surge": "lightning-surge",
+};
+
+/** Weapon specials use the native weapon icon in the ability palette. */
+const WEAPON_SPECIAL_ICON_EQUIPMENT: Record<string, string> = {
+  balance_by_force: "item:bow-of-the-last-guardian",
+  claws_of_guthix: "item:guthix-staff",
+  death_grasp: "item:death-guard-tier-70",
+  igneous_showdown: "item:ek-zekkil",
+  instability: "item:fractured-staff-of-armadyl",
+  icy_tempest: "item:dark-shard-of-leng",
+  ode_to_deceit: "item:ode-to-deceit",
+  ode_of_devourer: "item:ode-to-deceit",
+  // Roar of Awakening special (was wrongly wild-magic plate).
+  soulfire: "item:roar-of-awakening",
 };
 
 /** Shared constitution-bar abilities live under abilities/constitution/. */
@@ -74,6 +90,11 @@ export function abilityIconPath(
 ): string {
   const bare = abilityId.includes(":") ? abilityId.slice(abilityId.indexOf(":") + 1) : abilityId;
   const withoutVariant = bare.replace(ABILITY_ICON_VARIANT_SUFFIX, "").toLowerCase();
+  const weaponIcon = WEAPON_SPECIAL_ICON_EQUIPMENT[withoutVariant];
+  if (weaponIcon) {
+    const path = equipmentIconPath(weaponIcon);
+    if (path) return path;
+  }
   const lookupId = withoutVariant.replace(/-/g, "_");
   let slug = withoutVariant.replace(/_/g, "-");
   slug = ABILITY_ICON_FORM_FALLBACK[slug] ?? slug;
@@ -86,14 +107,10 @@ export function abilityIconPath(
   return `/game/combat/abilities/${folder}/${slug}.webp`;
 }
 
-/**
- * Player-facing ability category chip.
- * Post-CSM engine uses `enhanced`; UI still labels it threshold (player term).
- */
+/** Player-facing ability category chip. */
 export function abilityCategoryLabel(
-  category: "basic" | "enhanced" | "ultimate" | "utility" | string,
+  category: "basic" | "enhanced" | "threshold" | "ultimate" | "utility" | string,
 ): string {
-  if (category === "enhanced") return "threshold";
   return category;
 }
 

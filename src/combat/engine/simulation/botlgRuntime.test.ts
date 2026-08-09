@@ -165,8 +165,8 @@ function runPhysicalBalance(stacks: number) {
   const rt = createRuntime(
     {
       ...rangedInput,
-      league: unholy,
-      crit: { chance: 0.5 },
+      league: undefined,
+      crit: { chance: 0 },
       startingAdrenaline: 100,
       equipmentEffects: botlgEffects(),
       context: { style: "ranged", ruleset: "equilibrium" },
@@ -188,6 +188,8 @@ function runEofBalance(stacks: number) {
       ...rangedInput,
       equipmentEffects: undefined,
       equipmentIds: ["item:essence-of-finality"],
+      // EoF requires matching stored special; alone is fail-closed.
+      eofStoredSpecialId: "balance_by_force",
       league: unholy,
       crit: { chance: 0.5 },
       startingAdrenaline: 100,
@@ -238,8 +240,8 @@ describe("Perfect Equilibrium runtime", () => {
       {
         ...rangedInput,
         equipmentEffects: otherBowEffects(),
-        league: unholy,
-        crit: { chance: 0.5 },
+        league: undefined,
+        crit: { chance: 0 },
         startingAdrenaline: 100,
         context: { style: "ranged", ruleset: "equilibrium" },
       },
@@ -260,7 +262,7 @@ describe("Perfect Equilibrium runtime", () => {
     expect(withoutPhysical.state.ranged.perfectEquilibriumStacks).toBe(7);
   });
 
-  it("spends Balance pre-cast stacks once, including through EoF without a physical bow", () => {
+  it("spends Balance pre-cast stacks once, including through EoF with stored Balance", () => {
     const physical = runEofBalance(3);
     expect(
       physical.events.filter((event) => event.abilityId === "perfect_equilibrium"),
@@ -280,7 +282,7 @@ describe("Perfect Equilibrium runtime", () => {
     const rt = createRuntime(
       {
         ...rangedInput,
-        league: unholy,
+        league: undefined,
         crit: { chance: 0.5 },
         startingAdrenaline: 100,
         equipmentEffects: botlgEffects(),
@@ -301,6 +303,123 @@ describe("Perfect Equilibrium runtime", () => {
     expect(pes).toHaveLength(1);
     expect(rt.state.ranged.perfectEquilibriumStacks).toBe(parents.length - 1);
     expect(pes.some((event) => event.derivedFrom === pes[0]?.seq)).toBe(false);
+  });
+
+  it("uses the four-hit Balance threshold across every Greater Ricochet hitsplat", () => {
+    const rt = createRuntime(
+      {
+        ...rangedInput,
+        league: undefined,
+        crit: { chance: 0 },
+        startingAdrenaline: 100,
+        equipmentEffects: botlgEffects(),
+        context: { style: "ranged", ruleset: "base" },
+      },
+      { laneIndex: 0, laneCount: 128 },
+    );
+    const balance = rt.byId.get("balance_by_force");
+    const grico = rt.byId.get("greater_ricochet");
+    if (!balance || !grico) throw new Error("missing BotLG rotation abilities");
+
+    const balanceAttempt = performCast(rt, balance, 0, false);
+    if (!balanceAttempt.ok) throw new Error(balanceAttempt.error);
+    const gricoAttempt = performCast(rt, grico, rt.state.tick, false);
+    if (!gricoAttempt.ok) throw new Error(gricoAttempt.error);
+    advanceTo(rt, rt.endTick);
+
+    const gricoHits = rt.events.filter((event) => event.abilityId === "greater_ricochet");
+    const gricoSeqs = new Set(gricoHits.map((event) => event.seq));
+    const gricoPerfectEquilibrium = rt.events.filter(
+      (event) =>
+        event.abilityId === "perfect_equilibrium" &&
+        event.derivedFrom !== undefined &&
+        gricoSeqs.has(event.derivedFrom),
+    );
+    const stackHistory = gricoHits.map(
+      (event) =>
+        event.appliedEffects?.find((effect) => effect.id === "perfect_equilibrium")?.stackCount,
+    );
+
+    expect(
+      rt.events.find((event) => event.abilityId === "balance_by_force")?.appliedEffects,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "perfect_equilibrium", stackCount: 1 }),
+        expect.objectContaining({ id: "balance_by_force", remainingTicks: 50 }),
+      ]),
+    );
+    expect(gricoHits).toHaveLength(7);
+    expect(stackHistory).toEqual([2, 3, 0, 1, 2, 3, 0]);
+    expect(gricoPerfectEquilibrium).toHaveLength(2);
+    expect(rt.state.ranged.perfectEquilibriumStacks).toBe(0);
+  });
+
+  it("counts a direct Inferno blessing hit toward Perfect Equilibrium", () => {
+    const rt = createRuntime(
+      {
+        ...rangedInput,
+        league: unholy,
+        crit: { chance: 1, guaranteed: true },
+        startingAdrenaline: 100,
+        equipmentEffects: botlgEffects(),
+        context: { style: "ranged", ruleset: "equilibrium" },
+      },
+      { laneIndex: 0, laneCount: 128 },
+    );
+    rt.state = patchRanged(rt.state, { perfectEquilibriumStacks: 6 });
+    const ability = rt.byId.get("ranged_attack");
+    if (!ability) throw new Error("missing ranged attack");
+    const attempt = performCast(rt, ability, 0, false);
+    if (!attempt.ok) throw new Error(attempt.error);
+    advanceTo(rt, rt.endTick);
+
+    const parent = rt.events.find((event) => event.abilityId === "ranged_attack");
+    const inferno = rt.events.find((event) => event.abilityId === "inferno-of-zamorak");
+    const pe = rt.events.find(
+      (event) => event.abilityId === "perfect_equilibrium" && event.derivedFrom === inferno?.seq,
+    );
+
+    expect(parent?.appliedEffects).toContainEqual(
+      expect.objectContaining({ id: "perfect_equilibrium", stackCount: 7 }),
+    );
+    expect(inferno).toBeDefined();
+    expect(inferno?.appliedEffects).toContainEqual(
+      expect.objectContaining({ id: "perfect_equilibrium", stackCount: 0 }),
+    );
+    expect(pe).toBeDefined();
+  });
+
+  it("counts a PE proc as a landed hit for active Imbue Shadows", () => {
+    const run = (expiresAtTick: number) => {
+      const rt = createRuntime(
+        {
+          ...rangedInput,
+          league: undefined,
+          crit: { chance: 0 },
+          startingAdrenaline: 0,
+          equipmentEffects: botlgEffects(),
+          context: { style: "ranged", ruleset: "base" },
+        },
+        { laneIndex: 0, laneCount: 128 },
+      );
+      rt.state = patchRanged(rt.state, {
+        perfectEquilibriumStacks: 7,
+        shadowImbued: { expiresAtTick },
+      });
+      const ability = rt.byId.get("ranged_attack");
+      if (!ability) throw new Error("missing ranged attack");
+      const attempt = performCast(rt, ability, 0, false);
+      if (!attempt.ok) throw new Error(attempt.error);
+      advanceTo(rt, rt.endTick);
+      return rt;
+    };
+
+    const inactive = run(0);
+    const active = run(50);
+    expect(active.events.filter((event) => event.abilityId === "perfect_equilibrium")).toHaveLength(
+      1,
+    );
+    expect(active.state.adrenaline - inactive.state.adrenaline).toBe(10);
   });
 
   it("uses BotLG's explicit ammunition origin for one landed PE state update", () => {
@@ -379,7 +498,7 @@ describe("Perfect Equilibrium runtime", () => {
       {
         ...rangedInput,
         ammunition: testRangedAmmunition("wen"),
-        league: unholy,
+        league: undefined,
         crit: { chance: 1 },
         startingAdrenaline: 100,
         equipmentEffects: botlgEffects(),

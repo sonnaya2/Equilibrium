@@ -67,10 +67,14 @@ test("rotation solver starts, shows progress, and cancel leaves no verified resu
 test("uncached rotation analysis stays responsive and returns a worker result", async ({
   page,
 }) => {
-  await page.getByRole("button", { name: "Buffs", exact: true }).click();
-  const vulnerability = page.getByRole("checkbox", { name: /Vulnerability/ });
+  await page.getByRole("tab", { name: "Loadout", exact: true }).click();
+  await page.getByRole("button", { name: "Show all active effects", exact: true }).click();
+  const effects = page.getByRole("dialog", { name: "Active effects" });
+  const vulnerability = effects.getByRole("checkbox", { name: /Vulnerability/ });
   await vulnerability.check();
   await expect(vulnerability).toBeChecked();
+  await effects.getByRole("button", { name: "Close loadout editor" }).click();
+  await expect(effects).toBeHidden();
 
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await page.getByTestId("revo-run-duration").fill("67");
@@ -92,7 +96,7 @@ test("uncached rotation analysis stays responsive and returns a worker result", 
   const framesAfter = Number(await page.locator("html").getAttribute("data-run-frames"));
   expect(framesAfter - framesBefore).toBeGreaterThan(5);
 
-  await expect(page.getByText("Fixed-window DPS", { exact: true })).toBeVisible({
+  await expect(page.getByText("DPS", { exact: true })).toBeVisible({
     timeout: 25_000,
   });
   await expect(page.getByTestId("revo-run-worker-error")).toHaveCount(0);

@@ -176,13 +176,16 @@ describe("concrete Unholy Critual runtime", () => {
   });
 
   it("keeps DoT and poison provenance out of Critual", () => {
-    const result = simulate({
-      ...rangedInput,
-      league: unholy,
-      crit: { chance: 0.5 },
-      context: { style: "ranged", ruleset: "equilibrium" },
-      rotation: rotationOf("ranged_attack", "corruption_shot"),
-    });
+    const result = simulate(
+      {
+        ...rangedInput,
+        league: unholy,
+        crit: { chance: 0.5 },
+        context: { style: "ranged", ruleset: "equilibrium" },
+        rotation: rotationOf("ranged_attack", "corruption_shot"),
+      },
+      { stochasticLanes: 128 },
+    );
     expect(
       result.events
         .filter((event) => event.abilityId === "corruption_shot" || event.family === "poison")

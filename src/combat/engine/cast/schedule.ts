@@ -40,6 +40,7 @@ export function scheduleCastEvents(
     refund: 0,
     adrenalineGained: 0,
     ...(auto ? { auto: true as const } : {}),
+    ...(snap.surgingStormAtCast ? { surgingStormAtCast: true as const } : {}),
   };
   rt.recordBySeq.set(castSeq, record);
 

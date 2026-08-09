@@ -11,6 +11,7 @@ import {
   createRuntime,
   createRuntimeSharedCaches,
   prepareRuntimeInput,
+  resolveAutoSpecialIds,
   type RuntimeSharedCaches,
 } from "../runtime/runtime";
 import type { RotationState } from "../runtime/state";
@@ -39,6 +40,7 @@ function revoAbilityLegal(
   byId: ReadonlyMap<string, AbilitySpec>,
   league: ResolvedLeagueRules | undefined,
   activeWeapon: { specialAttackId?: string | null } | undefined,
+  eofStoredSpecialId: string | null | undefined,
 ): boolean {
   return (
     firstLegalTickFor(state, ability, level) <= state.tick &&
@@ -52,6 +54,7 @@ function revoAbilityLegal(
       byId,
       league,
       activeWeapon,
+      eofStoredSpecialId,
     ) === null
   );
 }
@@ -81,6 +84,7 @@ function revoReadyCastAbility(
     passiveIds: input.equipmentEffects?.passiveIds,
     league: input.league,
     activeWeapon: input.equipmentEffects?.activeWeapon,
+    eofStoredSpecialId: input.eofStoredSpecialId,
   });
   const legal = (ability: AbilitySpec) =>
     revoAbilityLegal(
@@ -93,6 +97,7 @@ function revoReadyCastAbility(
       byId,
       input.league,
       input.equipmentEffects?.activeWeapon,
+      input.eofStoredSpecialId,
     );
 
   const morphIds = REVO_CONJURE_COMMAND_MORPH[castAbility.id];
@@ -153,32 +158,35 @@ function simulateRevolutionLane(
   let guard = 0;
   const maxCasts = Math.max(input.durationTicks * 2, 64);
   const nativeSpecialNextAutoTick = new Map<string, number>();
+  const autoSpecialSet = new Set(rt.nativeSpecials.map((spec) => spec.id));
   while (lane.error === undefined && rt.state.tick < input.durationTicks) {
     if (++guard > maxCasts) {
       lane.error = `revolution stalled at tick ${rt.state.tick}: cast guard exceeded`;
       break;
     }
     let ready: AbilitySpec | undefined;
-    const nativeSpecial = rt.nativeSpecial;
-    const nativeSpecialAutoTick = nativeSpecial
-      ? (nativeSpecialNextAutoTick.get(nativeSpecial.id) ?? rt.state.tick)
-      : Number.POSITIVE_INFINITY;
-    if (
-      nativeSpecial &&
-      rt.state.tick >= nativeSpecialAutoTick &&
-      revoAbilityLegal(
-        rt.state,
-        nativeSpecial,
-        input.level,
-        input.weaponConfiguration,
-        input.equipmentIds,
-        input.equipmentEffects?.passiveIds,
-        rt.byId,
-        input.league,
-        input.equipmentEffects?.activeWeapon,
-      )
-    ) {
-      ready = rt.nativeSpecial;
+    // Weapon special first, then distinct EoF store when weapon is on CD / illegal.
+    for (const nativeSpecial of rt.nativeSpecials) {
+      const nativeSpecialAutoTick =
+        nativeSpecialNextAutoTick.get(nativeSpecial.id) ?? rt.state.tick;
+      if (
+        rt.state.tick >= nativeSpecialAutoTick &&
+        revoAbilityLegal(
+          rt.state,
+          nativeSpecial,
+          input.level,
+          input.weaponConfiguration,
+          input.equipmentIds,
+          input.equipmentEffects?.passiveIds,
+          rt.byId,
+          input.league,
+          input.equipmentEffects?.activeWeapon,
+          input.eofStoredSpecialId,
+        )
+      ) {
+        ready = nativeSpecial;
+        break;
+      }
     }
     for (const barAbility of input.bar) {
       if (ready) break;
@@ -197,7 +205,7 @@ function simulateRevolutionLane(
     const castTick = rt.state.tick;
     const automaticNativeSpecial =
       ready !== undefined &&
-      nativeSpecial?.id === ready.id &&
+      autoSpecialSet.has(ready.id) &&
       ready.minimumAutomaticRecastTicks != null;
     const attempt = performCast(rt, ability, castTick, ready === undefined);
     if (!attempt.ok) lane.error = attempt.error;
@@ -212,15 +220,10 @@ export function simulateRevolution(
   input: RevolutionInput,
   options?: SimulateOptions,
 ): RotationSummary {
+  const autoSpecialIds = resolveAutoSpecialIds(input);
   const laneCount = stochasticLaneCount(
     input,
-    [
-      ...input.bar.map((ability) => ability.id),
-      ...(input.nativeSpecialPolicy?.useEquippedWeaponSpecial === true &&
-      input.equipmentEffects?.activeWeapon?.specialAttackId
-        ? [input.equipmentEffects.activeWeapon.specialAttackId]
-        : []),
-    ],
+    [...input.bar.map((ability) => ability.id), ...autoSpecialIds],
     options?.stochasticLanes,
   );
   const runtimeInput = prepareRuntimeInput({

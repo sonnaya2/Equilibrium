@@ -79,7 +79,7 @@ export interface AbilitySpec {
   id: string;
   name: string;
   style: "melee" | "ranged" | "magic" | "necromancy";
-  category: "basic" | "enhanced" | "ultimate" | "utility";
+  category: "basic" | "enhanced" | "threshold" | "ultimate" | "utility";
   hits: AbilityHit[];
   /** Canonical player DoT metadata used by Tearing Thorns. */
   tearingThornsEligible?: boolean;
@@ -95,7 +95,7 @@ export interface AbilitySpec {
   weaponSpecial?: boolean;
   /**
    * When true, cast requires a native weapon with specialAttackId === ability.id
-   * or Essence of Finality equipped (stored special / EoF access).
+   * or Essence of Finality with a matching stored special id.
    * Weapon specials that are always available via style alone leave this unset/false.
    */
   requiresSpecialAccess?: boolean;
@@ -124,7 +124,7 @@ export interface AbilitySpec {
     /** Fully unlocked max (2 for stun basics). */
     max: number;
     /**
-     * Style level for second charge (54). When player level < this, max is 1.
+     * Style level for second charge. When player level < this, max is 1.
      * Product default level is 120 -> 2 charges.
      */
     secondChargeLevel?: number;
@@ -162,6 +162,11 @@ export interface AbilitySpec {
   bleedDurationExtension?: {
     equipmentPassive: "masterwork-spear-bleed-extension";
   };
+  /**
+   * Flat bleed hits already in the list (Strength cape on Dismember).
+   * Excluded from spear floor(n*0.5) so cape+spear totals 15, not 16.
+   */
+  flatBleedHitBonus?: number;
   /**
    * Hits derived from the resolved first hit at a fraction of it (Bloat tails,
    * Death Skulls bounces, Corruption). They inherit the source hit's crit-
@@ -209,10 +214,14 @@ export function calculateAbility(
     critByHit?: readonly Omit<CritLayers, "eligible">[];
   },
 ): AbilityResult {
+  // Wiki hit chance: Sunshine / Greater Sunshine zone DoT uses full Damage Potential.
+  const accuracy =
+    ability.id === "sunshine" || ability.id === "greater_sunshine" ? 1 : input.accuracy;
   const hits = ability.hits.map((hit, index) => {
     const { damageSource, provenance } = hitProvenance(ability, hit);
     return calculateHit({
       ...input,
+      accuracy,
       band: hit.band,
       crit: { ...(input.critByHit?.[index] ?? input.crit), eligible: hit.critEligible ?? true },
       provenance,

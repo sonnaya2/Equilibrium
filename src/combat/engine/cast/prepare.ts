@@ -47,6 +47,7 @@ import type { CastSnapshot } from "./snapshot";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { secondsToTicks } from "../../core/ticks";
 import { GLOBAL_COOLDOWN_TICKS } from "../runtime/timing";
+import { igneousShowdownHits, IGNEOUS_SHOWDOWN_REPEAT_REFUND } from "../../styles/melee/ekZekKil";
 import { balanceByForceTriggersPerfectEquilibrium } from "../../styles/ranged/botlg";
 import { prepareWenArrowCast, type WenArrowState } from "../../styles/ranged/wen";
 import {
@@ -101,6 +102,8 @@ export type PreparedTransition =
   | { kind: "consumeEnduringRuin" }
   /** Icy Tempest spends all Primordial Ice stacks on cast. */
   | { kind: "consumePrimordialIce"; next: PrimordialIceDistribution }
+  /** Showdown designates the single primary target before its hits land. */
+  | { kind: "designateFlameboundRival" }
   /** Balance by Force consumes the pre-cast Perfect Equilibrium trigger. */
   | { kind: "consumePerfectEquilibrium" }
   /** A 10-stack Wen spender starts Icy Precision at cast time. */
@@ -128,6 +131,8 @@ export interface PreparedCast {
   occupancyTicks: number;
   flowReduction?: number;
   channelAsDot: boolean;
+  /** Fixed repeat Showdown refund, separate from Ring and Relentless. */
+  specialRefund: number;
   snap: CastSnapshot;
   transitions: readonly PreparedTransition[];
 }
@@ -254,8 +259,17 @@ export function prepareCast(
       hits: selectedIcyTempestOutcome.hits.map((h) => ({ band: { ...h.band } })),
     };
   }
+  const physicalAshenVow =
+    input.equipmentEffects?.activeWeapon?.passiveIds.includes("ashen-vow") === true;
   const perfectEquilibriumAtCast =
     input.equipmentEffects?.activeWeapon?.passiveIds.includes("perfect-equilibrium") === true;
+  const igneousShowdownRepeat =
+    ability.id === "igneous_showdown" &&
+    physicalAshenVow &&
+    rt.state.target.melee.flameboundRival === true;
+  if (ability.id === "igneous_showdown") {
+    working = { ...working, hits: igneousShowdownHits(igneousShowdownRepeat) };
+  }
   const perfectEquilibriumTrigger =
     ability.id === "balance_by_force" &&
     balanceByForceTriggersPerfectEquilibrium({
@@ -435,6 +449,8 @@ export function prepareCast(
     magicWeaponAtCast: input.equipmentEffects?.activeWeapon?.style === "magic",
     surgingStormAtCast:
       input.equipmentEffects?.activeWeapon?.passiveIds.includes("surging-storm") === true,
+    ashenVowAtCast: physicalAshenVow,
+    igneousShowdownRepeat,
     perfectEquilibriumAtCast,
     perfectEquilibriumTrigger,
     wenIcyPrecisionDamageAtCast: wen.snapshot.damageActive,
@@ -462,6 +478,9 @@ export function prepareCast(
       next: selectedIcyTempestOutcome!.postCastPrimordialIce,
     });
   }
+  if (ability.id === "igneous_showdown") {
+    transitions.push({ kind: "designateFlameboundRival" });
+  }
   if (perfectEquilibriumTrigger) transitions.push({ kind: "consumePerfectEquilibrium" });
   if (wen.nextState) transitions.push({ kind: "activateWenIcyPrecision", next: wen.nextState });
   if (songConflagrateActive) transitions.push({ kind: "consumeSongConflagrate" });
@@ -482,6 +501,9 @@ export function prepareCast(
     input.ammunition,
     selectedIcyTempestOutcome,
   );
+  const specialRefund = igneousShowdownRepeat
+    ? IGNEOUS_SHOWDOWN_REPEAT_REFUND * (candidate < rt.state.naturalInstinctUntilTick ? 2 : 1)
+    : 0;
 
   return {
     ability,
@@ -494,6 +516,7 @@ export function prepareCast(
       : (working.channelTicks ?? GLOBAL_COOLDOWN_TICKS),
     ...(flowReduction !== undefined ? { flowReduction } : {}),
     channelAsDot: endlessAssaultConsume,
+    specialRefund,
     snap,
     transitions,
   };

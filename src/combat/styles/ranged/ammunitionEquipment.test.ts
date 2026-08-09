@@ -114,9 +114,7 @@ describe("canonical equipment ammunition adapter", () => {
         ammunitionCapability: { mode: "required", acceptedFamily: "bolts" },
       }),
     ).toEqual({ mode: "required", acceptedFamily: "bolts" });
-    expect(
-      weaponAmmunitionCapabilityFromEquipment({ id: "item:test-missing-capability" }),
-    ).toBeNull();
+    expect(weaponAmmunitionCapabilityFromEquipment({ id: "item:test-missing-capability" })).toBeNull();
   });
 
   it("classifies shipped standard crossbows as required-bolt weapons", () => {

@@ -100,7 +100,17 @@ export interface LeagueCritualStats {
   convertedChance: number;
 }
 
-const CRITUAL_EFFECTIVE_CHANCE_CAP = 0.5;
+const CRITUAL_EFFECTIVE_CHANCE_CAP_DEFAULT = 0.5;
+
+function critualEffectiveChanceCap(rule: {
+  effectiveChanceCap?: number;
+}): number {
+  const cap = rule.effectiveChanceCap;
+  if (typeof cap === "number" && Number.isFinite(cap) && cap > 0) {
+    return Math.min(1, cap);
+  }
+  return CRITUAL_EFFECTIVE_CHANCE_CAP_DEFAULT;
+}
 
 function critChanceEquivalent(layers: CritLayers): number {
   if (layers.eligible === false || layers.disabled) return 0;
@@ -128,13 +138,16 @@ export function resolveLeagueCritualStats(
       convertedChance: 0,
     };
   }
+  const cap = critualEffectiveChanceCap(rule);
+  const excessRatio =
+    typeof rule.excessCritDamageRatio === "number" && Number.isFinite(rule.excessCritDamageRatio)
+      ? Math.max(0, rule.excessCritDamageRatio)
+      : 1;
   const uncappedChance = raw + Math.max(0, rule.chanceBonus);
-  const effectiveChance = disabled
-    ? 0
-    : Math.min(CRITUAL_EFFECTIVE_CHANCE_CAP, Math.max(0, uncappedChance));
+  const effectiveChance = disabled ? 0 : Math.min(cap, Math.max(0, uncappedChance));
   const convertedChance = disabled
     ? 0
-    : Math.max(0, uncappedChance - CRITUAL_EFFECTIVE_CHANCE_CAP) * rule.excessCritDamageRatio;
+    : Math.max(0, uncappedChance - cap) * excessRatio;
   return { uncappedChance, effectiveChance, convertedChance };
 }
 
@@ -145,6 +158,11 @@ export function resolveLeagueCritAtLand(
   // current is the complete chance layer set after all land-time bonuses.
   const rule = blessingRule(rules, "unholy-critual")?.unholyCritual;
   if (!rule || current.disabled || current.eligible === false) return current;
+  const cap = critualEffectiveChanceCap(rule);
+  const excessRatio =
+    typeof rule.excessCritDamageRatio === "number" && Number.isFinite(rule.excessCritDamageRatio)
+      ? Math.max(0, rule.excessCritDamageRatio)
+      : 1;
   const existingConverted = Math.max(0, current.critualConvertedDamageBonus ?? 0);
   const nonCritualDamageBonus = Math.max(0, (current.damageBonus ?? 0) - existingConverted);
   const uncappedChance = current.guaranteed
@@ -152,9 +170,8 @@ export function resolveLeagueCritAtLand(
     : existingConverted > 0
       ? Math.max(0, current.chance) + existingConverted
       : critChanceEquivalent(current);
-  const effectiveChance = Math.min(CRITUAL_EFFECTIVE_CHANCE_CAP, uncappedChance);
-  const convertedChance =
-    Math.max(0, uncappedChance - CRITUAL_EFFECTIVE_CHANCE_CAP) * rule.excessCritDamageRatio;
+  const effectiveChance = Math.min(cap, uncappedChance);
+  const convertedChance = Math.max(0, uncappedChance - cap) * excessRatio;
   return {
     ...current,
     chance: effectiveChance,

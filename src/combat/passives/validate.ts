@@ -34,6 +34,7 @@ export const ITEM_PASSIVE_IDS: readonly ItemPassiveId[] = [
   "blowpipe-weapon-poison",
   "laniakea-weapon-poison",
   "surging-storm",
+  "ashen-vow",
   "perfect-equilibrium",
 ];
 

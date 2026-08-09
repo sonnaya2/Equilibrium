@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
+import { bandOf } from "../../core/abilityDamage";
 import { mulFloor } from "../../core/rounding";
 import {
   ESSENCE_CORRUPTION_DURATION_TICKS,
   ESSENCE_CORRUPTION_SOURCE,
   ESSENCE_CORRUPTION_STACK_CAP,
+  SONG_TWO_PIECE_DAMAGE_MULTIPLIER,
   SOULFIRE_ABILITY,
   activeEssenceCorruptionStacks,
   essenceCorruptionFlatBonus,
@@ -16,7 +18,13 @@ import {
   songOfDestructionSummary,
 } from "./songOfDestruction";
 import { MAGIC_ABILITIES } from "./abilities";
-import type { DamageProvenanceKind } from "../../shared/damageProvenance";
+import {
+  isTrueDotDamage,
+  outgoingSourceOf,
+  provenanceForCastHit,
+  type DamageProvenanceKind,
+} from "../../shared/damageProvenance";
+import { calculateAbility } from "../../pipeline/calculateAbility";
 import { calculateHit, calculateHitWithAttached } from "../../pipeline/calculateHit";
 import { abilityBehaviorFingerprint } from "../../shared/abilityFingerprint";
 import { songOfDestructionEquipmentSummary } from "../../shared/equipment";
@@ -183,6 +191,28 @@ describe("Song of Destruction helpers", () => {
     expect(damage).toBe(mulFloor(mulFloor(101, 1.4), 1.3));
   });
 
+  // Wiki Soulfire: opener is direct; Song 2pc is DoT-only (no 1.3 on that hit).
+  it("does not apply Song 2pc 1.3 to Soulfire direct opener provenance", () => {
+    const modifiers = songOfDestructionModifiers({
+      summary: twoPiece,
+      ability: SOULFIRE_ABILITY,
+    });
+    const twoPieceDot = modifiers.find((modifier) => modifier.id === "song:two-piece-dot");
+    expect(twoPieceDot).toBeDefined();
+    expect(
+      twoPieceDot!.applies({
+        style: "magic",
+        provenance: { kind: "player_direct" },
+      }),
+    ).toBe(false);
+    expect(
+      twoPieceDot!.applies({
+        style: "magic",
+        provenance: { kind: "player_dot", detail: "burn" },
+      }),
+    ).toBe(true);
+  });
+
   it("exposes Essence as a post-Damage-Potential, pre-cap host term", () => {
     const targetMultiplier = {
       id: "test:target-double",
@@ -238,7 +268,7 @@ describe("Song of Destruction helpers", () => {
     expect(composed.hit.expected).toBe(280);
   });
 
-  it("keeps Soulfire as the Roar native eight-hit special", () => {
+  it("keeps Soulfire as the Roar native seven-hit special (1 direct + 6 DoT)", () => {
     expect(MAGIC_ABILITIES.find(({ id }) => id === "soulfire")).toBe(SOULFIRE_ABILITY);
     expect(SOULFIRE_ABILITY).toMatchObject({
       category: "enhanced",
@@ -249,18 +279,102 @@ describe("Song of Destruction helpers", () => {
       essenceCorruptionEligible: true,
       songAffectedDot: true,
     });
-    expect(SOULFIRE_ABILITY.hits).toHaveLength(8);
-    expect(SOULFIRE_ABILITY.hits.map((hit) => hit.tickOffset ?? 0)).toEqual([0, 3, 6, 9, 12, 15, 18, 21]);
+    // Wiki: opener direct concurrent with first DoT; five more DoTs every 3 ticks.
+    expect(SOULFIRE_ABILITY.hits).toHaveLength(7);
+    expect(SOULFIRE_ABILITY.hits.map((hit) => hit.tickOffset ?? 0)).toEqual([0, 0, 3, 6, 9, 12, 15]);
     expect(SOULFIRE_ABILITY.hits[0]?.band).toEqual({ minPct: 130, maxPct: 160 });
-    expect(SOULFIRE_ABILITY.hits.slice(1).every((hit) => hit.band.minPct === 170 && hit.band.maxPct === 200)).toBe(
-      true,
-    );
-    expect(SOULFIRE_ABILITY.hits.every((hit) => hit.dot && hit.critEligible === false)).toBe(true);
+    expect(SOULFIRE_ABILITY.hits[0]?.dot).toBeUndefined();
+    expect(SOULFIRE_ABILITY.hits[0]?.critEligible).not.toBe(false);
+    expect(
+      SOULFIRE_ABILITY.hits.slice(1).every(
+        (hit) =>
+          hit.band.minPct === 170 &&
+          hit.band.maxPct === 200 &&
+          hit.dot === true &&
+          hit.dotKind === "burn" &&
+          hit.critEligible === false,
+      ),
+    ).toBe(true);
     expect(
       abilityBehaviorFingerprint(SOULFIRE_ABILITY),
     ).not.toBe(
       abilityBehaviorFingerprint({ ...SOULFIRE_ABILITY, requiresSpecialAccess: false }),
     );
+  });
+
+  // Wiki Soulfire: opener direct 130-160% (no Song 2pc); 6 burn DoTs 170-200% get 2pc x1.3.
+  // Residual must exercise applies (pipeline filter), not only modifier.apply on a bare style.
+  it("applies Song 2pc only to true DoT hits on Soulfire (not the direct opener)", () => {
+    const modifiers = songOfDestructionModifiers({
+      summary: twoPiece,
+      ability: SOULFIRE_ABILITY,
+    });
+    const twoPieceDot = modifiers.find((modifier) => modifier.id === "song:two-piece-dot");
+    expect(twoPieceDot).toBeDefined();
+
+    const openerHit = SOULFIRE_ABILITY.hits[0]!;
+    const burnHit = SOULFIRE_ABILITY.hits[1]!;
+    const openerProvenance = provenanceForCastHit({
+      isCommand: false,
+      isDot: openerHit.dot === true || openerHit.dotKind != null,
+      dotKind: openerHit.dotKind,
+    });
+    const burnProvenance = provenanceForCastHit({
+      isCommand: false,
+      isDot: burnHit.dot === true || burnHit.dotKind != null,
+      dotKind: burnHit.dotKind,
+    });
+    const openerContext = {
+      style: "magic" as const,
+      provenance: openerProvenance,
+      damageSource: outgoingSourceOf(openerProvenance),
+      dotKind: openerHit.dotKind,
+    };
+    const burnContext = {
+      style: "magic" as const,
+      provenance: burnProvenance,
+      damageSource: outgoingSourceOf(burnProvenance),
+      dotKind: burnHit.dotKind,
+    };
+
+    expect(openerProvenance).toEqual({ kind: "player_direct" });
+    expect(burnProvenance).toEqual({ kind: "player_dot", detail: "burn" });
+    expect(isTrueDotDamage(openerContext)).toBe(false);
+    expect(isTrueDotDamage(burnContext)).toBe(true);
+    expect(twoPieceDot!.applies(openerContext)).toBe(false);
+    expect(twoPieceDot!.applies(burnContext)).toBe(true);
+    expect(twoPieceDot!.applies({ ...burnContext, style: "melee" })).toBe(false);
+
+    const hitInput = {
+      base: 1000,
+      level: 99,
+      accuracy: 1,
+      crit: { chance: 0 },
+      context: { style: "magic" as const },
+    };
+    const bare = calculateAbility(SOULFIRE_ABILITY, hitInput);
+    const withTwoPiece = calculateAbility(SOULFIRE_ABILITY, {
+      ...hitInput,
+      modifiers,
+    });
+
+    // Opener: same expected with or without 2pc (applies false on player_direct).
+    expect(withTwoPiece.hits[0]!.expected).toBe(bare.hits[0]!.expected);
+    expect(withTwoPiece.hits[0]!.expected).toBe(bandOf(1000, openerHit.band).expected);
+
+    // DoT: independent ability-stage floor oracle (acc 1, no crit, no cap bind).
+    const burnBand = bandOf(1000, burnHit.band);
+    let burnTotal = 0;
+    for (let roll = burnBand.min; roll <= burnBand.max; roll++) {
+      burnTotal += mulFloor(roll, SONG_TWO_PIECE_DAMAGE_MULTIPLIER);
+    }
+    const burnExpectedWithTwoPiece = burnTotal / (burnBand.max - burnBand.min + 1);
+
+    expect(bare.hits.slice(1).every((hit) => hit.expected === burnBand.expected)).toBe(true);
+    expect(
+      withTwoPiece.hits.slice(1).every((hit) => hit.expected === burnExpectedWithTwoPiece),
+    ).toBe(true);
+    expect(burnExpectedWithTwoPiece).toBeGreaterThan(burnBand.expected);
   });
 
   it("creates concrete lane-local Song state", () => {

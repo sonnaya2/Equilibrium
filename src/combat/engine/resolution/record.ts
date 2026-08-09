@@ -9,7 +9,42 @@ import { applyBlessingDamage } from "./league/blessingDamage";
 import { applyLeagueLandedHitEffects } from "./landed/league";
 import { noteAttachedTermsResolved } from "../../profiling/allocation";
 import { applyDeathMarkLanded } from "./landed/deathMark";
+import { scheduleInstabilityLightningSurge } from "./landed/magic";
 import { applyBotlgLanded } from "./botlg";
+
+/** Host or component band mean for a concrete Crit / No-crit outcome. */
+function branchExpected(
+  hitDetail: NonNullable<EventResolution["hitDetail"]>,
+  outcome: boolean,
+): number {
+  if (outcome) return hitDetail.critExpected ?? hitDetail.expected;
+  return hitDetail.nonCritExpected ?? hitDetail.expected;
+}
+
+/**
+ * Pin one damage payload to the matching band mean.
+ * hitDetail must be the pure host (or pure component) means - not a total that
+ * already folds attached riders. Callers rebuild totals from host + components.
+ */
+function pinDamage(
+  damage: EventResolution["damage"],
+  hitDetail: EventResolution["hitDetail"],
+  outcome: boolean,
+): EventResolution["damage"] {
+  const criticalBase = { ...damage.critical!, outcome };
+  if (!hitDetail) return { ...damage, critical: criticalBase };
+  const hostBranch = branchExpected(hitDetail, outcome);
+  const excess = Math.max(0, hitDetail.critExpected - (hitDetail.nonCritExpected ?? 0));
+  return {
+    ...damage,
+    expected: hostBranch,
+    critExpected: hitDetail.critExpected,
+    critical: {
+      ...criticalBase,
+      contribution: outcome ? excess : 0,
+    },
+  };
+}
 
 function materializeCriticalOutcome(
   rt: SimulationRuntime,
@@ -20,35 +55,79 @@ function materializeCriticalOutcome(
   const existingOutcome = resolution.damage.critical?.outcome;
   const critical = resolution.damage.critical;
   if (!critical || critical.mode === "none") return resolution;
+  // Always sample (or inherit) a concrete Crit/No-crit outcome, then pin damage
+  // to that band mean. Single-lane oracle hash-samples real uniforms so bernoulli(p)
+  // is ~p (not the old stratified mid-bin trap of uniform always 0.5).
+  // Forced chain outcomes (Inferno terminals) arrive as existingOutcome.
   const outcome =
     existingOutcome ??
     inheritedOutcome ??
     (critical.mode === "guaranteed"
       ? true
-      : rt.stochastic.bernoulli(`land:critical:${event.seq}`, critical.chance));
-  const damage = {
-    ...resolution.damage,
-    critical: { ...critical, outcome },
-  };
-  const hitDetail = resolution.hitDetail
-    ? { ...resolution.hitDetail, critOutcome: outcome }
-    : undefined;
+      : critical.chance <= 0
+        ? false
+        : critical.chance >= 1
+          ? true
+          : rt.stochastic.bernoulli(`land:critical:${event.seq}`, critical.chance));
+
   const components = resolution.components?.map((component) => {
     const componentCritical = component.damage.critical;
+    if (!componentCritical || componentCritical.mode === "none") {
+      // Shared riders without their own crit package still inherit the host outcome
+      // when they carry hitDetail (Big Boned inherits host crit).
+      if (!component.hitDetail) return component;
+      const pinned = branchExpected(component.hitDetail, outcome);
+      return {
+        ...component,
+        hitDetail: { ...component.hitDetail, critOutcome: outcome, expected: pinned },
+        damage: {
+          ...component.damage,
+          expected: pinned,
+          critExpected: component.hitDetail.critExpected ?? component.damage.critExpected,
+        },
+      };
+    }
+    const componentOutcome = componentCritical.outcome ?? outcome;
+    const componentHitDetail = component.hitDetail
+      ? {
+          ...component.hitDetail,
+          critOutcome: componentOutcome,
+          expected: branchExpected(component.hitDetail, componentOutcome),
+        }
+      : component.hitDetail;
     return {
       ...component,
-      hitDetail: component.hitDetail
-        ? { ...component.hitDetail, critOutcome: outcome }
-        : component.hitDetail,
-      damage: componentCritical
-        ? { ...component.damage, critical: { ...componentCritical, outcome } }
-        : component.damage,
+      hitDetail: componentHitDetail,
+      damage: pinDamage(component.damage, component.hitDetail, componentOutcome),
     };
   });
+
+  const hostHitDetail = resolution.hitDetail
+    ? {
+        ...resolution.hitDetail,
+        critOutcome: outcome,
+        expected: branchExpected(resolution.hitDetail, outcome),
+      }
+    : undefined;
+
+  // Rebuild total from pure host band + every attached component (shared and separate).
+  // hitDetail must be pure host (castHit / Inferno baseHit). Do not host-slice
+  // replace on damage.expected - that leaves attached riders at EV mass.
+  let damage = pinDamage(resolution.damage, resolution.hitDetail, outcome);
+  if (components && components.length > 0 && resolution.hitDetail) {
+    let total = branchExpected(resolution.hitDetail, outcome);
+    let critTotal = resolution.hitDetail.critExpected;
+    for (const component of components) {
+      total += component.damage.expected;
+      critTotal += component.damage.critExpected ?? component.damage.expected;
+    }
+    damage = { ...damage, expected: total, critExpected: critTotal };
+  }
+
   return {
     ...resolution,
     damage,
-    ...(hitDetail ? { hitDetail } : {}),
+    ...(hostHitDetail ? { hitDetail: hostHitDetail } : {}),
     ...(components ? { components } : {}),
   };
 }
@@ -117,6 +196,9 @@ export function recordResolved(
       event.bleedId != null)
   ) {
     applyLandedHitEffects(rt, event, damage, composed);
+  } else if (event.family === "blessing" && event.lightningSurge) {
+    // Magic-style blessing crits (Light/Inferno) are not bar AbilitySpecs; LS only.
+    scheduleInstabilityLightningSurge(rt, event);
   }
 
   releaseScoreOnlyHitDetails(rt, event);

@@ -3,6 +3,7 @@ import {
   channelledMightCritBonus,
   LIGHTNING_SURGE_BAND,
   lightningSurgeExpected,
+  lightningSurgeSourceWeight,
   sunshineActive,
 } from "../../styles/magic/effects";
 import type { SimulationRuntime } from "../runtime/runtime";
@@ -33,7 +34,8 @@ export function resolveLightningSurge(
   sourceSeq: number,
 ): EventResolution {
   const { input, state } = rt;
-  const sourceCritChance = rt.hitDetails.get(sourceSeq)?.critChance ?? 0;
+  // Same weight as schedule: concrete critOutcome or EV post-league critChance.
+  const sourceCritChance = lightningSurgeSourceWeight(rt.hitDetails.get(sourceSeq));
   if (sourceCritChance <= 0) return NO_DAMAGE;
   const baseMods =
     typeof input.modifiers === "function"
@@ -55,6 +57,8 @@ export function resolveLightningSurge(
     enduringRuinBonus: 0,
     magicWeaponAtCast: false,
     surgingStormAtCast: false,
+    ashenVowAtCast: false,
+    igneousShowdownRepeat: false,
     perfectEquilibriumAtCast: false,
     wenIcyPrecisionDamageAtCast: false,
     wenIcyPrecisionDamagePotentialAtCast: false,
@@ -118,34 +122,43 @@ export function resolveLightningSurge(
     cap: input.cap,
     ...(essenceFlat > 0 ? { postDamagePotentialFlat: essenceFlat } : {}),
   });
+  // Pure host for materialize (same contract as castHit / Inferno). Shared riders
+  // stay in components; hitDetail must not already include them.
+  const base = host.baseHit;
+  const components = host.components.map((component) =>
+    attachedResolutionComponent(component, sourceCritChance, 0, 0),
+  );
+  let expected = lightningSurgeExpected(sourceCritChance, base.expected);
+  let critExpected = lightningSurgeExpected(sourceCritChance, base.critExpected);
+  let capLoss = lightningSurgeExpected(sourceCritChance, base.capLoss);
+  for (const component of components) {
+    expected += component.damage.expected;
+    critExpected += component.damage.critExpected ?? component.damage.expected;
+    capLoss += component.damage.capLoss ?? 0;
+  }
   return {
     damage: {
       min: 0,
       max: 0,
-      expected: lightningSurgeExpected(sourceCritChance, host.hit.expected),
-      capLoss: lightningSurgeExpected(sourceCritChance, host.hit.capLoss),
+      expected,
+      critExpected,
+      capLoss,
       critical: packageCritical(
-        host.hit.critChance,
-        host.hit.critExpected,
-        host.hit.nonCritExpected,
+        base.critChance,
+        base.critExpected,
+        base.nonCritExpected,
         { scale: sourceCritChance },
       ),
     },
-    hitDetail: host.hit,
-    ...(host.hit.postDamagePotentialFlatContribution !== undefined
+    hitDetail: base,
+    ...(base.postDamagePotentialFlatContribution !== undefined
       ? {
           postDamagePotentialFlatContribution: lightningSurgeExpected(
             sourceCritChance,
-            host.hit.postDamagePotentialFlatContribution,
+            base.postDamagePotentialFlatContribution,
           ),
         }
       : {}),
-    ...(host.components.length > 0
-      ? {
-          components: host.components.map((component) =>
-            attachedResolutionComponent(component, sourceCritChance, 0, 0),
-          ),
-        }
-      : {}),
+    ...(components.length > 0 ? { components } : {}),
   };
 }

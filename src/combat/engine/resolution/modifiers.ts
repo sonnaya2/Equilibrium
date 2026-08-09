@@ -27,6 +27,7 @@ import {
 } from "../../shared/equipment";
 import { FROSTBLADES_AD_FRACTION } from "../../styles/melee/effects";
 import { activeFrostbladesMass } from "../../styles/melee/primordialIce";
+import { ashenVowModifier } from "../../styles/melee/ekZekKil";
 import { WEN_ICY_PRECISION_DAMAGE_MULTIPLIER } from "../../styles/ranged/wen";
 import {
   NO_SONG_OF_DESTRUCTION,
@@ -108,6 +109,15 @@ export function landTimeModifiers(
     !modifiers.some((modifier) => modifier.id === "item:frostblades")
   ) {
     modifiers.push(frostbladesModifier(Math.floor(rt.input.base * FROSTBLADES_AD_FRACTION)));
+  }
+  if (
+    snap.ashenVowAtCast &&
+    ability.style === "melee" &&
+    !isDot &&
+    provenance?.kind === "player_direct" &&
+    state.target.melee.flameboundRival
+  ) {
+    modifiers.push(ashenVowModifier());
   }
   if (
     equipment?.amHejDamageBonus &&

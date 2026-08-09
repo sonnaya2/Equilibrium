@@ -11,9 +11,10 @@ const enabled = process.env.SOLVER_STOCHASTIC_BENCH === "1";
 const scenarioId = process.env.SOLVER_BENCH_SCENARIO ?? "short-score";
 const caseId = process.env.SOLVER_BENCH_CASE ?? "league-poison-melee";
 
+// Post F3: BF no longer buffs true DoTs (poison included). Measured 2026-08-09.
 const retiredExactOracle = {
-  totalExpected: 39_106.39415772694,
-  playerPoisonHostExpectedDamage: 4_499.315,
+  totalExpected: 38_863.23158600931,
+  playerPoisonHostExpectedDamage: 4_371.5,
 };
 
 describe("stochastic migration parity", () => {

@@ -29,6 +29,9 @@ import { useBuild as useLeagueBuild } from "@/league/useBuild";
 import { unlockedRegions } from "@/league";
 import type { ResolvedCombatModel } from "@/combat/model";
 import { SLIVER_OF_EDICTS_ID } from "@/combat/league/naragiEdict";
+import { hasEssenceOfFinalityEquipped } from "@/combat/shared/requirements";
+import { eofStorableSpecials } from "@/combat/shared/eofStoredSpecials";
+import { normalizeEofStoredSpecialId } from "./loadout/model";
 import {
   applyLoadoutVariantsToSlots,
   barOptionLabel,
@@ -44,6 +47,7 @@ import { CombatFrame } from "./CombatFrame";
 import { RevoBarGraphic } from "./RevoBarGraphic";
 import { RevoBarLibraryPanel } from "./RevoBarLibraryPanel";
 import { RevoSolverSection } from "./RevoSolverSection";
+import { CalculationAssumptions } from "./CalculationAssumptions";
 import { RevoRunResults } from "./RevoRunResults";
 import { useRevolutionSolver } from "./useRevolutionSolver";
 import "./revo-solver.css";
@@ -287,13 +291,7 @@ export function RevolutionPanel({
     setShowAllCasts(false);
     setAnalysisOpen(false);
     setRunError(null);
-
-    const cached = getUiRunCache(runKey);
-    if (cached) {
-      setResult(cached.summary);
-      setResultKey(runKey);
-      return;
-    }
+    // Always re-sim on click; cache only hydrates when the run key changes.
 
     const durationTicks = secondsToTicks(clampRunDurationSeconds(durationSeconds));
     const gen = ++runGenRef.current;
@@ -549,8 +547,8 @@ export function RevolutionPanel({
         </section>
       </CombatFrame>
 
-      <CombatFrame as="aside" className="revo-status-rail" aria-label="Run control status">
-        <h2>Run control &amp; status</h2>
+      <CombatFrame as="aside" className="revo-status-rail" aria-label="Run status">
+        <h2>Run status</h2>
         <label className="revo-status-control">
           <span>Duration</span>
           <span>
@@ -581,9 +579,34 @@ export function RevolutionPanel({
               }
             />
             <span>
-              <strong>Use equipped weapon special manually</strong>
-              <small>Fires it when legal.</small>
+              <strong>Use equipped / EoF stored special</strong>
+              <small>
+                Weapon special first; EoF store when the weapon special is on cooldown.
+              </small>
             </span>
+          </label>
+        ) : null}
+        {setLoadout && hasEssenceOfFinalityEquipped(loadout.equipmentIds) ? (
+          <label className="revo-status-control" data-testid="eof-stored-special">
+            <span>EoF stored special</span>
+            <select
+              value={loadout.eofStoredSpecialId ?? ""}
+              aria-label="Essence of Finality stored special"
+              onChange={(event) => {
+                const next = event.target.value || null;
+                setLoadout((prev) => ({
+                  ...prev,
+                  eofStoredSpecialId: normalizeEofStoredSpecialId(prev.equipmentIds, next),
+                }));
+              }}
+            >
+              <option value="">None (fail-closed)</option>
+              {eofStorableSpecials().map((spec) => (
+                <option key={spec.id} value={spec.id}>
+                  {spec.name}
+                </option>
+              ))}
+            </select>
           </label>
         ) : null}
         <div className="revo-status-actions">
@@ -618,16 +641,21 @@ export function RevolutionPanel({
         </div>
         <dl>
           <div>
-            <dt>Duration</dt>
-            <dd>{durationSeconds}s</dd>
-          </div>
-          <div>
             <dt>Horizon</dt>
-            <dd>{plannedTicks > 0 ? `${plannedTicks} ticks` : "—"}</dd>
+            <dd>
+              {plannedTicks > 0 ? `${plannedTicks} ticks` : "—"}
+              <span className="revo-muted"> · {durationSeconds}s</span>
+            </dd>
           </div>
           <div>
             <dt>Status</dt>
             <dd>{statusLabel}</dd>
+          </div>
+          <div>
+            <dt>Hit cap</dt>
+            <dd data-testid="revo-run-hit-cap">
+              {loadout.hitCapEnabled ? "On (30,000)" : "Off"}
+            </dd>
           </div>
           <div>
             <dt>Active bar</dt>
@@ -635,7 +663,7 @@ export function RevolutionPanel({
           </div>
           <div>
             <dt>Solver proof</dt>
-            <dd>{solver.solverResult?.proofLabel ?? "Not available"}</dd>
+            <dd>{solver.solverResult?.proofLabel ?? "—"}</dd>
           </div>
         </dl>
         <section aria-labelledby="revo-adren-title">
@@ -664,9 +692,21 @@ export function RevolutionPanel({
               ))}
             </ul>
           ) : (
-            <small>No current warnings.</small>
+            <small>None</small>
           )}
         </section>
+        {liveResult ? (
+          <section
+            className="revo-status-assumptions"
+            aria-labelledby="revo-assumptions-title"
+            data-testid="revo-status-assumptions"
+          >
+            <h2 id="revo-assumptions-title" className="sr-only">
+              Assumptions
+            </h2>
+            <CalculationAssumptions stats={stats} result={liveResult} />
+          </section>
+        ) : null}
       </CombatFrame>
     </div>
   );

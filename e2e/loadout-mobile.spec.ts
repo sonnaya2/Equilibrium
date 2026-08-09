@@ -21,7 +21,7 @@ test.beforeEach(async ({ page }) => {
 
 test("Loadout gear is usable on a phone viewport", async ({ page }) => {
   await page.getByRole("tab", { name: "Loadout", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "Loadout" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Equipment" })).toBeVisible();
 
   const setup = page.locator(".combat-setup");
   await expect(setup).toBeVisible();
@@ -35,19 +35,15 @@ test("Loadout gear is usable on a phone viewport", async ({ page }) => {
     const root = document.querySelector(".combat-setup");
     if (!root) return { ok: false, reason: "missing .combat-setup" };
     const rootRect = root.getBoundingClientRect();
-    const weapons = document.querySelector('[aria-label="Weapon and body slots"]');
-    const doll = document.querySelector('[aria-label="Equipment slots"]');
-    if (!weapons || !doll) return { ok: false, reason: "missing gear groups" };
-    const w = weapons.getBoundingClientRect();
-    const d = doll.getBoundingClientRect();
+    const equipment = document.querySelector('[aria-label="Equipped equipment"]');
+    if (!equipment) return { ok: false, reason: "missing equipment grid" };
+    const e = equipment.getBoundingClientRect();
     // Content must not be entirely outside the setup box (overflow:hidden collapse).
-    const weaponsInView = w.bottom > rootRect.top + 8 && w.height > 24;
-    const dollInView = d.bottom > rootRect.top + 8 && d.height > 24;
+    const equipmentInView = e.bottom > rootRect.top + 8 && e.height > 24;
     return {
-      ok: weaponsInView && dollInView,
+      ok: equipmentInView,
       setupH: Math.round(rootRect.height),
-      weaponsH: Math.round(w.height),
-      dollH: Math.round(d.height),
+      equipmentH: Math.round(e.height),
       overflow: getComputedStyle(root).overflow,
       flex: getComputedStyle(root).flex,
     };
@@ -55,21 +51,25 @@ test("Loadout gear is usable on a phone viewport", async ({ page }) => {
   expect(clipped.ok, JSON.stringify(clipped)).toBe(true);
   expect(clipped.overflow).toMatch(/visible|auto/);
 
-  await page.getByRole("button", { name: "Gear", exact: true }).click();
-  const weapons = page.getByRole("group", { name: "Weapon and body slots" });
-  await expect(weapons.getByRole("button", { name: /^Main-hand/ })).toBeVisible();
-  await expect(weapons.getByRole("button", { name: /^Main-hand/ })).toBeEnabled();
+  // Equipment column keeps gear usable without a section sub-nav.
+  await expect(page.getByRole("button", { name: /Main Hand:/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Main Hand:/ })).toBeEnabled();
 
-  // Sub-nav still switches sections without re-collapsing.
-  await page.getByRole("button", { name: "Buffs", exact: true }).click();
-  await expect(page.locator(".buffs-panel, .loadout-panel-wide").first()).toBeVisible();
+  // Opening a workbench editor must not re-collapse the setup root.
+  await page.getByRole("button", { name: "Show all active effects", exact: true }).click();
+  const effects = page.getByRole("dialog", { name: "Active effects" });
+  await expect(effects).toBeVisible();
+  await expect(effects.locator(".buffs-panel, .loadout-panel-wide").first()).toBeVisible();
+  await effects.getByRole("button", { name: "Close loadout editor" }).click();
+  await expect(effects).toBeHidden();
+
   const after = await setup.boundingBox();
   expect(after!.height).toBeGreaterThan(200);
 });
 
 test("Loadout summary metrics remain reachable under the stage on phone", async ({ page }) => {
   await page.getByRole("tab", { name: "Loadout", exact: true }).click();
-  const summary = page.getByRole("complementary", { name: "Loadout summary" });
+  const summary = page.getByRole("region", { name: "Combat results" });
   await expect(summary).toBeVisible();
   // Scroll the page so the summary is in the viewport if it stacks below.
   await summary.scrollIntoViewIfNeeded();

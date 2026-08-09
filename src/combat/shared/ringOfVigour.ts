@@ -43,6 +43,7 @@ export const MODELLED_WEAPON_SPECIAL_IDS = [
   "instability",
   "claws_of_guthix",
   "death_grasp",
+  "igneous_showdown",
   "soulfire",
 ] as const;
 

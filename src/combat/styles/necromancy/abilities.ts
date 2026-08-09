@@ -255,7 +255,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
   },
   {
     id: "spectral_scythe_2",
-    name: "Spectral Scythe (cast 2)",
+    name: "Spectral Scythe",
     style: "necromancy",
     category: "enhanced",
     area: "aoe",
@@ -268,7 +268,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     // Base band only. Missing-HP multiplier (1% per 1% missing, up to +100%) is a
     // target-stage modifier - applied when targetHpPercent is provided.
     id: "spectral_scythe_3",
-    name: "Spectral Scythe (cast 3)",
+    name: "Spectral Scythe",
     style: "necromancy",
     category: "enhanced",
     area: "aoe",
@@ -402,9 +402,12 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
     style: "necromancy",
     category: "enhanced",
     weaponSpecial: true,
+    requiresSpecialAccess: true,
     hits: [{ band: { ...DEATH_GRASP_BAND } }],
     adrenaline: { cost: DEATH_GRASP_ADRENALINE_COST },
     cooldownSeconds: DEATH_GRASP_COOLDOWN_SECONDS,
+    supportNote:
+      "Weapon special. Requires Death Guard (or equivalent) or Essence of Finality with that special stored.",
     source: DEATH_GRASP_WIKI,
   },
   {
@@ -597,6 +600,7 @@ export function deathGrasp(opts: { necrosisStacks?: number } = {}): NecromancyAb
     style: "necromancy",
     category: "enhanced",
     weaponSpecial: true,
+    requiresSpecialAccess: true,
     hits: [
       {
         band: {

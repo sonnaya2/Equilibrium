@@ -1,6 +1,6 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
-const summary = (page: Page) => page.getByRole("complementary", { name: "Loadout summary" });
+const summary = (page: Page) => page.getByRole("region", { name: "Combat results" });
 
 const summaryMetric = (page: Page, name: string) =>
   summary(page).getByRole("group", { name, exact: true });
@@ -14,12 +14,53 @@ async function expectBreakdownToReconcile(metric: Locator) {
   expect(values.reduce((sum, value) => sum + value, 0)).toBeCloseTo(total, 10);
 }
 
+async function closeLoadoutEditor(page: Page) {
+  const dialog = page.getByRole("dialog");
+  await dialog.getByRole("button", { name: "Close loadout editor" }).click();
+  await expect(dialog).toBeHidden();
+}
+
+async function openEquipmentEditor(page: Page) {
+  await page.getByRole("tab", { name: "Loadout", exact: true }).click();
+  await page.getByRole("button", { name: /^Helmet:/ }).click();
+  await expect(page.getByRole("dialog", { name: "Change equipment" })).toBeVisible();
+}
+
+async function openEffectsEditor(page: Page) {
+  await page.getByRole("tab", { name: "Loadout", exact: true }).click();
+  await page.getByRole("button", { name: "Show all active effects", exact: true }).click();
+  await expect(page.getByRole("dialog", { name: "Active effects" })).toBeVisible();
+}
+
+async function openPerksEditor(page: Page) {
+  await page.getByRole("tab", { name: "Loadout", exact: true }).click();
+  await page
+    .getByRole("button", { name: /^(Set|Change) Weapon 1/ })
+    .first()
+    .click();
+  await expect(page.getByRole("dialog", { name: "Change perks" })).toBeVisible();
+}
+
+async function openRelicsEditor(page: Page) {
+  await page.getByRole("tab", { name: "Loadout", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Click here to update relic", exact: true })
+    .first()
+    .click();
+  await expect(page.getByRole("dialog", { name: "Archaeology" })).toBeVisible();
+}
+
+async function openTargetEditor(page: Page) {
+  await page.getByRole("tab", { name: "Loadout", exact: true }).click();
+  await page.getByRole("button", { name: "Edit target", exact: true }).click();
+  await expect(page.getByRole("dialog", { name: "Edit target" })).toBeVisible();
+}
+
 /** Loadout default is 100% start adren (ultimate-friendly). Some rotation cases need 0. */
 async function setStartingAdrenaline(page: Page, value: number) {
   await page.getByRole("tab", { name: "Loadout", exact: true }).click();
-  await page.getByRole("button", { name: "Stats", exact: true }).click();
-  // NumberField suffix "%" is part of the accessible name; summary rail also says "Starting adrenaline".
-  const field = page.getByRole("spinbutton", { name: "Starting adrenaline %" });
+  // Combat assumptions on Equipment column; NumberField suffix "%" joins the accessible name.
+  const field = page.getByRole("spinbutton", { name: /Starting adrenaline/i });
   await field.fill(String(value));
   await expect(field).toHaveValue(String(value));
 }
@@ -30,14 +71,16 @@ test.beforeEach(async ({ page }) => {
   await page.reload();
 });
 
-test("quick calculator runs the real pipeline", async ({ page }) => {
-  await page.getByRole("button", { name: "Abilities", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "Abilities" })).toBeVisible();
-  await expect(page.getByText("Damage Potential").first()).toBeVisible();
+test("analysis ability library runs the real pipeline", async ({ page }) => {
+  await page.getByRole("tab", { name: "Analysis", exact: true }).click();
+  await expect(page.getByText("Ability library")).toBeVisible();
+  await expect(page.getByText("A · Loadout")).toBeVisible();
 
-  await page.getByRole("option", { name: /Rend/ }).click();
+  await page.getByLabel("Ability filter").fill("Rend");
+  await page.getByRole("button", { name: /Rend/ }).click();
   await expect(page.getByRole("heading", { name: "Rend" })).toBeVisible();
-  await expect(page.getByText("+2 stacks")).toBeVisible();
+  await expect(page.getByText("Expected primary")).toBeVisible();
+  await expect(page.getByText("Damage Potential").first()).toBeVisible();
 });
 
 test("rotation planner queues, simulates, and persists", async ({ page }) => {
@@ -52,7 +95,7 @@ test("rotation planner queues, simulates, and persists", async ({ page }) => {
   await expect(page.getByText("Queue · 2 casts")).toBeVisible();
 
   await page.getByRole("button", { name: "Run", exact: true }).click();
-  await expect(page.getByText("Fixed-window DPS", { exact: true })).toBeVisible();
+  await expect(page.getByText("DPS", { exact: true })).toBeVisible();
   await expect(page.getByText("6 ticks · 3.6s").first()).toBeVisible();
   await expect(page.getByText("18%")).toBeVisible();
 
@@ -83,35 +126,45 @@ test("auto-weave fills basics to afford a queued ultimate", async ({ page }) => 
 
   await page.getByRole("button", { name: "Overpower ultimate 60%", exact: true }).click();
   await page.getByRole("button", { name: "Run", exact: true }).click();
-  await expect(page.getByText("Fixed-window DPS", { exact: true })).toBeVisible();
+  await expect(page.getByText("DPS", { exact: true })).toBeVisible();
   await expect(page.getByText("25 ticks · 15.0s").first()).toBeVisible();
   await expect(page.getByText("auto").first()).toBeVisible();
 });
 
 test("setup gear filters equipment by region", async ({ page }) => {
-  await page.getByRole("tab", { name: "Loadout", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "Loadout" })).toBeVisible();
-  await page.getByRole("button", { name: "Gear", exact: true }).click();
+  await openEquipmentEditor(page);
+  const dialog = page.getByRole("dialog", { name: "Change equipment" });
 
-  await page.getByRole("checkbox", { name: "Match style" }).uncheck();
-  await page.getByRole("combobox", { name: "Region" }).selectOption("misthalin");
-  await expect(page.getByRole("button", { name: /Omni guard/ })).toBeVisible();
-  await expect(page.getByRole("button", { name: /Seismic wand/ })).toBeHidden();
+  await dialog.getByRole("checkbox", { name: "Match style" }).uncheck();
+  await dialog.getByRole("combobox", { name: "Region" }).selectOption("misthalin");
+  await expect(dialog.getByRole("button", { name: /Omni guard/ })).toBeVisible();
+  await expect(dialog.getByRole("button", { name: /Seismic wand/ })).toBeHidden();
+  await closeLoadoutEditor(page);
 });
 
 test("the main-hand picker accepts two-handed weapons and locks off-hand", async ({ page }) => {
-  await page.getByRole("tab", { name: "Loadout", exact: true }).click();
-  const weapons = page.getByRole("group", { name: "Weapon and body slots" });
+  await openEquipmentEditor(page);
+  const dialog = page.getByRole("dialog", { name: "Change equipment" });
+  const weapons = dialog.getByRole("group", { name: "Weapon and body slots" });
 
   await expect(weapons.getByRole("button", { name: /^Two-hand/ })).toHaveCount(0);
   await weapons.getByRole("button", { name: /^Main-hand/ }).click();
-  await page.getByRole("button", { name: /Masterwork 2h sword/ }).click();
+  await dialog.getByRole("button", { name: /Masterwork 2h sword/ }).click();
 
   await expect(
     weapons.getByRole("button", { name: /^Main-hand.*Masterwork 2h sword/ }),
   ).toBeVisible();
   await expect(weapons.getByRole("button", { name: /^Off-hand/ })).toBeDisabled();
   await expect(weapons.getByText("Locked")).toBeVisible();
+  await closeLoadoutEditor(page);
+
+  await expect(
+    page.getByRole("button", { name: /Main Hand:.*Masterwork 2h sword/ }),
+  ).toBeVisible();
+  // Equipment column shows locked off-hand; the picker disables the slot inside the dialog.
+  await expect(
+    page.getByRole("button", { name: /Off-hand: Locked, two-handed weapon/ }),
+  ).toBeVisible();
 });
 
 test("analysis tab compares two stat lines", async ({ page }) => {
@@ -139,13 +192,12 @@ test("analysis tab compares two stat lines", async ({ page }) => {
   expect(duplicateKeyWarnings).toEqual([]);
 });
 
-test("quick tab offers necromancy's sourced volley", async ({ page }) => {
-  await page.getByRole("button", { name: "Abilities", exact: true }).click();
-  await page.locator(".combat-quick-toolbar").getByRole("button", { name: "Necromancy" }).click();
-  await page.getByRole("option", { name: /Volley of Souls/ }).click();
+test("analysis ability library offers necromancy's sourced volley", async ({ page }) => {
+  await page.getByRole("tab", { name: "Analysis", exact: true }).click();
+  await page.getByLabel("Ability filter").fill("Volley of Souls");
+  await page.getByRole("button", { name: /Volley of Souls/ }).click();
   await expect(page.getByRole("heading", { name: "Volley of Souls" })).toBeVisible();
   await expect(page.getByText("Residual Souls")).toBeVisible();
-  // Summary rail and ability readout both say Damage Potential; pin the first.
   await expect(page.getByText("Damage Potential", { exact: true }).first()).toBeVisible();
 });
 
@@ -158,11 +210,11 @@ test("rotation defaults to the shared setup loadout", async ({ page }) => {
   await page.getByRole("button", { name: /^Attack.*\+9%$/ }).click();
   await page.getByRole("button", { name: /^Attack.*\+9%$/ }).click();
   await page.getByRole("button", { name: "Run", exact: true }).click();
-  await expect(page.getByText("Fixed-window DPS", { exact: true })).toBeVisible();
+  await expect(page.getByText("DPS", { exact: true })).toBeVisible();
   await expect(page.getByText("6 ticks · 3.6s").first()).toBeVisible();
 });
 
-test("combat navigation exposes the production workspaces", async ({ page }) => {
+test("combat navigation exposes tabs and workbench editors", async ({ page }) => {
   await page.evaluate(() => {
     localStorage.setItem("eq:build:v1", JSON.stringify({ elective: ["morytania"] }));
   });
@@ -172,107 +224,113 @@ test("combat navigation exposes the production workspaces", async ({ page }) => 
   await expect(tabs).toHaveCount(3);
   await expect(tabs).toHaveText(["Loadout", "Rotation", "Analysis"]);
   await expect(page.getByRole("tab", { name: "Reference" })).toHaveCount(0);
+  await expect(page.getByRole("navigation", { name: "Loadout sections" })).toHaveCount(0);
 
-  const nav = page.getByRole("navigation", { name: "Loadout sections" });
-  await expect(nav.getByRole("button")).toHaveText([
-    "Gear",
-    "Stats",
-    "Buffs",
-    "Arch",
-    "Invention",
-    "Abilities",
-    "Target",
-  ]);
+  await page.getByRole("tab", { name: "Loadout", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Equipment" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Main Hand:/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Active Effects" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Invention" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Archaeology" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Target & Scenario" })).toBeVisible();
 
-  await page.getByRole("button", { name: "Gear", exact: true }).click();
-  const doll = page.getByRole("group", { name: "Equipment slots" });
+  await openEquipmentEditor(page);
+  const equipment = page.getByRole("dialog", { name: "Change equipment" });
+  const doll = equipment.getByRole("group", { name: "Equipment slots" });
   await expect(doll.getByText("Main-hand")).toBeVisible();
   await expect(doll.getByText("Empty").first()).toBeVisible();
+  await closeLoadoutEditor(page);
 
-  await page.getByRole("button", { name: "Arch", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "Arch", exact: true })).toBeVisible();
-  await expect(page.getByText("Berserker's Fury", { exact: true }).first()).toBeVisible();
-  // BF LP controls appear only when the relic is selected.
-  await page
+  await openRelicsEditor(page);
+  const relics = page.getByRole("dialog", { name: "Archaeology" });
+  await expect(relics.getByRole("heading", { name: "Arch", exact: true })).toBeVisible();
+  await expect(relics.getByText("Berserker's Fury", { exact: true }).first()).toBeVisible();
+  await relics
     .getByRole("button", { name: /Berserker's Fury/i })
     .first()
     .click();
-  await expect(page.getByRole("spinbutton", { name: "Current HP" })).toBeVisible();
-  await expect(page.getByText("Damage bonus")).toBeVisible();
+  await expect(relics.getByRole("spinbutton", { name: "Current Hitpoints" })).toBeVisible();
+  await expect(relics.getByText("Damage bonus")).toBeVisible();
+  await closeLoadoutEditor(page);
 
-  await page.getByRole("button", { name: "Invention", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "Invention" })).toBeVisible();
-  // Two weapon shells + two armour shells (body + legs); each shell is 2 perk slots.
-  const gizmos = page.getByRole("group", { name: "Gizmos" });
+  await openPerksEditor(page);
+  const perks = page.getByRole("dialog", { name: "Change perks" });
+  await expect(perks.getByText("Invention")).toBeVisible();
+  const gizmos = perks.getByRole("group", { name: "Gizmos" });
   await expect(gizmos.getByRole("button", { name: /^Weapon 1\b/ })).toBeVisible();
   await expect(gizmos.getByRole("button", { name: /^Weapon 2\b/ })).toBeVisible();
   await expect(gizmos.getByRole("button", { name: /^Armour 1\b/ })).toBeVisible();
   await expect(gizmos.getByRole("button", { name: /^Armour 2\b/ })).toBeVisible();
   await expect(gizmos.getByText("Body", { exact: true })).toBeVisible();
   await expect(gizmos.getByText("Legs", { exact: true })).toBeVisible();
-  const aftershock = page.getByRole("button", { name: /Aftershock.*Weapon/ });
+  const aftershock = perks.getByRole("button", { name: /Aftershock.*Weapon/ });
   await gizmos.getByRole("button", { name: /^Armour 1\b/ }).click();
   await expect(aftershock).toHaveAttribute("aria-disabled", "true");
   await gizmos.getByRole("button", { name: /^Weapon 1\b/ }).click();
   await aftershock.click();
-  await expect(page.getByRole("status", { name: "Aftershock rank" })).toHaveText("R1");
-  await page.getByRole("button", { name: "Increase Aftershock rank" }).click();
-  await expect(page.getByRole("status", { name: "Aftershock rank" })).toHaveText("R2");
+  await expect(perks.getByRole("status", { name: "Aftershock rank" })).toHaveText("R1");
+  await perks.getByRole("button", { name: "Increase Aftershock rank" }).click();
+  await expect(perks.getByRole("status", { name: "Aftershock rank" })).toHaveText("R2");
+  await closeLoadoutEditor(page);
 
-  await page.getByRole("button", { name: "Buffs", exact: true }).click();
-  await expect(page.getByRole("checkbox", { name: /Vulnerability/ })).toBeVisible();
-  const agony = page.getByRole("button", { name: /Agony/ });
+  await openEffectsEditor(page);
+  const effects = page.getByRole("dialog", { name: "Active effects" });
+  await expect(effects.getByRole("checkbox", { name: /Vulnerability/ })).toBeVisible();
+  const agony = effects.getByRole("button", { name: /Agony/ });
   await expect(agony).toHaveAttribute("aria-pressed", "true");
   await agony.click();
   await expect(agony).toHaveAttribute("aria-pressed", "false");
 
-  // Buffs are icon tiles: the name and effect survive only in the accessible name.
-  const elder = page.getByRole("button", { name: /Elder overload/ });
+  const elder = effects.getByRole("button", { name: /Elder overload/ });
   await expect(elder).toHaveAttribute("aria-pressed", "false");
   await elder.click();
   await expect(elder).toHaveAttribute("aria-pressed", "true");
+  await closeLoadoutEditor(page);
+
   // Overload boosts Defence: elder is floor(99 × 0.17) + 5 = 21 over 99 → 120.
-  // Summary shows one Defence row (visible level); base 99 is in the dropdown.
   const defence = summaryMetric(page, "Defence");
   await expect(defence.getByText("120")).toBeVisible();
   await defence.locator("summary").click();
   await expect(defence.getByText("99", { exact: true })).toBeVisible();
 
-  await page.getByRole("button", { name: "Gear", exact: true }).click();
+  await openEquipmentEditor(page);
   await expect(page.getByText("Equip set pieces to activate their effects.")).toBeVisible();
+  await closeLoadoutEditor(page);
 
-  await page.getByRole("button", { name: "Target", exact: true }).click();
-  await page.getByRole("checkbox", { name: "Use NPC target" }).check();
-  await expect(page.getByRole("combobox", { name: "Affinity" })).toBeVisible();
+  await openTargetEditor(page);
+  const target = page.getByRole("dialog", { name: "Edit target" });
+  await target.getByRole("checkbox", { name: "Use NPC target" }).check();
+  await expect(target.getByRole("combobox", { name: "Affinity" })).toBeVisible();
+  await closeLoadoutEditor(page);
 });
 
 test("setup summary exposes the complete core-derived stat line", async ({ page }) => {
   for (const label of [
-    "Base ability damage",
-    "Equipment damage",
+    "Base Ability Damage",
+    "Equipment Damage",
     "Accuracy",
     "Damage Potential",
-    "Crit chance",
-    "Crit damage",
+    "Crit Chance",
+    "Crit Damage",
     "Defence",
-    // Total Armor Value is the Loadout-screen stat; armour rating is hit-chance only.
-    "Total Armor Value",
-    "Armour rating",
-    "Maximum HP",
-    "Current HP",
-    "Prayer bonus",
-    "Starting adrenaline",
-    "Maximum adrenaline",
+    "Total Armour Value",
+    "Equipment Armour",
+    "Maximum Hitpoints",
+    "Current Hitpoints",
+    "Prayer Bonus",
+    "Starting Adrenaline",
+    "Maximum Adrenaline",
   ]) {
     await expect(summaryMetric(page, label)).toBeVisible();
   }
-  // Hit cap lives on Rotation, not the loadout summary.
+  // Hit cap lives on Active effects / Rotation, not the loadout summary.
   await expect(summaryMetric(page, "Hit cap")).toHaveCount(0);
 });
 
 test("poison buffs expose every potion tier and persist Herblore", async ({ page }) => {
-  await page.getByRole("button", { name: "Buffs", exact: true }).click();
-  const potion = page.getByRole("combobox", { name: "Weapon poison potion" });
+  await openEffectsEditor(page);
+  const effects = page.getByRole("dialog", { name: "Active effects" });
+  const potion = effects.getByRole("combobox", { name: "Weapon poison potion" });
   await expect(potion.locator("option")).toHaveText([
     "None",
     "Weapon poison",
@@ -281,14 +339,17 @@ test("poison buffs expose every potion tier and persist Herblore", async ({ page
     "Weapon poison+++",
   ]);
   await potion.selectOption("weapon-plus-plus-plus");
-  await page.getByRole("spinbutton", { name: "Herblore level" }).fill("120");
+  await effects.getByRole("spinbutton", { name: "Herblore level" }).fill("120");
+  await closeLoadoutEditor(page);
 
   await page.reload();
-  await page.getByRole("button", { name: "Buffs", exact: true }).click();
-  await expect(page.getByRole("combobox", { name: "Weapon poison potion" })).toHaveValue(
+  await openEffectsEditor(page);
+  const reopened = page.getByRole("dialog", { name: "Active effects" });
+  await expect(reopened.getByRole("combobox", { name: "Weapon poison potion" })).toHaveValue(
     "weapon-plus-plus-plus",
   );
-  await expect(page.getByRole("spinbutton", { name: "Herblore level" })).toHaveValue("120");
+  await expect(reopened.getByRole("spinbutton", { name: "Herblore level" })).toHaveValue("120");
+  await closeLoadoutEditor(page);
 });
 
 test("Cinderbanes add recursive poison hits to a rendered 60-second bar", async ({
@@ -321,20 +382,24 @@ test("Cinderbanes add recursive poison hits to a rendered 60-second bar", async 
     return { dialog, poison, separateHits, totalDamage };
   };
 
-  await page.getByRole("button", { name: "Buffs", exact: true }).click();
+  await openEffectsEditor(page);
   await page
+    .getByRole("dialog", { name: "Active effects" })
     .getByRole("combobox", { name: "Weapon poison potion" })
     .selectOption("weapon-plus-plus-plus");
+  await closeLoadoutEditor(page);
+
   const without = await runAndReadPoison();
   await expect(without.poison.getByText(/tier 4/)).toBeVisible();
   await expect(without.poison.getByText(/Cinderbane chain:/)).toHaveCount(0);
   await without.dialog.getByRole("button", { name: "Close" }).click();
 
-  await page.getByRole("tab", { name: "Loadout", exact: true }).click();
-  await page.getByRole("button", { name: "Gear", exact: true }).click();
-  await page.getByRole("button", { name: /^Gloves/ }).click();
-  await page.getByRole("searchbox", { name: "Search" }).fill("Cinderbane gloves");
-  await page.getByRole("button", { name: /Cinderbane gloves/ }).click();
+  await openEquipmentEditor(page);
+  const gear = page.getByRole("dialog", { name: "Change equipment" });
+  await gear.getByRole("button", { name: /^Gloves/ }).click();
+  await gear.getByRole("searchbox", { name: "Search" }).fill("Cinderbane gloves");
+  await gear.getByRole("button", { name: /Cinderbane gloves/ }).click();
+  await closeLoadoutEditor(page);
 
   const withCinderbanes = await runAndReadPoison();
   await expect(withCinderbanes.poison.getByText(/tier 5/)).toBeVisible();
@@ -350,18 +415,14 @@ test("Cinderbanes add recursive poison hits to a rendered 60-second bar", async 
   const poisonTimeline = withCinderbanes.dialog
     .getByRole("heading", { name: "Resolved timeline" })
     .locator("..");
-  const poisonEventRows = poisonTimeline
-    .getByRole("row")
-    .filter({ hasText: "Player weapon poison" });
+  const poisonEventRows = poisonTimeline.getByRole("row").filter({ hasText: "Weapon poison" });
   const poisonEventText = await poisonEventRows.allInnerTexts();
   await testInfo.attach("cinderbane-timeline.txt", {
     body: poisonEventText.join("\n"),
     contentType: "text/plain",
   });
   await expect(
-    withCinderbanes.dialog.getByText(
-      "Totals are probability-weighted. The event log shows the most common sampled history.",
-    ),
+    withCinderbanes.dialog.getByText("Damage is EV. Log is the top sampled path."),
   ).toBeVisible();
   expect(poisonEventText.length).toBeGreaterThan(0);
   expect(poisonEventText.some((row) => /\b0 expected occurrences?/.test(row))).toBe(false);
@@ -370,20 +431,20 @@ test("Cinderbanes add recursive poison hits to a rendered 60-second bar", async 
 });
 
 test("summary breakdowns reconcile and open from the keyboard", async ({ page }) => {
-  const crit = summaryMetric(page, "Crit chance");
+  const crit = summaryMetric(page, "Crit Chance");
   const toggle = crit.locator("summary");
   await toggle.focus();
   await page.keyboard.press("Enter");
   await expect(crit).toHaveAttribute("open", "");
   await expectBreakdownToReconcile(crit);
 
-  const life = summaryMetric(page, "Maximum HP");
+  const life = summaryMetric(page, "Maximum Hitpoints");
   await life.locator("summary").focus();
   await page.keyboard.press("Space");
   await expect(life).toHaveAttribute("open", "");
   await expectBreakdownToReconcile(life);
 
-  const base = summaryMetric(page, "Base ability damage");
+  const base = summaryMetric(page, "Base Ability Damage");
   await base.locator("summary").click();
   await expectBreakdownToReconcile(base);
 });
@@ -391,52 +452,74 @@ test("summary breakdowns reconcile and open from the keyboard", async ({ page })
 test("summary reacts to temporary life effects and a manual Damage Potential override", async ({
   page,
 }) => {
-  await page.getByRole("button", { name: "Buffs", exact: true }).click();
-  await page.getByRole("button", { name: /Reaper Crew/ }).click();
-  await page.getByRole("button", { name: /Font of Life/ }).click();
-  await page.getByRole("button", { name: /Boon of Het/ }).click();
+  // Boon of Het is automatic with Desert unlocked (disabled tile in Active effects).
+  await page.evaluate(() => {
+    localStorage.setItem("eq:build:v1", JSON.stringify({ elective: ["desert"] }));
+  });
+  await page.reload();
 
-  // Persistent buffs raise Maximum HP; temporary ones update the same row.
-  const maximumHp = summaryMetric(page, "Maximum HP");
+  await openEffectsEditor(page);
+  const effects = page.getByRole("dialog", { name: "Active effects" });
+  await effects.getByRole("button", { name: /Reaper Crew/ }).click();
+  await effects.getByRole("button", { name: /Font of Life/ }).click();
+  await expect(effects.getByRole("button", { name: /Boon of Het/ })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await closeLoadoutEditor(page);
+
+  // Persistent buffs raise Maximum Hitpoints; temporary ones update the same row.
+  const maximumHp = summaryMetric(page, "Maximum Hitpoints");
   await expect(maximumHp.getByText("11,095")).toBeVisible();
-  await page.getByRole("button", { name: /Thermal bath/ }).click();
+
+  await openEffectsEditor(page);
+  await page
+    .getByRole("dialog", { name: "Active effects" })
+    .getByRole("button", { name: /Thermal bath/ })
+    .click();
+  await closeLoadoutEditor(page);
   await expect(maximumHp.getByText("11,392")).toBeVisible();
   await expect(maximumHp).toContainText("Includes temporary effects");
   await maximumHp.locator("summary").click();
   await expectBreakdownToReconcile(maximumHp);
 
-  await page.getByRole("button", { name: "Target", exact: true }).click();
-  await page.getByRole("checkbox", { name: "Use NPC target" }).check();
-  // Labels: checkbox "Manual Damage Potential"; field accessible name includes "%" suffix.
-  await page.getByRole("checkbox", { name: "Manual Damage Potential" }).check();
-  await page.getByRole("spinbutton", { name: "Damage Potential %" }).fill("73");
+  await openTargetEditor(page);
+  const target = page.getByRole("dialog", { name: "Edit target" });
+  await target.getByRole("checkbox", { name: "Use NPC target" }).check();
+  await target.getByRole("checkbox", { name: "Manual Damage Potential" }).check();
+  await target.getByRole("spinbutton", { name: /Damage Potential/ }).fill("73");
+  await closeLoadoutEditor(page);
   await expect(
     summaryMetric(page, "Damage Potential").getByText("73%", { exact: true }),
   ).toBeVisible();
-  await expect(summaryMetric(page, "Damage Potential")).toContainText("manual override");
 });
 
-test("setup summary and every editor subtab stay within a phone viewport", async ({ page }) => {
+test("setup workbench editors stay within a phone viewport", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  // Loadout stage must size to content on phone (not a collapsed flex fill).
   await expect(page.locator(".combat-setup")).toBeVisible();
   await expect
     .poll(async () => (await page.locator(".combat-setup").boundingBox())?.height ?? 0)
     .toBeGreaterThan(200);
 
-  const nav = page.getByRole("navigation", { name: "Loadout sections" });
-  for (const tab of ["Gear", "Stats", "Buffs", "Arch", "Invention", "Abilities", "Target"]) {
-    const btn = nav.getByRole("button", { name: tab, exact: true });
-    await btn.scrollIntoViewIfNeeded();
-    await btn.click();
-    await expect(btn).toHaveAttribute("aria-pressed", "true");
+  const openers: Array<{ open: () => Promise<void>; dialog: string }> = [
+    { open: () => openEquipmentEditor(page), dialog: "Change equipment" },
+    { open: () => openEffectsEditor(page), dialog: "Active effects" },
+    { open: () => openPerksEditor(page), dialog: "Change perks" },
+    { open: () => openRelicsEditor(page), dialog: "Archaeology" },
+    { open: () => openTargetEditor(page), dialog: "Edit target" },
+  ];
+
+  for (const { open, dialog } of openers) {
+    await open();
+    await expect(page.getByRole("dialog", { name: dialog })).toBeVisible();
     await expect(summary(page)).toBeVisible();
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1,
       ),
-      `${tab} should not overflow horizontally`,
+      `${dialog} should not overflow horizontally`,
     ).toBe(true);
+    await closeLoadoutEditor(page);
   }
 });
 
@@ -453,7 +536,7 @@ test("revolution is the default mode with the wiki bar graphic", async ({ page }
   await expect(page.getByText("Chaos Roar")).toBeVisible();
 
   await page.getByRole("button", { name: "Run bar" }).click();
-  await expect(page.getByText("Fixed-window DPS", { exact: true })).toBeVisible();
+  await expect(page.getByText("DPS", { exact: true })).toBeVisible();
   await expect(page.getByTestId("revo-horizon")).toHaveText(/^100$/);
   await expect(page.getByTestId("revo-casts")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Timeline" })).toBeVisible();
@@ -482,7 +565,7 @@ test("revolution solver optimizes and apply keeps a runnable bar", async ({ page
   await page.getByRole("button", { name: "Apply" }).first().click();
   await expect(page.getByText(/Solved bar/)).toBeVisible();
   await page.getByRole("button", { name: "Run bar" }).click();
-  await expect(page.getByText("Fixed-window DPS", { exact: true })).toBeVisible();
+  await expect(page.getByText("DPS", { exact: true })).toBeVisible();
   await expect(page.getByTestId("revo-casts")).toBeVisible();
 });
 
@@ -527,35 +610,37 @@ test("manual rotation still exposes necromancy abilities", async ({ page }) => {
   await expect(page.getByRole("button", { name: /Volley of Souls/ })).toBeVisible();
 });
 
-test("loadout base damage follows the weapon tier and persists into Revolution", async ({
+test("loadout base damage follows equipped weapon tier and persists into Revolution", async ({
   page,
 }) => {
   await page.getByRole("tab", { name: "Loadout", exact: true }).click();
-  await page.getByRole("button", { name: "Stats", exact: true }).click();
-
-  await expect(
-    page.getByText("Calculated from level, weapon, and style", { exact: true }),
-  ).toBeVisible();
-  const baseMetric = summaryMetric(page, "Base ability damage");
+  const baseMetric = summaryMetric(page, "Base Ability Damage");
   const before = await baseMetric.locator("strong").innerText();
 
-  await page.getByRole("spinbutton", { name: "Main weapon tier" }).fill("91");
-  await expect(baseMetric.locator("strong")).not.toHaveText(before);
-  await page.getByRole("spinbutton", { name: "Starting adrenaline" }).fill("62");
+  await openEquipmentEditor(page);
+  const gear = page.getByRole("dialog", { name: "Change equipment" });
+  await gear.getByRole("group", { name: "Weapon and body slots" }).getByRole("button", { name: /^Main-hand/ }).click();
+  await gear.getByRole("searchbox", { name: "Search" }).fill("Masterwork 2h sword");
+  await gear.getByRole("button", { name: /Masterwork 2h sword/ }).click();
+  await closeLoadoutEditor(page);
 
-  await page.getByRole("tab", { name: "Rotation", exact: true }).click();
-  await page.getByRole("checkbox", { name: "30,000 hit cap" }).uncheck();
+  await expect(baseMetric.locator("strong")).not.toHaveText(before);
+  await setStartingAdrenaline(page, 62);
+
+  // Hit cap defaults off; pin it so Revolution assumptions stay "Off" after reload.
+  await openEffectsEditor(page);
+  await page
+    .getByRole("dialog", { name: "Active effects" })
+    .getByRole("checkbox", { name: "Hit cap" })
+    .uncheck();
+  await closeLoadoutEditor(page);
 
   await page.reload();
   await page.getByRole("tab", { name: "Loadout", exact: true }).click();
-  await page.getByRole("button", { name: "Stats", exact: true }).click();
-  await expect(page.getByRole("spinbutton", { name: "Main weapon tier" })).toHaveValue("91");
-  await expect(
-    page.getByText("Calculated from level, weapon, and style", { exact: true }),
-  ).toBeVisible();
+  await expect(page.getByRole("button", { name: /Main Hand:.*Masterwork 2h sword/ })).toBeVisible();
+  await expect(page.getByRole("spinbutton", { name: /Starting adrenaline/i })).toHaveValue("62");
 
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
-  await expect(page.getByRole("checkbox", { name: "30,000 hit cap" })).not.toBeChecked();
   await page.getByRole("button", { name: "Run bar" }).click();
   const assumptions = page.locator("details").filter({ hasText: "Assumptions" }).first();
   await assumptions.getByText("Assumptions", { exact: true }).click();
@@ -586,68 +671,67 @@ test("v1 loadout migration and Defence/life controls persist across reload", asy
   });
   await page.reload();
   await page.getByRole("tab", { name: "Loadout", exact: true }).click();
-  await page.getByRole("button", { name: "Stats", exact: true }).click();
 
-  await expect(page.getByRole("spinbutton", { name: "Attack level" })).toHaveValue("82");
-  await expect(page.getByRole("spinbutton", { name: "Strength level" })).toHaveValue("91");
-  await expect(page.getByRole("spinbutton", { name: "Defence level" })).toHaveValue("99");
-  await expect(page.getByRole("spinbutton", { name: "Constitution level" })).toHaveValue("99");
-  await expect(
-    page.getByText("Calculated from level, weapon, and style", { exact: true }),
-  ).toBeVisible();
-  await expect(summaryMetric(page, "Base ability damage").locator("strong")).not.toHaveText(
+  await expect(page.getByRole("spinbutton", { name: /^Attack$/ })).toHaveValue("82");
+  await expect(page.getByRole("spinbutton", { name: /^Strength$/ })).toHaveValue("91");
+  await expect(page.getByRole("spinbutton", { name: /^Defence$/ })).toHaveValue("99");
+  await expect(page.getByRole("spinbutton", { name: /^Constitution$/ })).toHaveValue("99");
+  await expect(summaryMetric(page, "Base Ability Damage").locator("strong")).not.toHaveText(
     "4,321",
   );
-  await expect(page.getByRole("spinbutton", { name: "Starting adrenaline" })).toHaveValue("72");
+  await expect(page.getByRole("spinbutton", { name: /Starting adrenaline/i })).toHaveValue("72");
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await expect(page.getByRole("checkbox", { name: "30,000 hit cap" })).not.toBeChecked();
   await page.getByRole("tab", { name: "Loadout", exact: true }).click();
-  await page.getByRole("button", { name: "Stats", exact: true }).click();
 
-  await page.getByRole("spinbutton", { name: "Defence level" }).fill("73");
-  await page.getByRole("spinbutton", { name: "Constitution level" }).fill("88");
-  // Current HP follows the maximum until that is turned off.
-  await page.getByRole("checkbox", { name: "Current HP automatic" }).uncheck();
-  await page.getByRole("spinbutton", { name: "Current HP" }).fill("6000");
-  await page.getByRole("button", { name: "Buffs", exact: true }).click();
+  await page.getByRole("spinbutton", { name: /^Defence$/ }).fill("73");
+  await page.getByRole("spinbutton", { name: /^Constitution$/ }).fill("88");
 
-  const fortitude = page.getByRole("button", { name: /Fortitude/ });
-  const turmoil = page.getByRole("button", { name: /Turmoil/ });
+  await openEffectsEditor(page);
+  const effects = page.getByRole("dialog", { name: "Active effects" });
+  await effects.getByRole("spinbutton", { name: "Current Hitpoints" }).fill("6000");
+
+  const fortitude = effects.getByRole("button", { name: /Fortitude/ });
   await fortitude.click();
   await expect(fortitude).toHaveAttribute("aria-pressed", "true");
-  await expect(turmoil).toHaveAttribute("aria-pressed", "false");
-  await turmoil.click();
-  await expect(fortitude).toHaveAttribute("aria-pressed", "false");
-  await fortitude.click();
 
-  for (const name of ["Reaper Crew", "Font of Life", "Boon of Het", "Thermal bath"]) {
-    await page.getByRole("button", { name: new RegExp(name) }).click();
+  for (const name of ["Reaper Crew", "Font of Life", "Thermal bath"]) {
+    await effects.getByRole("button", { name: new RegExp(name) }).click();
   }
-  await page.getByRole("combobox", { name: "Bonfire log type" }).selectOption("elder");
-  await page.getByRole("spinbutton", { name: "Bonfire Firemaking level" }).fill("110");
-  const totem = page.getByRole("button", { name: /Totem of Vitality/ });
-  await totem.click();
-  await expect(page.getByRole("combobox", { name: "Bonfire log type" })).toHaveValue("none");
-  await totem.click();
-  await page.getByRole("combobox", { name: "Bonfire log type" }).selectOption("elder");
-  await page.getByRole("combobox", { name: "Overheal source" }).selectOption("soup-line");
+  await effects.getByRole("combobox", { name: "Bonfire log type" }).selectOption("elder");
+  await effects.getByRole("spinbutton", { name: "Bonfire Firemaking level" }).fill("110");
+  await effects.getByRole("combobox", { name: "Overheal source" }).selectOption("soup-line");
+  await closeLoadoutEditor(page);
+
+  // Fortitude clears damage prayer; prayer picker lives on the equipment dialog.
+  await openEquipmentEditor(page);
+  const equipment = page.getByRole("dialog", { name: "Change equipment" });
+  const turmoil = equipment.getByTestId("prayer-picker").getByRole("button", { name: /Turmoil/ });
+  await expect(turmoil).toHaveAttribute("aria-pressed", "false");
+  await closeLoadoutEditor(page);
 
   await page.reload();
   await page.getByRole("tab", { name: "Loadout", exact: true }).click();
-  await page.getByRole("button", { name: "Stats", exact: true }).click();
-  await expect(page.getByRole("spinbutton", { name: "Defence level" })).toHaveValue("73");
-  await expect(page.getByRole("spinbutton", { name: "Constitution level" })).toHaveValue("88");
-  await expect(page.getByRole("spinbutton", { name: "Current HP" })).toHaveValue("6000");
-  await page.getByRole("button", { name: "Buffs", exact: true }).click();
-  await expect(page.getByRole("button", { name: /Fortitude/ })).toHaveAttribute(
+  await expect(page.getByRole("spinbutton", { name: /^Defence$/ })).toHaveValue("73");
+  await expect(page.getByRole("spinbutton", { name: /^Constitution$/ })).toHaveValue("88");
+
+  await openEffectsEditor(page);
+  const reopened = page.getByRole("dialog", { name: "Active effects" });
+  await expect(reopened.getByRole("spinbutton", { name: "Current Hitpoints" })).toHaveValue(
+    "6000",
+  );
+  await expect(reopened.getByRole("button", { name: /Fortitude/ })).toHaveAttribute(
     "aria-pressed",
     "true",
   );
-  await expect(page.getByRole("combobox", { name: "Bonfire log type" })).toHaveValue("elder");
-  await expect(page.getByRole("spinbutton", { name: "Bonfire Firemaking level" })).toHaveValue(
+  await expect(reopened.getByRole("combobox", { name: "Bonfire log type" })).toHaveValue("elder");
+  await expect(reopened.getByRole("spinbutton", { name: "Bonfire Firemaking level" })).toHaveValue(
     "110",
   );
-  await expect(page.getByRole("combobox", { name: "Overheal source" })).toHaveValue("soup-line");
+  await expect(reopened.getByRole("combobox", { name: "Overheal source" })).toHaveValue(
+    "soup-line",
+  );
+  await closeLoadoutEditor(page);
 
   const stored = await page.evaluate(() =>
     JSON.parse(window.localStorage.getItem("eq:loadout:v1")!),
@@ -674,31 +758,33 @@ test("v1 loadout migration and Defence/life controls persist across reload", asy
 
 test("Powerburst doubles life for six seconds and persists its cooldown", async ({ page }) => {
   await page.getByRole("tab", { name: "Loadout", exact: true }).click();
-  await page.getByRole("button", { name: "Stats", exact: true }).click();
-  await page.getByRole("checkbox", { name: "Current HP automatic" }).uncheck();
-  await page.getByRole("spinbutton", { name: "Current HP" }).fill("4000");
-  await page.getByRole("button", { name: "Buffs", exact: true }).click();
-  await page.getByRole("button", { name: /Powerburst of vitality/ }).click();
-  await page.getByRole("button", { name: "Stats", exact: true }).click();
+  await openEffectsEditor(page);
+  const effects = page.getByRole("dialog", { name: "Active effects" });
+  await effects.getByRole("spinbutton", { name: "Current Hitpoints" }).fill("4000");
+  await effects.getByRole("button", { name: /Powerburst of vitality/ }).click();
+  await closeLoadoutEditor(page);
 
-  const life = page.getByRole("heading", { name: "Defence & life" }).locator("..");
-  await expect(page.getByRole("spinbutton", { name: "Current HP" })).toHaveValue("8000");
-  await expect(life.getByText("19,800", { exact: true })).toBeVisible();
-  await expect(page.getByRole("spinbutton", { name: "Current HP" })).toHaveValue("4000", {
+  await expect(summaryMetric(page, "Current Hitpoints").getByText("8,000")).toBeVisible();
+  await expect(summaryMetric(page, "Maximum Hitpoints").getByText("19,800", { exact: true })).toBeVisible();
+  await expect(summaryMetric(page, "Current Hitpoints").getByText("4,000")).toBeVisible({
     timeout: 8000,
   });
-  await expect(life.getByText("9,900", { exact: true })).toBeVisible();
+  await expect(summaryMetric(page, "Maximum Hitpoints").getByText("9,900", { exact: true })).toBeVisible();
 
-  await page.getByRole("button", { name: "Buffs", exact: true }).click();
-  const powerburst = page.getByRole("button", { name: /Powerburst of vitality/ });
+  await openEffectsEditor(page);
+  const powerburst = page
+    .getByRole("dialog", { name: "Active effects" })
+    .getByRole("button", { name: /Powerburst of vitality/ });
   await expect(powerburst).toHaveAttribute("aria-disabled", "true");
+  await closeLoadoutEditor(page);
   await page.reload();
-  await page.getByRole("tab", { name: "Loadout", exact: true }).click();
-  await page.getByRole("button", { name: "Buffs", exact: true }).click();
-  await expect(page.getByRole("button", { name: /Powerburst of vitality/ })).toHaveAttribute(
-    "aria-disabled",
-    "true",
-  );
+  await openEffectsEditor(page);
+  await expect(
+    page
+      .getByRole("dialog", { name: "Active effects" })
+      .getByRole("button", { name: /Powerburst of vitality/ }),
+  ).toHaveAttribute("aria-disabled", "true");
+  await closeLoadoutEditor(page);
 });
 
 test("rotation analysis opens the engine-owned event breakdown", async ({ page }) => {
@@ -717,29 +803,106 @@ test("rotation analysis opens the engine-owned event breakdown", async ({ page }
   await expect(dialog).toBeHidden();
 });
 
+test("ranged passive, ammunition, poison, perk, and blessing rows use game art", async ({
+  page,
+}) => {
+  test.setTimeout(180_000);
+  await page.evaluate(() => {
+    localStorage.setItem(
+      "eq:build:v1",
+      JSON.stringify({
+        elective: [],
+        relics: {},
+        blessingPicks: ["Balance", "Chaos"],
+        blessingSelections: [],
+        blessingResetsUsed: 0,
+      }),
+    );
+    localStorage.setItem(
+      "eq:loadout:v1",
+      JSON.stringify({
+        style: "ranged",
+        startingAdrenaline: 100,
+        critChance: 50,
+        equipmentSlots: {
+          twohand: "item:bow-of-the-last-guardian",
+          ammo: "item:bik-arrows",
+        },
+        perks: { aftershock: 4, crackling: 4 },
+        gizmos: { weapon1: ["aftershock", "crackling"] },
+        buffs: {
+          useEquippedWeaponSpecial: true,
+          weaponPoison: "weapon-plus-plus-plus",
+          herbloreLevel: 120,
+        },
+      }),
+    );
+  });
+  await page.reload();
+  await page.getByRole("tab", { name: "Rotation", exact: true }).click();
+  await page.getByRole("button", { name: "Run bar" }).click();
+  await expect(page.getByRole("heading", { name: "Ability damage" })).toBeVisible({
+    timeout: 120_000,
+  });
+
+  const expectEffectIcon = async (id: string, path: RegExp) => {
+    const row = page.locator(`[data-effect-id="${id}"]`).first();
+    await expect(row).toBeVisible();
+    await expect(row.locator("img").first()).toHaveAttribute("src", path);
+  };
+
+  await expectEffectIcon("perfect_equilibrium", /bow-of-the-last-guardian\.webp$/);
+  await expectEffectIcon("ammunition:bik", /bik-arrows\.webp$/);
+  await expectEffectIcon("player_weapon_poison", /weapon-poison\.webp$/);
+  await expectEffectIcon("crackling", /crackling\.webp$/);
+  await expectEffectIcon("aftershock", /aftershock\.webp$/);
+  await expectEffectIcon("big-boned", /big-boned\.webp$/);
+  await expect(page.locator('[data-effect-id="ammunition:bik"]').first()).toContainText(
+    "Evolving Toxin",
+  );
+  await expect(page.locator('[data-effect-id="player_weapon_poison"]').first()).toContainText(
+    "Weapon poison",
+  );
+  const resolvedEvents = page.getByRole("region", { name: "Run results" });
+  await expect(
+    resolvedEvents.getByText(/Perfect Equilibrium · [0-3] stacks/).first(),
+  ).toBeVisible();
+  await expect(
+    resolvedEvents.getByText(/Balance by Force · \d+\.\d+s remaining/).first(),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Analyze damage" }).click();
+  const analysis = page.getByRole("dialog", { name: "Damage analysis" });
+  const timeline = analysis.getByRole("heading", { name: "Resolved timeline" }).locator("..");
+  const inferno = timeline.getByRole("row").filter({ hasText: "Inferno" }).first();
+  await expect(inferno).toContainText("Perfect Equilibrium");
+});
+
 test("equipped passives appear under Gear and disappear when the item is removed", async ({
   page,
 }) => {
-  const passives = page.getByRole("heading", { name: "Passives" }).locator("..");
-  await expect(passives.getByText("No equipped item grants a passive.")).toBeVisible();
+  await openEquipmentEditor(page);
+  const gear = page.getByRole("dialog", { name: "Change equipment" });
+  const passives = gear.getByRole("heading", { name: "Passives" }).locator("..");
+  await expect(passives.getByText("Natural Instinct")).toHaveCount(0);
 
-  await page.getByRole("button", { name: /^Helmet/ }).click();
-  await page.getByRole("searchbox", { name: "Search" }).fill("Jaws of the Abyss");
-  await page.getByRole("button", { name: /Jaws of the Abyss/ }).click();
+  await gear.getByRole("button", { name: /^Helmet/ }).click();
+  await gear.getByRole("searchbox", { name: "Search" }).fill("Jaws of the Abyss");
+  await gear.getByRole("button", { name: /Jaws of the Abyss/ }).click();
 
   await expect(passives.getByText("Natural Instinct doubles this bonus gain.")).toBeVisible();
   await expect(passives.getByText("Active", { exact: true })).toBeVisible();
 
-  await page.getByRole("button", { name: "Clear Helmet" }).click();
-  await expect(passives.getByText("No equipped item grants a passive.")).toBeVisible();
+  await gear.getByRole("button", { name: "Clear Helmet" }).click();
+  await expect(passives.getByText("Natural Instinct doubles this bonus gain.")).toHaveCount(0);
 
-  await page.getByRole("button", { name: /^Off-hand/ }).click();
-  await page.getByRole("searchbox", { name: "Search" }).fill("Kalphite defender");
-  await page.getByRole("button", { name: /Kalphite defender/ }).click();
+  await gear.getByRole("button", { name: /^Off-hand/ }).click();
+  await gear.getByRole("searchbox", { name: "Search" }).fill("Kalphite defender");
+  await gear.getByRole("button", { name: /Kalphite defender/ }).click();
   await expect(
     passives.getByText("Defenders, reprisers, and rebounders have +3% accuracy."),
   ).toBeVisible();
   await expect(passives.getByText("Active", { exact: true })).toBeVisible();
+  await closeLoadoutEditor(page);
 });
 
 test("set thresholds downgrade and disappear with equipped pieces", async ({ page }) => {
@@ -757,31 +920,34 @@ test("set thresholds downgrade and disappear with equipped pieces", async ({ pag
     );
   });
   await page.reload();
-  await page.getByRole("button", { name: "Gear", exact: true }).click();
-  const setCard = page.locator(".set-effect-card").filter({ hasText: "Vestments of havoc" });
+  await openEquipmentEditor(page);
+  const gear = page.getByRole("dialog", { name: "Change equipment" });
+  const setCard = gear.locator(".set-effect-card").filter({ hasText: "Vestments of havoc" });
   await expect(setCard).toContainText("2 equipped · 2 effective pieces");
   await expect(setCard.getByText("Active", { exact: true })).toBeVisible();
   await expect(setCard.getByText("Set 3", { exact: true })).toBeVisible();
 
-  await page.getByRole("button", { name: /^Helmet Hood of the Vestments of Havoc/ }).click();
-  await page.getByRole("button", { name: "Clear Helmet" }).click();
+  await gear.getByRole("button", { name: /^Helmet Hood of the Vestments of Havoc/ }).click();
+  await gear.getByRole("button", { name: "Clear Helmet" }).click();
   await expect(setCard).toContainText("1 equipped · 1 effective piece");
   await expect(setCard.getByText("Active", { exact: true })).toHaveCount(0);
   await expect(setCard.getByText("Set 2", { exact: true })).toBeVisible();
 
-  await page.getByRole("button", { name: "Clear all gear" }).click();
-  await expect(page.getByText("Equip set pieces to activate their effects.")).toBeVisible();
+  await gear.getByRole("button", { name: "Clear all gear" }).click();
+  await expect(gear.getByText("Equip set pieces to activate their effects.")).toBeVisible();
+  await closeLoadoutEditor(page);
 });
 
 test("combat blessing choices stay synced with Build", async ({ page }) => {
-  await page.getByRole("button", { name: "Buffs", exact: true }).click();
-  await page.getByRole("combobox", { name: "Blessing tier 1" }).selectOption("Order");
-  await page.getByRole("combobox", { name: "Blessing tier 2" }).selectOption("Chaos");
-  await page.getByRole("combobox", { name: "Blessing tier 3" }).selectOption("Balance");
-  await expect(page.getByText(/God Tier One · Splash Zone/)).toBeVisible();
-
   await page.goto("/build");
-  // Build lattice aria is "Name. effects… Path, tier N, selected".
+  await page.evaluate(() => window.localStorage.clear());
+  await page.reload();
+
+  // Build lattice unlocks sequentially; Order→Chaos→Balance grants god-tier Splash Zone path.
+  await page.getByRole("button", { name: /Order, tier 1$/ }).click();
+  await page.getByRole("button", { name: /Chaos, tier 2$/ }).click();
+  await page.getByRole("button", { name: /Balance, tier 3$/ }).click();
+
   await expect(
     page.getByRole("button", {
       name: /Teragard's Aegis.*Order, tier 1, selected/,
@@ -789,10 +955,17 @@ test("combat blessing choices stay synced with Build", async ({ page }) => {
   ).toHaveAttribute("aria-pressed", "true");
 
   await page.goto("/combat");
-  await page.getByRole("button", { name: "Buffs", exact: true }).click();
-  await expect(page.getByRole("combobox", { name: "Blessing tier 1" })).toHaveValue("Order");
-  await expect(page.getByRole("combobox", { name: "Blessing tier 2" })).toHaveValue("Chaos");
-  await expect(page.getByRole("combobox", { name: "Blessing tier 3" })).toHaveValue("Balance");
+  await page.getByRole("tab", { name: "Loadout", exact: true }).click();
+  const league = page.locator(".setup-league-display");
+  await expect(league.getByText(/Teragard's Aegis|Splash Zone|Order/)).toBeVisible();
+
+  await openEffectsEditor(page);
+  const effects = page.getByRole("dialog", { name: "Active effects" });
+  await expect(effects.getByRole("combobox", { name: "Blessing tier 1" })).toHaveValue("Order");
+  await expect(effects.getByRole("combobox", { name: "Blessing tier 2" })).toHaveValue("Chaos");
+  await expect(effects.getByRole("combobox", { name: "Blessing tier 3" })).toHaveValue("Balance");
+  await expect(effects.getByText(/God Tier One · Splash Zone/)).toBeVisible();
+  await closeLoadoutEditor(page);
 });
 
 test("T7 relic selection equips its granted pocket item in the Build loadout", async ({ page }) => {
@@ -806,25 +979,25 @@ test("T7 relic selection equips its granted pocket item in the Build loadout", a
   await expect(finalLoadout.locator('[aria-label="Pocket: Avernic Star"]')).toBeVisible();
 });
 
-test("Genesis locks the displayed main weapon tier to T120", async ({ page }) => {
+test("Genesis Essence marks the main hand and is visible on Loadout", async ({ page }) => {
   await page.evaluate(() => {
     window.localStorage.setItem(
       "eq:build:v1",
       JSON.stringify({
         elective: [],
         relics: {},
-          blessingPicks: ["Order", "Order", "Order", "Order", "Order", "Order"],
+        blessingPicks: ["Order", "Order", "Order", "Order", "Order", "Order"],
         blessingSelections: [],
         blessingResetsUsed: 0,
       }),
     );
   });
   await page.reload();
-  await page.getByRole("button", { name: "Stats", exact: true }).click();
+  await page.getByRole("tab", { name: "Loadout", exact: true }).click();
 
-  const weaponTier = page.getByRole("spinbutton", { name: "Main weapon tier" });
-  await expect(weaponTier).toHaveValue("120");
-  await expect(weaponTier).toBeDisabled();
+  await expect(
+    page.getByRole("button", { name: /Main Hand:.*, Genesis Essence active/ }),
+  ).toBeVisible();
   await expect(page.locator('img[src="/game/blessings/genesis-essence.webp"]')).toBeVisible();
 });
 
@@ -837,9 +1010,10 @@ test("combat interaction chrome uses the shared emerald gem token", async ({ pag
 });
 
 test("set effects come only from equipped gear", async ({ page }) => {
-  await page.getByRole("tab", { name: "Loadout", exact: true }).click();
-  await page.getByRole("button", { name: "Gear", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "Set effects" })).toBeVisible();
-  await expect(page.getByText("Equip set pieces to activate their effects.")).toBeVisible();
-  await expect(page.getByRole("spinbutton", { name: /^Tectonic/ })).toHaveCount(0);
+  await openEquipmentEditor(page);
+  const gear = page.getByRole("dialog", { name: "Change equipment" });
+  await expect(gear.getByRole("heading", { name: "Set effects" })).toBeVisible();
+  await expect(gear.getByText("Equip set pieces to activate their effects.")).toBeVisible();
+  await expect(gear.getByRole("spinbutton", { name: /^Tectonic/ })).toHaveCount(0);
+  await closeLoadoutEditor(page);
 });

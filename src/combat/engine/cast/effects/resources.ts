@@ -50,9 +50,11 @@ export function applyCastResources(fx: CastEffectContext): AdrenalineTransaction
     spend > 0 && (adren?.relentlessRank ?? 0) > 0 && candidate >= rt.state.relentlessUntilTick;
   const relentlessProc = relentlessEligible && rngProc(rng, "relentless");
 
+  // Wiki Meteor: 1.5x adren on melee basic abilities only - not Attack (basic attack).
   const meteorBasic =
     ability.style === "melee" &&
     ability.category === "basic" &&
+    !basicAttack &&
     rt.state.melee.meteorStrikeUntilTick > 0 &&
     candidate < rt.state.melee.meteorStrikeUntilTick;
 
@@ -137,6 +139,7 @@ export function applyCastResources(fx: CastEffectContext): AdrenalineTransaction
     meteorBasicMultiplier: meteorBasic ? METEOR_STRIKE_BASIC_ADREN_MULTIPLIER : 1,
     conservationOfEnergyRefund,
     ringOfVigourRefund,
+    specialRefund: fx.prepared.specialRefund,
     otherImmediateGrants,
     spendZeroReason,
   });

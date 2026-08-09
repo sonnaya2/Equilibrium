@@ -299,9 +299,8 @@ export function AnalysisTab({ loadout }: { loadout: Loadout }) {
 
         <div className="analysis-results">
           <p className="analysis-results-note">
-            Single-cast damage EV on the shared combat model. FotS / CoE / Invigorating change{" "}
-            <strong className="font-medium text-parch-100">Adren Δ</strong> here; multi-cast economy
-            (second ultimates, starvation) is on Rotation / Revolution after Run.
+            One cast EV on the loadout model. Adren Δ includes FotS / CoE / Invigorating. Multi-cast
+            economy is on Rotation after Run.
           </p>
 
           {castFailed ? (
@@ -480,7 +479,7 @@ export function AnalysisTab({ loadout }: { loadout: Loadout }) {
             </div>
           </dl>
           <a className="analysis-summary-action" href="#analysis-assumptions">
-            Inspect calculation details
+            Assumptions
           </a>
         </CombatFrame>
         <CombatFrame

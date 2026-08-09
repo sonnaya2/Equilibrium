@@ -96,12 +96,16 @@ function eventType(event: ResolvedEvent): string {
   return "Hit";
 }
 
-function critLabel(event: ResolvedEvent): string | null {
+/**
+ * Event-row / State-column crit chrome from concrete outcomes only.
+ * No "% crit EV". Engine pins damage.expected to the crit or non-crit band at land.
+ */
+export function eventCritLabel(event: ResolvedEvent): string | null {
   const critical = event.damage.critical;
   if (!critical || critical.mode === "none") return null;
   if (critical.outcome !== undefined) return critical.outcome ? "Crit" : "No crit";
-  if (critical.mode === "guaranteed") return "Crit";
-  return `${formatPercent(critical.chance)} crit EV`;
+  if (critical.mode === "guaranteed" || critical.chance >= 1) return "Crit";
+  return null;
 }
 
 function parentEffectLabel(
@@ -217,26 +221,26 @@ function EventTable({
   const bySeq = useMemo(() => new Map(events.map((event) => [event.seq, event])), [events]);
 
   return (
-    <div className={compact ? "max-h-72 overflow-auto" : "max-h-[30rem] overflow-auto"}>
-      <table className="w-full min-w-[760px] border-collapse text-left text-xs">
-        <thead className="sticky top-0 bg-stone-900 text-parch-300">
-          <tr className="border-b border-stone-750">
-            <th className="py-1.5 pr-3 font-medium">Tick</th>
-            <th className="py-1.5 pr-3 font-medium">Effect</th>
-            <th className="py-1.5 pr-3 font-medium">Event</th>
-            <th className="py-1.5 pr-3 font-medium">Hit</th>
+    <div className={compact ? "revo-event-scroll is-compact" : "revo-event-scroll"}>
+      <table className={compact ? "revo-event-table is-compact" : "revo-event-table"}>
+        <thead>
+          <tr>
+            <th>Tick</th>
+            <th>Effect</th>
+            <th>Event</th>
+            {!compact ? <th className="text-right">Hit</th> : null}
             <th
-              className="py-1.5 pr-3 text-right font-medium"
+              className="text-right"
               title="Damage for this landed event; DoTs show one tick, not the full ability"
             >
-              Event damage
+              Dmg
             </th>
-            <th className="py-1.5 font-medium">State</th>
+            {!compact ? <th>State</th> : null}
           </tr>
         </thead>
         <tbody>
           {events.map((event) => {
-            const critical = critLabel(event);
+            const critical = eventCritLabel(event);
             const weight = eventExpectedWeight(event);
             const parent = parentEffectLabel(event, bySeq, nameForId);
             const occurrenceNote = occurrenceModelNote(
@@ -244,84 +248,96 @@ function EventTable({
               effectName(event.abilityId, nameForId),
             );
             return (
-              <tr key={event.seq} className="border-b border-stone-750/70">
-                <td className="py-1.5 pr-3 font-mono text-parch-300">
+              <tr key={event.seq}>
+                <td className="revo-num revo-muted">
                   {event.tick}{" "}
-                  <span className="text-parch-300/70">
-                    {ticksToSeconds(event.tick).toFixed(1)}s
-                  </span>
+                  <span className="revo-time-sub">{ticksToSeconds(event.tick).toFixed(1)}s</span>
                 </td>
-                <td className="py-1.5 pr-3 text-parch-50">
-                  <span className="inline-flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+                <td className="revo-ability-cell">
+                  <span className="revo-ability-line">
                     <GameIcon
                       src={effectIconPath(event.abilityId, undefined, event.blessingId)}
-                      size={18}
+                      size={compact ? 16 : 18}
+                      className="shrink-0"
                     />
-                    <span>{effectName(event.abilityId, nameForId)}</span>
-                    {isConjureDamageEvent(event) ? (
+                    <span className="revo-ability-name">
+                      {effectName(event.abilityId, nameForId)}
+                    </span>
+                    {!compact && isConjureDamageEvent(event) ? (
                       <AbilityCategoryChip category="conjure" />
                     ) : null}
-                    {parent ? <span className="text-parch-300">on {parent}</span> : null}
+                    {parent ? <span className="revo-muted">on {parent}</span> : null}
+                    {compact && critical === "Crit" ? (
+                      <span className="rotation-crit">Crit</span>
+                    ) : null}
+                    {compact && isExpectedProcEvent(event) && weight !== undefined ? (
+                      <span className="revo-inline-note">
+                        ×{formatExpectedOccurrence(weight)}
+                      </span>
+                    ) : null}
                   </span>
                 </td>
-                <td className="whitespace-nowrap py-1.5 pr-3 text-parch-300">{eventType(event)}</td>
-                <td className="whitespace-nowrap py-1.5 pr-3 text-right font-mono tabular-nums text-parch-300">
-                  {event.attached || event.hitIndex < 0 ? "–" : event.hitIndex + 1}
-                </td>
-                <td className="whitespace-nowrap py-1.5 pr-3 text-right font-mono tabular-nums text-parch-50">
+                <td className="revo-event-type">{eventType(event)}</td>
+                {!compact ? (
+                  <td className="revo-num revo-muted text-right">
+                    {event.attached || event.hitIndex < 0 ? "–" : event.hitIndex + 1}
+                  </td>
+                ) : null}
+                <td className="revo-num text-right">
                   {formatNumber(event.damage.expected)}
                   {event.damage.capLoss ? (
-                    <span className="ml-1 text-chaos-300">
+                    <span className="revo-cap-loss">
                       -{formatNumber(event.damage.capLoss)} cap
                     </span>
                   ) : null}
                 </td>
-                <td className="py-1.5 text-parch-300">
-                  {isExpectedProcEvent(event) && weight !== undefined ? (
-                    <span className="mr-2">
-                      {formatExpectedOccurrence(weight)} expected occurrence
-                      {weight === 1 ? "" : "s"}
-                    </span>
-                  ) : null}
-                  {critical ? (
-                    <span className={critical === "Crit" ? "rotation-crit" : undefined}>
-                      {critical}
-                    </span>
-                  ) : null}
-                  {occurrenceNote ? (
-                    <span
-                      className="ml-2 text-gold-300"
-                      data-occurrence-model={event.occurrenceModel?.kind}
-                      title="Expected multiplicity is packed into this event; it is not one deterministic hit."
-                    >
-                      {occurrenceNote}
-                    </span>
-                  ) : null}
-                  {event.stackCount != null ? (
-                    <span className="ml-2">{event.stackCount} stacks</span>
-                  ) : null}
-                  {event.remainingTicks != null ? (
-                    <span
-                      className="ml-2 font-mono text-[11px] text-parch-300"
-                      title="Remaining summon / effect life at this land"
-                    >
-                      {formatRemainingDurationNote(event.tick, event.remainingTicks)}
-                    </span>
-                  ) : null}
-                  {event.appliedEffects?.map((effect) => (
-                    <span
-                      key={effect.id}
-                      className="ml-2 inline-flex items-center gap-1 text-gold-300"
-                    >
-                      <GameIcon src={effectIconPath(effect.id)} size={16} />
-                      {effectName(effect.id, nameForId)}
-                      {effect.stackCount != null ? ` · ${effect.stackCount} stacks` : ""}
-                      {effect.remainingTicks != null
-                        ? ` · ${ticksToSeconds(effect.remainingTicks).toFixed(1)}s remaining`
-                        : ""}
-                    </span>
-                  ))}
-                </td>
+                {!compact ? (
+                  <td className="revo-event-state">
+                    {isExpectedProcEvent(event) && weight !== undefined ? (
+                      <span className="mr-2">
+                        {formatExpectedOccurrence(weight)}×
+                      </span>
+                    ) : null}
+                    {critical ? (
+                      <span className={critical === "Crit" ? "rotation-crit" : "revo-muted"}>
+                        {critical}
+                      </span>
+                    ) : null}
+                    {occurrenceNote ? (
+                      <span
+                        className="ml-2 text-gold-300"
+                        data-occurrence-model={event.occurrenceModel?.kind}
+                        title="Expected multiplicity is packed into this event; it is not one deterministic hit."
+                      >
+                        {occurrenceNote}
+                      </span>
+                    ) : null}
+                    {event.stackCount != null ? (
+                      <span className="ml-2">{event.stackCount} stacks</span>
+                    ) : null}
+                    {event.remainingTicks != null ? (
+                      <span
+                        className="ml-2 font-mono text-[11px] text-parch-300"
+                        title="Remaining summon / effect life at this land"
+                      >
+                        {formatRemainingDurationNote(event.tick, event.remainingTicks)}
+                      </span>
+                    ) : null}
+                    {event.appliedEffects?.map((effect) => (
+                      <span
+                        key={effect.id}
+                        className="ml-2 inline-flex items-center gap-1 text-gold-300"
+                      >
+                        <GameIcon src={effectIconPath(effect.id)} size={16} />
+                        {effectName(effect.id, nameForId)}
+                        {effect.stackCount != null ? ` · ${effect.stackCount} stacks` : ""}
+                        {effect.remainingTicks != null
+                          ? ` · ${ticksToSeconds(effect.remainingTicks).toFixed(1)}s left`
+                          : ""}
+                      </span>
+                    ))}
+                  </td>
+                ) : null}
               </tr>
             );
           })}
@@ -339,19 +355,17 @@ export function RotationEventPreview({
   nameForId: (id: string) => string;
 }) {
   const preview = resolvedEventPreview(result.events);
+  const shown = Math.min(RESOLVED_EVENT_PREVIEW_LIMIT, result.events.length);
   return (
-    <section className="mt-4 border-t border-stone-750 pt-3">
-      <div className="flex items-baseline justify-between gap-3">
-        <h3 className="combat-section-title text-xs font-medium text-parch-50">Resolved events</h3>
-        <span className="text-[11px] text-parch-300">
-          First {Math.min(RESOLVED_EVENT_PREVIEW_LIMIT, result.events.length)}
-          {preview.pinnedPerfectEquilibrium ? " + Perfect Equilibrium" : ""} of{" "}
-          {result.events.length}
+    <section className="revo-section revo-event-preview">
+      <header className="revo-section-head">
+        <h3 className="combat-section-title">Resolved events</h3>
+        <span className="revo-section-meta">
+          {shown}
+          {preview.pinnedPerfectEquilibrium ? " + PE" : ""} / {result.events.length}
         </span>
-      </div>
-      <div className="mt-2 border-t border-stone-750">
-        <EventTable events={preview.events} nameForId={nameForId} compact />
-      </div>
+      </header>
+      <EventTable events={preview.events} nameForId={nameForId} compact />
     </section>
   );
 }
@@ -402,8 +416,8 @@ export function RotationAnalysisModal({
             </h2>
             <p className="mt-1 text-xs text-parch-300">
               {result.rng
-                ? "Totals are probability-weighted. The event log shows the most common sampled history."
-                : "The event log follows the resolved expected-value timeline."}
+                ? "Damage is EV. Log is the top sampled path."
+                : "Expected-value timeline."}
             </p>
           </div>
           <button

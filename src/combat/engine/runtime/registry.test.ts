@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { abilityBehaviorFingerprint } from "../../shared/abilityFingerprint";
+import { activeEquipmentEffects } from "../../shared/equipment";
+import { MAGIC_ABILITIES } from "../../styles/magic/abilities";
 import { MELEE_ABILITIES } from "../../styles/melee/abilities";
 import { createRuntime, mapAbilitiesById } from "./runtime";
 import { baseInput } from "../../test/fixtures/inputs";
@@ -80,5 +82,48 @@ describe("runtime ability registries", () => {
     });
     expect(rt.byId.get("attack")).toBeDefined();
     expect(rt.basicByStyle.get("melee")?.id).toBe("attack");
+  });
+
+  it("nativeSpecial: EoF when no weapon special; both listed when weapon + store differ", () => {
+    const staff = activeEquipmentEffects({
+      style: "magic",
+      equipmentSlots: { twohand: "item:staff-of-light" },
+    });
+    const fsoa = activeEquipmentEffects({
+      style: "magic",
+      equipmentSlots: { twohand: "item:fractured-staff-of-armadyl" },
+    });
+    expect(staff.activeWeapon?.specialAttackId).toBeFalsy();
+    expect(fsoa.activeWeapon?.specialAttackId).toBe("instability");
+
+    const fromStore = createRuntime({
+      ...baseInput,
+      abilities: MAGIC_ABILITIES,
+      nativeSpecialPolicy: { useEquippedWeaponSpecial: true },
+      equipmentEffects: staff,
+      eofStoredSpecialId: "soulfire",
+    });
+    expect(fromStore.nativeSpecial?.id).toBe("soulfire");
+    expect(fromStore.nativeSpecials.map((s) => s.id)).toEqual(["soulfire"]);
+
+    const policyOff = createRuntime({
+      ...baseInput,
+      abilities: MAGIC_ABILITIES,
+      nativeSpecialPolicy: { useEquippedWeaponSpecial: false },
+      equipmentEffects: staff,
+      eofStoredSpecialId: "soulfire",
+    });
+    expect(policyOff.nativeSpecial).toBeNull();
+    expect(policyOff.nativeSpecials).toEqual([]);
+
+    const both = createRuntime({
+      ...baseInput,
+      abilities: MAGIC_ABILITIES,
+      nativeSpecialPolicy: { useEquippedWeaponSpecial: true },
+      equipmentEffects: fsoa,
+      eofStoredSpecialId: "soulfire",
+    });
+    expect(both.nativeSpecial?.id).toBe("instability");
+    expect(both.nativeSpecials.map((s) => s.id)).toEqual(["instability", "soulfire"]);
   });
 });

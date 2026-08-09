@@ -1,5 +1,5 @@
 import { spendBloodlust } from "../../../styles/melee/bloodlust";
-import { patchMagic, patchMelee, patchRanged } from "../../runtime/state";
+import { patchMagic, patchMelee, patchRanged, patchTarget } from "../../runtime/state";
 import {
   armSongAdrenalineStream,
   consumeConflagrate,
@@ -43,6 +43,11 @@ export function applyPreparedTransitions(fx: CastEffectContext): void {
       case "consumePrimordialIce":
         rt.state = patchMelee(rt.state, {
           primordialIce: transition.next,
+        });
+        break;
+      case "designateFlameboundRival":
+        rt.state = patchTarget(rt.state, {
+          melee: { ...rt.state.target.melee, flameboundRival: true },
         });
         break;
       case "consumePerfectEquilibrium":

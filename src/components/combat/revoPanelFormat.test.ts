@@ -74,7 +74,7 @@ describe("revoPanelFormat", () => {
         convertedCritChance: 0.05,
         critualActive: true,
       }),
-    ).toBe("50.0% effective · 55.0% uncapped · +5.0% Critual damage");
+    ).toBe("50.0% · +5.0% Critual dmg");
     expect(
       formatCritContext({
         critChance: 0.2,

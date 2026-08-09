@@ -51,11 +51,17 @@ describe("Perfect Equilibrium stack mechanics", () => {
     ).toEqual({ stacks: 0, triggered: true });
   });
 
-  it("excludes DoT, poison, invention, melee, and the separate PE hit", () => {
+  it("counts direct blessing hits but excludes poison-like blessings and other proc damage", () => {
     const excluded = [
       { style: "ranged" as const, provenance: { kind: "player_dot" as const } },
       { style: "ranged" as const, provenance: { kind: "player_poison" as const } },
       { style: "ranged" as const, provenance: { kind: "invention_proc" as const } },
+      { style: "ranged" as const, provenance: { kind: "equipment_proc" as const } },
+      { style: "ranged" as const, provenance: { kind: "blessing" as const } },
+      {
+        style: "ranged" as const,
+        provenance: { kind: "blessing" as const, detail: "grasp-of-guthix-poison" },
+      },
       { style: "melee" as const, provenance: { kind: "player_direct" as const } },
       {
         style: "ranged" as const,
@@ -63,6 +69,14 @@ describe("Perfect Equilibrium stack mechanics", () => {
       },
     ];
     for (const args of excluded) expect(perfectEquilibriumHitEligible(args)).toBe(false);
+    for (const detail of ["inferno-of-zamorak", "light-of-saradomin"] as const) {
+      expect(
+        perfectEquilibriumHitEligible({
+          style: "ranged",
+          provenance: { kind: "blessing", detail },
+        }),
+      ).toBe(true);
+    }
     expect(
       perfectEquilibriumHitEligible({ style: "ranged", provenance: { kind: "player_direct" } }),
     ).toBe(true);

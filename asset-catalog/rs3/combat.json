@@ -1228,11 +1228,16 @@
     "label": "Claws Of Guthix",
     "category": "rs3/combat/abilities/magic",
     "path": "public/game/combat/abilities/magic/claws-of-guthix",
-    "fileTitle": "Claws Of Guthix.png",
-    "search": "Claws Of Guthix inventory icon",
+    "fileTitle": "Weapon Special Attack.png",
+    "search": "Weapon Special Attack icon",
     "canonicalPage": "https://runescape.wiki/w/Claws_Of_Guthix",
     "aliases": ["combat-abilities-magic-instability"],
-    "alsoAt": ["public/game/combat/abilities/magic/instability.webp"]
+    "alsoAt": [
+      "public/game/combat/abilities/magic/instability.webp",
+      "public/game/combat/abilities/melee/icy-tempest.webp",
+      "public/game/combat/abilities/melee/igneous-showdown.webp",
+      "public/game/combat/abilities/ranged/balance-by-force.webp"
+    ]
   },
   {
     "id": "combat-abilities-magic-combust",
@@ -7028,4 +7033,33 @@
     "search": "Topaz bolts (e) inventory icon",
     "canonicalPage": "https://runescape.wiki/w/Topaz_bolts_%28e%29"
   },
+  {
+    "id": "combat-perk-caroming",
+    "label": "Caroming perk",
+    "category": "rs3/combat/perks",
+    "path": "public/game/combat/perks/caroming",
+    "fileTitle": "Caroming.png",
+    "search": "Caroming perk icon",
+    "canonicalPage": "https://runescape.wiki/w/Caroming"
+  },
+  {
+    "id": "combat-abilities-magic-lightning-surge",
+    "label": "Lightning Surge",
+    "category": "rs3/combat/abilities/magic",
+    "path": "public/game/combat/abilities/magic/lightning-surge",
+    "fileTitle": "Instability (self status).png",
+    "search": "Instability self status",
+    "canonicalPage": "https://runescape.wiki/w/Instability_(status)",
+    "sourcePage": "https://runescape.wiki/w/File:Instability_(self_status).png"
+  },
+  {
+    "id": "combat-status-surging-storm",
+    "label": "Surging Storm",
+    "category": "rs3/combat/status",
+    "path": "public/game/combat/status/surging-storm",
+    "fileTitle": "Surging Storm (status).png",
+    "search": "Surging Storm status",
+    "canonicalPage": "https://runescape.wiki/w/Fractured_Staff_of_Armadyl",
+    "sourcePage": "https://runescape.wiki/w/File:Surging_Storm_(status).png"
+  }
 ]

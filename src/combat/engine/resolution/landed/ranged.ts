@@ -75,7 +75,10 @@ function mayActivateBoltDeathmark(
   ) {
     return false;
   }
-  const chance = enchantedBoltActivationChance(mechanicId, rt.input.enchantedBoltChanceModifiers);
+  const chance = enchantedBoltActivationChance(
+    mechanicId,
+    rt.input.enchantedBoltChanceModifiers,
+  );
   return chance != null && rt.stochastic.bernoulli(`ammunition:deathmark:${event.seq}`, chance);
 }
 
@@ -309,7 +312,10 @@ function scheduleEmeraldPoisonHit(
   ) {
     return;
   }
-  const chance = enchantedBoltActivationChance("emerald", rt.input.enchantedBoltChanceModifiers);
+  const chance = enchantedBoltActivationChance(
+    "emerald",
+    rt.input.enchantedBoltChanceModifiers,
+  );
   if (chance == null || chance <= 0) return;
   const payload = emeraldPoisonHit(rt.input.base);
   const toxin = rt.state.target.evolvingToxin;
@@ -496,13 +502,17 @@ export function applyRangedAmmunitionLandedState(
         recordAppliedEventEffect(rt, event, {
           id: "ammunition:black-stone",
           stackCount: application.state.applications,
-          remainingTicks: Math.max(0, (application.state.expiresAtTick ?? event.tick) - event.tick),
+          remainingTicks: Math.max(
+            0,
+            (application.state.expiresAtTick ?? event.tick) - event.tick,
+          ),
         });
       }
     }
   }
 
-  const wenBasic = attackOrigin === "botlg" || (ability != null && wenBasicHitEligible(ability));
+  const wenBasic =
+    attackOrigin === "botlg" || (ability != null && wenBasicHitEligible(ability));
   if (mechanicId === "wen" && eligible && wenBasic) {
     const wen = recordWenBasicHit(rt.state.ranged.wen, event.tick);
     rt.state = patchRanged(rt.state, { wen });

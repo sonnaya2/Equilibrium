@@ -25,9 +25,7 @@ function rangedLoadout(
 function resolvedBoltProfile(itemId: string, withQuiver = false) {
   const projectile = resolveAmmunitionFromEquipment(equipmentById(itemId));
   if (projectile == null) throw new Error(`missing test ammunition ${itemId}`);
-  const quiver = withQuiver
-    ? resolveQuiverFromEquipment(equipmentById("item:pernix-quiver"))
-    : null;
+  const quiver = withQuiver ? resolveQuiverFromEquipment(equipmentById("item:pernix-quiver")) : null;
   if (withQuiver && quiver == null) throw new Error("missing test quiver");
   return {
     projectile,
@@ -40,7 +38,9 @@ function resolvedBoltProfile(itemId: string, withQuiver = false) {
 describe("ranged ammunition effect presentation", () => {
   it("omits empty and ordinary ammunition", () => {
     expect(
-      rangedAmmunitionEffectPresentation(rangedLoadout({ twohand: "item:ascension-crossbow" })),
+      rangedAmmunitionEffectPresentation(
+        rangedLoadout({ twohand: "item:ascension-crossbow" }),
+      ),
     ).toBeNull();
     expect(
       rangedAmmunitionEffectPresentation(
@@ -67,7 +67,9 @@ describe("ranged ammunition effect presentation", () => {
 
   it("uses the selected projectile inside a quiver", () => {
     expect(
-      rangedAmmunitionEffectPresentationFromProfile(resolvedBoltProfile("item:opal-bolts-e", true)),
+      rangedAmmunitionEffectPresentationFromProfile(
+        resolvedBoltProfile("item:opal-bolts-e", true),
+      ),
     ).toMatchObject({
       effectId: "ammunition:opal",
       itemId: "item:opal-bolts-e",
@@ -88,7 +90,9 @@ describe("ranged ammunition effect presentation", () => {
     expect(bakriminel?.label).toBe(standard?.label);
     expect(standard?.itemId).toBe("item:opal-bolts-e");
     expect(bakriminel?.itemId).toBe("item:opal-bakriminel-bolts-e");
-    expect(bakriminel?.icon).toBe("/game/combat/equipment/opal-bakriminel-bolts-e.webp");
+    expect(bakriminel?.icon).toBe(
+      "/game/combat/equipment/opal-bakriminel-bolts-e.webp",
+    );
     expect(standard?.icon).toBe("/game/combat/equipment/opal-bolts-e.webp");
     expect(bakriminel?.icon).not.toBe(standard?.icon);
   });

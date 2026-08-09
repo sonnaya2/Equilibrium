@@ -267,6 +267,15 @@ const EXPECTED: ExpectedRow[] = [
     supportStatus: undefined,
   },
   {
+    id: "igneous_showdown",
+    hitCount: 1,
+    bands: [{ minPct: 260, maxPct: 300 }],
+    adrenCost: 50,
+    cooldownSeconds: 60,
+    // Native special access is separate from weapon shape requirements.
+    weaponRequirement: undefined,
+  },
+  {
     id: "pulverise",
     hitCount: 1,
     bands: [{ minPct: 300, maxPct: 340 }],

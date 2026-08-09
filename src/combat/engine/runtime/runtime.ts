@@ -60,6 +60,27 @@ export function prepareRuntimeInput<T extends CastContextInput>(input: T): T {
   return { ...input, modifiers };
 }
 
+/**
+ * Auto-special ids when policy is on: equipped weapon first, then a distinct
+ * EoF store. Revo tries them in order so EoF fires while the weapon special is
+ * on cooldown (or otherwise illegal).
+ */
+export function resolveAutoSpecialIds(input: {
+  nativeSpecialPolicy?: { useEquippedWeaponSpecial?: boolean };
+  equipmentEffects?: { activeWeapon?: { specialAttackId?: string | null } | null };
+  eofStoredSpecialId?: string | null;
+}): string[] {
+  if (input.nativeSpecialPolicy?.useEquippedWeaponSpecial !== true) return [];
+  const ids: string[] = [];
+  const weaponId = input.equipmentEffects?.activeWeapon?.specialAttackId;
+  if (typeof weaponId === "string" && weaponId.length > 0) ids.push(weaponId);
+  const stored = input.eofStoredSpecialId;
+  if (typeof stored === "string" && stored.length > 0 && !ids.includes(stored)) {
+    ids.push(stored);
+  }
+  return ids;
+}
+
 /** Spirit event identity: a pending auto/poison event is live only for its summon instance. */
 export interface SpiritEventMeta {
   id: ConjureId;
@@ -76,8 +97,16 @@ export interface SimulationRuntime {
   readonly horizon?: number;
   readonly byId: ReadonlyMap<string, AbilitySpec>;
   readonly basicByStyle: ReadonlyMap<AbilitySpec["style"], AbilitySpec>;
+  /**
+   * First auto-special candidate (weapon preferred over EoF store).
+   * Prefer `nativeSpecials` when both weapon and EoF store can fire.
+   */
   readonly nativeSpecial: AbilitySpec | null;
-
+  /**
+   * Auto specials when policy is on: equipped weapon special first, then a
+   * distinct EoF store (Roar Soulfire + EoF Instability both must fire).
+   */
+  readonly nativeSpecials: readonly AbilitySpec[];
   /**
    * Equipment-static Leng land outcome table (null when no Leng passives).
    * Compiled once in createRuntime; shared across stochastic lanes.
@@ -256,12 +285,11 @@ export function createRuntime(
   // When absent, rebuild from abilities (manual UI / unit tests / one-off sims).
   const byId = input.abilityRegistry?.byId ?? mapAbilitiesById(input.abilities);
   const basicByStyle = input.abilityRegistry?.basicByStyle ?? mapBasicsByStyle(input.abilities);
-  const nativeSpecialId =
-    input.nativeSpecialPolicy?.useEquippedWeaponSpecial === true
-      ? input.equipmentEffects?.activeWeapon?.specialAttackId
-      : undefined;
-  const nativeSpecial = nativeSpecialId ? (byId.get(nativeSpecialId) ?? null) : null;
-
+  // Weapon special and distinct EoF store are both auto candidates when policy on.
+  const nativeSpecials = resolveAutoSpecialIds(input)
+    .map((id) => byId.get(id))
+    .filter((spec): spec is AbilitySpec => spec != null);
+  const nativeSpecial = nativeSpecials[0] ?? null;
   const equipment = input.equipmentEffects;
   const lengLandTable = lengLandTableFor(
     hasPassive(equipment, "leng-endless-frost"),
@@ -275,7 +303,8 @@ export function createRuntime(
     (input.playerMaximumLifePoints != null && input.playerMaximumLifePoints > 0
       ? {
           maximumLifePoints: input.playerMaximumLifePoints,
-          currentLifePoints: (input.playerMaximumLifePoints * (input.playerHpPercent ?? 100)) / 100,
+          currentLifePoints:
+            (input.playerMaximumLifePoints * (input.playerHpPercent ?? 100)) / 100,
         }
       : undefined);
   let state = newRotationState({
@@ -334,6 +363,7 @@ export function createRuntime(
     byId,
     basicByStyle,
     nativeSpecial,
+    nativeSpecials,
     lengLandTable,
     stochastic: createStochasticOracle(
       stochastic ?? { laneIndex: 0, laneCount: DEFAULT_STOCHASTIC_LANES },

@@ -167,8 +167,7 @@ export function wieldedOffhandKind(loadout: LoadoutEquipmentView): "shield" | "d
 }
 
 const SET_PIECE_WEIGHTS: Readonly<Record<string, number>> = {
-  // Visage and Misalionar's death mask each occupy one slot but count twice.
-  "item:misalionars-death-mask": 2,
+  // Visage occupies one slot but counts twice toward First Necromancer set effects.
   "item:visage-of-the-first-necromancer": 2,
 };
 

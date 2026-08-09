@@ -21,6 +21,7 @@ import type { ActiveEquipmentEffects } from "@/combat/shared/equipment";
 import type { AegisArmourBonus, ResolvedLeagueRules } from "@/combat/league/ruleset";
 import type { BarkscalesOutcome } from "@/combat/league/barkscales";
 import type { IcyenicFaithBonuses, IcyenicProtectionOutcome } from "@/combat/league/icyenicFaith";
+import type { RegionId } from "@/league";
 import { type Loadout } from "./useLoadout";
 import {
   equippedRecordIds,
@@ -242,7 +243,28 @@ export function nonWeaponAccuracyBonus(loadout: Loadout): number {
   }).appliedAccuracy;
 }
 
+function withAutomaticLoadoutEffects(loadout: Loadout, options: LoadoutStatsOptions): Loadout {
+  const regions = options.unlockedRegions;
+  const regionDriven = regions !== undefined;
+  const hasRegion = (region: RegionId) => regions?.includes(region) === true;
+  return {
+    ...loadout,
+    buffs: {
+      ...loadout.buffs,
+      strengthCape99: loadout.strengthLevel >= 99,
+      attackCape120: loadout.attackLevel >= 120,
+      ringOfVigourPassive: regionDriven
+        ? hasRegion("anachronia")
+        : loadout.buffs.ringOfVigourPassive,
+      eliteSeersVillage: loadout.buffs.eliteSeersVillage,
+      totemOfVitality: regionDriven ? hasRegion("anachronia") : loadout.buffs.totemOfVitality,
+      boonOfHet: regionDriven ? hasRegion("desert") : loadout.buffs.boonOfHet,
+    },
+  };
+}
+
 export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}): CalcStats {
+  loadout = withAutomaticLoadoutEffects(loadout, options);
   const now = options.now ?? Date.now();
   const levels = resolveLevels(loadout);
   const leagueSelection = resolveLeagueSelection(options);

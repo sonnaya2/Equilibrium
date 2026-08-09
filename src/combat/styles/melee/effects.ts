@@ -79,6 +79,8 @@ export interface MeleeTargetEffects {
   bleeds: Partial<Record<BleedId, number>>;
   abyssalParasite: AbyssalParasiteState;
   enduringRuin: { bleedVulnerability: number; untilTick: number };
+  /** Flamebound Rival is the single-target Ek-ZekKil designation. */
+  flameboundRival: boolean;
   /** Last Hurricane cast that reduced this target's cooldown. */
   lastHurricaneCdrCast: number;
 }
@@ -87,6 +89,7 @@ export const newMeleeTargetEffects = (): MeleeTargetEffects => ({
   bleeds: {},
   abyssalParasite: { stacks: 0, expiresAtTick: 0, nextDamageTick: 0, scheduledThroughTick: 0 },
   enduringRuin: { bleedVulnerability: 0, untilTick: 0 },
+  flameboundRival: false,
   lastHurricaneCdrCast: -1,
 });
 

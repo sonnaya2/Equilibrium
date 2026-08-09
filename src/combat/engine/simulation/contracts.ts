@@ -115,7 +115,11 @@ export interface SimulateInput {
   startingAdrenaline?: number;
   /** Equipped catalogue ids used by mechanics with verified item requirements. */
   equipmentIds?: readonly string[];
-
+  /**
+   * EoF stored special ability id. Required with Essence of Finality for
+   * requiresSpecialAccess weapon specials; EoF alone does not unlock them.
+   */
+  eofStoredSpecialId?: string | null;
   weaponConfiguration?: "twohand" | "dualwield" | "mainhand" | "shield" | "defender" | "necromancy";
   ammunition?: ResolvedRangedAmmunitionProfile | null;
   enchantedBoltChanceModifiers?: EnchantedBoltChanceModifiers;
@@ -258,7 +262,7 @@ export interface CastRecord {
    */
   refund: number;
   /**
-   * totalAbilityGain + otherImmediate + coe + vigour from the transaction.
+   * totalAbilityGain + otherImmediate + coe + vigour + special refund from the transaction.
    * Not after - before (channel passive gen must not inflate this).
    */
   adrenalineGained: number;
@@ -266,6 +270,11 @@ export interface CastRecord {
   adrenalineTransaction?: AdrenalineTransaction;
   /** Automatically selected Basic Attack, not part of the queued rotation. */
   auto?: boolean;
+  /**
+   * FSoA Surging Storm crit-damage layer snapped at cast time.
+   * Timeline status only; EoF specials on non-FSoA weapons stay false.
+   */
+  surgingStormAtCast?: boolean;
 }
 
 export type DamageSourceKind =

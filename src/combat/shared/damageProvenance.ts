@@ -405,7 +405,12 @@ export function assertProvenance(p: DamageProvenance | null | undefined): Damage
   return p;
 }
 
-/** True DoT damage for Precise and Berserker's Fury gates. */
+/**
+ * True DoT damage for Precise / Berserker's Fury gates.
+ * Converted channels project damageSource "dot" but are not true DoTs (keep Precise/BF).
+ * https://runescape.wiki/w/Precise
+ * https://runescape.wiki/w/Berserker%27s_Fury
+ */
 export function isTrueDotDamage(context: CombatContext): boolean {
   const kind = context.provenance?.kind;
   if (kind === "player_converted_channel") return false;

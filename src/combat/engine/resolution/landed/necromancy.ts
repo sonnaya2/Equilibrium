@@ -1,5 +1,9 @@
 import type { AbilitySpec } from "../../../pipeline/calculateAbility";
-import { findConjure, skeletonCommandHitLanded } from "../../../styles/necromancy/conjures";
+import {
+  dismissConjure,
+  findConjure,
+  skeletonCommandHitLanded,
+} from "../../../styles/necromancy/conjures";
 import { residualSoulCapFor } from "../../../styles/necromancy/effects";
 import type { ScheduledEvent } from "../../runtime/events";
 import type { SimulationRuntime } from "../../runtime/runtime";
@@ -47,6 +51,13 @@ export function onNecromancyHitLanded(
           s === spirit ? skeletonCommandHitLanded(s) : s,
         ),
       });
+    }
+  }
+
+  // Command Putrid explode (cast+4): dismiss zombie; pending poison already capped at chat.
+  if (event.family === "command" && event.abilityId === "command_putrid_zombie") {
+    if (findConjure(rt.state.necromancy.conjures, "putrid_zombie")) {
+      rt.state = patchConjures(rt.state, dismissConjure(rt.state.necromancy.conjures, "putrid_zombie"));
     }
   }
 

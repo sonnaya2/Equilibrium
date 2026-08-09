@@ -1,7 +1,7 @@
 /**
  * Catalyst locality → Equilibrium region mapping + display labels.
  * Client-safe: no snapshot JSON, no league barrel (relics/blessings).
- * Keep in sync with scripts/refresh-catalyst-snapshot.mjs.
+ * Keep in sync with data/league/catalyst-tasks-snapshot.json (manual snapshot; no refresh script).
  */
 
 import type { TaskRegionId } from "./index";

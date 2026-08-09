@@ -260,8 +260,17 @@ export {
   cancelOptimize,
   runSolverOnMainThread,
   solverPoolSize,
+  solverHostDiagnostics,
+  clearSolverHostDiagnostics,
+  getSolverHostDiagnostics,
+  isSolverHostDebugEnabled,
+  noteSolverHost,
+  snapshotSolverHostHeap,
   type RunOptimizeOptions,
+  type SolverHostDiagEvent,
+  type SolverHostHeapSnapshot,
 } from "./worker/host";
+export { liveSolverPoolWorkerCount } from "./worker/pool";
 
 export {
   createSearchState,

@@ -60,12 +60,13 @@ export interface SolverPackSnapshot {
   tumekensPieces?: number;
   equipmentEffects: ActiveEquipmentEffects;
   nativeSpecialPolicy?: { useEquippedWeaponSpecial: boolean };
+  eofStoredSpecialId?: string | null;
   league: SerializableLeagueRules;
   context?: CombatContext;
   targetHpPercent?: number;
   targetMaximumLifePoints?: number;
-  playerPoison?: PlayerPoisonProfile;
   playerVitality?: SerializableRevolutionSimBase["playerVitality"];
+  playerPoison?: PlayerPoisonProfile;
   targetPoisonImmune?: boolean;
   cap?: HitCapRule;
   startingAdrenaline?: number;
@@ -189,19 +190,26 @@ export function packSimBase(snapshot: SolverPackSnapshot): SerializableRevolutio
         : {}),
     },
     ...(snapshot.nativeSpecialPolicy ? { nativeSpecialPolicy: snapshot.nativeSpecialPolicy } : {}),
+    ...(snapshot.eofStoredSpecialId != null && snapshot.eofStoredSpecialId !== ""
+      ? { eofStoredSpecialId: snapshot.eofStoredSpecialId }
+      : {}),
     league: snapshot.league,
     context: snapshot.context,
     targetHpPercent: snapshot.targetHpPercent,
     targetMaximumLifePoints: snapshot.targetMaximumLifePoints,
     ...(snapshot.playerVitality ? { playerVitality: { ...snapshot.playerVitality } } : {}),
-    playerPoison: snapshot.playerPoison ? { ...snapshot.playerPoison } : undefined,
+    ...(snapshot.playerPoison ? { playerPoison: { ...snapshot.playerPoison } } : {}),
     targetPoisonImmune: snapshot.targetPoisonImmune === true,
     cap: snapshot.cap,
     startingAdrenaline: snapshot.startingAdrenaline,
-    naturalInstinctUntilTick: snapshot.naturalInstinctUntilTick,
-    startingResidualSouls: snapshot.startingResidualSouls,
-    slayerOnTask: snapshot.slayerOnTask,
-    slayerLevel: snapshot.slayerLevel,
+    ...(snapshot.naturalInstinctUntilTick != null
+      ? { naturalInstinctUntilTick: snapshot.naturalInstinctUntilTick }
+      : {}),
+    ...(snapshot.startingResidualSouls != null
+      ? { startingResidualSouls: snapshot.startingResidualSouls }
+      : {}),
+    ...(snapshot.slayerOnTask != null ? { slayerOnTask: snapshot.slayerOnTask } : {}),
+    ...(snapshot.slayerLevel != null ? { slayerLevel: snapshot.slayerLevel } : {}),
     equipmentIds: snapshot.equipmentIds,
     weaponConfiguration: snapshot.weaponConfiguration,
     modifierSources: modifierSourcesFrom(snapshot),

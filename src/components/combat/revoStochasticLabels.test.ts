@@ -46,8 +46,8 @@ describe("revoStochasticLabels", () => {
       },
     };
 
-    expect(residualNote(source)).toBe("10% of probability mass is unrepresented;");
-    expect(failureNote(source)).toMatch(/20% of paths failed/);
+    expect(residualNote(source)).toBe("10% mass not expanded.");
+    expect(failureNote(source)).toMatch(/20% paths failed/);
   });
 
   it("suppresses exact proof wording for estimated runs", () => {

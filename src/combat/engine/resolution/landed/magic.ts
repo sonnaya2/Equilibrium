@@ -5,6 +5,7 @@ import {
   instabilityActive,
   isConcentratedBlast,
   LIGHTNING_SURGE_TICK_DELAY,
+  lightningSurgeSourceWeight,
 } from "../../../styles/magic/effects";
 import type { ScheduledEvent } from "../../runtime/events";
 import { scheduleEvent, type SimulationRuntime } from "../../runtime/runtime";
@@ -18,6 +19,46 @@ import {
 } from "../../../styles/magic/songOfDestruction";
 
 /**
+ * Wiki Instability: magic weapon + magic crit on primary while buff active fires
+ * LS at land+1. Concrete critOutcome (stochastic) is weight 1; EV uses critChance
+ * after league/Critual land resolution. Surge itself is never lightningSurge-marked.
+ */
+export function scheduleInstabilityLightningSurge(
+  rt: SimulationRuntime,
+  event: ScheduledEvent<SimulationRuntime>,
+): void {
+  const snap = event.castSnap;
+  const lightningSurgeChance = lightningSurgeSourceWeight(rt.hitDetails.get(event.seq));
+  if (
+    !event.lightningSurge ||
+    !snap?.magicWeaponAtCast ||
+    !instabilityActive(rt.state.magic.instability, event.tick) ||
+    lightningSurgeChance <= 0
+  ) {
+    return;
+  }
+  scheduleEvent(rt, {
+    tick: event.tick + LIGHTNING_SURGE_TICK_DELAY,
+    family: "proc",
+    abilityId: "instability_lightning_surge",
+    sourceCast: event.sourceCast,
+    hitIndex: event.hitIndex,
+    attached: false,
+    procEligible: false,
+    recursionAllowed: false,
+    expectedOccurrences: lightningSurgeChance,
+    expectedTriggerRolls: 0,
+    expectedActivations: lightningSurgeChance,
+    expectedSeparateHits: lightningSurgeChance,
+    lightningSurgeSourceCritChance: lightningSurgeChance,
+    originKind: "proc",
+    provenance: { kind: "equipment_proc", detail: "lightning_surge" },
+    derivedFrom: event.seq,
+    resolve: (eventRt, at) => resolveLightningSurge(eventRt, at, event.seq),
+  });
+}
+
+/**
  * Magic state a real landed hit changes: Conc Blast crit ledger, Sonic Flow,
  * and Tsunami crit-adrenaline state.
  */
@@ -27,35 +68,7 @@ export function onMagicHitLanded(
   ability: AbilitySpec,
   damage?: ResolvedDamage,
 ): void {
-  const snap = event.castSnap;
-  const lightningSurgeChance = rt.hitDetails.get(event.seq)?.critChance ?? 0;
-  if (
-    event.lightningSurge &&
-    snap &&
-    snap.magicWeaponAtCast &&
-    instabilityActive(rt.state.magic.instability, event.tick) &&
-    lightningSurgeChance > 0
-  ) {
-    scheduleEvent(rt, {
-      tick: event.tick + LIGHTNING_SURGE_TICK_DELAY,
-      family: "proc",
-      abilityId: "instability_lightning_surge",
-      sourceCast: event.sourceCast,
-      hitIndex: event.hitIndex,
-      attached: false,
-      procEligible: false,
-      recursionAllowed: false,
-      expectedOccurrences: lightningSurgeChance,
-      expectedTriggerRolls: 0,
-      expectedActivations: lightningSurgeChance,
-      expectedSeparateHits: lightningSurgeChance,
-      lightningSurgeSourceCritChance: lightningSurgeChance,
-      originKind: "proc",
-      provenance: { kind: "equipment_proc", detail: "lightning_surge" },
-      derivedFrom: event.seq,
-      resolve: (eventRt, at) => resolveLightningSurge(eventRt, at, event.seq),
-    });
-  }
+  scheduleInstabilityLightningSurge(rt, event);
   // Concentrated Blast hits stack their crit grant at land time (wiki: each
   // channelled hit increases crit chance for the next Magic attack).
   if (isConcentratedBlast(ability.id)) {

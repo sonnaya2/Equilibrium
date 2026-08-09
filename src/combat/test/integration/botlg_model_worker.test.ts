@@ -161,6 +161,18 @@ describe("BotLG resolved-loadout projection", () => {
     ] as const) {
       expect(positivePerfectEquilibriumEvents(result), label).not.toHaveLength(0);
     }
+    const onPerfectEquilibrium = onRuns.direct.analysis.byEffect.find(
+      (effect) => effect.id === "perfect_equilibrium",
+    );
+    const offPerfectEquilibrium = offRuns.direct.analysis.byEffect.find(
+      (effect) => effect.id === "perfect_equilibrium",
+    );
+    expect(onPerfectEquilibrium?.expectedActivations).toBeGreaterThan(
+      offPerfectEquilibrium?.expectedActivations ?? 0,
+    );
+    expect(onPerfectEquilibrium?.totalDamage).toBeGreaterThan(
+      offPerfectEquilibrium?.totalDamage ?? 0,
+    );
     expect(
       onRuns.direct.casts.some(
         (cast) => cast.abilityId === "balance_by_force" && cast.result.expected > 0,

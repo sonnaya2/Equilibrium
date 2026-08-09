@@ -231,10 +231,7 @@ function mixExactDamageDistributions(
 ): readonly ExactDamageDistribution[] {
   const weights = new Map<number, number>();
   for (const outcome of inactive) {
-    weights.set(
-      outcome.damage,
-      (weights.get(outcome.damage) ?? 0) + outcome.weight * (1 - activeWeight),
-    );
+    weights.set(outcome.damage, (weights.get(outcome.damage) ?? 0) + outcome.weight * (1 - activeWeight));
   }
   for (const outcome of active) {
     weights.set(outcome.damage, (weights.get(outcome.damage) ?? 0) + outcome.weight * activeWeight);
@@ -318,12 +315,7 @@ function damageOnlyEnchantedBoltChance(
   provenance: ReturnType<typeof provenanceForCastHit>,
 ): number | null {
   const mechanicId = rt.input.ammunition?.projectile?.mechanicId;
-  if (
-    mechanicId !== "opal" &&
-    mechanicId !== "pearl" &&
-    mechanicId !== "diamond" &&
-    mechanicId !== "onyx"
-  ) {
+  if (mechanicId !== "opal" && mechanicId !== "pearl" && mechanicId !== "diamond" && mechanicId !== "onyx") {
     return null;
   }
   if (mechanicId === "onyx" && (rt.state.player?.vitality.maximumLifePoints ?? 0) > 0) return null;
@@ -364,7 +356,13 @@ function ammunitionSourceDamageDistribution(args: {
   const cap = normalizeHitCapRule(args.cap ?? standardHitCap);
   const postDamagePotentialFlat = args.postDamagePotentialFlat ?? 0;
   const resolve = (roll: number, critMultiplier?: number): number => {
-    const state = runOrderedPipeline({ damage: roll }, ordered, args.context, true, critMultiplier);
+    const state = runOrderedPipeline(
+      { damage: roll },
+      ordered,
+      args.context,
+      true,
+      critMultiplier,
+    );
     return applyHitCap(
       Math.floor(applyDamagePotential(state.damage, args.accuracy)) + postDamagePotentialFlat,
       cap,
@@ -388,7 +386,7 @@ function ammunitionSourceDamageDistribution(args: {
       grouped.set(damage, (grouped.get(damage) ?? 0) + rollWeight * (1 - critChance));
     }
     if (critBonuses.length > 0) {
-      const critWeight = (rollWeight * critChance) / critBonuses.length;
+      const critWeight = rollWeight * critChance / critBonuses.length;
       for (const bonus of critBonuses) {
         const damage = resolve(roll, baseCritDamageMultiplier(args.level, bonus));
         grouped.set(damage, (grouped.get(damage) ?? 0) + critWeight);
@@ -592,7 +590,10 @@ function resolveCastHitUncached(
         enchantedBoltStatefulProcStream(snap.castSeq, hitIndex),
         chance,
       );
-      rt.boltProcOutcomes.set(enchantedBoltStatefulProcStream(snap.castSeq, hitIndex), activeState);
+      rt.boltProcOutcomes.set(
+        enchantedBoltStatefulProcStream(snap.castSeq, hitIndex),
+        activeState,
+      );
       return activeState ? active : inactive;
     }
   }
@@ -744,8 +745,13 @@ function resolveCastHitUncached(
               wenDamagePotentialDelta,
           ),
         );
+  const accuracyWithBoltOverride = ammunition.accuracyOverride ?? effectiveAccuracy;
+  // Wiki hit chance: commands and Sunshine / Greater Sunshine zone DoT bypass DP.
+  // https://runescape.wiki/w/Hit_chance
   const hitAccuracy =
-    ammunition.accuracyOverride ?? (isCommand ? CONJURE_DAMAGE_POTENTIAL : effectiveAccuracy);
+    isCommand || ability.id === "sunshine" || ability.id === "greater_sunshine"
+      ? 1
+      : accuracyWithBoltOverride;
   const damageSource = outgoingSourceOf(provenance);
   const hitContext: import("../../types").CombatContext = {
     ...input.context,
@@ -767,7 +773,19 @@ function resolveCastHitUncached(
     ability,
     provenance,
   );
-
+  const ashenVowActive =
+    snap.ashenVowAtCast &&
+    ability.style === "melee" &&
+    !isDot &&
+    provenance.kind === "player_direct" &&
+    state.target.melee.flameboundRival;
+  const attachedTermBase = ashenVowActive
+    ? applyAbilityBaseModifiers(
+        base,
+        modifiers.filter((modifier) => modifier.id !== "passive:ashen-vow"),
+        hitContext,
+      ).base
+    : undefined;
   // Tuska on-task: flat 100x Slayer (15k cap); keep only Havoc's global final multiplier.
   // https://runescape.wiki/w/Tuska%27s_Wrath
   const tuskaFinalModifiers = modifiers.filter(
@@ -805,6 +823,7 @@ function resolveCastHitUncached(
           context: hitContext,
           cap: input.cap,
           preciseRank: input.preciseRank,
+          ...(attachedTermBase !== undefined ? { attachedTermBase } : {}),
           ...(essenceFlat > 0 ? { postDamagePotentialFlat: essenceFlat } : {}),
         });
   const hit = host.baseHit;

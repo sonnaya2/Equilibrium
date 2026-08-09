@@ -297,7 +297,8 @@ describe("Big Boned source composition", () => {
     expect(riders).toHaveLength(7);
     expect(summary.events.some((event) => event.abilityId === "big-boned")).toBe(false);
     expect(riders.every(({ component }) => component.hitCapPolicy === "shared")).toBe(true);
-    expect(riders.every(({ component }) => component.damage.expected > 750)).toBe(true);
+    // Flat 5% max-life (15000 -> 750). Concrete non-crit pins to 750; crit pins higher.
+    expect(riders.every(({ component }) => component.damage.expected >= 750)).toBe(true);
     expect(summary.analysis.byEffect.find((row) => row.id === "big-boned")?.dotDamage).toBe(0);
   });
 

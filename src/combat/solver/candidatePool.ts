@@ -123,6 +123,7 @@ export function buildCandidatePool(
       equipmentIds: options.equipmentIds,
       activeWeapon: options.activeWeapon,
       passiveIds: asPassiveIds(options.passiveIds),
+      eofStoredSpecialId: options.eofStoredSpecialId,
       league: options.league,
       groupPeers: peers,
     });

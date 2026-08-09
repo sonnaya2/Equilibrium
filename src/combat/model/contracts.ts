@@ -75,6 +75,11 @@ export interface ResolvedCombatModel {
   readonly nativeSpecialPolicy: {
     readonly useEquippedWeaponSpecial: boolean;
   };
+  /**
+   * EoF stored special ability id. Required with Essence of Finality for
+   * requiresSpecialAccess weapon specials.
+   */
+  readonly eofStoredSpecialId?: string | null;
 
   readonly modifierSources: ResolvedModifierSources;
   readonly adrenaline: AdrenalineRules;
@@ -137,6 +142,8 @@ export interface HostCombatResolveInput {
   readonly nativeSpecialPolicy?: {
     readonly useEquippedWeaponSpecial: boolean;
   };
+  /** EoF stored special ability id when Essence of Finality is equipped. */
+  readonly eofStoredSpecialId?: string | null;
   readonly league: SerializableLeagueRules;
   readonly context?: CombatContext;
   readonly targetHpPercent?: number;

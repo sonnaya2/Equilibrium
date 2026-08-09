@@ -81,6 +81,9 @@ export function reviveRevolutionBase(sim: SerializableRevolutionSimBase): Revive
     nativeSpecialPolicy: {
       useEquippedWeaponSpecial: sim.nativeSpecialPolicy?.useEquippedWeaponSpecial === true,
     },
+    ...(sim.eofStoredSpecialId != null && sim.eofStoredSpecialId !== ""
+      ? { eofStoredSpecialId: sim.eofStoredSpecialId }
+      : {}),
     league,
     procs: sim.procs,
     conjureBasicDamageMult: sim.conjureBasicDamageMult,

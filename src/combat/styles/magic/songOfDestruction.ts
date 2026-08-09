@@ -1,7 +1,7 @@
 import { mulFloor } from "../../core/rounding";
 import { secondsToTicks } from "../../core/ticks";
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
-import type { DamageProvenance } from "../../shared/damageProvenance";
+import { isTrueDotDamage, type DamageProvenance } from "../../shared/damageProvenance";
 import type { CombatContext, CombatModifier, SourceReference } from "../../types";
 import type { MagicAbilitySpec } from "./abilities";
 
@@ -29,8 +29,8 @@ export const SONG_OF_DESTRUCTION_SOURCE: SourceReference = {
 
 export const SOULFIRE_SOURCE: SourceReference = {
   source: "runescape-wiki",
-  url: "https://runescape.wiki/w/Comparison_of_high-level_magic_weapons",
-  title: "Comparison of high-level magic weapons",
+  url: "https://runescape.wiki/w/Soulfire",
+  title: "Soulfire",
   verifiedAt: "2026-08-09",
 };
 
@@ -298,13 +298,14 @@ export function songOfDestructionModifiers(input: SongDamageModifierInput): Comb
     input.ability?.songAffectedDot === true &&
     scope !== "corruption-tail"
   ) {
+    // Song 2pc is DoT-only (wiki Soulfire opener is direct; no 2pc on that hit).
     modifiers.push(
       abilityModifier(
         "song:two-piece-dot",
         SONG_TWO_PIECE_ABILITY_PRIORITY,
         SONG_TWO_PIECE_DAMAGE_MULTIPLIER,
         SONG_OF_DESTRUCTION_SOURCE,
-        (context) => context.style === "magic",
+        (context) => context.style === "magic" && isTrueDotDamage(context),
       ),
     );
   }
@@ -393,6 +394,9 @@ export function advanceSongAdrenalineStream(
   };
 }
 
+// Wiki Soulfire: 1 direct 130-160 (can crit, Sunshine; no Song 2pc) concurrent with
+// first of 6 DoT 170-200 every 3 ticks; total 7 hits, 1150-1360% AD.
+// https://runescape.wiki/w/Soulfire
 export const SOULFIRE_ABILITY: MagicAbilitySpec = {
   id: "soulfire",
   name: "Soulfire",
@@ -402,17 +406,19 @@ export const SOULFIRE_ABILITY: MagicAbilitySpec = {
   requiresSpecialAccess: true,
   minimumAutomaticRecastTicks: secondsToTicks(45),
   hits: [
-    { band: { minPct: 130, maxPct: 160 }, critEligible: false, dot: true, tickOffset: 0 },
-    ...Array.from({ length: 7 }, (_, index) => ({
+    { band: { minPct: 130, maxPct: 160 }, tickOffset: 0 },
+    ...Array.from({ length: 6 }, (_, index) => ({
       band: { minPct: 170, maxPct: 200 },
       critEligible: false,
       dot: true,
-      tickOffset: (index + 1) * 3,
+      dotKind: "burn" as const,
+      tickOffset: index * 3,
     })),
   ],
   essenceCorruptionEligible: true,
   adrenaline: { cost: 35 },
   cooldownSeconds: 45,
+  // Two-piece Song mult applies only to true DoT hits (gated in songOfDestructionModifiers).
   songAffectedDot: true,
   source: SOULFIRE_SOURCE,
 };

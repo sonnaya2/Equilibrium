@@ -21,8 +21,7 @@ import { buildSolverResultHonesty } from "./solverDtoHonesty";
 import { CURRENT_BAR_REMAINS_BEST_NOTE, type SolverResultDTO } from "./worker/serializable";
 import type { SerializableSolverRequest } from "./worker/serializable";
 import { isSerializableSimBase } from "./worker/serializable";
-import { reviveLeague, reviveModifiers } from "./worker/revive";
-import { playerPoisonModifiersFromSources } from "../model";
+import { reviveRevolutionBase } from "./worker/revive";
 
 export type HostIncumbentBaseline = {
   /** Normalized user bar (order preserved; only illegal ids dropped). */
@@ -62,41 +61,10 @@ export function evaluateHostIncumbentBaseline(
   const abilities = [...abilityMap.values()];
 
   const { fullTicks } = computeHorizonsAndBudget(request);
-  const league = reviveLeague(simBase.league);
-  const modifiers = reviveModifiers(simBase.modifierSources, league);
-
+  // Same field set as worker path - no hand-built subset.
   const sim = {
-    base: simBase.base,
-    level: simBase.level,
-    ...(simBase.overrideBase != null ? { overrideBase: simBase.overrideBase } : {}),
-    ...(simBase.overrideLevel != null ? { overrideLevel: simBase.overrideLevel } : {}),
-    ...(simBase.activateNaragiAtStart === true ? { activateNaragiAtStart: true } : {}),
-    accuracy: simBase.accuracy,
-    crit: simBase.crit,
+    ...reviveRevolutionBase(simBase),
     abilities,
-    equipmentIds: simBase.equipmentIds,
-    weaponConfiguration: simBase.weaponConfiguration,
-    startingAdrenaline: simBase.startingAdrenaline,
-    adrenaline: simBase.adrenaline,
-    procs: simBase.procs,
-    plantedFeet: simBase.plantedFeet,
-    strengthCape99: simBase.strengthCape99,
-    preciseRank: simBase.preciseRank,
-    ammunition: simBase.ammunition,
-    caromingRank: simBase.caromingRank ?? simBase.modifierSources?.caroming ?? 0,
-    conjureBasicDamageMult: simBase.conjureBasicDamageMult,
-    conjureDurationMult: simBase.conjureDurationMult,
-    tumekensPieces: simBase.tumekensPieces,
-    equipmentEffects: simBase.equipmentEffects,
-    league,
-    context: simBase.context,
-    targetHpPercent: simBase.targetHpPercent,
-    targetMaximumLifePoints: simBase.targetMaximumLifePoints,
-    playerPoison: simBase.playerPoison,
-    playerPoisonModifiers: playerPoisonModifiersFromSources(simBase.modifierSources, league),
-    targetPoisonImmune: simBase.targetPoisonImmune === true,
-    cap: simBase.cap,
-    modifiers,
   };
 
   const evaluation = evaluateRevolutionBar({

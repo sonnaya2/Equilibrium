@@ -53,7 +53,7 @@ interface CombatRecordBase {
   mechanicalImplementation?: string;
 }
 
-export type AbilityCategory = "basic" | "enhanced" | "ultimate" | "utility";
+export type AbilityCategory = "basic" | "enhanced" | "threshold" | "ultimate" | "utility";
 
 export interface AbilityRecord extends CombatRecordBase {
   /** "shared" for all-style abilities (Sacrifice is a Constitution ability). */
@@ -132,6 +132,8 @@ export type ItemPassiveId =
   | "surging-storm"
   /** Pernix quiver: raises only the ranged maximum-hit band below 25% target LP. */
   | "pernix-quiver-max-hit-band"
+  /** Ek-ZekKil physical weapon passive: outgoing damage against Flamebound Rival. */
+  | "ashen-vow"
   /** Bow of the Last Guardian physical passive: Perfect Equilibrium. */
   | "perfect-equilibrium";
 

@@ -18,6 +18,8 @@ import {
   type PerfectEquilibriumSourceOutcome,
 } from "../../styles/ranged/botlg";
 import { dracolichInfusionCritChance } from "../../styles/ranged/dracolich";
+import { shadowImbuedAdrenalinePerHit } from "../../styles/ranged/onHit";
+import { balanceByForceActive } from "../../styles/ranged/effects";
 import { activeBleedCount } from "../../styles/melee/effects";
 import { resolveLeagueCritAtLand } from "../../league/ruleset";
 import { landTimeModifiers } from "./modifiers";
@@ -25,8 +27,9 @@ import { applyRangedAmmunitionLandedState } from "./landed/ranged";
 import { packageCritical, type EventResolution, type ResolvedDamage } from "./types";
 import type { ScheduledEvent } from "../runtime/events";
 import { scheduleEvent, type SimulationRuntime } from "../runtime/runtime";
-import { patchRanged } from "../runtime/state";
+import { gainAdrenaline, patchRanged } from "../runtime/state";
 import type { CastSnapshot } from "../cast/snapshot";
+import { recordAppliedEventEffect } from "./accounting";
 
 const PERFECT_EQUILIBRIUM_ABILITY: AbilitySpec = {
   id: "perfect_equilibrium",
@@ -55,6 +58,8 @@ function emptyPerfectEquilibriumSnapshot(baseMods: CombatModifier[]): CastSnapsh
     enduringRuinBonus: 0,
     magicWeaponAtCast: false,
     surgingStormAtCast: false,
+    ashenVowAtCast: false,
+    igneousShowdownRepeat: false,
     perfectEquilibriumAtCast: false,
     perfectEquilibriumTrigger: false,
     wenIcyPrecisionDamageAtCast: false,
@@ -245,38 +250,64 @@ function parentStyle(
   );
 }
 
+function recordPerfectEquilibriumState(
+  rt: SimulationRuntime,
+  event: ScheduledEvent<SimulationRuntime>,
+): void {
+  recordAppliedEventEffect(rt, event, {
+    id: "perfect_equilibrium",
+    stackCount: rt.state.ranged.perfectEquilibriumStacks,
+  });
+  const balance = rt.state.ranged.balanceByForce;
+  if (balanceByForceActive(balance, event.tick)) {
+    recordAppliedEventEffect(rt, event, {
+      id: "balance_by_force",
+      remainingTicks: balance.expiresAtTick - event.tick,
+    });
+  }
+}
+
 export function applyBotlgLanded(
   rt: SimulationRuntime,
   event: ScheduledEvent<SimulationRuntime>,
   resolution: EventResolution,
 ): void {
   if (event.provenance.kind === "botlg_perfect_equilibrium") {
+    const perHit = shadowImbuedAdrenalinePerHit(rt.state.ranged.shadowImbued, event.tick);
+    if (perHit > 0) rt.state = gainAdrenaline(rt.state, perHit);
     applyRangedAmmunitionLandedState(rt, event, resolution.damage, "botlg");
+    recordPerfectEquilibriumState(rt, event);
     return;
   }
   const source = resolution.sourcePrecritDistribution;
-  if (!source || event.attached || event.family !== "hit") return;
+  const style = parentStyle(rt, event);
+  const provenance = event.provenance;
+  if (
+    !source ||
+    event.attached ||
+    (event.family !== "hit" && !perfectEquilibriumHitEligible({ style, provenance }))
+  ) {
+    return;
+  }
 
   const forcedBalance =
     event.abilityId === "balance_by_force" && event.castSnap?.perfectEquilibriumTrigger === true;
   if (forcedBalance) {
     schedulePerfectEquilibrium(rt, event, source);
+    recordPerfectEquilibriumState(rt, event);
     return;
   }
 
   const snap = event.castSnap;
-  const provenance = event.provenance;
-  if (
-    !snap?.perfectEquilibriumAtCast ||
-    !perfectEquilibriumHitEligible({ style: parentStyle(rt, event), provenance })
-  ) {
+  if (!snap?.perfectEquilibriumAtCast || !perfectEquilibriumHitEligible({ style, provenance })) {
     return;
   }
   const result = recordPerfectEquilibriumHit(rt.state.ranged, {
-    style: parentStyle(rt, event),
+    style,
     provenance,
     tick: event.tick,
   });
   rt.state = patchRanged(rt.state, { perfectEquilibriumStacks: result.stacks });
   if (result.triggered) schedulePerfectEquilibrium(rt, event, source);
+  recordPerfectEquilibriumState(rt, event);
 }

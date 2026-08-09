@@ -10,11 +10,11 @@ import {
 } from "./workerPlan";
 
 describe("workerPlan", () => {
-  it("tier ceilings are Thorough 4 · Extreme 6 · Unhinged 8", () => {
+  it("tier ceilings are Thorough 4 · Extreme 6 · Unhinged 6", () => {
     expect(TIER_MAX_AGENTS.thorough).toBe(4);
     expect(TIER_MAX_AGENTS.extreme).toBe(6);
-    expect(TIER_MAX_AGENTS.unhinged).toBe(8);
-    expect(SAFE_GLOBAL_AGENT_CEILING).toBe(8);
+    expect(TIER_MAX_AGENTS.unhinged).toBe(6);
+    expect(SAFE_GLOBAL_AGENT_CEILING).toBe(6);
   });
 
   it("low-core hardware lowers agent count below tier ceiling", () => {
@@ -26,7 +26,7 @@ describe("workerPlan", () => {
   it("high-core hardware is still capped by tier ceilings", () => {
     expect(preferredAgentCount("thorough", 32)).toBe(4);
     expect(preferredAgentCount("extreme", 32)).toBe(6);
-    expect(preferredAgentCount("unhinged", 32)).toBe(8);
+    expect(preferredAgentCount("unhinged", 32)).toBe(6);
   });
 
   it("planWorkers keeps every assignment inside request bounds", () => {
@@ -43,7 +43,7 @@ describe("workerPlan", () => {
         hardwareCores: 16,
         baseSeed: 7,
       });
-      expect(plan.agentCount).toBe(8);
+      expect(plan.agentCount).toBe(6);
       for (const a of plan.assignments) {
         expect(a.minBarSize).toBeGreaterThanOrEqual(range.minBarSize);
         expect(a.maxBarSize).toBeLessThanOrEqual(range.maxBarSize);
@@ -128,9 +128,10 @@ describe("RESERVES_UI_CORE capacity guard", () => {
     expect(preferredAgentCount("thorough", 6)).toBe(4);
     // low cores still limited by hardware, never by a forced reserve.
     expect(preferredAgentCount("thorough", 2)).toBe(2);
-    expect(preferredAgentCount("unhinged", 8)).toBe(8);
-    expect(shouldReserveUiCore(8, 8)).toBe(false);
-    expect(shouldReserveUiCore(8, 10)).toBe(true);
-    expect(preferredAgentCount("unhinged", 10)).toBe(8);
+    expect(preferredAgentCount("unhinged", 6)).toBe(6);
+    expect(shouldReserveUiCore(6, 6)).toBe(false);
+    expect(shouldReserveUiCore(6, 8)).toBe(true);
+    expect(preferredAgentCount("unhinged", 8)).toBe(6);
+    expect(preferredAgentCount("unhinged", 10)).toBe(6);
   });
 });

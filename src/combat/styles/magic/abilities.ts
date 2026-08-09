@@ -303,6 +303,8 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     name: "Smoke Tendrils",
     style: "magic",
     category: "enhanced",
+    // Wiki: 4 hits over 4.2s (7 ticks occupancy); free after last hit offset + 1.
+    channelTicks: 7,
     hits: smokeTendrilHits(),
     guaranteedCrit: true,
     // Wiki adrenaline cell is 0% (neither gain nor spend).
@@ -425,6 +427,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     style: "magic",
     category: "enhanced",
     weaponSpecial: true,
+    requiresSpecialAccess: true,
     hits: [{ band: { minPct: 200, maxPct: 240 } }],
     adrenaline: { cost: 25 },
     supportStatus: "partially-modeled",
@@ -520,9 +523,9 @@ export const MAGIC_EFFECTS = [
   },
   {
     id: "instability_lightning_surge",
-    name: "Instability Lightning Surge",
+    name: "Lightning Surge",
     notes:
-      "While Instability buff (30s / 50 ticks): Magic crits on primary target fire Lightning Surge 70-90% ability damage 1 tick later. EV: p·T per crit-eligible hit (wiki formula). Surge crits do not chain. Magic weapons only. PvP: no crit effect and no cooldown — out of scope.",
+      "While Instability buff (30s / 50 ticks): Magic crits on primary target fire Lightning Surge 70-90% ability damage 1 tick later. EV: p·T per crit-eligible hit (wiki formula). Surge crits do not chain. Magic weapons only. PvP: no crit effect and no cooldown - out of scope.",
     source: wikiAbility("Instability"),
   },
   {

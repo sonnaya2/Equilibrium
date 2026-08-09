@@ -38,6 +38,24 @@ function equipment(twohand: string, amulet?: string) {
 }
 
 describe("Surging Storm cast ownership", () => {
+  it("marks CastRecord.surgingStormAtCast for timeline status on FSoA only", () => {
+    const fsoa = simulate({
+      ...fsoaMagicInput,
+      crit: { chance: 0, guaranteed: true },
+      rotation: rotationOf("magic_attack"),
+    });
+    const staff = simulate({
+      ...magicInput,
+      equipmentIds: [STAFF],
+      weaponConfiguration: "twohand",
+      equipmentEffects: equipment(STAFF),
+      crit: { chance: 0, guaranteed: true },
+      rotation: rotationOf("magic_attack"),
+    });
+    expect(fsoa.casts[0]?.surgingStormAtCast).toBe(true);
+    expect(staff.casts[0]?.surgingStormAtCast).toBeUndefined();
+  });
+
   it("applies the exact layer only to an FSoA cast and composes additively", () => {
     const fsoa = simulate({
       ...fsoaMagicInput,
@@ -85,6 +103,7 @@ describe("Surging Storm cast ownership", () => {
       equipmentIds: [STAFF, EOF],
       weaponConfiguration: "twohand",
       equipmentEffects: equipment(STAFF, EOF),
+      eofStoredSpecialId: "instability",
       startingAdrenaline: 50,
       crit: { chance: 0, guaranteed: true },
       rotation: rotationOf("instability"),

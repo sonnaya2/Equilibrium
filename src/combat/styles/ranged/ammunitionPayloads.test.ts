@@ -251,16 +251,14 @@ describe("ranged ammunition source-hit payloads", () => {
       { damage: 403, weight: 0.5 },
     ];
     expect(dragonstoneSeparateHitExpected(distribution, 1, 30_000)).toBe(99.5);
-    expect(
-      dragonstoneSeparateHitExpected(
-        [
-          { damage: 10_000, weight: 0.5 },
-          { damage: 30_000, weight: 0.5 },
-        ],
-        1,
-        4_000,
-      ),
-    ).toBe(3_250);
+    expect(dragonstoneSeparateHitExpected(
+      [
+        { damage: 10_000, weight: 0.5 },
+        { damage: 30_000, weight: 0.5 },
+      ],
+      1,
+      4_000,
+    )).toBe(3_250);
   });
 
   it("does not use the weapon-poison potion tier for Emerald", () => {
@@ -271,9 +269,9 @@ describe("ranged ammunition source-hit payloads", () => {
       blowpipe: false,
       laniakea: false,
     };
-    expect(emeraldExternalPoisonMultiplier({ ...base, potion: "none" })).toBe(
-      emeraldExternalPoisonMultiplier({ ...base, potion: "weapon-plus-plus-plus" }),
-    );
+    expect(
+      emeraldExternalPoisonMultiplier({ ...base, potion: "none" }),
+    ).toBe(emeraldExternalPoisonMultiplier({ ...base, potion: "weapon-plus-plus-plus" }));
   });
 
   it("models Emerald as one poison-type payload without scheduler refresh", () => {

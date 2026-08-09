@@ -1,5 +1,11 @@
 import type { SourceReference } from "../../types";
 import type { AbilityHit, AbilitySpec } from "../../pipeline/calculateAbility";
+import {
+  IGNEOUS_SHOWDOWN_ADRENALINE_COST,
+  IGNEOUS_SHOWDOWN_COOLDOWN_SECONDS,
+  IGNEOUS_SHOWDOWN_PRIMARY_BAND,
+  IGNEOUS_SHOWDOWN_SOURCE,
+} from "./ekZekKil";
 
 /**
  * Post-modernisation melee kit. Bands and adrenaline are wiki-verified (Melee
@@ -426,8 +432,8 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     name: "Icy Tempest",
     style: "melee",
     category: "utility",
-    // Weapon special attack (not a normal ability). Access: Leng MH specialAttackId
-    // or Essence of Finality equipped; never passive-only.
+    // Weapon special (not a normal ability). Access: Leng MH specialAttackId or
+    // EoF with matching stored special; never passive-only or EoF alone.
     weaponSpecial: true,
     requiresSpecialAccess: true,
     area: "aoe",
@@ -435,8 +441,22 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     adrenaline: { cost: 30 },
     cooldownSeconds: 15,
     supportNote:
-      "Weapon special. Requires Dark Shard of Leng (or equivalent) or Essence of Finality. ST primary model; multi-target splash unmodeled.",
+      "Weapon special. Requires Dark Shard of Leng (or equivalent) or Essence of Finality with that special stored. ST primary model; multi-target splash unmodeled.",
     source: wikiAbility("Icy Tempest", "Icy_Tempest", "2026-08-02"),
+  },
+  {
+    id: "igneous_showdown",
+    name: "Igneous Showdown",
+    style: "melee",
+    category: "utility",
+    weaponSpecial: true,
+    requiresSpecialAccess: true,
+    hits: [{ band: { ...IGNEOUS_SHOWDOWN_PRIMARY_BAND } }],
+    adrenaline: { cost: IGNEOUS_SHOWDOWN_ADRENALINE_COST },
+    cooldownSeconds: IGNEOUS_SHOWDOWN_COOLDOWN_SECONDS,
+    supportNote:
+      "Native Ek-ZekKil special or Essence of Finality with that special stored. Flamebound Rival has no timer in the single-primary-target model; death, revival, and genuine NPC phase replacement are not simulated.",
+    source: IGNEOUS_SHOWDOWN_SOURCE,
   },
   {
     // Wiki Pulverise: two-handed ultimate, 300-340, 60% cost, 60s CD; Pulverised 30s; on-kill +50% adren.
@@ -449,6 +469,9 @@ export const MELEE_ABILITIES: MeleeAbilitySpec[] = [
     cooldownSeconds: 60,
     weaponRequirement: "twohand",
     appliesEffect: "pulverise",
+    // Hit is full; residual DR/kill adren documented only (keep solver-eligible).
+    supportNote:
+      "300-340% hit included. Pulverised -25% target damage and on-kill +50% adren not modeled.",
     source: wikiAbility("Pulverise", "Pulverise"),
   },
   {
@@ -577,6 +600,8 @@ export const PUNISH_HP_THRESHOLD = 0.5;
 /**
  * Strength cape (99) / master cape: Dismember deals three additional hits of
  * the same bleed band (wiki). Idempotent if already extended.
+ * Marks the +N as flatBleedHitBonus so spear duration extension still uses the
+ * pre-cape base (8 + floor(8*0.5) + 3 = 15; not floor(11*0.5)).
  */
 export function withStrengthCape99Dismember<T extends AbilitySpec>(
   abilities: readonly T[],
@@ -587,7 +612,7 @@ export function withStrengthCape99Dismember<T extends AbilitySpec>(
     if (ability.id !== "dismember") return ability;
     const baseHits = ability.hits;
     if (baseHits.length === 0) return ability;
-    // Base kit is 8 ticks; skip if already patched.
+    if ((ability.flatBleedHitBonus ?? 0) >= extraHits) return ability;
     if (baseHits.length >= 8 + extraHits) return ability;
     const sample = baseHits[baseHits.length - 1]!;
     const step =
@@ -598,6 +623,10 @@ export function withStrengthCape99Dismember<T extends AbilitySpec>(
       ...sample,
       tickOffset: (sample.tickOffset ?? 0) + step * (i + 1),
     }));
-    return { ...ability, hits: [...baseHits, ...extra] };
+    return {
+      ...ability,
+      hits: [...baseHits, ...extra],
+      flatBleedHitBonus: (ability.flatBleedHitBonus ?? 0) + extraHits,
+    };
   });
 }

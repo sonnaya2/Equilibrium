@@ -23,6 +23,7 @@ import { statefulOccurrenceProbability } from "../../analysis/multiplicity";
 import { noteBlessingDamageCache } from "../../../profiling/allocation";
 import { critProbability, type CritLayers } from "../../../core/critical";
 import type { CombatContext, CombatModifier } from "../../../types";
+import { calculateNonCriticalHitDistribution } from "../../../pipeline/calculateHit";
 
 /**
  * Prefer scheduled DamageProvenance (keeps blessing detail for rider carve-out);
@@ -119,24 +120,76 @@ function resolveConcreteInferno(
     preciseRank: rt.input.preciseRank,
     landTick: event.tick,
   });
+  const sourcePrecritDistribution = calculateNonCriticalHitDistribution({
+    base: rt.input.base,
+    band: { minPct: band[0], maxPct: band[1] },
+    level: rt.input.level,
+    accuracy: rt.input.accuracy,
+    crit: { ...infernoCritLayers(rt), chance: 0, guaranteed: false, eligible: false },
+    modifiers: modifiers.filter(
+      (modifier) => modifier.stage === "target" || modifier.stage === "postHit",
+    ),
+    context: {
+      ...context,
+      style,
+      damageSource: "blessing",
+      provenance,
+    },
+    provenance,
+    cap: rt.input.cap,
+    preciseRank: rt.input.preciseRank,
+  });
+  // Match castHit: hitDetail is pure host (baseHit). Shared riders stay as
+  // components so materialize rebuilds host band + each component once.
+  const base = inferno.baseHit;
   const critical = packageCritical(
-    inferno.hit.critChance,
-    inferno.hit.critExpected,
-    inferno.hit.nonCritExpected,
+    base.critChance,
+    base.critExpected,
+    base.nonCritExpected,
     forcedOutcome === undefined ? undefined : { outcome: forcedOutcome },
   );
+  const components = inferno.components.map((component) =>
+    attachedResolutionComponent(component),
+  );
+  // Pre-materialize EV total = pure host + every attached component (shared + separate).
+  let min = base.min;
+  let max = base.max;
+  let expected = base.expected;
+  let critExpected = base.critExpected;
+  let capLoss = base.capLoss;
+  for (const component of components) {
+    min += component.damage.min;
+    max += component.damage.max;
+    expected += component.damage.expected;
+    critExpected += component.damage.critExpected ?? component.damage.expected;
+    capLoss += component.damage.capLoss ?? 0;
+  }
   return {
     damage: {
-      min: inferno.hit.min,
-      max: inferno.hit.max,
-      expected: inferno.hit.expected,
-      critExpected: inferno.hit.critExpected,
-      capLoss: inferno.hit.capLoss,
+      min,
+      max,
+      expected,
+      critExpected,
+      capLoss,
       critical,
     },
-    hitDetail: inferno.hit,
-    components: inferno.components.map((component) => attachedResolutionComponent(component)),
+    hitDetail: {
+      ...base,
+      ...(forcedOutcome === undefined ? {} : { critOutcome: forcedOutcome }),
+    },
+    sourcePrecritDistribution,
+    components,
   };
+}
+
+/** Wiki Instability: magic weapon + magic-style crit can fire LS; blessings use style at schedule. */
+function blessingLightningSurgeFlag(
+  style: CombatContext["style"],
+  castSnap: ScheduledEvent<SimulationRuntime>["castSnap"],
+): { lightningSurge: true } | Record<string, never> {
+  return style === "magic" && castSnap?.magicWeaponAtCast === true
+    ? { lightningSurge: true as const }
+    : {};
 }
 
 function scheduleConcreteInfernoChain(
@@ -173,6 +226,8 @@ function scheduleConcreteInfernoChain(
       expectedSeparateHits: 1,
       combatStyle: style,
       resourceEligible: true,
+      castSnap: parent.castSnap,
+      ...blessingLightningSurgeFlag(style, parent.castSnap),
       resolve: (runtime) =>
         resolveConcreteInferno(
           runtime,
@@ -417,6 +472,9 @@ export function applyBlessingDamage(
       ...(component.bonusTargetId ? { bonusTargetId: component.bonusTargetId } : {}),
       originKind: "blessing",
       provenance: { kind: "blessing", detail: component.effectId },
+      castSnap: event.castSnap,
+      combatStyle: style,
+      ...blessingLightningSurgeFlag(style, event.castSnap),
       expectedOccurrences: component.expectedOccurrences * parentWeight,
       expectedTriggerRolls: component.expectedTriggerRolls * parentWeight,
       expectedActivations: component.expectedActivations * parentWeight,
@@ -440,6 +498,9 @@ export function applyBlessingDamage(
       resolve: () => ({
         damage: scaledDamage,
         hitDetail: parentWeight === 1 ? component.hitDetail : undefined,
+        ...(component.sourcePrecritDistribution
+          ? { sourcePrecritDistribution: component.sourcePrecritDistribution }
+          : {}),
         ...(nested && nested.length > 0 ? { components: nested } : {}),
       }),
     });

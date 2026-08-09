@@ -131,28 +131,23 @@ describe("damage-only enchanted bolts", () => {
     );
   });
 
-  it.each([0.35, 0.8])(
-    "uses Diamond perfect accuracy while leaving damage increase partial at DP %s",
-    (accuracy) => {
-      const reference = simulate({
-        ...rangedInput,
-        accuracy,
-        rotation: rotationOf("ranged_attack"),
-      });
-      const diamond = simulate({
-        ...rangedInput,
-        accuracy,
-        ammunition: boltAmmunition("diamond"),
-        rotation: rotationOf("ranged_attack"),
-      });
-      expect(
-        diamond.events.find((event) => event.originKind === "direct")!.damage.expected,
-      ).toBeGreaterThan(
-        reference.events.find((event) => event.originKind === "direct")!.damage.expected,
-      );
-      expect(diamond.rng?.lanes ?? 1).toBe(1);
-    },
-  );
+  it.each([0.35, 0.8])("uses Diamond perfect accuracy while leaving damage increase partial at DP %s", (accuracy) => {
+    const reference = simulate({
+      ...rangedInput,
+      accuracy,
+      rotation: rotationOf("ranged_attack"),
+    });
+    const diamond = simulate({
+      ...rangedInput,
+      accuracy,
+      ammunition: boltAmmunition("diamond"),
+      rotation: rotationOf("ranged_attack"),
+    });
+    expect(diamond.events.find((event) => event.originKind === "direct")!.damage.expected).toBeGreaterThan(
+      reference.events.find((event) => event.originKind === "direct")!.damage.expected,
+    );
+    expect(diamond.rng?.lanes ?? 1).toBe(1);
+  });
 
   it("schedules Emerald as one poison hit, with immunity and poison modifiers", () => {
     const emerald = simulate({
@@ -221,12 +216,8 @@ describe("damage-only enchanted bolts", () => {
       ammunition: boltAmmunition("dragonstone", "bolts", 95),
       rotation: rotationOf("ranged_attack"),
     });
-    const ordinaryProc = ordinary.events.find(
-      (event) => event.abilityId === "ammunition:dragonstone",
-    );
-    const bakriminelProc = bakriminel.events.find(
-      (event) => event.abilityId === "ammunition:dragonstone",
-    );
+    const ordinaryProc = ordinary.events.find((event) => event.abilityId === "ammunition:dragonstone");
+    const bakriminelProc = bakriminel.events.find((event) => event.abilityId === "ammunition:dragonstone");
     expect(ordinaryProc?.damage.expected).toBe(bakriminelProc?.damage.expected);
     expect(ordinaryProc).toMatchObject({
       family: "proc",

@@ -28,17 +28,17 @@ function castAbility(
 }
 
 describe("stun-basic charges (Backhand / Binding Shot / Impact)", () => {
-  it("specs declare max 2 at secondChargeLevel 54", () => {
-    for (const [id, list] of [
-      ["backhand", MELEE_ABILITIES],
-      ["binding_shot", RANGED_ABILITIES],
-      ["impact", MAGIC_ABILITIES],
+  it("unlocks each second charge at its sourced level", () => {
+    for (const [id, list, secondChargeLevel] of [
+      ["backhand", MELEE_ABILITIES, 54],
+      ["binding_shot", RANGED_ABILITIES, 70],
+      ["impact", MAGIC_ABILITIES, 54],
     ] as const) {
       const ability = list.find((a) => a.id === id)!;
-      expect(ability.charges).toEqual({ max: 2, secondChargeLevel: 54 });
+      expect(ability.charges).toEqual({ max: 2, secondChargeLevel });
       expect(maxChargesFor(ability, 99)).toBe(2);
-      expect(maxChargesFor(ability, 54)).toBe(2);
-      expect(maxChargesFor(ability, 53)).toBe(1);
+      expect(maxChargesFor(ability, secondChargeLevel)).toBe(2);
+      expect(maxChargesFor(ability, secondChargeLevel - 1)).toBe(1);
     }
   });
 

@@ -100,6 +100,9 @@ export function projectSerializableSimBase(
         : {}),
     },
     nativeSpecialPolicy: model.nativeSpecialPolicy,
+    ...(model.eofStoredSpecialId != null && model.eofStoredSpecialId !== ""
+      ? { eofStoredSpecialId: model.eofStoredSpecialId }
+      : {}),
     league: {
       ...model.league,
       blessingIds: [...model.league.blessingIds],
@@ -109,10 +112,10 @@ export function projectSerializableSimBase(
     context: model.context,
     targetHpPercent: model.target.hpPercent,
     targetMaximumLifePoints: model.target.maximumLifePoints,
+    ...(model.playerVitality ? { playerVitality: { ...model.playerVitality } } : {}),
     playerPoison: { ...model.playerPoison },
     targetPoisonImmune: model.target.poisonImmune === true,
     cap: model.cap ?? { cap: STANDARD_HIT_CAP, bypass: false },
-    ...(model.playerVitality ? { playerVitality: { ...model.playerVitality } } : {}),
     startingAdrenaline: model.startingAdrenaline,
     ...(model.naturalInstinctUntilTick != null
       ? { naturalInstinctUntilTick: model.naturalInstinctUntilTick }

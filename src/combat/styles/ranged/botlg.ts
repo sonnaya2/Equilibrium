@@ -23,6 +23,7 @@ export const PERFECT_EQUILIBRIUM_ABILITY_DAMAGE_BAND = { minPct: 12, maxPct: 16 
 export const PERFECT_EQUILIBRIUM_TRIGGER_DAMAGE_BAND = { minPct: 33, maxPct: 37 } as const;
 
 const MAX_EXACT_TERM_CONVOLUTION_PAIRS = 10_000_000;
+const PERFECT_EQUILIBRIUM_DIRECT_BLESSINGS = new Set(["inferno-of-zamorak", "light-of-saradomin"]);
 
 export function perfectEquilibriumStackThreshold(
   state: Pick<RangedRotationState, "balanceByForce">,
@@ -37,6 +38,13 @@ export function perfectEquilibriumHitEligible(args: {
   style: CombatStyle;
   provenance: DamageProvenance;
 }): boolean {
+  if (
+    args.style === "ranged" &&
+    args.provenance.kind === "blessing" &&
+    args.provenance.detail !== undefined
+  ) {
+    return PERFECT_EQUILIBRIUM_DIRECT_BLESSINGS.has(args.provenance.detail);
+  }
   const capabilities = capabilitiesOf(args.provenance);
   return (
     args.style === "ranged" &&

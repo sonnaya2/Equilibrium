@@ -65,7 +65,10 @@ const CHARGEBOW_IDS: ReadonlySet<string> = new Set([
 ]);
 
 export function weaponAmmunitionCapabilityFromEquipment(
-  record: Pick<EquipmentRecord, "id" | "ammunitionCapability" | "weaponClass"> | null | undefined,
+  record:
+    | Pick<EquipmentRecord, "id" | "ammunitionCapability" | "weaponClass">
+    | null
+    | undefined,
 ): RangedWeaponAmmunitionCapability | null {
   if (record?.ammunitionCapability) return record.ammunitionCapability;
   if (record?.id != null && CHARGEBOW_IDS.has(record.id)) {

@@ -206,9 +206,8 @@ export function hasEssenceOfFinalityEquipped(equipmentIds?: readonly string[]): 
 }
 
 /**
- * Weapon special access: native weapon (specialAttackId match) or EoF equipped.
- * When eofStoredSpecialId is provided, EoF path also requires it match ability.id.
- * When unset, EoF alone is accepted (loadout UI may not yet track stored special).
+ * Weapon special access: native weapon (specialAttackId match) or EoF with a
+ * matching stored special id. EoF alone does not unlock every special.
  */
 export function meetsSpecialAccess(
   ability: AbilitySpec,
@@ -222,12 +221,13 @@ export function meetsSpecialAccess(
   if (equipmentGrantsNativeSpecial(ability.id, options.equipmentIds, options.activeWeapon))
     return true;
   if (!hasEssenceOfFinalityEquipped(options.equipmentIds)) return false;
-  if (options.eofStoredSpecialId == null || options.eofStoredSpecialId === "") return true;
+  // Fail-closed: stored special must be set and match the ability.
+  if (options.eofStoredSpecialId == null || options.eofStoredSpecialId === "") return false;
   return options.eofStoredSpecialId === ability.id;
 }
 
 export function specialAccessMessage(ability: AbilitySpec): string {
-  return `${ability.name} requires the special weapon equipped or Essence of Finality`;
+  return `${ability.name} requires the special weapon equipped, or Essence of Finality with that special stored`;
 }
 
 export type AbilityAvailabilityOptions = {

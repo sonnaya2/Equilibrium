@@ -15,7 +15,6 @@
     "data:audit": "node scripts/data/audit.mjs",
     "data:rebuild": "node scripts/data/platform.mjs rebuild",
     "data:migrate": "node scripts/data/platform.mjs migrate",
-    "data:import": "node scripts/data/platform.mjs import",
     "data:apply": "node scripts/data/platform.mjs apply",
     "data:validate": "node scripts/data/platform.mjs validate",
     "data:validate:changed": "node scripts/data/platform.mjs validate --changed",

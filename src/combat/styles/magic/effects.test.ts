@@ -16,6 +16,7 @@ import {
   LIGHTNING_SURGE_BAND,
   LIGHTNING_SURGE_TICK_DELAY,
   lightningSurgeExpected,
+  lightningSurgeSourceWeight,
   newChannelledMight,
   newInstability,
   SUNSHINE_DAMAGE_MULTIPLIER,
@@ -103,6 +104,14 @@ describe("instability lightning surge", () => {
     expect(lightningSurgeExpected(0.5, 800)).toBe(400);
     expect(lightningSurgeExpected(1, 800)).toBe(800);
     expect(lightningSurgeExpected(1.5, 800)).toBe(800); // clamp
+  });
+
+  it("LS source weight prefers concrete critOutcome over EV chance", () => {
+    expect(lightningSurgeSourceWeight(undefined)).toBe(0);
+    expect(lightningSurgeSourceWeight({ critChance: 0.4 })).toBeCloseTo(0.4, 12);
+    expect(lightningSurgeSourceWeight({ critChance: 0.4, critOutcome: true })).toBe(1);
+    expect(lightningSurgeSourceWeight({ critChance: 0.4, critOutcome: false })).toBe(0);
+    expect(lightningSurgeSourceWeight({ critChance: 1.5 })).toBe(1);
   });
 
   it("wiki bands and delay are locked", () => {

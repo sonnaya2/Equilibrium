@@ -185,6 +185,9 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
       : {}),
     ...(input.slayerOnTask != null ? { slayerOnTask: input.slayerOnTask } : {}),
     ...(input.slayerLevel != null ? { slayerLevel: input.slayerLevel } : {}),
+    ...(input.eofStoredSpecialId != null && input.eofStoredSpecialId !== ""
+      ? { eofStoredSpecialId: input.eofStoredSpecialId }
+      : {}),
     diagnostics: {
       slayerHelmet: diag.slayerHelmet ? { ...diag.slayerHelmet } : null,
       salve: diag.salve ? { ...diag.salve } : null,

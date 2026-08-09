@@ -44,6 +44,7 @@ export const RECORD_TO_ENGINE: Readonly<Record<string, string>> = {
   "melee:berserk": "berserk",
   "melee:meteor-strike": "meteor_strike",
   "melee:chaos-roar": "chaos_roar",
+  "melee:igneous-showdown": "igneous_showdown",
   // Ranged
   "ranged:balance-by-force": "balance_by_force",
   "ranged:attack": "ranged_attack",
@@ -175,6 +176,10 @@ export const ENGINE_LINK_OVERRIDES: Readonly<Record<string, EngineLinkOverride>>
     forceSolver: false,
   },
   claws_of_guthix: {
+    linkKind: "canonical",
+    forceSolver: false,
+  },
+  igneous_showdown: {
     linkKind: "canonical",
     forceSolver: false,
   },

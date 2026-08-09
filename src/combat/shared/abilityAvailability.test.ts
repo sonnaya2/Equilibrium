@@ -312,10 +312,31 @@ describe("native special access", () => {
         activeWeapon: wrongWeapon.activeWeapon,
       }),
     ).toMatchObject({ available: false, reason: "missing-special-access" });
+    // EoF alone without a matching stored special is fail-closed.
+    const eofBase = {
+      equipmentIds: ["item:staff-of-light", "item:essence-of-finality"] as const,
+      activeWeapon: wrongWeapon.activeWeapon,
+    };
+    expect(resolveAbilityCastAvailability(instability, eofBase)).toMatchObject({
+      available: false,
+      reason: "missing-special-access",
+    });
+    expect(
+      resolveAbilityCastAvailability(instability, { ...eofBase, eofStoredSpecialId: null }),
+    ).toMatchObject({ available: false, reason: "missing-special-access" });
+    expect(
+      resolveAbilityCastAvailability(instability, { ...eofBase, eofStoredSpecialId: "" }),
+    ).toMatchObject({ available: false, reason: "missing-special-access" });
     expect(
       resolveAbilityCastAvailability(instability, {
-        equipmentIds: ["item:staff-of-light", "item:essence-of-finality"],
-        activeWeapon: wrongWeapon.activeWeapon,
+        ...eofBase,
+        eofStoredSpecialId: "soulfire",
+      }),
+    ).toMatchObject({ available: false, reason: "missing-special-access" });
+    expect(
+      resolveAbilityCastAvailability(instability, {
+        ...eofBase,
+        eofStoredSpecialId: "instability",
       }),
     ).toEqual({ available: true });
   });

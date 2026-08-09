@@ -1,25 +1,31 @@
 import { expect, test } from "@playwright/test";
 
 test("Build blessing picks feed the combat workspace", async ({ page }) => {
-  await page.goto("/combat");
+  await page.goto("/build");
   await page.evaluate(() => window.localStorage.clear());
   await page.reload();
 
-  await page.getByRole("button", { name: "Buffs", exact: true }).click();
-  await page.getByRole("combobox", { name: "Blessing tier 1" }).selectOption("Balance");
-  await page.getByRole("combobox", { name: "Blessing tier 2" }).selectOption("Chaos");
-  await page.getByRole("combobox", { name: "Blessing tier 3" }).selectOption("Chaos");
+  // Path lattice unlocks sequentially; Balance→Chaos→Chaos grants Big Boned, Cinders, Rampage + Demon's Mark.
+  await page.getByRole("button", { name: /Balance, tier 1$/ }).click();
+  await page.getByRole("button", { name: /Chaos, tier 2$/ }).click();
+  await page.getByRole("button", { name: /Chaos, tier 3$/ }).click();
 
-  await expect(page.getByText("God Tier One · Demon's Mark (Chaos)")).toBeVisible();
-  await expect(page.getByText("Big Boned · Active · unverified")).toBeVisible();
-  await expect(page.getByText("Abyssal Cinders · Active · unverified")).toBeVisible();
-  await expect(page.getByText("Avernic Rampage · Active · unverified")).toBeVisible();
-  await expect(page.getByText("Demon's Mark · Partial · unverified")).toBeVisible();
+  await page.goto("/combat");
+  await page.getByRole("tab", { name: "Loadout", exact: true }).click();
 
-  await page.getByRole("button", { name: "Abilities", exact: true }).click();
-  await page.getByText("Assumptions", { exact: true }).click();
-  await expect(page.getByText("Equilibrium blessings", { exact: true })).toBeVisible();
+  // League loadout mirror on Setup shows the active path cards.
+  const league = page.locator(".setup-league-display");
+  await expect(league.getByText("Big Boned")).toBeVisible();
+  await expect(league.getByText("Abyssal Cinders")).toBeVisible();
+  await expect(league.getByText("Avernic Rampage")).toBeVisible();
+  await expect(league.getByText("Demon's Mark")).toBeVisible();
+
+  // Analysis assumptions list the same blessings for the combat pipeline.
+  await page.getByRole("tab", { name: "Analysis", exact: true }).click();
+  const assumptions = page.locator("details").filter({ hasText: "Assumptions" }).first();
+  await assumptions.locator("summary").click();
+  await expect(assumptions.getByText("Equilibrium blessings", { exact: true })).toBeVisible();
   await expect(
-    page.getByText(/Big Boned, Abyssal Cinders, Avernic Rampage, Demon's Mark/),
+    assumptions.getByText(/Big Boned, Abyssal Cinders, Avernic Rampage, Demon's Mark/),
   ).toBeVisible();
 });

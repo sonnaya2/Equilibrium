@@ -316,14 +316,18 @@ describe("Tier 5 and Tier 6 blessing mechanics", () => {
 
   it("lets inherited Death Skulls crits trigger Critual without rerolling bounces", () => {
     const league = picks("Order", "Order", "Order", "Order", "Chaos");
-    const critical = simulate({
-      ...necroInput,
-      startingAdrenaline: 100,
-      crit: { chance: 0.5, guaranteed: true },
-      league,
-      context: { style: "necromancy", ruleset: "equilibrium" },
-      rotation: rotationOf("death_skulls"),
-    });
+    // Explicit multi-lane ensemble for EV activation totals (product UI is single-path).
+    const critical = simulate(
+      {
+        ...necroInput,
+        startingAdrenaline: 100,
+        crit: { chance: 0.5, guaranteed: true },
+        league,
+        context: { style: "necromancy", ruleset: "equilibrium" },
+        rotation: rotationOf("death_skulls"),
+      },
+      { stochasticLanes: 128 },
+    );
     expect(critical.analysis.byEffect.find((row) => row.id === "inferno-of-zamorak")).toMatchObject(
       { expectedActivations: expect.closeTo(3, 0), expectedSeparateHits: expect.closeTo(3, 0) },
     );
@@ -351,13 +355,17 @@ describe("Tier 5 and Tier 6 blessing mechanics", () => {
   it("materializes Unholy Inferno recursion without requiring Cinders", () => {
     const league = picks("Order", "Order", "Order", "Order", "Chaos");
     expect(league.blessingIds.has("abyssal-cinders")).toBe(false);
-    const result = simulate({
-      ...rangedInput,
-      league,
-      crit: { chance: 0.5 },
-      context: { style: "ranged", ruleset: "equilibrium" },
-      rotation: rotationOf("greater_ricochet"),
-    });
+    // Explicit multi-lane ensemble for EV activation totals (product UI is single-path).
+    const result = simulate(
+      {
+        ...rangedInput,
+        league,
+        crit: { chance: 0.5 },
+        context: { style: "ranged", ruleset: "equilibrium" },
+        rotation: rotationOf("greater_ricochet"),
+      },
+      { stochasticLanes: 128 },
+    );
     const infernos = result.events.filter((event) => event.abilityId === "inferno-of-zamorak");
     expect(result.analysis.byEffect.find((row) => row.id === "inferno-of-zamorak")).toMatchObject({
       expectedActivations: expect.closeTo(7, 0),

@@ -72,6 +72,37 @@ describe("counter-based stochastic oracle", () => {
     expect(copy.uniform("relentless")).toBe(oracle.uniform("relentless"));
   });
 
+  // Old trap: laneCount=1 stratified midpoints were always 0.5 (bernoulli never mixed).
+  it("laneCount=1 hash stream produces real uniforms and seed-stable bernoulli mixes", () => {
+    const seed = 41;
+    const oracle = createStochasticOracle({ laneIndex: 0, laneCount: 1, seed });
+    const uniforms = Array.from({ length: 64 }, () => oracle.uniform("u"));
+    expect(uniforms.every((u) => u >= 0 && u < 1)).toBe(true);
+    expect(new Set(uniforms.map((u) => u.toFixed(12))).size).toBeGreaterThan(1);
+    expect(uniforms.every((u) => u === 0.5)).toBe(false);
+
+    const half = createStochasticOracle({ laneIndex: 0, laneCount: 1, seed });
+    const halfTrue = Array.from({ length: 400 }, () => half.bernoulli("half", 0.5)).filter(
+      Boolean,
+    ).length;
+    expect(halfTrue).toBeGreaterThan(120);
+    expect(halfTrue).toBeLessThan(280);
+
+    const rare = createStochasticOracle({ laneIndex: 0, laneCount: 1, seed });
+    const rareTrue = Array.from({ length: 400 }, () => rare.bernoulli("rare", 0.1)).filter(
+      Boolean,
+    ).length;
+    expect(rareTrue).toBeGreaterThan(0);
+    expect(rareTrue).toBeLessThan(400);
+
+    const a = createStochasticOracle({ laneIndex: 0, laneCount: 1, seed: 99 });
+    const b = createStochasticOracle({ laneIndex: 0, laneCount: 1, seed: 99 });
+    for (let i = 0; i < 32; i++) {
+      expect(a.uniform("det")).toBe(b.uniform("det"));
+      expect(a.bernoulli("det-b", 0.37)).toBe(b.bernoulli("det-b", 0.37));
+    }
+  });
+
   it("samples bounded binomial and geometric counts", () => {
     for (let laneIndex = 0; laneIndex < 64; laneIndex++) {
       const oracle = createStochasticOracle({ laneIndex, laneCount: 64, seed: 31 });
@@ -120,6 +151,20 @@ describe("counter-based stochastic oracle", () => {
         { abilities: [necromancyBasic], style: "necromancy", equipmentEffects: deathdealer },
         [],
       ),
+    ).toBe(128);
+  });
+
+  it("keeps Critual single-lane while Cinders still forces the ensemble", () => {
+    const league = (ids: string[]) =>
+      ({
+        ruleset: "equilibrium" as const,
+        blessingIds: new Set(ids),
+        blessings: ids.map((id) => ({ id })),
+      }) as never;
+    expect(stochasticLaneCount({ league: league(["unholy-critual"]) }, ["attack"])).toBe(1);
+    expect(stochasticLaneCount({ league: league(["abyssal-cinders"]) }, ["attack"])).toBe(128);
+    expect(
+      stochasticLaneCount({ league: league(["unholy-critual", "abyssal-cinders"]) }, ["attack"]),
     ).toBe(128);
   });
 

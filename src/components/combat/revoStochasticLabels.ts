@@ -151,7 +151,7 @@ export function exactnessLabel(exactness: string | null | undefined): string | n
 export function residualNote(source: StochasticLabelSource): string | null {
   const residual = residualWeightOf(source);
   if (residual <= 0) return null;
-  return `${formatPercentMass(residual)} of probability mass is unrepresented;`;
+  return `${formatPercentMass(residual)} mass not expanded.`;
 }
 
 export function failureNote(source: StochasticLabelSource): string | null {
@@ -162,16 +162,12 @@ export function failureNote(source: StochasticLabelSource): string | null {
   const reason = source.failure?.primaryReason ?? source.rng?.failure?.primaryReason;
   if (scope === "unconditional-all-mass" && success > 0) {
     // Failure axis is success+fail concrete; residual axis is totalsBasis (separate note).
-    const residual = residualWeightOf(source);
-    const base =
-      residual > 0
-        ? `${formatPercentMass(failed)} of paths failed (${formatPercentMass(success)} success); damage and DPS stay unconditional over concrete success and fail paths (residual excluded; not unit-mass EV).`
-        : `${formatPercentMass(failed)} of paths failed (${formatPercentMass(success)} success); damage and DPS stay unconditional over concrete success and fail paths (not success-renormalized).`;
-    return reason ? `${base} ${reason}.` : base;
+    const base = `${formatPercentMass(failed)} paths failed · ${formatPercentMass(success)} succeeded · damage stays unconditional`;
+    return reason ? `${base} · ${reason}` : base;
   }
   return reason
-    ? `${formatPercentMass(failed)} of paths failed (${reason}).`
-    : `${formatPercentMass(failed)} of paths failed.`;
+    ? `${formatPercentMass(failed)} paths failed · ${reason}`
+    : `${formatPercentMass(failed)} paths failed.`;
 }
 
 /**
@@ -196,8 +192,8 @@ export function primaryDamageLabel(source: StochasticLabelSource): string {
 }
 
 export function primaryDpsLabel(source: StochasticLabelSource): string {
-  if (isApproximatedRun(source)) return "Fixed-window DPS (approx.)";
-  return "Fixed-window DPS";
+  if (isApproximatedRun(source)) return "DPS (approx.)";
+  return "DPS";
 }
 
 /** Manual RotationPlanner uses Expected wording instead of Damage. */

@@ -70,20 +70,17 @@ export function formatAdrenalineTimeline(cast: AdrenalineTimelineCast): string {
 
 export function formatCritContext({
   critChance,
-  uncappedCritChance,
   convertedCritChance,
   critualActive,
 }: {
   critChance: number;
-  uncappedCritChance: number;
+  uncappedCritChance?: number;
   convertedCritChance: number;
   critualActive: boolean;
 }): string {
   const effective = `${(critChance * 100).toFixed(1)}%`;
   if (!critualActive) return effective;
-  return `${effective} effective · ${(uncappedCritChance * 100).toFixed(1)}% uncapped · +${(
-    convertedCritChance * 100
-  ).toFixed(1)}% Critual damage`;
+  return `${effective} · +${(convertedCritChance * 100).toFixed(1)}% Critual dmg`;
 }
 
 /** Fixed length n, or a min..max search window. */
@@ -538,10 +535,24 @@ export function formatTime(ticks: number): string {
   return `${seconds.toFixed(1)}s`;
 }
 
+/**
+ * Cast-row crit chrome from concrete hit outcomes when present.
+ * No "% crit EV" - multi-hit shows Crit / No crit / N/M crits.
+ */
 export function castCritLabel(result: RotationSummary["casts"][number]["result"]): string | null {
+  if (result.hits.length === 0) return null;
+  const outcomes = result.hits
+    .map((hit) => hit.critOutcome)
+    .filter((outcome): outcome is boolean => outcome === true || outcome === false);
+  if (outcomes.length > 0) {
+    const crits = outcomes.filter(Boolean).length;
+    if (crits === outcomes.length) return "Crit";
+    if (crits === 0) return "No crit";
+    return `${crits}/${outcomes.length} crit`;
+  }
   const chance = Math.max(0, ...result.hits.map((hit) => hit.critChance));
   if (chance >= 1) return "Crit";
-  return chance > 0 ? `${Math.round(chance * 1000) / 10}% crit EV` : null;
+  return null;
 }
 
 export function progressFillFromState(

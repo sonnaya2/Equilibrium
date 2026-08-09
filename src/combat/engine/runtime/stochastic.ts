@@ -127,7 +127,9 @@ export function needsStochasticLanes(
   if ((input.adrenaline?.impatientRank ?? 0) > 0) return true;
   if ((input.adrenaline?.relentlessRank ?? 0) > 0) return true;
   if (hasBlessing(input.league, "avernic-rampage")) return true;
-  if (hasBlessing(input.league, "unholy-critual")) return true;
+  // Critual stays single-lane: oracle hash-samples real bernoulli when laneCount=1,
+  // and land materializes parent critOutcome for concrete Inferno chains.
+  // Cinders 5% needs the ensemble - rare single-lane samples starve analysis.
   if (hasBlessing(input.league, "abyssal-cinders")) return true;
   if (
     input.playerPoison !== undefined &&
@@ -273,6 +275,12 @@ class CounterBasedStochasticOracle implements StochasticOracle {
     const ordinal = this.counters.get(stream) ?? 0;
     this.counters.set(stream, ordinal + 1);
     const key = `${stream}\x1f${ordinal}`;
+    // Old trap: stratified (stratum+0.5)/laneCount is always 0.5 when laneCount=1, so
+    // bernoulli(p) was deterministic (false for p<=0.5, true for p>0.5). Single-lane uses a
+    // hash stream instead: full [0,1) draws, still seed-deterministic.
+    if (this.laneCount === 1) {
+      return hashString(key, this.seed) / 0x1_0000_0000;
+    }
     const offset = hashString(`${key}\x1foffset`, this.seed) % this.laneCount;
     const stride = coprimeStride(hashString(`${key}\x1fstride`, this.seed), this.laneCount);
     const stratum = (offset + this.laneIndex * stride) % this.laneCount;

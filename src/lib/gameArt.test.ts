@@ -30,7 +30,8 @@ describe("gameArt", () => {
     expect(abilityIconPath("greater_barge", "melee")).toBe(
       "/game/combat/abilities/melee/greater-barge.webp",
     );
-    expect(abilityCategoryLabel("enhanced")).toBe("threshold");
+    expect(abilityCategoryLabel("enhanced")).toBe("enhanced");
+    expect(abilityCategoryLabel("threshold")).toBe("threshold");
     expect(abilityCategoryLabel("basic")).toBe("basic");
     expect(abilityCategoryLabel("ultimate")).toBe("ultimate");
   });
@@ -61,6 +62,31 @@ describe("gameArt", () => {
       expect(path, id).toBe(expected);
       expect(existsSync(join(PUBLIC, path)), `missing public file for ${id}: ${path}`).toBe(true);
     }
+  });
+
+  it("uses the native weapon icon for every modeled weapon special", () => {
+    const cases: Array<[string, string]> = [
+      ["balance_by_force", "/game/combat/equipment/bow-of-the-last-guardian.webp"],
+      ["claws_of_guthix", "/game/combat/equipment/guthix-staff.webp"],
+      ["death_grasp", "/game/combat/equipment/death-guard-tier-70.webp"],
+      ["igneous_showdown", "/game/combat/equipment/ek-zekkil.webp"],
+      ["instability", "/game/combat/equipment/fractured-staff-of-armadyl.webp"],
+      ["icy_tempest", "/game/combat/equipment/dark-shard-of-leng.webp"],
+      ["soulfire", "/game/combat/equipment/roar-of-awakening.webp"],
+    ];
+    for (const [id, expected] of cases) {
+      expect(abilityIconPath(id, "melee"), id).toBe(expected);
+      expect(existsSync(join(PUBLIC, expected)), `missing public file for ${id}: ${expected}`).toBe(
+        true,
+      );
+    }
+    // Lightning Surge: transparent FSoA plate (not the teal wiki status badge).
+    expect(abilityIconPath("instability_lightning_surge", "magic")).toBe(
+      "/game/combat/abilities/magic/lightning-surge.webp",
+    );
+    expect(existsSync(join(PUBLIC, "/game/combat/abilities/magic/lightning-surge.webp"))).toBe(
+      true,
+    );
   });
 
   it("igneous cape / kal aliases resolve to existing public webp files", () => {

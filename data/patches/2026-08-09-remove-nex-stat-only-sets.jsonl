@@ -1,0 +1,2 @@
+{"op":"remove-record","file":"data/combat/equipment-sets.json","path":"$.records[7]","reason":"Virtus has no combat set passive and must not appear in the set-effects list."}
+{"op":"remove-record","file":"data/combat/equipment-sets.json","path":"$.records[8]","reason":"Torva has no combat set passive and must not appear in the set-effects list."}

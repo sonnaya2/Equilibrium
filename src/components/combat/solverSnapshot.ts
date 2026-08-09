@@ -41,6 +41,9 @@ export function solverSnapshotFromResolvedModel(model: ResolvedCombatModel): Sol
     tumekensPieces: model.tumekensPieces,
     equipmentEffects: model.equipmentEffects,
     nativeSpecialPolicy: model.nativeSpecialPolicy,
+    ...(model.eofStoredSpecialId != null && model.eofStoredSpecialId !== ""
+      ? { eofStoredSpecialId: model.eofStoredSpecialId }
+      : {}),
     league: {
       ...model.league,
       blessingIds: [...model.league.blessingIds],
@@ -50,11 +53,19 @@ export function solverSnapshotFromResolvedModel(model: ResolvedCombatModel): Sol
     context: model.context,
     targetHpPercent: model.target.hpPercent,
     targetMaximumLifePoints: model.target.maximumLifePoints,
+    ...(model.playerVitality ? { playerVitality: { ...model.playerVitality } } : {}),
     playerPoison: { ...model.playerPoison },
     targetPoisonImmune: model.target.poisonImmune === true,
     cap: model.cap,
-    ...(model.playerVitality ? { playerVitality: { ...model.playerVitality } } : {}),
     startingAdrenaline: model.startingAdrenaline,
+    ...(model.naturalInstinctUntilTick != null
+      ? { naturalInstinctUntilTick: model.naturalInstinctUntilTick }
+      : {}),
+    ...(model.startingResidualSouls != null
+      ? { startingResidualSouls: model.startingResidualSouls }
+      : {}),
+    ...(model.slayerOnTask != null ? { slayerOnTask: model.slayerOnTask } : {}),
+    ...(model.slayerLevel != null ? { slayerLevel: model.slayerLevel } : {}),
     equipmentIds: model.equipmentIds,
     weaponConfiguration: model.weaponConfiguration,
     // Precomputed sources only - pack must not re-scan slots for these.

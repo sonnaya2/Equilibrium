@@ -113,17 +113,20 @@ export function hostInputFromLoadoutStats(
     nativeSpecialPolicy: {
       useEquippedWeaponSpecial: loadout.buffs.useEquippedWeaponSpecial === true,
     },
+    ...(loadout.eofStoredSpecialId != null && loadout.eofStoredSpecialId !== ""
+      ? { eofStoredSpecialId: loadout.eofStoredSpecialId }
+      : {}),
     league: serializeLeague(stats.league),
     context: stats.combatContext,
     targetHpPercent: loadout.target?.hpPercent,
     targetMaximumLifePoints: loadout.target?.maximumLifePoints,
-    cap: stats.cap,
-    startingAdrenaline: stats.startingAdrenaline,
-    equipmentIds: stats.equipmentIds,
     playerVitality: {
       maximumLifePoints: stats.life.temporaryMaxLife,
       currentLifePoints: stats.life.currentLife,
     },
+    cap: stats.cap,
+    startingAdrenaline: stats.startingAdrenaline,
+    equipmentIds: stats.equipmentIds,
     weaponConfiguration: stats.weaponConfiguration,
     equipmentSlots: loadout.equipmentSlots,
     playerPoison: {
@@ -151,6 +154,13 @@ export function hostInputFromLoadoutStats(
       elementalWeakness: loadout.target?.elementalWeakness ?? "unknown",
       dragonfireImmune: loadout.target?.dragonfireImmune === true,
     },
+    // Tuska empower: both required; never invent level when on-task alone.
+    ...(loadout.target?.onSlayerTask === true ? { slayerOnTask: true } : {}),
+    ...(loadout.slayerLevel != null &&
+    Number.isFinite(loadout.slayerLevel) &&
+    loadout.slayerLevel > 0
+      ? { slayerLevel: Math.floor(loadout.slayerLevel) }
+      : {}),
     slayerHelmet: stats.slayerHelmet,
     salve: stats.salve,
     ultimatums: loadout.perks.ultimatums ?? 0,

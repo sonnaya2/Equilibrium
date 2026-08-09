@@ -32,7 +32,7 @@ export const TIER_HORIZON_SECONDS: Record<
   unhinged: { exploreSeconds: 36, fullSeconds: 300 },
 };
 
-/** Tier MAX ceilings - Thorough 4 · Extreme 6 · Unhinged 8 (see workerPlan). */
+/** Tier MAX ceilings - Thorough 4 · Extreme 6 · Unhinged 6 (see workerPlan). */
 export { preferredAgentCount } from "./workerPlan";
 
 export function configForTier(tier: SolveTier, seed = 1): SearchConfig {

@@ -285,7 +285,7 @@ export type SolveTier = SearchTier;
  * Minimal ability surface the search / exclusivity helpers need.
  * Full AbilitySpec satisfies this.
  */
-export type AbilityCategory = "basic" | "enhanced" | "ultimate" | "utility";
+export type AbilityCategory = "basic" | "enhanced" | "threshold" | "ultimate" | "utility";
 
 export interface PoolAbility {
   id: string;
@@ -416,6 +416,8 @@ export interface CandidatePoolOptions {
   activeWeapon?: ActiveWeaponCapability;
   /** Active equipment passives (capability gates for Igneous upgrades, etc.). */
   passiveIds?: readonly string[];
+  /** EoF stored special ability id for requiresSpecialAccess gates. */
+  eofStoredSpecialId?: string | null;
   league?: ResolvedLeagueRules;
 }
 

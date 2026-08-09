@@ -219,6 +219,18 @@ describe("shared/equipment set effects", () => {
     ).toEqual([]);
   });
 
+  it("keeps stat-only Nex armour out of the set-effects list", () => {
+    expect(
+      setEffectsSummary({
+        equipmentSlots: {
+          helmet: "item:torva-full-helm",
+          body: "item:virtus-robe-top",
+          legs: "item:pernix-chaps",
+        },
+      }),
+    ).toEqual([]);
+  });
+
   it("style Igneous capes still show a single style-specific passive row", () => {
     const rows = equippedPassiveSummaries({
       equipmentSlots: { cape: "item:igneous-kal-ket" },
@@ -363,9 +375,9 @@ describe("shared/equipment set effects", () => {
     const maskLoadout = {
       equipmentSlots: { helmet: "item:misalionars-death-mask" },
     };
-    expect(equippedSetCounts(maskLoadout).get("first-necromancer")).toBe(2);
-    expect(setEffectsSummary(maskLoadout)[0]).toMatchObject({ pieces: 1, effectivePieces: 2 });
-    expect(loadoutFirstNecromancerConjureDamageMult(maskLoadout)).toBeCloseTo(1.14, 10);
+    expect(equippedSetCounts(maskLoadout).get("first-necromancer")).toBe(1);
+    expect(setEffectsSummary(maskLoadout)[0]).toMatchObject({ pieces: 1, effectivePieces: 1 });
+    expect(loadoutFirstNecromancerConjureDamageMult(maskLoadout)).toBe(1);
     expect(loadoutFirstNecromancerConjureDurationMult(maskLoadout)).toBe(1);
 
     const chaotic = { additionalPiecesPerItem: 2 } as const;

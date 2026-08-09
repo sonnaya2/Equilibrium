@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MELEE_ABILITIES } from "../styles/melee/abilities";
+import { MELEE_ABILITIES, withStrengthCape99Dismember } from "../styles/melee/abilities";
 import { RANGED_ABILITIES } from "../styles/ranged/abilities";
 import { MAGIC_ABILITIES } from "../styles/magic/abilities";
 import type { AbilityHit, AbilitySpec } from "../pipeline/calculateAbility";
@@ -117,6 +117,17 @@ describe("resolveAbilityWithEquipment", () => {
     expect(resolveAbilityWithEquipment(dismember, ordinary).hits).toHaveLength(8);
     expect(resolveAbilityWithEquipment(dismember, spear).hits).toHaveLength(12);
     expect(dismember.hits).toHaveLength(8);
+  });
+
+  // Wiki: 8 + floor(8*0.5) + 3 cape = 15; not floor(11*0.5) on top of cape (=16).
+  it("Strength cape + Masterwork spear Dismember totals 15 hits", () => {
+    const base = byId("dismember");
+    const caped = withStrengthCape99Dismember([base], 3)[0]!;
+    expect(caped.hits).toHaveLength(11);
+    expect(caped.flatBleedHitBonus).toBe(3);
+    expect(resolveAbilityWithEquipment(base, spear).hits).toHaveLength(12);
+    expect(resolveAbilityWithEquipment(caped, ordinary).hits).toHaveLength(11);
+    expect(resolveAbilityWithEquipment(caped, spear).hits).toHaveLength(15);
   });
 
   it("is a no-op for abilities that do not declare bleedDurationExtension", () => {

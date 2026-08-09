@@ -12,6 +12,7 @@ export const SET_SUPPORT_BY_ID: Readonly<Record<string, SetEffectSupport>> = {
   "warpriest-of-tuska": "modeled",
   "first-necromancer": "outgoing-only",
   "vestments-of-havoc": "modeled",
+  "song-of-destruction": "modeled",
   dracolich: "modeled",
   "elite-dracolich": "modeled",
   sirenic: "not-modeled",

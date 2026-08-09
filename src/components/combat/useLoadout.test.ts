@@ -52,17 +52,17 @@ describe("normalizeLoadout", () => {
     const legacy = normalizeLoadout({ base: 777, startingAdrenaline: 140 });
     expect(legacy.baseDamage).toEqual({ mode: "automatic" });
     expect(legacy.startingAdrenaline).toBe(100);
-    expect(legacy.hitCapEnabled).toBe(true);
+    expect(legacy.hitCapEnabled).toBe(false);
     expect(legacy.loadoutSchemaVersion).toBe(2);
 
     const manual = normalizeLoadout({
       baseDamage: { mode: "manual", manualValue: 1234 },
       startingAdrenaline: -5,
-      hitCapEnabled: false,
+      hitCapEnabled: true,
     });
     expect(manual.baseDamage).toEqual({ mode: "automatic" });
     expect(manual.startingAdrenaline).toBe(0);
-    expect(manual.hitCapEnabled).toBe(false);
+    expect(manual.hitCapEnabled).toBe(true);
   });
 
   it("migrates pre-v2 stored startingAdrenaline 0 to product default 100", () => {

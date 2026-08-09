@@ -356,12 +356,31 @@ describe("Equilibrium blessing combat rules", () => {
     expect(parent).toBeDefined();
     expect(lights.every((event) => event.derivedFrom === parent?.seq)).toBe(true);
     expect(lights.every((event) => event.tick === 0)).toBe(true);
-    expect(lights.every((event) => event.damage.expected === previewLight.damage.expected)).toBe(
-      true,
-    );
+    // Independent Light crits: each strike samples Crit/No crit and pins band damage.
+    // Preview EV is the chance-weighted blend; sample path damages differ across outcomes.
     expect(lights.every((event) => event.damage.critical?.mode === "expected")).toBe(true);
     expect(lights.every((event) => event.damage.critical?.chance === 0.25)).toBe(true);
     expect(lights.every((event) => event.damage.critical?.inherited !== true)).toBe(true);
+    expect(
+      lights.every(
+        (event) =>
+          event.damage.critical?.outcome === true || event.damage.critical?.outcome === false,
+      ),
+    ).toBe(true);
+    for (const light of lights) {
+      if (light.damage.critical?.outcome === true && light.damage.critExpected != null) {
+        expect(light.damage.expected).toBe(light.damage.critExpected);
+      }
+      if (light.damage.critical?.outcome === false && light.damage.critExpected != null) {
+        expect(light.damage.expected).toBeLessThan(light.damage.critExpected);
+      }
+    }
+    // Weighted mean of band-pinned lights still centers on the EV preview.
+    const meanLight =
+      lights.reduce((sum, event) => sum + event.damage.expected, 0) / lights.length;
+    expect(Math.abs(meanLight - previewLight.damage.expected)).toBeLessThan(
+      previewLight.damage.expected * 0.55 + 1,
+    );
     const expectedHealing = lights.reduce(
       (total, event) => total + Math.floor(event.damage.expected * 0.05),
       0,

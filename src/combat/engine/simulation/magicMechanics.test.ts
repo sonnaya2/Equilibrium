@@ -47,8 +47,16 @@ describe("Wild Magic crit layers", () => {
     });
     expect(s.ok).toBe(true);
     const wm = lastCastOf(s);
-    expect(wm.result.expected).toBeCloseTo(2995.9102990033225, 10);
+    // Chance-weighted EV lives on uncappedExpected; result.expected pins Crit/No-crit.
+    const chanceWeighted = wm.result.hits.reduce(
+      (sum, hit) => sum + (hit.uncappedExpected ?? hit.expected),
+      0,
+    );
+    expect(chanceWeighted).toBeCloseTo(2995.9102990033225, 10);
     expect(wm.result.hits[0].critChance).toBeCloseTo(0.1);
+    expect(wm.result.hits[0].critDamageBonus).toBeCloseTo(0.2);
+    expect(wm.result.hits[1].critChance).toBeCloseTo(0.1);
+    expect(wm.result.hits[1].critDamageBonus).toBeCloseTo(0.2);
   });
 
   it("converts Wild Magic snapshot excess after the global Critual layer", () => {
@@ -100,8 +108,10 @@ describe("Concentrated Blast crit progression", () => {
     expect(cbCast.result.hits[0].critChance).toBeCloseTo(0);
     expect(cbCast.result.hits[1].critChance).toBeCloseTo(0.05);
     expect(cbCast.result.hits[2].critChance).toBeCloseTo(0.1);
-    expect(s.casts[1].result.hits[0].critChance).toBeCloseTo(0.15);
-    expect(s.casts[1].result.expected).toBeCloseTo(1074.9626865671642, 10);
+    const consume = s.casts[1].result.hits[0];
+    expect(consume.critChance).toBeCloseTo(0.15);
+    // Chance-weighted EV (pin leaves expected as Crit or No-crit band only).
+    expect(consume.uncappedExpected).toBeCloseTo(1074.9626865671642, 10);
     // The consuming attack reset the stacks.
     expect(ctx.getState().magic.concCritStacks).toBe(0);
   });

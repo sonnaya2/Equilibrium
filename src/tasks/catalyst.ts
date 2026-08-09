@@ -17,7 +17,7 @@ export const CATALYST_COMPLETION_URL =
 /** Wiki table size used when callers omit expectedRecords (Catalyst stand-in integrity gate). */
 export const CATALYST_EXPECTED_RECORDS = 1117;
 
-/** Product path: static snapshot. Live fetch is only for scripts/refresh-catalyst-snapshot.mjs. */
+/** Product path: static snapshot. Live fetch is for manual snapshot refresh only. */
 const CATALYST_TASKS_API =
   "https://runescape.wiki/api.php?action=parse&page=Catalyst_League%2FTasks&prop=text&format=json&formatversion=2&disableeditsection=1";
 
@@ -151,7 +151,7 @@ export function catalystRecordsPassIntegrity(
 
 /**
  * Product path: read the static Catalyst snapshot (no network).
- * Refresh offline with: node scripts/refresh-catalyst-snapshot.mjs
+ * Refresh offline via manual snapshot / data:rebuild (no refresh-catalyst-snapshot.mjs in tree).
  * Normalizes wikiTaskId → id for stable progress keys.
  */
 export function loadCatalystSnapshot(expectedRecords?: number): CatalystTaskLoadResult {
@@ -249,7 +249,7 @@ export async function fetchCatalystCompletionRates(): Promise<{
   }
 }
 
-/** Dev-only live fetch - used by refresh-catalyst-snapshot.mjs logic parity tests only. */
+/** Dev-only live fetch - parity tests / manual snapshot refresh only. */
 export async function fetchCatalystTasksLive(
   expectedRecords?: number,
 ): Promise<CatalystTaskLoadResult> {

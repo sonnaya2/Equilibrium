@@ -347,7 +347,8 @@ export function resolveRangedAmmunitionHitEffects(
   const pernix = input.ammunition?.quiver?.passiveIds.includes("pernix-quiver-max-hit-band")
     ? pernixMaximumHitBandPayload(input.targetHealthFraction)
     : null;
-  const diamondMaximumHitBandFraction = 0;
+  const diamondMaximumHitBandFraction =
+    0;
   return {
     mechanicId,
     sourceHitMultiplier: sourceHit?.multiplier ?? 1,
@@ -494,19 +495,14 @@ export function dragonstoneSeparateHitExpected(
   if (!Number.isFinite(activationChance) || activationChance < 0 || activationChance > 1) {
     throw new Error("Dragonstone activation chance must be between 0 and 1");
   }
-  if (!Number.isFinite(cap) || cap < 0)
-    throw new Error("Dragonstone cap must be finite and non-negative");
+  if (!Number.isFinite(cap) || cap < 0) throw new Error("Dragonstone cap must be finite and non-negative");
   const weight = sourceDistribution.reduce((total, outcome) => total + outcome.weight, 0);
   if (!Number.isFinite(weight) || Math.abs(weight - 1) > 1e-9) {
     throw new Error("Dragonstone source distribution must have unit mass");
   }
-  return (
-    activationChance *
-    sourceDistribution.reduce(
-      (total, outcome) =>
-        total + Math.min(cap, dragonstoneSeparateHitDamage(outcome.damage)) * outcome.weight,
-      0,
-    )
+  return activationChance * sourceDistribution.reduce(
+    (total, outcome) => total + Math.min(cap, dragonstoneSeparateHitDamage(outcome.damage)) * outcome.weight,
+    0,
   );
 }
 

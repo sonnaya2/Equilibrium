@@ -487,7 +487,6 @@
 }
 
 .combat-screen .setup-input-group .loadout-number,
-.combat-screen .setup-input-group .stats-derived,
 .combat-screen .setup-input-check {
   min-height: 1.75rem;
   padding: 0.25rem 0.3rem;
@@ -521,33 +520,6 @@
   color: var(--combat-text);
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
   text-align: right;
-}
-
-.combat-screen .stats-derived {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.35rem;
-  color: var(--combat-muted);
-  font-size: 0.75rem;
-}
-
-.combat-screen .stats-derived__label {
-  min-width: 0;
-}
-
-.combat-screen .stats-derived__note {
-  display: block;
-  color: var(--combat-faint);
-  font-size: 0.65rem;
-  font-style: normal;
-}
-
-.combat-screen .stats-derived__value {
-  flex: 0 0 auto;
-  color: var(--combat-text);
-  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  font-size: 0.78rem;
 }
 
 .combat-screen .setup-effect-strip {
@@ -1673,7 +1645,6 @@
 }
 
 .combat-screen .setup-input-group .loadout-number,
-.combat-screen .setup-input-group .stats-derived,
 .combat-screen .setup-input-check {
   min-width: 0;
   min-height: 3.15rem;
@@ -1890,36 +1861,76 @@
 }
 
 .combat-screen .revo-run-output {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-auto-flow: row dense;
+  display: flex;
+  flex-direction: column;
   gap: 0.5rem;
+  min-width: 0;
+  margin-top: 0.65rem;
 }
 
-.combat-screen .revo-run-output > .revo-stat-strip,
-.combat-screen .revo-run-output > p,
-.combat-screen .revo-run-output > div.mt-3,
-.combat-screen .revo-run-output > details,
-.combat-screen .revo-run-output > .revo-event-preview {
-  grid-column: 1 / -1;
+.combat-screen .revo-run-output > * {
+  min-width: 0;
 }
 
-.combat-screen .revo-run-output > .revo-timeline {
-  grid-column: 2;
-  grid-row: auto;
-  margin-top: 0.5rem;
+.combat-screen .revo-status-rail dd {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
 }
 
-.combat-screen .revo-run-output > .revo-damage {
-  grid-column: 1;
-  grid-row: auto;
-  margin-top: 0.5rem;
+.combat-screen .revo-status-rail .calculation-assumptions__body dd {
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
+.combat-screen .revo-stat-strip {
+  margin-top: 0;
+}
+
+.combat-screen .revo-stat-cell {
+  padding: 0.45rem 0.6rem;
+}
+
+.combat-screen .revo-stat-primary .revo-stat-cell.is-primary:first-child dd {
+  color: var(--combat-text);
+}
+
+.combat-screen .revo-analyze-button {
+  border-color: var(--combat-gem);
+  color: var(--combat-gem-bright);
+  background: var(--combat-inset);
+}
+
+.combat-screen .revo-analyze-button:hover {
+  border-color: var(--combat-gem-bright);
+  background: var(--combat-raised);
+}
+
+.combat-screen .revo-status-assumptions {
+  margin-top: 0.15rem;
+}
+
+.combat-screen .revo-status-assumptions .calculation-assumptions > summary {
+  color: var(--combat-gold-bright);
+  font-family: var(--combat-display);
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+}
+
+.combat-screen .revo-status-assumptions .calculation-assumptions__body {
+  max-height: min(14rem, 28vh);
+}
+
+.combat-screen .revo-empty,
 .combat-screen [data-testid="revo-empty"] {
   min-height: 4.25rem;
   margin-top: 0.65rem;
   padding: 0.65rem;
+}
+
+.combat-screen .revo-alert {
+  margin-top: 0.65rem;
+  padding: 0.5rem 0.65rem;
 }
 
 .combat-screen .analysis-layout {
@@ -2027,17 +2038,15 @@
   align-items: start;
 }
 
-.combat-screen .analysis-assumptions-panel details {
-  border: 0;
-  padding: 0;
-}
-
-.combat-screen .analysis-assumptions-panel details > summary {
+.combat-screen .analysis-assumptions-panel .calculation-assumptions > summary {
   color: var(--combat-gold-bright);
   font-family: var(--combat-display);
   font-size: 0.76rem;
   letter-spacing: 0.04em;
-  text-transform: uppercase;
+}
+
+.combat-screen .analysis-assumptions-panel .calculation-assumptions__body {
+  max-height: min(18rem, 36vh);
 }
 
 .combat-screen .analysis-limitations ul {
@@ -2118,14 +2127,18 @@
     margin-top: 0;
   }
 
-  .combat-screen .revo-run-output {
+  .combat-screen .revo-detail-pair {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .combat-screen .revo-run-output > .revo-timeline,
-  .combat-screen .revo-run-output > .revo-damage {
-    grid-column: 1;
-    grid-row: auto;
+  .combat-screen .revo-cast-table {
+    min-width: 30rem;
+  }
+
+  .combat-screen .revo-timeline-scroll,
+  .combat-screen .revo-contributions,
+  .combat-screen .revo-event-scroll.is-compact {
+    max-height: min(16rem, 30vh);
   }
 
   .combat-screen .analysis-library,
@@ -2287,10 +2300,6 @@
 @media (min-width: 901px) and (max-width: 1350px) {
   .combat-screen .setup-input-group:nth-child(1) .setup-input-group__fields {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .combat-screen .revo-stat-strip {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 

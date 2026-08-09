@@ -265,26 +265,20 @@ export function CalculationAssumptions({
   }
 
   return (
-    <details className="border-t border-stone-750 pt-2">
-      <summary className="cursor-pointer text-[11px] uppercase tracking-[0.1em] text-parch-300 hover:text-parch-50">
-        Assumptions
-      </summary>
-      <div className="pt-1">
-        <dl className="grid gap-x-4 text-xs sm:grid-cols-2">
+    <details className="calculation-assumptions">
+      <summary>Assumptions</summary>
+      <div className="calculation-assumptions__body">
+        <dl>
           {rows.map(([label, value]) => (
-            <div
-              key={label}
-              className="flex justify-between gap-2 border-b border-stone-750/60 py-1"
-            >
-              <dt className="text-parch-300">{label}</dt>
-              <dd className="text-right font-mono text-parch-50">{value}</dd>
+            <div key={label}>
+              <dt>{label}</dt>
+              <dd>{value}</dd>
             </div>
           ))}
         </dl>
         {stats.combatStyle.includes("necromancy") ? (
-          <p className="mt-2 text-xs text-chaos-300">
-            Partial: Phantom Guardian defensive/incoming behavior is not modeled; Ghost healing uses
-            final basic-hit damage.
+          <p className="calculation-assumptions__note">
+            Partial: Phantom Guardian defence is unmodeled; Ghost heal uses final basic damage.
           </p>
         ) : null}
       </div>

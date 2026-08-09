@@ -23,6 +23,7 @@ describe("ranged ability data", () => {
     expect(byId("snap_shot").hits).toHaveLength(2);
     expect(byId("snap_shot").hits[0]!.band).toEqual({ minPct: 135, maxPct: 155 });
     expect(byId("snap_shot").adrenaline?.cost).toBe(25);
+    expect(byId("snap_shot").cooldownSeconds).toBeUndefined();
 
     expect(byId("snipe").hits[0]).toMatchObject({
       band: { minPct: 300, maxPct: 360 },
@@ -37,6 +38,7 @@ describe("ranged ability data", () => {
 
     expect(byId("bombardment").hits[0]!.band).toEqual({ minPct: 220, maxPct: 260 });
     expect(byId("bombardment").adrenaline?.cost).toBe(25);
+    expect(byId("bombardment").cooldownSeconds).toBeUndefined();
 
     expect(byId("deadshot").hits).toHaveLength(4);
     expect(byId("deadshot").hits[0]!.band).toEqual({ minPct: 105, maxPct: 125 });
@@ -134,14 +136,14 @@ describe("ranged ability data", () => {
     expect(byId("greater_ricochet").cooldownSeconds).toBe(10.2);
 
     expect(byId("snap_shot").adrenaline).toEqual({ cost: 25 });
-    expect(byId("snap_shot").cooldownSeconds).toBe(1.8);
+    expect(byId("snap_shot").cooldownSeconds).toBeUndefined();
 
     expect(byId("snipe").adrenaline).toEqual({ cost: 0 });
     expect(byId("snipe").cooldownSeconds).toBe(60);
     expect(byId("snipe").category).toBe("enhanced");
 
     expect(byId("bombardment").adrenaline).toEqual({ cost: 25 });
-    expect(byId("bombardment").cooldownSeconds).toBe(1.8);
+    expect(byId("bombardment").cooldownSeconds).toBeUndefined();
 
     expect(byId("rapid_fire").adrenaline).toEqual({ cost: 25 });
     expect(byId("rapid_fire").cooldownSeconds).toBe(20.4);

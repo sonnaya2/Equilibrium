@@ -118,7 +118,8 @@ describe("berserkersFuryModifier", () => {
     expect(mod!.stage).toBe("roll");
     expect(mod!.applies({ style: "melee" })).toBe(true);
     expect(mod!.applies({ style: "melee", dotKind: "bleed" })).toBe(false);
-    expect(mod!.applies({ style: "melee", dotKind: "burn" })).toBe(true);
+    // Product F3: all true DoTs skip BF (burn included), not only bleed.
+    expect(mod!.applies({ style: "melee", dotKind: "burn" })).toBe(false);
     expect(mod!.apply({ damage: 1000 }, { style: "melee" }).damage).toBe(mulFloor(1000, 1.03));
   });
 });

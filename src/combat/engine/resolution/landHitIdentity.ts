@@ -87,6 +87,7 @@ export function landHitIdentity(
     at < t.melee.enduringRuin.untilTick
       ? t.melee.enduringRuin.bleedVulnerability
       : 0;
+  const flameboundRival = t.melee.flameboundRival;
   // Live Haunted at land (expiry-normalized); damage uses land-time, not snap.
   const hauntedUntil =
     t.haunted.untilTick > 0 && at < t.haunted.untilTick ? t.haunted.untilTick : 0;
@@ -193,6 +194,8 @@ export function landHitIdentity(
     snap.enduringRuinBonus,
     b(!!snap.magicWeaponAtCast),
     b(!!snap.surgingStormAtCast),
+    b(!!snap.ashenVowAtCast),
+    b(!!snap.igneousShowdownRepeat),
     b(!!snap.perfectEquilibriumAtCast),
     b(!!snap.perfectEquilibriumTrigger),
     b(!!snap.songEmpowered),
@@ -203,6 +206,7 @@ export function landHitIdentity(
     mag.song.essenceCorruption.expiresAtTick,
     b(!!snap.wenIcyPrecisionDamageAtCast),
     b(!!snap.wenIcyPrecisionDamagePotentialAtCast),
+    b(flameboundRival),
     snap.critLayers.chance,
     snap.critLayers.damageBonus ?? 0,
     b(!!snap.critLayers.guaranteed),

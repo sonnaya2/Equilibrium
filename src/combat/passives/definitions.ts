@@ -43,6 +43,7 @@ export const PASSIVE_SOURCE = {
   blowpipePoison: wiki("Upgraded bone blowpipe", "Upgraded_bone_blowpipe", "2026-08-06"),
   laniakeaPoison: wiki("Laniakea's spear", "Laniakea%27s_spear", "2026-08-06"),
   surgingStorm: wiki("Fractured Staff of Armadyl", "Fractured_Staff_of_Armadyl", "2026-08-08"),
+  ashenVow: wiki("Ashen Vow", "Ashen_Vow", "2026-08-08"),
   perfectEquilibrium: wiki("Bow of the Last Guardian", "Bow_of_the_Last_Guardian", "2026-08-09"),
 } as const;
 
@@ -376,6 +377,20 @@ export const PASSIVE_DEFINITIONS: readonly PassiveDefinition[] = [
       "+15.0% to +25.0% critical strike damage in 0.1 percentage-point steps on FSoA casts.",
     ],
     source: PASSIVE_SOURCE.surgingStorm,
+  },
+  {
+    id: "ashen-vow",
+    label: "Ashen Vow",
+    support: "partially-modeled",
+    duplicatePolicy: "mutually-exclusive",
+    lifecycle: ["cast-preparation", "modifier-provider", "landed-hit"],
+    implementationOwners: ["styles/melee/ekZekKil.ts", "engine/resolution/modifiers.ts"],
+    effects: [
+      "Physical Ek-ZekKil attacks against the designated Flamebound Rival gain 12% outgoing damage.",
+      "Bleeds, poison, procs, reflections, derived hits, and attached League riders are excluded.",
+      "The sourced 12% defensive reduction against the Rival is not modeled.",
+    ],
+    source: PASSIVE_SOURCE.ashenVow,
   },
   {
     id: "perfect-equilibrium",

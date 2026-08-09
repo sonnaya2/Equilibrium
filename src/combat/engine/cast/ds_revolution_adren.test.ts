@@ -9,13 +9,9 @@ import {
 } from "../../../components/combat/loadout/model";
 import { loadoutStats } from "../../../components/combat/loadoutStats";
 
-const regions = [
-  "misthalin",
-  "kandarin",
-  "morytania",
-  "forinthry",
-  "anachronia",
-] as readonly RegionId[];
+// Kandarin only: CoE + FotS dig-site. Omit Anachronia so region-driven RoV
+// does not stack another +10 ultimate refund into CoE-only assertions.
+const regions = ["kandarin"] as readonly RegionId[];
 
 function byId(id: string) {
   const a = RANGED_ABILITIES.find((x) => x.id === id);

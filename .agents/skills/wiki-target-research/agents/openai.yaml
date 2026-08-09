@@ -1,0 +1,4 @@
+interface:
+  display_name: "Wiki Target Research"
+  short_description: "Source and normalize RS3 monster target data"
+  default_prompt: "Use $wiki-target-research to source and normalize RuneScape Wiki monster target facts for Equilibrium."

@@ -82,10 +82,11 @@ describe("greater_flurry", () => {
 });
 
 describe("meteor_strike", () => {
-  it("multiplies melee basic adrenaline by 1.5x inside the 30s window", () => {
+  it("multiplies melee basic abilities by 1.5x adren, not Attack (basic attack)", () => {
+    // Wiki: basic abilities 1.5x; Attack (ability) excluded.
     const s = simulate({
       ...baseInput,
-      rotation: rotationOf(...Array(7).fill("attack"), "meteor_strike", "attack"),
+      rotation: rotationOf(...Array(7).fill("attack"), "meteor_strike", "attack", "fury"),
     });
     expect(s.ok).toBe(true);
     const meteor = findCast(
@@ -94,8 +95,18 @@ describe("meteor_strike", () => {
       "Missing Meteor Strike cast",
     );
     expect(meteor.adrenalineAfter).toBeCloseTo(3 + 3 * 4.5);
-    const follow = lastCast(s);
-    expect(follow.adrenalineAfter).toBeCloseTo(meteor.adrenalineAfter + 13.5 + 3 * 4.5);
+    const attackCast = s.casts.find(
+      (cast, i) => cast.abilityId === "attack" && i > s.casts.indexOf(meteor),
+    );
+    expect(attackCast).toBeDefined();
+    // Attack: +9 listed only (no 1.5x), plus passive ticks between.
+    expect(attackCast!.adrenalineAfter).toBeCloseTo(
+      meteor.adrenalineAfter + 9 + 3 * 4.5,
+      5,
+    );
+    const fury = lastCast(s);
+    // Fury basic ability: +9 * 1.5 = 13.5 under Meteor.
+    expect(fury.adrenalineAfter).toBeCloseTo(attackCast!.adrenalineAfter + 13.5 + 3 * 4.5, 5);
   });
 
   it("does not 1.5x non-basic adrenaline costs or gains (channel occupancy grants its 8 passive ticks)", () => {
@@ -111,9 +122,11 @@ describe("meteor_strike", () => {
     expect(s.ok).toBe(true);
     const assault = lastCast(s);
     const beforeAssault = s.casts[s.casts.length - 2].adrenalineAfter;
-    // Assault @33: −25 cost, then 8 channel ticks × 4.5 passive = +36 (cap 100).
-    expect(assault.adrenalineAfter).toBeCloseTo(Math.min(100, beforeAssault - 25 + 8 * 4.5), 10);
-    expect(assault.adrenalineAfter).toBe(100);
+    // Assault: −25 cost (no 1.5x on spend), then 8 channel ticks × 4.5 passive.
+    expect(assault.adrenalineAfter).toBeCloseTo(
+      Math.min(100, beforeAssault - 25 + 8 * 4.5),
+      10,
+    );
   });
 });
 

@@ -90,6 +90,10 @@ export const REVO_CONJURE_COMMAND_MORPH: Readonly<Record<string, readonly string
 export const COMMAND_GHOST_INITIAL_COOLDOWN_TICKS = 6;
 /** Initial lockout after conjuring zombie (wiki: command first available tick 6). */
 export const COMMAND_ZOMBIE_INITIAL_COOLDOWN_TICKS = 6;
+/** Wiki: chat at command+3; poison still lands on that tick. */
+export const COMMAND_PUTRID_CHAT_DELAY_TICKS = 3;
+/** Wiki: explode + dismiss at command+4 (ability tickOffset). */
+export const COMMAND_PUTRID_EXPLODE_DELAY_TICKS = 4;
 
 /** PerAbility / damage ledger ids for spirit autos (not bar abilities). */
 export const SPIRIT_AUTO_ABILITY_ID: Readonly<Record<ConjureId, string>> = {
@@ -165,6 +169,16 @@ export interface ActivePutridZombie extends ActiveConjureBase {
   readonly auto: SpiritTrack;
   /** The poison aura. No other spirit has one. */
   readonly poison: SpiritTrack;
+  /**
+   * After Command: last poison-eligible tick (chat = command+3).
+   * https://runescape.wiki/w/Command_Putrid_Zombie
+   */
+  readonly poisonThroughTick?: number;
+  /**
+   * After Command: explode land tick (command+4). Spirit stays until then.
+   * https://runescape.wiki/w/Command_Putrid_Zombie
+   */
+  readonly explodeAtTick?: number;
 }
 
 export interface ActivePhantomGuardian extends ActiveConjureBase {
@@ -186,7 +200,16 @@ export interface ConjureState {
 export const newConjures = (): ConjureState => ({ spirits: [] });
 
 export function conjureActive(state: ConjureState, id: ConjureId, tick = 0): boolean {
-  return state.spirits.some((s) => s.id === id && tick < s.untilTick);
+  return state.spirits.some((s) => {
+    if (s.id !== id) return false;
+    if (tick < s.untilTick) return true;
+    // Commanded putrid occupies the slot until explode lands (buff bar still up).
+    return (
+      s.id === "putrid_zombie" &&
+      s.explodeAtTick !== undefined &&
+      tick < s.explodeAtTick
+    );
+  });
 }
 
 /** The active spirit with this id, narrowed to its own variant. */
@@ -304,12 +327,24 @@ export function skeletonRageMult(stacks: number): number {
 
 /** The auto track has another attack to schedule. A phantom never does. */
 export function spiritAutoPending(s: ActiveConjure): boolean {
-  return hasAutoTrack(s) && s.auto.nextTick < s.untilTick;
+  if (!hasAutoTrack(s) || s.auto.nextTick >= s.untilTick) return false;
+  // Command Putrid: autos after the command cast tick are suppressed (same-tick ok).
+  if (s.id === "putrid_zombie" && s.explodeAtTick !== undefined) {
+    const commandTick = s.explodeAtTick - COMMAND_PUTRID_EXPLODE_DELAY_TICKS;
+    if (s.auto.nextTick > commandTick) return false;
+  }
+  return true;
+}
+
+/** Natural poison bound (SP3 tail past untilTick). Command caps this further. */
+export function spiritPoisonBound(s: ActivePutridZombie): number {
+  const natural = s.untilTick + ZOMBIE_POISON_TAIL_TICKS;
+  return s.poisonThroughTick === undefined ? natural : Math.min(natural, s.poisonThroughTick);
 }
 
 /** The zombie poison track has another hit to schedule (tail may pass untilTick). */
 export function spiritPoisonPending(s: ActiveConjure): s is ActivePutridZombie {
-  return s.id === "putrid_zombie" && s.poison.nextTick <= s.untilTick + ZOMBIE_POISON_TAIL_TICKS;
+  return s.id === "putrid_zombie" && s.poison.nextTick <= spiritPoisonBound(s);
 }
 
 /** Next scheduled tick of a track, for the scheduler's horizon check. */
@@ -353,6 +388,32 @@ export function applyGhostCommand(state: ConjureState): ConjureState {
   };
 }
 
+/**
+ * Command Putrid Zombie state: poison through chat (command+3), explode at +4.
+ * Does not dismiss; scheduler suppresses post-command autos and caps poison.
+ * https://runescape.wiki/w/Command_Putrid_Zombie
+ */
+export function applyPutridCommandState(state: ConjureState, commandTick: number): ConjureState {
+  const zombie = findConjure(state, "putrid_zombie");
+  if (!zombie || zombie.explodeAtTick !== undefined) return state;
+  const next: ActivePutridZombie = {
+    ...zombie,
+    poisonThroughTick: commandTick + COMMAND_PUTRID_CHAT_DELAY_TICKS,
+    explodeAtTick: commandTick + COMMAND_PUTRID_EXPLODE_DELAY_TICKS,
+  };
+  // Park auto if next land is after command (same-tick auto still pending-eligible).
+  if (next.auto.nextTick > commandTick) {
+    return {
+      spirits: state.spirits.map((s) =>
+        s.id === "putrid_zombie" ? { ...next, auto: { nextTick: next.untilTick } } : s,
+      ),
+    };
+  }
+  return {
+    spirits: state.spirits.map((s) => (s.id === "putrid_zombie" ? next : s)),
+  };
+}
+
 /** Summon from a conjure_* ability id; army uses UNDEAD_ARMY_DEFAULT. */
 export function applyConjureCast(
   state: ConjureState,
@@ -375,6 +436,11 @@ export function conjureCanCast(abilityId: string, state: ConjureState, tick: num
     if (abilityId === "command_vengeful_ghost") {
       const ghost = findConjure(state, "vengeful_ghost");
       if (ghost?.commanding) return false;
+    }
+    // Putrid explode is one-shot; re-command while waiting for C+4 is a no-op.
+    if (abilityId === "command_putrid_zombie") {
+      const zombie = findConjure(state, "putrid_zombie");
+      if (zombie?.explodeAtTick !== undefined) return false;
     }
     return true;
   }

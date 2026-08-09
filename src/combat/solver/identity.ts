@@ -201,6 +201,19 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
     overrideLevel: loadout.overrideLevel ?? null,
     activateNaragiAtStart: loadout.activateNaragiAtStart === true,
     accuracy: roundN(loadout.accuracy, 6),
+    targetAccuracyProfile:
+      loadout.targetAccuracyProfile == null
+        ? null
+        : {
+            playerAccuracyRating: roundN(loadout.targetAccuracyProfile.playerAccuracyRating, 6),
+            originalTargetArmourRating: roundN(
+              loadout.targetAccuracyProfile.originalTargetArmourRating,
+              3,
+            ),
+            affinity: loadout.targetAccuracyProfile.affinity,
+            additiveHitChance: roundN(loadout.targetAccuracyProfile.additiveHitChance, 6),
+            damagePotentialOverride: loadout.targetAccuracyProfile.damagePotentialOverride ?? null,
+          },
     crit: {
       chance: roundN(loadout.crit?.chance ?? 0, 6),
       disabled: loadout.crit?.disabled === true,
@@ -221,7 +234,30 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
     plantedFeet: loadout.plantedFeet === true,
     strengthCape99: loadout.strengthCape99 === true,
     preciseRank: loadout.preciseRank ?? 0,
-    ammo: loadout.ammo ?? null,
+    ammunition:
+      loadout.ammunition == null
+        ? null
+        : {
+            projectile:
+              loadout.ammunition.projectile == null
+                ? null
+                : {
+                    itemId: loadout.ammunition.projectile.itemId,
+                    family: loadout.ammunition.projectile.family,
+                    statTier: loadout.ammunition.projectile.statTier,
+                    mechanicId: loadout.ammunition.projectile.mechanicId,
+                  },
+            quiver:
+              loadout.ammunition.quiver == null
+                ? null
+                : {
+                    itemId: loadout.ammunition.quiver.itemId,
+                    acceptedFamilies: [...loadout.ammunition.quiver.acceptedFamilies],
+                    passiveIds: [...loadout.ammunition.quiver.passiveIds],
+                  },
+            weaponCapability: loadout.ammunition.weaponCapability,
+            effectiveStatTier: loadout.ammunition.effectiveStatTier,
+          },
     caromingRank: loadout.caromingRank ?? 0,
     conjureBasicDamageMult: roundN(loadout.conjureBasicDamageMult ?? 1, 6),
     conjureDurationMult: roundN(loadout.conjureDurationMult ?? 1, 6),

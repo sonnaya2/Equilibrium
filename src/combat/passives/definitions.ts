@@ -43,6 +43,7 @@ export const PASSIVE_SOURCE = {
   blowpipePoison: wiki("Upgraded bone blowpipe", "Upgraded_bone_blowpipe", "2026-08-06"),
   laniakeaPoison: wiki("Laniakea's spear", "Laniakea%27s_spear", "2026-08-06"),
   surgingStorm: wiki("Fractured Staff of Armadyl", "Fractured_Staff_of_Armadyl", "2026-08-08"),
+  perfectEquilibrium: wiki("Bow of the Last Guardian", "Bow_of_the_Last_Guardian", "2026-08-09"),
 } as const;
 
 /**
@@ -375,6 +376,24 @@ export const PASSIVE_DEFINITIONS: readonly PassiveDefinition[] = [
       "+15.0% to +25.0% critical strike damage in 0.1 percentage-point steps on FSoA casts.",
     ],
     source: PASSIVE_SOURCE.surgingStorm,
+  },
+  {
+    id: "perfect-equilibrium",
+    label: "Perfect Equilibrium",
+    support: "modeled",
+    duplicatePolicy: "mutually-exclusive",
+    lifecycle: ["cast-preparation", "landed-hit", "timed-runtime"],
+    implementationOwners: [
+      "styles/ranged/botlg.ts",
+      "engine/resolution/botlg.ts",
+      "engine/resolution/castHit.ts",
+    ],
+    effects: [
+      "Physical Bow of the Last Guardian direct ranged hits build Perfect Equilibrium stacks.",
+      "Balance by Force lowers the stack threshold; the separate Perfect Equilibrium attack uses its own crit and ammunition context.",
+      "Separate Perfect Equilibrium hits use explicit ammunition-origin and landed-state routing.",
+    ],
+    source: PASSIVE_SOURCE.perfectEquilibrium,
   },
 ];
 

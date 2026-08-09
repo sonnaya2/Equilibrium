@@ -1,4 +1,4 @@
-import type { HitResult } from "../../pipeline/calculateHit";
+import type { ExactDamageDistribution, HitResult } from "../../pipeline/calculateHit";
 
 export interface CriticalResolution {
   mode: "none" | "expected" | "guaranteed";
@@ -51,6 +51,7 @@ export interface EventResolution {
   damage: ResolvedDamage;
   hitDetail?: HitResult;
   components?: readonly AttachedDamageComponent[];
+  sourcePrecritDistribution?: readonly ExactDamageDistribution[];
 }
 
 export function appendAttachedComponents(

@@ -4,6 +4,11 @@ import { resolvedEquipmentSlots } from "@/combat/shared/equipment";
 import { equipmentRecordDamage } from "@/combat/shared/equipmentStats";
 import { overloadBoostedLevel, type OverloadTier } from "@/combat/shared/potions";
 import { equipmentById } from "@/combat/data";
+import {
+  resolveRangedAmmunitionProfileFromEquipment,
+} from "@/combat/styles/ranged/ammunitionEquipment";
+import type { ResolvedRangedAmmunitionProfile } from "@/combat/styles/ranged/ammunitionProfile";
+import type { EquipmentRecord } from "@/combat/data/records";
 import type { Loadout } from "./model";
 
 const clampLevel = (value: number) => Math.min(Math.max(1, value), 145);
@@ -137,6 +142,42 @@ export function loadoutEffectiveDamageLevel(loadout: Loadout): number {
   return clampLevel(tier ? overloadBoostedLevel(level, tier) : level);
 }
 
+function equippedRangedWeaponRecord(loadout: Loadout): EquipmentRecord | null {
+  const slots = resolvedEquipmentSlots(loadout);
+  for (const slot of ["twohand", "mainhand"] as const) {
+    const id = slots[slot];
+    if (typeof id !== "string") continue;
+    const record = equipmentById(id);
+    if (
+      record?.style &&
+      record.style !== "hybrid" &&
+      record.style !== loadout.style
+    ) {
+      continue;
+    }
+    if (record) return record;
+  }
+  return null;
+}
+
+export function loadoutRangedAmmunitionProfile(
+  loadout: Loadout,
+): ResolvedRangedAmmunitionProfile | null {
+  if (loadout.style !== "ranged") return null;
+  const slots = resolvedEquipmentSlots(loadout);
+  const ammoSlotId = slots.ammo;
+  const ammoSlot = typeof ammoSlotId === "string" ? equipmentById(ammoSlotId) : null;
+  const selectedAmmunition =
+    ammoSlot?.quiver != null && loadout.selectedAmmunitionId != null
+      ? equipmentById(loadout.selectedAmmunitionId)
+      : null;
+  return resolveRangedAmmunitionProfileFromEquipment({
+    weapon: equippedRangedWeaponRecord(loadout),
+    ammoSlot,
+    selectedAmmunition,
+  });
+}
+
 function slotWeaponTier(
   loadout: Loadout,
   slot: "twohand" | "mainhand" | "offhand" | "ammo",
@@ -147,7 +188,7 @@ function slotWeaponTier(
   const record = equipmentById(id);
   if (!record) return null;
   if (record?.style && record.style !== "hybrid" && record.style !== loadout.style) return null;
-  const tier = record.tier;
+  const tier = record.damageTier ?? record.tier;
   if (tier == null || !Number.isFinite(tier)) return null;
   if (slot === "offhand" && record.shield && !record.defender) return null;
   const effectiveTier = effectiveWeaponProfileTier(tier, overrides);
@@ -188,12 +229,24 @@ export function loadoutWeaponConfig(
   }
   const caps =
     loadout.style === "ranged"
-      ? {
-          ammunitionTier: effectiveWeaponProfileTier(
-            slotWeaponTier(loadout, "ammo", []) ?? loadout.ammunitionTier,
-            overrides,
-          ),
-        }
+      ? (() => {
+          const ammunition = loadoutRangedAmmunitionProfile(loadout);
+          if (ammunition == null) {
+            return {
+              ammunitionTier: effectiveWeaponProfileTier(loadout.ammunitionTier, overrides),
+            };
+          }
+          const rangedAmmunitionState =
+            ammunition.projectile != null
+              ? ("external" as const)
+              : ammunition.weaponCapability.mode === "required"
+                ? ("missing-required" as const)
+                : ("self-generated" as const);
+          return {
+            ammunitionTier: ammunition.effectiveStatTier ?? 0,
+            rangedAmmunitionState,
+          };
+        })()
       : loadout.style === "magic"
         ? { spellTier: effectiveWeaponProfileTier(loadout.spellTier, overrides) }
         : {};

@@ -13,7 +13,10 @@ import {
   SUNSHINE_SOURCE,
 } from "../../styles/magic/effects";
 import { deathsSwiftnessMultiplier } from "../../styles/ranged/effects";
+import { isAmmunitionHitEligible } from "../../styles/ranged/ammunitionEligibility";
+import { resolveRangedAmmunitionHitEffects } from "../../styles/ranged/ammunitionPayloads";
 import type { CombatModifier, DamageOverTimeKind, SourceReference } from "../../types";
+import type { DamageProvenance } from "../../shared/damageProvenance";
 import type { CastSnapshot } from "../cast/snapshot";
 import type { SimulationRuntime } from "../runtime/runtime";
 import {
@@ -82,6 +85,7 @@ export function landTimeModifiers(
   convertedChannel = false,
   dotKind?: DamageOverTimeKind,
   frostbladesActive?: boolean,
+  provenance?: DamageProvenance,
 ): CombatModifier[] {
   const { state } = rt;
   const modifiers = [...snap.baseMods];
@@ -145,6 +149,33 @@ export function landTimeModifiers(
     );
   }
   if (ability.style === "ranged") {
+    if (provenance) {
+      const ammunition = resolveRangedAmmunitionHitEffects({
+        ammunition: rt.input.ammunition,
+        style: ability.style,
+        provenance,
+        attackOrigin: "player",
+        attackKind: "ability",
+        targetClassification: rt.input.targetClassification,
+      });
+      if (ammunition.sourceHitMultiplier !== 1) {
+        const multiplier = ammunition.sourceHitMultiplier;
+        modifiers.push({
+          id: `ammunition:${ammunition.mechanicId}`,
+          stage: "onHit",
+          priority: 30,
+          applies: (context) =>
+            context.provenance != null &&
+            isAmmunitionHitEligible({
+              style: context.style,
+              provenance: context.provenance,
+              attackOrigin: "player",
+            }),
+          apply: (damage) => ({ ...damage, damage: mulFloor(damage.damage, multiplier) }),
+          source: MODERNISATION_WIKI,
+        });
+      }
+    }
     const mult = deathsSwiftnessMultiplier(state.ranged.swiftness, at);
     if (mult !== 1) {
       modifiers.push(buffMultiplier("buff:deaths_swiftness", mult, MODERNISATION_WIKI));

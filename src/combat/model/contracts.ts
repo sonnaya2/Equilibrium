@@ -13,7 +13,8 @@ import type {
 } from "../solver/worker/serializable";
 import type { ResolvedCombatDiagnostics } from "./diagnostics";
 import type { PlayerPoisonProfile } from "../poison/mechanics";
-import type { StyleAmmoId } from "../styles/ranged/ammoModel";
+import type { ResolvedRangedAmmunitionProfile } from "../styles/ranged/ammunitionProfile";
+import type { ResolvedTargetAccuracyProfile } from "../target/genericTarget";
 
 /** Static crit layers for sim (no per-hit eligibility). */
 export interface ResolvedCritInput {
@@ -57,6 +58,8 @@ export interface ResolvedCombatModel {
   readonly activateNaragiAtStart?: boolean;
   /** Damage Potential 0..1 (sim / pack accuracy). */
   readonly accuracy: number;
+  /** Host-resolved target facts; absent keeps the legacy accuracy fallback. */
+  readonly targetAccuracyProfile?: ResolvedTargetAccuracyProfile;
   readonly crit: ResolvedCritInput;
 
   readonly equipmentIds: readonly string[];
@@ -73,11 +76,7 @@ export interface ResolvedCombatModel {
   readonly plantedFeet: boolean;
   readonly strengthCape99: boolean;
   readonly preciseRank: number;
-  /**
-   * Style ammo mechanics, including Bik. Derived from equipment when unset
-   * on host input; explicit override wins.
-   */
-  readonly ammo?: StyleAmmoId;
+  readonly ammunition: ResolvedRangedAmmunitionProfile | null;
   /** Caroming rank 1-4 (0 = off). */
   readonly caromingRank: number;
 
@@ -112,13 +111,14 @@ export interface HostCombatResolveInput {
   readonly overrideLevel?: number;
   readonly activateNaragiAtStart?: boolean;
   readonly accuracy: number;
+  readonly targetAccuracyProfile?: ResolvedTargetAccuracyProfile;
   readonly crit: ResolvedCritInput;
   readonly adrenaline?: AdrenalineRules;
   readonly procs?: ProcRules;
   readonly plantedFeet?: boolean;
   readonly strengthCape99?: boolean;
   readonly preciseRank?: number;
-  readonly ammo?: StyleAmmoId;
+  readonly ammunition?: ResolvedRangedAmmunitionProfile | null;
   readonly caromingRank?: number;
   readonly conjureBasicDamageMult?: number;
   readonly conjureDurationMult?: number;

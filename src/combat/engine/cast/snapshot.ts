@@ -33,6 +33,10 @@ export interface CastSnapshot {
   /** Resolved weapon state captured by this cast. */
   magicWeaponAtCast: boolean;
   surgingStormAtCast: boolean;
+  /** Perfect Equilibrium passive ownership captured from the physical weapon. */
+  perfectEquilibriumAtCast: boolean;
+  /** Balance by Force crosses the pre-cast Perfect Equilibrium threshold. */
+  perfectEquilibriumTrigger?: boolean;
   /**
    * Tuska's Wrath on-task empowered flat damage (100x Slayer, 15k cap).
    * Absent = off-task AD band path.

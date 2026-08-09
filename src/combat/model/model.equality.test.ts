@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { EQUIPMENT_SET_ACTIVATION } from "../shared/equipment";
 import {
   buildResolvedCombatModel,
+  buildSimulationInputBase,
   isResolvedCombatModel,
   projectSerializableSimBase,
   type HostCombatResolveInput,
@@ -174,6 +175,20 @@ describe("ResolvedCombatModel equality", () => {
     expect(model.diagnostics.berserkersFury.bonus).toBe(0.05);
     expect(model.target).toMatchObject({ demon: true, dragon: true, hpPercent: 33 });
     expect(model.modifierSources.target).toMatchObject({ demon: true, dragon: true });
+    const byId = new Map();
+    const basicByStyle = new Map();
+    const simulation = buildSimulationInputBase(model, {
+      catalogue: [],
+      byId,
+      basicByStyle,
+      strengthCape99: false,
+      abilityRegistry: { byId, basicByStyle },
+    });
+    expect(simulation.targetClassification).toEqual({
+      demon: true,
+      dragon: true,
+      undead: false,
+    });
   });
 
   it("projects to serializable sim base without Maps", () => {
@@ -189,6 +204,20 @@ describe("ResolvedCombatModel equality", () => {
     expect(Array.isArray(sim.league.blessingIds)).toBe(true);
     expect(sim.targetHpPercent).toBe(55);
     expect(sim.league.powerburstUntilTick).toBe(12);
+  });
+
+  it("preserves the resolved target accuracy profile across model and simulation projections", () => {
+    const targetAccuracyProfile = {
+      playerAccuracyRating: 1200,
+      originalTargetArmourRating: 900,
+      affinity: "same" as const,
+      additiveHitChance: 0.02,
+      damagePotentialOverride: 0.42,
+    };
+    const model = buildResolvedCombatModel(baseInput({ targetAccuracyProfile }));
+    expect(model.targetAccuracyProfile).toEqual(targetAccuracyProfile);
+    expect(Object.isFrozen(model.targetAccuracyProfile)).toBe(true);
+    expect(projectSerializableSimBase(model).targetAccuracyProfile).toEqual(targetAccuracyProfile);
   });
 
   it("shield / defender / necromancy configurations stay distinct", () => {

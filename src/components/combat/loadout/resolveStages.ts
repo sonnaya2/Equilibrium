@@ -5,7 +5,12 @@ import { baseAbilityDamage } from "@/combat/core/abilityDamage";
 import { baseCritDamageMultiplier, type CritLayers } from "@/combat/core/critical";
 import { STANDARD_HIT_CAP, type HitCapRule } from "@/combat/core/hitCaps";
 import { mulFloor } from "@/combat/core/rounding";
-import { targetDamagePotential, playerAccuracy } from "@/combat/target/genericTarget";
+import {
+  liveTargetDamagePotential,
+  playerAccuracy,
+  targetArmour,
+  type ResolvedTargetAccuracyProfile,
+} from "@/combat/target/genericTarget";
 import {
   ATTACK_CAPE_MELEE_HIT_CHANCE,
   bitingCritChanceBonus,
@@ -20,7 +25,6 @@ import {
   additiveMeleeDamageModifier,
   amZiModifier,
   applyEquipmentAccuracy,
-  applyEquipmentDamagePotential,
   equipmentCritByHit,
   equippedPassiveSummaries,
   equippedSetCounts,
@@ -137,6 +141,7 @@ import {
   loadoutWeaponConfig,
   computedLoadoutBase,
   loadoutBase,
+  loadoutRangedAmmunitionProfile,
   type WeaponTierOverrides,
   type StyleDamageContribution,
   type WeaponHand,
@@ -297,6 +302,7 @@ export interface ResolvedEquipment {
   equipmentEffects: ActiveEquipmentEffects;
   weaponTier: number;
   weaponConfig: WeaponHand;
+  ammunitionProfile: ReturnType<typeof loadoutRangedAmmunitionProfile>;
   accessoryAccuracy: number;
   setCounts: Map<string, number>;
   tumekensPieces: number;
@@ -350,6 +356,7 @@ export function resolveEquipment(
   const styleContributions = equipmentStyleDamageContributions(loadout);
   const styleGearDamage = equipmentStyleDamageBonus(loadout);
   const weaponConfig = loadoutWeaponConfig(loadout, weaponTierOverrides);
+  const ammunitionProfile = loadoutRangedAmmunitionProfile(loadout);
   const wieldedOffhand = wieldedOffhandKind(loadout);
   const equipmentDamage = styleGearDamage;
   const mainhandTier =
@@ -393,6 +400,7 @@ export function resolveEquipment(
     weaponTier:
       weaponConfig.kind === "necromancy" ? weaponConfig.deathGuard.tier : weaponConfig.weapon.tier,
     weaponConfig,
+    ammunitionProfile,
     accessoryAccuracy,
     setCounts,
     tumekensPieces,
@@ -587,6 +595,7 @@ export interface ResolvedAccuracyDp {
   damagePotentialSource: DamagePotentialSource;
   accuracyBreakdown: readonly BreakdownRow[];
   targetAffinity: ReturnType<typeof effectiveTargetAffinity> | undefined;
+  targetAccuracyProfile?: ResolvedTargetAccuracyProfile;
 }
 
 export function resolveAccuracyDp(
@@ -618,17 +627,24 @@ export function resolveAccuracyDp(
         leagueBundle.league,
       )
     : undefined;
-  const dp = loadout.target
-    ? applyEquipmentDamagePotential(
-        targetDamagePotential(accuracyAfterTargetPassives, {
+  const targetAccuracyProfile = loadout.target
+    ? Object.freeze({
+        playerAccuracyRating: accuracyAfterTargetPassives,
+        originalTargetArmourRating: targetArmour({
           defenceLevel: loadout.target.defenceLevel,
           armour: loadout.target.armour,
-          affinity: targetAffinity,
-          additiveHitChance: (loadout.target.additiveHitChance ?? 0) / 100 + attackCapeHit,
-          damagePotentialOverride: loadout.target.damagePotentialOverride,
         }),
-        equipment.equipmentEffects,
-      )
+        affinity: targetAffinity ?? loadout.target.affinity,
+        additiveHitChance: (loadout.target.additiveHitChance ?? 0) / 100 + attackCapeHit,
+        ...(loadout.target.damagePotentialOverride != null
+          ? { damagePotentialOverride: loadout.target.damagePotentialOverride }
+          : {}),
+      })
+    : undefined;
+  const dp = loadout.target
+    ? liveTargetDamagePotential(targetAccuracyProfile!, {
+        equipmentEffects: equipment.equipmentEffects,
+      })
     : // Manual slider is final DP; skillcape hit chance still stacks on top.
       // Target-specific accuracy mults (slayer/salve) need a target model.
       clamp01(loadout.accuracy / 100 + attackCapeHit);
@@ -656,6 +672,7 @@ export function resolveAccuracyDp(
     damagePotentialSource,
     accuracyBreakdown,
     targetAffinity,
+    targetAccuracyProfile,
   };
 }
 

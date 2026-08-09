@@ -45,6 +45,7 @@ export const RECORD_TO_ENGINE: Readonly<Record<string, string>> = {
   "melee:meteor-strike": "meteor_strike",
   "melee:chaos-roar": "chaos_roar",
   // Ranged
+  "ranged:balance-by-force": "balance_by_force",
   "ranged:attack": "ranged_attack",
   "ranged:piercing-shot": "piercing_shot",
   "ranged:binding-shot": "binding_shot",
@@ -174,6 +175,10 @@ export const ENGINE_LINK_OVERRIDES: Readonly<Record<string, EngineLinkOverride>>
     forceSolver: false,
   },
   claws_of_guthix: {
+    linkKind: "canonical",
+    forceSolver: false,
+  },
+  balance_by_force: {
     linkKind: "canonical",
     forceSolver: false,
   },

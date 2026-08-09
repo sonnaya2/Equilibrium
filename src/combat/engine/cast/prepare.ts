@@ -47,6 +47,7 @@ import type { CastSnapshot } from "./snapshot";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { secondsToTicks } from "../../core/ticks";
 import { GLOBAL_COOLDOWN_TICKS } from "../runtime/timing";
+import { balanceByForceTriggersPerfectEquilibrium } from "../../styles/ranged/botlg";
 
 /** Explicit Greater Barge opener idle policy when lastAttackTick is unset (default 0). */
 export const GREATER_BARGE_OPENER_IDLE_TICKS = 0;
@@ -93,7 +94,9 @@ export type PreparedTransition =
   | { kind: "consumeFury" }
   | { kind: "consumeEnduringRuin" }
   /** Icy Tempest spends all Primordial Ice stacks on cast. */
-  | { kind: "consumePrimordialIce"; next: PrimordialIceDistribution };
+  | { kind: "consumePrimordialIce"; next: PrimordialIceDistribution }
+  /** Balance by Force consumes the pre-cast Perfect Equilibrium trigger. */
+  | { kind: "consumePerfectEquilibrium" };
 
 /**
  * Everything one atomic cast needs, computed once against the advanced state
@@ -238,6 +241,13 @@ export function prepareCast(
       hits: selectedIcyTempestOutcome.hits.map((h) => ({ band: { ...h.band } })),
     };
   }
+  const perfectEquilibriumAtCast =
+    input.equipmentEffects?.activeWeapon?.passiveIds.includes("perfect-equilibrium") === true;
+  const perfectEquilibriumTrigger =
+    ability.id === "balance_by_force" &&
+    balanceByForceTriggersPerfectEquilibrium({
+      stacks: rt.state.ranged.perfectEquilibriumStacks,
+    });
   if (ability.id === "asphyxiate" && (input.tumekensPieces ?? 0) >= 4) {
     working = resplendentAsphyxiate(working);
   }
@@ -368,6 +378,8 @@ export function prepareCast(
     magicWeaponAtCast: input.equipmentEffects?.activeWeapon?.style === "magic",
     surgingStormAtCast:
       input.equipmentEffects?.activeWeapon?.passiveIds.includes("surging-storm") === true,
+    perfectEquilibriumAtCast,
+    perfectEquilibriumTrigger,
     ...(tuskasEmpoweredFlat !== undefined ? { tuskasEmpoweredDamage: tuskasEmpoweredFlat } : {}),
   };
 
@@ -387,6 +399,7 @@ export function prepareCast(
       next: selectedIcyTempestOutcome!.postCastPrimordialIce,
     });
   }
+  if (perfectEquilibriumTrigger) transitions.push({ kind: "consumePerfectEquilibrium" });
 
   const sonic = ability.id === "sonic_wave" || ability.id === "greater_sonic_wave";
   const flowReduction = sonic
@@ -396,7 +409,13 @@ export function prepareCast(
 
   // costOf / spendOf share Vigour special discount; Icy Tempest stack reduction is spend-only.
   const cost = costOf(rt.state, ability, candidate);
-  const spend = spendOf(rt.state, ability, candidate, input.ammo, selectedIcyTempestOutcome);
+  const spend = spendOf(
+    rt.state,
+    ability,
+    candidate,
+    input.ammunition,
+    selectedIcyTempestOutcome,
+  );
 
   return {
     ability,

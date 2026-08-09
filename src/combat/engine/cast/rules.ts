@@ -8,7 +8,7 @@ import {
   residualSoulCapFor,
 } from "../../styles/necromancy/effects";
 import { deathsporeFreeCastActive } from "../../styles/ranged/onHit";
-import type { StyleAmmoId } from "../../styles/ranged/ammoModel";
+import type { ResolvedRangedAmmunitionProfile } from "../../styles/ranged/ammunitionProfile";
 import { impatientProcChance, relentlessProcChance } from "../../shared/perks";
 import {
   isWeaponSpecialAbility,
@@ -137,7 +137,7 @@ export function spendOf(
   state: RotationState,
   ability: AbilitySpec,
   tick: number,
-  ammo?: StyleAmmoId,
+  ammunition?: ResolvedRangedAmmunitionProfile | null,
   icyTempestOutcome?: IcyTempestOutcome,
 ): number {
   // Concrete Icy Tempest casts must supply one discrete outcome.
@@ -154,7 +154,7 @@ export function spendOf(
   const cost = costOf(state, ability, tick);
   return cost > 0 &&
     ability.style === "ranged" &&
-    ammo === "deathspore" &&
+    ammunition?.projectile?.mechanicId === "deathspore" &&
     deathsporeFreeCastActive(state.ranged.deathspore, tick)
     ? 0
     : cost;

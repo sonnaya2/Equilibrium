@@ -19,6 +19,12 @@ export function sourceKindOf(
   }
   if (event.provenance.kind === "target_status") return "target-status";
   if (event.provenance.kind === "player_poison") return "player-poison";
+  if (
+    event.abilityId === "perfect_equilibrium" ||
+    event.provenance.kind === "botlg_perfect_equilibrium"
+  ) {
+    return "equipment-passive";
+  }
   if (event.blessingId) return "league-blessing";
   if (event.abilityId === "crackling" || event.abilityId === "aftershock") return "perk";
   if (event.abilityId === "abyssal_parasite" || event.abilityId === "puncture") {

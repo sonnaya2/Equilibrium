@@ -25,6 +25,29 @@ export const DEATHS_SWIFTNESS_MULTIPLIER = 1.5;
 export const DEATHS_SWIFTNESS_DURATION_TICKS = 50;
 export const GREATER_DEATHS_SWIFTNESS_DURATION_TICKS = 63;
 
+export const BALANCE_BY_FORCE_DURATION_TICKS = 50;
+
+export interface BalanceByForceState {
+  startsAtTick: number;
+  expiresAtTick: number;
+}
+
+export const newBalanceByForce = (): BalanceByForceState => ({
+  startsAtTick: 0,
+  expiresAtTick: 0,
+});
+
+export function activateBalanceByForce(tick: number): BalanceByForceState {
+  return {
+    startsAtTick: tick,
+    expiresAtTick: tick + BALANCE_BY_FORCE_DURATION_TICKS,
+  };
+}
+
+export function balanceByForceActive(state: BalanceByForceState, tick: number): boolean {
+  return tick >= state.startsAtTick && tick < state.expiresAtTick;
+}
+
 export interface DeathsSwiftnessState {
   /** Buff applies to casts on ticks [startsAtTick, expiresAtTick); both 0 = inactive. */
   startsAtTick: number;
@@ -69,6 +92,8 @@ export const DEATHS_SWIFTNESS_SOURCE: SourceReference = MODERNISATION_WIKI;
 /** Every mutable ranged state the simulation carries between casts. */
 export interface RangedRotationState {
   swiftness: DeathsSwiftnessState;
+  balanceByForce: BalanceByForceState;
+  perfectEquilibriumStacks: number;
   searingWinds: SearingWindsState;
   shadowImbued: ShadowImbuedState;
   deathspore: DeathsporeState;
@@ -78,6 +103,8 @@ export interface RangedRotationState {
 
 export const newRangedRotationState = (): RangedRotationState => ({
   swiftness: newDeathsSwiftness(),
+  balanceByForce: newBalanceByForce(),
+  perfectEquilibriumStacks: 0,
   searingWinds: newSearingWinds(),
   shadowImbued: newShadowImbued(),
   deathspore: newDeathspore(),

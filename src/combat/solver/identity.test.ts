@@ -227,6 +227,20 @@ describe("fingerprint changes one field at a time", () => {
     );
   });
 
+  it("resolved target accuracy profile", async () => {
+    await expectDiff("targetAccuracyProfile", (r) =>
+      withSim(r, (s) => ({
+        ...s,
+        targetAccuracyProfile: {
+          playerAccuracyRating: 1200,
+          originalTargetArmourRating: 900,
+          affinity: "same",
+          additiveHitChance: 0.02,
+        },
+      })),
+    );
+  });
+
   it("Dracolich resolved effects", async () => {
     await expectDiff("Dracolich", (r) =>
       withSim(r, (s) => ({
@@ -345,7 +359,6 @@ describe("fingerprint changes one field at a time", () => {
         })),
       );
     }
-    await expectDiff("bik", (request) => withSim(request, (sim) => ({ ...sim, ammo: "bik" })));
     await expectDiff("targetPoisonImmune", (request) =>
       withSim(request, (sim) => ({ ...sim, targetPoisonImmune: true })),
     );

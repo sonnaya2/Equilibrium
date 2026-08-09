@@ -38,6 +38,7 @@ export type RingOfVigourSource = "equipped" | "permanent";
  * Keep in sync when adding a special under styles/*.
  */
 export const MODELLED_WEAPON_SPECIAL_IDS = [
+  "balance_by_force",
   "icy_tempest",
   "instability",
   "claws_of_guthix",

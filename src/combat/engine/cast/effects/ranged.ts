@@ -1,4 +1,7 @@
-import { activateDeathsSwiftness } from "../../../styles/ranged/effects";
+import {
+  activateBalanceByForce,
+  activateDeathsSwiftness,
+} from "../../../styles/ranged/effects";
 import {
   activateSearingWinds,
   activateShadowImbued,
@@ -24,6 +27,10 @@ export function applyRangedCastEffects(fx: CastEffectContext): void {
     rt.state = patchRanged(rt.state, { swiftness: activateDeathsSwiftness(candidate, true) });
   } else if (ability.stateEffect === "shadow_imbued") {
     rt.state = patchRanged(rt.state, { shadowImbued: activateShadowImbued(candidate) });
+  } else if (ability.stateEffect === "balance_by_force") {
+    rt.state = patchRanged(rt.state, {
+      balanceByForce: activateBalanceByForce(candidate),
+    });
   }
   if (ability.appliesEffect === "searing_winds") {
     rt.state = patchRanged(rt.state, {

@@ -2,7 +2,6 @@
  * Assemble an immutable ResolvedCombatModel from domain-neutral host input.
  */
 import { STANDARD_HIT_CAP } from "../core/hitCaps";
-import { resolveStyleAmmo } from "../styles/ranged/ammoModel";
 import type { HostCombatResolveInput, ResolvedCombatModel } from "./contracts";
 import { resolveModifierSourcesFromHost } from "./modifierSources";
 import {
@@ -74,6 +73,9 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
     ...(input.overrideLevel != null ? { overrideLevel: input.overrideLevel } : {}),
     ...(input.activateNaragiAtStart === true ? { activateNaragiAtStart: true } : {}),
     accuracy: input.accuracy,
+    ...(input.targetAccuracyProfile
+      ? { targetAccuracyProfile: { ...input.targetAccuracyProfile } }
+      : {}),
     crit: {
       chance: input.crit.chance,
       disabled: input.crit.disabled,
@@ -99,7 +101,7 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
     plantedFeet: input.plantedFeet === true,
     strengthCape99: input.strengthCape99 === true,
     preciseRank: input.preciseRank ?? 0,
-    ammo: resolveStyleAmmo(input.ammo, input.equipmentIds, input.style),
+    ammunition: input.ammunition ?? null,
     caromingRank: Math.max(0, Math.min(4, Math.floor(input.caromingRank ?? input.caroming ?? 0))),
     conjureBasicDamageMult: input.conjureBasicDamageMult ?? 1,
     conjureDurationMult: input.conjureDurationMult ?? 1,

@@ -22,6 +22,7 @@ export type DamageProvenanceKind =
   | "equipment_proc"
   | "invention_proc"
   | "attached"
+  | "botlg_perfect_equilibrium"
   | "blessing"
   | "derived_bounce"
   | "derived_tail"
@@ -59,6 +60,8 @@ export interface DamageCapabilities {
   canCrit: boolean;
   /** A resolved inherited crit can feed Critual even when the hit cannot reroll. */
   canTriggerCritual?: boolean;
+  canGeneratePerfectEquilibrium: boolean;
+  canApplyAmmunition: boolean;
   canGenerateResources: boolean;
   /** ~procEligible for invention + gear land. */
   canTriggerProcs: boolean;
@@ -79,6 +82,8 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     cindersOnHit: true,
     blessingOnHit: true,
     canCrit: true,
+    canGeneratePerfectEquilibrium: true,
+    canApplyAmmunition: true,
     canGenerateResources: true,
     canTriggerProcs: true,
     recursiveDamage: true,
@@ -95,6 +100,8 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     cindersOnHit: true,
     blessingOnHit: true,
     canCrit: true,
+    canGeneratePerfectEquilibrium: true,
+    canApplyAmmunition: true,
     canGenerateResources: true,
     canTriggerProcs: true,
     recursiveDamage: true,
@@ -111,6 +118,8 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
+    canGeneratePerfectEquilibrium: false,
+    canApplyAmmunition: false,
     canGenerateResources: false,
     canTriggerProcs: false,
     recursiveDamage: false,
@@ -127,6 +136,8 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
+    canGeneratePerfectEquilibrium: false,
+    canApplyAmmunition: false,
     canGenerateResources: false,
     // Crackling charges from DoT family; style land stacks stay procEligible=false on events.
     canTriggerProcs: true,
@@ -145,6 +156,8 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     cindersOnHit: false,
     blessingOnHit: false,
     canCrit: true,
+    canGeneratePerfectEquilibrium: false,
+    canApplyAmmunition: false,
     canGenerateResources: false,
     canTriggerProcs: true,
     recursiveDamage: false,
@@ -161,6 +174,8 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
+    canGeneratePerfectEquilibrium: false,
+    canApplyAmmunition: false,
     canGenerateResources: false,
     canTriggerProcs: false,
     recursiveDamage: false,
@@ -178,6 +193,8 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
+    canGeneratePerfectEquilibrium: false,
+    canApplyAmmunition: false,
     canGenerateResources: false,
     canTriggerProcs: false,
     recursiveDamage: false,
@@ -194,6 +211,8 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     cindersOnHit: false,
     blessingOnHit: false,
     canCrit: true,
+    canGeneratePerfectEquilibrium: false,
+    canApplyAmmunition: false,
     canGenerateResources: true,
     canTriggerProcs: true,
     recursiveDamage: false,
@@ -210,6 +229,8 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     cindersOnHit: false,
     blessingOnHit: false,
     canCrit: true,
+    canGeneratePerfectEquilibrium: false,
+    canApplyAmmunition: false,
     canGenerateResources: false,
     canTriggerProcs: false,
     recursiveDamage: false,
@@ -227,6 +248,8 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
+    canGeneratePerfectEquilibrium: false,
+    canApplyAmmunition: false,
     canGenerateResources: false,
     canTriggerProcs: false,
     recursiveDamage: false,
@@ -244,6 +267,27 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
+    canGeneratePerfectEquilibrium: false,
+    canApplyAmmunition: false,
+    canGenerateResources: false,
+    canTriggerProcs: false,
+    recursiveDamage: false,
+    prayerMods: true,
+    canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: false,
+    canApplyEvolvingToxin: false,
+  },
+  botlg_perfect_equilibrium: {
+    playerAttack: false,
+    directHit: false,
+    onHitGear: false,
+    blessingRider: false,
+    cindersOnHit: false,
+    blessingOnHit: false,
+    canCrit: true,
+    canTriggerCritual: false,
+    canGeneratePerfectEquilibrium: false,
+    canApplyAmmunition: true,
     canGenerateResources: false,
     canTriggerProcs: false,
     recursiveDamage: false,
@@ -260,6 +304,8 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     cindersOnHit: false,
     blessingOnHit: false,
     canCrit: true,
+    canGeneratePerfectEquilibrium: false,
+    canApplyAmmunition: false,
     canGenerateResources: false,
     canTriggerProcs: false,
     recursiveDamage: false,
@@ -278,6 +324,8 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     blessingOnHit: true,
     canCrit: false,
     canTriggerCritual: true,
+    canGeneratePerfectEquilibrium: false,
+    canApplyAmmunition: false,
     canGenerateResources: false,
     canTriggerProcs: true,
     recursiveDamage: false,
@@ -295,6 +343,8 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
+    canGeneratePerfectEquilibrium: false,
+    canApplyAmmunition: false,
     canGenerateResources: false,
     canTriggerProcs: false,
     recursiveDamage: false,
@@ -311,6 +361,8 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
+    canGeneratePerfectEquilibrium: false,
+    canApplyAmmunition: false,
     canGenerateResources: false,
     canTriggerProcs: false,
     recursiveDamage: false,
@@ -327,6 +379,8 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     cindersOnHit: false,
     blessingOnHit: false,
     canCrit: false,
+    canGeneratePerfectEquilibrium: false,
+    canApplyAmmunition: false,
     canGenerateResources: false,
     canTriggerProcs: false,
     recursiveDamage: false,
@@ -392,6 +446,7 @@ export function outgoingSourceOf(p: DamageProvenance): OutgoingDamageSource {
     case "blessing":
       return "blessing";
     case "attached":
+    case "botlg_perfect_equilibrium":
     case "player_direct":
     case "player_auto":
     case "derived_bounce":

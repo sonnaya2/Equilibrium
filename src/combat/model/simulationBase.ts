@@ -42,6 +42,7 @@ export function buildSimulationInputBase(
     ...(model.overrideLevel != null ? { overrideLevel: model.overrideLevel } : {}),
     ...(model.activateNaragiAtStart === true ? { activateNaragiAtStart: true } : {}),
     accuracy: model.accuracy,
+    ...(model.targetAccuracyProfile ? { targetAccuracyProfile: model.targetAccuracyProfile } : {}),
     crit: {
       chance: model.crit.chance,
       disabled: model.crit.disabled,
@@ -60,7 +61,7 @@ export function buildSimulationInputBase(
     plantedFeet: model.plantedFeet,
     strengthCape99: model.strengthCape99,
     preciseRank: model.preciseRank,
-    ammo: model.ammo,
+    ammunition: model.ammunition,
     caromingRank: model.caromingRank,
     tumekensPieces: model.tumekensPieces,
     equipmentEffects: model.equipmentEffects,
@@ -71,6 +72,11 @@ export function buildSimulationInputBase(
     conjureDurationMult: model.conjureDurationMult,
     targetHpPercent: model.target.hpPercent,
     targetMaximumLifePoints: model.target.maximumLifePoints,
+    targetClassification: {
+      demon: model.target.demon,
+      dragon: model.target.dragon,
+      undead: model.target.undead,
+    },
     playerPoison: model.playerPoison,
     playerPoisonModifiers: playerPoisonModifiersFromSources(model.modifierSources, league),
     targetPoisonImmune: model.target.poisonImmune === true,
@@ -154,6 +160,7 @@ export function toHybridManualCombatModel(
     plantedFeet: scaffold.plantedFeet,
     strengthCape99: scaffold.strengthCape99,
     preciseRank: scaffold.preciseRank,
+    ammunition: scaffold.ammunition,
     conjureBasicDamageMult: scaffold.conjureBasicDamageMult,
     conjureDurationMult: scaffold.conjureDurationMult,
     tumekensPieces: scaffold.tumekensPieces,
@@ -208,31 +215,13 @@ export function toManualSimulateInput(
     rotation: SimulateInput["rotation"];
     autoWeave?: boolean;
     horizonTicks?: number;
-    /**
-     * Manual UI ammo override over model-packed base.ammo:
-     * - undefined: keep base.ammo (Revolution / omit path)
-     * - null: force clear (Manual "None")
-     * - deathspore | splintering | bik: set that ammo
-     */
-    ammo?: SimulateInput["ammo"] | null;
   },
 ): SimulateInput {
-  if (parts.ammo === null) {
-    // Drop model-packed ammo entirely (Manual "None").
-    const { ammo: _cleared, ...withoutAmmo } = base;
-    return {
-      ...withoutAmmo,
-      rotation: parts.rotation,
-      autoWeave: parts.autoWeave,
-      ...(parts.horizonTicks !== undefined ? { horizonTicks: parts.horizonTicks } : {}),
-    };
-  }
   return {
     ...base,
     rotation: parts.rotation,
     autoWeave: parts.autoWeave,
     ...(parts.horizonTicks !== undefined ? { horizonTicks: parts.horizonTicks } : {}),
-    ...(parts.ammo !== undefined ? { ammo: parts.ammo } : {}),
   };
 }
 

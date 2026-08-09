@@ -19,6 +19,8 @@ import { findConjure } from "../../styles/necromancy/conjures";
 import { isBasicAttack } from "../../shared/adrenalineGain";
 import type { CastSnapshot } from "../cast/snapshot";
 import type { SimulationRuntime } from "../runtime/runtime";
+import { liveTargetDamagePotential } from "../../target/genericTarget";
+import { effectiveBaseArmourAtTick } from "../../styles/ranged/blackStone";
 
 const objectIds = new WeakMap<object, number>();
 let nextObjectId = 1;
@@ -87,6 +89,18 @@ export function landHitIdentity(
   const hauntedUntil =
     t.haunted.untilTick > 0 && at < t.haunted.untilTick ? t.haunted.untilTick : 0;
   const hauntedCapLive = hauntedUntil > 0 ? t.haunted.capAbilityDamage : 0;
+  const targetProfile = input.targetAccuracyProfile;
+  const liveTargetArmour = targetProfile
+    ? t.blackStone
+      ? effectiveBaseArmourAtTick(t.blackStone, at)
+      : targetProfile.originalTargetArmourRating
+    : -1;
+  const liveTargetDp = targetProfile
+    ? liveTargetDamagePotential(targetProfile, {
+        ...(t.blackStone ? { blackStone: { state: t.blackStone, currentTick: at } } : {}),
+        equipmentEffects: input.equipmentEffects,
+      })
+    : input.accuracy;
 
   // Equipment effects object identity covers am-zi / am-hej / champion-ring etc.
   const equipId = input.equipmentEffects ? oid(input.equipmentEffects) : 0;
@@ -131,6 +145,15 @@ export function landHitIdentity(
     input.base,
     input.level,
     input.accuracy,
+    targetProfile?.playerAccuracyRating ?? -1,
+    targetProfile?.originalTargetArmourRating ?? -1,
+    targetProfile?.affinity ?? "",
+    targetProfile?.additiveHitChance ?? -1,
+    targetProfile?.damagePotentialOverride ?? -1,
+    liveTargetArmour,
+    liveTargetDp,
+    t.vitality?.currentLifePoints ?? -1,
+    t.vitality?.maximumLifePoints ?? -1,
     input.preciseRank ?? 0,
     setCritChance?.unconditional ?? 0,
     ...setCritConditional,
@@ -153,6 +176,8 @@ export function landHitIdentity(
     snap.enduringRuinBonus,
     b(!!snap.magicWeaponAtCast),
     b(!!snap.surgingStormAtCast),
+    b(!!snap.perfectEquilibriumAtCast),
+    b(!!snap.perfectEquilibriumTrigger),
     snap.critLayers.chance,
     snap.critLayers.damageBonus ?? 0,
     b(!!snap.critLayers.guaranteed),

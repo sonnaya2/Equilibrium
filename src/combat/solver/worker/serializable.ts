@@ -18,7 +18,8 @@ import type {
 import type { RegionId } from "@/league";
 import type { CombatContext, CombatStyle } from "../../types";
 import type { PlayerPoisonProfile } from "../../poison/mechanics";
-import type { StyleAmmoId } from "../../styles/ranged/ammoModel";
+import type { ResolvedRangedAmmunitionProfile } from "../../styles/ranged/ammunitionProfile";
+import type { ResolvedTargetAccuracyProfile } from "../../target/genericTarget";
 import type { TrueEquilibriumResolution } from "../../league/ruleset";
 
 export { SOLVER_SCHEMA_VERSION };
@@ -108,6 +109,7 @@ export interface SerializableRevolutionSimBase {
   /** Activate Sliver of Edicts at combat start. */
   activateNaragiAtStart?: boolean;
   accuracy: number;
+  targetAccuracyProfile?: ResolvedTargetAccuracyProfile;
   crit: {
     chance: number;
     disabled?: boolean;
@@ -121,8 +123,7 @@ export interface SerializableRevolutionSimBase {
   /** Strength cape (99): extend Dismember by three bleed hits in the worker catalogue. */
   strengthCape99?: boolean;
   preciseRank?: number;
-  /** Style ammo mechanic for Ranged, including Bik. */
-  ammo?: StyleAmmoId;
+  ammunition?: ResolvedRangedAmmunitionProfile | null;
   /** Caroming rank 1-4 for Ricochet band construction. */
   caromingRank?: number;
   conjureBasicDamageMult?: number;

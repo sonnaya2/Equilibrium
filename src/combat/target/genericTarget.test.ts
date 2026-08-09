@@ -6,7 +6,12 @@ import {
   playerAccuracy,
   targetArmour,
   targetDamagePotential,
+  liveTargetDamagePotential,
 } from "./genericTarget";
+import {
+  applyBlackStoneArmourReduction,
+  newBlackStoneArmourState,
+} from "../styles/ranged/blackStone";
 
 describe("genericTarget", () => {
   it("accuracyCurve follows f(x) = x³/1250 + 4x + 40", () => {
@@ -52,5 +57,26 @@ describe("genericTarget", () => {
     const target = { defenceLevel: 70, affinity: "same" as const };
     expect(targetDamagePotential(accuracy, target)).toBeCloseTo(hitChance(accuracy, target), 10);
     expect(targetDamagePotential(accuracy, { ...target, damagePotentialOverride: 0.7 })).toBe(0.7);
+  });
+
+  it("uses live Black Stone armour for formula DP and leaves overrides armour-independent", () => {
+    const profile = {
+      playerAccuracyRating: 600,
+      originalTargetArmourRating: 1000,
+      affinity: "same" as const,
+      additiveHitChance: 0,
+    };
+    const state = applyBlackStoneArmourReduction(newBlackStoneArmourState(1000), 0).state;
+    const before = liveTargetDamagePotential(profile);
+    const after = liveTargetDamagePotential(profile, {
+      blackStone: { state, currentTick: 1 },
+    });
+    expect(after).toBeGreaterThan(before);
+
+    const override = liveTargetDamagePotential(
+      { ...profile, damagePotentialOverride: 0.42 },
+      { blackStone: { state, currentTick: 1 } },
+    );
+    expect(override).toBe(0.42);
   });
 });

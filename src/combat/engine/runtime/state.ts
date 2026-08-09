@@ -23,6 +23,7 @@ import { newNaragiRuntime, type NaragiRuntimeState } from "../../league/naragiEd
 import { firstChargeReadyTick, maxChargesFor } from "./charges";
 import type { PoisonTier } from "../../poison/mechanics";
 import type { TimedTargetStatus } from "../../target/timedStatus";
+import type { BlackStoneArmourState } from "../../styles/ranged/blackStone";
 
 export type { MeleeRotationState, RangedRotationState, MagicRotationState };
 export type { NecroRotationState, NecromancyRotationState, ConjureState };
@@ -106,6 +107,7 @@ export interface TargetRuntimeState {
   evolvingToxin: EvolvingToxinState;
   vitality?: TargetVitalityState;
   deathMark?: TimedTargetStatus;
+  blackStone?: BlackStoneArmourState;
 }
 
 export interface TargetVitalityState {

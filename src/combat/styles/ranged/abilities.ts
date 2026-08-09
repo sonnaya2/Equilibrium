@@ -32,6 +32,19 @@ export const CORRUPTION_TAIL_FRACTIONS_PCT = [80, 60, 40, 20] as const;
 
 export const RANGED_ABILITIES: RangedAbilitySpec[] = [
   {
+    id: "balance_by_force",
+    name: "Balance by Force",
+    style: "ranged",
+    category: "enhanced",
+    weaponSpecial: true,
+    requiresSpecialAccess: true,
+    minimumAutomaticRecastTicks: 50,
+    hits: [{ band: { minPct: 235, maxPct: 255 } }],
+    adrenaline: { cost: 30 },
+    stateEffect: "balance_by_force",
+    source: wiki("Balance by Force", "Balance_by_Force"),
+  },
+  {
     id: "ranged_attack",
     name: "Ranged",
     style: "ranged",

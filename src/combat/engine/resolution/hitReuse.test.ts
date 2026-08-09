@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { MELEE_ABILITIES } from "../../styles/melee/abilities";
+import { RANGED_ABILITIES } from "../../styles/ranged/abilities";
 import {
   resetHitPipelineCounters,
   setHitPipelineProfiling,
@@ -9,7 +10,11 @@ import { createRuntime } from "../runtime/runtime";
 import { prepareCast } from "../cast/prepare";
 import { resolveCastHit } from "./castHit";
 import { hitReuseSize, runWithHitReuseScope } from "./hitReuse";
-import { patchMelee } from "../runtime/state";
+import { patchMelee, patchTarget } from "../runtime/state";
+import {
+  applyBlackStoneArmourReduction,
+  newBlackStoneArmourState,
+} from "../../styles/ranged/blackStone";
 import { recordResolved } from ".";
 import { resolveLeagueRules } from "../../league/ruleset";
 import { createStochasticOracle, DEFAULT_STOCHASTIC_LANES } from "../runtime/stochastic";
@@ -169,6 +174,37 @@ describe("hit reuse across stochastic lanes", () => {
     const b = resolveCastHit(rt, 0, hitSpec, 0, assault, snap, false);
     expect(b).not.toBe(a);
     expect(a.damage.expected).toBe(b.damage.expected);
+  });
+
+  it("does not reuse when live target armour and DP change", () => {
+    setHitPipelineProfiling(true);
+    resetHitPipelineCounters();
+    const rangedAttack = RANGED_ABILITIES.find((ability) => ability.id === "ranged_attack")!;
+    const rt = createRuntime({
+      base: 1000,
+      level: 99,
+      accuracy: 0.5,
+      crit: { chance: 0 },
+      abilities: RANGED_ABILITIES,
+      context: { style: "ranged" },
+      targetAccuracyProfile: {
+        playerAccuracyRating: 1000,
+        originalTargetArmourRating: 1200,
+        affinity: "same",
+        additiveHitChance: 0,
+      },
+    });
+    const prepared = prepareCast(rt, rangedAttack, 0);
+    const hitSpec = prepared.working.hits[0]!;
+    runWithHitReuseScope(() => {
+      const before = resolveCastHit(rt, 0, hitSpec, 0, rangedAttack, prepared.snap, false);
+      const blackStone = applyBlackStoneArmourReduction(newBlackStoneArmourState(1200), 0).state;
+      rt.state = patchTarget(rt.state, { blackStone });
+      const after = resolveCastHit(rt, 0, hitSpec, 0, rangedAttack, prepared.snap, false);
+      expect(after).not.toBe(before);
+      expect(after.damage.expected).toBeGreaterThan(before.damage.expected);
+    });
+    setHitPipelineProfiling(false);
   });
 
   it("keeps sampled crit outcomes lane-local after deterministic hit reuse", () => {

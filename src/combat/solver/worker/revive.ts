@@ -52,6 +52,7 @@ export function reviveRevolutionBase(sim: SerializableRevolutionSimBase): Revive
     overrideLevel: sim.overrideLevel,
     ...(sim.activateNaragiAtStart === true ? { activateNaragiAtStart: true } : {}),
     accuracy: sim.accuracy,
+    ...(sim.targetAccuracyProfile ? { targetAccuracyProfile: sim.targetAccuracyProfile } : {}),
     crit: sim.crit,
     modifiers: reviveModifiers(sim.modifierSources, league),
     context: sim.context,
@@ -63,7 +64,7 @@ export function reviveRevolutionBase(sim: SerializableRevolutionSimBase): Revive
     plantedFeet: sim.plantedFeet,
     strengthCape99: sim.strengthCape99,
     preciseRank: sim.preciseRank,
-    ammo: sim.ammo,
+    ammunition: sim.ammunition,
     caromingRank: sim.caromingRank ?? sim.modifierSources?.caroming ?? 0,
     tumekensPieces: sim.tumekensPieces,
     equipmentEffects: {
@@ -82,6 +83,11 @@ export function reviveRevolutionBase(sim: SerializableRevolutionSimBase): Revive
     conjureDurationMult: sim.conjureDurationMult,
     targetHpPercent: sim.targetHpPercent,
     targetMaximumLifePoints: sim.targetMaximumLifePoints,
+    targetClassification: {
+      demon: sim.modifierSources.target.demon,
+      dragon: sim.modifierSources.target.dragon,
+      undead: sim.modifierSources.target.undead,
+    },
     playerPoison: sim.playerPoison,
     playerPoisonModifiers: playerPoisonModifiersFromSources(sim.modifierSources, league),
     targetPoisonImmune: sim.targetPoisonImmune === true,

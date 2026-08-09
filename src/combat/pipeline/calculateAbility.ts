@@ -41,7 +41,8 @@ export type StateEffectId =
   | "greater_deaths_swiftness"
   | "living_death"
   | "runic_charge"
-  | "shadow_imbued";
+  | "shadow_imbued"
+  | "balance_by_force";
 
 export type AppliedEffectId =
   | "chaos_roar"
@@ -93,6 +94,8 @@ export interface AbilitySpec {
    * Weapon specials that are always available via style alone leave this unset/false.
    */
   requiresSpecialAccess?: boolean;
+  /** Minimum ticks between automatic native-special casts; manual casts ignore this policy. */
+  minimumAutomaticRecastTicks?: number;
   adrenaline?: { gain?: number; cost?: number };
   cooldownSeconds?: number;
   stateEffect?: StateEffectId;

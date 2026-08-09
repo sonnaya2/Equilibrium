@@ -9,7 +9,12 @@ import { sumNonWeaponAccuracy } from "@/combat/shared/equipment";
 import { equilibriumDamageBonus } from "@/combat/shared/perks";
 import { overloadBoostedLevel } from "@/combat/shared/potions";
 import { prayerBoostedStyleLevel, styleCurseById } from "@/combat/shared/prayers";
-import { hitChance, playerAccuracy, targetDamagePotential } from "@/combat/target/genericTarget";
+import {
+  hitChance,
+  playerAccuracy,
+  targetArmour,
+  targetDamagePotential,
+} from "@/combat/target/genericTarget";
 import {
   computedLoadoutBase,
   equippedBonuses,
@@ -190,10 +195,17 @@ describe("loadoutStats", () => {
   });
 
   it("derives Damage Potential from the target model when set", () => {
-    const stats = loadoutStats({ ...base, target: { defenceLevel: 80, affinity: "same" } });
-    const expected = hitChance(playerAccuracy(99, 90), { defenceLevel: 80, affinity: "same" });
+    const target = { defenceLevel: 80, armour: 500, affinity: "same" as const };
+    const stats = loadoutStats({ ...base, target });
+    const expected = hitChance(playerAccuracy(99, 90), target);
     expect(stats.dp).toBeCloseTo(expected, 10);
     expect(stats.damagePotentialSource).toBe("target stats");
+    expect(stats.targetAccuracyProfile).toMatchObject({
+      playerAccuracyRating: stats.accuracyRating,
+      originalTargetArmourRating: targetArmour(target),
+      affinity: "same",
+      additiveHitChance: 0,
+    });
   });
 
   it("exposes the same accuracy rating it feeds into the target-model Damage Potential", () => {

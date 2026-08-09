@@ -8,6 +8,7 @@ import {
 } from "@/combat";
 import { equipmentById } from "@/combat/data";
 import type { EquipmentSlot } from "@/combat/data/records";
+import { normalizeSelectedAmmunitionId } from "./ammunitionSelection";
 import {
   isRelicGrantedItemAvailable,
   relicGrantedItemForRelic,
@@ -423,6 +424,7 @@ export interface Loadout {
   /** Archaeology monolith powers (selection + energy budget). */
   archaeology: LoadoutArchaeology;
   equipmentSlots: Partial<Record<EquipmentSlot, string | null>>;
+  selectedAmmunitionId: string | null;
   enchantments: EquipmentEnchantmentId[];
   /** Derived: slotted ids + unlock pins. */
   equipmentIds: string[];
@@ -512,6 +514,7 @@ export const DEFAULT_LOADOUT: Loadout = {
     energyCap: MONOLITH_ENERGY_DEFAULT,
   },
   equipmentSlots: {},
+  selectedAmmunitionId: null,
   enchantments: [...EQUIPMENT_ENCHANTMENTS],
   equipmentIds: [],
 };
@@ -679,9 +682,14 @@ export function equipInSlot(
     }
   }
   const unlocks = unlockOnlyIds(loadout);
+  const ammoRecord = equipmentById(slots.ammo ?? "");
   const next: Loadout = {
     ...loadout,
     equipmentSlots: slots,
+    selectedAmmunitionId: normalizeSelectedAmmunitionId(
+      ammoRecord?.quiver != null,
+      loadout.selectedAmmunitionId,
+    ),
     equipmentIds: mergeEquipmentIds(slots, unlocks),
     buffs:
       loadout.buffs.sliverOfEdictsActive && slots.pocket !== "item:sliver-of-edicts"
@@ -712,9 +720,14 @@ export function syncRelicGrantedEquipment(
   const unlocks = unlockOnlyIds(loadout).filter((id) =>
     isRelicGrantedItemAvailable(id, activeRelicNames),
   );
+  const ammoRecord = equipmentById(nextSlots.ammo ?? "");
   return {
     ...loadout,
     equipmentSlots: nextSlots,
+    selectedAmmunitionId: normalizeSelectedAmmunitionId(
+      ammoRecord?.quiver != null,
+      loadout.selectedAmmunitionId,
+    ),
     equipmentIds: mergeEquipmentIds(nextSlots, unlocks),
     buffs: clearSliverActive ? { ...loadout.buffs, sliverOfEdictsActive: false } : loadout.buffs,
   };
@@ -775,6 +788,7 @@ export function clearEquipment(loadout: Loadout): Loadout {
   return {
     ...loadout,
     equipmentSlots: {},
+    selectedAmmunitionId: null,
     equipmentIds: [],
   };
 }
@@ -803,9 +817,14 @@ export function pruneUnknownEquipment(
   }
   // Only original unlock pins - never convert a pruned slot orphan into a pin.
   const unlocks = unlockOnlyIds(loadout).filter((id) => known(id));
+  const ammoRecord = equipmentById(slots.ammo ?? "");
   return {
     ...loadout,
     equipmentSlots: slots,
+    selectedAmmunitionId: normalizeSelectedAmmunitionId(
+      ammoRecord?.quiver != null,
+      loadout.selectedAmmunitionId,
+    ),
     equipmentIds: mergeEquipmentIds(slots, unlocks),
   };
 }
@@ -1076,6 +1095,7 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
     : [];
   const slotted = new Set(equipmentIdList(equipmentSlots));
   const unlocks = legacyIds.filter((id) => !slotted.has(id));
+  const ammoRecord = equipmentById(equipmentSlots.ammo ?? "");
   // Remap curse to resolved style (weapon swap must not leave a melee curse on magic).
   const styleCurse = curseForStyle(
     STYLE_CURSES.includes(rawBuffs.styleCurse as StyleCurseChoice)
@@ -1298,6 +1318,10 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
     },
     archaeology,
     equipmentSlots,
+    selectedAmmunitionId: normalizeSelectedAmmunitionId(
+      ammoRecord?.quiver != null,
+      raw.selectedAmmunitionId,
+    ),
     enchantments,
     equipmentIds: mergeEquipmentIds(equipmentSlots, unlocks),
   };

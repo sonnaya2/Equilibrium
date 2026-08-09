@@ -26,7 +26,8 @@ import type { ResolvedCombatModel } from "../model/contracts";
 import { resolveModifierSourcesFromHost } from "../model/modifierSources";
 import { projectSerializableSimBase } from "../model/simulationInput";
 import type { PlayerPoisonProfile } from "../poison/mechanics";
-import type { StyleAmmoId } from "../styles/ranged/ammoModel";
+import type { ResolvedRangedAmmunitionProfile } from "../styles/ranged/ammunitionProfile";
+import type { ResolvedTargetAccuracyProfile } from "../target/genericTarget";
 
 /**
  * Neutral combat-domain snapshot for solver packing.
@@ -39,6 +40,7 @@ export interface SolverPackSnapshot {
   overrideLevel?: number;
   activateNaragiAtStart?: boolean;
   accuracy: number;
+  targetAccuracyProfile?: ResolvedTargetAccuracyProfile;
   crit: {
     chance: number;
     disabled?: boolean;
@@ -50,7 +52,7 @@ export interface SolverPackSnapshot {
   plantedFeet?: boolean;
   strengthCape99?: boolean;
   preciseRank?: number;
-  ammo?: StyleAmmoId;
+  ammunition?: ResolvedRangedAmmunitionProfile | null;
   conjureBasicDamageMult?: number;
   conjureDurationMult?: number;
   tumekensPieces?: number;
@@ -151,6 +153,9 @@ export function packSimBase(snapshot: SolverPackSnapshot): SerializableRevolutio
     ...(snapshot.overrideLevel != null ? { overrideLevel: snapshot.overrideLevel } : {}),
     ...(snapshot.activateNaragiAtStart === true ? { activateNaragiAtStart: true } : {}),
     accuracy: snapshot.accuracy,
+    ...(snapshot.targetAccuracyProfile
+      ? { targetAccuracyProfile: snapshot.targetAccuracyProfile }
+      : {}),
     crit: {
       chance: snapshot.crit.chance,
       disabled: snapshot.crit.disabled,
@@ -162,13 +167,13 @@ export function packSimBase(snapshot: SolverPackSnapshot): SerializableRevolutio
     plantedFeet: snapshot.plantedFeet,
     strengthCape99: snapshot.strengthCape99,
     preciseRank: snapshot.preciseRank,
-    ammo: snapshot.ammo,
+    ammunition: snapshot.ammunition,
     caromingRank: snapshot.caroming,
     conjureBasicDamageMult: snapshot.conjureBasicDamageMult,
     conjureDurationMult: snapshot.conjureDurationMult,
     tumekensPieces: snapshot.tumekensPieces,
     equipmentEffects: snapshot.equipmentEffects,
-    nativeSpecialPolicy: snapshot.nativeSpecialPolicy,
+    ...(snapshot.nativeSpecialPolicy ? { nativeSpecialPolicy: snapshot.nativeSpecialPolicy } : {}),
     league: snapshot.league,
     context: snapshot.context,
     targetHpPercent: snapshot.targetHpPercent,

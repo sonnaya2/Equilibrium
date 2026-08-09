@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { createCastContext, simulate } from "../../engine/simulation/simulate";
 import { rotationOf } from "../../engine/simulation/contracts";
-import { onRangedHitLanded } from "../../engine/resolution/landed/ranged";
+import {
+  applyRangedAmmunitionLandedState,
+  onRangedHitLanded,
+} from "../../engine/resolution/landed/ranged";
 import { createRuntime } from "../../engine/runtime/runtime";
 import { patchRanged } from "../../engine/runtime/state";
 import { GLOBAL_COOLDOWN_TICKS } from "../../engine/runtime/timing";
@@ -21,7 +24,7 @@ import {
 } from "./puncture";
 import { applyCaromingToRicochetHits } from "./caroming";
 import { darkfangBasicHits, hasDarkfangWeapon } from "./darkfang";
-import { hasRangedWeapon, resolveStyleAmmo, styleAmmoFromEquipmentIds } from "./ammoModel";
+import { testRangedAmmunition } from "../../testing/rangedAmmunition";
 import { caromingRicochetBonus } from "../../shared/perks";
 import {
   buildSimulationInputBase,
@@ -34,8 +37,9 @@ import { canonicalSimulationIdentity } from "../../solver/identity";
 import type { HostCombatResolveInput } from "../../model/contracts";
 import { simulateRevolution } from "../../engine/simulation/revolution";
 import { RANGED_ABILITIES } from "./abilities";
-import { equipmentById } from "../../data";
 import { EQUIPMENT_SET_ACTIVATION } from "../../shared/equipment";
+import type { RangedAmmunitionMechanicId } from "../../data/ammunition";
+import type { ResolvedRangedAmmunitionProfile } from "./ammunitionProfile";
 
 const BASE = 1000;
 
@@ -96,6 +100,39 @@ function hostScaffold(overrides: Partial<HostCombatResolveInput> = {}): HostComb
   };
 }
 
+function stageB1Ammunition(
+  mechanicId: Extract<
+    RangedAmmunitionMechanicId,
+    "ful" | "jas-dragonbane" | "jas-demonbane" | "dragonbane" | "demonbane" | "black-stone"
+  > | null,
+  pernix = false,
+): ResolvedRangedAmmunitionProfile {
+  return {
+    projectile:
+      mechanicId == null
+        ? null
+        : {
+            itemId: `item:test-${mechanicId}`,
+            label: `Test ${mechanicId}`,
+            family: "arrows",
+            statTier: 100,
+            mechanicId,
+            support: { status: "modeled", label: "Modeled" },
+          },
+    quiver: pernix
+      ? {
+          itemId: "item:test-pernix-quiver",
+          label: "Test Pernix quiver",
+          acceptedFamilies: ["arrows"],
+          passiveIds: ["pernix-quiver-max-hit-band"],
+          support: { status: "modeled", label: "Modeled" },
+        }
+      : null,
+    weaponCapability: { mode: "optional", acceptedFamily: "arrows" },
+    effectiveStatTier: 100,
+  };
+}
+
 describe("puncture pure helpers", () => {
   it("stores 1% ability damage per under-cap stack and caps at 250", () => {
     expect(punctureStoreAmount(BASE)).toBe(10);
@@ -136,7 +173,7 @@ describe("puncture runtime", () => {
   it("first application schedules 5 hits after ability finish", () => {
     const s = simulate({
       ...rangedInput,
-      ammo: "splintering",
+      ammunition: testRangedAmmunition("splintering"),
       rotation: rotationOf("piercing_shot"),
     });
     const dots = s.events.filter((e) => e.abilityId === PUNCTURE_ABILITY_ID);
@@ -153,14 +190,20 @@ describe("puncture runtime", () => {
     ]);
     // 2 stacks: stored 20; hits 10, 4, 3, 2, 1
     expect(dots.map((e) => e.damage.expected)).toEqual([10, 4, 3, 2, 1]);
-    const ctx = createCastContext({ ...rangedInput, ammo: "splintering" });
+    const ctx = createCastContext({
+      ...rangedInput,
+      ammunition: testRangedAmmunition("splintering"),
+    });
     ctx.performCast(ctx.byId.get("piercing_shot")!, 0, false);
     expect(ctx.getState().ranged.puncture.stacks).toBe(2);
     expect(ctx.getState().ranged.puncture.storedDamage).toBe(20);
   });
 
   it("stack growth and cap", () => {
-    const ctx = createCastContext({ ...rangedInput, ammo: "splintering" });
+    const ctx = createCastContext({
+      ...rangedInput,
+      ammunition: testRangedAmmunition("splintering"),
+    });
     const pierce = ctx.byId.get("piercing_shot")!;
     for (let i = 0; i < 30; i++) {
       ctx.performCast(pierce, ctx.getState().tick, false);
@@ -169,7 +212,10 @@ describe("puncture runtime", () => {
     expect(ctx.getState().ranged.puncture.stacks).toBe(60);
     expect(ctx.getState().ranged.puncture.storedDamage).toBe(600);
 
-    const cap = createCastContext({ ...rangedInput, ammo: "splintering" });
+    const cap = createCastContext({
+      ...rangedInput,
+      ammunition: testRangedAmmunition("splintering"),
+    });
     for (let i = 0; i < 130; i++) {
       cap.performCast(pierce, cap.getState().tick, false);
     }
@@ -182,7 +228,7 @@ describe("puncture runtime", () => {
     // Second auto @3 lands before that tick, bumps gen, reschedules at 7.
     const s = simulate({
       ...rangedInput,
-      ammo: "splintering",
+      ammunition: testRangedAmmunition("splintering"),
       rotation: rotationOf("ranged_attack", "ranged_attack"),
     });
     const dots = s.events.filter((e) => e.abilityId === PUNCTURE_ABILITY_ID);
@@ -206,7 +252,10 @@ describe("puncture runtime", () => {
   it("refresh during active sequence cancels unlanded tails", () => {
     // Piercing @0: 2 stacks, sequence first at 4 ([10,4,3,2,1]).
     // Piercing @8: after hits at 4 and 7, gen bump drops remaining old tails from queue.
-    const ctx = createCastContext({ ...rangedInput, ammo: "splintering" });
+    const ctx = createCastContext({
+      ...rangedInput,
+      ammunition: testRangedAmmunition("splintering"),
+    });
     const pierce = ctx.byId.get("piercing_shot")!;
     ctx.performCast(pierce, 0, false);
     ctx.performCast(pierce, 8, false);
@@ -233,7 +282,10 @@ describe("puncture runtime", () => {
   });
 
   it("event invalidation: gen bump cancels pending puncture before new sequence", () => {
-    const rt = createRuntime({ ...rangedInput, ammo: "splintering" });
+    const rt = createRuntime({
+      ...rangedInput,
+      ammunition: testRangedAmmunition("splintering"),
+    });
     const attack = rt.byId.get("ranged_attack")!;
     // Land one hit as finished cast so sequence is scheduled immediately.
     rt.state = patchRanged(rt.state, {
@@ -293,7 +345,7 @@ describe("puncture runtime", () => {
     const s = simulate({
       ...rangedInput,
       base: 2000,
-      ammo: "splintering",
+      ammunition: testRangedAmmunition("splintering"),
       rotation: rotationOf("ranged_attack"),
     });
     const dots = s.events.filter((e) => e.abilityId === PUNCTURE_ABILITY_ID);
@@ -305,7 +357,7 @@ describe("puncture runtime", () => {
     const s = simulate({
       ...rangedInput,
       base: BASE,
-      ammo: "splintering",
+      ammunition: testRangedAmmunition("splintering"),
       rotation: rotationOf("ranged_attack"),
     });
     const dots = s.events.filter((e) => e.abilityId === PUNCTURE_ABILITY_ID);
@@ -314,7 +366,10 @@ describe("puncture runtime", () => {
   });
 
   it("puncture cannot recursively apply itself", () => {
-    const ctx = createCastContext({ ...rangedInput, ammo: "splintering" });
+    const ctx = createCastContext({
+      ...rangedInput,
+      ammunition: testRangedAmmunition("splintering"),
+    });
     ctx.performCast(ctx.byId.get("ranged_attack")!, 0, false);
     // Drain puncture sequence
     ctx.performCast(ctx.byId.get("ranged_attack")!, 40, false);
@@ -331,7 +386,7 @@ describe("puncture runtime", () => {
 
     const windowed = createCastContext({
       ...rangedInput,
-      ammo: "splintering",
+      ammunition: testRangedAmmunition("splintering"),
       horizonTicks: horizon,
     });
     windowed.performCast(windowed.byId.get("ranged_attack")!, 0, false);
@@ -345,7 +400,7 @@ describe("puncture runtime", () => {
 
     const withTailsCtx = createCastContext({
       ...rangedInput,
-      ammo: "splintering",
+      ammunition: testRangedAmmunition("splintering"),
       horizonTicks: horizon,
     });
     withTailsCtx.performCast(withTailsCtx.byId.get("ranged_attack")!, 0, false);
@@ -357,7 +412,10 @@ describe("puncture runtime", () => {
   });
 
   it("expires after duration without reapplication", () => {
-    const ctx = createCastContext({ ...rangedInput, ammo: "splintering" });
+    const ctx = createCastContext({
+      ...rangedInput,
+      ammunition: testRangedAmmunition("splintering"),
+    });
     const attack = ctx.byId.get("ranged_attack")!;
     ctx.performCast(attack, 0, false);
     expect(ctx.getState().ranged.puncture.stacks).toBe(1);
@@ -372,7 +430,10 @@ describe("puncture runtime", () => {
   it("late land after owner cast completed schedules from land (no orphan pending)", () => {
     // Hit with sourceCast already finished would set pendingOwnerCast to a cast
     // that never completes again; lastCompletedCastSeq forces immediate schedule.
-    const rt = createRuntime({ ...rangedInput, ammo: "splintering" });
+    const rt = createRuntime({
+      ...rangedInput,
+      ammunition: testRangedAmmunition("splintering"),
+    });
     const ability = rt.byId.get("ranged_attack")!;
     const finishedCast = 7;
     const landTick = 12;
@@ -418,7 +479,10 @@ describe("puncture runtime", () => {
   });
 
   it("open cast multi-hit defers schedule until completion (no per-hit schedule)", () => {
-    const rt = createRuntime({ ...rangedInput, ammo: "splintering" });
+    const rt = createRuntime({
+      ...rangedInput,
+      ammunition: testRangedAmmunition("splintering"),
+    });
     const ability = rt.byId.get("piercing_shot")!;
     const openCast = 3;
     // lastCompletedCastSeq stays -1 so openCast is still open.
@@ -454,7 +518,7 @@ describe("deathspore / searing winds / shadow imbued regressions", () => {
     const rotation = rotationOf(...Array(12).fill("ranged_attack"), "imbue_shadows");
     const s = simulate({
       ...rangedInput,
-      ammo: "deathspore",
+      ammunition: testRangedAmmunition("deathspore"),
       startingAdrenaline: 100,
       rotation,
     });
@@ -515,7 +579,7 @@ describe("darkfang basic", () => {
   it("each darkfang hit participates in deathspore stacks", () => {
     const ctx = createCastContext({
       ...rangedInput,
-      ammo: "deathspore",
+      ammunition: testRangedAmmunition("deathspore"),
       equipmentIds: ["item:gloomfire-bow"],
     });
     const attack = ctx.byId.get("ranged_attack")!;
@@ -576,73 +640,294 @@ describe("caroming", () => {
   });
 });
 
-describe("ammo packing Manual / Revolution / identity", () => {
-  it("styleAmmoFromEquipmentIds maps deathspore arrows", () => {
-    expect(styleAmmoFromEquipmentIds(["item:deathspore-arrows"])).toBe("deathspore");
-    expect(styleAmmoFromEquipmentIds(["item:splintering-arrows"])).toBe("splintering");
+describe("deterministic ammunition hit effects", () => {
+  it("applies Ful damage and Damage Potential to current ability events", () => {
+    const ability = simulate({
+      ...rangedInput,
+      accuracy: 0.8,
+      ammunition: stageB1Ammunition("ful"),
+      rotation: rotationOf("piercing_shot"),
+    }).casts[0]!.result;
+    const abilityReference = simulate({
+      ...rangedInput,
+      accuracy: 0.7,
+      rotation: rotationOf("piercing_shot"),
+    }).casts[0]!.result;
+    expect(ability.hits).toHaveLength(2);
+    expect(ability.hits.every((hit) => Math.abs(hit.potential - 0.7) < 1e-12)).toBe(true);
+    for (let index = 0; index < ability.hits.length; index++) {
+      expect(ability.hits[index]!.min / abilityReference.hits[index]!.min).toBeCloseTo(1.15, 2);
+      expect(ability.hits[index]!.max / abilityReference.hits[index]!.max).toBeCloseTo(1.15, 2);
+    }
+
+    const basic = simulate({
+      ...rangedInput,
+      accuracy: 0.8,
+      ammunition: stageB1Ammunition("ful"),
+      rotation: rotationOf("ranged_attack"),
+    }).casts[0]!.result.hits[0]!;
+    const basicReference = simulate({
+      ...rangedInput,
+      accuracy: 0.7,
+      rotation: rotationOf("ranged_attack"),
+    }).casts[0]!.result.hits[0]!;
+    expect(basic.potential).toBeCloseTo(0.7, 12);
+    expect(basic.min / basicReference.min).toBeCloseTo(1.15, 2);
+    expect(basic.max / basicReference.max).toBeCloseTo(1.15, 2);
   });
 
-  it("only resolves ranged ammo for an equipped ranged weapon", () => {
-    expect(hasRangedWeapon(["item:dark-bow"])).toBe(true);
-    expect(hasRangedWeapon(["item:splintering-arrows"])).toBe(false);
-    expect(resolveStyleAmmo("bik", ["item:dark-bow"], "ranged")).toBe("bik");
-    expect(resolveStyleAmmo("bik", ["item:dark-bow"], "melee")).toBeUndefined();
-    expect(resolveStyleAmmo("bik", ["item:splintering-arrows"], "ranged")).toBeUndefined();
+  it.each([
+    ["jas-dragonbane", { dragon: true, demon: false }, { dragon: false, demon: true }, 0.2, 1.3],
+    ["jas-demonbane", { demon: true, dragon: false }, { demon: false, dragon: true }, 0.2, 1.3],
+    ["dragonbane", { dragon: true, demon: false }, { dragon: false, demon: true }, 0.3, 1.25],
+    ["demonbane", { demon: true, dragon: false }, { demon: false, dragon: true }, 0.3, 1.25],
+  ] as const)(
+    "%s gates ability damage and Damage Potential to the exact target group",
+    (mechanicId, matching, nonMatching, damagePotentialDelta, multiplier) => {
+      const inputAccuracy = 0.4;
+      const matchingResult = simulate({
+        ...rangedInput,
+        accuracy: inputAccuracy,
+        ammunition: stageB1Ammunition(mechanicId),
+        targetClassification: matching,
+        rotation: rotationOf("ricochet"),
+      }).casts[0]!.result;
+      const matchingReference = simulate({
+        ...rangedInput,
+        accuracy: inputAccuracy + damagePotentialDelta,
+        rotation: rotationOf("ricochet"),
+      }).casts[0]!.result;
+      const nonMatchingResult = simulate({
+        ...rangedInput,
+        accuracy: inputAccuracy,
+        ammunition: stageB1Ammunition(mechanicId),
+        targetClassification: nonMatching,
+        rotation: rotationOf("ricochet"),
+      }).casts[0]!.result;
+      const absentClassification = simulate({
+        ...rangedInput,
+        accuracy: inputAccuracy,
+        ammunition: stageB1Ammunition(mechanicId),
+        rotation: rotationOf("ricochet"),
+      }).casts[0]!.result;
+      const nonMatchingReference = simulate({
+        ...rangedInput,
+        accuracy: inputAccuracy,
+        rotation: rotationOf("ricochet"),
+      }).casts[0]!.result;
+
+      expect(matchingResult.hits).toHaveLength(3);
+      expect(
+        matchingResult.hits.every((hit) => hit.potential === inputAccuracy + damagePotentialDelta),
+      ).toBe(true);
+      for (let index = 0; index < matchingResult.hits.length; index++) {
+        expect(
+          matchingResult.hits[index]!.expected / matchingReference.hits[index]!.expected,
+        ).toBeCloseTo(multiplier, 2);
+      }
+      expect(nonMatchingResult.hits).toEqual(nonMatchingReference.hits);
+      expect(absentClassification.hits).toEqual(nonMatchingReference.hits);
+    },
+  );
+
+  it("uses the attuned-bane ability multiplier for the modern Basic Attack", () => {
+    const basic = simulate({
+      ...rangedInput,
+      accuracy: 0.4,
+      ammunition: stageB1Ammunition("dragonbane"),
+      targetClassification: { dragon: true },
+      rotation: rotationOf("ranged_attack"),
+    }).casts[0]!.result.hits[0]!;
+    const reference = simulate({
+      ...rangedInput,
+      accuracy: 0.7,
+      rotation: rotationOf("ranged_attack"),
+    }).casts[0]!.result.hits[0]!;
+    expect(basic.potential).toBeCloseTo(0.7, 12);
+    expect(basic.min).toBe(Math.floor(reference.min * 1.25));
+    expect(basic.max).toBe(Math.floor(reference.max * 1.25));
   });
 
-  it("equip id item:splintering-arrows resolves in catalogue and style ammo", () => {
-    const record = equipmentById("item:splintering-arrows");
-    expect(record, "item:splintering-arrows missing from combat equipment").toBeDefined();
-    expect(record!.slot).toBe("ammo");
-    expect(record!.style).toBe("ranged");
-    expect(record!.tier).toBe(95);
-    expect(styleAmmoFromEquipmentIds([record!.id])).toBe("splintering");
-    const model = buildResolvedCombatModel(
-      hostScaffold({ equipmentIds: ["item:noxious-longbow", "item:splintering-arrows"] }),
+  it("raises only Pernix's maximum band below 25% current target LP", () => {
+    const ammunition = stageB1Ammunition(null, true);
+    const below = simulate({
+      ...rangedInput,
+      ammunition,
+      targetMaximumLifePoints: 10_000,
+      targetHpPercent: 24.99,
+      rotation: rotationOf("ranged_attack"),
+    }).casts[0]!.result.hits[0]!;
+    const exact = simulate({
+      ...rangedInput,
+      ammunition,
+      targetMaximumLifePoints: 10_000,
+      targetHpPercent: 25,
+      rotation: rotationOf("ranged_attack"),
+    }).casts[0]!.result.hits[0]!;
+    const reference = simulate({
+      ...rangedInput,
+      targetMaximumLifePoints: 10_000,
+      targetHpPercent: 24.99,
+      rotation: rotationOf("ranged_attack"),
+    }).casts[0]!.result.hits[0]!;
+    expect(below.min).toBe(reference.min);
+    expect(below.max).toBe(reference.max + 40);
+    expect(exact.min).toBe(reference.min);
+    expect(exact.max).toBe(reference.max);
+  });
+
+  it("does not apply Jas damage or accuracy to a Searing Winds attached component", () => {
+    const result = simulate({
+      ...rangedInput,
+      accuracy: 0.5,
+      ammunition: stageB1Ammunition("jas-dragonbane"),
+      targetClassification: { dragon: true },
+      startingAdrenaline: 100,
+      rotation: rotationOf("galeshot", "ranged_attack"),
+    });
+    const attack = result.events.find(
+      (event) => event.abilityId === "ranged_attack" && event.family === "hit",
     );
-    expect(model.ammo).toBe("splintering");
+    const attached = attack?.components?.find((component) => component.id === "searing_winds");
+    const damageReference = simulate({
+      ...rangedInput,
+      accuracy: 0.7,
+      startingAdrenaline: 100,
+      rotation: rotationOf("galeshot", "ranged_attack"),
+    }).events.find((event) => event.abilityId === "ranged_attack" && event.family === "hit");
+    const attachedReference = simulate({
+      ...rangedInput,
+      accuracy: 0.5,
+      startingAdrenaline: 100,
+      rotation: rotationOf("galeshot", "ranged_attack"),
+    })
+      .events.find((event) => event.abilityId === "ranged_attack" && event.family === "hit")
+      ?.components?.find((component) => component.id === "searing_winds");
+    const directExpected = (attack?.damage.expected ?? 0) - (attached?.damage.expected ?? 0);
+    const referenceDirectExpected =
+      (damageReference?.damage.expected ?? 0) -
+      (damageReference?.components?.find((component) => component.id === "searing_winds")?.damage
+        .expected ?? 0);
+    expect(directExpected / referenceDirectExpected).toBeCloseTo(1.3, 2);
+    expect(attached?.damage).toEqual(attachedReference?.damage);
   });
 
-  it("drops explicit ranged ammo when the loadout has no ranged weapon", () => {
-    const model = buildResolvedCombatModel(
-      hostScaffold({ equipmentIds: ["item:splintering-arrows"], ammo: "bik" }),
+  it("applies Black Stone after the current hit and lowers armour for later hits", () => {
+    const ammunition = stageB1Ammunition("black-stone");
+    const targetAccuracyProfile = {
+      playerAccuracyRating: 1000,
+      originalTargetArmourRating: 1200,
+      affinity: "same" as const,
+      additiveHitChance: 0,
+    };
+    const withBlackStone = simulate({
+      ...rangedInput,
+      accuracy: 0.5,
+      ammunition,
+      targetAccuracyProfile,
+      rotation: rotationOf("ranged_attack", "ranged_attack"),
+    });
+    const withoutBlackStone = simulate({
+      ...rangedInput,
+      accuracy: 0.5,
+      rotation: rotationOf("ranged_attack", "ranged_attack"),
+    });
+    const liveHits = withBlackStone.events.filter(
+      (event) => event.abilityId === "ranged_attack" && event.family === "hit",
     );
-    expect(model.ammo).toBeUndefined();
+    const referenceHits = withoutBlackStone.events.filter(
+      (event) => event.abilityId === "ranged_attack" && event.family === "hit",
+    );
+    expect(liveHits).toHaveLength(2);
+    expect(referenceHits).toHaveLength(2);
+    expect(liveHits[0]!.damage).toEqual(referenceHits[0]!.damage);
+    expect(liveHits[1]!.damage.expected).toBeGreaterThan(referenceHits[1]!.damage.expected);
   });
 
-  it("resolved model carries ammo and caroming into sim base + identity", () => {
-    const model = buildResolvedCombatModel(
-      hostScaffold({
-        ammo: "splintering",
-        caroming: 3,
-        equipmentIds: ["item:noxious-longbow"],
-      }),
-    );
-    expect(model.ammo).toBe("splintering");
-    expect(model.caromingRank).toBe(3);
+  it("keeps Black Stone on the scalar fallback when no target profile is resolved", () => {
+    const withArrow = simulate({
+      ...rangedInput,
+      ammunition: stageB1Ammunition("black-stone"),
+      rotation: rotationOf("ranged_attack"),
+    });
+    const withoutArrow = simulate({ ...rangedInput, rotation: rotationOf("ranged_attack") });
+    expect(withArrow.events).toEqual(withoutArrow.events);
+  });
 
-    // Catalogue not required for packing fields
+  it("accepts the explicit BotLG ammunition origin for Black Stone state", () => {
+    const rt = createRuntime({
+      ...rangedInput,
+      ammunition: stageB1Ammunition("black-stone"),
+      targetAccuracyProfile: {
+        playerAccuracyRating: 1000,
+        originalTargetArmourRating: 1200,
+        affinity: "same",
+        additiveHitChance: 0,
+      },
+    });
+    const attack = rt.byId.get("ranged_attack")!;
+    applyRangedAmmunitionLandedState(
+      rt,
+      {
+        tick: 0,
+        seq: 0,
+        family: "hit",
+        abilityId: attack.id,
+        sourceCast: 0,
+        hitIndex: 0,
+        attached: false,
+        procEligible: false,
+        recursionAllowed: false,
+        originKind: "direct",
+        provenance: { kind: "botlg_perfect_equilibrium" },
+        resolve: () => ({ damage: { min: 100, max: 100, expected: 100 } }),
+      },
+      { min: 100, max: 100, expected: 100 },
+      "botlg",
+    );
+    expect(rt.state.target.blackStone?.reducedRating).toBe(9);
+  });
+});
+
+describe("ammunition profile packing Manual / Revolution / identity", () => {
+  it("carries one compact profile through the resolved model and worker wire", () => {
+    const ammunition = testRangedAmmunition("splintering");
+    const model = buildResolvedCombatModel(hostScaffold({ ammunition, caroming: 3 }));
+    expect(model.ammunition).toEqual(ammunition);
     const wire = projectSerializableSimBase(model);
-    expect(wire.ammo).toBe("splintering");
+    expect(wire.ammunition).toEqual(ammunition);
     expect(wire.caromingRank).toBe(3);
-
-    const idA = canonicalSimulationIdentity(wire);
-    const idB = canonicalSimulationIdentity({ ...wire, ammo: "deathspore" });
-    expect(JSON.stringify(idA)).not.toEqual(JSON.stringify(idB));
-    const idC = canonicalSimulationIdentity({ ...wire, caromingRank: 1 });
-    expect(JSON.stringify(idA)).not.toEqual(JSON.stringify(idC));
-    // Same ammo + caromingRank keeps identity stable.
-    const idA2 = canonicalSimulationIdentity({ ...wire, ammo: "splintering", caromingRank: 3 });
-    expect(JSON.stringify(idA)).toEqual(JSON.stringify(idA2));
   });
 
-  it("Manual / Revolution both receive packed ammo and caromingRank", () => {
+  it("carries the resolved target accuracy profile through model and worker wire", () => {
+    const targetAccuracyProfile = {
+      playerAccuracyRating: 1234,
+      originalTargetArmourRating: 987,
+      affinity: "weakness" as const,
+      additiveHitChance: 0.02,
+      damagePotentialOverride: 0.42,
+    };
+    const model = buildResolvedCombatModel(hostScaffold({ targetAccuracyProfile }));
+    expect(model.targetAccuracyProfile).toEqual(targetAccuracyProfile);
+    expect(projectSerializableSimBase(model).targetAccuracyProfile).toEqual(targetAccuracyProfile);
+  });
+
+  it("changes solver identity when resolved projectile facts change", () => {
+    const base = projectSerializableSimBase(
+      buildResolvedCombatModel(hostScaffold({ ammunition: testRangedAmmunition("splintering") })),
+    );
+    const changed = {
+      ...base,
+      ammunition: testRangedAmmunition("deathspore"),
+    };
+    expect(JSON.stringify(canonicalSimulationIdentity(base))).not.toEqual(
+      JSON.stringify(canonicalSimulationIdentity(changed)),
+    );
+  });
+
+  it("Manual and Revolution consume the same resolved profile", () => {
     const model = buildResolvedCombatModel(
-      hostScaffold({
-        ammo: "deathspore",
-        caroming: 2,
-        equipmentIds: ["item:noxious-longbow", "item:deathspore-arrows"],
-      }),
+      hostScaffold({ ammunition: testRangedAmmunition("deathspore"), caroming: 2 }),
     );
     const byId = new Map(RANGED_ABILITIES.map((a) => [a.id, a]));
     const catalogue = {
@@ -655,66 +940,14 @@ describe("ammo packing Manual / Revolution / identity", () => {
       },
     };
     const base = buildSimulationInputBase(model, catalogue as never);
-    expect(base.ammo).toBe("deathspore");
-    expect(base.caromingRank).toBe(2);
-
-    const manual = toManualSimulateInput(base, {
-      rotation: rotationOf("ranged_attack"),
-    });
+    const manual = toManualSimulateInput(base, { rotation: rotationOf("ranged_attack") });
     const revo = toRevolutionInput(base, {
       bar: [byId.get("ranged_attack")!],
       style: "ranged",
       durationTicks: 30,
     });
-    expect(manual.ammo).toBe("deathspore");
-    expect(revo.ammo).toBe("deathspore");
-    expect(manual.caromingRank).toBe(2);
-    expect(revo.caromingRank).toBe(2);
-
-    const manSim = simulate(manual);
-    const revoSim = simulateRevolution(revo);
-    // Same ammo path: both can land ranged basics
-    expect(manSim.events.some((e) => e.abilityId === "ranged_attack")).toBe(true);
-    expect(revoSim.events.some((e) => e.abilityId === "ranged_attack")).toBe(true);
-  });
-
-  it("Manual ammo null clears model-packed ammo; override sets; omit keeps", () => {
-    const model = buildResolvedCombatModel(
-      hostScaffold({
-        ammo: "deathspore",
-        equipmentIds: ["item:noxious-longbow", "item:deathspore-arrows"],
-      }),
-    );
-    const byId = new Map(RANGED_ABILITIES.map((a) => [a.id, a]));
-    const catalogue = {
-      catalogue: RANGED_ABILITIES,
-      byId,
-      basicByStyle: new Map([["ranged" as const, RANGED_ABILITIES[0]!]]),
-      abilityRegistry: {
-        byId,
-        basicByStyle: new Map([["ranged" as const, RANGED_ABILITIES[0]!]]),
-      },
-    };
-    const base = buildSimulationInputBase(model, catalogue as never);
-    expect(base.ammo).toBe("deathspore");
-
-    const cleared = toManualSimulateInput(base, {
-      rotation: rotationOf("ranged_attack"),
-      ammo: null,
-      horizonTicks: 100,
-    });
-    expect(cleared.ammo).toBeUndefined();
-    expect(cleared.horizonTicks).toBe(100);
-
-    const override = toManualSimulateInput(base, {
-      rotation: rotationOf("ranged_attack"),
-      ammo: "splintering",
-    });
-    expect(override.ammo).toBe("splintering");
-
-    const keep = toManualSimulateInput(base, {
-      rotation: rotationOf("ranged_attack"),
-    });
-    expect(keep.ammo).toBe("deathspore");
+    expect(manual.ammunition).toEqual(revo.ammunition);
+    expect(simulate(manual).events.some((e) => e.abilityId === "ranged_attack")).toBe(true);
+    expect(simulateRevolution(revo).events.some((e) => e.abilityId === "ranged_attack")).toBe(true);
   });
 });

@@ -1,5 +1,4 @@
 import type { AbilitySpec } from "../../../pipeline/calculateAbility";
-import { capabilitiesOf } from "../../../shared/damageProvenance";
 import {
   extendSearingWinds,
   onRangedHit,
@@ -16,22 +15,34 @@ import {
 import type { ResolvedDamage } from "../types";
 import type { ScheduledEvent } from "../../runtime/events";
 import { scheduleEvent, type SimulationRuntime } from "../../runtime/runtime";
-import { gainAdrenaline, patchRanged } from "../../runtime/state";
+import { gainAdrenaline, patchRanged, patchTarget } from "../../runtime/state";
 import { dracolichAdrenalinePerRapidFireHit } from "../../../styles/ranged/dracolich";
 import { attachedResolutionComponent, resolveLeagueAttachedRawHost } from "../../../league/damage";
 import { targetAndPostHitModifiers } from "../modifiers";
+import {
+  isAmmunitionHitEligible,
+  type AmmunitionAttackOrigin,
+} from "../../../styles/ranged/ammunitionEligibility";
+import {
+  applyBlackStoneArmourReduction,
+  newBlackStoneArmourState,
+  resetBlackStoneOnTargetDeath,
+} from "../../../styles/ranged/blackStone";
 
 function mayApplyPuncture(
   rt: SimulationRuntime,
   event: ScheduledEvent<SimulationRuntime>,
   damage: ResolvedDamage,
+  attackOrigin: AmmunitionAttackOrigin,
 ): boolean {
-  if (rt.input.ammo !== "splintering") return false;
+  if (rt.input.ammunition?.projectile?.mechanicId !== "splintering") return false;
   if (event.abilityId === PUNCTURE_ABILITY_ID) return false;
-  if (event.attached || !event.procEligible) return false;
   if (damage.max <= 0) return false;
-  const caps = capabilitiesOf(event.provenance);
-  return caps.playerAttack && caps.directHit;
+  return isAmmunitionHitEligible({
+    style: "ranged",
+    provenance: event.provenance,
+    attackOrigin,
+  });
 }
 
 /** Drop stale puncture sequence events (gen bump / refresh). */
@@ -124,6 +135,65 @@ export function schedulePunctureAfterFinish(rt: SimulationRuntime, finishTick: n
   });
 }
 
+export function applyRangedAmmunitionLandedState(
+  rt: SimulationRuntime,
+  event: ScheduledEvent<SimulationRuntime>,
+  damage: ResolvedDamage,
+  attackOrigin: AmmunitionAttackOrigin,
+): void {
+  if (
+    rt.input.ammunition?.projectile?.mechanicId === "deathspore" &&
+    isAmmunitionHitEligible({
+      style: "ranged",
+      provenance: event.provenance,
+      attackOrigin,
+    })
+  ) {
+    rt.state = patchRanged(rt.state, {
+      deathspore: onRangedHit(rt.state.ranged.deathspore, event.tick),
+    });
+  }
+
+  if (
+    rt.input.ammunition?.projectile?.mechanicId === "black-stone" &&
+    rt.input.targetAccuracyProfile &&
+    isAmmunitionHitEligible({
+      style: "ranged",
+      provenance: event.provenance,
+      attackOrigin,
+    })
+  ) {
+    const existing = rt.state.target.blackStone;
+    if (rt.state.target.vitality?.currentLifePoints === 0) {
+      if (existing) {
+        rt.state = patchTarget(rt.state, {
+          blackStone: resetBlackStoneOnTargetDeath(existing).state,
+        });
+      }
+    } else {
+      const state =
+        existing ??
+        newBlackStoneArmourState(rt.input.targetAccuracyProfile.originalTargetArmourRating);
+      const application = applyBlackStoneArmourReduction(state, event.tick);
+      rt.state = patchTarget(rt.state, { blackStone: application.state });
+    }
+  }
+
+  if (!mayApplyPuncture(rt, event, damage, attackOrigin)) return;
+
+  const owner = event.sourceCast;
+  const finished = owner < 0 || owner <= rt.state.ranged.puncture.lastCompletedCastSeq;
+  const next = applyPunctureStack(
+    rt.state.ranged.puncture,
+    event.tick,
+    rt.input.base,
+    finished ? -1 : owner,
+  );
+  rt.state = patchRanged(rt.state, { puncture: next });
+  cancelPendingPuncture(rt);
+  if (next.pendingOwnerCast < 0) schedulePunctureAfterFinish(rt, event.tick);
+}
+
 /**
  * Ranged state a real landed hit changes: Deathspore, Shadow Imbued adren,
  * Rapid Fire Searing Winds extension, and Puncture stacks (splintering).
@@ -159,11 +229,6 @@ export function onRangedHitLanded(
       },
     };
   }
-  if (rt.input.ammo === "deathspore") {
-    rt.state = patchRanged(rt.state, {
-      deathspore: onRangedHit(rt.state.ranged.deathspore, event.tick),
-    });
-  }
   const perHit = shadowImbuedAdrenalinePerHit(rt.state.ranged.shadowImbued, event.tick);
   if (perHit > 0) rt.state = gainAdrenaline(rt.state, perHit);
   // Rapid Fire: each landed hit extends an active Searing Winds by 1 tick (wiki).
@@ -173,22 +238,5 @@ export function onRangedHitLanded(
     });
   }
 
-  if (!mayApplyPuncture(rt, event, damage)) return;
-
-  // Open cast: pendingOwnerCast waits for applyCompletionEffects (one sequence per cast).
-  // Finished / autonomous: pendingOwnerCast=-1 and schedule from land (finish analog = land tick).
-  const owner = event.sourceCast;
-  const finished = owner < 0 || owner <= rt.state.ranged.puncture.lastCompletedCastSeq;
-  const next = applyPunctureStack(
-    rt.state.ranged.puncture,
-    event.tick,
-    rt.input.base,
-    finished ? -1 : owner,
-  );
-  rt.state = patchRanged(rt.state, { puncture: next });
-  // Gen bump invalidates any live sequence; drop stale queue rows (not only on reschedule).
-  cancelPendingPuncture(rt);
-  if (next.pendingOwnerCast < 0) {
-    schedulePunctureAfterFinish(rt, event.tick);
-  }
+  applyRangedAmmunitionLandedState(rt, event, damage, "player");
 }

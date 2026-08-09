@@ -62,6 +62,11 @@ export interface HitResult {
   critOutcome?: boolean;
 }
 
+export interface ExactDamageDistribution {
+  damage: number;
+  weight: number;
+}
+
 export interface RawHitBandInput extends Omit<HitInput, "base" | "band"> {
   min: number;
   max: number;
@@ -143,7 +148,7 @@ function activeFor(kits: HitPassKits, critMult: number | null): readonly CombatM
   return kits.crit ?? kits.nonCrit;
 }
 
-const MAX_EXACT_BAND_POINTS = 100_001;
+export const MAX_EXACT_BAND_POINTS = 100_001;
 
 /**
  * Inclusive integer-band mean for the exact oracle path.
@@ -279,6 +284,59 @@ function assertIntegerBandBounds(min: number, max: number): void {
   if (min > max) {
     throw new RangeError(`calculateRawHitBand: inverted band ${min}-${max}`);
   }
+}
+
+function normalizeExactDamageDistribution(
+  grouped: Map<number, number>,
+  count: number,
+): readonly ExactDamageDistribution[] {
+  if (grouped.size === 0 || count < 1) {
+    throw new RangeError("calculateHit: exact noncritical distribution has no mass");
+  }
+  return [...grouped.entries()]
+    .sort(([a], [b]) => a - b)
+    .map(([damage, occurrences]) => ({ damage, weight: occurrences / count }));
+}
+
+export function calculateRawNonCriticalHitDistribution(
+  input: RawHitBandInput,
+): readonly ExactDamageDistribution[] {
+  recordHitExpectationCall();
+  assertIntegerBandBounds(input.min, input.max);
+  const count = input.max - input.min + 1;
+  if (count > MAX_EXACT_BAND_POINTS) {
+    throw new RangeError(
+      `calculateHit: exact integer band has ${count} points (limit ${MAX_EXACT_BAND_POINTS})`,
+    );
+  }
+  recordIntegerBandPoints(count);
+  const kits = compileHitPassKits(input, false);
+  const grouped = new Map<number, number>();
+  for (let roll = input.min; roll <= input.max; roll++) {
+    const damage = runPass(roll, kits.nonCrit, kits);
+    grouped.set(damage, (grouped.get(damage) ?? 0) + 1);
+  }
+  return normalizeExactDamageDistribution(grouped, count);
+}
+
+export function calculateNonCriticalHitDistribution(
+  input: HitInput,
+): readonly ExactDamageDistribution[] {
+  const context = resolvedHitContext(input);
+  const prepared = applyAbilityBaseModifiers(input.base, input.modifiers ?? [], context);
+  const raw = rawHitBand({
+    ...input,
+    base: prepared.base,
+    modifiers: prepared.modifiers,
+  });
+  const { base: _base, band: _band, ...shared } = input;
+  return calculateRawNonCriticalHitDistribution({
+    ...shared,
+    min: raw.min,
+    max: raw.max,
+    modifiers: prepared.modifiers,
+    crit: { ...input.crit, chance: 0, guaranteed: false, eligible: false },
+  });
 }
 
 /** Resolve an already-composed inclusive integer band through the normal hit pipeline. */

@@ -152,17 +152,23 @@ function simulateRevolutionLane(
 
   let guard = 0;
   const maxCasts = Math.max(input.durationTicks * 2, 64);
+  const nativeSpecialNextAutoTick = new Map<string, number>();
   while (lane.error === undefined && rt.state.tick < input.durationTicks) {
     if (++guard > maxCasts) {
       lane.error = `revolution stalled at tick ${rt.state.tick}: cast guard exceeded`;
       break;
     }
     let ready: AbilitySpec | undefined;
+    const nativeSpecial = rt.nativeSpecial;
+    const nativeSpecialAutoTick = nativeSpecial
+      ? (nativeSpecialNextAutoTick.get(nativeSpecial.id) ?? rt.state.tick)
+      : Number.POSITIVE_INFINITY;
     if (
-      rt.nativeSpecial &&
+      nativeSpecial &&
+      rt.state.tick >= nativeSpecialAutoTick &&
       revoAbilityLegal(
         rt.state,
-        rt.nativeSpecial,
+        nativeSpecial,
         input.level,
         input.weaponConfiguration,
         input.equipmentIds,
@@ -188,8 +194,16 @@ function simulateRevolutionLane(
       lane.error = `revolution stalled at tick ${rt.state.tick}: no bar ability ready and no basic for ${input.style}`;
       break;
     }
-    const attempt = performCast(rt, ability, rt.state.tick, ready === undefined);
+    const castTick = rt.state.tick;
+    const automaticNativeSpecial =
+      ready !== undefined &&
+      nativeSpecial?.id === ready.id &&
+      ready.minimumAutomaticRecastTicks != null;
+    const attempt = performCast(rt, ability, castTick, ready === undefined);
     if (!attempt.ok) lane.error = attempt.error;
+    else if (automaticNativeSpecial && ready) {
+      nativeSpecialNextAutoTick.set(ready.id, castTick + ready.minimumAutomaticRecastTicks!);
+    }
   }
   return lane;
 }

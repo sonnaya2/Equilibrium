@@ -75,6 +75,7 @@ export function projectSerializableSimBase(
     ...(model.overrideLevel != null ? { overrideLevel: model.overrideLevel } : {}),
     ...(model.activateNaragiAtStart === true ? { activateNaragiAtStart: true } : {}),
     accuracy: model.accuracy,
+    ...(model.targetAccuracyProfile ? { targetAccuracyProfile: model.targetAccuracyProfile } : {}),
     crit: {
       chance: model.crit.chance,
       disabled: model.crit.disabled,
@@ -86,7 +87,7 @@ export function projectSerializableSimBase(
     plantedFeet: model.plantedFeet,
     strengthCape99: model.strengthCape99,
     preciseRank: model.preciseRank,
-    ammo: model.ammo,
+    ammunition: model.ammunition,
     caromingRank: model.caromingRank,
     conjureBasicDamageMult: model.conjureBasicDamageMult,
     conjureDurationMult: model.conjureDurationMult,

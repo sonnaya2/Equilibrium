@@ -14,6 +14,7 @@ export {
   loadoutOverloadTier,
   loadoutEffectiveDamageLevel,
   loadoutWeaponConfig,
+  loadoutRangedAmmunitionProfile,
   computedLoadoutBase,
   loadoutBase,
   type WeaponHand,

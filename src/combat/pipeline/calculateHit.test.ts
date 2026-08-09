@@ -12,6 +12,7 @@ import { MODERNISATION_WIKI } from "../data/sources";
 import { contextWithProvenance } from "../shared/damageProvenance";
 import {
   calculateHit,
+  calculateNonCriticalHitDistribution,
   calculateRawHitBand,
   type HitInput,
   type RawHitBandInput,
@@ -248,6 +249,32 @@ describe("calculateHit", () => {
       modifiers: [half],
     });
     expect(r.nonCritExpected).toBe((25 + 25 + 25) / 3);
+  });
+
+  it("returns the exact noncritical source distribution used by separate hits", () => {
+    const input = {
+      ...baseInput,
+      base: 101,
+      band: { minPct: 100, maxPct: 102 },
+      accuracy: 0.5,
+      modifiers: [
+        {
+          id: "half",
+          stage: "onHit" as const,
+          priority: 0,
+          applies: () => true,
+          apply: (s: { damage: number }) => ({ ...s, damage: mulFloor(s.damage, 0.5) }),
+          source: { source: "derived" as const, url: "test", verifiedAt: "2026-08-01" },
+        },
+      ],
+    };
+    const source = calculateHit(input);
+    const distribution = calculateNonCriticalHitDistribution(input);
+    expect(distribution).toEqual([{ damage: 25, weight: 1 }]);
+    expect(distribution.reduce((sum, outcome) => sum + outcome.weight, 0)).toBe(1);
+    expect(distribution[0]!.damage).toBe(source.min);
+    expect(distribution[0]!.damage).toBe(source.max);
+    expect(distribution[0]!.damage * distribution[0]!.weight).toBe(source.nonCritExpected);
   });
 
   it("rejects an impractically wide exact band", () => {

@@ -6,6 +6,7 @@ import {
 import { equipmentById } from "@/combat/data";
 import type { AdrenalineRules, ProcRules } from "@/combat/engine/simulation/simulate";
 import type { CombatModifier, CombatContext } from "@/combat/types";
+import type { ResolvedTargetAccuracyProfile } from "@/combat/target/genericTarget";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import type { CritLayers } from "@/combat/core/critical";
 import type { HitCapRule } from "@/combat/core/hitCaps";
@@ -33,6 +34,7 @@ import {
   loadoutWeaponConfig,
   computedLoadoutBase,
   loadoutBase,
+  loadoutRangedAmmunitionProfile,
 } from "./loadout/weaponConfiguration";
 import {
   critDamageStats,
@@ -109,6 +111,8 @@ export interface CalcStats {
    * flat accuracy. The same value feeds the target-model Damage Potential.
    */
   accuracyRating: number;
+  /** Host-resolved target facts for live land-time Damage Potential. */
+  targetAccuracyProfile?: ResolvedTargetAccuracyProfile;
   /** Named sources for the setup summary dropdowns - zero rows are filtered in the UI. */
   baseAbilityDamageBreakdown: readonly { label: string; value: number }[];
   equipmentDamageBreakdown: readonly { label: string; value: number }[];
@@ -163,6 +167,7 @@ export interface CalcStats {
   offhandTier: number | null;
   spellTier: number | null;
   ammunitionTier: number | null;
+  ammunition: ReturnType<typeof loadoutRangedAmmunitionProfile>;
   equipmentStyleDamageBonus: number;
   styleDamageBonus: number;
   damagePotentialSource: "target stats" | "target weakness" | "manual override" | "100% assumption";
@@ -283,6 +288,7 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     attackLevel: levels.attackLevel,
     dp: accuracyDp.dp,
     accuracyRating: accuracyDp.accuracyRating,
+    targetAccuracyProfile: accuracyDp.targetAccuracyProfile,
     baseAbilityDamageBreakdown: baseDamage.baseAbilityDamageBreakdown,
     equipmentDamageBreakdown: baseDamage.equipmentDamageBreakdown,
     accuracyBreakdown: accuracyDp.accuracyBreakdown,
@@ -314,6 +320,7 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     offhandTier: equipment.offhandTier,
     spellTier: equipment.spellTier,
     ammunitionTier: equipment.ammunitionTier,
+    ammunition: equipment.ammunitionProfile,
     equipmentStyleDamageBonus: equipment.equipmentStyleDamageBonus,
     styleDamageBonus: equipment.styleDamageBonus,
     damagePotentialSource: accuracyDp.damagePotentialSource,

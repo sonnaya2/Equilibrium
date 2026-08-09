@@ -92,6 +92,7 @@ export function hostInputFromLoadoutStats(
     overrideLevel: NARAGI_LEVEL_OVERRIDE,
     ...(activateNaragiAtStart ? { activateNaragiAtStart: true } : {}),
     accuracy: stats.dp,
+    ...(stats.targetAccuracyProfile ? { targetAccuracyProfile: stats.targetAccuracyProfile } : {}),
     crit: {
       chance: stats.critChance,
       disabled: stats.critsDisabled,
@@ -103,6 +104,7 @@ export function hostInputFromLoadoutStats(
     plantedFeet: stats.plantedFeet,
     strengthCape99: stats.strengthCape99,
     preciseRank: stats.preciseRank,
+    ammunition: stats.ammunition,
     conjureBasicDamageMult: stats.conjureBasicDamageMult,
     conjureDurationMult: stats.conjureDurationMult,
     tumekensPieces: stats.tumekensPieces,

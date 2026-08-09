@@ -3,6 +3,7 @@ import { rotationOf } from "../../engine/simulation/contracts";
 import { createCastContext, simulate } from "../../engine/simulation/simulate";
 import { rangedInput } from "../../test/fixtures/inputs";
 import { lastCast } from "../../test/helpers/summary";
+import { testRangedAmmunition } from "../../testing/rangedAmmunition";
 import {
   activePuncture,
   activateSearingWinds,
@@ -137,7 +138,11 @@ describe("shadow imbued", () => {
 describe("deathspore arrows — free-cast lifecycle through the simulator", () => {
   it("deathspore arrows waive the adrenaline cost at 12 stacks", () => {
     const rotation = rotationOf(...Array(12).fill("ranged_attack"), "imbue_shadows");
-    const withAmmo = simulate({ ...rangedInput, ammo: "deathspore", rotation });
+    const withAmmo = simulate({
+      ...rangedInput,
+      ammunition: testRangedAmmunition("deathspore"),
+      rotation,
+    });
     expect(withAmmo.ok).toBe(true);
     expect(lastCast(withAmmo).adrenalineAfter).toBe(100);
 
@@ -148,7 +153,11 @@ describe("deathspore arrows — free-cast lifecycle through the simulator", () =
   it("a free cast outside the 15-tick window pays full cost", () => {
     // 12th stack lands at tick 33 → buff until 48; imbue at 54 is past it.
     const rotation = rotationOf(...Array(18).fill("ranged_attack"), "imbue_shadows");
-    const s = simulate({ ...rangedInput, ammo: "deathspore", rotation });
+    const s = simulate({
+      ...rangedInput,
+      ammunition: testRangedAmmunition("deathspore"),
+      rotation,
+    });
     expect(s.ok).toBe(true);
     expect(lastCast(s).adrenalineAfter).toBe(100 - 40);
   });
@@ -160,7 +169,7 @@ describe("deathspore arrows — free-cast lifecycle through the simulator", () =
     // needs the necessary adrenaline to cast it").
     const broke = simulate({
       ...rangedInput,
-      ammo: "deathspore",
+      ammunition: testRangedAmmunition("deathspore"),
       rotation: rotationOf(...Array(6).fill("ranged_attack"), "rapid_fire", "imbue_shadows"),
     });
     expect(broke.ok).toBe(false);
@@ -168,7 +177,7 @@ describe("deathspore arrows — free-cast lifecycle through the simulator", () =
     // With enough adrenaline rebuilt inside the window, the same cast spends 0.
     const funded = simulate({
       ...rangedInput,
-      ammo: "deathspore",
+      ammunition: testRangedAmmunition("deathspore"),
       rotation: rotationOf(
         ...Array(6).fill("ranged_attack"),
         "rapid_fire",
@@ -181,7 +190,10 @@ describe("deathspore arrows — free-cast lifecycle through the simulator", () =
   });
 
   it("stacks cannot rebuild during the 50-tick cooldown, then build again", () => {
-    const ctx = createCastContext({ ...rangedInput, ammo: "deathspore" });
+    const ctx = createCastContext({
+      ...rangedInput,
+      ammunition: testRangedAmmunition("deathspore"),
+    });
     const attack = ctx.byId.get("ranged_attack")!;
     for (let i = 0; i < 12; i++) ctx.performCast(attack, ctx.getState().tick, false);
     expect(ctx.getState().ranged.deathspore.freeCastUntilTick).toBe(33 + 15);
@@ -200,7 +212,11 @@ describe("deathspore arrows — free-cast lifecycle through the simulator", () =
       ...Array(20).fill("ranged_attack"),
       "imbue_shadows",
     );
-    const s = simulate({ ...rangedInput, ammo: "deathspore", rotation });
+    const s = simulate({
+      ...rangedInput,
+      ammunition: testRangedAmmunition("deathspore"),
+      rotation,
+    });
     expect(s.ok).toBe(true);
     const imbues = s.casts.filter((c) => c.abilityId === "imbue_shadows");
     expect(imbues[0].adrenalineAfter).toBe(100); // free: spend 0

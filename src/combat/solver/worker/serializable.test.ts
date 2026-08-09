@@ -122,6 +122,21 @@ describe("solver worker serializable boundary", () => {
     expect(requireSimBase(cloned.loadout).base).toBe(1200);
   });
 
+  it("carries the resolved target accuracy profile through worker revival", () => {
+    const sim = {
+      ...sampleSimBase(),
+      targetAccuracyProfile: {
+        playerAccuracyRating: 1200,
+        originalTargetArmourRating: 900,
+        affinity: "weakness" as const,
+        additiveHitChance: 0.02,
+        damagePotentialOverride: 0.42,
+      },
+    } satisfies SerializableRevolutionSimBase;
+    const cloned = structuredClone(sim);
+    expect(reviveRevolutionBase(cloned).targetAccuracyProfile).toEqual(sim.targetAccuracyProfile);
+  });
+
   it("preserves Critual conversion metadata through worker revival", () => {
     const sim = {
       ...sampleSimBase(),
@@ -134,6 +149,18 @@ describe("solver worker serializable boundary", () => {
     const revived = reviveRevolutionBase(structuredClone(sim));
 
     expect(revived.crit.critualConvertedDamageBonus).toBeCloseTo(0.05, 12);
+  });
+
+  it("revives target classification from modifier-source target facts", () => {
+    const sim = sampleSimBase();
+    sim.modifierSources.target = { demon: true, dragon: false, undead: true };
+    const revived = reviveRevolutionBase(structuredClone(sim));
+
+    expect(revived.targetClassification).toEqual({
+      demon: true,
+      dragon: false,
+      undead: true,
+    });
   });
 
   it("preserves Dracolich effects through clone and worker revival", () => {

@@ -1,4 +1,6 @@
 import { damagePotential } from "../core/damagePotential";
+import { applyEquipmentDamagePotential, type ActiveEquipmentEffects } from "../shared/equipment";
+import { effectiveBaseArmourAtTick, type BlackStoneArmourState } from "../styles/ranged/blackStone";
 
 /**
  * Generic-target accuracy model:
@@ -43,6 +45,23 @@ export interface GenericTarget {
   demon?: boolean;
 }
 
+/** Host-resolved target facts used by land-time accuracy and Damage Potential. */
+export interface ResolvedTargetAccuracyProfile {
+  readonly playerAccuracyRating: number;
+  readonly originalTargetArmourRating: number;
+  readonly affinity: AffinityKind;
+  readonly additiveHitChance: number;
+  readonly damagePotentialOverride?: number;
+}
+
+export interface LiveTargetDamagePotentialOptions {
+  readonly blackStone?: {
+    readonly state: BlackStoneArmourState;
+    readonly currentTick: number;
+  };
+  readonly equipmentEffects?: ActiveEquipmentEffects;
+}
+
 /** f(x) = x³/1250 + 4x + 40 (Hit chance page). */
 export function accuracyCurve(x: number): number {
   if (!Number.isFinite(x) || x < 0) throw new RangeError(`accuracyCurve: bad value ${x}`);
@@ -65,9 +84,48 @@ export function hitChance(accuracy: number, target: GenericTarget): number {
   return Math.min(1, Math.max(0, affinity * (accuracy / armour) + (target.additiveHitChance ?? 0)));
 }
 
+function hitChanceForArmour(
+  accuracy: number,
+  armour: number,
+  affinity: AffinityKind,
+  additiveHitChance: number,
+): number {
+  if (armour <= 0) return 1;
+  return Math.min(
+    1,
+    Math.max(0, (AFFINITY[affinity] / 100) * (accuracy / armour) + additiveHitChance),
+  );
+}
+
 /** Damage Potential against this target; the override wins when set. */
 export function targetDamagePotential(accuracy: number, target: GenericTarget): number {
   if (target.damagePotentialOverride != null)
     return damagePotential(target.damagePotentialOverride);
   return damagePotential(hitChance(accuracy, target));
+}
+
+/**
+ * Live target Damage Potential before ammunition deltas. Armour changes affect
+ * the formula path only; a manual override remains independent of armour.
+ */
+export function liveTargetDamagePotential(
+  profile: ResolvedTargetAccuracyProfile,
+  options: LiveTargetDamagePotentialOptions = {},
+): number {
+  const formulaDp =
+    profile.damagePotentialOverride != null
+      ? damagePotential(profile.damagePotentialOverride)
+      : damagePotential(
+          hitChanceForArmour(
+            profile.playerAccuracyRating,
+            options.blackStone
+              ? effectiveBaseArmourAtTick(options.blackStone.state, options.blackStone.currentTick)
+              : profile.originalTargetArmourRating,
+            profile.affinity,
+            profile.additiveHitChance,
+          ),
+        );
+  return options.equipmentEffects
+    ? applyEquipmentDamagePotential(formulaDp, options.equipmentEffects)
+    : formulaDp;
 }

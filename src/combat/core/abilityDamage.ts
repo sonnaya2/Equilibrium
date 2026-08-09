@@ -34,6 +34,7 @@ export type WeaponConfiguration =
       offhand?: WeaponProfile;
       styleBonus?: number;
       ammunitionTier?: number;
+      rangedAmmunitionState?: "self-generated" | "external" | "missing-required";
       spellTier?: number;
     }
   | {
@@ -42,6 +43,7 @@ export type WeaponConfiguration =
       weapon: WeaponProfile;
       styleBonus?: number;
       ammunitionTier?: number;
+      rangedAmmunitionState?: "self-generated" | "external" | "missing-required";
       spellTier?: number;
     }
   | {
@@ -99,6 +101,10 @@ export function baseAbilityDamage(level: number, config: WeaponConfiguration): n
       styleBonus,
     );
     return main + Math.floor(conduitAsMain / 2);
+  }
+
+  if (config.style === "ranged" && config.rangedAmmunitionState === "missing-required") {
+    return 0;
   }
 
   const rawWeaponTier = validateTier(config.weapon.tier, "weapon tier");

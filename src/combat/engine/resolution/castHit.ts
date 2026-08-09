@@ -1,6 +1,11 @@
 import type { CritLayers } from "../../core/critical";
 import type { AbilityHit, AbilitySpec } from "../../pipeline/calculateAbility";
-import { calculateHit, type HitResult } from "../../pipeline/calculateHit";
+import {
+  calculateHit,
+  calculateNonCriticalHitDistribution,
+  type ExactDamageDistribution,
+  type HitResult,
+} from "../../pipeline/calculateHit";
 import { TUSKAS_EMPOWERED_HIT_CAP } from "../../styles/shared/constitutionAbilities";
 import { FURY_CRIT_CHANCE_BONUS } from "../../styles/melee/effects";
 import {
@@ -9,6 +14,7 @@ import {
   sunshineActive,
 } from "../../styles/magic/effects";
 import { SEARING_WINDS_BONUS_HIT_PCT } from "../../styles/ranged/onHit";
+import { resolveRangedAmmunitionHitEffects } from "../../styles/ranged/ammunitionPayloads";
 import { dracolichInfusionCritChance } from "../../styles/ranged/dracolich";
 import {
   COMMAND_REQUIRES_CONJURE,
@@ -52,6 +58,7 @@ import {
 } from "../../league/damage";
 import { recordResolutionCache } from "../../profiling/hitPipeline";
 import { resolveLeagueCritAtLand } from "../../league/ruleset";
+import { liveTargetDamagePotential as resolveLiveTargetDamagePotential } from "../../target/genericTarget";
 
 /** Style level at land tick: temporary override (e.g. Naragi 255) wins when active. */
 function combatLevelAt(rt: SimulationRuntime, landTick: number): number {
@@ -150,7 +157,50 @@ function mixResolution(a: EventResolution, b: EventResolution, weight: number): 
     damage: mixDamage(a.damage, b.damage, weight),
     ...(a.hitDetail && b.hitDetail ? { hitDetail: mixHit(a.hitDetail, b.hitDetail, weight) } : {}),
     ...(components ? { components } : {}),
+    ...(a.sourcePrecritDistribution
+      ? { sourcePrecritDistribution: a.sourcePrecritDistribution }
+      : b.sourcePrecritDistribution
+        ? { sourcePrecritDistribution: b.sourcePrecritDistribution }
+        : {}),
   };
+}
+
+function sourceDistributionForPerfectEquilibrium(args: {
+  ability: AbilitySpec;
+  snap: CastSnapshot;
+  isDot: boolean;
+  convertedChannel: boolean;
+  provenance: ReturnType<typeof provenanceForCastHit>;
+}): boolean {
+  if (args.ability.style !== "ranged" || args.isDot || args.convertedChannel) return false;
+  const capabilities = capabilitiesOf(args.provenance);
+  return (
+    (args.snap.perfectEquilibriumAtCast &&
+      capabilities.canGeneratePerfectEquilibrium === true) ||
+    (args.ability.id === "balance_by_force" && args.snap.perfectEquilibriumTrigger === true)
+  );
+}
+
+function validatePerfectEquilibriumSourceDistribution(
+  distribution: readonly ExactDamageDistribution[],
+  source: HitResult,
+): void {
+  const weight = distribution.reduce((total, outcome) => total + outcome.weight, 0);
+  const min = distribution[0]?.damage;
+  const max = distribution[distribution.length - 1]?.damage;
+  const tolerance = Math.max(1e-9, Math.abs(source.nonCritExpected) * 1e-9);
+  if (
+    !Number.isFinite(weight) ||
+    Math.abs(weight - 1) > 1e-9 ||
+    min !== source.min ||
+    max !== source.max ||
+    Math.abs(
+      distribution.reduce((total, outcome) => total + outcome.damage * outcome.weight, 0) -
+        source.nonCritExpected,
+    ) > tolerance
+  ) {
+    throw new Error("Perfect Equilibrium source distribution diverged from source hit");
+  }
 }
 
 /**
@@ -242,6 +292,14 @@ function resolveCastHitUncached(
     );
     return mixResolution(inactive, active, frostMass);
   }
+  const isCommand = COMMAND_REQUIRES_CONJURE[ability.id] !== undefined;
+  const provenance = provenanceForCastHit({
+    isCommand,
+    isDot,
+    convertedChannel,
+    dotKind: hitSpec.dotKind,
+    bleedId: hitSpec.bleedId,
+  });
   const modifiers = landTimeModifiers(
     rt,
     at,
@@ -252,6 +310,7 @@ function resolveCastHitUncached(
     convertedChannel,
     hitSpec.dotKind,
     frostbladesActive,
+    provenance,
   );
 
   const firstEligible = hitIndex === snap.firstEligibleHitIndex;
@@ -296,20 +355,52 @@ function resolveCastHitUncached(
   // Command abilities are part of the conjure: full Damage Potential, the
   // conjure-eligible modifier set (never prayers), and for the skeleton the
   // live rage multiplier at the land tick (wiki, verified 2026-07-31).
-  const isCommand = COMMAND_REQUIRES_CONJURE[ability.id] !== undefined;
   let band = hitSpec.band;
   if (ability.id === "command_skeleton_warrior") {
     const spirit = findConjure(state.necromancy.conjures, "skeleton_warrior");
     const mult = skeletonRageMult(spirit?.rageStacks ?? 0);
     if (mult !== 1) band = { minPct: band.minPct * mult, maxPct: band.maxPct * mult };
   }
-  const provenance = provenanceForCastHit({
-    isCommand,
-    isDot,
-    convertedChannel,
-    dotKind: hitSpec.dotKind,
-    bleedId: hitSpec.bleedId,
+  const targetVitality = state.target.vitality;
+  const targetHealthFraction =
+    targetVitality && targetVitality.maximumLifePoints > 0
+      ? targetVitality.currentLifePoints / targetVitality.maximumLifePoints
+      : null;
+  const ammunition = resolveRangedAmmunitionHitEffects({
+    ammunition: input.ammunition,
+    style: ability.style,
+    provenance,
+    attackOrigin: "player",
+    attackKind: "ability",
+    targetClassification: input.targetClassification,
+    targetHealthFraction,
   });
+  if (ammunition.maximumHitBandFraction > 0) {
+    band = {
+      minPct: band.minPct,
+      maxPct: band.maxPct + ammunition.maximumHitBandFraction * 100,
+    };
+  }
+  const targetDamagePotentialBeforeAmmunition = input.targetAccuracyProfile
+    ? resolveLiveTargetDamagePotential(input.targetAccuracyProfile, {
+        ...(state.target.blackStone
+          ? {
+              blackStone: {
+                state: state.target.blackStone,
+                currentTick: at,
+              },
+            }
+          : {}),
+        equipmentEffects: input.equipmentEffects,
+      })
+    : input.accuracy;
+  const effectiveAccuracy =
+    ammunition.damagePotentialDelta === 0
+      ? targetDamagePotentialBeforeAmmunition
+      : Math.max(
+          0,
+          Math.min(1, targetDamagePotentialBeforeAmmunition + ammunition.damagePotentialDelta),
+        );
   const damageSource = outgoingSourceOf(provenance);
   const hitContext: import("../../types").CombatContext = {
     ...input.context,
@@ -351,7 +442,7 @@ function resolveCastHitUncached(
           base,
           band,
           level,
-          accuracy: isCommand ? CONJURE_DAMAGE_POTENTIAL : input.accuracy,
+          accuracy: isCommand ? CONJURE_DAMAGE_POTENTIAL : effectiveAccuracy,
           crit,
           ...(snap.surgingStormAtCast
             ? { critDamageDistribution: SURGING_STORM_CRIT_DAMAGE_DISTRIBUTION }
@@ -362,6 +453,30 @@ function resolveCastHitUncached(
           preciseRank: input.preciseRank,
         });
   const hit = host.baseHit;
+
+  const sourcePrecritDistribution = sourceDistributionForPerfectEquilibrium({
+    ability,
+    snap,
+    isDot,
+    convertedChannel,
+    provenance,
+  })
+    ? calculateNonCriticalHitDistribution({
+        base,
+        band,
+        level,
+        accuracy: isCommand ? CONJURE_DAMAGE_POTENTIAL : effectiveAccuracy,
+        crit: { ...crit, chance: 0, guaranteed: false, eligible: false },
+        modifiers: isCommand ? conjureEligibleModifiers(modifiers) : modifiers,
+        context: hitContext,
+        provenance,
+        cap: input.cap,
+        preciseRank: input.preciseRank,
+      })
+    : undefined;
+  if (sourcePrecritDistribution) {
+    validatePerfectEquilibriumSourceDistribution(sourcePrecritDistribution, hit);
+  }
 
   const components: AttachedDamageComponent[] = host.components.map((component) =>
     attachedResolutionComponent(component),
@@ -375,7 +490,7 @@ function resolveCastHitUncached(
       base,
       band: { minPct: SEARING_WINDS_BONUS_HIT_PCT, maxPct: SEARING_WINDS_BONUS_HIT_PCT },
       level,
-      accuracy: input.accuracy,
+      accuracy: targetDamagePotentialBeforeAmmunition,
       crit: { chance: 0, eligible: false },
       modifiers,
       provenance: bonusProv,
@@ -453,5 +568,6 @@ function resolveCastHitUncached(
     },
     hitDetail: hit,
     ...(components.length > 0 ? { components } : {}),
+    ...(sourcePrecritDistribution ? { sourcePrecritDistribution } : {}),
   };
 }

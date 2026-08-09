@@ -57,6 +57,19 @@ describe("toResolvedCombatModel", () => {
     expect(model.base).toBe(loadoutStats(loadout, { now: NOW }).base);
   });
 
+  it("projects the host-resolved target accuracy profile", () => {
+    const loadout = withLoadout({
+      style: "ranged",
+      target: { defenceLevel: 80, armour: 500, affinity: "same" },
+    });
+    const stats = loadoutStats(loadout, { now: NOW });
+    const model = toResolvedCombatModel(loadout, { now: NOW }, stats);
+    expect(model.targetAccuracyProfile).toEqual(stats.targetAccuracyProfile);
+    expect(projectSerializableSimBase(model).targetAccuracyProfile).toEqual(
+      stats.targetAccuracyProfile,
+    );
+  });
+
   it("copies Slayer Helmet host descriptor (equipped)", () => {
     const loadout = withLoadout({
       equipmentSlots: { helmet: FULL_SLAYER_HELMET_ITEM_ID },
@@ -369,11 +382,11 @@ describe("toResolvedCombatModel", () => {
       blowpipe: false,
       laniakea: true,
     });
-    expect(model.ammo).toBeUndefined();
+    expect(model.ammunition).toBeNull();
     expect(model.modifierSources.vulnerability).toBe(true);
     expect(model.target.poisonImmune).toBe(true);
     expect(model.league.herbloreLevel).toBe(120);
-    expect(projectSerializableSimBase(model).ammo).toBeUndefined();
+    expect(projectSerializableSimBase(model).ammunition).toBeNull();
     expect(projectSerializableSimBase(model)).toMatchObject({
       playerPoison: model.playerPoison,
       targetPoisonImmune: true,

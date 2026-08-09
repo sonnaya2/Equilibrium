@@ -8,7 +8,8 @@ import type { ActiveEquipmentEffects } from "../../shared/equipment";
 import type { ResolvedLeagueRules } from "../../league/ruleset";
 import type { AdrenalineTransaction } from "../../shared/adrenalineTransaction";
 import type { PlayerPoisonProfile } from "../../poison/mechanics";
-import type { StyleAmmoId } from "../../styles/ranged/ammoModel";
+import type { ResolvedRangedAmmunitionProfile } from "../../styles/ranged/ammunitionProfile";
+import type { ResolvedTargetAccuracyProfile } from "../../target/genericTarget";
 
 /** One queued cast; the simulator advances to its first legal tick. */
 export interface RotationAction {
@@ -57,6 +58,12 @@ export interface ProcRules {
   aftershockRank?: number;
 }
 
+export interface TargetClassification {
+  readonly demon?: boolean;
+  readonly dragon?: boolean;
+  readonly undead?: boolean;
+}
+
 /**
  * Prebuilt ability id / basic-auto maps (solver compiled context).
  * When present, createRuntime uses these and skips mapAbilitiesById / mapBasicsByStyle.
@@ -82,6 +89,8 @@ export interface SimulateInput {
    */
   activateNaragiAtStart?: boolean;
   accuracy: number;
+  /** Host-resolved target facts; absent preserves the scalar accuracy fallback. */
+  targetAccuracyProfile?: ResolvedTargetAccuracyProfile;
   crit: Omit<CritLayers, "eligible">;
   abilities: readonly AbilitySpec[];
   /** Optional prebuilt registry; createRuntime reuses without remapping. */
@@ -95,11 +104,7 @@ export interface SimulateInput {
   /** Equipped catalogue ids used by mechanics with verified item requirements. */
   equipmentIds?: readonly string[];
   weaponConfiguration?: "twohand" | "dualwield" | "mainhand" | "shield" | "defender" | "necromancy";
-  /**
-   * Style ammo mechanic (Deathspore free-cast, Puncture). Packed on Manual,
-   * Revolution, and solver via resolved model / equipment derivation.
-   */
-  ammo?: StyleAmmoId;
+  ammunition?: ResolvedRangedAmmunitionProfile | null;
   /** Caroming rank 1-4; rewrites Ricochet hit bands at prepare. */
   caromingRank?: number;
   /** Use the style Basic Attack through idle GCDs and adrenaline shortfalls. */
@@ -129,6 +134,7 @@ export interface SimulateInput {
   targetHpPercent?: number;
   /** Optional maximum target LP for Death Mark vitality and threshold checks. */
   targetMaximumLifePoints?: number;
+  targetClassification?: TargetClassification;
   playerPoison?: PlayerPoisonProfile;
   /** Canonical target/global modifiers explicitly eligible for player poison. */
   playerPoisonModifiers?: readonly CombatModifier[];

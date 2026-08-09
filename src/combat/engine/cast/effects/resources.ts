@@ -93,7 +93,10 @@ export function applyCastResources(fx: CastEffectContext): AdrenalineTransaction
   );
 
   const spendZeroReason =
-    spend === 0 && cost > 0 && ability.style === "ranged" && input.ammo === "deathspore"
+    spend === 0 &&
+    cost > 0 &&
+    ability.style === "ranged" &&
+    input.ammunition?.projectile?.mechanicId === "deathspore"
       ? ("deathspore" as const)
       : undefined;
 

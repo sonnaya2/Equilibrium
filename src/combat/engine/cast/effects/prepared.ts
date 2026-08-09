@@ -1,5 +1,5 @@
 import { spendBloodlust } from "../../../styles/melee/bloodlust";
-import { patchMelee } from "../../runtime/state";
+import { patchMelee, patchRanged } from "../../runtime/state";
 import type { CastEffectContext } from "./context";
 
 /**
@@ -39,6 +39,11 @@ export function applyPreparedTransitions(fx: CastEffectContext): void {
       case "consumePrimordialIce":
         rt.state = patchMelee(rt.state, {
           primordialIce: transition.next,
+        });
+        break;
+      case "consumePerfectEquilibrium":
+        rt.state = patchRanged(rt.state, {
+          perfectEquilibriumStacks: 0,
         });
         break;
     }

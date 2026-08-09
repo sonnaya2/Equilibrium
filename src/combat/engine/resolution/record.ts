@@ -9,6 +9,7 @@ import { applyBlessingDamage } from "./league/blessingDamage";
 import { applyLeagueLandedHitEffects } from "./landed/league";
 import { noteAttachedTermsResolved } from "../../profiling/allocation";
 import { applyDeathMarkLanded } from "./landed/deathMark";
+import { applyBotlgLanded } from "./botlg";
 
 function materializeCriticalOutcome(
   rt: SimulationRuntime,
@@ -83,6 +84,8 @@ export function recordResolved(
     releaseScoreOnlyHitDetails(rt, event);
     return composed;
   }
+
+  applyBotlgLanded(rt, event, landed);
 
   const { damage } = composed;
   if (!event.blessingId) applyInventionProcs(rt, event, damage);

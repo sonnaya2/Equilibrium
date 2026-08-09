@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { MAGIC_ABILITIES } from "../styles/magic/abilities";
 import { MELEE_ABILITIES } from "../styles/melee/abilities";
 import { NECROMANCY_ABILITIES } from "../styles/necromancy/abilities";
+import { RANGED_ABILITIES } from "../styles/ranged/abilities";
 import {
   formatRingOfVigourSources,
   hasRingOfVigourEffect,
@@ -218,7 +219,12 @@ describe("Ring of Vigour invariants (SSOT pins)", () => {
 });
 
 describe("modelled weapon special catalogue", () => {
-  const allSpecs = [...MELEE_ABILITIES, ...MAGIC_ABILITIES, ...NECROMANCY_ABILITIES];
+  const allSpecs = [
+    ...MELEE_ABILITIES,
+    ...RANGED_ABILITIES,
+    ...MAGIC_ABILITIES,
+    ...NECROMANCY_ABILITIES,
+  ];
 
   it("every MODELLED_WEAPON_SPECIAL_IDS entry is tagged weaponSpecial", () => {
     for (const id of MODELLED_WEAPON_SPECIAL_IDS) {

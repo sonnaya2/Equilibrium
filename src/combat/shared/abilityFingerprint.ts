@@ -56,6 +56,7 @@ export function abilityBehaviorFingerprint(spec: AbilitySpec): string {
     adrenalineGain: spec.adrenaline?.gain ?? null,
     adrenalineCost: spec.adrenaline?.cost ?? null,
     weaponSpecial: spec.weaponSpecial ?? null,
+    minimumAutomaticRecastTicks: spec.minimumAutomaticRecastTicks ?? null,
     cooldownSeconds: spec.cooldownSeconds ?? null,
     channelTicks: spec.channelTicks ?? null,
     replacementGroup: spec.replacementGroup ?? null,

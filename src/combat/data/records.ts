@@ -1,5 +1,11 @@
 import type { RegionId } from "../../league";
 import type { CombatStyle, SourceReference } from "../types";
+import type {
+  AmmunitionFamily,
+  AmmunitionSupport,
+  RangedAmmunitionMechanicId,
+  RangedWeaponAmmunitionCapability,
+} from "./ammunition";
 
 /**
  * Record types for the canonical combat datasets in `data/combat/`.
@@ -123,7 +129,11 @@ export type ItemPassiveId =
   | "blowpipe-weapon-poison"
   | "laniakea-weapon-poison"
   /** Fractured Staff of Armadyl cast-time crit-damage distribution. */
-  | "surging-storm";
+  | "surging-storm"
+  /** Pernix quiver: raises only the ranged maximum-hit band below 25% target LP. */
+  | "pernix-quiver-max-hit-band"
+  /** Bow of the Last Guardian physical passive: Perfect Equilibrium. */
+  | "perfect-equilibrium";
 
 export type WeaponClass = "bow" | "crossbow" | "thrown" | "other";
 
@@ -168,6 +178,20 @@ export interface EquipmentRecord extends CombatRecordBase {
   shield?: boolean;
   /** Defender/repriser/rebounder: defensive hybrid, half-tier off-hand damage, full-tier accuracy. */
   defender?: boolean;
+  /** Sourced projectile identity; runtime resolves this into a compact profile. */
+  ammunition?: {
+    family: AmmunitionFamily;
+    mechanicId: RangedAmmunitionMechanicId;
+    support: AmmunitionSupport;
+  };
+  /** Sourced weapon ammunition capability; no name-based inference. */
+  ammunitionCapability?: RangedWeaponAmmunitionCapability;
+  /** Sourced ammo-slot quiver identity and passive capabilities. */
+  quiver?: {
+    acceptedFamilies: readonly AmmunitionFamily[];
+    passiveIds: readonly ItemPassiveId[];
+    support: AmmunitionSupport;
+  };
   /** Melee ammo-harness items carry the 0.26875 damage multiplier. */
   meleeAmmoHarness?: boolean;
   specialAttackId?: string;

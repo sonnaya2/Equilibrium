@@ -1,8 +1,17 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import { DEFAULT_AFFINITIES, sanitizeAffinity } from "@/combat/target/genericTarget";
 import { NumberField } from "./NumberField";
 import type { Loadout, LoadoutTarget } from "./useLoadout";
+import {
+  applyTargetPreset,
+  filterTargetPresetOptions,
+  isTargetModifiedFromPreset,
+  listTargetPresetOptions,
+  presetLabel,
+  resetTargetToPreset,
+} from "./targetPresetUi";
 
 const NAMED_AFFINITY_OPTIONS = [
   { value: DEFAULT_AFFINITIES.weak, label: "Weak (70)" },
@@ -21,6 +30,14 @@ export function TargetPanel({
   setLoadout: (next: Loadout) => void;
 }) {
   const target = loadout.target;
+  const [presetQuery, setPresetQuery] = useState("");
+  const presetOptions = useMemo(() => listTargetPresetOptions(), []);
+  const filteredPresets = useMemo(
+    () => filterTargetPresetOptions(presetOptions, presetQuery),
+    [presetOptions, presetQuery],
+  );
+  const modified =
+    target != null && isTargetModifiedFromPreset(target, loadout.style);
   const updateTarget = (patch: Partial<LoadoutTarget>) => {
     if (!target) return;
     setLoadout({ ...loadout, target: { ...target, ...patch } });
@@ -59,6 +76,61 @@ export function TargetPanel({
         </label>
         {target ? (
           <>
+            <label className="loadout-select loadout-select--wide">
+              <span>Boss preset</span>
+              <input
+                type="search"
+                className="loadout-input"
+                placeholder="Search bosses (KBD, Rax, Amascut…)"
+                value={presetQuery}
+                onChange={(event) => setPresetQuery(event.target.value)}
+                aria-label="Search boss presets"
+              />
+              <select
+                value={target.targetPresetId ?? ""}
+                onChange={(event) => {
+                  const id = event.target.value;
+                  if (!id) {
+                    updateTarget({ targetPresetId: undefined });
+                    return;
+                  }
+                  const next = applyTargetPreset(id, loadout.style, target);
+                  if (next) setLoadout({ ...loadout, target: next });
+                }}
+              >
+                <option value="">Custom</option>
+                {filteredPresets.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.name}
+                    {option.support === "provisional" ? " (provisional)" : ""}
+                    {option.aliases.length ? ` · ${option.aliases[0]}` : ""}
+                  </option>
+                ))}
+              </select>
+            </label>
+            {target.targetPresetId ? (
+              <p className="text-xs text-parch-300">
+                {presetLabel(target.targetPresetId)}
+                {modified ? " · Modified" : " · Wiki values"}
+                {modified ? (
+                  <>
+                    {" "}
+                    <button
+                      type="button"
+                      className="underline"
+                      onClick={() =>
+                        setLoadout({
+                          ...loadout,
+                          target: resetTargetToPreset(target, loadout.style),
+                        })
+                      }
+                    >
+                      Reset to Wiki
+                    </button>
+                  </>
+                ) : null}
+              </p>
+            ) : null}
             <NumberField
               label="Defence level"
               value={target.defenceLevel}

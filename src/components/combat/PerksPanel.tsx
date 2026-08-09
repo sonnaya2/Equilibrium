@@ -18,8 +18,7 @@ import {
   type PerkRankKey,
 } from "./useLoadout";
 
-const PERK_ICON = (id: string) =>
-  id === "caroming" ? "/game/combat/invention-perk.webp" : `/game/combat/perks/${id}.webp`;
+const PERK_ICON = (id: string) => `/game/combat/perks/${id}.webp`;
 
 type GizmoKind = "weapon" | "armour" | "both";
 const KIND_ORDER: Record<GizmoKind, number> = { weapon: 0, armour: 1, both: 2 };

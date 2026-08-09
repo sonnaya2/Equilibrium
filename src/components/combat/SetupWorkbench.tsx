@@ -57,7 +57,6 @@ function titleCase(value: string): string {
 }
 
 function perkIcon(key: PerkRankKey): string {
-  if (key === "caroming") return "/game/combat/invention-perk.webp";
   return `/game/combat/perks/${key.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`)}.webp`;
 }
 
@@ -335,64 +334,7 @@ function ArchaeologySummary({ loadout, onEdit }: { loadout: Loadout; onEdit: () 
   );
 }
 
-function TargetSummary({
-  target,
-  style,
-  damagePotential,
-}: {
-  target: Loadout["target"];
-  style: Loadout["style"];
-  damagePotential: number;
-}) {
-  const view = targetSummaryView(target, {
-    modified: target != null && isTargetModifiedFromPreset(target, style),
-  });
-  if (!view) {
-    return (
-      <div className="setup-target-summary setup-target-summary--empty">
-        <p>No NPC target. Damage Potential uses the manual accuracy slider.</p>
-      </div>
-    );
-  }
-  return (
-    <div className="setup-target-summary">
-      <div className="setup-target-identity">
-        <span className="setup-target-identity__icon" aria-hidden>
-          <GameIcon src={view.iconSrc} size={40} />
-        </span>
-        <div className="setup-target-identity__copy">
-          <strong>{view.name}</strong>
-          <span>
-            {view.modifiedHint ?? "Custom"}
-            {view.flags.length ? ` · ${view.flags.join(" · ")}` : ""}
-          </span>
-        </div>
-      </div>
-      <dl>
-        <div>
-          <dt>Defence</dt>
-          <dd>{view.defenceLevel}</dd>
-        </div>
-        <div>
-          <dt>Armour</dt>
-          <dd>{view.armour}</dd>
-        </div>
-        <div>
-          <dt>Affinity</dt>
-          <dd>{view.affinity}</dd>
-        </div>
-        <div>
-          <dt>Damage Potential</dt>
-          <dd>{Math.round(damagePotential * 100)}%</dd>
-        </div>
-        <div>
-          <dt>Life points</dt>
-          <dd>{formatLifePoints(view.maximumLifePoints)}</dd>
-        </div>
-      </dl>
-    </div>
-  );
-}
+
 
 export function SetupWorkbench({
   loadout,

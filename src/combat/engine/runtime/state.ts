@@ -22,6 +22,7 @@ import { NO_DEATH_PREVENTION, type DeathPreventionState } from "./deathPreventio
 import { newNaragiRuntime, type NaragiRuntimeState } from "../../league/naragiEdict";
 import { firstChargeReadyTick, maxChargesFor } from "./charges";
 import type { PoisonTier } from "../../poison/mechanics";
+import type { TimedTargetStatus } from "../../target/timedStatus";
 
 export type { MeleeRotationState, RangedRotationState, MagicRotationState };
 export type { NecroRotationState, NecromancyRotationState, ConjureState };
@@ -103,6 +104,13 @@ export interface TargetRuntimeState {
   haunted: HauntedState;
   weaponPoison: TargetWeaponPoisonSample;
   evolvingToxin: EvolvingToxinState;
+  vitality?: TargetVitalityState;
+  deathMark?: TimedTargetStatus;
+}
+
+export interface TargetVitalityState {
+  readonly maximumLifePoints: number;
+  readonly currentLifePoints: number;
 }
 
 export interface TargetWeaponPoisonSample {

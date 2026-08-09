@@ -8,6 +8,7 @@ import { applyInventionProcs } from "./procs/invention";
 import { applyBlessingDamage } from "./league/blessingDamage";
 import { applyLeagueLandedHitEffects } from "./landed/league";
 import { noteAttachedTermsResolved } from "../../profiling/allocation";
+import { applyDeathMarkLanded } from "./landed/deathMark";
 
 function materializeCriticalOutcome(
   rt: SimulationRuntime,
@@ -65,14 +66,23 @@ export function recordResolved(
   resolution: EventResolution,
 ): EventResolution {
   const landed = materializeCriticalOutcome(rt, event, resolution);
-  const composed = materializeCriticalOutcome(
-    rt,
-    event,
-    applyBlessingDamage(rt, event, landed),
-    landed.damage.critical?.outcome,
-  );
+  const composed =
+    event.family === "status"
+      ? landed
+      : materializeCriticalOutcome(
+          rt,
+          event,
+          applyBlessingDamage(rt, event, landed),
+          landed.damage.critical?.outcome,
+        );
   noteAttachedTermsResolved(composed.components?.length ?? 0);
   recordEventAccounting(rt, event, composed);
+  applyDeathMarkLanded(rt, event, composed.damage.expected);
+
+  if (event.family === "status") {
+    releaseScoreOnlyHitDetails(rt, event);
+    return composed;
+  }
 
   const { damage } = composed;
   if (!event.blessingId) applyInventionProcs(rt, event, damage);

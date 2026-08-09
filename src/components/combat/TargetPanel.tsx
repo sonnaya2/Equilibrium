@@ -20,7 +20,10 @@ export function TargetPanel({
   return (
     <div className="loadout-panel">
       <h2 className="combat-section-title text-sm font-medium text-parch-50">Target</h2>
-      <p className="mt-1 text-xs text-parch-300">Damage Potential from NPC stats.</p>
+      <p className="mt-1 text-xs text-parch-300">
+        Damage Potential from NPC stats. Death Mark uses expected landed damage and does not model
+        boss phase nullification, special soft caps, Resonance, reflection, or phase replacement.
+      </p>
       <div className="loadout-fields mt-3">
         <label className="loadout-check">
           <input
@@ -102,6 +105,30 @@ export function TargetPanel({
                 label="HP %"
                 value={target.hpPercent}
                 onChange={(value) => updateTarget({ hpPercent: Math.min(100, Math.max(0, value)) })}
+              />
+            ) : null}
+            <label className="loadout-check">
+              <input
+                type="checkbox"
+                checked={target.maximumLifePoints !== undefined}
+                onChange={(event) =>
+                  updateTarget({
+                    maximumLifePoints: event.target.checked ? 100_000 : undefined,
+                  })
+                }
+              />
+              Track target maximum LP
+            </label>
+            {target.maximumLifePoints !== undefined ? (
+              <NumberField
+                label="Maximum LP"
+                value={target.maximumLifePoints}
+                min={1}
+                onChange={(value) =>
+                  updateTarget({
+                    maximumLifePoints: Math.min(10_000_000, Math.max(1, Math.floor(value))),
+                  })
+                }
               />
             ) : null}
             <label className="loadout-check">

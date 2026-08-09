@@ -59,6 +59,7 @@ export interface SolverPackSnapshot {
   league: SerializableLeagueRules;
   context?: CombatContext;
   targetHpPercent?: number;
+  targetMaximumLifePoints?: number;
   playerPoison?: PlayerPoisonProfile;
   targetPoisonImmune?: boolean;
   cap?: HitCapRule;
@@ -171,6 +172,7 @@ export function packSimBase(snapshot: SolverPackSnapshot): SerializableRevolutio
     league: snapshot.league,
     context: snapshot.context,
     targetHpPercent: snapshot.targetHpPercent,
+    targetMaximumLifePoints: snapshot.targetMaximumLifePoints,
     playerPoison: snapshot.playerPoison ? { ...snapshot.playerPoison } : undefined,
     targetPoisonImmune: snapshot.targetPoisonImmune === true,
     cap: snapshot.cap,

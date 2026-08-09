@@ -14,6 +14,10 @@ export function sourceKindOf(
   rt: SimulationRuntime,
   event: ScheduledEvent<SimulationRuntime>,
 ): DamageSourceKind {
+  if (event.abilityId === "deathdealer" && event.statusEffect === "death-mark-application") {
+    return "equipment-passive";
+  }
+  if (event.provenance.kind === "target_status") return "target-status";
   if (event.provenance.kind === "player_poison") return "player-poison";
   if (event.blessingId) return "league-blessing";
   if (event.abilityId === "crackling" || event.abilityId === "aftershock") return "perk";

@@ -290,15 +290,32 @@ describe("equipment BiS region tags", () => {
     expect(regions).toEqual(expect.arrayContaining(["asgarnia", "desert"]));
   });
 
-  it("has no bare deathdealer t70 residual", () => {
-    const bareT70 = combatEquipment.records.filter(
+  it("has explicit Deathdealer tier records and no bare residual", () => {
+    const deathdealer = combatEquipment.records.filter((r) => r.id.startsWith("item:deathdealer"));
+    expect(deathdealer.map((r) => r.id).sort()).toEqual([
+      "item:deathdealer-boots-t70",
+      "item:deathdealer-boots-t80",
+      "item:deathdealer-boots-t90",
+      "item:deathdealer-gloves-t70",
+      "item:deathdealer-gloves-t80",
+      "item:deathdealer-gloves-t90",
+      "item:deathdealer-hood-t70",
+      "item:deathdealer-hood-t80",
+      "item:deathdealer-hood-t90",
+      "item:deathdealer-robe-bottom-t70",
+      "item:deathdealer-robe-bottom-t80",
+      "item:deathdealer-robe-bottom-t90",
+      "item:deathdealer-robe-top-t70",
+      "item:deathdealer-robe-top-t80",
+      "item:deathdealer-robe-top-t90",
+    ]);
+    const bare = combatEquipment.records.filter(
       (r) =>
         r.id.startsWith("item:deathdealer") &&
-        (r.id.includes("-t70") ||
-          r.id.endsWith("-70") ||
+        (!/-t(?:70|80|90)$/.test(r.id) ||
           /deathdealer-(hood|robe|gloves|boots|leggings)?$/.test(r.id)),
     );
-    expect(bareT70.map((r) => r.id), "bare or t70 deathdealer should be removed").toEqual([]);
+    expect(bare.map((r) => r.id), "bare deathdealer should be removed").toEqual([]);
   });
 
   it("deathguard ladder is misthalin t90 only — no base/t70/t80 residual", () => {

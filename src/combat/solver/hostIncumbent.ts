@@ -91,6 +91,7 @@ export function evaluateHostIncumbentBaseline(
     league,
     context: simBase.context,
     targetHpPercent: simBase.targetHpPercent,
+    targetMaximumLifePoints: simBase.targetMaximumLifePoints,
     playerPoison: simBase.playerPoison,
     playerPoisonModifiers: playerPoisonModifiersFromSources(simBase.modifierSources, league),
     targetPoisonImmune: simBase.targetPoisonImmune === true,

@@ -281,6 +281,22 @@ const MATRIX: Record<DamageProvenanceKind, DamageCapabilities> = {
     canApplyWeaponPoison: true,
     canApplyEvolvingToxin: false,
   },
+  target_status: {
+    playerAttack: false,
+    directHit: false,
+    onHitGear: false,
+    blessingRider: false,
+    cindersOnHit: false,
+    blessingOnHit: false,
+    canCrit: false,
+    canGenerateResources: false,
+    canTriggerProcs: false,
+    recursiveDamage: false,
+    prayerMods: false,
+    canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: false,
+    canApplyEvolvingToxin: false,
+  },
 };
 
 describe("damage eligibility matrix (capabilitiesOf)", () => {

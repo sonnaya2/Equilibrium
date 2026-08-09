@@ -113,6 +113,7 @@ export function hostInputFromLoadoutStats(
     league: serializeLeague(stats.league),
     context: stats.combatContext,
     targetHpPercent: loadout.target?.hpPercent,
+    targetMaximumLifePoints: loadout.target?.maximumLifePoints,
     cap: stats.cap,
     startingAdrenaline: stats.startingAdrenaline,
     equipmentIds: stats.equipmentIds,

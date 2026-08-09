@@ -221,6 +221,7 @@ export interface ActiveEquipmentEffects {
   };
   amZiFlatDamage: number;
   amHejDamageBonus: number;
+  deathdealer?: DeathdealerSetSummary;
   dracolich?: DracolichSetSummary;
   vestments: {
     pieces: number;
@@ -228,6 +229,30 @@ export interface ActiveEquipmentEffects {
     berserkExtension: boolean;
     increasedAdrenalineCap: boolean;
   };
+}
+
+export interface DeathdealerSetSummary {
+  physicalPieces: number;
+  effectivePieces: number;
+  applicationChance: number;
+}
+
+const DEATHDEALER_ARMOUR_SLOTS: readonly EquipmentSlot[] = [
+  "helmet",
+  "body",
+  "legs",
+  "gloves",
+  "boots",
+];
+
+const DEATHDEALER_TIER_RATES: Readonly<Record<string, number>> = {
+  "deathdealer-70": 0.01,
+  "deathdealer-80": 0.015,
+  "deathdealer-90": 0.02,
+};
+
+export function deathdealerApplicationChance(effects: ActiveEquipmentEffects | undefined): number {
+  return effects?.deathdealer?.applicationChance ?? 0;
 }
 
 export interface ResolvedSetCritChance {
@@ -309,6 +334,24 @@ export function activeEquipmentEffects(
     itemCounts.get("vestments-of-havoc"),
   );
   const slots = resolvedEquipmentSlots(loadout);
+  const deathdealerItems = DEATHDEALER_ARMOUR_SLOTS.map((slot) => slots[slot])
+    .filter((id): id is string => id !== undefined)
+    .map((id) => equipmentById(id))
+    .filter((item): item is NonNullable<ReturnType<typeof equipmentById>> => item !== undefined)
+    .map((item) => ({ item, rate: DEATHDEALER_TIER_RATES[item.setId ?? ""] ?? 0 }))
+    .filter(({ rate }) => rate > 0);
+  const deathdealerContribution = effectiveSetPieces(1, loadout.pieceContribution, 1);
+  const deathdealer =
+    deathdealerItems.length > 0
+      ? {
+          physicalPieces: deathdealerItems.length,
+          effectivePieces: deathdealerItems.length * deathdealerContribution,
+          applicationChance: deathdealerItems.reduce(
+            (total, { rate }) => total + rate * deathdealerContribution,
+            0,
+          ),
+        }
+      : undefined;
   const weaponId = slots.twohand ?? slots.mainhand;
   const weapon = weaponId ? equipmentById(weaponId) : undefined;
   const activeWeapon: ActiveWeaponCapability = {
@@ -364,6 +407,7 @@ export function activeEquipmentEffects(
     amHejDamageBonus: passiveIds.includes("am-hej")
       ? Math.floor((loadout.effectiveStrengthLevel ?? 0) * 0.05) / 100
       : 0,
+    ...(deathdealer ? { deathdealer } : {}),
     dracolich: dracolichSetSummary(setCounts, itemCounts, loadout.pieceContribution, weaponClass),
     vestments: {
       pieces,

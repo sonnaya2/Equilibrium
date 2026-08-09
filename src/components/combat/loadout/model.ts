@@ -71,6 +71,8 @@ export interface LoadoutTarget {
   damagePotentialOverride?: number;
   /** Optional target life-points % (0-100) for HP-dependent mechanics; absent = unavailable. */
   hpPercent?: number;
+  /** Optional maximum LP for Death Mark execution assessment. */
+  maximumLifePoints?: number;
   hasApplicableWeakness?: boolean;
   /** NPC size config used by mechanics such as Splash Zone. */
   size?: number;
@@ -1201,6 +1203,15 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
               : {}),
             ...(Number.isFinite(rawTarget.hpPercent)
               ? { hpPercent: Math.min(100, Math.max(0, Number(rawTarget.hpPercent))) }
+              : {}),
+            ...(Number.isFinite(rawTarget.maximumLifePoints) &&
+            Number(rawTarget.maximumLifePoints) > 0
+              ? {
+                  maximumLifePoints: Math.min(
+                    10_000_000,
+                    Math.floor(Number(rawTarget.maximumLifePoints)),
+                  ),
+                }
               : {}),
             ...(rawTarget.hasApplicableWeakness === true ? { hasApplicableWeakness: true } : {}),
             ...(Number.isFinite(rawTarget.size)

@@ -181,6 +181,11 @@ export function createRuntime(
   ) {
     throw new RangeError(`targetHpPercent outside 0-100: ${input.targetHpPercent}`);
   }
+  if (input.targetMaximumLifePoints != null && !Number.isFinite(input.targetMaximumLifePoints)) {
+    throw new RangeError(
+      `targetMaximumLifePoints must be finite: ${input.targetMaximumLifePoints}`,
+    );
+  }
   if (
     input.startingResidualSouls != null &&
     (!Number.isFinite(input.startingResidualSouls) || input.startingResidualSouls < 0)
@@ -230,6 +235,16 @@ export function createRuntime(
     lantern: soulboundLantern,
   });
   state = patchTarget(state, { weaponPoison: inactiveTargetWeaponPoison() });
+  const targetMaximumLifePoints = input.targetMaximumLifePoints;
+  if (targetMaximumLifePoints !== undefined && targetMaximumLifePoints > 0) {
+    const targetHpPercent = input.targetHpPercent ?? 100;
+    state = patchTarget(state, {
+      vitality: {
+        maximumLifePoints: targetMaximumLifePoints,
+        currentLifePoints: (targetMaximumLifePoints * targetHpPercent) / 100,
+      },
+    });
+  }
   if (input.startingResidualSouls != null) {
     const requested = Math.floor(input.startingResidualSouls);
     const resources = state.necromancy.resources;

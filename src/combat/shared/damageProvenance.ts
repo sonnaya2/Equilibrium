@@ -25,7 +25,8 @@ export type DamageProvenanceKind =
   | "blessing"
   | "derived_bounce"
   | "derived_tail"
-  | "reflected";
+  | "reflected"
+  | "target_status";
 
 export interface DamageProvenance {
   kind: DamageProvenanceKind;
@@ -318,6 +319,22 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     canApplyWeaponPoison: true,
     canApplyEvolvingToxin: false,
   },
+  target_status: {
+    playerAttack: false,
+    directHit: false,
+    onHitGear: false,
+    blessingRider: false,
+    cindersOnHit: false,
+    blessingOnHit: false,
+    canCrit: false,
+    canGenerateResources: false,
+    canTriggerProcs: false,
+    recursiveDamage: false,
+    prayerMods: false,
+    canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: false,
+    canApplyEvolvingToxin: false,
+  },
 };
 
 export function capabilitiesOf(p: DamageProvenance): DamageCapabilities {
@@ -370,6 +387,7 @@ export function outgoingSourceOf(p: DamageProvenance): OutgoingDamageSource {
     case "equipment_proc":
     case "invention_proc":
     case "reflected":
+    case "target_status":
       return "proc";
     case "blessing":
       return "blessing";

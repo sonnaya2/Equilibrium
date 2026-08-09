@@ -46,6 +46,7 @@ function processDueEvents(rt: SimulationRuntime, bound: number): void {
     }
     const resolution = event.resolve(rt, event.tick);
     const landed = recordResolved(rt, event, resolution);
+    if (event.family === "status") continue;
     applyPoisonLandEffects(rt, event, resolution.damage);
     applyStatefulLandRng(rt, event, landed.damage);
   }

@@ -46,6 +46,7 @@ export function solverSnapshotFromResolvedModel(model: ResolvedCombatModel): Sol
     },
     context: model.context,
     targetHpPercent: model.target.hpPercent,
+    targetMaximumLifePoints: model.target.maximumLifePoints,
     playerPoison: { ...model.playerPoison },
     targetPoisonImmune: model.target.poisonImmune === true,
     cap: model.cap,

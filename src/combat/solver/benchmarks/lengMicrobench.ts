@@ -78,6 +78,7 @@ function buildSimCommon(request: ReturnType<ReturnType<typeof caseById>["build"]
     league,
     context: simBase.context,
     targetHpPercent: simBase.targetHpPercent,
+    targetMaximumLifePoints: simBase.targetMaximumLifePoints,
     cap: simBase.cap,
     modifiers,
   };

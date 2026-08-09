@@ -81,6 +81,7 @@ export function reviveRevolutionBase(sim: SerializableRevolutionSimBase): Revive
     conjureBasicDamageMult: sim.conjureBasicDamageMult,
     conjureDurationMult: sim.conjureDurationMult,
     targetHpPercent: sim.targetHpPercent,
+    targetMaximumLifePoints: sim.targetMaximumLifePoints,
     playerPoison: sim.playerPoison,
     playerPoisonModifiers: playerPoisonModifiersFromSources(sim.modifierSources, league),
     targetPoisonImmune: sim.targetPoisonImmune === true,

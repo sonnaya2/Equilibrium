@@ -38,6 +38,7 @@ const SOURCE_LABEL: Record<DamageSourceKind, string> = {
   "basic-attack": "Basic Attacks",
   "auto-attack": "Basic Attacks",
   "other-modeled": "Other effects",
+  "target-status": "Target status",
 };
 const PROCEDURAL_EFFECT_LABEL: Record<string, string> = {
   aftershock: "Aftershock",
@@ -357,6 +358,7 @@ export function RotationAnalysisModal({
   const afterTotalColumns = visibleColumns.filter((column) => column.afterTotal);
   const trailingColumns = visibleColumns.filter((column) => !column.afterTotal);
   const effectRows = result.analysis.byEffect.filter((row) => row.analysisGroupId == null);
+  const deathMark = result.targetStatus?.deathMark;
 
   return (
     <dialog
@@ -479,6 +481,40 @@ export function RotationAnalysisModal({
                 </div>
               ) : null}
             </dl>
+          </section>
+        ) : null}
+
+        {deathMark ? (
+          <section className="border-b border-stone-750 py-3" data-testid="target-status-analysis">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <div>
+                <h3 className="combat-section-title text-xs font-medium text-parch-50">
+                  Target state
+                </h3>
+                <p className="mt-1 text-xs text-parch-300">
+                  Death Mark · {deathMark.active ? "active" : "inactive"}
+                  {deathMark.source ? ` · ${deathMark.source.label}` : ""}
+                </p>
+              </div>
+              <span className="text-[11px] text-parch-300">
+                {deathMark.remainingTicks} ticks remaining
+              </span>
+            </div>
+            {deathMark.currentLifePoints !== undefined ? (
+              <p className="mt-2 font-mono text-xs text-parch-100">
+                LP {formatNumber(deathMark.currentLifePoints)} /{" "}
+                {formatNumber(deathMark.maximumLifePoints ?? 0)}
+              </p>
+            ) : null}
+            {deathMark.expected ? (
+              <p
+                className="mt-1 font-mono text-[11px] text-parch-300"
+                title="Lane-weighted expectation; not a concrete target state."
+              >
+                Weighted active probability {formatPercent(deathMark.expected.activeProbability)} ·{" "}
+                {formatExpected(deathMark.expected.remainingTicks)} ticks remaining
+              </p>
+            ) : null}
           </section>
         ) : null}
 

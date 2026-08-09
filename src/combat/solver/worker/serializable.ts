@@ -135,6 +135,7 @@ export interface SerializableRevolutionSimBase {
   league: SerializableLeagueRules;
   context?: CombatContext;
   targetHpPercent?: number;
+  targetMaximumLifePoints?: number;
   playerPoison?: PlayerPoisonProfile;
   targetPoisonImmune?: boolean;
   cap?: HitCapRule;
@@ -192,6 +193,7 @@ export interface SerializableLoadoutPlain {
   };
   target?: {
     hpPercent?: number;
+    maximumLifePoints?: number;
     demon?: boolean;
     dragon?: boolean;
     undead?: boolean;

@@ -4,6 +4,8 @@ import {
   type ResolvedLeagueRules,
 } from "../../league/ruleset";
 import { resolvePoisonApplication, type PlayerPoisonProfile } from "../../poison/mechanics";
+import type { ActiveEquipmentEffects } from "../../shared/equipment";
+import { deathdealerApplicationChance } from "../../shared/equipment";
 
 export const DEFAULT_STOCHASTIC_LANES = 128;
 export const DEFAULT_STOCHASTIC_SEED = 0x6d2b79f5;
@@ -16,6 +18,7 @@ interface StatefulRngInput {
   readonly league?: ResolvedLeagueRules;
   readonly playerPoison?: PlayerPoisonProfile;
   readonly targetPoisonImmune?: boolean;
+  readonly equipmentEffects?: ActiveEquipmentEffects;
 }
 
 const STATEFUL_RNG_ABILITIES = new Set([
@@ -41,6 +44,7 @@ export function needsStochasticLanes(
   ) {
     return true;
   }
+  if (deathdealerApplicationChance(input.equipmentEffects) > 0) return true;
   for (const abilityId of activeAbilityIds) {
     if (STATEFUL_RNG_ABILITIES.has(abilityId)) return true;
   }

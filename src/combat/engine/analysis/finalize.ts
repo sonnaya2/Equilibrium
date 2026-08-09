@@ -17,6 +17,7 @@ const SOURCE_KINDS: readonly DamageSourceKind[] = [
   "player-poison",
   "basic-attack",
   "auto-attack",
+  "target-status",
   "other-modeled",
 ];
 

@@ -32,6 +32,7 @@ export type ResolvedModifierSources = SerializableModifierSources;
 /** Target race / HP scenario frozen for race slayers and HP-gated mechanics. */
 export interface ResolvedTargetScenario {
   readonly hpPercent?: number;
+  readonly maximumLifePoints?: number;
   readonly demon?: boolean;
   readonly dragon?: boolean;
   readonly undead?: boolean;
@@ -129,6 +130,7 @@ export interface HostCombatResolveInput {
   readonly league: SerializableLeagueRules;
   readonly context?: CombatContext;
   readonly targetHpPercent?: number;
+  readonly targetMaximumLifePoints?: number;
   readonly cap?: HitCapRule;
   readonly startingAdrenaline?: number;
   readonly naturalInstinctUntilTick?: number;

@@ -127,6 +127,8 @@ export interface SimulateInput {
   conjureDurationMult?: number;
   /** Target LP% (0-100) for HP-gated mechanics (Bloodlust Flurry, Punish, Spectral Scythe); absent = no HP scale. */
   targetHpPercent?: number;
+  /** Optional maximum target LP for Death Mark vitality and threshold checks. */
+  targetMaximumLifePoints?: number;
   playerPoison?: PlayerPoisonProfile;
   /** Canonical target/global modifiers explicitly eligible for player poison. */
   playerPoisonModifiers?: readonly CombatModifier[];
@@ -251,6 +253,7 @@ export type DamageSourceKind =
   | "basic-attack"
   /** @deprecated Read compatibility for pre-modernisation analysis payloads. */
   | "auto-attack"
+  | "target-status"
   | "other-modeled";
 
 export interface DamageSourceBreakdown {
@@ -342,6 +345,24 @@ export interface PlayerPoisonTargetState {
   remainingTargetPoisonTicks: number;
   bikStacks: number;
   bikRemainingTicks: number;
+}
+
+export interface TargetDeathMarkSummary {
+  active: boolean;
+  source?: { id: string; label: string };
+  remainingTicks: number;
+  currentLifePoints?: number;
+  maximumLifePoints?: number;
+  expected?: {
+    activeProbability: number;
+    remainingTicks: number;
+    currentLifePoints?: number;
+    maximumLifePoints?: number;
+  };
+}
+
+export interface TargetStatusSummary {
+  deathMark?: TargetDeathMarkSummary;
 }
 
 export interface PlayerPoisonAnalysis {
@@ -607,6 +628,7 @@ export interface RotationSummary {
   history: HistoryProvenance;
   /** Reconciled engine-owned aggregations; never rebuilt from representative events. */
   analysis: RotationDamageAnalysis;
+  targetStatus?: TargetStatusSummary;
   playerPoison?: PlayerPoisonAnalysis;
   /** Opt-in (includeTails); not the fixed-window DPS numerator. */
   tails?: TailMetrics;

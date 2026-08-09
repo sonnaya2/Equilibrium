@@ -101,6 +101,7 @@ export function projectSerializableSimBase(
     },
     context: model.context,
     targetHpPercent: model.target.hpPercent,
+    targetMaximumLifePoints: model.target.maximumLifePoints,
     playerPoison: { ...model.playerPoison },
     targetPoisonImmune: model.target.poisonImmune === true,
     cap: model.cap ?? { cap: STANDARD_HIT_CAP, bypass: false },

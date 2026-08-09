@@ -123,6 +123,13 @@ export function normalizeEquipmentEffects(effects: ActiveEquipmentEffects): unkn
     },
     amZiFlatDamage: roundN(effects.amZiFlatDamage ?? 0, 4),
     amHejDamageBonus: roundN(effects.amHejDamageBonus ?? 0, 6),
+    deathdealer: effects.deathdealer
+      ? {
+          physicalPieces: effects.deathdealer.physicalPieces,
+          effectivePieces: effects.deathdealer.effectivePieces,
+          applicationChance: roundN(effects.deathdealer.applicationChance, 6),
+        }
+      : null,
     dracolich: effects.dracolich
       ? {
           setId: effects.dracolich.setId ?? null,
@@ -220,6 +227,7 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
     conjureDurationMult: roundN(loadout.conjureDurationMult ?? 1, 6),
     tumekensPieces: loadout.tumekensPieces ?? 0,
     targetHpPercent: loadout.targetHpPercent ?? null,
+    targetMaximumLifePoints: loadout.targetMaximumLifePoints ?? null,
     playerPoison: {
       potion: loadout.playerPoison?.potion ?? "none",
       potionUntilTick: loadout.playerPoison?.potionUntilTick ?? 0,

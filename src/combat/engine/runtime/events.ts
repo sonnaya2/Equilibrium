@@ -13,7 +13,15 @@ import {
 export type { EventResolution, ResolvedDamage } from "../resolution/types";
 
 export type EventFamily =
-  "hit" | "dot" | "proc" | "blessing" | "conjureAuto" | "command" | "poison" | "player";
+  | "hit"
+  | "dot"
+  | "proc"
+  | "blessing"
+  | "conjureAuto"
+  | "command"
+  | "poison"
+  | "player"
+  | "status";
 
 export type StatefulOccurrenceModel =
   | { readonly kind: "bernoulli"; readonly probability: number }
@@ -24,7 +32,14 @@ export type StatefulOccurrenceModel =
     };
 
 export type DamageOriginKind =
-  "direct" | "dot" | "command" | "conjure" | "proc" | "blessing" | "poison";
+  | "direct"
+  | "dot"
+  | "command"
+  | "conjure"
+  | "proc"
+  | "blessing"
+  | "poison"
+  | "status";
 
 export interface ScheduledEvent<RT = unknown> {
   tick: number;
@@ -61,6 +76,7 @@ export interface ScheduledEvent<RT = unknown> {
   resourceEligible?: boolean;
   lightningSurge?: boolean;
   lightningSurgeSourceCritChance?: number;
+  statusEffect?: "death-mark-application" | "death-mark-execution";
   castSnap?: CastSnapshot;
   resolve: (rt: RT, landTick: number) => EventResolution;
 }

@@ -259,6 +259,34 @@ describe("fingerprint changes one field at a time", () => {
     );
   });
 
+  it("includes Deathdealer effects and target maximum LP in the identity", async () => {
+    await expectDiff("target maximum LP", (r) =>
+      withSim(r, (s) => ({ ...s, targetMaximumLifePoints: 250_000 })),
+    );
+    await expectDiff("Deathdealer effects", (r) =>
+      withSim(r, (s) => ({
+        ...s,
+        equipmentIds: [
+          "item:deathdealer-hood-t90",
+          "item:deathdealer-robe-top-t90",
+          "item:deathdealer-robe-bottom-t90",
+          "item:deathdealer-gloves-t90",
+          "item:deathdealer-boots-t90",
+        ],
+        equipmentEffects: activeEquipmentEffects({
+          style: "necromancy",
+          equipmentSlots: {
+            helmet: "item:deathdealer-hood-t90",
+            body: "item:deathdealer-robe-top-t90",
+            legs: "item:deathdealer-robe-bottom-t90",
+            gloves: "item:deathdealer-gloves-t90",
+            boots: "item:deathdealer-boots-t90",
+          },
+        }),
+      })),
+    );
+  });
+
   it("Aftershock", async () => {
     await expectDiff("aftershock", (r) =>
       withSim(r, (s) => ({ ...s, procs: { ...(s.procs ?? {}), aftershockRank: 4 } })),

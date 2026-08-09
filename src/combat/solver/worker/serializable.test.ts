@@ -18,6 +18,7 @@ import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { modifiersFromSources, reviveLeague as hostReviveLeague } from "../../model";
 import { activeEquipmentEffects, EQUIPMENT_SET_ACTIVATION } from "../../shared/equipment";
 import { RANGED_ABILITIES } from "../../styles/ranged/abilities";
+import { NECROMANCY_ABILITIES } from "../../styles/necromancy/abilities";
 import { simulateRevolution } from "../../engine/simulation/revolution";
 
 const basicAbility: AbilitySpec = {
@@ -168,6 +169,104 @@ describe("solver worker serializable boundary", () => {
       unconditional: 0.03,
       conditional: { sunshine: 0.045 },
     });
+  });
+
+  it("preserves Deathdealer target state inputs through clone and worker revival", () => {
+    const effects = activeEquipmentEffects({
+      style: "necromancy",
+      equipmentSlots: {
+        helmet: "item:deathdealer-hood-t90",
+        body: "item:deathdealer-robe-top-t90",
+        legs: "item:deathdealer-robe-bottom-t90",
+        gloves: "item:deathdealer-gloves-t90",
+        boots: "item:deathdealer-boots-t90",
+      },
+    });
+    const sim = {
+      ...sampleSimBase(),
+      equipmentIds: Object.values({
+        helmet: "item:deathdealer-hood-t90",
+        body: "item:deathdealer-robe-top-t90",
+        legs: "item:deathdealer-robe-bottom-t90",
+        gloves: "item:deathdealer-gloves-t90",
+        boots: "item:deathdealer-boots-t90",
+      }),
+      equipmentEffects: effects,
+      targetMaximumLifePoints: 250_000,
+    } satisfies SerializableRevolutionSimBase;
+    const revived = reviveRevolutionBase(structuredClone(sim));
+    expect(revived.equipmentEffects?.deathdealer).toEqual(effects.deathdealer);
+    expect(revived.targetMaximumLifePoints).toBe(250_000);
+  });
+
+  it("keeps Death Mark host and worker Revolution results identical", () => {
+    const effects = activeEquipmentEffects({
+      style: "necromancy",
+      equipmentSlots: {
+        helmet: "item:deathdealer-hood-t90",
+        body: "item:deathdealer-robe-top-t90",
+        legs: "item:deathdealer-robe-bottom-t90",
+        gloves: "item:deathdealer-gloves-t90",
+        boots: "item:deathdealer-boots-t90",
+      },
+    });
+    const sim = {
+      ...sampleSimBase(),
+      context: { style: "necromancy", ruleset: "equilibrium", targetSize: 1, occupiedTiles: 1 },
+      equipmentIds: [
+        "item:deathdealer-hood-t90",
+        "item:deathdealer-robe-top-t90",
+        "item:deathdealer-robe-bottom-t90",
+        "item:deathdealer-gloves-t90",
+        "item:deathdealer-boots-t90",
+      ],
+      equipmentEffects: {
+        ...effects,
+        deathdealer: { ...effects.deathdealer!, applicationChance: 1 },
+      },
+      targetMaximumLifePoints: 100_000,
+      targetHpPercent: 19,
+      startingAdrenaline: 0,
+    } satisfies SerializableRevolutionSimBase;
+    const basic = NECROMANCY_ABILITIES.find((ability) => ability.id === "necromancy_basic")!;
+    const parts = {
+      bar: [basic],
+      style: "necromancy" as const,
+      durationTicks: 10,
+      abilities: [basic],
+    };
+    const league = hostReviveLeague(sim.league);
+    const host = simulateRevolution(
+      {
+        base: sim.base,
+        level: sim.level,
+        accuracy: sim.accuracy,
+        crit: sim.crit,
+        modifiers: modifiersFromSources(sim.modifierSources, league),
+        context: sim.context,
+        cap: sim.cap,
+        startingAdrenaline: sim.startingAdrenaline,
+        equipmentIds: sim.equipmentIds,
+        weaponConfiguration: sim.weaponConfiguration,
+        equipmentEffects: sim.equipmentEffects,
+        targetMaximumLifePoints: sim.targetMaximumLifePoints,
+        targetHpPercent: sim.targetHpPercent,
+        league,
+        adrenaline: sim.adrenaline,
+        procs: sim.procs,
+        bar: parts.bar,
+        style: parts.style,
+        durationTicks: parts.durationTicks,
+        abilities: parts.abilities,
+      },
+      { stochasticLanes: 1 },
+    );
+    const worker = simulateRevolution(buildRevolutionInput(structuredClone(sim), parts), {
+      stochasticLanes: 1,
+    });
+    expect(worker.totalExpected).toBe(host.totalExpected);
+    expect(worker.perAbility.death_mark).toBe(host.perAbility.death_mark);
+    expect(worker.targetStatus).toEqual(host.targetStatus);
   });
 
   it("keeps main and revived Revolution Rapid Fire results identical", () => {

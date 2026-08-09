@@ -47,6 +47,7 @@ function copyEquipmentEffects(
     passage: { ...effects.passage },
     amZiFlatDamage: effects.amZiFlatDamage,
     amHejDamageBonus: effects.amHejDamageBonus,
+    deathdealer: effects.deathdealer ? { ...effects.deathdealer } : undefined,
     dracolich: effects.dracolich
       ? {
           ...effects.dracolich,
@@ -105,6 +106,7 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
     tumekensPieces: input.tumekensPieces ?? 0,
     target: {
       hpPercent: input.targetHpPercent,
+      maximumLifePoints: input.targetMaximumLifePoints,
       demon: input.target?.demon,
       dragon: input.target?.dragon,
       undead: input.target?.undead,

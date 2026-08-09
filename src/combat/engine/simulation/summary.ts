@@ -14,6 +14,7 @@ import type {
   RotationSummary,
   SimulateOptions,
   StochasticRngSummary,
+  TargetStatusSummary,
   TailMetrics,
 } from "./contracts";
 import {
@@ -31,6 +32,7 @@ import {
 } from "./contracts";
 import { advanceTo } from "../runtime/clock";
 import { cloneRuntime, type SimulationRuntime } from "../runtime/runtime";
+import { activeTimedTargetStatus } from "../../target/timedStatus";
 import { lastPlayerPoisonTick } from "../schedulers/playerPoisonState";
 import { TICK_SECONDS } from "../../core/ticks";
 import {
@@ -51,6 +53,7 @@ const SOURCE_KINDS: readonly DamageSourceKind[] = [
   "player-poison",
   "basic-attack",
   "auto-attack",
+  "target-status",
   "other-modeled",
 ];
 
@@ -116,6 +119,26 @@ function buildPlayerPoisonAnalysis(
     supportNote: cinderbane
       ? `${PLAYER_POISON_SUPPORT_NOTE} ${CINDERBANE_SUPPORT_NOTE}`
       : PLAYER_POISON_SUPPORT_NOTE,
+  };
+}
+
+function buildTargetStatusSummary(rt: SimulationRuntime): TargetStatusSummary | undefined {
+  const vitality = rt.state.target.vitality;
+  const candidate = rt.state.target.deathMark;
+  const status = activeTimedTargetStatus(candidate, rt.state.tick) ? candidate : undefined;
+  if (!vitality && !status) return undefined;
+  return {
+    deathMark: {
+      active: status !== undefined,
+      ...(status ? { source: { ...status.source } } : {}),
+      remainingTicks: status ? Math.max(0, status.expiresAtTick - rt.state.tick) : 0,
+      ...(vitality
+        ? {
+            currentLifePoints: vitality.currentLifePoints,
+            maximumLifePoints: vitality.maximumLifePoints,
+          }
+        : {}),
+    },
   };
 }
 
@@ -253,6 +276,7 @@ export function finish(
   const presentHistory = keepsPresentationHistory(detail);
   const analysis = buildAnalysis(rt);
   const playerPoison = buildPlayerPoisonAnalysis(rt, analysis);
+  const targetStatus = buildTargetStatusSummary(rt);
   return {
     ok: error === undefined,
     ...(error !== undefined ? { error } : {}),
@@ -299,6 +323,7 @@ export function finish(
     events: presentHistory ? rt.events : [],
     history,
     analysis,
+    ...(targetStatus ? { targetStatus } : {}),
     ...(playerPoison ? { playerPoison } : {}),
     ...(tails !== undefined
       ? {
@@ -317,6 +342,51 @@ function poolMean(
 ): number {
   if (pool.length === 0) return 0;
   return weightedMean(pool.map((p) => ({ weight: p.weight, value: f(p.summary) })));
+}
+
+function combineTargetStatus(
+  pool: readonly { weight: number; summary: RotationSummary }[],
+  modal: RotationSummary,
+): TargetStatusSummary | undefined {
+  const marks = pool
+    .map((part) => part.summary.targetStatus?.deathMark)
+    .filter((mark): mark is NonNullable<typeof mark> => mark !== undefined);
+  if (marks.length === 0) return undefined;
+  const modalMark = modal.targetStatus?.deathMark;
+  const sourceMark = marks.find((mark) => mark.source !== undefined);
+  const base = modalMark ?? sourceMark ?? { active: false, remainingTicks: 0 };
+  const hasCurrent = marks.some((mark) => mark.currentLifePoints !== undefined);
+  const hasMaximum = marks.some((mark) => mark.maximumLifePoints !== undefined);
+  return {
+    deathMark: {
+      ...base,
+      expected: {
+        activeProbability: poolMean(pool, (summary) =>
+          summary.targetStatus?.deathMark?.active ? 1 : 0,
+        ),
+        remainingTicks: poolMean(
+          pool,
+          (summary) => summary.targetStatus?.deathMark?.remainingTicks ?? 0,
+        ),
+        ...(hasCurrent
+          ? {
+              currentLifePoints: poolMean(
+                pool,
+                (summary) => summary.targetStatus?.deathMark?.currentLifePoints ?? 0,
+              ),
+            }
+          : {}),
+        ...(hasMaximum
+          ? {
+              maximumLifePoints: poolMean(
+                pool,
+                (summary) => summary.targetStatus?.deathMark?.maximumLifePoints ?? 0,
+              ),
+            }
+          : {}),
+      },
+    },
+  };
 }
 
 function collectFailures(
@@ -726,9 +796,12 @@ export function combineStochasticSummaries(
   const error = failure?.primaryReason;
 
   const usesExpectedDamageApproximation = terminalLanes.some(
-    (lane) => (lane.rt.input.procs?.aftershockRank ?? 0) > 0,
+    (lane) =>
+      (lane.rt.input.procs?.aftershockRank ?? 0) > 0 ||
+      ((lane.rt.input.targetMaximumLifePoints ?? 0) > 0 &&
+        (lane.rt.input.equipmentEffects?.deathdealer?.applicationChance ?? 0) > 0),
   );
-  // Aftershock threshold timing uses expected damage, so it is approximated even with one lane.
+  // Aftershock and Death Mark threshold timing use expected damage.
   const resolvedExactness: StochasticExactness = usesExpectedDamageApproximation
     ? "approximated"
     : stochastic
@@ -777,6 +850,7 @@ export function combineStochasticSummaries(
     }
   }
   const poisonRow = byEffect.find((effect) => effect.id === PLAYER_POISON_EFFECT_ID);
+  const targetStatus = combineTargetStatus(mixPool, modal);
   const playerPoison =
     wantAnalysis && modal.playerPoison
       ? {
@@ -863,6 +937,7 @@ export function combineStochasticSummaries(
           capLoss: toKnownMass(mix((s) => s.analysis.capLoss)),
         }
       : EMPTY_ANALYSIS,
+    ...(targetStatus ? { targetStatus } : {}),
     ...(playerPoison ? { playerPoison } : {}),
     ...(tails !== undefined
       ? {

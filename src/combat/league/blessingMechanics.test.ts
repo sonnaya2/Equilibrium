@@ -248,7 +248,7 @@ describe("Striking Light ability mult", () => {
       (modifier) => modifier.id === "blessing:striking-light",
     )!;
 
-  it("applies a 1.4x base multiplier to direct Basic Attacks only", () => {
+  it("applies a 1.4x base multiplier to category-basic direct hits", () => {
     const modifier = strikingModifier();
     expect(modifier.abilityBaseMultiplier).toBe(1.4);
     expect(
@@ -257,6 +257,15 @@ describe("Striking Light ability mult", () => {
         ruleset: "equilibrium",
         abilityCategory: "basic",
         basicAttack: true,
+        provenance: { kind: "player_direct" },
+      }),
+    ).toBe(true);
+    // Category basic without the modern Basic Attack flag still qualifies.
+    expect(
+      modifier.applies({
+        style: "magic",
+        ruleset: "equilibrium",
+        abilityCategory: "basic",
         provenance: { kind: "player_direct" },
       }),
     ).toBe(true);
@@ -276,7 +285,8 @@ describe("Striking Light ability mult", () => {
       modifier.applies({
         style: "magic",
         ruleset: "equilibrium",
-        abilityCategory: "basic",
+        abilityCategory: "threshold",
+        provenance: { kind: "player_direct" },
       }),
     ).toBe(false);
     expect(

@@ -121,8 +121,8 @@ describe("blessingPresentation", () => {
     const rows = strikingLightAssumptionRows([plate], 1_000);
     expect(rows).toHaveLength(2);
     expect(rows[0]).toEqual([
-      "Striking Light Basic Attacks",
-      "+40% damage on Basic Attacks (ability-stage mult; not in base ability damage field)",
+      "Striking Light basics",
+      "+40% damage on basic-category abilities (ability-stage mult; not in base ability damage field)",
     ]);
     expect(rows[1]![0]).toBe("Light of Saradomin");
     expect(rows[1]![1]).toMatch(/40-60% AD/);
@@ -132,7 +132,10 @@ describe("blessingPresentation", () => {
     expect(rows[1]![1]).toMatch(/separate hit/);
 
     expect(strikingLightBasicCastNote([plate], { basicAttack: true })).toBe(
-      "Includes Striking Light +40% on this Basic Attack",
+      "Includes Striking Light +40% on this basic",
+    );
+    expect(strikingLightBasicCastNote([plate], { category: "basic" })).toBe(
+      "Includes Striking Light +40% on this basic",
     );
     expect(strikingLightBasicCastNote([plate], { autoAttack: true })).toBeNull();
     expect(strikingLightBasicCastNote([plate], {})).toBeNull();
@@ -182,15 +185,15 @@ describe("blessingPresentation", () => {
     ]);
   });
 
-  it("compact +40% SL mark only on Basic Attacks when Striking Light is active", () => {
+  it("compact +40% SL mark on category basics and Basic Attacks when Striking Light is active", () => {
     expect(strikingLightBasicRowMark(undefined, { basicAttack: true })).toBeNull();
     expect(strikingLightBasicRowMark([], { basicAttack: true })).toBeNull();
 
     const plate = strikingPlate();
     expect(strikingLightBasicRowMark([plate], { basicAttack: true })).toBe("+40% SL");
     expect(strikingLightBasicRowMark([plate], { kind: "basic-attack" })).toBe("+40% SL");
+    expect(strikingLightBasicRowMark([plate], { category: "basic" })).toBe("+40% SL");
     expect(strikingLightBasicRowMark([plate], { kind: "auto-attack" })).toBeNull();
-    expect(strikingLightBasicRowMark([plate], { category: "basic" })).toBeNull();
     // Light of Saradomin is a separate blessing hit - not the ability-stage mult row.
     expect(
       strikingLightBasicRowMark([plate], {
@@ -208,6 +211,6 @@ describe("blessingPresentation", () => {
     expect(blessingEffectDisplayName("light-of-saradomin")).not.toBe("Striking Light");
     const plate = strikingPlate();
     const rows = strikingLightAssumptionRows([plate], 0);
-    expect(rows.map((r) => r[0])).toEqual(["Striking Light Basic Attacks", "Light of Saradomin"]);
+    expect(rows.map((r) => r[0])).toEqual(["Striking Light basics", "Light of Saradomin"]);
   });
 });

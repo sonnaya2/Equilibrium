@@ -14,7 +14,7 @@ import {
   type MaximumAdrenalineSource,
 } from "../shared/adrenalineCap";
 import { mulFloor } from "../core/rounding";
-import { isBasicAttack } from "../shared/adrenalineGain";
+import { isStrikingLightHost } from "../shared/adrenalineGain";
 import { resolveCombatProvenance } from "../shared/damageProvenance";
 import {
   DEFAULT_AFFINITIES,
@@ -515,7 +515,7 @@ export function leagueModifiers(rules: ResolvedLeagueRules | undefined): CombatM
       applies: (context) =>
         context.ruleset === "equilibrium" &&
         notBlessingDamage(context) &&
-        isBasicAttack(context) &&
+        isStrikingLightHost(context) &&
         (resolveCombatProvenance(context).kind === "player_direct" ||
           resolveCombatProvenance(context).kind === "player_auto"),
       apply: (state) => ({

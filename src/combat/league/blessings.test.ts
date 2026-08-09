@@ -198,21 +198,22 @@ describe("Equilibrium blessing combat rules", () => {
     expect(context.firstLegalTick(dragonBreath.id)).toBe(8);
   });
 
-  it("limits Light of Saradomin triggers to post-modernisation Basic Attacks", () => {
+  it("fires Light of Saradomin on category-basic abilities; not on legacy auto-only shells", () => {
     const league = rules(["Order", "Order"], { totalArmour: 1_000 });
     const ordinaryBasic = simulate({
       ...baseInput,
       league,
+      modifiers: leagueModifiers(league),
       context: { style: "melee", ruleset: "equilibrium" },
       rotation: rotationOf("rend"),
     });
     expect(
       ordinaryBasic.events.filter((event) => event.abilityId === "light-of-saradomin"),
-    ).toHaveLength(0);
+    ).toHaveLength(1);
 
     const attack = baseInput.abilities.find((ability) => ability.id === "attack")!;
     const legacyAuto = calculateLeagueAbility(
-      { ...attack, basicAttack: undefined, autoAttack: true },
+      { ...attack, basicAttack: undefined, autoAttack: true, category: "threshold" as const },
       {
         base: 1_000,
         level: 99,

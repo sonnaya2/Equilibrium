@@ -39,7 +39,7 @@ import {
   type AttachedDamageComponent,
   type ResolvedDamage,
 } from "../engine/resolution/types";
-import { isBasicAttack } from "../shared/adrenalineGain";
+import { isBasicAttack, isStrikingLightHost } from "../shared/adrenalineGain";
 import { mulFloor } from "../core/rounding";
 import type { StatefulOccurrenceModel } from "../engine/runtime/events";
 import { extendTearingThornsAbility } from "../shared/dotDurationExtension";
@@ -641,7 +641,7 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
 
   const strikingLight = blessingRule(input.rules, "striking-light")?.light;
   const lordLight = blessingRule(input.rules, "lord-of-light")?.light;
-  if (eligible.onHit && isBasicAttack(input.ability)) {
+  if (eligible.onHit && isStrikingLightHost(input.ability)) {
     const prayerMultiplier = 1 + input.rules.prayerBonus * (lordLight?.prayerDamagePerBonus ?? 0);
     const prayerSource = input.rules.blessings.find(
       (choice) => choice.id === "lord-of-light",

@@ -163,7 +163,7 @@ describe("Striking Light regression fixture", () => {
     );
   });
 
-  it("applies the multiplier to every style Basic Attack and to no ordinary basic", () => {
+  it("applies the multiplier and Light to every style Basic Attack and to category basics", () => {
     const styles = [
       [MELEE_ABILITIES, "melee", "attack", 2_180],
       [RANGED_ABILITIES, "ranged", "ranged_attack", 1_900],
@@ -184,6 +184,7 @@ describe("Striking Light regression fixture", () => {
       ).toHaveLength(1);
     }
 
+    // Fury is category basic but not a modern Basic Attack - still gets SL + Light.
     const ordinary = MELEE_ABILITIES.find((ability) => ability.id === "fury")!;
     const plain = calculateAbility(ordinary, {
       base: 1_000,
@@ -193,8 +194,10 @@ describe("Striking Light regression fixture", () => {
       context: { style: "melee", ruleset: "equilibrium" },
     });
     const withStriking = basicPreview(ordinary);
-    expect(withStriking.expected).toBe(plain.expected);
-    expect(withStriking.leagueContributions).toHaveLength(0);
+    expect(withStriking.hits[0]?.expected).toBeGreaterThan(plain.hits[0]!.expected);
+    expect(
+      withStriking.leagueContributions.filter((c) => c.effectId === "light-of-saradomin"),
+    ).toHaveLength(1);
   });
 
   it("multiplies each hit of a multi-hit Basic Attack but triggers one Light volley", () => {

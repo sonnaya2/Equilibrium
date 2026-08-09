@@ -350,7 +350,7 @@ export const NECROMANCY_ABILITIES: NecromancyAbilitySpec[] = [
   {
     // Wiki is area (2 tiles). ST model: one explode hit on the primary target.
     // 0s ability CD; initial 6-tick lockout starts on summon (not on command).
-    // Dismisses the zombie on cast; explosion lands at cast+4.
+    // Poison through cast+3 (chat); explode + dismiss at cast+4.
     id: "command_putrid_zombie",
     name: "Command Putrid Zombie",
     style: "necromancy",

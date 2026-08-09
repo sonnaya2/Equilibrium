@@ -21,7 +21,13 @@ import {
   residualSoulCapFor,
   resolveNecromancyAbility,
 } from "./effects";
-import { CONJURE_UNTIL_OFFSET_TICKS, conjureActive, newConjures, summonConjure } from "./conjures";
+import {
+  CONJURE_UNTIL_OFFSET_TICKS,
+  conjureActive,
+  findConjure,
+  newConjures,
+  summonConjure,
+} from "./conjures";
 import { NECROSIS_CAP, TOUCH_OF_DEATH_NECROSIS } from "./necrosis";
 import { RESIDUAL_SOUL_CAP } from "./souls";
 
@@ -142,7 +148,7 @@ describe("necro rotation state machine", () => {
     expect(necroCanCast(byId("conjure_skeleton_warrior"), necro, empty, 0)).toBe(true);
   });
 
-  it("applyNecroOnCast summons conjures and dismisses zombie on command", () => {
+  it("applyNecroOnCast summons conjures and marks putrid command without dismiss", () => {
     const necro = newNecroRotationState();
     const cast = applyNecroOnCast(necro, byId("conjure_skeleton_warrior"), 0, newConjures());
     expect(cast.conjures).toBeDefined();
@@ -154,8 +160,13 @@ describe("necro rotation state machine", () => {
 
     let z = applyNecroOnCast(necro, byId("conjure_putrid_zombie"), 0, newConjures()).conjures!;
     expect(conjureActive(z, "putrid_zombie", 0)).toBe(true);
+    // Wiki: still present through chat/explode window; dismiss lands with explode (cast+4).
     z = applyNecroOnCast(necro, byId("command_putrid_zombie"), 10, z).conjures!;
-    expect(conjureActive(z, "putrid_zombie", 10)).toBe(false);
+    const zombie = findConjure(z, "putrid_zombie")!;
+    expect(conjureActive(z, "putrid_zombie", 10)).toBe(true);
+    expect(zombie.poisonThroughTick).toBe(13);
+    expect(zombie.explodeAtTick).toBe(14);
+    expect(conjureActive(z, "putrid_zombie", 14)).toBe(true);
   });
 });
 

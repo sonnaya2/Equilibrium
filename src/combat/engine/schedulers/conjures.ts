@@ -12,6 +12,7 @@ import {
   spiritAutoFired,
   spiritAutoPending,
   spiritAutoProfile,
+  spiritPoisonBound,
   spiritPoisonFired,
   spiritPoisonPending,
   ZOMBIE_POISON_BAND,
@@ -299,6 +300,48 @@ export function applySkeletonCommand(rt: SimulationRuntime, candidate: number): 
   patchSpirit(rt, spirit, next);
   if (spiritAutoPending(next)) {
     scheduleSpiritAuto(rt, next);
+  }
+}
+
+/**
+ * Command Putrid Zombie scheduler (wiki hit timings):
+ * Autos after command cast suppressed (same-tick auto still lands).
+ * Poison keeps its 3t grid through chat (command+3); do not drop pending early.
+ * Explode + dismiss is the cast hit at command+4 (onNecromancyHitLanded).
+ * https://runescape.wiki/w/Command_Putrid_Zombie
+ */
+export function applyPutridCommand(rt: SimulationRuntime, candidate: number): void {
+  const spirit = findConjure(rt.state.necromancy.conjures, "putrid_zombie");
+  if (!spirit || spirit.explodeAtTick === undefined) return;
+
+  const pendingAuto = rt.queue
+    .pending()
+    .find(
+      (e) =>
+        e.family === "conjureAuto" &&
+        e.abilityId === SPIRIT_AUTO_ABILITY_ID.putrid_zombie &&
+        rt.spiritEventMeta.get(e.seq)?.untilTick === spirit.untilTick,
+    );
+  if (pendingAuto && pendingAuto.tick > candidate) {
+    rt.queue.cancelBySeq(pendingAuto.seq);
+    rt.spiritEventMeta.delete(pendingAuto.seq);
+    rt.spiritHitCounts.delete(`${spirit.id}:${spirit.untilTick}:auto`);
+  }
+
+  const poisonBound = spiritPoisonBound(spirit);
+  const pendingPoison = rt.queue
+    .pending()
+    .find(
+      (e) =>
+        e.family === "poison" &&
+        e.abilityId === SPIRIT_POISON_ABILITY_ID &&
+        rt.spiritEventMeta.get(e.seq)?.untilTick === spirit.untilTick,
+    );
+  if (pendingPoison && pendingPoison.tick > poisonBound) {
+    // Only cancel if already past the command chat cutoff (should be rare).
+    rt.queue.cancelBySeq(pendingPoison.seq);
+    rt.spiritEventMeta.delete(pendingPoison.seq);
+    rt.spiritHitCounts.delete(`${spirit.id}:${spirit.untilTick}:poison`);
   }
 }
 

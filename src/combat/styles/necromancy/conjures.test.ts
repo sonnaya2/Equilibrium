@@ -20,6 +20,7 @@ import {
   ZOMBIE_POISON_FIRST_TICKS,
   applyConjureCast,
   applyGhostCommand,
+  applyPutridCommandState,
   conjureActive,
   conjureCanCast,
   dismissConjure,
@@ -27,6 +28,7 @@ import {
   skeletonRageMult,
   spiritAutoFired,
   spiritAutoPending,
+  spiritPoisonBound,
   spiritPoisonFired,
   spiritPoisonPending,
   summonConjure,
@@ -176,6 +178,52 @@ describe("conjures", () => {
     expect(conjureCanCast("command_vengeful_ghost", ghost, 0)).toBe(true);
     const commanded = applyGhostCommand(ghost);
     expect(conjureCanCast("command_vengeful_ghost", commanded, 0)).toBe(false);
+  });
+
+  it("command putrid caps poison through chat and keeps the slot until explode", () => {
+    // Wiki: command@18 -> poison through 21, explode 22; auto@19 suppressed.
+    const summoned = summonConjure(newConjures(), "putrid_zombie", 0);
+    let z = findConjure(summoned, "putrid_zombie")!;
+    while (spiritPoisonPending(z) && z.poison.nextTick < 18) {
+      z = spiritPoisonFired(z);
+    }
+    // Autos 7 and 13 already landed; next would be 19 (post-command -> parked).
+    while (spiritAutoPending(z) && z.auto.nextTick < 18) {
+      z = spiritAutoFired(z) as typeof z;
+    }
+    expect(z.poison.nextTick).toBe(18);
+    expect(z.auto.nextTick).toBe(19);
+    const commanded = applyPutridCommandState({ spirits: [z] }, 18);
+    const after = findConjure(commanded, "putrid_zombie")!;
+    expect(after.poisonThroughTick).toBe(21);
+    expect(after.explodeAtTick).toBe(22);
+    expect(spiritPoisonBound(after)).toBe(21);
+    // untilTick still 105: slot occupied until explode lands and dismisses.
+    expect(conjureActive(commanded, "putrid_zombie", 21)).toBe(true);
+    expect(conjureActive(commanded, "putrid_zombie", 22)).toBe(true);
+    expect(conjureCanCast("command_putrid_zombie", commanded, 18)).toBe(false);
+    expect(conjureCanCast("conjure_putrid_zombie", commanded, 18)).toBe(false);
+
+    const poisonTicks: number[] = [];
+    let track = after;
+    while (spiritPoisonPending(track)) {
+      poisonTicks.push(track.poison.nextTick);
+      track = spiritPoisonFired(track);
+    }
+    expect(poisonTicks).toEqual([18, 21]);
+    expect(spiritAutoPending(after)).toBe(false);
+
+    // End-of-life command: explode past untilTick still occupies the slot.
+    const late = applyPutridCommandState(
+      summonConjure(newConjures(), "putrid_zombie", 0),
+      104,
+    );
+    const lateZ = findConjure(late, "putrid_zombie")!;
+    expect(lateZ.explodeAtTick).toBe(108);
+    expect(lateZ.untilTick).toBe(105);
+    expect(conjureActive(late, "putrid_zombie", 105)).toBe(true);
+    expect(conjureActive(late, "putrid_zombie", 107)).toBe(true);
+    expect(conjureActive(late, "putrid_zombie", 108)).toBe(false);
   });
 });
 

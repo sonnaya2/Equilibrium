@@ -17,7 +17,11 @@ import { hasPassive } from "../../../shared/equipment";
 import { isBasicAttack } from "../../../shared/adrenalineGain";
 import { rngProc } from "../../simulation/contracts";
 import { patchConjures, patchNecro, patchTarget } from "../../runtime/state";
-import { applySkeletonCommand, scheduleSpiritTracks } from "../../schedulers/conjures";
+import {
+  applyPutridCommand,
+  applySkeletonCommand,
+  scheduleSpiritTracks,
+} from "../../schedulers/conjures";
 import { resetCooldowns, startLinkedCooldown } from "./cooldowns";
 import type { CastEffectContext } from "./context";
 
@@ -105,6 +109,8 @@ export function applyNecromancyCastEffects(fx: CastEffectContext): void {
   if (ability.id === "command_vengeful_ghost") {
     rt.state = patchConjures(rt.state, applyGhostCommand(rt.state.necromancy.conjures));
   }
+  // Putrid command state already applied in applyNecroOnCast; only queue mutates here.
+  if (ability.id === "command_putrid_zombie") applyPutridCommand(rt, candidate);
 
   // Bloated does not stack on the single static target: a recast cancels the
   // previous cast's pending tails and starts a fresh derived set (wiki: "its

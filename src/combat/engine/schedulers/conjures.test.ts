@@ -482,6 +482,77 @@ describe("conjure summoning and auto contribution", () => {
   });
 });
 
+describe("Command Putrid Zombie poison through command", () => {
+  it("wiki: command@18 keeps poison@18+21, suppresses auto@19, explode@22", () => {
+    // https://runescape.wiki/w/Command_Putrid_Zombie
+    const ctx = createCastContext(necroFixtureInput);
+    const basic = ctx.byId.get("necromancy_basic")!;
+    ctx.performCast(ctx.byId.get("conjure_putrid_zombie")!, 0, false);
+    while (ctx.getState().tick < 18) ctx.performCast(basic, ctx.getState().tick, false);
+    expect(ctx.getState().tick).toBeLessThanOrEqual(18);
+    const cmd = ctx.performCast(ctx.byId.get("command_putrid_zombie")!, 18, false);
+    expect(cmd.ok).toBe(true);
+    // Still present after command (not dismissed on cast).
+    expect(findConjure(ctx.getState().necromancy.conjures, "putrid_zombie")).toBeDefined();
+    while (ctx.getState().tick <= 24) ctx.performCast(basic, ctx.getState().tick, false);
+    const s = ctx.finish();
+    const poisons = s.events
+      .filter((e) => e.abilityId === SPIRIT_POISON_ABILITY_ID)
+      .map((e) => e.tick);
+    const autos = s.events
+      .filter((e) => e.abilityId === "spirit_putrid_zombie")
+      .map((e) => e.tick);
+    const explode = s.events.filter((e) => e.abilityId === "command_putrid_zombie");
+    // Natural poison 9,12,15,18 then command keeps 21; not 24.
+    expect(poisons.filter((t) => t >= 15)).toEqual([15, 18, 21]);
+    expect(poisons).not.toContain(24);
+    expect(autos).toContain(7);
+    expect(autos).toContain(13);
+    expect(autos).not.toContain(19);
+    expect(explode).toHaveLength(1);
+    expect(explode[0]!.tick).toBe(22);
+    expect(findConjure(ctx.getState().necromancy.conjures, "putrid_zombie")).toBeUndefined();
+  });
+
+  it("does not drop poison when command is cast on a poison tick", () => {
+    // Later wiki table: poison@60 and command@60, next poison@63 (chat), explode@64.
+    const ctx = createCastContext(necroFixtureInput);
+    const basic = ctx.byId.get("necromancy_basic")!;
+    ctx.performCast(ctx.byId.get("conjure_putrid_zombie")!, 0, false);
+    while (ctx.getState().tick < 60) ctx.performCast(basic, ctx.getState().tick, false);
+    expect(ctx.performCast(ctx.byId.get("command_putrid_zombie")!, 60, false).ok).toBe(true);
+    // Zombie still live after command; poison track not dismissed.
+    expect(findConjure(ctx.getState().necromancy.conjures, "putrid_zombie")?.poisonThroughTick).toBe(
+      63,
+    );
+    while (ctx.getState().tick <= 66) ctx.performCast(basic, ctx.getState().tick, false);
+    const s = ctx.finish();
+    const poisons = s.events
+      .filter((e) => e.abilityId === SPIRIT_POISON_ABILITY_ID && e.tick >= 57)
+      .map((e) => e.tick);
+    expect(poisons).toEqual([57, 60, 63]);
+    expect(
+      s.events.filter((e) => e.abilityId === "command_putrid_zombie").map((e) => e.tick),
+    ).toEqual([64]);
+    // Auto that would land on 61 is suppressed.
+    expect(
+      s.events.some((e) => e.abilityId === "spirit_putrid_zombie" && e.tick === 61),
+    ).toBe(false);
+  });
+
+  it("natural SP3 poison tail 105/108 is unchanged without command", () => {
+    const ctx = createCastContext(necroFixtureInput);
+    const basic = ctx.byId.get("necromancy_basic")!;
+    ctx.performCast(ctx.byId.get("conjure_putrid_zombie")!, 0, false);
+    while (ctx.getState().tick <= 110) ctx.performCast(basic, ctx.getState().tick, false);
+    const s = ctx.finish();
+    const late = s.events
+      .filter((e) => e.abilityId === SPIRIT_POISON_ABILITY_ID && e.tick >= 102)
+      .map((e) => e.tick);
+    expect(late).toEqual([102, 105, 108]);
+  });
+});
+
 describe("Command Skeleton Warrior scheduling", () => {
   function skeletonEvents(s: RotationSummary) {
     return {

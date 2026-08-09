@@ -22,9 +22,9 @@ import { FINGER_OF_DEATH_MAX_STACKS, NECROSIS_CAP, TOUCH_OF_DEATH_NECROSIS } fro
 import { RESIDUAL_SOUL_CAP, SOULBOUND_LANTERN_BONUS_CAP } from "./souls";
 import {
   applyConjureCast,
+  applyPutridCommandState,
   COMMAND_REQUIRES_CONJURE,
   conjureCanCast,
-  dismissConjure,
   newConjures,
   type ConjureState,
 } from "./conjures";
@@ -260,8 +260,9 @@ export function applyNecroOnCast(
   if (conjures !== undefined) {
     const afterSummon = applyConjureCast(conjures, ability.id, castTick, conjureDurationMult);
     if (afterSummon !== conjures) conjures = afterSummon;
+    // Command Putrid: mark poison-through-chat + explode tick; dismiss on explode land.
     if (ability.id === "command_putrid_zombie") {
-      conjures = dismissConjure(conjures, "putrid_zombie");
+      conjures = applyPutridCommandState(conjures, castTick);
     }
   }
 

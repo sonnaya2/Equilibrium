@@ -9,6 +9,7 @@ import { isBasicAttack } from "../../shared/adrenalineGain";
 import type { ActiveEquipmentEffects } from "../../shared/equipment";
 import { deathdealerApplicationChance } from "../../shared/equipment";
 import type { ResolvedRangedAmmunitionProfile } from "../../styles/ranged/ammunitionProfile";
+import type { PlayerVitalityInput } from "../simulation/contracts";
 
 export const DEFAULT_STOCHASTIC_LANES = 128;
 export const DEFAULT_STOCHASTIC_SEED = 0x6d2b79f5;
@@ -21,6 +22,9 @@ interface StatefulRngInput {
   readonly league?: ResolvedLeagueRules;
   readonly playerPoison?: PlayerPoisonProfile;
   readonly targetPoisonImmune?: boolean;
+  readonly targetMaximumLifePoints?: number;
+  readonly playerVitality?: PlayerVitalityInput;
+  readonly playerMaximumLifePoints?: number;
   readonly equipmentEffects?: ActiveEquipmentEffects;
   readonly ammunition?: ResolvedRangedAmmunitionProfile | null;
   readonly abilities?: readonly AbilitySpec[];
@@ -147,6 +151,14 @@ export function needsStochasticLanes(
   const ammunitionMechanic = input.ammunition?.projectile?.mechanicId;
   if (
     (ammunitionMechanic === "hydrix" || ammunitionMechanic === "ascendri") &&
+    hasBoltDeathmarkApplicationOpportunity(input, abilityIds)
+  ) {
+    return true;
+  }
+  if (
+    ((ammunitionMechanic === "ruby" && (input.targetMaximumLifePoints ?? 0) > 0) ||
+      (ammunitionMechanic === "onyx" &&
+        (input.playerVitality?.maximumLifePoints ?? input.playerMaximumLifePoints ?? 0) > 0)) &&
     hasBoltDeathmarkApplicationOpportunity(input, abilityIds)
   ) {
     return true;

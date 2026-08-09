@@ -77,6 +77,7 @@ export interface SimulationRuntime {
   readonly byId: ReadonlyMap<string, AbilitySpec>;
   readonly basicByStyle: ReadonlyMap<AbilitySpec["style"], AbilitySpec>;
   readonly nativeSpecial: AbilitySpec | null;
+
   /**
    * Equipment-static Leng land outcome table (null when no Leng passives).
    * Compiled once in createRuntime; shared across stochastic lanes.
@@ -85,6 +86,8 @@ export interface SimulationRuntime {
   readonly stochastic: StochasticOracle;
   readonly playerPoisonDamageCache: Map<string, unknown>;
   readonly leagueDamageCache: Map<string, unknown>;
+  /** Concrete Ruby/Onyx outcomes shared by cast resolution and landed state. */
+  readonly boltProcOutcomes: Map<string, boolean>;
   readonly queue: EventQueue<SimulationRuntime>;
   state: RotationState;
   readonly casts: CastRecord[];
@@ -206,6 +209,31 @@ export function createRuntime(
     );
   }
   if (
+    input.playerVitality != null &&
+    (!Number.isFinite(input.playerVitality.maximumLifePoints) ||
+      input.playerVitality.maximumLifePoints < 0 ||
+      !Number.isFinite(input.playerVitality.currentLifePoints) ||
+      input.playerVitality.currentLifePoints < 0)
+  ) {
+    throw new RangeError("playerVitality must contain finite non-negative life points");
+  }
+  if (
+    input.playerMaximumLifePoints != null &&
+    (!Number.isFinite(input.playerMaximumLifePoints) || input.playerMaximumLifePoints < 0)
+  ) {
+    throw new RangeError(
+      `playerMaximumLifePoints must be finite and non-negative: ${input.playerMaximumLifePoints}`,
+    );
+  }
+  if (
+    input.playerHpPercent != null &&
+    (!Number.isFinite(input.playerHpPercent) ||
+      input.playerHpPercent < 0 ||
+      input.playerHpPercent > 100)
+  ) {
+    throw new RangeError(`playerHpPercent outside 0-100: ${input.playerHpPercent}`);
+  }
+  if (
     input.startingResidualSouls != null &&
     (!Number.isFinite(input.startingResidualSouls) || input.startingResidualSouls < 0)
   ) {
@@ -233,6 +261,7 @@ export function createRuntime(
       ? input.equipmentEffects?.activeWeapon?.specialAttackId
       : undefined;
   const nativeSpecial = nativeSpecialId ? (byId.get(nativeSpecialId) ?? null) : null;
+
   const equipment = input.equipmentEffects;
   const lengLandTable = lengLandTableFor(
     hasPassive(equipment, "leng-endless-frost"),
@@ -241,6 +270,14 @@ export function createRuntime(
   // Soulbound lantern from equipped ids only - never invent from requested souls.
   const soulboundLantern =
     input.equipmentIds?.some((id) => id === "item:soulbound-lantern") === true;
+  const playerVitality =
+    input.playerVitality ??
+    (input.playerMaximumLifePoints != null && input.playerMaximumLifePoints > 0
+      ? {
+          maximumLifePoints: input.playerMaximumLifePoints,
+          currentLifePoints: (input.playerMaximumLifePoints * (input.playerHpPercent ?? 100)) / 100,
+        }
+      : undefined);
   let state = newRotationState({
     adrenaline: input.startingAdrenaline,
     adrenalineCap,
@@ -252,6 +289,9 @@ export function createRuntime(
       hasBlessing(input.league, "tearing-thorns"),
     ringOfVigour: input.adrenaline?.ringOfVigour === true,
     lantern: soulboundLantern,
+    ...(playerVitality && playerVitality.maximumLifePoints > 0
+      ? { player: { ...playerVitality } }
+      : {}),
   });
   state = patchTarget(state, { weaponPoison: inactiveTargetWeaponPoison() });
   const targetMaximumLifePoints = input.targetMaximumLifePoints;
@@ -300,6 +340,7 @@ export function createRuntime(
     ),
     playerPoisonDamageCache: sharedCaches?.playerPoisonDamageCache ?? new Map(),
     leagueDamageCache: sharedCaches?.leagueDamageCache ?? new Map(),
+    boltProcOutcomes: new Map(),
     queue: new EventQueue<SimulationRuntime>(),
     state,
     casts: [],
@@ -368,6 +409,7 @@ export function cloneRuntime(rt: SimulationRuntime): SimulationRuntime {
     scheduledSpiritTracks: new Set(rt.scheduledSpiritTracks),
     spiritHitCounts: new Map(rt.spiritHitCounts),
     analysis: keepsAnalysisLedgers(rt.detailLevel) ? cloneAnalysisState(rt.analysis) : rt.analysis,
+    boltProcOutcomes: new Map(rt.boltProcOutcomes),
   };
 }
 

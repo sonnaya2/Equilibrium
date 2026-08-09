@@ -15,8 +15,10 @@ import { deathsSwiftnessMultiplier } from "../../styles/ranged/effects";
 import { dracolichInfusionCritChance } from "../../styles/ranged/dracolich";
 import { activeBleedCount } from "../../styles/melee/effects";
 import { activeFrostbladesMass } from "../../styles/melee/primordialIce";
-import { findConjure } from "../../styles/necromancy/conjures";
+import { COMMAND_REQUIRES_CONJURE, findConjure } from "../../styles/necromancy/conjures";
 import { isBasicAttack } from "../../shared/adrenalineGain";
+import { provenanceForCastHit } from "../../shared/damageProvenance";
+import { isAmmunitionHitEligible } from "../../styles/ranged/ammunitionEligibility";
 import type { CastSnapshot } from "../cast/snapshot";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { liveTargetDamagePotential } from "../../target/genericTarget";
@@ -101,6 +103,20 @@ export function landHitIdentity(
         equipmentEffects: input.equipmentEffects,
       })
     : input.accuracy;
+  const statefulAmmunition = input.ammunition?.projectile?.mechanicId;
+  const statefulBoltEligible =
+    (statefulAmmunition === "ruby" || statefulAmmunition === "onyx") &&
+    isAmmunitionHitEligible({
+      style: ability.style,
+      provenance: provenanceForCastHit({
+        isCommand: COMMAND_REQUIRES_CONJURE[ability.id] !== undefined,
+        isDot,
+        convertedChannel,
+        dotKind: hitSpec.dotKind,
+        bleedId: hitSpec.bleedId,
+      }),
+      attackOrigin: "player",
+    });
 
   // Equipment effects object identity covers am-zi / am-hej / champion-ring etc.
   const equipId = input.equipmentEffects ? oid(input.equipmentEffects) : 0;
@@ -122,6 +138,7 @@ export function landHitIdentity(
     ability.area ?? "",
     ability.channelTicks ?? -1,
     hitIndex,
+    ...(statefulBoltEligible ? [rt.stochastic.laneIndex, snap.castSeq] : []),
     b(isDot),
     b(convertedChannel),
     hitSpec.band.minPct,

@@ -23,6 +23,7 @@ import {
   type Loadout,
   type SetLoadout,
 } from "./useLoadout";
+import { rangedAmmunitionEffectPresentation } from "./ammunitionEffectPresentation";
 
 const DAMAGE_SKILL: Record<CombatStyle, string> = {
   melee: "Strength",
@@ -203,6 +204,7 @@ export function EquipmentColumn({
       }),
     [loadout.equipmentIds, pieceContribution, slots],
   );
+  const ammunitionEffect = rangedAmmunitionEffectPresentation(loadout);
   const effectRows = [
     ...passives.map((passive) => ({
       id: `${passive.itemId}:${passive.passiveId}`,
@@ -276,11 +278,12 @@ export function EquipmentColumn({
         </div>
         <div className="setup-equipment-footer">
           <EquipmentLevels loadout={loadout} setLoadout={setLoadout} />
+
           <section className="setup-equipment-passives" aria-labelledby="passives-card-title">
             <header className="setup-equipment-passives__heading setup-subsection-header">
               <h3 id="passives-card-title">Passives &amp; Set Effects</h3>
             </header>
-            {effectRows.length > 0 ? (
+            {effectRows.length > 0 || ammunitionEffect ? (
               <ul className="setup-passive-list">
                 {effectRows.map((effect) => (
                   <li key={effect.id} className="setup-status-row">
@@ -290,6 +293,20 @@ export function EquipmentColumn({
                     </span>
                   </li>
                 ))}
+                {ammunitionEffect ? (
+                  <li className={`setup-status-row ${ammunitionEffect.rowClass}`}>
+                    <GameIcon
+                      src={ammunitionEffect.icon}
+                      alt={ammunitionEffect.itemLabel}
+                      size={22}
+                    />
+                    <span>
+                      <strong>{ammunitionEffect.label}</strong>
+                      <em>{ammunitionEffect.statusLabel}</em>
+                      <small>{ammunitionEffect.itemLabel}</small>
+                    </span>
+                  </li>
+                ) : null}
               </ul>
             ) : null}
             <button

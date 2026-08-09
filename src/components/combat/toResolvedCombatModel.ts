@@ -120,6 +120,10 @@ export function hostInputFromLoadoutStats(
     cap: stats.cap,
     startingAdrenaline: stats.startingAdrenaline,
     equipmentIds: stats.equipmentIds,
+    playerVitality: {
+      maximumLifePoints: stats.life.temporaryMaxLife,
+      currentLifePoints: stats.life.currentLife,
+    },
     weaponConfiguration: stats.weaponConfiguration,
     equipmentSlots: loadout.equipmentSlots,
     playerPoison: {

@@ -53,6 +53,7 @@ export function solverSnapshotFromResolvedModel(model: ResolvedCombatModel): Sol
     playerPoison: { ...model.playerPoison },
     targetPoisonImmune: model.target.poisonImmune === true,
     cap: model.cap,
+    ...(model.playerVitality ? { playerVitality: { ...model.playerVitality } } : {}),
     startingAdrenaline: model.startingAdrenaline,
     equipmentIds: model.equipmentIds,
     weaponConfiguration: model.weaponConfiguration,

@@ -4,8 +4,10 @@ import {
   baneSourceHitModifier,
   dragonstoneCanHitTarget,
   dragonstoneSeparateHitDamage,
+  dragonstoneSeparateHitExpected,
   dragonstoneSeparateHitPayload,
   emeraldPoisonHit,
+  emeraldExternalPoisonMultiplier,
   fulAccuracyModifier,
   fulSourceHitModifier,
   jasAccuracyModifier,
@@ -160,11 +162,61 @@ describe("ranged ammunition source-hit payloads", () => {
     expect(rubyRecoilDamage(4_001)).toBe(200);
   });
 
-  it("keeps Diamond ordering unresolved while exposing perfect accuracy", () => {
+  it("routes active Diamond, Ruby, and Onyx payloads into the shared hit result", () => {
+    const ammunition = {
+      projectile: {
+        itemId: "item:test-enchanted-bolts",
+        label: "Test enchanted bolts",
+        family: "bolts" as const,
+        statTier: 95,
+        mechanicId: "diamond" as const,
+        support: { status: "modeled" as const, label: "Modeled" },
+      },
+      quiver: null,
+      weaponCapability: { mode: "optional" as const, acceptedFamily: "bolts" as const },
+      effectiveStatTier: 95,
+    };
+    expect(
+      resolveRangedAmmunitionHitEffects({
+        ammunition,
+        style: "ranged",
+        provenance: { kind: "player_direct" },
+        attackKind: "ability",
+        enchantedBoltProcActive: true,
+      }),
+    ).toMatchObject({ maximumHitBandFraction: 0, accuracyOverride: 1 });
+    expect(
+      resolveRangedAmmunitionHitEffects({
+        ammunition: {
+          ...ammunition,
+          projectile: { ...ammunition.projectile, mechanicId: "ruby" as const },
+        },
+        style: "ranged",
+        provenance: { kind: "player_direct" },
+        attackKind: "ability",
+        targetHealthFraction: 0.5,
+        enchantedBoltProcActive: true,
+      }).abilityDamageFraction,
+    ).toBeCloseTo(0.75, 10);
+    expect(
+      resolveRangedAmmunitionHitEffects({
+        ammunition: {
+          ...ammunition,
+          projectile: { ...ammunition.projectile, mechanicId: "onyx" as const },
+        },
+        style: "ranged",
+        provenance: { kind: "player_direct" },
+        attackKind: "ability",
+        enchantedBoltProcActive: true,
+      }).sourceHitMultiplier,
+    ).toBe(1.25);
+  });
+
+  it("keeps Diamond damage partial until the modern band rule is proven", () => {
     expect(resolveDiamondSourceHit()).toEqual({
-      kind: "research-gate",
+      kind: "partial",
       perfectAccuracy: true,
-      unresolvedDamageOrdering: true,
+      damageIncreaseModeled: false,
       support: expect.objectContaining({ status: "partially-modeled" }),
     });
   });
@@ -191,6 +243,37 @@ describe("ranged ammunition source-hit payloads", () => {
     expect(
       dragonstoneCanHitTarget({ targetIsDragon: false, targetHasDragonfireImmunity: true }),
     ).toBe(false);
+  });
+
+  it("transforms each Dragonstone source outcome before its independent cap", () => {
+    const distribution = [
+      { damage: 399, weight: 0.5 },
+      { damage: 403, weight: 0.5 },
+    ];
+    expect(dragonstoneSeparateHitExpected(distribution, 1, 30_000)).toBe(99.5);
+    expect(
+      dragonstoneSeparateHitExpected(
+        [
+          { damage: 10_000, weight: 0.5 },
+          { damage: 30_000, weight: 0.5 },
+        ],
+        1,
+        4_000,
+      ),
+    ).toBe(3_250);
+  });
+
+  it("does not use the weapon-poison potion tier for Emerald", () => {
+    const base = {
+      potionUntilTick: 1_000,
+      kwuarmPotency: 0 as const,
+      cinderbane: false,
+      blowpipe: false,
+      laniakea: false,
+    };
+    expect(emeraldExternalPoisonMultiplier({ ...base, potion: "none" })).toBe(
+      emeraldExternalPoisonMultiplier({ ...base, potion: "weapon-plus-plus-plus" }),
+    );
   });
 
   it("models Emerald as one poison-type payload without scheduler refresh", () => {

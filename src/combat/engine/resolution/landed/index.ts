@@ -4,7 +4,7 @@ import { onMagicHitLanded } from "./magic";
 import { onNecromancyHitLanded } from "./necromancy";
 import { onRangedHitLanded } from "./ranged";
 import { onMeleeHitLanded } from "./melee";
-import type { ResolvedDamage } from "../types";
+import type { EventResolution, ResolvedDamage } from "../types";
 
 /**
  * Per-landed-hit state effects, dispatched to the style that owns them. Only
@@ -16,6 +16,7 @@ export function applyLandedHitEffects(
   rt: SimulationRuntime,
   event: ScheduledEvent<SimulationRuntime>,
   damage: ResolvedDamage,
+  resolution?: EventResolution,
 ): void {
   const ability = rt.byId.get(event.abilityId);
   if (event.abilityId === "abyssal_parasite") {
@@ -31,7 +32,7 @@ export function applyLandedHitEffects(
       onMagicHitLanded(rt, event, ability, damage);
       break;
     case "ranged":
-      onRangedHitLanded(rt, event, ability, damage);
+      onRangedHitLanded(rt, event, ability, damage, resolution);
       break;
     case "melee":
       onMeleeHitLanded(rt, event, ability, damage);

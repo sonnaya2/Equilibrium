@@ -405,6 +405,16 @@ export function assertProvenance(p: DamageProvenance | null | undefined): Damage
   return p;
 }
 
+/** True DoT damage for Precise and Berserker's Fury gates. */
+export function isTrueDotDamage(context: CombatContext): boolean {
+  const kind = context.provenance?.kind;
+  if (kind === "player_converted_channel") return false;
+  if (kind === "player_dot" || kind === "player_poison" || kind === "derived_tail") return true;
+  if (context.dotKind != null) return true;
+  if (context.damageSource === "dot") return true;
+  return false;
+}
+
 /** Classify a cast hit once: schedule, resolve, and pipeline share this. */
 export function provenanceForCastHit(args: {
   isCommand: boolean;

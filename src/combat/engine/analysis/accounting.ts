@@ -19,6 +19,7 @@ export function sourceKindOf(
   }
   if (event.provenance.kind === "target_status") return "target-status";
   if (event.provenance.kind === "player_poison") return "player-poison";
+  if (event.provenance.kind === "equipment_proc") return "equipment-passive";
   if (
     event.abilityId === "perfect_equilibrium" ||
     event.provenance.kind === "botlg_perfect_equilibrium"

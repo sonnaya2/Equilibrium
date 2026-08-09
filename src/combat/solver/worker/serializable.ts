@@ -6,7 +6,11 @@ import {
   type ProofLabel,
   type SearchTier,
 } from "../contracts";
-import type { AdrenalineRules, ProcRules } from "../../engine/simulation/contracts";
+import type {
+  AdrenalineRules,
+  PlayerVitalityInput,
+  ProcRules,
+} from "../../engine/simulation/contracts";
 import type { HitCapRule } from "../../core/hitCaps";
 import type { ActiveEquipmentEffects } from "../../shared/equipment";
 import type {
@@ -143,6 +147,7 @@ export interface SerializableRevolutionSimBase {
   targetMaximumLifePoints?: number;
   playerPoison?: PlayerPoisonProfile;
   targetPoisonImmune?: boolean;
+  playerVitality?: PlayerVitalityInput;
   cap?: HitCapRule;
   startingAdrenaline?: number;
   naturalInstinctUntilTick?: number;

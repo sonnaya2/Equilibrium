@@ -17,6 +17,7 @@ import { RegionCrest } from "../RegionCrest";
 import { CombatFrame } from "./CombatFrame";
 import { PrayerPicker } from "./PrayerPicker";
 import { SetEffectsList } from "./SetEffectsList";
+import { rangedAmmunitionEffectPresentation } from "./ammunitionEffectPresentation";
 import { clearEquipment, equipInSlot, type Loadout, type SetLoadout } from "./useLoadout";
 
 const REGION_NAMES = new Map(regionsData.records.map((r) => [r.id, r.name]));
@@ -239,6 +240,7 @@ export function GearPanel({ loadout, setLoadout }: { loadout: Loadout; setLoadou
     equipmentSlots: slots,
     enchantments: loadout.enchantments,
   });
+  const ammunitionEffect = rangedAmmunitionEffectPresentation(loadout);
   const primaryWeapon = byId(slots.twohand ?? slots.mainhand);
   const activeItem =
     activeSlot === "weapon" ? primaryWeapon : activeSlot ? byId(slots[activeSlot]) : undefined;
@@ -452,7 +454,7 @@ export function GearPanel({ loadout, setLoadout }: { loadout: Loadout; setLoadou
           >
             Passives
           </h3>
-          {passives.length ? (
+          {passives.length || ammunitionEffect ? (
             <ul className="gear-passive-list mt-1.5">
               {passives.map((passive) => (
                 <li key={`${passive.itemId}:${passive.passiveId}`} className="gear-passive-row">
@@ -476,6 +478,27 @@ export function GearPanel({ loadout, setLoadout }: { loadout: Loadout; setLoadou
                   </div>
                 </li>
               ))}
+              {ammunitionEffect ? (
+                <li key={`ammunition:${ammunitionEffect.itemId}`} className="gear-passive-row">
+                  <GameIcon
+                    src={ammunitionEffect.icon}
+                    alt={ammunitionEffect.itemLabel}
+                    size={28}
+                    className="gear-passive-row__icon"
+                  />
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                      <span className="text-sm text-parch-50">{ammunitionEffect.label}</span>
+                      <span className={`passive-status is-${ammunitionEffect.fullStatusClass}`}>
+                        {ammunitionEffect.statusLabel}
+                      </span>
+                    </div>
+                    <ul className="mt-0.5 space-y-0.5 text-[11px] leading-snug text-parch-300">
+                      <li>{ammunitionEffect.itemLabel}</li>
+                    </ul>
+                  </div>
+                </li>
+              ) : null}
             </ul>
           ) : null}
 

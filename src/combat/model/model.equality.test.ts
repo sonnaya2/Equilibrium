@@ -220,6 +220,22 @@ describe("ResolvedCombatModel equality", () => {
     });
   });
 
+  it("carries exact player vitality through model and simulation projections", () => {
+    const model = buildResolvedCombatModel(
+      baseInput({ playerVitality: { maximumLifePoints: 9_900, currentLifePoints: 7_321 } }),
+    );
+    const simulation = buildSimulationInputBase(model, {
+      catalogue: [],
+      byId: new Map(),
+      basicByStyle: new Map(),
+      strengthCape99: false,
+      abilityRegistry: { byId: new Map(), basicByStyle: new Map() },
+    });
+    expect(model.playerVitality).toEqual({ maximumLifePoints: 9_900, currentLifePoints: 7_321 });
+    expect(simulation.playerVitality).toEqual(model.playerVitality);
+    expect(projectSerializableSimBase(model).playerVitality).toEqual(model.playerVitality);
+  });
+
   it("preserves the resolved target accuracy profile across model and simulation projections", () => {
     const targetAccuracyProfile = {
       playerAccuracyRating: 1200,

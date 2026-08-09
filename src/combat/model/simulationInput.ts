@@ -112,6 +112,7 @@ export function projectSerializableSimBase(
     playerPoison: { ...model.playerPoison },
     targetPoisonImmune: model.target.poisonImmune === true,
     cap: model.cap ?? { cap: STANDARD_HIT_CAP, bypass: false },
+    ...(model.playerVitality ? { playerVitality: { ...model.playerVitality } } : {}),
     startingAdrenaline: model.startingAdrenaline,
     ...(model.naturalInstinctUntilTick != null
       ? { naturalInstinctUntilTick: model.naturalInstinctUntilTick }

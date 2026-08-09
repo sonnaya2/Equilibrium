@@ -76,7 +76,9 @@ export function newPlayerRuntimeState(
 ): PlayerRuntimeState {
   const max = Math.max(0, opts.maximumLifePoints ?? 0);
   const cur =
-    opts.currentLifePoints != null ? Math.min(Math.max(0, opts.currentLifePoints), max) : max;
+    opts.currentLifePoints != null && Number.isFinite(opts.currentLifePoints)
+      ? Math.max(0, opts.currentLifePoints)
+      : max;
   return {
     vitality: { maximumLifePoints: max, currentLifePoints: cur },
     dead: false,

@@ -123,6 +123,14 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
       elementalWeakness: input.target?.elementalWeakness ?? "unknown",
       dragonfireImmune: input.target?.dragonfireImmune === true,
     },
+    ...(input.playerVitality
+      ? {
+          playerVitality: {
+            maximumLifePoints: input.playerVitality.maximumLifePoints,
+            currentLifePoints: input.playerVitality.currentLifePoints,
+          },
+        }
+      : {}),
     playerPoison: {
       potion: normalizeWeaponPoisonChoice(poison.potion),
       potionUntilTick:

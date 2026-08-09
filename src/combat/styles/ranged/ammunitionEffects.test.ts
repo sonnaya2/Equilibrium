@@ -5,7 +5,7 @@ describe("ranged ammunition presentation", () => {
   it("uses player-facing names for Perfect Equilibrium and modeled arrow effects", () => {
     expect(rangedEffectDisplayName("perfect_equilibrium")).toBe("Perfect Equilibrium");
     expect(rangedEffectDisplayName("puncture")).toBe("Splintering arrows · Puncture damage");
-    expect(rangedEffectDisplayName("ammunition:bik")).toBe("Bik arrows · Evolving Toxin");
+    expect(rangedEffectDisplayName("ammunition:bik")).toBe("Evolving Toxin");
     expect(rangedEffectDisplayName("ammunition:wen-icy-precision")).toBe(
       "Wen arrows · Icy Precision",
     );

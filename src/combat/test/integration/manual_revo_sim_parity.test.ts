@@ -174,6 +174,34 @@ function expectOk(label: string, s: RotationSummary) {
 }
 
 describe("Manual / Revolution new-path simulation", () => {
+  it("carries exact loadout vitality into manual and Revolution bases", () => {
+    const loadout = withLoadout({
+      style: "ranged",
+      equipmentSlots: {
+        twohand: "item:ascension-crossbow",
+        ammo: "item:onyx-bakriminel-bolts-e",
+      },
+    });
+    const stats = loadoutStats(loadout);
+    const model = toResolvedCombatModel(loadout, {}, stats);
+    const catalogue = resolveAbilityCatalogue({ strengthCape99: model.strengthCape99 });
+    const base = buildSimulationInputBase(model, catalogue);
+    const manual = toManualSimulateInput(base, {
+      rotation: rotationOf("ranged_attack"),
+    });
+    const bar = resolveAbilitySpecsFromCatalogue(catalogue, ["ranged_attack"]);
+    const revolution = toRevolutionInput(base, {
+      bar,
+      style: "ranged",
+      durationTicks: 10,
+    });
+    expect(model.playerVitality).toEqual({
+      maximumLifePoints: stats.life.temporaryMaxLife,
+      currentLifePoints: stats.life.currentLife,
+    });
+    expect(manual.playerVitality).toEqual(revolution.playerVitality);
+  });
+
   it("melee use-build manual with strength cape runs and is deterministic", () => {
     const loadout = withLoadout({
       style: "melee",

@@ -87,6 +87,7 @@ export function reviveRevolutionBase(sim: SerializableRevolutionSimBase): Revive
     conjureDurationMult: sim.conjureDurationMult,
     targetHpPercent: sim.targetHpPercent,
     targetMaximumLifePoints: sim.targetMaximumLifePoints,
+    ...(sim.playerVitality ? { playerVitality: { ...sim.playerVitality } } : {}),
     targetClassification: {
       demon: sim.modifierSources.target.demon,
       dragon: sim.modifierSources.target.dragon,

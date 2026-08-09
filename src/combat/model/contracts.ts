@@ -3,7 +3,11 @@
  * No React, no Loadout UI type, no function properties, no Maps.
  */
 import type { ActiveEquipmentEffects } from "../shared/equipment";
-import type { AdrenalineRules, ProcRules } from "../engine/simulation/contracts";
+import type {
+  AdrenalineRules,
+  PlayerVitalityInput,
+  ProcRules,
+} from "../engine/simulation/contracts";
 import type { HitCapRule } from "../core/hitCaps";
 import type { CombatContext, CombatStyle } from "../types";
 import type {
@@ -89,6 +93,7 @@ export interface ResolvedCombatModel {
   readonly tumekensPieces: number;
 
   readonly target: ResolvedTargetScenario;
+  readonly playerVitality?: PlayerVitalityInput;
   readonly playerPoison: PlayerPoisonProfile;
   /** Serializable league freeze (arrays, not Sets). */
   readonly league: SerializableLeagueRules;
@@ -136,6 +141,7 @@ export interface HostCombatResolveInput {
   readonly context?: CombatContext;
   readonly targetHpPercent?: number;
   readonly targetMaximumLifePoints?: number;
+  readonly playerVitality?: PlayerVitalityInput;
   readonly cap?: HitCapRule;
   readonly startingAdrenaline?: number;
   readonly naturalInstinctUntilTick?: number;

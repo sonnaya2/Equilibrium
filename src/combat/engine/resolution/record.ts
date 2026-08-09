@@ -116,7 +116,7 @@ export function recordResolved(
       event.convertedChannel ||
       event.bleedId != null)
   ) {
-    applyLandedHitEffects(rt, event, damage);
+    applyLandedHitEffects(rt, event, damage, composed);
   }
 
   releaseScoreOnlyHitDetails(rt, event);

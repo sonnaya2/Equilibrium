@@ -4,6 +4,10 @@ export const BOLT_DEATHMARK_DURATION_TICKS = secondsToTicks(15);
 export const BOLT_DEATHMARK_BASIC_ADRENALINE_BONUS = 1;
 export const BOLT_DEATHMARK_ACTIVATION_ADRENALINE = 10;
 
+export function enchantedBoltStatefulProcStream(castSeq: number, hitIndex: number): string {
+  return `ammunition:stateful:${castSeq}:${hitIndex}`;
+}
+
 export interface BoltDeathmarkState {
   readonly expiresAtTick: number;
 }

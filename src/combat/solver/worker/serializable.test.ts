@@ -148,6 +148,15 @@ describe("solver worker serializable boundary", () => {
     );
   });
 
+  it("preserves exact player vitality through worker revival", () => {
+    const sim = {
+      ...sampleSimBase(),
+      playerVitality: { maximumLifePoints: 9_900, currentLifePoints: 7_321 },
+    } satisfies SerializableRevolutionSimBase;
+    const revived = reviveRevolutionBase(structuredClone(sim));
+    expect(revived.playerVitality).toEqual(sim.playerVitality);
+  });
+
   it("preserves Critual conversion metadata through worker revival", () => {
     const sim = {
       ...sampleSimBase(),

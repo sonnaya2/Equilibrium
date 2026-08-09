@@ -4,6 +4,8 @@ import {
   resolveQuiverFromEquipment,
   weaponAmmunitionCapabilityFromEquipment,
 } from "./ammunitionEquipment";
+import { equipmentById } from "../../data";
+import { resolveRangedAmmunitionHitEffects } from "./ammunitionPayloads";
 
 describe("canonical equipment ammunition adapter", () => {
   it("resolves a compact projectile profile from EquipmentRecord fields", () => {
@@ -54,6 +56,39 @@ describe("canonical equipment ammunition adapter", () => {
     expect(bakriminel?.statTier).toBe(95);
   });
 
+  it("resolves ordinary and bakriminel Emerald bolts to one payload identity", () => {
+    const ordinary = resolveAmmunitionFromEquipment(equipmentById("item:emerald-bolts-e"));
+    const bakriminel = resolveAmmunitionFromEquipment(
+      equipmentById("item:emerald-bakriminel-bolts-e"),
+    );
+    expect(ordinary).toMatchObject({ mechanicId: "emerald", statTier: 60 });
+    expect(bakriminel).toMatchObject({ mechanicId: "emerald", statTier: 95 });
+    const effects = (projectile: NonNullable<typeof ordinary>) =>
+      resolveRangedAmmunitionHitEffects({
+        ammunition: {
+          projectile,
+          quiver: null,
+          weaponCapability: { mode: "required", acceptedFamily: "bolts" },
+          effectiveStatTier: projectile.statTier,
+        },
+        style: "ranged",
+        provenance: { kind: "player_direct" },
+        attackOrigin: "player",
+        attackKind: "ability",
+      });
+    expect(effects(ordinary!)).toEqual(effects(bakriminel!));
+  });
+
+  it("resolves ordinary and bakriminel Dragonstone bolts to one payload identity", () => {
+    const ordinary = resolveAmmunitionFromEquipment(equipmentById("item:dragonstone-bolts-e"));
+    const bakriminel = resolveAmmunitionFromEquipment(
+      equipmentById("item:dragonstone-bakriminel-bolts-e"),
+    );
+    expect(ordinary).toMatchObject({ mechanicId: "dragonstone", statTier: 70 });
+    expect(bakriminel).toMatchObject({ mechanicId: "dragonstone", statTier: 95 });
+    expect(ordinary?.mechanicId).toBe(bakriminel?.mechanicId);
+  });
+
   it("keeps quiver identity separate from projectile selection", () => {
     const profile = resolveQuiverFromEquipment({
       id: "item:pernix-quiver",
@@ -75,10 +110,90 @@ describe("canonical equipment ammunition adapter", () => {
   it("reads the weapon capability from canonical data without name checks", () => {
     expect(
       weaponAmmunitionCapabilityFromEquipment({
+        id: "item:test-capability-record",
         ammunitionCapability: { mode: "required", acceptedFamily: "bolts" },
       }),
     ).toEqual({ mode: "required", acceptedFamily: "bolts" });
-    expect(weaponAmmunitionCapabilityFromEquipment({})).toBeNull();
+    expect(
+      weaponAmmunitionCapabilityFromEquipment({ id: "item:test-missing-capability" }),
+    ).toBeNull();
+  });
+
+  it("classifies shipped standard crossbows as required-bolt weapons", () => {
+    for (const id of [
+      "item:armadyl-crossbow",
+      "item:chaotic-crossbow",
+      "item:royal-crossbow",
+      "item:wyvern-crossbow",
+      "item:ascension-crossbow",
+      "item:eldritch-crossbow",
+      "item:blightbound-crossbow",
+      "item:ruinous-crossbow",
+      "item:primal-crossbow-mk-5",
+    ]) {
+      const record = equipmentById(id);
+      expect(record?.weaponClass, id).toBe("crossbow");
+      expect(weaponAmmunitionCapabilityFromEquipment(record), id).toEqual({
+        mode: "required",
+        acceptedFamily: "bolts",
+      });
+    }
+  });
+
+  it("treats known chargebows as optional arrows when capability is unset", () => {
+    expect(
+      weaponAmmunitionCapabilityFromEquipment({
+        id: "item:zaryte-bow",
+        weaponClass: "bow",
+      }),
+    ).toEqual({ mode: "optional", acceptedFamily: "arrows" });
+    expect(
+      weaponAmmunitionCapabilityFromEquipment({
+        id: "item:seren-godbow",
+        weaponClass: "bow",
+      }),
+    ).toEqual({ mode: "optional", acceptedFamily: "arrows" });
+    expect(
+      weaponAmmunitionCapabilityFromEquipment({
+        id: "item:hellfire-bow",
+        weaponClass: "bow",
+      }),
+    ).toEqual({ mode: "optional", acceptedFamily: "arrows" });
+    // Hexhunter and strykebow require arrows; not chargebows.
+    expect(
+      weaponAmmunitionCapabilityFromEquipment({
+        id: "item:hexhunter-bow",
+        weaponClass: "bow",
+      }),
+    ).toEqual({ mode: "required", acceptedFamily: "arrows" });
+    expect(
+      weaponAmmunitionCapabilityFromEquipment({
+        id: "item:strykebow",
+        weaponClass: "bow",
+      }),
+    ).toEqual({ mode: "required", acceptedFamily: "arrows" });
+    // Explicit record capability still wins over the chargebow list.
+    expect(
+      weaponAmmunitionCapabilityFromEquipment({
+        id: "item:zaryte-bow",
+        weaponClass: "bow",
+        ammunitionCapability: { mode: "optional", acceptedFamily: "arrows" },
+      }),
+    ).toEqual({ mode: "optional", acceptedFamily: "arrows" });
+    expect(
+      weaponAmmunitionCapabilityFromEquipment({
+        id: "item:zaryte-bow",
+        weaponClass: "bow",
+        ammunitionCapability: { mode: "required", acceptedFamily: "arrows" },
+      }),
+    ).toEqual({ mode: "required", acceptedFamily: "arrows" });
+    // Ordinary bow without capability stays required arrows.
+    expect(
+      weaponAmmunitionCapabilityFromEquipment({
+        id: "item:noxious-longbow",
+        weaponClass: "bow",
+      }),
+    ).toEqual({ mode: "required", acceptedFamily: "arrows" });
   });
 
   it("rejects an ammunition record with no stat tier", () => {

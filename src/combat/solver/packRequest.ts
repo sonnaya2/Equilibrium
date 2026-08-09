@@ -65,6 +65,7 @@ export interface SolverPackSnapshot {
   targetHpPercent?: number;
   targetMaximumLifePoints?: number;
   playerPoison?: PlayerPoisonProfile;
+  playerVitality?: SerializableRevolutionSimBase["playerVitality"];
   targetPoisonImmune?: boolean;
   cap?: HitCapRule;
   startingAdrenaline?: number;
@@ -192,6 +193,7 @@ export function packSimBase(snapshot: SolverPackSnapshot): SerializableRevolutio
     context: snapshot.context,
     targetHpPercent: snapshot.targetHpPercent,
     targetMaximumLifePoints: snapshot.targetMaximumLifePoints,
+    ...(snapshot.playerVitality ? { playerVitality: { ...snapshot.playerVitality } } : {}),
     playerPoison: snapshot.playerPoison ? { ...snapshot.playerPoison } : undefined,
     targetPoisonImmune: snapshot.targetPoisonImmune === true,
     cap: snapshot.cap,

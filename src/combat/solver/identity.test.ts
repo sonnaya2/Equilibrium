@@ -301,6 +301,15 @@ describe("fingerprint changes one field at a time", () => {
     );
   });
 
+  it("includes exact player vitality in the identity", async () => {
+    await expectDiff("player vitality", (r) =>
+      withSim(r, (s) => ({
+        ...s,
+        playerVitality: { maximumLifePoints: 9_900, currentLifePoints: 7_321 },
+      })),
+    );
+  });
+
   it("Aftershock", async () => {
     await expectDiff("aftershock", (r) =>
       withSim(r, (s) => ({ ...s, procs: { ...(s.procs ?? {}), aftershockRank: 4 } })),

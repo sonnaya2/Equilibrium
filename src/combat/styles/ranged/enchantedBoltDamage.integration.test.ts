@@ -3,6 +3,33 @@ import { rotationOf } from "../../engine/simulation/contracts";
 import { simulate } from "../../engine/simulation/simulate";
 import { rangedInput } from "../../test/fixtures/inputs";
 import { testRangedAmmunition } from "../../testing/rangedAmmunition";
+import { resolveAmmunitionProfile } from "./ammunitionProfile";
+import type { RangedAmmunitionMechanicId } from "../../data/ammunition";
+
+function boltAmmunition(
+  mechanicId: Extract<
+    RangedAmmunitionMechanicId,
+    "jade" | "topaz" | "sapphire" | "emerald" | "ruby" | "diamond" | "dragonstone" | "onyx"
+  >,
+  family: "bolts" = "bolts",
+  statTier = family === "bolts" ? 95 : 70,
+) {
+  const projectile = resolveAmmunitionProfile({
+    id: `item:test-${mechanicId}-${family}`,
+    label: `Test ${mechanicId} ${family}`,
+    family,
+    statTier,
+    mechanicId,
+    support: { status: "modeled", label: "Test fixture" },
+  });
+  if (!projectile) throw new Error(`missing ${mechanicId} test bolt`);
+  return {
+    projectile,
+    quiver: null,
+    weaponCapability: { mode: "optional" as const, acceptedFamily: family },
+    effectiveStatTier: statTier,
+  };
+}
 
 function directHits(result: ReturnType<typeof simulate>) {
   return result.events.filter(
@@ -102,5 +129,118 @@ describe("damage-only enchanted bolts", () => {
     expect(corruption.events.map((event) => event.damage)).toEqual(
       corruptionReference.events.map((event) => event.damage),
     );
+  });
+
+  it.each([0.35, 0.8])(
+    "uses Diamond perfect accuracy while leaving damage increase partial at DP %s",
+    (accuracy) => {
+      const reference = simulate({
+        ...rangedInput,
+        accuracy,
+        rotation: rotationOf("ranged_attack"),
+      });
+      const diamond = simulate({
+        ...rangedInput,
+        accuracy,
+        ammunition: boltAmmunition("diamond"),
+        rotation: rotationOf("ranged_attack"),
+      });
+      expect(
+        diamond.events.find((event) => event.originKind === "direct")!.damage.expected,
+      ).toBeGreaterThan(
+        reference.events.find((event) => event.originKind === "direct")!.damage.expected,
+      );
+      expect(diamond.rng?.lanes ?? 1).toBe(1);
+    },
+  );
+
+  it("schedules Emerald as one poison hit, with immunity and poison modifiers", () => {
+    const emerald = simulate({
+      ...rangedInput,
+      ammunition: boltAmmunition("emerald"),
+      rotation: rotationOf("ranged_attack"),
+    });
+    const poison = emerald.events.find((event) => event.abilityId === "ammunition:emerald");
+    expect(poison).toMatchObject({
+      family: "proc",
+      originKind: "poison",
+      procEligible: false,
+      recursionAllowed: false,
+      provenance: { kind: "equipment_proc", detail: "emerald" },
+    });
+    expect(poison?.expectedActivations).toBe(0.55);
+    expect(poison?.damage.expected).toBeGreaterThan(0);
+
+    const immune = simulate({
+      ...rangedInput,
+      ammunition: boltAmmunition("emerald"),
+      targetPoisonImmune: true,
+      rotation: rotationOf("ranged_attack"),
+    });
+    expect(immune.events.some((event) => event.abilityId === "ammunition:emerald")).toBe(false);
+
+    const cinderbanes = simulate({
+      ...rangedInput,
+      ammunition: boltAmmunition("emerald"),
+      playerPoison: {
+        potion: "none",
+        potionUntilTick: 0,
+        kwuarmPotency: 0,
+        cinderbane: true,
+        blowpipe: false,
+        laniakea: false,
+      },
+      rotation: rotationOf("ranged_attack"),
+    });
+    expect(cinderbanes.totalExpected).toBeGreaterThan(emerald.totalExpected);
+  });
+
+  it("keeps Jade, Topaz, and Sapphire control effects explicit", () => {
+    for (const mechanicId of ["jade", "topaz", "sapphire"] as const) {
+      const withBolt = simulate({
+        ...rangedInput,
+        ammunition: boltAmmunition(mechanicId),
+        rotation: rotationOf("ranged_attack"),
+      });
+      const reference = simulate({ ...rangedInput, rotation: rotationOf("ranged_attack") });
+      expect(withBolt.totalExpected).toBe(reference.totalExpected);
+      expect(withBolt.events.some((event) => event.abilityId.startsWith("ammunition:"))).toBe(
+        false,
+      );
+    }
+  });
+
+  it("routes ordinary and bakriminel bolts through the same Dragonstone payload", () => {
+    const ordinary = simulate({
+      ...rangedInput,
+      ammunition: boltAmmunition("dragonstone", "bolts", 70),
+      rotation: rotationOf("ranged_attack"),
+    });
+    const bakriminel = simulate({
+      ...rangedInput,
+      ammunition: boltAmmunition("dragonstone", "bolts", 95),
+      rotation: rotationOf("ranged_attack"),
+    });
+    const ordinaryProc = ordinary.events.find(
+      (event) => event.abilityId === "ammunition:dragonstone",
+    );
+    const bakriminelProc = bakriminel.events.find(
+      (event) => event.abilityId === "ammunition:dragonstone",
+    );
+    expect(ordinaryProc?.damage.expected).toBe(bakriminelProc?.damage.expected);
+    expect(ordinaryProc).toMatchObject({
+      family: "proc",
+      derivedFrom: expect.any(Number),
+      provenance: { kind: "equipment_proc", detail: "dragonstone" },
+      procEligible: false,
+      recursionAllowed: false,
+    });
+    const immune = simulate({
+      ...rangedInput,
+      ammunition: boltAmmunition("dragonstone"),
+      targetClassification: { dragonfireImmune: true },
+      rotation: rotationOf("ranged_attack"),
+    });
+    expect(immune.events.some((event) => event.abilityId === "ammunition:dragonstone")).toBe(false);
   });
 });

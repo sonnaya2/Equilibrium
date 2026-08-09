@@ -1,5 +1,9 @@
+import { mulFloor } from "../../core/rounding";
 import type { AmmunitionSupport, RangedAmmunitionMechanicId } from "../../data/ammunition";
 import type { DamageProvenance } from "../../shared/damageProvenance";
+import { kwuarmPoisonMultiplier, type PlayerPoisonProfile } from "../../poison/mechanics";
+import type { CombatContext, CombatModifier, SourceReference } from "../../types";
+import type { ExactDamageDistribution } from "../../pipeline/calculateHit";
 import {
   isAmmunitionHitEligible,
   type AmmunitionAttackOrigin,
@@ -35,8 +39,8 @@ export const EMERALD_POISON_HIT_MAX_FRACTION = 0.04;
 
 export const DIAMOND_SUPPORT: AmmunitionSupport = {
   status: "partially-modeled",
-  label: "Research gate",
-  note: "Perfect accuracy is sourced; the modern damage-band ordering is unresolved.",
+  label: "Perfect accuracy modeled",
+  note: "The current damage band distribution and cap ordering for the up-to-15% increase remain unresolved.",
 };
 
 export const UNSUPPORTED_DEFENSIVE_BOLT_SUPPORT: Readonly<
@@ -98,6 +102,8 @@ export interface ResolvedRangedAmmunitionHitEffects {
   readonly sourceHitMultiplier: number;
   readonly damagePotentialDelta: number;
   readonly maximumHitBandFraction: number;
+  readonly abilityDamageFraction: number;
+  readonly accuracyOverride: number | null;
 }
 
 export interface ResolveRangedAmmunitionHitEffectsInput {
@@ -117,9 +123,9 @@ export interface ResolveRangedAmmunitionHitEffectsInput {
 }
 
 export interface DiamondResearchGate {
-  kind: "research-gate";
+  kind: "partial";
   perfectAccuracy: true;
-  unresolvedDamageOrdering: true;
+  damageIncreaseModeled: false;
   support: AmmunitionSupport;
 }
 
@@ -141,9 +147,9 @@ export interface EmeraldPoisonHit {
 }
 
 const SOURCE_HIT_SUPPORT: AmmunitionSupport = {
-  status: "partially-modeled",
-  label: "Source-hit payload",
-  note: "Descriptor awaits the shared ranged damage pipeline integration.",
+  status: "modeled",
+  label: "Damage pipeline",
+  note: "The shared ranged hit pipeline applies the sourced damage and accuracy stages.",
 };
 
 function targetHealthFractionOf(value: number): number {
@@ -287,11 +293,15 @@ export function resolveRangedAmmunitionHitEffects(
       sourceHitMultiplier: 1,
       damagePotentialDelta: 0,
       maximumHitBandFraction: 0,
+      abilityDamageFraction: 0,
+      accuracyOverride: null,
     };
   }
 
   let sourceHit: RangedSourceHitModifier | null = null;
   let accuracy: RangedAccuracyModifier | null = null;
+  let abilityDamageFraction = 0;
+  let accuracyOverride: number | null = null;
   if (mechanicId === "ful") {
     sourceHit = fulSourceHitModifier(input.attackKind);
     accuracy = fulAccuracyModifier(input.attackKind);
@@ -321,16 +331,31 @@ export function resolveRangedAmmunitionHitEffects(
     sourceHit = opalSourceHitModifier();
   } else if (input.enchantedBoltProcActive && mechanicId === "pearl") {
     sourceHit = pearlSourceHitModifier(input.targetClassification?.elementalWeakness ?? "unknown");
+  } else if (input.enchantedBoltProcActive && mechanicId === "ruby") {
+    if (input.targetHealthFraction != null) {
+      abilityDamageFraction = rubyBloodForfeitPayload(
+        input.targetHealthFraction,
+      ).additiveAbilityDamageFraction;
+    }
+  } else if (input.enchantedBoltProcActive && mechanicId === "diamond") {
+    const diamond = resolveDiamondSourceHit();
+    accuracyOverride = diamond.perfectAccuracy ? 1 : null;
+  } else if (input.enchantedBoltProcActive && mechanicId === "onyx") {
+    sourceHit = onyxSourceHitModifier();
   }
 
   const pernix = input.ammunition?.quiver?.passiveIds.includes("pernix-quiver-max-hit-band")
     ? pernixMaximumHitBandPayload(input.targetHealthFraction)
     : null;
+  const diamondMaximumHitBandFraction = 0;
   return {
     mechanicId,
     sourceHitMultiplier: sourceHit?.multiplier ?? 1,
     damagePotentialDelta: accuracy?.additiveHitChanceFraction ?? 0,
-    maximumHitBandFraction: pernix?.applies ? pernix.fractionOfAbilityMaximum : 0,
+    maximumHitBandFraction:
+      (pernix?.applies ? pernix.fractionOfAbilityMaximum : 0) + diamondMaximumHitBandFraction,
+    abilityDamageFraction,
+    accuracyOverride,
   };
 }
 
@@ -387,9 +412,9 @@ export function rubyRecoilDamage(currentPlayerLifePoints: number): number {
 
 export function resolveDiamondSourceHit(): DiamondResearchGate {
   return {
-    kind: "research-gate",
+    kind: "partial",
     perfectAccuracy: true,
-    unresolvedDamageOrdering: true,
+    damageIncreaseModeled: false,
     support: DIAMOND_SUPPORT,
   };
 }
@@ -410,6 +435,39 @@ export function onyxHealingAmount(originalDamagePotential: number): number {
   return Math.min(ONYX_HEALING_CAP, Math.floor(originalDamagePotential * ONYX_HEALING_FRACTION));
 }
 
+const EMERALD_POISON_SOURCE: SourceReference = {
+  source: "runescape-wiki",
+  url: "https://runescape.wiki/w/Enchant_Crossbow_Bolt_%28Emerald%29",
+  title: "Enchant Crossbow Bolt (Emerald)",
+  verifiedAt: "2026-08-09",
+};
+
+export function emeraldExternalPoisonMultiplier(profile: PlayerPoisonProfile | undefined): number {
+  if (!profile) return 1;
+  return (
+    (profile.cinderbane ? 1.25 : 1) *
+    kwuarmPoisonMultiplier(profile.kwuarmPotency) *
+    (profile.blowpipe ? 0.5 : 1) *
+    (profile.laniakea ? 1.05 : 1)
+  );
+}
+
+export function emeraldExternalPoisonModifier(
+  profile: PlayerPoisonProfile | undefined,
+): CombatModifier | null {
+  const multiplier = emeraldExternalPoisonMultiplier(profile);
+  if (multiplier === 1) return null;
+  return {
+    id: "ammo:emerald-external-poison",
+    stage: "target",
+    priority: -20,
+    appliesToPlayerPoison: true,
+    applies: (context: CombatContext) => context.dotKind === "poison",
+    apply: (state) => ({ ...state, damage: mulFloor(state.damage, multiplier) }),
+    source: EMERALD_POISON_SOURCE,
+  };
+}
+
 export function dragonstoneSeparateHitPayload(): DragonstoneSeparateHitPayload {
   return {
     kind: "separate-hit",
@@ -426,6 +484,30 @@ export function dragonstoneSeparateHitDamage(triggeringHitDamage: number): numbe
     throw new Error("triggering hit damage must be finite and non-negative");
   }
   return Math.floor(triggeringHitDamage * DRAGONSTONE_SEPARATE_HIT_FRACTION);
+}
+
+export function dragonstoneSeparateHitExpected(
+  sourceDistribution: readonly ExactDamageDistribution[],
+  activationChance: number,
+  cap = 30_000,
+): number {
+  if (!Number.isFinite(activationChance) || activationChance < 0 || activationChance > 1) {
+    throw new Error("Dragonstone activation chance must be between 0 and 1");
+  }
+  if (!Number.isFinite(cap) || cap < 0)
+    throw new Error("Dragonstone cap must be finite and non-negative");
+  const weight = sourceDistribution.reduce((total, outcome) => total + outcome.weight, 0);
+  if (!Number.isFinite(weight) || Math.abs(weight - 1) > 1e-9) {
+    throw new Error("Dragonstone source distribution must have unit mass");
+  }
+  return (
+    activationChance *
+    sourceDistribution.reduce(
+      (total, outcome) =>
+        total + Math.min(cap, dragonstoneSeparateHitDamage(outcome.damage)) * outcome.weight,
+      0,
+    )
+  );
 }
 
 export function dragonstoneCanHitTarget(args: {
@@ -445,9 +527,9 @@ export function emeraldPoisonHit(weaponDamage: number): EmeraldPoisonHit {
     max: Math.floor(weaponDamage * EMERALD_POISON_HIT_MAX_FRACTION),
     persistentWeaponPoisonScheduler: false,
     support: {
-      status: "partially-modeled",
-      label: "Poison hit payload only",
-      note: "The single poison-type hit is not connected to persistent weapon-poison scheduling.",
+      status: "modeled",
+      label: "Poison hit",
+      note: "The single poison-type hit uses supported player-poison modifiers and immunity.",
     },
   };
 }

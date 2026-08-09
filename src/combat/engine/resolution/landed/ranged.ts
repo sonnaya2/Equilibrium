@@ -1,4 +1,6 @@
 import type { AbilitySpec } from "../../../pipeline/calculateAbility";
+import { runPipeline } from "../../../pipeline/modifierPipeline";
+import type { CombatModifier } from "../../../types";
 import {
   extendSearingWinds,
   onRangedHit,
@@ -15,7 +17,7 @@ import {
 import type { ResolvedDamage } from "../types";
 import type { ScheduledEvent } from "../../runtime/events";
 import { scheduleEvent, type SimulationRuntime } from "../../runtime/runtime";
-import { gainAdrenaline, patchRanged, patchTarget } from "../../runtime/state";
+import { gainAdrenaline, patchPlayer, patchRanged, patchTarget } from "../../runtime/state";
 import { dracolichAdrenalinePerRapidFireHit } from "../../../styles/ranged/dracolich";
 import { attachedResolutionComponent, resolveLeagueAttachedRawHost } from "../../../league/damage";
 import { targetAndPostHitModifiers } from "../modifiers";
@@ -32,11 +34,28 @@ import { enchantedBoltActivationChance } from "../../../styles/ranged/enchantedB
 import {
   activateBoltDeathmark,
   BOLT_DEATHMARK_ACTIVATION_ADRENALINE,
+  enchantedBoltStatefulProcStream,
 } from "../../../styles/ranged/enchantedBoltRuntime";
-import { resolveRangedAmmunitionHitEffects } from "../../../styles/ranged/ammunitionPayloads";
+import {
+  dragonstoneCanHitTarget,
+  dragonstoneSeparateHitExpected,
+  emeraldExternalPoisonModifier,
+  emeraldPoisonHit,
+  onyxHealingAmount,
+  rubyRecoilDamage,
+  resolveRangedAmmunitionHitEffects,
+} from "../../../styles/ranged/ammunitionPayloads";
 import { ammunitionAppliedEffectId } from "../../../styles/ranged/ammunitionEffects";
 import { recordWenBasicHit, wenBasicHitEligible } from "../../../styles/ranged/wen";
 import { recordAppliedEventEffect } from "../accounting";
+import { accountAppliedEffect } from "../../analysis";
+import { keepsAnalysisLedgers } from "../../simulation/contracts";
+import {
+  activeEvolvingToxinStacks,
+  evolvingToxinPoisonModifier,
+  isTargetPoisonImmune,
+} from "../../../poison/mechanics";
+import type { EventResolution } from "../types";
 
 function mayActivateBoltDeathmark(
   rt: SimulationRuntime,
@@ -56,10 +75,7 @@ function mayActivateBoltDeathmark(
   ) {
     return false;
   }
-  const chance = enchantedBoltActivationChance(
-    mechanicId,
-    rt.input.enchantedBoltChanceModifiers,
-  );
+  const chance = enchantedBoltActivationChance(mechanicId, rt.input.enchantedBoltChanceModifiers);
   return chance != null && rt.stochastic.bernoulli(`ammunition:deathmark:${event.seq}`, chance);
 }
 
@@ -169,12 +185,193 @@ export function schedulePunctureAfterFinish(rt: SimulationRuntime, finishTick: n
   });
 }
 
+function statefulBoltProcActive(
+  rt: SimulationRuntime,
+  event: ScheduledEvent<SimulationRuntime>,
+  mechanicId: string | undefined,
+  attackOrigin: AmmunitionAttackOrigin,
+): boolean {
+  if (attackOrigin !== "player" || (mechanicId !== "ruby" && mechanicId !== "onyx")) return false;
+  if (
+    !isAmmunitionHitEligible({
+      style: "ranged",
+      provenance: event.provenance,
+      attackOrigin,
+    })
+  ) {
+    return false;
+  }
+  if (mechanicId === "ruby" && (rt.state.target.vitality?.maximumLifePoints ?? 0) <= 0) {
+    return false;
+  }
+  if (mechanicId === "onyx" && (rt.state.player?.vitality.maximumLifePoints ?? 0) <= 0) {
+    return false;
+  }
+  const stream = enchantedBoltStatefulProcStream(event.sourceCast, event.hitIndex);
+  const active = rt.boltProcOutcomes.get(stream);
+  if (active !== undefined) rt.boltProcOutcomes.delete(stream);
+  return active === true;
+}
+
+function accountExpectedBoltActivation(
+  rt: SimulationRuntime,
+  effectId: string | null,
+  chance: number | null,
+): void {
+  if (effectId && chance != null && keepsAnalysisLedgers(rt.detailLevel)) {
+    accountAppliedEffect(rt.analysis, effectId, chance);
+  }
+}
+
+function scheduleDragonstoneHit(
+  rt: SimulationRuntime,
+  event: ScheduledEvent<SimulationRuntime>,
+  damage: ResolvedDamage,
+  resolution: EventResolution | undefined,
+  attackOrigin: AmmunitionAttackOrigin,
+): void {
+  if (rt.input.ammunition?.projectile?.mechanicId !== "dragonstone") return;
+  if (damage.max <= 0) return;
+  if (
+    !isAmmunitionHitEligible({
+      style: "ranged",
+      provenance: event.provenance,
+      attackOrigin,
+    })
+  ) {
+    return;
+  }
+  if (
+    !dragonstoneCanHitTarget({
+      targetIsDragon: rt.input.targetClassification?.dragon === true,
+      targetHasDragonfireImmunity: rt.input.targetClassification?.dragonfireImmune === true,
+    })
+  ) {
+    return;
+  }
+  const chance = enchantedBoltActivationChance(
+    "dragonstone",
+    rt.input.enchantedBoltChanceModifiers,
+  );
+  if (chance == null || chance <= 0) return;
+  const sourceDistribution = resolution?.ammunitionSourceDistribution;
+  if (!sourceDistribution) return;
+  const amount = dragonstoneSeparateHitExpected(
+    sourceDistribution,
+    chance,
+    rt.input.cap?.cap ?? 30_000,
+  );
+  const provenance = { kind: "equipment_proc" as const, detail: "dragonstone" };
+  scheduleEvent(rt, {
+    tick: event.tick,
+    family: "proc",
+    abilityId: "ammunition:dragonstone",
+    sourceCast: event.sourceCast,
+    hitIndex: 0,
+    attached: false,
+    procEligible: false,
+    recursionAllowed: false,
+    derivedFrom: event.seq,
+    expectedOccurrences: chance,
+    expectedTriggerRolls: 1,
+    expectedActivations: chance,
+    expectedSeparateHits: chance,
+    occurrenceModel: { kind: "bernoulli", probability: chance },
+    originKind: "proc",
+    provenance,
+    combatStyle: "ranged",
+    resourceEligible: false,
+    resolve: () => ({
+      damage: { min: 0, max: 0, expected: amount, critExpected: 0, capLoss: 0 },
+    }),
+  });
+}
+
+function scheduleEmeraldPoisonHit(
+  rt: SimulationRuntime,
+  event: ScheduledEvent<SimulationRuntime>,
+  damage: ResolvedDamage,
+  attackOrigin: AmmunitionAttackOrigin,
+): void {
+  if (rt.input.ammunition?.projectile?.mechanicId !== "emerald") return;
+  if (damage.max <= 0) return;
+  if (
+    !isAmmunitionHitEligible({
+      style: "ranged",
+      provenance: event.provenance,
+      attackOrigin,
+    }) ||
+    isTargetPoisonImmune(
+      rt.input.targetPoisonImmune,
+      rt.state.target.weaponPoison.immunityDisabledUntilTick,
+      event.tick,
+    )
+  ) {
+    return;
+  }
+  const chance = enchantedBoltActivationChance("emerald", rt.input.enchantedBoltChanceModifiers);
+  if (chance == null || chance <= 0) return;
+  const payload = emeraldPoisonHit(rt.input.base);
+  const toxin = rt.state.target.evolvingToxin;
+  const modifiers: CombatModifier[] = [
+    emeraldExternalPoisonModifier(rt.input.playerPoison),
+    evolvingToxinPoisonModifier(
+      activeEvolvingToxinStacks(toxin.stacks, toxin.expiresAtTick, event.tick),
+    ),
+    ...(rt.input.playerPoisonModifiers ?? []).filter(
+      (modifier) => modifier.appliesToPlayerPoison === true,
+    ),
+  ].filter((modifier): modifier is CombatModifier => modifier != null);
+  const provenance = { kind: "equipment_proc" as const, detail: "emerald" };
+  const context = {
+    ...(rt.input.context ?? { style: "ranged" as const }),
+    style: "ranged" as const,
+    dotKind: "poison" as const,
+    damageSource: "proc" as const,
+    provenance,
+  };
+  const apply = (value: number) => runPipeline({ damage: value }, modifiers, context).damage;
+  const expected = apply((payload.min + payload.max) / 2);
+  scheduleEvent(rt, {
+    tick: event.tick,
+    family: "proc",
+    abilityId: "ammunition:emerald",
+    sourceCast: event.sourceCast,
+    hitIndex: 0,
+    attached: false,
+    procEligible: false,
+    recursionAllowed: false,
+    derivedFrom: event.seq,
+    expectedOccurrences: chance,
+    expectedTriggerRolls: 1,
+    expectedActivations: chance,
+    expectedSeparateHits: chance,
+    occurrenceModel: { kind: "bernoulli", probability: chance },
+    originKind: "poison",
+    dotKind: "poison",
+    provenance,
+    combatStyle: "ranged",
+    resourceEligible: false,
+    resolve: () => ({
+      damage: {
+        min: 0,
+        max: 0,
+        expected: expected * chance,
+        critExpected: 0,
+        capLoss: 0,
+      },
+      hitDetail: undefined,
+    }),
+  });
+}
+
 export function applyRangedAmmunitionLandedState(
   rt: SimulationRuntime,
   event: ScheduledEvent<SimulationRuntime>,
   damage: ResolvedDamage,
   attackOrigin: AmmunitionAttackOrigin,
   ability?: AbilitySpec,
+  resolution?: EventResolution,
 ): void {
   const mechanicId = rt.input.ammunition?.projectile?.mechanicId;
   const eligible = isAmmunitionHitEligible({
@@ -197,6 +394,11 @@ export function applyRangedAmmunitionLandedState(
     targetHealthFraction,
   });
   const sourceEffectId = ammunitionAppliedEffectId(mechanicId);
+  const statefulActive = statefulBoltProcActive(rt, event, mechanicId, attackOrigin);
+  const chance =
+    eligible && mechanicId
+      ? enchantedBoltActivationChance(mechanicId, rt.input.enchantedBoltChanceModifiers)
+      : null;
   if (
     eligible &&
     sourceEffectId &&
@@ -204,6 +406,52 @@ export function applyRangedAmmunitionLandedState(
   ) {
     recordAppliedEventEffect(rt, event, { id: sourceEffectId });
   }
+  if (eligible && sourceEffectId) {
+    if ((mechanicId === "ruby" || mechanicId === "onyx") && statefulActive) {
+      recordAppliedEventEffect(rt, event, { id: sourceEffectId });
+    } else if (
+      mechanicId === "opal" ||
+      mechanicId === "pearl" ||
+      mechanicId === "diamond" ||
+      (mechanicId === "onyx" && (rt.state.player?.vitality.maximumLifePoints ?? 0) <= 0)
+    ) {
+      accountExpectedBoltActivation(rt, sourceEffectId, chance);
+    }
+  }
+
+  if (statefulActive && mechanicId === "ruby" && rt.state.player) {
+    const current = rt.state.player.vitality.currentLifePoints;
+    const recoil = rubyRecoilDamage(current);
+    rt.state = patchPlayer(rt.state, {
+      vitality: {
+        ...rt.state.player.vitality,
+        currentLifePoints: Math.max(0, current - recoil),
+      },
+    });
+  }
+  if (statefulActive && mechanicId === "onyx" && rt.state.player) {
+    const sourceExpected =
+      resolution?.ammunitionOriginalDamagePotential ?? rt.hitDetails.get(event.seq)?.expected ?? 0;
+    const healing = onyxHealingAmount(sourceExpected);
+    if (healing > 0) {
+      rt.totalHealed += healing;
+      if (event.sourceCast >= 0) {
+        const cast = rt.recordBySeq.get(event.sourceCast);
+        if (cast) cast.expectedHeal = (cast.expectedHeal ?? 0) + healing;
+      }
+      const current = rt.state.player.vitality.currentLifePoints;
+      const maximum = rt.state.player.vitality.maximumLifePoints;
+      rt.state = patchPlayer(rt.state, {
+        vitality: {
+          ...rt.state.player.vitality,
+          currentLifePoints: current >= maximum ? current : Math.min(maximum, current + healing),
+        },
+      });
+    }
+  }
+
+  scheduleEmeraldPoisonHit(rt, event, damage, attackOrigin);
+  scheduleDragonstoneHit(rt, event, damage, resolution, attackOrigin);
 
   if (mayActivateBoltDeathmark(rt, event, damage, attackOrigin)) {
     const boltDeathmark = activateBoltDeathmark(event.tick);
@@ -248,17 +496,13 @@ export function applyRangedAmmunitionLandedState(
         recordAppliedEventEffect(rt, event, {
           id: "ammunition:black-stone",
           stackCount: application.state.applications,
-          remainingTicks: Math.max(
-            0,
-            (application.state.expiresAtTick ?? event.tick) - event.tick,
-          ),
+          remainingTicks: Math.max(0, (application.state.expiresAtTick ?? event.tick) - event.tick),
         });
       }
     }
   }
 
-  const wenBasic =
-    attackOrigin === "botlg" || (ability != null && wenBasicHitEligible(ability));
+  const wenBasic = attackOrigin === "botlg" || (ability != null && wenBasicHitEligible(ability));
   if (mechanicId === "wen" && eligible && wenBasic) {
     const wen = recordWenBasicHit(rt.state.ranged.wen, event.tick);
     rt.state = patchRanged(rt.state, { wen });
@@ -304,6 +548,7 @@ export function onRangedHitLanded(
   event: ScheduledEvent<SimulationRuntime>,
   ability: AbilitySpec,
   damage: ResolvedDamage,
+  resolution?: EventResolution,
 ): void {
   if (ability.id === "rapid_fire") {
     const grant = dracolichAdrenalinePerRapidFireHit(rt.input.equipmentEffects);
@@ -339,5 +584,5 @@ export function onRangedHitLanded(
     });
   }
 
-  applyRangedAmmunitionLandedState(rt, event, damage, "player", ability);
+  applyRangedAmmunitionLandedState(rt, event, damage, "player", ability, resolution);
 }

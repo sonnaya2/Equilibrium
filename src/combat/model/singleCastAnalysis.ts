@@ -115,6 +115,7 @@ export function hostInputFromResolvedModel(
     context: model.context,
     targetHpPercent: model.target.hpPercent,
     targetMaximumLifePoints: model.target.maximumLifePoints,
+    ...(model.playerVitality ? { playerVitality: { ...model.playerVitality } } : {}),
     cap: model.cap,
     startingAdrenaline: model.startingAdrenaline,
     equipmentIds: model.equipmentIds,

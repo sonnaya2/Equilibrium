@@ -281,6 +281,12 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
       potion: loadout.playerPoison?.potion ?? "none",
       potionUntilTick: loadout.playerPoison?.potionUntilTick ?? 0,
       kwuarmPotency: loadout.playerPoison?.kwuarmPotency ?? 0,
+      playerVitality: loadout.playerVitality
+        ? {
+            maximumLifePoints: loadout.playerVitality.maximumLifePoints,
+            currentLifePoints: loadout.playerVitality.currentLifePoints,
+          }
+        : null,
       cinderbane: loadout.playerPoison?.cinderbane === true,
       blowpipe: loadout.playerPoison?.blowpipe === true,
       laniakea: loadout.playerPoison?.laniakea === true,

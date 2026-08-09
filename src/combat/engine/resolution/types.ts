@@ -50,6 +50,9 @@ export interface AttachedDamageComponent {
 export interface EventResolution {
   damage: ResolvedDamage;
   hitDetail?: HitResult;
+  /** Exact source outcomes retained only for ammunition payloads that transform a hit. */
+  ammunitionSourceDistribution?: readonly ExactDamageDistribution[];
+  ammunitionOriginalDamagePotential?: number;
   postDamagePotentialFlatContribution?: number;
   components?: readonly AttachedDamageComponent[];
   sourcePrecritDistribution?: readonly ExactDamageDistribution[];

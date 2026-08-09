@@ -1,4 +1,12 @@
-import type { CritLayers } from "../../core/critical";
+import {
+  baseCritDamageMultiplier,
+  critProbability,
+  discreteUniformCritDamageValues,
+  type CritLayers,
+  type DiscreteUniformCritDamageLayer,
+} from "../../core/critical";
+import { bandOf } from "../../core/abilityDamage";
+import { applyHitCap, normalizeHitCapRule, standardHitCap } from "../../core/hitCaps";
 import type { AbilityHit, AbilitySpec } from "../../pipeline/calculateAbility";
 import {
   calculateHit,
@@ -6,6 +14,13 @@ import {
   type ExactDamageDistribution,
   type HitResult,
 } from "../../pipeline/calculateHit";
+import {
+  applyAbilityBaseModifiers,
+  compileActiveModifiers,
+  runOrderedPipeline,
+} from "../../pipeline/modifierPipeline";
+import { applyDamagePotential } from "../../core/damagePotential";
+import { preciseMinHitAddition } from "../../shared/perks";
 import { TUSKAS_EMPOWERED_HIT_CAP } from "../../styles/shared/constitutionAbilities";
 import { FURY_CRIT_CHANCE_BONUS } from "../../styles/melee/effects";
 import {
@@ -16,6 +31,7 @@ import {
 import { SEARING_WINDS_BONUS_HIT_PCT } from "../../styles/ranged/onHit";
 import { resolveRangedAmmunitionHitEffects } from "../../styles/ranged/ammunitionPayloads";
 import { enchantedBoltActivationChance } from "../../styles/ranged/enchantedBolt";
+import { enchantedBoltStatefulProcStream } from "../../styles/ranged/enchantedBoltRuntime";
 import { isAmmunitionHitEligible } from "../../styles/ranged/ammunitionEligibility";
 import { dracolichInfusionCritChance } from "../../styles/ranged/dracolich";
 import { WEN_ICY_PRECISION_DAMAGE_POTENTIAL_DELTA } from "../../styles/ranged/wen";
@@ -33,6 +49,7 @@ import {
 } from "../../styles/necromancy/haunted";
 import {
   capabilitiesOf,
+  isTrueDotDamage,
   outgoingSourceOf,
   provenanceForCastHit,
 } from "../../shared/damageProvenance";
@@ -173,6 +190,21 @@ function mixResolution(a: EventResolution, b: EventResolution, weight: number): 
   return {
     damage: mixDamage(a.damage, b.damage, weight),
     ...(a.hitDetail && b.hitDetail ? { hitDetail: mixHit(a.hitDetail, b.hitDetail, weight) } : {}),
+    ...(a.ammunitionSourceDistribution
+      ? { ammunitionSourceDistribution: a.ammunitionSourceDistribution }
+      : b.ammunitionSourceDistribution
+        ? { ammunitionSourceDistribution: b.ammunitionSourceDistribution }
+        : {}),
+    ...(a.ammunitionOriginalDamagePotential !== undefined ||
+    b.ammunitionOriginalDamagePotential !== undefined
+      ? {
+          ammunitionOriginalDamagePotential: mix(
+            a.ammunitionOriginalDamagePotential ?? 0,
+            b.ammunitionOriginalDamagePotential ?? 0,
+            weight,
+          ),
+        }
+      : {}),
     ...(a.postDamagePotentialFlatContribution !== undefined ||
     b.postDamagePotentialFlatContribution !== undefined
       ? {
@@ -199,7 +231,10 @@ function mixExactDamageDistributions(
 ): readonly ExactDamageDistribution[] {
   const weights = new Map<number, number>();
   for (const outcome of inactive) {
-    weights.set(outcome.damage, (weights.get(outcome.damage) ?? 0) + outcome.weight * (1 - activeWeight));
+    weights.set(
+      outcome.damage,
+      (weights.get(outcome.damage) ?? 0) + outcome.weight * (1 - activeWeight),
+    );
   }
   for (const outcome of active) {
     weights.set(outcome.damage, (weights.get(outcome.damage) ?? 0) + outcome.weight * activeWeight);
@@ -257,6 +292,11 @@ function mixChanceResolution(
       max: Math.max(inactive.damage.max, active.damage.max),
     },
     ...(hitDetail ? { hitDetail } : {}),
+    ...(inactive.ammunitionSourceDistribution
+      ? { ammunitionSourceDistribution: inactive.ammunitionSourceDistribution }
+      : active.ammunitionSourceDistribution
+        ? { ammunitionSourceDistribution: active.ammunitionSourceDistribution }
+        : {}),
     ...(inactive.postDamagePotentialFlatContribution !== undefined ||
     active.postDamagePotentialFlatContribution !== undefined
       ? {
@@ -278,7 +318,15 @@ function damageOnlyEnchantedBoltChance(
   provenance: ReturnType<typeof provenanceForCastHit>,
 ): number | null {
   const mechanicId = rt.input.ammunition?.projectile?.mechanicId;
-  if (mechanicId !== "opal" && mechanicId !== "pearl") return null;
+  if (
+    mechanicId !== "opal" &&
+    mechanicId !== "pearl" &&
+    mechanicId !== "diamond" &&
+    mechanicId !== "onyx"
+  ) {
+    return null;
+  }
+  if (mechanicId === "onyx" && (rt.state.player?.vitality.maximumLifePoints ?? 0) > 0) return null;
   if (
     mechanicId === "pearl" &&
     rt.input.targetClassification?.elementalWeakness !== "water" &&
@@ -286,6 +334,84 @@ function damageOnlyEnchantedBoltChance(
   ) {
     return null;
   }
+  if (!isAmmunitionHitEligible({ style: ability.style, provenance, attackOrigin: "player" })) {
+    return null;
+  }
+  return enchantedBoltActivationChance(mechanicId, rt.input.enchantedBoltChanceModifiers);
+}
+
+function ammunitionSourceDamageDistribution(args: {
+  base: number;
+  band: { minPct: number; maxPct: number };
+  level: number;
+  accuracy: number;
+  crit: CritLayers;
+  critDamageDistribution?: DiscreteUniformCritDamageLayer;
+  modifiers: readonly import("../../types").CombatModifier[];
+  context: import("../../types").CombatContext;
+  cap?: import("../../core/hitCaps").HitCapRule;
+  preciseRank?: number;
+  postDamagePotentialFlat?: number;
+}): readonly ExactDamageDistribution[] {
+  const prepared = applyAbilityBaseModifiers(args.base, args.modifiers, args.context);
+  const raw = bandOf(prepared.base, args.band);
+  const precise = args.preciseRank ?? 0;
+  const min =
+    precise > 0 && !isTrueDotDamage(args.context)
+      ? Math.min(raw.max, Math.floor(raw.min + preciseMinHitAddition(raw.max, precise)))
+      : raw.min;
+  const ordered = compileActiveModifiers(prepared.modifiers, args.context);
+  const cap = normalizeHitCapRule(args.cap ?? standardHitCap);
+  const postDamagePotentialFlat = args.postDamagePotentialFlat ?? 0;
+  const resolve = (roll: number, critMultiplier?: number): number => {
+    const state = runOrderedPipeline({ damage: roll }, ordered, args.context, true, critMultiplier);
+    return applyHitCap(
+      Math.floor(applyDamagePotential(state.damage, args.accuracy)) + postDamagePotentialFlat,
+      cap,
+    );
+  };
+  const points = raw.max - min + 1;
+  const critChance = critProbability(args.crit);
+  const critBonuses =
+    critChance > 0
+      ? args.critDamageDistribution
+        ? discreteUniformCritDamageValues(args.critDamageDistribution).map(
+            (bonus) => (args.crit.damageBonus ?? 0) + bonus,
+          )
+        : [args.crit.damageBonus ?? 0]
+      : [];
+  const grouped = new Map<number, number>();
+  for (let roll = min; roll <= raw.max; roll += 1) {
+    const rollWeight = 1 / points;
+    if (critChance < 1) {
+      const damage = resolve(roll);
+      grouped.set(damage, (grouped.get(damage) ?? 0) + rollWeight * (1 - critChance));
+    }
+    if (critBonuses.length > 0) {
+      const critWeight = (rollWeight * critChance) / critBonuses.length;
+      for (const bonus of critBonuses) {
+        const damage = resolve(roll, baseCritDamageMultiplier(args.level, bonus));
+        grouped.set(damage, (grouped.get(damage) ?? 0) + critWeight);
+      }
+    }
+  }
+  return [...grouped]
+    .filter(([, weight]) => weight > 0)
+    .sort(([left], [right]) => left - right)
+    .map(([damage, weight]) => ({ damage, weight }));
+}
+
+function statefulEnchantedBoltChance(
+  rt: SimulationRuntime,
+  ability: AbilitySpec,
+  provenance: ReturnType<typeof provenanceForCastHit>,
+): number | null {
+  const mechanicId = rt.input.ammunition?.projectile?.mechanicId;
+  const hasTargetState = (rt.state.target.vitality?.maximumLifePoints ?? 0) > 0;
+  const hasPlayerState = (rt.state.player?.vitality.maximumLifePoints ?? 0) > 0;
+  if (mechanicId === "ruby" && !hasTargetState) return null;
+  if (mechanicId === "onyx" && !hasPlayerState) return null;
+  if (mechanicId !== "ruby" && mechanicId !== "onyx") return null;
   if (!isAmmunitionHitEligible({ style: ability.style, provenance, attackOrigin: "player" })) {
     return null;
   }
@@ -386,6 +512,7 @@ function resolveCastHitUncached(
   convertedChannel: boolean,
   frostbladesActive?: boolean,
   enchantedBoltProcActive?: boolean,
+  statefulEnchantedBoltProcActive?: boolean,
 ): EventResolution {
   const { input, state } = rt;
   const frostMass = activeFrostbladesMass(state.melee.primordialIce, at);
@@ -407,6 +534,7 @@ function resolveCastHitUncached(
       convertedChannel,
       false,
       enchantedBoltProcActive,
+      statefulEnchantedBoltProcActive,
     );
     const active = resolveCastHitUncached(
       rt,
@@ -419,6 +547,7 @@ function resolveCastHitUncached(
       convertedChannel,
       true,
       enchantedBoltProcActive,
+      statefulEnchantedBoltProcActive,
     );
     return mixResolution(inactive, active, frostMass);
   }
@@ -430,6 +559,43 @@ function resolveCastHitUncached(
     dotKind: hitSpec.dotKind,
     bleedId: hitSpec.bleedId,
   });
+  if (statefulEnchantedBoltProcActive === undefined) {
+    const chance = statefulEnchantedBoltChance(rt, ability, provenance);
+    if (chance != null && chance > 0) {
+      const inactive = resolveCastHitUncached(
+        rt,
+        at,
+        hitSpec,
+        hitIndex,
+        ability,
+        snap,
+        isDot,
+        convertedChannel,
+        frostbladesActive,
+        enchantedBoltProcActive,
+        false,
+      );
+      const active = resolveCastHitUncached(
+        rt,
+        at,
+        hitSpec,
+        hitIndex,
+        ability,
+        snap,
+        isDot,
+        convertedChannel,
+        frostbladesActive,
+        enchantedBoltProcActive,
+        true,
+      );
+      const activeState = rt.stochastic.bernoulli(
+        enchantedBoltStatefulProcStream(snap.castSeq, hitIndex),
+        chance,
+      );
+      rt.boltProcOutcomes.set(enchantedBoltStatefulProcStream(snap.castSeq, hitIndex), activeState);
+      return activeState ? active : inactive;
+    }
+  }
   if (enchantedBoltProcActive === undefined) {
     const chance = damageOnlyEnchantedBoltChance(rt, ability, provenance);
     if (chance != null && chance > 0) {
@@ -444,6 +610,7 @@ function resolveCastHitUncached(
         convertedChannel,
         frostbladesActive,
         false,
+        statefulEnchantedBoltProcActive,
       );
       const active = resolveCastHitUncached(
         rt,
@@ -456,10 +623,12 @@ function resolveCastHitUncached(
         convertedChannel,
         frostbladesActive,
         true,
+        statefulEnchantedBoltProcActive,
       );
       return mixChanceResolution(inactive, active, chance);
     }
   }
+  const boltProcActive = enchantedBoltProcActive ?? statefulEnchantedBoltProcActive;
   const modifiers = landTimeModifiers(
     rt,
     at,
@@ -471,7 +640,7 @@ function resolveCastHitUncached(
     hitSpec.dotKind,
     frostbladesActive,
     provenance,
-    enchantedBoltProcActive,
+    boltProcActive,
   );
 
   const firstEligible = hitIndex === snap.firstEligibleHitIndex;
@@ -535,8 +704,12 @@ function resolveCastHitUncached(
     attackKind: "ability",
     targetClassification: input.targetClassification,
     targetHealthFraction,
-    enchantedBoltProcActive,
+    enchantedBoltProcActive: boltProcActive,
   });
+  if (ammunition.abilityDamageFraction !== 0) {
+    const addition = ammunition.abilityDamageFraction * 100;
+    band = { minPct: band.minPct + addition, maxPct: band.maxPct + addition };
+  }
   if (ammunition.maximumHitBandFraction > 0) {
     band = {
       minPct: band.minPct,
@@ -571,6 +744,8 @@ function resolveCastHitUncached(
               wenDamagePotentialDelta,
           ),
         );
+  const hitAccuracy =
+    ammunition.accuracyOverride ?? (isCommand ? CONJURE_DAMAGE_POTENTIAL : effectiveAccuracy);
   const damageSource = outgoingSourceOf(provenance);
   const hitContext: import("../../types").CombatContext = {
     ...input.context,
@@ -592,6 +767,7 @@ function resolveCastHitUncached(
     ability,
     provenance,
   );
+
   // Tuska on-task: flat 100x Slayer (15k cap); keep only Havoc's global final multiplier.
   // https://runescape.wiki/w/Tuska%27s_Wrath
   const tuskaFinalModifiers = modifiers.filter(
@@ -620,7 +796,7 @@ function resolveCastHitUncached(
           base,
           band,
           level,
-          accuracy: isCommand ? CONJURE_DAMAGE_POTENTIAL : effectiveAccuracy,
+          accuracy: hitAccuracy,
           crit,
           ...(snap.surgingStormAtCast
             ? { critDamageDistribution: SURGING_STORM_CRIT_DAMAGE_DISTRIBUTION }
@@ -633,6 +809,81 @@ function resolveCastHitUncached(
         });
   const hit = host.baseHit;
 
+  const ammunitionSourceDistribution =
+    ammunition.mechanicId === "dragonstone" &&
+    !isDot &&
+    isAmmunitionHitEligible({
+      style: ability.style,
+      provenance,
+      attackOrigin: "player",
+    })
+      ? ammunitionSourceDamageDistribution({
+          base,
+          band,
+          level,
+          accuracy: hitAccuracy,
+          crit,
+          ...(snap.surgingStormAtCast
+            ? { critDamageDistribution: SURGING_STORM_CRIT_DAMAGE_DISTRIBUTION }
+            : {}),
+          modifiers: isCommand ? conjureEligibleModifiers(modifiers) : modifiers,
+          context: hitContext,
+          cap: input.cap,
+          preciseRank: input.preciseRank,
+          ...(essenceFlat > 0 ? { postDamagePotentialFlat: essenceFlat } : {}),
+        })
+      : undefined;
+
+  const ammunitionOriginalDamagePotential =
+    boltProcActive === true && ammunition.mechanicId === "onyx"
+      ? resolveLeagueAttachedHost({
+          rules: input.league,
+          source: provenance,
+          landTick: at,
+          base,
+          band,
+          level,
+          accuracy: hitAccuracy,
+          crit,
+          ...(snap.surgingStormAtCast
+            ? { critDamageDistribution: SURGING_STORM_CRIT_DAMAGE_DISTRIBUTION }
+            : {}),
+          modifiers: isCommand
+            ? conjureEligibleModifiers(
+                landTimeModifiers(
+                  rt,
+                  at,
+                  ability,
+                  snap,
+                  hitIndex,
+                  isDot,
+                  convertedChannel,
+                  hitSpec.dotKind,
+                  frostbladesActive,
+                  provenance,
+                  false,
+                ),
+              )
+            : landTimeModifiers(
+                rt,
+                at,
+                ability,
+                snap,
+                hitIndex,
+                isDot,
+                convertedChannel,
+                hitSpec.dotKind,
+                frostbladesActive,
+                provenance,
+                false,
+              ),
+          context: hitContext,
+          cap: input.cap,
+          preciseRank: input.preciseRank,
+          ...(essenceFlat > 0 ? { postDamagePotentialFlat: essenceFlat } : {}),
+        }).baseHit.expected
+      : undefined;
+
   const sourcePrecritDistribution = sourceDistributionForPerfectEquilibrium({
     ability,
     snap,
@@ -644,7 +895,7 @@ function resolveCastHitUncached(
         base,
         band,
         level,
-        accuracy: isCommand ? CONJURE_DAMAGE_POTENTIAL : effectiveAccuracy,
+        accuracy: hitAccuracy,
         crit: { ...crit, chance: 0, guaranteed: false, eligible: false },
         modifiers: isCommand ? conjureEligibleModifiers(modifiers) : modifiers,
         context: hitContext,
@@ -747,6 +998,10 @@ function resolveCastHitUncached(
       ),
     },
     hitDetail: hit,
+    ...(ammunitionSourceDistribution ? { ammunitionSourceDistribution } : {}),
+    ...(ammunitionOriginalDamagePotential !== undefined
+      ? { ammunitionOriginalDamagePotential }
+      : {}),
     ...(components.length > 0 ? { components } : {}),
     ...(sourcePrecritDistribution ? { sourcePrecritDistribution } : {}),
   };

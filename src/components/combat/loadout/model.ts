@@ -8,7 +8,7 @@ import {
 } from "@/combat";
 import { equipmentById } from "@/combat/data";
 import type { EquipmentSlot } from "@/combat/data/records";
-import { normalizeSelectedAmmunitionId } from "./ammunitionSelection";
+import { normalizeSavedEquipmentId, normalizeSelectedAmmunitionId } from "./ammunitionSelection";
 import {
   isRelicGrantedItemAvailable,
   relicGrantedItemForRelic,
@@ -662,21 +662,21 @@ export function equipInSlot(
   itemId: string | null,
   activeRelicNames?: readonly string[] | ReadonlySet<string>,
 ): Loadout {
+  const normalizedItemId = itemId == null ? null : normalizeSavedEquipmentId(itemId);
   if (
-    itemId != null &&
-    itemId !== "" &&
+    normalizedItemId != null &&
     activeRelicNames !== undefined &&
-    !isRelicGrantedItemAvailable(itemId, activeRelicNames)
+    !isRelicGrantedItemAvailable(normalizedItemId, activeRelicNames)
   ) {
     return loadout;
   }
   const slots: Partial<Record<EquipmentSlot, string | null>> = {
     ...(loadout.equipmentSlots ?? {}),
   };
-  if (itemId == null || itemId === "") {
+  if (normalizedItemId == null) {
     delete slots[slot];
   } else {
-    slots[slot] = itemId;
+    slots[slot] = normalizedItemId;
     if (slot === "twohand") {
       delete slots.mainhand;
       delete slots.offhand;
@@ -1042,7 +1042,8 @@ function normalizeEquipmentSlots(raw: unknown): Partial<Record<EquipmentSlot, st
   for (const [key, value] of Object.entries(raw as Record<string, unknown>)) {
     if (!SLOT_SET.has(key)) continue;
     if (value == null || value === "") continue;
-    if (typeof value === "string") out[key as EquipmentSlot] = value;
+    const id = normalizeSavedEquipmentId(value);
+    if (id != null) out[key as EquipmentSlot] = id;
   }
   return out;
 }
@@ -1095,7 +1096,9 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       ]
     : [...EQUIPMENT_ENCHANTMENTS];
   const legacyIds = Array.isArray(raw.equipmentIds)
-    ? raw.equipmentIds.filter((id): id is string => typeof id === "string")
+    ? raw.equipmentIds
+        .map((id) => normalizeSavedEquipmentId(id))
+        .filter((id): id is string => id != null)
     : [];
   const slotted = new Set(equipmentIdList(equipmentSlots));
   const unlocks = legacyIds.filter((id) => !slotted.has(id));

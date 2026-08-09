@@ -18,7 +18,7 @@ type AmmunitionEquipmentRecord = Pick<
 type QuiverEquipmentRecord = Pick<EquipmentRecord, "id" | "name" | "quiver">;
 type WeaponEquipmentRecord = Pick<
   EquipmentRecord,
-  "tier" | "damageTier" | "weaponClass" | "ammunitionCapability"
+  "id" | "tier" | "damageTier" | "weaponClass" | "ammunitionCapability"
 >;
 
 export function resolveAmmunitionFromEquipment(
@@ -48,10 +48,29 @@ export function resolveQuiverFromEquipment(
   });
 }
 
+/**
+ * Chargebows (wiki Chargebow): bare works; optional arrows use min(weapon,ammo) tier.
+ * Hexhunter bow and strykebow are not chargebows (require arrows).
+ * Catalogue may omit ammunitionCapability; without this list they default to required arrows.
+ * Explicit ammunitionCapability on the record always wins.
+ * https://runescape.wiki/w/Chargebow_(bow_type)
+ */
+const CHARGEBOW_IDS: ReadonlySet<string> = new Set([
+  "item:zaryte-bow",
+  "item:seren-godbow",
+  "item:decimation",
+  "item:crystal-bow",
+  "item:attuned-crystal-bow",
+  "item:hellfire-bow",
+]);
+
 export function weaponAmmunitionCapabilityFromEquipment(
-  record: Pick<EquipmentRecord, "ammunitionCapability" | "weaponClass"> | null | undefined,
+  record: Pick<EquipmentRecord, "id" | "ammunitionCapability" | "weaponClass"> | null | undefined,
 ): RangedWeaponAmmunitionCapability | null {
   if (record?.ammunitionCapability) return record.ammunitionCapability;
+  if (record?.id != null && CHARGEBOW_IDS.has(record.id)) {
+    return { mode: "optional", acceptedFamily: "arrows" };
+  }
   return record?.weaponClass == null ? null : capabilityForWeaponClass(record.weaponClass);
 }
 

@@ -1,9 +1,15 @@
 import { describe, expect, it } from "vitest";
+import { resolveAbilityCatalogue } from "@/combat/abilities/catalogue";
 import { baseAbilityDamage } from "@/combat/core/abilityDamage";
+import { simulateRevolution } from "@/combat/engine/simulation/revolution";
+import { buildSimulationInputBase, toRevolutionInput } from "@/combat/model";
 import { weaponAmmunitionCapabilityFromEquipment } from "@/combat/styles/ranged/ammunitionEquipment";
 import { reviveRevolutionBase } from "@/combat/solver/worker/revive";
 import { projectSerializableSimBase } from "@/combat/model/simulationInput";
-import { toResolvedCombatModel } from "@/components/combat/toResolvedCombatModel";
+import {
+  resolveLoadoutCombat,
+  toResolvedCombatModel,
+} from "@/components/combat/toResolvedCombatModel";
 import { loadoutStats } from "@/components/combat/loadoutStats";
 import { uiRunFingerprint } from "@/components/combat/uiSimFingerprint";
 import { DEFAULT_LOADOUT, normalizeLoadout } from "./model";
@@ -47,6 +53,69 @@ describe("loadout-owned ranged ammunition resolution", () => {
     expect(quiverProfile?.quiver?.itemId).toBe("item:pernix-quiver");
     expect(quiverProfile?.quiver?.passiveIds).toEqual(["pernix-quiver-max-hit-band"]);
     expect(rangedConfig(direct).ammunitionTier).toBe(rangedConfig(quiver).ammunitionTier);
+  });
+
+  it("resolves ordinary and bakriminel bolts from a real crossbow loadout", () => {
+    const ordinary = rangedLoadout({
+      twohand: "item:royal-crossbow",
+      ammo: "item:ruby-bolts-e",
+    });
+    const bakriminel = rangedLoadout({
+      twohand: "item:royal-crossbow",
+      ammo: "item:ruby-bakriminel-bolts-e",
+    });
+
+    expect(loadoutRangedAmmunitionProfile(ordinary)).toMatchObject({
+      projectile: { itemId: "item:ruby-bolts-e", mechanicId: "ruby", statTier: 60 },
+      weaponCapability: { mode: "required", acceptedFamily: "bolts" },
+      effectiveStatTier: 60,
+    });
+    expect(loadoutRangedAmmunitionProfile(bakriminel)).toMatchObject({
+      projectile: {
+        itemId: "item:ruby-bakriminel-bolts-e",
+        mechanicId: "ruby",
+        statTier: 95,
+      },
+      weaponCapability: { mode: "required", acceptedFamily: "bolts" },
+      effectiveStatTier: 80,
+    });
+    expect(rangedConfig(ordinary).rangedAmmunitionState).toBe("external");
+    expect(rangedConfig(bakriminel).rangedAmmunitionState).toBe("external");
+  });
+
+  it("runs bakriminel Ruby bolts through the product Revolution path", () => {
+    const loadout = normalizeLoadout({
+      ...rangedLoadout({
+        twohand: "item:royal-crossbow",
+        ammo: "item:ruby-bakriminel-bolts-e",
+      }),
+      target: {
+        defenceLevel: 80,
+        affinity: "weak",
+        hpPercent: 100,
+        maximumLifePoints: 1_000_000,
+      },
+    });
+    const { model } = resolveLoadoutCombat(loadout);
+    const catalogue = resolveAbilityCatalogue();
+    const summary = simulateRevolution(
+      toRevolutionInput(buildSimulationInputBase(model, catalogue), {
+        bar: [catalogue.byId.get("ranged_attack")!],
+        style: "ranged",
+        durationTicks: 12,
+      }),
+      { stochasticSeed: 31, stochasticLanes: 128 },
+    );
+
+    expect(model.ammunition?.projectile).toMatchObject({
+      itemId: "item:ruby-bakriminel-bolts-e",
+      mechanicId: "ruby",
+    });
+    expect(summary.ok).toBe(true);
+    expect(summary.totalExpected).toBeGreaterThan(0);
+    expect(
+      summary.analysis.byEffect.find(({ id }) => id === "ammunition:ruby")?.expectedActivations,
+    ).toBeGreaterThan(0);
   });
 
   it("invalidates a required bow with missing or wrong-family ammunition", () => {
@@ -94,11 +163,17 @@ describe("loadout-owned ranged ammunition resolution", () => {
   it("uses explicit optional and no-ammo capability modes", () => {
     expect(
       weaponAmmunitionCapabilityFromEquipment({
+        id: "item:test-optional-capability-record",
         weaponClass: "bow",
         ammunitionCapability: { mode: "optional", acceptedFamily: "arrows" },
       }),
     ).toEqual({ mode: "optional", acceptedFamily: "arrows" });
-    expect(weaponAmmunitionCapabilityFromEquipment({ weaponClass: "thrown" })).toEqual({
+    expect(
+      weaponAmmunitionCapabilityFromEquipment({
+        id: "item:test-thrown-weapon",
+        weaponClass: "thrown",
+      }),
+    ).toEqual({
       mode: "none",
       acceptedFamily: null,
     });
@@ -119,8 +194,14 @@ describe("loadout-owned ranged ammunition resolution", () => {
     const revived = reviveRevolutionBase(wire);
 
     expect(directModel.ammunition).toEqual(directStats.ammunition);
+    expect(directModel.playerVitality).toEqual({
+      maximumLifePoints: directStats.life.temporaryMaxLife,
+      currentLifePoints: directStats.life.currentLife,
+    });
     expect(wire.ammunition).toEqual(directModel.ammunition);
+    expect(wire.playerVitality).toEqual(directModel.playerVitality);
     expect(revived.ammunition).toEqual(directModel.ammunition);
+    expect(revived.playerVitality).toEqual(directModel.playerVitality);
 
     const directFingerprint = uiRunFingerprint({
       mode: "manual",

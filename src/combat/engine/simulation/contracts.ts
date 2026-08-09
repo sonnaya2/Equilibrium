@@ -45,6 +45,11 @@ export interface AdrenalineRules {
   relentlessLevel20?: boolean;
 }
 
+export interface PlayerVitalityInput {
+  maximumLifePoints: number;
+  currentLifePoints: number;
+}
+
 /** State-changing RNG outcomes for one stochastic lane; missing = no proc. */
 export type CastRngPointId =
   | "impatient"
@@ -110,6 +115,7 @@ export interface SimulateInput {
   startingAdrenaline?: number;
   /** Equipped catalogue ids used by mechanics with verified item requirements. */
   equipmentIds?: readonly string[];
+
   weaponConfiguration?: "twohand" | "dualwield" | "mainhand" | "shield" | "defender" | "necromancy";
   ammunition?: ResolvedRangedAmmunitionProfile | null;
   enchantedBoltChanceModifiers?: EnchantedBoltChanceModifiers;
@@ -142,6 +148,12 @@ export interface SimulateInput {
   targetHpPercent?: number;
   /** Optional maximum target LP for Death Mark vitality and threshold checks. */
   targetMaximumLifePoints?: number;
+  /** Optional player LP state for stateful bolt recoil and healing. */
+  playerVitality?: PlayerVitalityInput;
+  /** Legacy percent lane for direct engine callers without a resolved model. */
+  playerMaximumLifePoints?: number;
+  /** Player LP percentage at tick 0; defaults to 100 when player LP is configured. */
+  playerHpPercent?: number;
   targetClassification?: TargetClassification;
   playerPoison?: PlayerPoisonProfile;
   /** Canonical target/global modifiers explicitly eligible for player poison. */

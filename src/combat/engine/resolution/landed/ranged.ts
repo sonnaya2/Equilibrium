@@ -28,6 +28,40 @@ import {
   newBlackStoneArmourState,
   resetBlackStoneOnTargetDeath,
 } from "../../../styles/ranged/blackStone";
+import { enchantedBoltActivationChance } from "../../../styles/ranged/enchantedBolt";
+import {
+  activateBoltDeathmark,
+  BOLT_DEATHMARK_ACTIVATION_ADRENALINE,
+} from "../../../styles/ranged/enchantedBoltRuntime";
+import { resolveRangedAmmunitionHitEffects } from "../../../styles/ranged/ammunitionPayloads";
+import { ammunitionAppliedEffectId } from "../../../styles/ranged/ammunitionEffects";
+import { recordWenBasicHit, wenBasicHitEligible } from "../../../styles/ranged/wen";
+import { recordAppliedEventEffect } from "../accounting";
+
+function mayActivateBoltDeathmark(
+  rt: SimulationRuntime,
+  event: ScheduledEvent<SimulationRuntime>,
+  damage: ResolvedDamage,
+  attackOrigin: AmmunitionAttackOrigin,
+): boolean {
+  const mechanicId = rt.input.ammunition?.projectile?.mechanicId;
+  if (mechanicId !== "hydrix" && mechanicId !== "ascendri") return false;
+  if (damage.max <= 0) return false;
+  if (
+    !isAmmunitionHitEligible({
+      style: "ranged",
+      provenance: event.provenance,
+      attackOrigin,
+    })
+  ) {
+    return false;
+  }
+  const chance = enchantedBoltActivationChance(
+    mechanicId,
+    rt.input.enchantedBoltChanceModifiers,
+  );
+  return chance != null && rt.stochastic.bernoulli(`ammunition:deathmark:${event.seq}`, chance);
+}
 
 function mayApplyPuncture(
   rt: SimulationRuntime,
@@ -140,29 +174,63 @@ export function applyRangedAmmunitionLandedState(
   event: ScheduledEvent<SimulationRuntime>,
   damage: ResolvedDamage,
   attackOrigin: AmmunitionAttackOrigin,
+  ability?: AbilitySpec,
 ): void {
+  const mechanicId = rt.input.ammunition?.projectile?.mechanicId;
+  const eligible = isAmmunitionHitEligible({
+    style: "ranged",
+    provenance: event.provenance,
+    attackOrigin,
+  });
+  const targetVitality = rt.state.target.vitality;
+  const targetHealthFraction =
+    targetVitality && targetVitality.maximumLifePoints > 0
+      ? targetVitality.currentLifePoints / targetVitality.maximumLifePoints
+      : null;
+  const sourceEffects = resolveRangedAmmunitionHitEffects({
+    ammunition: rt.input.ammunition,
+    style: "ranged",
+    provenance: event.provenance,
+    attackOrigin,
+    attackKind: "ability",
+    targetClassification: rt.input.targetClassification,
+    targetHealthFraction,
+  });
+  const sourceEffectId = ammunitionAppliedEffectId(mechanicId);
   if (
-    rt.input.ammunition?.projectile?.mechanicId === "deathspore" &&
-    isAmmunitionHitEligible({
-      style: "ranged",
-      provenance: event.provenance,
-      attackOrigin,
-    })
+    eligible &&
+    sourceEffectId &&
+    (sourceEffects.sourceHitMultiplier !== 1 || sourceEffects.damagePotentialDelta !== 0)
   ) {
-    rt.state = patchRanged(rt.state, {
-      deathspore: onRangedHit(rt.state.ranged.deathspore, event.tick),
-    });
+    recordAppliedEventEffect(rt, event, { id: sourceEffectId });
   }
 
-  if (
-    rt.input.ammunition?.projectile?.mechanicId === "black-stone" &&
-    rt.input.targetAccuracyProfile &&
-    isAmmunitionHitEligible({
-      style: "ranged",
-      provenance: event.provenance,
-      attackOrigin,
-    })
-  ) {
+  if (mayActivateBoltDeathmark(rt, event, damage, attackOrigin)) {
+    const boltDeathmark = activateBoltDeathmark(event.tick);
+    rt.state = patchRanged(rt.state, { boltDeathmark });
+    rt.state = gainAdrenaline(rt.state, BOLT_DEATHMARK_ACTIVATION_ADRENALINE);
+    if (sourceEffectId) {
+      recordAppliedEventEffect(rt, event, {
+        id: sourceEffectId,
+        remainingTicks: Math.max(0, boltDeathmark.expiresAtTick - event.tick),
+      });
+    }
+  }
+
+  if (mechanicId === "deathspore" && eligible) {
+    const prior = rt.state.ranged.deathspore;
+    const deathspore = onRangedHit(prior, event.tick);
+    rt.state = patchRanged(rt.state, { deathspore });
+    if (deathspore !== prior) {
+      recordAppliedEventEffect(rt, event, {
+        id: "ammunition:deathspore",
+        stackCount: deathspore.stacks,
+        remainingTicks: Math.max(0, deathspore.freeCastUntilTick - event.tick),
+      });
+    }
+  }
+
+  if (mechanicId === "black-stone" && rt.input.targetAccuracyProfile && eligible) {
     const existing = rt.state.target.blackStone;
     if (rt.state.target.vitality?.currentLifePoints === 0) {
       if (existing) {
@@ -176,7 +244,35 @@ export function applyRangedAmmunitionLandedState(
         newBlackStoneArmourState(rt.input.targetAccuracyProfile.originalTargetArmourRating);
       const application = applyBlackStoneArmourReduction(state, event.tick);
       rt.state = patchTarget(rt.state, { blackStone: application.state });
+      if (application.reduction > 0) {
+        recordAppliedEventEffect(rt, event, {
+          id: "ammunition:black-stone",
+          stackCount: application.state.applications,
+          remainingTicks: Math.max(
+            0,
+            (application.state.expiresAtTick ?? event.tick) - event.tick,
+          ),
+        });
+      }
     }
+  }
+
+  const wenBasic =
+    attackOrigin === "botlg" || (ability != null && wenBasicHitEligible(ability));
+  if (mechanicId === "wen" && eligible && wenBasic) {
+    const wen = recordWenBasicHit(rt.state.ranged.wen, event.tick);
+    rt.state = patchRanged(rt.state, { wen });
+    recordAppliedEventEffect(rt, event, {
+      id: "ammunition:wen",
+      stackCount: wen.icyChillStacks,
+      remainingTicks: Math.max(0, wen.icyChillExpiresAtTick - event.tick),
+    });
+  }
+  if (mechanicId === "wen" && eligible && event.castSnap?.wenIcyPrecisionDamageAtCast) {
+    recordAppliedEventEffect(rt, event, {
+      id: "ammunition:wen-icy-precision",
+      remainingTicks: Math.max(0, rt.state.ranged.wen.icyPrecisionUntilTick - event.tick),
+    });
   }
 
   if (!mayApplyPuncture(rt, event, damage, attackOrigin)) return;
@@ -190,6 +286,11 @@ export function applyRangedAmmunitionLandedState(
     finished ? -1 : owner,
   );
   rt.state = patchRanged(rt.state, { puncture: next });
+  recordAppliedEventEffect(rt, event, {
+    id: "ammunition:splintering",
+    stackCount: next.stacks,
+    remainingTicks: Math.max(0, next.expiresAtTick - event.tick),
+  });
   cancelPendingPuncture(rt);
   if (next.pendingOwnerCast < 0) schedulePunctureAfterFinish(rt, event.tick);
 }
@@ -238,5 +339,5 @@ export function onRangedHitLanded(
     });
   }
 
-  applyRangedAmmunitionLandedState(rt, event, damage, "player");
+  applyRangedAmmunitionLandedState(rt, event, damage, "player", ability);
 }

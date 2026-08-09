@@ -1,0 +1,4 @@
+interface:
+  display_name: "Equilibrium ammunition"
+  short_description: "Research and route ranged ammunition effects"
+  default_prompt: "Use $manage-equilibrium-ammunition to research, model, or verify this ranged ammunition mechanic, including its Luna-only implementation gate."

@@ -82,7 +82,7 @@ export function evaluateHostIncumbentBaseline(
     plantedFeet: simBase.plantedFeet,
     strengthCape99: simBase.strengthCape99,
     preciseRank: simBase.preciseRank,
-    ammo: simBase.ammo,
+    ammunition: simBase.ammunition,
     caromingRank: simBase.caromingRank ?? simBase.modifierSources?.caroming ?? 0,
     conjureBasicDamageMult: simBase.conjureBasicDamageMult,
     conjureDurationMult: simBase.conjureDurationMult,

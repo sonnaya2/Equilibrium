@@ -65,6 +65,7 @@ export function reviveRevolutionBase(sim: SerializableRevolutionSimBase): Revive
     strengthCape99: sim.strengthCape99,
     preciseRank: sim.preciseRank,
     ammunition: sim.ammunition,
+    enchantedBoltChanceModifiers: sim.enchantedBoltChanceModifiers,
     caromingRank: sim.caromingRank ?? sim.modifierSources?.caroming ?? 0,
     tumekensPieces: sim.tumekensPieces,
     equipmentEffects: {
@@ -90,6 +91,8 @@ export function reviveRevolutionBase(sim: SerializableRevolutionSimBase): Revive
       demon: sim.modifierSources.target.demon,
       dragon: sim.modifierSources.target.dragon,
       undead: sim.modifierSources.target.undead,
+      elementalWeakness: sim.modifierSources.target.elementalWeakness ?? "unknown",
+      dragonfireImmune: sim.modifierSources.target.dragonfireImmune === true,
     },
     playerPoison: sim.playerPoison,
     playerPoisonModifiers: playerPoisonModifiersFromSources(sim.modifierSources, league),

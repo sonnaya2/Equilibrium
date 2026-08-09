@@ -69,6 +69,7 @@ const LIFE_ICON = {
 } as const;
 const RING_OF_VIGOUR_PASSIVE_ICON = "/game/upgrades/permanent-unlocks/ring-of-vigour.webp";
 const SPECTRAL_LENS_ICON = "/game/upgrades/permanent-unlocks/slayer-helmet.webp";
+const ELITE_SEERS_VILLAGE_ICON = "/game/upgrades/permanent-unlocks/seers-village-achievements.webp";
 
 const T7_RELIC_TIER = 7;
 type Tier7RelicChoice = { name: string; effects: readonly string[]; seat: number | null };
@@ -597,6 +598,13 @@ export function BuffsPanel({
                 onClick={() =>
                   setBuffs({ ensouledSpectralLens: !loadout.buffs.ensouledSpectralLens })
                 }
+              />
+              <BuffTile
+                icon={ELITE_SEERS_VILLAGE_ICON}
+                label="Elite Seers' Village achievements"
+                effect="Adds 2 percentage points to enchanted-bolt activation chance before the Ranged cape multiplier."
+                pressed={loadout.buffs.eliteSeersVillage}
+                onClick={() => setBuffs({ eliteSeersVillage: !loadout.buffs.eliteSeersVillage })}
               />
             </div>
             {vigourSources.length > 0 ? (

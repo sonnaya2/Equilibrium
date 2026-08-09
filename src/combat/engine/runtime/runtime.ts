@@ -27,7 +27,6 @@ import { lengLandTableFor, type CompiledLengLandTable } from "../../styles/melee
 import { MAX_SOULS } from "../../styles/necromancy/abilities";
 import { residualSoulCapFor } from "../../styles/necromancy/effects";
 import { normalizeKwuarmPotency, normalizeWeaponPoisonChoice } from "../../poison/mechanics";
-import { resolveStyleAmmo } from "../../styles/ranged/ammoModel";
 import {
   createStochasticOracle,
   DEFAULT_STOCHASTIC_LANES,
@@ -171,9 +170,7 @@ export function createRuntime(
   sharedCaches?: RuntimeSharedCaches,
 ): SimulationRuntime {
   noteRuntimeCreated();
-  const ammo = resolveStyleAmmo(input.ammo, input.equipmentIds, input.context?.style);
-  const withAmmo = ammo === input.ammo ? input : { ...input, ammo };
-  const runtimeInput = prepareRuntimeInput(withAmmo);
+  const runtimeInput = prepareRuntimeInput(input);
   const adrenalineCap = resolveMaximumAdrenaline(
     input.equipmentEffects?.vestments.increasedAdrenalineCap ? 120 : ADRENALINE_CAP,
     input.league,

@@ -4,6 +4,11 @@ export {
   type EffectAnalysisLedger,
   type RuntimeAnalysisState,
 } from "./contracts";
-export { accountAnalysisEvent, accountPlayerPoisonHits, sourceKindOf } from "./accounting";
+export {
+  accountAnalysisEvent,
+  accountAppliedEffect,
+  accountPlayerPoisonHits,
+  sourceKindOf,
+} from "./accounting";
 export { resolveEventMultiplicity, type ResolvedMultiplicity } from "./multiplicity";
 export { analysisReconciles, finalizeAnalysis, graspGroupFromEffects } from "./finalize";

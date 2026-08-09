@@ -4,6 +4,7 @@ import { rotationOf } from "../simulation/contracts";
 import { simulate, type SimulateInput } from "../simulation/simulate";
 import { baseInput } from "../../test/fixtures/inputs";
 import { EventQueue, type ScheduledEvent } from "./events";
+import { testRangedAmmunition } from "../../testing/rangedAmmunition";
 
 const rangedInput: Omit<SimulateInput, "rotation"> = {
   base: 1000,
@@ -76,7 +77,7 @@ describe("attached damage is not a separate hit", () => {
   it("attached damage does not generate an extra Deathspore stack", () => {
     const summary = simulate({
       ...rangedInput,
-      ammo: "deathspore",
+      ammunition: testRangedAmmunition("deathspore"),
       rotation: rotationOf("galeshot", ...Array(9).fill("ranged_attack"), "corruption_shot"),
     });
     expect(summary.ok).toBe(true);

@@ -137,6 +137,17 @@ describe("solver worker serializable boundary", () => {
     expect(reviveRevolutionBase(cloned).targetAccuracyProfile).toEqual(sim.targetAccuracyProfile);
   });
 
+  it("carries enchanted-bolt chance modifiers through worker revival", () => {
+    const sim = {
+      ...sampleSimBase(),
+      enchantedBoltChanceModifiers: { rangedCape: true, eliteSeersVillage: true },
+    } satisfies SerializableRevolutionSimBase;
+
+    expect(reviveRevolutionBase(structuredClone(sim)).enchantedBoltChanceModifiers).toEqual(
+      sim.enchantedBoltChanceModifiers,
+    );
+  });
+
   it("preserves Critual conversion metadata through worker revival", () => {
     const sim = {
       ...sampleSimBase(),
@@ -153,13 +164,21 @@ describe("solver worker serializable boundary", () => {
 
   it("revives target classification from modifier-source target facts", () => {
     const sim = sampleSimBase();
-    sim.modifierSources.target = { demon: true, dragon: false, undead: true };
+    sim.modifierSources.target = {
+      demon: true,
+      dragon: false,
+      undead: true,
+      elementalWeakness: "fire",
+      dragonfireImmune: true,
+    };
     const revived = reviveRevolutionBase(structuredClone(sim));
 
     expect(revived.targetClassification).toEqual({
       demon: true,
       dragon: false,
       undead: true,
+      elementalWeakness: "fire",
+      dragonfireImmune: true,
     });
   });
 

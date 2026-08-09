@@ -6,6 +6,7 @@ import { rotationOf } from "./contracts";
 import { createCastContext, simulate } from "./simulate";
 import { leagueModifiers, resolveLeagueRules } from "../../league/ruleset";
 import { vulnerabilityModifier } from "../../shared/vulnerability";
+import { testRangedAmmunition } from "../../testing/rangedAmmunition";
 
 const profile = (patch: Partial<PlayerPoisonProfile> = {}): PlayerPoisonProfile => ({
   potion: "weapon",
@@ -73,7 +74,7 @@ describe("player poison simulation", () => {
     const bik = simulate({
       ...rangedInput,
       rotation: rotationOf("ranged_attack"),
-      ammo: "bik",
+      ammunition: testRangedAmmunition("bik"),
       playerPoison: profile(),
     });
     expect(bik.playerPoison?.expectedDamage).toBeGreaterThan(
@@ -102,7 +103,7 @@ describe("player poison simulation", () => {
     const bik = simulate({
       ...baseInput,
       rotation: rotationOf("attack"),
-      ammo: "bik",
+      ammunition: testRangedAmmunition("bik"),
       playerPoison: profile(),
     });
     expect(bik.playerPoison?.expectedDamage).toBe(ordinary.playerPoison?.expectedDamage);
@@ -114,7 +115,7 @@ describe("player poison simulation", () => {
       ...rangedInput,
       horizonTicks: 20,
       rotation: rotationOf("ranged_attack", "ranged_attack", "ranged_attack"),
-      ammo: "bik",
+      ammunition: testRangedAmmunition("bik"),
       playerPoison: profile(),
     });
     expect(result.rng).toBeDefined();

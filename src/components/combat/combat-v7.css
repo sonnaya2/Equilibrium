@@ -1389,6 +1389,209 @@
   }
 }
 
+.combat-screen .setup-league-display {
+  margin: 0 0.5rem 0.5rem;
+  padding: 0.7rem;
+  border: 1px solid var(--combat-gold-dim);
+  background: var(--combat-shell);
+}
+
+.setup-league-display__header,
+.setup-league-display__section-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.setup-league-display__header {
+  border-bottom: 1px solid var(--combat-line);
+  padding-bottom: 0.55rem;
+}
+
+.setup-league-display__header h2,
+.setup-league-display__section-head h3 {
+  margin: 0;
+  color: var(--combat-gold-bright);
+  font-family: Georgia, "Times New Roman", serif;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.setup-league-display__header h2 {
+  font-size: 1rem;
+}
+.setup-league-display__section-head h3 {
+  font-size: 0.78rem;
+}
+.setup-league-display__section-head span,
+.setup-league-display__regions span {
+  margin-left: auto;
+  color: var(--combat-muted);
+  font:
+    0.65rem ui-monospace,
+    SFMono-Regular,
+    monospace;
+  text-transform: uppercase;
+}
+.setup-league-display__regions {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  margin-left: auto;
+}
+.setup-league-display__regions .game-icon {
+  filter: drop-shadow(0 1px 2px #000);
+}
+.setup-league-display__edit {
+  border: 1px solid var(--combat-gold-dim);
+  padding: 0.35rem 0.55rem;
+  color: var(--combat-gold-bright);
+  font-size: 0.72rem;
+  text-decoration: none;
+}
+.setup-league-display__edit:hover {
+  border-color: var(--combat-gold-bright);
+  background: var(--combat-raised);
+}
+.setup-league-display__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.45fr);
+  gap: 0.8rem;
+  padding-top: 0.65rem;
+}
+.setup-league-display__section-head {
+  margin-bottom: 0.4rem;
+}
+.setup-league-relics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.35rem;
+}
+.setup-league-relic {
+  display: flex;
+  min-height: 4.1rem;
+  gap: 0.45rem;
+  align-items: center;
+  padding: 0.4rem;
+  border: 1px solid var(--combat-gold-dim);
+  background: var(--combat-inset);
+  color: inherit;
+  text-decoration: none;
+}
+.setup-league-relic.is-empty {
+  border-style: dotted;
+  opacity: 0.76;
+}
+.setup-league-relic.is-filled:hover {
+  border-color: var(--combat-gold-bright);
+}
+.setup-league-relic__icon {
+  display: grid;
+  width: 2.2rem;
+  height: 2.2rem;
+  flex: 0 0 2.2rem;
+  place-items: center;
+  border: 1px solid var(--combat-line);
+  color: var(--combat-gold-bright);
+  font:
+    0.7rem ui-monospace,
+    SFMono-Regular,
+    monospace;
+}
+.setup-league-relic__icon .game-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 2px #000);
+}
+.setup-league-relic__copy,
+.setup-league-blessing__copy {
+  min-width: 0;
+  display: grid;
+  gap: 0.08rem;
+}
+.setup-league-relic__copy small,
+.setup-league-blessing__tier {
+  color: var(--combat-gold-mid);
+  font:
+    0.58rem ui-monospace,
+    SFMono-Regular,
+    monospace;
+  letter-spacing: 0.08em;
+}
+.setup-league-relic__copy strong,
+.setup-league-blessing__copy strong {
+  overflow: hidden;
+  color: var(--combat-text);
+  font-size: 0.73rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.setup-league-relic__copy em,
+.setup-league-blessing__copy small {
+  overflow: hidden;
+  color: var(--combat-muted);
+  font-size: 0.64rem;
+  font-style: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.setup-league-blessings {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+.setup-league-blessing {
+  position: relative;
+  display: flex;
+  min-height: 4.1rem;
+  gap: 0.45rem;
+  align-items: center;
+  padding: 0.4rem;
+  border: 1px solid var(--combat-gold-dim);
+  background: var(--combat-inset);
+}
+.setup-league-blessing.is-empty {
+  border-style: dotted;
+  opacity: 0.72;
+}
+.setup-league-blessing__icon {
+  display: grid;
+  width: 2.1rem;
+  height: 2.1rem;
+  flex: 0 0 2.1rem;
+  place-items: center;
+  border: 1px solid var(--combat-line);
+  color: var(--combat-gem);
+  font-size: 1.3rem;
+}
+.setup-league-blessing__icon .game-icon {
+  filter: drop-shadow(0 2px 2px #000);
+}
+.setup-league-blessing__path {
+  position: absolute;
+  right: 0.35rem;
+  bottom: 0.25rem;
+  color: var(--combat-gem);
+  font:
+    0.55rem ui-monospace,
+    SFMono-Regular,
+    monospace;
+  text-transform: uppercase;
+}
+
+@media (max-width: 900px) {
+  .combat-screen .setup-league-display {
+    margin-inline: 0.35rem;
+  }
+  .setup-league-display__grid {
+    grid-template-columns: 1fr;
+  }
+  .setup-league-blessings {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .combat-screen *,
   .combat-screen *::before,

@@ -35,6 +35,12 @@ describe("gameArt", () => {
     expect(abilityCategoryLabel("ultimate")).toBe("ultimate");
   });
 
+  it("keeps the legacy hydra art for the corrected hydrix bolt id", () => {
+    expect(dataEntityIconPath({ id: "item:hydrix-bakriminel-bolts-e" })).toBe(
+      "/game/combat/equipment/hydra-bakriminel-bolts-e.webp",
+    );
+  });
+
   it("maps Infernal Fire to its locally published relic icon", () => {
     const path = relicIconPath("Infernal Fire");
     expect(path).toBe("/game/relics/infernal-fire.webp");

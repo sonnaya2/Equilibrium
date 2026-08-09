@@ -75,6 +75,8 @@ export interface LoadoutTarget {
   /** Optional maximum LP for Death Mark execution assessment. */
   maximumLifePoints?: number;
   hasApplicableWeakness?: boolean;
+  elementalWeakness?: "water" | "fire" | "other" | "unknown";
+  dragonfireImmune?: boolean;
   /** NPC size config used by mechanics such as Splash Zone. */
   size?: number;
   /** Spatial footprint reserved for mechanics that inspect occupied coverage. */
@@ -257,6 +259,7 @@ export interface LoadoutBuffs {
   strengthCape99: boolean;
   /** Attack master cape (120): +2% melee hit chance while style is melee. */
   attackCape120: boolean;
+  eliteSeersVillage: boolean;
   /**
    * Protection prayer or deflection curse active (scenario for Icyenic Faith
    * 100% block + Soul Split-on-protect).
@@ -499,6 +502,7 @@ export const DEFAULT_LOADOUT: Loadout = {
     powerburstOfVitalityCooldownUntil: null,
     strengthCape99: false,
     attackCape120: false,
+    eliteSeersVillage: false,
     protectionPrayer: false,
     berserkersFury: false,
     furyOfTheSmall: false,
@@ -1234,6 +1238,13 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
                 }
               : {}),
             ...(rawTarget.hasApplicableWeakness === true ? { hasApplicableWeakness: true } : {}),
+            elementalWeakness:
+              rawTarget.elementalWeakness === "water" ||
+              rawTarget.elementalWeakness === "fire" ||
+              rawTarget.elementalWeakness === "other"
+                ? rawTarget.elementalWeakness
+                : "unknown",
+            dragonfireImmune: rawTarget.dragonfireImmune === true,
             ...(Number.isFinite(rawTarget.size)
               ? { size: Math.max(1, Math.floor(Number(rawTarget.size))) }
               : {}),
@@ -1309,6 +1320,7 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       powerburstOfVitalityCooldownUntil,
       strengthCape99: rawBuffs.strengthCape99 === true,
       attackCape120: rawBuffs.attackCape120 === true,
+      eliteSeersVillage: rawBuffs.eliteSeersVillage === true,
       protectionPrayer: rawBuffs.protectionPrayer === true,
       sliverOfEdictsActive: rawBuffs.sliverOfEdictsActive === true,
       ringOfVigourPassive: rawBuffs.ringOfVigourPassive === true,

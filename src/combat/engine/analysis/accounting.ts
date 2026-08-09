@@ -105,6 +105,18 @@ export function accountPlayerPoisonHits(
   ledger.expectedPlayerPoisonHits += expectedHits;
 }
 
+export function accountAppliedEffect(
+  analysis: RuntimeAnalysisState,
+  id: string,
+  expectedActivations = 1,
+): void {
+  if (!(expectedActivations > 0)) return;
+  const ledger = analysis.effects.get(id) ?? emptyLedger(id, "equipment-passive");
+  ledger.kind = "equipment-passive";
+  ledger.expectedActivations += expectedActivations;
+  analysis.effects.set(id, ledger);
+}
+
 /** Parent ability that a bonus-damage rider attached to (already in the event log). */
 function parentAbilityId(
   rt: SimulationRuntime,

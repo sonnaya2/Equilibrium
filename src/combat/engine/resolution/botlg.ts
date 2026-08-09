@@ -57,6 +57,8 @@ function emptyPerfectEquilibriumSnapshot(baseMods: CombatModifier[]): CastSnapsh
     surgingStormAtCast: false,
     perfectEquilibriumAtCast: false,
     perfectEquilibriumTrigger: false,
+    wenIcyPrecisionDamageAtCast: false,
+    wenIcyPrecisionDamagePotentialAtCast: false,
     songEmpowered: false,
     songConflagrateActive: false,
     songTwoPieceActive: false,

@@ -6667,5 +6667,365 @@
     "search": "Barricade ability icon",
     "canonicalPage": "https://runescape.wiki/w/Barricade",
     "aliases": ["ability-barricade"]
-  }
+  },
+  {
+    "id": "combat-ammo-araxyte-arrows",
+    "label": "Araxyte arrows",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/araxyte-arrows",
+    "fileTitle": "Araxyte arrow.png",
+    "search": "Araxyte arrows inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Araxyte_arrow"
+  },
+  {
+    "id": "combat-ammo-ascension-bolts",
+    "label": "Ascension bolts",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/ascension-bolts",
+    "fileTitle": "Ascension bolts.png",
+    "search": "Ascension bolts inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Ascension_bolts"
+  },
+  {
+    "id": "combat-ammo-black-stone-arrows",
+    "label": "Black stone arrows",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/black-stone-arrows",
+    "fileTitle": "Black stone arrows.png",
+    "search": "Black stone arrows inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Black_stone_arrows"
+  },
+  {
+    "id": "combat-ammo-bronze-arrows",
+    "label": "Bronze arrows",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/bronze-arrows",
+    "fileTitle": "Bronze arrow.png",
+    "search": "Bronze arrows inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Bronze_arrow"
+  },
+  {
+    "id": "combat-ammo-bronze-bolts",
+    "label": "Bronze bolts",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/bronze-bolts",
+    "fileTitle": "Bronze bolts.png",
+    "search": "Bronze bolts inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Bronze_bolts"
+  },
+  {
+    "id": "combat-ammo-diamond-bakriminel-bolts-e",
+    "label": "Diamond bakriminel bolts (e)",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/diamond-bakriminel-bolts-e",
+    "fileTitle": "Diamond bakriminel bolts (e).png",
+    "search": "Diamond bakriminel bolts (e) inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Diamond_bakriminel_bolts_%28e%29"
+  },
+  {
+    "id": "combat-ammo-diamond-bolts-e",
+    "label": "Diamond bolts (e)",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/diamond-bolts-e",
+    "fileTitle": "Diamond bolts (e).png",
+    "search": "Diamond bolts (e) inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Diamond_bolts_%28e%29"
+  },
+  {
+    "id": "combat-ammo-dragon-arrows",
+    "label": "Dragon arrows",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/dragon-arrows",
+    "fileTitle": "Dragon arrow.png",
+    "search": "Dragon arrows inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Dragon_arrow"
+  },
+  {
+    "id": "combat-ammo-dragon-bolts",
+    "label": "Dragon bolts",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/dragon-bolts",
+    "fileTitle": "Dragon bolts.png",
+    "search": "Dragon bolts inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Dragon_bolts"
+  },
+  {
+    "id": "combat-ammo-dragonbane-arrows",
+    "label": "Dragonbane arrows",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/dragonbane-arrows",
+    "fileTitle": "Dragonbane arrow.png",
+    "search": "Dragonbane arrows inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Dragonbane_arrow"
+  },
+  {
+    "id": "combat-ammo-dragonbane-bolts",
+    "label": "Dragonbane bolts",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/dragonbane-bolts",
+    "fileTitle": "Dragonbane bolts.png",
+    "search": "Dragonbane bolts inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Dragonbane_bolts"
+  },
+  {
+    "id": "combat-ammo-dragonstone-bakriminel-bolts-e",
+    "label": "Dragonstone bakriminel bolts (e)",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/dragonstone-bakriminel-bolts-e",
+    "fileTitle": "Dragonstone bakriminel bolts (e).png",
+    "search": "Dragonstone bakriminel bolts (e) inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Dragonstone_bakriminel_bolts_%28e%29"
+  },
+  {
+    "id": "combat-ammo-dragonstone-bolts-e",
+    "label": "Dragonstone bolts (e)",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/dragonstone-bolts-e",
+    "fileTitle": "Dragon bolts (e).png",
+    "search": "Dragonstone bolts (e) inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Dragon_bolts_%28e%29"
+  },
+  {
+    "id": "combat-ammo-emerald-bakriminel-bolts-e",
+    "label": "Emerald bakriminel bolts (e)",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/emerald-bakriminel-bolts-e",
+    "fileTitle": "Emerald bakriminel bolts (e).png",
+    "search": "Emerald bakriminel bolts (e) inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Emerald_bakriminel_bolts_%28e%29"
+  },
+  {
+    "id": "combat-ammo-emerald-bolts-e",
+    "label": "Emerald bolts (e)",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/emerald-bolts-e",
+    "fileTitle": "Emerald bolts (e).png",
+    "search": "Emerald bolts (e) inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Emerald_bolts_%28e%29"
+  },
+  {
+    "id": "combat-ammo-hydrix-bakriminel-bolts-e",
+    "label": "Hydrix bakriminel bolts (e)",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/hydrix-bakriminel-bolts-e",
+    "fileTitle": "Hydrix bakriminel bolts (e).png",
+    "search": "Hydrix bakriminel bolts (e) inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Hydrix_bakriminel_bolts_%28e%29"
+  },
+  {
+    "id": "combat-ammo-jade-bakriminel-bolts-e",
+    "label": "Jade bakriminel bolts (e)",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/jade-bakriminel-bolts-e",
+    "fileTitle": "Jade bakriminel bolts (e).png",
+    "search": "Jade bakriminel bolts (e) inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Jade_bakriminel_bolts_%28e%29"
+  },
+  {
+    "id": "combat-ammo-jade-bolts-e",
+    "label": "Jade bolts (e)",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/jade-bolts-e",
+    "fileTitle": "Jade bolts (e).png",
+    "search": "Jade bolts (e) inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Jade_bolts_%28e%29"
+  },
+  {
+    "id": "combat-ammo-jas-demonbane-arrows",
+    "label": "Jas demonbane arrows",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/jas-demonbane-arrows",
+    "fileTitle": "Jas demonbane arrow.png",
+    "search": "Jas demonbane arrows inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Jas_demonbane_arrow"
+  },
+  {
+    "id": "combat-ammo-onyx-bakriminel-bolts-e",
+    "label": "Onyx bakriminel bolts (e)",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/onyx-bakriminel-bolts-e",
+    "fileTitle": "Onyx bakriminel bolts (e).png",
+    "search": "Onyx bakriminel bolts (e) inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Onyx_bakriminel_bolts_%28e%29"
+  },
+  {
+    "id": "combat-ammo-onyx-bolts-e",
+    "label": "Onyx bolts (e)",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/onyx-bolts-e",
+    "fileTitle": "Onyx bolts (e).png",
+    "search": "Onyx bolts (e) inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Onyx_bolts_%28e%29"
+  },
+  {
+    "id": "combat-ammo-opal-bakriminel-bolts-e",
+    "label": "Opal bakriminel bolts (e)",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/opal-bakriminel-bolts-e",
+    "fileTitle": "Opal bakriminel bolts (e).png",
+    "search": "Opal bakriminel bolts (e) inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Opal_bakriminel_bolts_%28e%29"
+  },
+  {
+    "id": "combat-ammo-opal-bolts-e",
+    "label": "Opal bolts (e)",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/opal-bolts-e",
+    "fileTitle": "Opal bolts (e).png",
+    "search": "Opal bolts (e) inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Opal_bolts_%28e%29"
+  },
+  {
+    "id": "combat-ammo-pearl-bakriminel-bolts-e",
+    "label": "Pearl bakriminel bolts (e)",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/pearl-bakriminel-bolts-e",
+    "fileTitle": "Pearl bakriminel bolts (e).png",
+    "search": "Pearl bakriminel bolts (e) inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Pearl_bakriminel_bolts_%28e%29"
+  },
+  {
+    "id": "combat-ammo-pearl-bolts-e",
+    "label": "Pearl bolts (e)",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/pearl-bolts-e",
+    "fileTitle": "Pearl bolts (e).png",
+    "search": "Pearl bolts (e) inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Pearl_bolts_%28e%29"
+  },
+  {
+    "id": "combat-ammo-pernix-quiver",
+    "label": "Pernix's quiver",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/pernix-quiver",
+    "fileTitle": "Pernix's quiver.png",
+    "search": "Pernix's quiver inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Pernix%27s_quiver"
+  },
+  {
+    "id": "combat-ammo-ruby-bakriminel-bolts-e",
+    "label": "Ruby bakriminel bolts (e)",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/ruby-bakriminel-bolts-e",
+    "fileTitle": "Ruby bakriminel bolts (e).png",
+    "search": "Ruby bakriminel bolts (e) inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Ruby_bakriminel_bolts_%28e%29"
+  },
+  {
+    "id": "combat-ammo-ruby-bolts-e",
+    "label": "Ruby bolts (e)",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/ruby-bolts-e",
+    "fileTitle": "Ruby bolts (e).png",
+    "search": "Ruby bolts (e) inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Ruby_bolts_%28e%29"
+  },
+  {
+    "id": "combat-ammo-rune-arrows",
+    "label": "Rune arrows",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/rune-arrows",
+    "fileTitle": "Rune arrow.png",
+    "search": "Rune arrows inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Rune_arrow"
+  },
+  {
+    "id": "combat-ammo-rune-bolts",
+    "label": "Rune bolts",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/rune-bolts",
+    "fileTitle": "Rune bolts.png",
+    "search": "Rune bolts inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Rune_bolts"
+  },
+  {
+    "id": "combat-ammo-sapphire-bakriminel-bolts-e",
+    "label": "Sapphire bakriminel bolts (e)",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/sapphire-bakriminel-bolts-e",
+    "fileTitle": "Sapphire bakriminel bolts (e).png",
+    "search": "Sapphire bakriminel bolts (e) inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Sapphire_bakriminel_bolts_%28e%29"
+  },
+  {
+    "id": "combat-ammo-sapphire-bolts-e",
+    "label": "Sapphire bolts (e)",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/sapphire-bolts-e",
+    "fileTitle": "Sapphire bolts (e).png",
+    "search": "Sapphire bolts (e) inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Sapphire_bolts_%28e%29"
+  },
+  {
+    "id": "combat-ammo-splintering-arrows",
+    "label": "Splintering arrows",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/splintering-arrows",
+    "fileTitle": "Splintering arrows.png",
+    "search": "Splintering arrows inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Splintering_arrows"
+  },
+  {
+    "id": "combat-ammo-stalker-arrows",
+    "label": "Stalker arrows",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/stalker-arrows",
+    "fileTitle": "Stalker arrow.png",
+    "search": "Stalker arrows inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Stalker_arrow"
+  },
+  {
+    "id": "combat-ammo-tirannwn-quiver-1",
+    "label": "Tirannwn quiver 1",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/tirannwn-quiver-1",
+    "fileTitle": "Tirannwn quiver 1.png",
+    "search": "Tirannwn quiver 1 inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Tirannwn_quiver_1"
+  },
+  {
+    "id": "combat-ammo-tirannwn-quiver-2",
+    "label": "Tirannwn quiver 2",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/tirannwn-quiver-2",
+    "fileTitle": "Tirannwn quiver 2.png",
+    "search": "Tirannwn quiver 2 inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Tirannwn_quiver_2"
+  },
+  {
+    "id": "combat-ammo-tirannwn-quiver-3",
+    "label": "Tirannwn quiver 3",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/tirannwn-quiver-3",
+    "fileTitle": "Tirannwn quiver 3.png",
+    "search": "Tirannwn quiver 3 inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Tirannwn_quiver_3"
+  },
+  {
+    "id": "combat-ammo-tirannwn-quiver-4",
+    "label": "Tirannwn quiver 4",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/tirannwn-quiver-4",
+    "fileTitle": "Tirannwn quiver 4.png",
+    "search": "Tirannwn quiver 4 inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Tirannwn_quiver_4"
+  },
+  {
+    "id": "combat-ammo-topaz-bakriminel-bolts-e",
+    "label": "Red topaz bakriminel bolts (e)",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/topaz-bakriminel-bolts-e",
+    "fileTitle": "Red topaz bakriminel bolts (e).png",
+    "search": "Red topaz bakriminel bolts (e) inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Red_topaz_bakriminel_bolts_%28e%29"
+  },
+  {
+    "id": "combat-ammo-topaz-bolts-e",
+    "label": "Topaz bolts (e)",
+    "category": "rs3/combat/equipment",
+    "path": "public/game/combat/equipment/topaz-bolts-e",
+    "fileTitle": "Topaz bolts (e).png",
+    "search": "Topaz bolts (e) inventory icon",
+    "canonicalPage": "https://runescape.wiki/w/Topaz_bolts_%28e%29"
+  },
 ]

@@ -13,6 +13,7 @@ import {
   resolveLeagueAttachedRawHost,
 } from "./damage";
 import { resolveLeagueRules } from "./ruleset";
+import { testRangedAmmunition } from "../testing/rangedAmmunition";
 
 const INFERNO_CHANCE = 0.05;
 
@@ -341,7 +342,7 @@ describe("Big Boned source composition", () => {
       ...rangedInput,
       league: rules,
       context: { style: "ranged", ruleset: "equilibrium" },
-      ammo: "splintering",
+      ammunition: testRangedAmmunition("splintering"),
       rotation: rotationOf("ranged_attack"),
     });
     const puncture = punctureSummary.events.filter((event) => event.abilityId === "puncture");

@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { activeEquipmentEffects } from "../../shared/equipment";
+import { testRangedAmmunition } from "../../testing/rangedAmmunition";
 import {
+  canActivateBoltDeathmark,
   createStochasticOracle,
   hasDeathMarkApplicationOpportunity,
   hasRevolutionDeathMarkApplicationOpportunity,
@@ -33,6 +35,17 @@ const necromancyBasic: AbilitySpec = {
   hits: [{ band: { minPct: 90, maxPct: 110 } }],
 };
 const magicDirect: AbilitySpec = { ...necromancyDirect, id: "magic_direct", style: "magic" };
+const rangedDirect: AbilitySpec = { ...necromancyDirect, id: "ranged_direct", style: "ranged" };
+const rangedDot: AbilitySpec = {
+  ...rangedDirect,
+  id: "ranged_dot",
+  hits: [{ band: { minPct: 90, maxPct: 110 }, dot: true }],
+};
+const rangedBasic: AbilitySpec = {
+  ...rangedDirect,
+  id: "ranged_attack",
+  basicAttack: true,
+};
 const deathdealer = {
   ...activeEquipmentEffects({ style: "necromancy" }),
   deathdealer: { physicalPieces: 5, effectivePieces: 5, applicationChance: 0.5 },
@@ -131,6 +144,37 @@ describe("counter-based stochastic oracle", () => {
     expect(stochasticLaneCount({}, ["tsunami"])).toBe(128);
     expect(stochasticLaneCount({}, ["instability"])).toBe(1);
     expect(stochasticLaneCount({}, ["instability", "tsunami"])).toBe(128);
+  });
+
+  it("uses stochastic lanes only for active Hydrix or Ascendri direct ranged hits", () => {
+    const hydrix = testRangedAmmunition("hydrix");
+    expect(canActivateBoltDeathmark(rangedDirect)).toBe(true);
+    expect(canActivateBoltDeathmark(rangedDot)).toBe(false);
+    expect(stochasticLaneCount({ abilities: [rangedDirect], ammunition: hydrix }, [])).toBe(1);
+    expect(
+      stochasticLaneCount({ abilities: [rangedDirect], ammunition: hydrix }, ["ranged_direct"]),
+    ).toBe(128);
+    expect(
+      stochasticLaneCount(
+        { abilities: [rangedBasic], style: "ranged", ammunition: hydrix },
+        [],
+      ),
+    ).toBe(128);
+    expect(
+      stochasticLaneCount({ abilities: [rangedDot], ammunition: hydrix }, ["ranged_dot"]),
+    ).toBe(1);
+    expect(
+      stochasticLaneCount(
+        {
+          abilities: [rangedDirect],
+          ammunition: {
+            ...hydrix,
+            projectile: { ...hydrix.projectile!, mechanicId: "diamond" },
+          },
+        },
+        ["ranged_direct"],
+      ),
+    ).toBe(1);
   });
 
   it("honors an explicit diagnostic lane count", () => {

@@ -5,6 +5,7 @@ import { unlockedRegions } from "@/league";
 import { useBuild } from "@/league/useBuild";
 import { EquipmentColumn } from "./EquipmentColumn";
 import { LoadoutEditorDialog, type LoadoutEditorMode } from "./LoadoutEditorDialog";
+import { LeagueLoadoutDisplay } from "./LeagueLoadoutDisplay";
 import { loadoutStats } from "./loadoutStats";
 import { ResolvedSummary } from "./ResolvedSummary";
 import { SetupWorkbench } from "./SetupWorkbench";
@@ -58,6 +59,7 @@ export function SetupTab({
           <ResolvedSummary stats={stats} />
         </aside>
       </div>
+      <LeagueLoadoutDisplay build={build} regions={regions} />
       <LoadoutEditorDialog
         mode={editorMode}
         loadout={loadout}

@@ -50,6 +50,9 @@ export function applyPreparedTransitions(fx: CastEffectContext): void {
           perfectEquilibriumStacks: 0,
         });
         break;
+      case "activateWenIcyPrecision":
+        rt.state = patchRanged(rt.state, { wen: transition.next });
+        break;
       case "consumeSongConflagrate":
         rt.analysis.song.conflagrateConsumptions += 1;
         rt.state = patchMagic(rt.state, {

@@ -9,6 +9,7 @@ import { simulateRevolution } from "../simulation/revolution";
 import { baseInput } from "../../test/fixtures/inputs";
 import { lastCast } from "../../test/helpers/summary";
 import { meetsWeaponRequirement } from "./rules";
+import { testRangedAmmunition } from "../../testing/rangedAmmunition";
 
 /**
  * Regression coverage for cast preparation: future-tick evaluation uses the
@@ -40,7 +41,7 @@ describe("cast boundary — candidate-tick evaluation", () => {
     // advanced state (buff active), not the pre-channel one.
     const s = simulate({
       ...rangedInput,
-      ammo: "deathspore",
+      ammunition: testRangedAmmunition("deathspore"),
       rotation: rotationOf(...Array(6).fill("ranged_attack"), "rapid_fire", "corruption_shot"),
     });
     expect(s.ok).toBe(true);
@@ -59,7 +60,7 @@ describe("cast boundary — candidate-tick evaluation", () => {
     // window (23 + 15 = 38): evaluated at the candidate, the buff is gone.
     const s = simulate({
       ...rangedInput,
-      ammo: "deathspore",
+      ammunition: testRangedAmmunition("deathspore"),
       rotation: rotationOf(
         ...Array(6).fill("ranged_attack"),
         "rapid_fire",

@@ -51,6 +51,17 @@ describe("resolveAdrenalineTransaction - generation", () => {
     expect(tx.totalAbilityGain).toBeCloseTo(12, 10);
   });
 
+  it("applies active bolt Deathmark before Invigorating", () => {
+    const tx = resolveAdrenalineTransaction({
+      ...baseGain,
+      boltDeathmarkFlatBonus: 1,
+      basicGainMultiplier: 1.2,
+    });
+    expect(tx.boltDeathmarkGain).toBe(1);
+    expect(tx.gainBeforeInvigorating).toBe(10);
+    expect(tx.totalAbilityGain).toBeCloseTo(12, 10);
+  });
+
   it("5. basic attack + Impatient + Invig4: 14.4", () => {
     const tx = resolveAdrenalineTransaction({
       ...baseGain,

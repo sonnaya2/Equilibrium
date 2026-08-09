@@ -27,6 +27,7 @@ import {
 } from "../../shared/equipment";
 import { FROSTBLADES_AD_FRACTION } from "../../styles/melee/effects";
 import { activeFrostbladesMass } from "../../styles/melee/primordialIce";
+import { WEN_ICY_PRECISION_DAMAGE_MULTIPLIER } from "../../styles/ranged/wen";
 import {
   NO_SONG_OF_DESTRUCTION,
   songOfDestructionModifiers,
@@ -91,6 +92,7 @@ export function landTimeModifiers(
   dotKind?: DamageOverTimeKind,
   frostbladesActive?: boolean,
   provenance?: DamageProvenance,
+  enchantedBoltProcActive?: boolean,
 ): CombatModifier[] {
   const { state } = rt;
   const modifiers = [...snap.baseMods];
@@ -162,6 +164,7 @@ export function landTimeModifiers(
         attackOrigin: "player",
         attackKind: "ability",
         targetClassification: rt.input.targetClassification,
+        enchantedBoltProcActive,
       });
       if (ammunition.sourceHitMultiplier !== 1) {
         const multiplier = ammunition.sourceHitMultiplier;
@@ -180,6 +183,19 @@ export function landTimeModifiers(
           source: MODERNISATION_WIKI,
         });
       }
+    }
+    if (snap.wenIcyPrecisionDamageAtCast) {
+      modifiers.push({
+        id: "ammunition:wen-icy-precision",
+        stage: "onHit",
+        priority: 31,
+        applies: (context) => context.style === "ranged",
+        apply: (damage) => ({
+          ...damage,
+          damage: mulFloor(damage.damage, WEN_ICY_PRECISION_DAMAGE_MULTIPLIER),
+        }),
+        source: MODERNISATION_PATCH_2,
+      });
     }
     const mult = deathsSwiftnessMultiplier(state.ranged.swiftness, at);
     if (mult !== 1) {

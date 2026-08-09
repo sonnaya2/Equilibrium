@@ -5,12 +5,22 @@ import {
 import type { RangedAmmunitionMechanicId } from "../data/ammunition";
 
 export function testRangedAmmunition(
-  mechanicId: Extract<RangedAmmunitionMechanicId, "deathspore" | "splintering" | "bik">,
+  mechanicId: Extract<
+    RangedAmmunitionMechanicId,
+    "deathspore" | "splintering" | "bik" | "wen" | "opal" | "pearl" | "hydrix" | "ascendri"
+  >,
 ): ResolvedRangedAmmunitionProfile {
+  const family =
+    mechanicId === "opal" ||
+    mechanicId === "pearl" ||
+    mechanicId === "hydrix" ||
+    mechanicId === "ascendri"
+      ? ("bolts" as const)
+      : ("arrows" as const);
   const projectile = resolveAmmunitionProfile({
-    id: `item:test-${mechanicId}-arrows`,
-    label: `Test ${mechanicId} arrows`,
-    family: "arrows",
+    id: `item:test-${mechanicId}-${family}`,
+    label: `Test ${mechanicId} ${family}`,
+    family,
     statTier: 95,
     mechanicId,
     support: { status: "partially-modeled", label: "Test fixture" },
@@ -19,7 +29,7 @@ export function testRangedAmmunition(
   return Object.freeze({
     projectile,
     quiver: null,
-    weaponCapability: { mode: "optional", acceptedFamily: "arrows" } as const,
+    weaponCapability: { mode: "optional", acceptedFamily: family } as const,
     effectiveStatTier: 95,
   });
 }

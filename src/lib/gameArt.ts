@@ -43,8 +43,9 @@ export const worldMapIconPath = () => "/game/leagues/world-map-icon.webp";
  */
 export function equipmentIconPath(equipmentId: string): string | null {
   const slug = equipmentId.replace(/^(?:item|equipment|cross-region):/, "");
-  if (!EQUIPMENT_OK.has(slug)) return null;
-  return `/game/combat/equipment/${slug}.webp`;
+  const resolvedSlug = DATA_ICON_ALIASES[slug] ?? slug;
+  if (!EQUIPMENT_OK.has(resolvedSlug)) return null;
+  return `/game/combat/equipment/${resolvedSlug}.webp`;
 }
 
 /** Equipment-variant ability ids share base art (death-skulls.webp, not death-skulls-igneous.webp). */
@@ -100,6 +101,7 @@ export function abilityCategoryLabel(
 
 /** Explicit name / label → published slug. Wrong icon is worse than none. */
 const DATA_ICON_ALIASES: Record<string, string> = {
+  "hydrix-bakriminel-bolts-e": "hydra-bakriminel-bolts-e",
   "abandoned mine salve shard mining": "salve-amulet-e",
   "salve amulet (e)": "salve-amulet-e",
   "salve amulet e": "salve-amulet-e",

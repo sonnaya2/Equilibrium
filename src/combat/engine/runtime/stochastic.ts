@@ -8,6 +8,7 @@ import { resolvePoisonApplication, type PlayerPoisonProfile } from "../../poison
 import { isBasicAttack } from "../../shared/adrenalineGain";
 import type { ActiveEquipmentEffects } from "../../shared/equipment";
 import { deathdealerApplicationChance } from "../../shared/equipment";
+import type { ResolvedRangedAmmunitionProfile } from "../../styles/ranged/ammunitionProfile";
 
 export const DEFAULT_STOCHASTIC_LANES = 128;
 export const DEFAULT_STOCHASTIC_SEED = 0x6d2b79f5;
@@ -21,6 +22,7 @@ interface StatefulRngInput {
   readonly playerPoison?: PlayerPoisonProfile;
   readonly targetPoisonImmune?: boolean;
   readonly equipmentEffects?: ActiveEquipmentEffects;
+  readonly ammunition?: ResolvedRangedAmmunitionProfile | null;
   readonly abilities?: readonly AbilitySpec[];
   readonly abilityRegistry?: {
     readonly byId: ReadonlyMap<string, AbilitySpec>;
@@ -92,6 +94,27 @@ export function hasRevolutionDeathMarkApplicationOpportunity(
   return false;
 }
 
+export function canActivateBoltDeathmark(ability: AbilitySpec | undefined): boolean {
+  return (
+    ability?.style === "ranged" &&
+    ability.hits.some((hit) => hit.dot !== true && hit.band.maxPct > 0)
+  );
+}
+
+function hasBoltDeathmarkApplicationOpportunity(
+  input: StatefulRngInput,
+  activeAbilityIds: Iterable<string>,
+): boolean {
+  for (const abilityId of activeAbilityIds) {
+    if (canActivateBoltDeathmark(abilityForId(input, abilityId))) return true;
+  }
+  if (input.style !== "ranged") return false;
+  const basic =
+    input.abilityRegistry?.basicByStyle.get("ranged") ??
+    input.abilities?.find((ability) => ability.style === "ranged" && isBasicAttack(ability));
+  return canActivateBoltDeathmark(basic);
+}
+
 export function needsStochasticLanes(
   input: StatefulRngInput,
   activeAbilityIds: Iterable<string>,
@@ -118,6 +141,13 @@ export function needsStochasticLanes(
   if (
     input.equipmentEffects?.songOfDestruction?.enabled === true &&
     hasSongEmpowermentOpportunity(input, abilityIds)
+  ) {
+    return true;
+  }
+  const ammunitionMechanic = input.ammunition?.projectile?.mechanicId;
+  if (
+    (ammunitionMechanic === "hydrix" || ammunitionMechanic === "ascendri") &&
+    hasBoltDeathmarkApplicationOpportunity(input, abilityIds)
   ) {
     return true;
   }

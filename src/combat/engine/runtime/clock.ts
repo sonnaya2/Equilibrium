@@ -2,7 +2,7 @@ import { endBerserk } from "../../styles/melee/bloodlust";
 import { METEOR_STRIKE_PASSIVE_ADREN_PER_TICK } from "../../styles/melee/effects";
 import { processSpiritEvent } from "../schedulers/conjures";
 import { recordResolved } from "../resolution";
-import { gainAdrenaline, patchMagic, patchMelee } from "./state";
+import { gainAdrenaline, patchMagic, patchMelee, patchRanged } from "./state";
 import type { SimulationRuntime } from "./runtime";
 import { playerPoisonPrecedes } from "../schedulers/playerPoison";
 import {
@@ -19,6 +19,7 @@ import {
   normalizeEssenceCorruptionState,
   normalizeSongAdrenalineStream,
 } from "../../styles/magic/songOfDestruction";
+import { expireWenArrowState } from "../../styles/ranged/wen";
 
 /**
  * The canonical simulation clock. Time moves only through advanceTo: it lands
@@ -178,4 +179,6 @@ export function advanceTo(rt: SimulationRuntime, targetTick: number): void {
   if (ice !== rt.state.melee.primordialIce) {
     rt.state = patchMelee(rt.state, { primordialIce: ice });
   }
+  const wen = expireWenArrowState(rt.state.ranged.wen, rt.state.tick);
+  if (wen !== rt.state.ranged.wen) rt.state = patchRanged(rt.state, { wen });
 }

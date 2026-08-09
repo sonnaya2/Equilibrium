@@ -1,4 +1,4 @@
-import { accountAnalysisEvent } from "../analysis";
+import { accountAnalysisEvent, accountAppliedEffect } from "../analysis";
 import type { ScheduledEvent } from "../runtime/events";
 import type { SimulationRuntime } from "../runtime/runtime";
 import type { EventResolution } from "./types";
@@ -17,6 +17,23 @@ import {
 import { sacrificeExpectedHeal } from "../../styles/shared/constitutionAbilities";
 import { shouldRetainHitDetail } from "./hitDetailsRetention";
 import { blessingRule } from "../../league/ruleset";
+import type { AppliedEventEffect } from "../runtime/events";
+
+export function recordAppliedEventEffect(
+  rt: SimulationRuntime,
+  event: ScheduledEvent<SimulationRuntime>,
+  effect: AppliedEventEffect,
+): void {
+  if (keepsAnalysisLedgers(rt.detailLevel)) accountAppliedEffect(rt.analysis, effect.id);
+  if (!keepsPresentationHistory(rt.detailLevel)) return;
+  for (let index = rt.events.length - 1; index >= 0; index--) {
+    const recorded = rt.events[index]!;
+    if (recorded.seq !== event.seq) continue;
+    const prior = recorded.appliedEffects?.filter((candidate) => candidate.id !== effect.id) ?? [];
+    rt.events[index] = { ...recorded, appliedEffects: [...prior, effect] };
+    return;
+  }
+}
 
 /**
  * Write generic ledgers for one landed event: totals, per-tick / per-ability

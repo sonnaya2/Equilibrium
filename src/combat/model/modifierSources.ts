@@ -75,6 +75,8 @@ export function resolveModifierSourcesFromHost(
       demon: input.target?.demon,
       dragon: input.target?.dragon,
       undead: input.target?.undead,
+      elementalWeakness: input.target?.elementalWeakness ?? "unknown",
+      dragonfireImmune: input.target?.dragonfireImmune === true,
     },
     // Pre-resolved on host (includes region gate for stand). Never re-resolve.
     slayerHelmet: input.slayerHelmet ?? null,

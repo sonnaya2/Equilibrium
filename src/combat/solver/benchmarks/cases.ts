@@ -19,6 +19,7 @@ import type { CombatStyle } from "../../types";
 import { OBJECTIVE_HORIZON_TICKS } from "../objective";
 import type { PlayerPoisonProfile } from "../../poison/mechanics";
 import type { ResolveLeagueRulesDerived } from "../../league/ruleset";
+import { testRangedAmmunition } from "../../testing/rangedAmmunition";
 
 export type BenchCaseId =
   | "melee-2h-4slot"
@@ -93,7 +94,7 @@ function baseLoadout(opts: {
   procs?: ProcRules;
   plantedFeet?: boolean;
   preciseRank?: number;
-  ammo?: SerializableRevolutionSimBase["ammo"];
+  ammunition?: SerializableRevolutionSimBase["ammunition"];
   conjureBasicDamageMult?: number;
   conjureDurationMult?: number;
   tumekensPieces?: number;
@@ -129,7 +130,7 @@ function baseLoadout(opts: {
     playerPoison: opts.playerPoison,
     plantedFeet: opts.plantedFeet,
     preciseRank: opts.preciseRank,
-    ammo: opts.ammo,
+    ammunition: opts.ammunition,
     conjureBasicDamageMult: opts.conjureBasicDamageMult,
     conjureDurationMult: opts.conjureDurationMult,
     tumekensPieces: opts.tumekensPieces,
@@ -158,7 +159,7 @@ function makeRequest(opts: {
   procs?: ProcRules;
   plantedFeet?: boolean;
   preciseRank?: number;
-  ammo?: SerializableRevolutionSimBase["ammo"];
+  ammunition?: SerializableRevolutionSimBase["ammunition"];
   conjureBasicDamageMult?: number;
   conjureDurationMult?: number;
   tumekensPieces?: number;
@@ -204,7 +205,7 @@ function makeRequest(opts: {
       procs: opts.procs,
       plantedFeet: opts.plantedFeet,
       preciseRank: opts.preciseRank,
-      ammo: opts.ammo,
+      ammunition: opts.ammunition,
       conjureBasicDamageMult: opts.conjureBasicDamageMult,
       conjureDurationMult: opts.conjureDurationMult,
       tumekensPieces: opts.tumekensPieces,
@@ -491,7 +492,7 @@ function leagueLightRequest(seed: number, leagueEnabled: boolean): SerializableS
     equipmentIds: ["item:bik-arrows", "item:cinderbane-gloves", "item:am-zi"],
     passiveIds: ["cinderbane-weapon-poison", "am-zi"],
     playerPoison,
-    ammo: "bik",
+    ammunition: testRangedAmmunition("bik"),
     procs: { cracklingRank: 4 },
     adrenaline: {
       impatientRank: 4,

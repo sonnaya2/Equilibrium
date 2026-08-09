@@ -48,6 +48,7 @@ import type { SimulationRuntime } from "../runtime/runtime";
 import { secondsToTicks } from "../../core/ticks";
 import { GLOBAL_COOLDOWN_TICKS } from "../runtime/timing";
 import { balanceByForceTriggersPerfectEquilibrium } from "../../styles/ranged/botlg";
+import { prepareWenArrowCast, type WenArrowState } from "../../styles/ranged/wen";
 import {
   activeEssenceCorruptionStacks,
   conflagrateActive,
@@ -102,6 +103,8 @@ export type PreparedTransition =
   | { kind: "consumePrimordialIce"; next: PrimordialIceDistribution }
   /** Balance by Force consumes the pre-cast Perfect Equilibrium trigger. */
   | { kind: "consumePerfectEquilibrium" }
+  /** A 10-stack Wen spender starts Icy Precision at cast time. */
+  | { kind: "activateWenIcyPrecision"; next: WenArrowState }
   /** The next Combust cast consumes its Soulfire Conflagrate window. */
   | { kind: "consumeSongConflagrate" }
   /** A qualifying Basic replaces the timed Song adrenaline stream. */
@@ -394,6 +397,13 @@ export function prepareCast(
   // Haunted snap: scheduled-event identity / forensics. Damage uses land-time in resolveCastHit.
   const hauntedAtCast = damaging && hauntedActive(rt.state.target.haunted, candidate);
   const hauntedCapAd = hauntedAtCast ? rt.state.target.haunted.capAbilityDamage : 0;
+  const wen =
+    input.ammunition?.projectile?.mechanicId === "wen"
+      ? prepareWenArrowCast(rt.state.ranged.wen, candidate, working)
+      : {
+          snapshot: { damageActive: false, damagePotentialActive: false },
+          nextState: null,
+        };
   const songConflagrateActive =
     songSummary?.enabled === true &&
     ability.id === "combust" &&
@@ -427,6 +437,8 @@ export function prepareCast(
       input.equipmentEffects?.activeWeapon?.passiveIds.includes("surging-storm") === true,
     perfectEquilibriumAtCast,
     perfectEquilibriumTrigger,
+    wenIcyPrecisionDamageAtCast: wen.snapshot.damageActive,
+    wenIcyPrecisionDamagePotentialAtCast: wen.snapshot.damagePotentialActive,
     songEmpowered: songEmpowerment.empowered,
     songConflagrateActive,
     songTwoPieceActive: songSummary?.twoPiece === true,
@@ -451,6 +463,7 @@ export function prepareCast(
     });
   }
   if (perfectEquilibriumTrigger) transitions.push({ kind: "consumePerfectEquilibrium" });
+  if (wen.nextState) transitions.push({ kind: "activateWenIcyPrecision", next: wen.nextState });
   if (songConflagrateActive) transitions.push({ kind: "consumeSongConflagrate" });
   if (songBasicStreamEligible) transitions.push({ kind: "armSongAdrenaline", stacks: songPreCastStacks });
 

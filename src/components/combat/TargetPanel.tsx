@@ -33,7 +33,14 @@ export function TargetPanel({
               setLoadout({
                 ...loadout,
                 target: event.target.checked
-                  ? { defenceLevel: 80, armour: 0, affinity: "same", additiveHitChance: 0 }
+                  ? {
+                      defenceLevel: 80,
+                      armour: 0,
+                      affinity: "same",
+                      additiveHitChance: 0,
+                      elementalWeakness: "unknown",
+                      dragonfireImmune: false,
+                    }
                   : null,
               })
             }
@@ -141,6 +148,24 @@ export function TargetPanel({
               />
               Has an applicable weakness
             </label>
+            <label className="loadout-select loadout-select--wide">
+              <span>Elemental weakness</span>
+              <select
+                value={target.elementalWeakness ?? "unknown"}
+                onChange={(event) =>
+                  updateTarget({
+                    elementalWeakness: event.target.value as NonNullable<
+                      LoadoutTarget["elementalWeakness"]
+                    >,
+                  })
+                }
+              >
+                <option value="unknown">Unknown</option>
+                <option value="water">Water</option>
+                <option value="fire">Fire</option>
+                <option value="other">Other</option>
+              </select>
+            </label>
             <label className="loadout-check">
               <input
                 type="checkbox"
@@ -156,6 +181,14 @@ export function TargetPanel({
                 onChange={(event) => updateTarget({ dragon: event.target.checked || undefined })}
               />
               Dragon (Dragon Slayer perk)
+            </label>
+            <label className="loadout-check">
+              <input
+                type="checkbox"
+                checked={target.dragonfireImmune === true}
+                onChange={(event) => updateTarget({ dragonfireImmune: event.target.checked })}
+              />
+              Dragonfire immune
             </label>
             <label className="loadout-check">
               <input

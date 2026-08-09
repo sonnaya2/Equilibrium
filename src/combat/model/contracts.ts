@@ -14,6 +14,7 @@ import type {
 import type { ResolvedCombatDiagnostics } from "./diagnostics";
 import type { PlayerPoisonProfile } from "../poison/mechanics";
 import type { ResolvedRangedAmmunitionProfile } from "../styles/ranged/ammunitionProfile";
+import type { EnchantedBoltChanceModifiers } from "../styles/ranged/enchantedBolt";
 import type { ResolvedTargetAccuracyProfile } from "../target/genericTarget";
 
 /** Static crit layers for sim (no per-hit eligibility). */
@@ -38,6 +39,8 @@ export interface ResolvedTargetScenario {
   readonly dragon?: boolean;
   readonly undead?: boolean;
   readonly poisonImmune?: boolean;
+  readonly elementalWeakness?: "water" | "fire" | "other" | "unknown";
+  readonly dragonfireImmune?: boolean;
 }
 
 export type ResolvedWeaponConfiguration = SerializableRevolutionSimBase["weaponConfiguration"];
@@ -77,6 +80,7 @@ export interface ResolvedCombatModel {
   readonly strengthCape99: boolean;
   readonly preciseRank: number;
   readonly ammunition: ResolvedRangedAmmunitionProfile | null;
+  readonly enchantedBoltChanceModifiers: EnchantedBoltChanceModifiers;
   /** Caroming rank 1-4 (0 = off). */
   readonly caromingRank: number;
 
@@ -119,6 +123,7 @@ export interface HostCombatResolveInput {
   readonly strengthCape99?: boolean;
   readonly preciseRank?: number;
   readonly ammunition?: ResolvedRangedAmmunitionProfile | null;
+  readonly enchantedBoltChanceModifiers?: EnchantedBoltChanceModifiers;
   readonly caromingRank?: number;
   readonly conjureBasicDamageMult?: number;
   readonly conjureDurationMult?: number;
@@ -151,6 +156,8 @@ export interface HostCombatResolveInput {
     dragon?: boolean;
     undead?: boolean;
     poisonImmune?: boolean;
+    elementalWeakness?: "water" | "fire" | "other" | "unknown";
+    dragonfireImmune?: boolean;
   };
   readonly playerPoison?: PlayerPoisonProfile;
   readonly slayerHelmet?: SerializableModifierSources["slayerHelmet"];

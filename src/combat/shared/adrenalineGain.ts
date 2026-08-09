@@ -1,6 +1,6 @@
 /**
  * Listed adrenaline generation for Basic abilities and Basic Attacks.
- * Order: listed + FotS + Impatient, then Invigorating (basic attacks only), then AJ mult.
+ * Order: listed + FotS + Deathmark + Impatient, then Invigorating (basic attacks only), then AJ mult.
  * https://runescape.wiki/w/Invigorating
  * https://runescape.wiki/w/Basic_attacks
  * https://runescape.wiki/w/Fury_of_the_Small
@@ -41,8 +41,9 @@ export interface AdrenalineGainRules {
 export interface AbilityAdrenalineGainBreakdown {
   listedGain: number;
   furyOfTheSmallGain: number;
+  boltDeathmarkGain: number;
   impatientGain: number;
-  /** listed + FotS + Impatient, then Meteor mult if any. */
+  /** listed + FotS + Deathmark + Impatient, then Meteor mult if any. */
   gainBeforeInvigorating: number;
   invigoratingMultiplier: number;
   gainAfterInvigorating: number;
@@ -57,6 +58,7 @@ export interface AbilityAdrenalineGainInput {
   /** Already resolved; no RNG here. */
   impatientProc?: boolean;
   basicAdrenalineFlatBonus?: number;
+  boltDeathmarkFlatBonus?: number;
   basicGainMultiplier?: number;
   abilityGainMultiplier?: number;
   /** Meteor Strike basic mult; applied after flats, before Invigorating. */
@@ -76,6 +78,7 @@ export function resolveAbilityAdrenalineGainBreakdown(
     return {
       listedGain: 0,
       furyOfTheSmallGain: 0,
+      boltDeathmarkGain: 0,
       impatientGain: 0,
       gainBeforeInvigorating: 0,
       invigoratingMultiplier: 1,
@@ -88,9 +91,11 @@ export function resolveAbilityAdrenalineGainBreakdown(
   const generating = input.isGeneratingBasicAbility;
   const furyOfTheSmallGain =
     generating && (input.basicAdrenalineFlatBonus ?? 0) > 0 ? input.basicAdrenalineFlatBonus! : 0;
+  const boltDeathmarkGain =
+    generating && (input.boltDeathmarkFlatBonus ?? 0) > 0 ? input.boltDeathmarkFlatBonus! : 0;
   const impatientGain = generating && input.impatientProc === true ? IMPATIENT_EXTRA_ADRENALINE : 0;
 
-  const flats = listedGain + furyOfTheSmallGain + impatientGain;
+  const flats = listedGain + furyOfTheSmallGain + boltDeathmarkGain + impatientGain;
   const meteor =
     input.meteorBasicMultiplier != null && input.meteorBasicMultiplier !== 1
       ? input.meteorBasicMultiplier
@@ -106,6 +111,7 @@ export function resolveAbilityAdrenalineGainBreakdown(
   return {
     listedGain,
     furyOfTheSmallGain,
+    boltDeathmarkGain,
     impatientGain,
     gainBeforeInvigorating,
     invigoratingMultiplier,

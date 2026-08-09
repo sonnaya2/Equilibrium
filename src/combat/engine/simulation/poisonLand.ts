@@ -7,7 +7,8 @@ import {
   statefulProcSuccessProbability,
 } from "../analysis/multiplicity";
 import { accountPlayerPoisonHits } from "../analysis";
-import { isRangedAmmoActive } from "../../styles/ranged/ammoModel";
+import { isAmmunitionHitEligible } from "../../styles/ranged/ammunitionEligibility";
+import { recordAppliedEventEffect } from "../resolution/accounting";
 import type { ResolvedDamage } from "../resolution/types";
 import type { ScheduledEvent } from "../runtime/events";
 import type { SimulationRuntime } from "../runtime/runtime";
@@ -37,17 +38,30 @@ export function applyEvolvingToxinOnLand(
   event: ScheduledEvent<SimulationRuntime>,
   damage: ResolvedDamage,
 ): void {
+  const attackOrigin =
+    event.provenance.kind === "botlg_perfect_equilibrium" ? "botlg" : "player";
+  const capabilities = capabilitiesOf(event.provenance);
   if (
-    !isRangedAmmoActive(rt.input.ammo, rt.input.context?.style, rt.input.equipmentIds) ||
+    rt.input.ammunition?.projectile?.mechanicId !== "bik" ||
     damage.expected <= 0 ||
-    event.attached ||
-    capabilitiesOf(event.provenance).canApplyEvolvingToxin !== true
+    !isAmmunitionHitEligible({
+      style: rt.input.context?.style ?? "melee",
+      provenance: event.provenance,
+      attackOrigin,
+    }) ||
+    (attackOrigin !== "botlg" && capabilities.canApplyEvolvingToxin !== true)
   ) {
     return;
   }
   const toxin = rt.state.target.evolvingToxin;
+  const evolvingToxin = nextEvolvingToxin(toxin.stacks, toxin.expiresAtTick, event.tick);
   rt.state = patchTarget(rt.state, {
-    evolvingToxin: nextEvolvingToxin(toxin.stacks, toxin.expiresAtTick, event.tick),
+    evolvingToxin,
+  });
+  recordAppliedEventEffect(rt, event, {
+    id: "ammunition:bik",
+    stackCount: evolvingToxin.stacks,
+    remainingTicks: Math.max(0, evolvingToxin.expiresAtTick - event.tick),
   });
 }
 

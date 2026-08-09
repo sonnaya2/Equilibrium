@@ -9,6 +9,7 @@ import { RELENTLESS_INTERNAL_CD_SECONDS } from "../../../shared/perks";
 import { RING_OF_VIGOUR_REFUND } from "../../../shared/ringOfVigour";
 import { METEOR_STRIKE_BASIC_ADREN_MULTIPLIER } from "../../../styles/melee/effects";
 import { spendDeathspore } from "../../../styles/ranged/onHit";
+import { boltDeathmarkBasicAdrenalineBonus } from "../../../styles/ranged/enchantedBoltRuntime";
 import { patchRanged } from "../../runtime/state";
 import type { CastEffectContext } from "./context";
 import {
@@ -127,6 +128,10 @@ export function applyCastResources(fx: CastEffectContext): AdrenalineTransaction
     impatientProc,
     relentlessProc,
     basicAdrenalineFlatBonus: adren?.basicAdrenalineFlatBonus,
+    boltDeathmarkFlatBonus: boltDeathmarkBasicAdrenalineBonus(
+      rt.state.ranged.boltDeathmark,
+      candidate,
+    ),
     basicGainMultiplier: adren?.basicGainMultiplier,
     abilityGainMultiplier: adren?.abilityGainMultiplier,
     meteorBasicMultiplier: meteorBasic ? METEOR_STRIKE_BASIC_ADREN_MULTIPLIER : 1,

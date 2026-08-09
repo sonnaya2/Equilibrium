@@ -152,7 +152,6 @@ export function RotationPlanner({
   const [accuracy, setAccuracy] = useState(100);
   const [critChance, setCritChance] = useState(10);
   const [paletteStyle, setPaletteStyle] = useState<CombatStyle>("melee");
-  const [ammo, setAmmo] = useState<"none" | "deathspore" | "splintering" | "bik">("none");
   const [queue, setQueue] = useState<string[]>([]);
   const [result, setResult] = useState<RotationSummary | null>(null);
   const [analysisOpen, setAnalysisOpen] = useState(false);
@@ -214,7 +213,6 @@ export function RotationPlanner({
         combatModel,
         queue,
         autoWeave: weave,
-        ammo,
         useBuild,
         manual: {
           base: manualLine.base,
@@ -223,7 +221,7 @@ export function RotationPlanner({
           critChance: manualLine.critChance * 100,
         },
       }),
-    [setupStats, combatModel, queue, weave, ammo, useBuild, manualLine],
+    [setupStats, combatModel, queue, weave, useBuild, manualLine],
   );
   const [resultKey, setResultKey] = useState<string | null>(null);
   const liveResult = result != null && resultKey === runKey ? result : null;
@@ -256,8 +254,6 @@ export function RotationPlanner({
       return;
     }
     const rotation = rotationOf(...queue);
-    // null clears model-packed ammo; undefined would keep Deathspore/etc from loadout.
-    const ammoOpt = ammo === "none" ? null : ammo;
     if (useBuild) {
       const catalogue = resolveAbilityCatalogue({
         strengthCape99: combatModel.strengthCape99,
@@ -267,7 +263,6 @@ export function RotationPlanner({
         toManualSimulateInput(simBase, {
           rotation,
           autoWeave: weave,
-          ammo: ammoOpt,
           horizonTicks: MANUAL_HORIZON_TICKS,
         }),
       );
@@ -289,7 +284,6 @@ export function RotationPlanner({
       toManualSimulateInput(simBase, {
         rotation,
         autoWeave: weave,
-        ammo: ammoOpt,
         horizonTicks: MANUAL_HORIZON_TICKS,
       }),
     );
@@ -481,24 +475,6 @@ export function RotationPlanner({
             </label>
           </div>
         )}
-        <div className="mt-3 grid grid-cols-1 gap-2 text-xs text-parch-300">
-          <label className="grid gap-1">
-            <span>Ammo</span>
-            <select
-              value={ammo}
-              onChange={(e) =>
-                setAmmo(e.target.value as "none" | "deathspore" | "splintering" | "bik")
-              }
-              className="w-full border border-stone-750 bg-transparent px-2 py-1 text-xs text-parch-50"
-            >
-              <option value="none">None</option>
-              <option value="deathspore">Deathspore arrows</option>
-              <option value="splintering">Splintering arrows</option>
-              <option value="bik">Bik arrows</option>
-            </select>
-          </label>
-        </div>
-
         <div className="mt-3 flex gap-1 border-t border-stone-750 pt-3">
           {(["revolution", "manual"] as const).map((candidate) => (
             <button

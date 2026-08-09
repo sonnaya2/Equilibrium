@@ -325,7 +325,82 @@ describe("Perfect Equilibrium runtime", () => {
 
     expect(rt.events.filter((event) => event.abilityId === "perfect_equilibrium")).toHaveLength(1);
     expect(rt.state.ranged.deathspore.stacks).toBe(2);
+    expect(
+      rt.events
+        .filter(
+          (event) =>
+            event.abilityId === "ranged_attack" || event.abilityId === "perfect_equilibrium",
+        )
+        .every((event) =>
+          event.appliedEffects?.some((effect) => effect.id === "ammunition:deathspore"),
+        ),
+    ).toBe(true);
+    expect(rt.analysis.effects.get("ammunition:deathspore")?.expectedActivations).toBe(2);
     expect(rt.events.some((event) => event.abilityId === "puncture")).toBe(false);
+  });
+
+  it("applies Bik on the parent and a critical PE without enabling recursive procs", () => {
+    const rt = createRuntime(
+      {
+        ...rangedInput,
+        ammunition: testRangedAmmunition("bik"),
+        league: undefined,
+        crit: { chance: 1 },
+        startingAdrenaline: 100,
+        equipmentEffects: botlgEffects(),
+        context: { style: "ranged", ruleset: "equilibrium" },
+      },
+      { laneIndex: 0, laneCount: 128 },
+    );
+    rt.state = patchRanged(rt.state, { perfectEquilibriumStacks: 7 });
+    const ability = rt.byId.get("ranged_attack");
+    if (!ability) throw new Error("missing ranged attack");
+    const attempt = performCast(rt, ability, 0, false);
+    if (!attempt.ok) throw new Error(attempt.error);
+    advanceTo(rt, rt.endTick);
+
+    const parent = rt.events.find((event) => event.abilityId === "ranged_attack");
+    const pe = rt.events.find((event) => event.abilityId === "perfect_equilibrium");
+    expect(parent?.damage.critical?.outcome).toBe(true);
+    expect(pe?.damage.critical?.outcome).toBe(true);
+    expect(parent?.appliedEffects).toContainEqual(
+      expect.objectContaining({ id: "ammunition:bik", stackCount: 1 }),
+    );
+    expect(pe?.appliedEffects).toContainEqual(
+      expect.objectContaining({ id: "ammunition:bik", stackCount: 2 }),
+    );
+    expect(rt.state.target.evolvingToxin.stacks).toBe(2);
+    expect(rt.analysis.effects.get("ammunition:bik")?.expectedActivations).toBe(2);
+    expect(rt.events.filter((event) => event.abilityId === "perfect_equilibrium")).toHaveLength(1);
+  });
+
+  it("lets a PE hit build Wen Icy Chill without adding another PE stack", () => {
+    const rt = createRuntime(
+      {
+        ...rangedInput,
+        ammunition: testRangedAmmunition("wen"),
+        league: unholy,
+        crit: { chance: 1 },
+        startingAdrenaline: 100,
+        equipmentEffects: botlgEffects(),
+        context: { style: "ranged", ruleset: "equilibrium" },
+      },
+      { laneIndex: 0, laneCount: 128 },
+    );
+    rt.state = patchRanged(rt.state, { perfectEquilibriumStacks: 7 });
+    const ability = rt.byId.get("ranged_attack");
+    if (!ability) throw new Error("missing ranged attack");
+    const attempt = performCast(rt, ability, 0, false);
+    if (!attempt.ok) throw new Error(attempt.error);
+    advanceTo(rt, rt.endTick);
+
+    const pe = rt.events.find((event) => event.abilityId === "perfect_equilibrium");
+    expect(rt.state.ranged.wen.icyChillStacks).toBe(2);
+    expect(pe?.appliedEffects).toContainEqual(
+      expect.objectContaining({ id: "ammunition:wen", stackCount: 2 }),
+    );
+    expect(rt.state.ranged.perfectEquilibriumStacks).toBe(0);
+    expect(rt.events.filter((event) => event.abilityId === "perfect_equilibrium")).toHaveLength(1);
   });
 
   it("applies configured prayer/perk stages and Ful as a PE on-hit stage", () => {

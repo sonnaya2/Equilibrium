@@ -37,6 +37,9 @@ export interface CastSnapshot {
   perfectEquilibriumAtCast: boolean;
   /** Balance by Force crosses the pre-cast Perfect Equilibrium threshold. */
   perfectEquilibriumTrigger?: boolean;
+  /** Wen Icy Precision damage and Damage Potential captured for this cast. */
+  wenIcyPrecisionDamageAtCast: boolean;
+  wenIcyPrecisionDamagePotentialAtCast: boolean;
   /** Song of Destruction cast-owned state and one-roll empowerment outcome. */
   songEmpowered: boolean;
   songConflagrateActive: boolean;

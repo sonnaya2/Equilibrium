@@ -21,6 +21,7 @@ function baseInput(patch: Partial<HostCombatResolveInput> = {}): HostCombatResol
     plantedFeet: true,
     strengthCape99: true,
     preciseRank: 4,
+    enchantedBoltChanceModifiers: { rangedCape: true, eliteSeersVillage: true },
     conjureBasicDamageMult: 1,
     conjureDurationMult: 1,
     tumekensPieces: 0,
@@ -65,7 +66,7 @@ function baseInput(patch: Partial<HostCombatResolveInput> = {}): HostCombatResol
     vulnerability: true,
     styleCurseId: "turmoil",
     slayer: { demon: 1, dragon: 0, undead: 0 },
-    target: { demon: true },
+    target: { demon: true, elementalWeakness: "water", dragonfireImmune: true },
     slayerHelmet: { tierId: "full", source: "equipped", damageMult: 1.125 },
     salve: null,
     ultimatums: 2,
@@ -105,6 +106,7 @@ function keyFields(model: ResolvedCombatModel) {
     plantedFeet: model.plantedFeet,
     strengthCape99: model.strengthCape99,
     preciseRank: model.preciseRank,
+    enchantedBoltChanceModifiers: model.enchantedBoltChanceModifiers,
   };
 }
 
@@ -157,7 +159,13 @@ describe("ResolvedCombatModel equality", () => {
     const model = buildResolvedCombatModel(
       baseInput({
         cap: { cap: 30_000, bypass: true },
-        target: { demon: true, dragon: true, undead: false },
+        target: {
+          demon: true,
+          dragon: true,
+          undead: false,
+          elementalWeakness: "water",
+          dragonfireImmune: true,
+        },
         targetHpPercent: 33,
         league: {
           ...baseInput().league,
@@ -188,6 +196,8 @@ describe("ResolvedCombatModel equality", () => {
       demon: true,
       dragon: true,
       undead: false,
+      elementalWeakness: "water",
+      dragonfireImmune: true,
     });
   });
 
@@ -204,6 +214,10 @@ describe("ResolvedCombatModel equality", () => {
     expect(Array.isArray(sim.league.blessingIds)).toBe(true);
     expect(sim.targetHpPercent).toBe(55);
     expect(sim.league.powerburstUntilTick).toBe(12);
+    expect(sim.enchantedBoltChanceModifiers).toEqual({
+      rangedCape: true,
+      eliteSeersVillage: true,
+    });
   });
 
   it("preserves the resolved target accuracy profile across model and simulation projections", () => {

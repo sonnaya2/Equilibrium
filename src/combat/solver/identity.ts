@@ -72,6 +72,8 @@ export function normalizeModifierSources(sources: SerializableModifierSources): 
       demon: sources.target?.demon === true,
       dragon: sources.target?.dragon === true,
       undead: sources.target?.undead === true,
+      elementalWeakness: sources.target?.elementalWeakness ?? "unknown",
+      dragonfireImmune: sources.target?.dragonfireImmune === true,
     },
     slayerHelmet: sources.slayerHelmet
       ? {
@@ -265,6 +267,10 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
             weaponCapability: loadout.ammunition.weaponCapability,
             effectiveStatTier: loadout.ammunition.effectiveStatTier,
           },
+    enchantedBoltChanceModifiers: {
+      rangedCape: loadout.enchantedBoltChanceModifiers?.rangedCape === true,
+      eliteSeersVillage: loadout.enchantedBoltChanceModifiers?.eliteSeersVillage === true,
+    },
     caromingRank: loadout.caromingRank ?? 0,
     conjureBasicDamageMult: roundN(loadout.conjureBasicDamageMult ?? 1, 6),
     conjureDurationMult: roundN(loadout.conjureDurationMult ?? 1, 6),

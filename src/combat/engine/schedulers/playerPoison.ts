@@ -9,7 +9,6 @@ import {
 } from "../../poison/mechanics";
 import { runPipeline } from "../../pipeline/modifierPipeline";
 import { contextWithProvenance } from "../../shared/damageProvenance";
-import { isRangedAmmoActive } from "../../styles/ranged/ammoModel";
 import type { CombatModifier } from "../../types";
 import { abilityDamageAt } from "../resolution/castHit";
 import type { ScheduledEvent } from "../runtime/events";
@@ -145,11 +144,8 @@ export function resolvePlayerPoison(
   const modifiers: CombatModifier[] = configured.filter(
     (modifier) => modifier.appliesToPlayerPoison === true,
   );
-  const toxinModifier = isRangedAmmoActive(
-    rt.input.ammo,
-    rt.input.context?.style,
-    rt.input.equipmentIds,
-  )
+  const toxinModifier =
+    rt.input.context?.style === "ranged" && rt.input.ammunition?.projectile?.mechanicId === "bik"
     ? evolvingToxinPoisonModifier(stacks)
     : null;
   if (toxinModifier) modifiers.push(toxinModifier);

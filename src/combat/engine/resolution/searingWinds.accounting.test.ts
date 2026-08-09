@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { rangedInput } from "../../test/fixtures/inputs";
 import { rotationOf } from "../simulation/contracts";
 import { simulate } from "../simulation/simulate";
+import { testRangedAmmunition } from "../../testing/rangedAmmunition";
 
 describe("Searing Winds component accounting", () => {
   it("event total reconciles with parent + attached component detail", () => {
@@ -18,7 +19,7 @@ describe("Searing Winds component accounting", () => {
   it("does not add proc rolls for the bonus", () => {
     const s = simulate({
       ...rangedInput,
-      ammo: "deathspore",
+      ammunition: testRangedAmmunition("deathspore"),
       rotation: rotationOf("galeshot", ...Array(9).fill("ranged_attack"), "corruption_shot"),
     });
     const hits = s.events.filter((e) => e.procEligible && !e.attached && e.family === "hit");

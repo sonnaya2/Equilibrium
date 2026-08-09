@@ -389,6 +389,22 @@ describe("fingerprint changes one field at a time", () => {
     );
   });
 
+  it("ammunition target facts", async () => {
+    await expectDiff("ammunitionTargetFacts", (r) =>
+      withSim(r, (s) => ({
+        ...s,
+        modifierSources: {
+          ...s.modifierSources,
+          target: {
+            ...s.modifierSources.target,
+            elementalWeakness: "water",
+            dragonfireImmune: true,
+          },
+        },
+      })),
+    );
+  });
+
   it("blessings", async () => {
     await expectDiff("blessings", (r) =>
       withSim(r, (s) => ({
@@ -487,6 +503,15 @@ describe("fingerprint changes one field at a time", () => {
 
   it("strength cape", async () => {
     await expectDiff("strengthCape", (r) => withSim(r, (s) => ({ ...s, strengthCape99: true })));
+  });
+
+  it("enchanted-bolt chance modifiers", async () => {
+    await expectDiff("enchantedBoltChanceModifiers", (r) =>
+      withSim(r, (s) => ({
+        ...s,
+        enchantedBoltChanceModifiers: { rangedCape: true, eliteSeersVillage: true },
+      })),
+    );
   });
 
   it("equipment effects beyond vestments pieces", async () => {

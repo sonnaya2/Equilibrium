@@ -85,6 +85,34 @@ vi.mock("@/combat/data", async (importOriginal) => {
 const base: Loadout = { ...DEFAULT_LOADOUT };
 
 describe("loadoutStats", () => {
+  it("derives passive Ranged cape bolt chance from base level in Equilibrium", () => {
+    const modifiersFor = (
+      style: Loadout["style"],
+      level: number,
+      ruleset: "base" | "equilibrium",
+    ) =>
+      loadoutStats(
+        {
+          ...base,
+          style,
+          level,
+          buffs: { ...base.buffs, eliteSeersVillage: false },
+        },
+        { ruleset, unlockedRegions: ["kandarin"] },
+      ).enchantedBoltChanceModifiers;
+
+    expect(modifiersFor("ranged", 98, "equilibrium")).toEqual({
+      rangedCape: false,
+      eliteSeersVillage: false,
+    });
+    expect(modifiersFor("ranged", 99, "equilibrium")).toEqual({
+      rangedCape: true,
+      eliteSeersVillage: false,
+    });
+    expect(modifiersFor("ranged", 120, "base").rangedCape).toBe(false);
+    expect(modifiersFor("magic", 120, "equilibrium").rangedCape).toBe(false);
+  });
+
   it("defaults to automatic base; no weapon equipped uses the selected configuration", () => {
     const fallback: Loadout = {
       ...base,

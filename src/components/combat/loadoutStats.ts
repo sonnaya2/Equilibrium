@@ -7,6 +7,7 @@ import { equipmentById } from "@/combat/data";
 import type { AdrenalineRules, ProcRules } from "@/combat/engine/simulation/simulate";
 import type { CombatModifier, CombatContext } from "@/combat/types";
 import type { ResolvedTargetAccuracyProfile } from "@/combat/target/genericTarget";
+import type { EnchantedBoltChanceModifiers } from "@/combat/styles/ranged/enchantedBolt";
 import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import type { CritLayers } from "@/combat/core/critical";
 import type { HitCapRule } from "@/combat/core/hitCaps";
@@ -168,6 +169,7 @@ export interface CalcStats {
   spellTier: number | null;
   ammunitionTier: number | null;
   ammunition: ReturnType<typeof loadoutRangedAmmunitionProfile>;
+  enchantedBoltChanceModifiers: EnchantedBoltChanceModifiers;
   equipmentStyleDamageBonus: number;
   styleDamageBonus: number;
   damagePotentialSource: "target stats" | "target weakness" | "manual override" | "100% assumption";
@@ -321,6 +323,13 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     spellTier: equipment.spellTier,
     ammunitionTier: equipment.ammunitionTier,
     ammunition: equipment.ammunitionProfile,
+    enchantedBoltChanceModifiers: {
+      rangedCape:
+        loadout.style === "ranged" &&
+        loadout.level >= 99 &&
+        leagueBundle.league.ruleset === "equilibrium",
+      eliteSeersVillage: loadout.buffs.eliteSeersVillage === true,
+    },
     equipmentStyleDamageBonus: equipment.equipmentStyleDamageBonus,
     styleDamageBonus: equipment.styleDamageBonus,
     damagePotentialSource: accuracyDp.damagePotentialSource,

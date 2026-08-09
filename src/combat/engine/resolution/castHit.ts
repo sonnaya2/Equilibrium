@@ -15,7 +15,10 @@ import {
 } from "../../styles/magic/effects";
 import { SEARING_WINDS_BONUS_HIT_PCT } from "../../styles/ranged/onHit";
 import { resolveRangedAmmunitionHitEffects } from "../../styles/ranged/ammunitionPayloads";
+import { enchantedBoltActivationChance } from "../../styles/ranged/enchantedBolt";
+import { isAmmunitionHitEligible } from "../../styles/ranged/ammunitionEligibility";
 import { dracolichInfusionCritChance } from "../../styles/ranged/dracolich";
+import { WEN_ICY_PRECISION_DAMAGE_POTENTIAL_DELTA } from "../../styles/ranged/wen";
 import {
   COMMAND_REQUIRES_CONJURE,
   CONJURE_DAMAGE_POTENTIAL,
@@ -189,6 +192,106 @@ function mixResolution(a: EventResolution, b: EventResolution, weight: number): 
   };
 }
 
+function mixExactDamageDistributions(
+  inactive: readonly ExactDamageDistribution[],
+  active: readonly ExactDamageDistribution[],
+  activeWeight: number,
+): readonly ExactDamageDistribution[] {
+  const weights = new Map<number, number>();
+  for (const outcome of inactive) {
+    weights.set(outcome.damage, (weights.get(outcome.damage) ?? 0) + outcome.weight * (1 - activeWeight));
+  }
+  for (const outcome of active) {
+    weights.set(outcome.damage, (weights.get(outcome.damage) ?? 0) + outcome.weight * activeWeight);
+  }
+  return [...weights]
+    .filter(([, weight]) => weight > 0)
+    .sort(([left], [right]) => left - right)
+    .map(([damage, weight]) => ({ damage, weight }));
+}
+
+function mixChanceResolution(
+  inactive: EventResolution,
+  active: EventResolution,
+  activeWeight: number,
+): EventResolution {
+  const damage = mixDamage(inactive.damage, active.damage, activeWeight);
+  const hitDetail =
+    inactive.hitDetail && active.hitDetail
+      ? {
+          ...mixHit(inactive.hitDetail, active.hitDetail, activeWeight),
+          min: Math.min(inactive.hitDetail.min, active.hitDetail.min),
+          max: Math.max(inactive.hitDetail.max, active.hitDetail.max),
+          critMin: Math.min(inactive.hitDetail.critMin, active.hitDetail.critMin),
+          critMax: Math.max(inactive.hitDetail.critMax, active.hitDetail.critMax),
+        }
+      : undefined;
+  const components = mixComponents(inactive.components, active.components, activeWeight)?.map(
+    (component, index) => ({
+      ...component,
+      damage: {
+        ...component.damage,
+        min: Math.min(
+          inactive.components?.[index]?.damage.min ?? component.damage.min,
+          active.components?.[index]?.damage.min ?? component.damage.min,
+        ),
+        max: Math.max(
+          inactive.components?.[index]?.damage.max ?? component.damage.max,
+          active.components?.[index]?.damage.max ?? component.damage.max,
+        ),
+      },
+    }),
+  );
+  const sourcePrecritDistribution =
+    inactive.sourcePrecritDistribution && active.sourcePrecritDistribution
+      ? mixExactDamageDistributions(
+          inactive.sourcePrecritDistribution,
+          active.sourcePrecritDistribution,
+          activeWeight,
+        )
+      : undefined;
+  return {
+    damage: {
+      ...damage,
+      min: Math.min(inactive.damage.min, active.damage.min),
+      max: Math.max(inactive.damage.max, active.damage.max),
+    },
+    ...(hitDetail ? { hitDetail } : {}),
+    ...(inactive.postDamagePotentialFlatContribution !== undefined ||
+    active.postDamagePotentialFlatContribution !== undefined
+      ? {
+          postDamagePotentialFlatContribution: mix(
+            inactive.postDamagePotentialFlatContribution ?? 0,
+            active.postDamagePotentialFlatContribution ?? 0,
+            activeWeight,
+          ),
+        }
+      : {}),
+    ...(components ? { components } : {}),
+    ...(sourcePrecritDistribution ? { sourcePrecritDistribution } : {}),
+  };
+}
+
+function damageOnlyEnchantedBoltChance(
+  rt: SimulationRuntime,
+  ability: AbilitySpec,
+  provenance: ReturnType<typeof provenanceForCastHit>,
+): number | null {
+  const mechanicId = rt.input.ammunition?.projectile?.mechanicId;
+  if (mechanicId !== "opal" && mechanicId !== "pearl") return null;
+  if (
+    mechanicId === "pearl" &&
+    rt.input.targetClassification?.elementalWeakness !== "water" &&
+    rt.input.targetClassification?.elementalWeakness !== "fire"
+  ) {
+    return null;
+  }
+  if (!isAmmunitionHitEligible({ style: ability.style, provenance, attackOrigin: "player" })) {
+    return null;
+  }
+  return enchantedBoltActivationChance(mechanicId, rt.input.enchantedBoltChanceModifiers);
+}
+
 function sourceDistributionForPerfectEquilibrium(args: {
   ability: AbilitySpec;
   snap: CastSnapshot;
@@ -282,6 +385,7 @@ function resolveCastHitUncached(
   isDot: boolean,
   convertedChannel: boolean,
   frostbladesActive?: boolean,
+  enchantedBoltProcActive?: boolean,
 ): EventResolution {
   const { input, state } = rt;
   const frostMass = activeFrostbladesMass(state.melee.primordialIce, at);
@@ -302,6 +406,7 @@ function resolveCastHitUncached(
       isDot,
       convertedChannel,
       false,
+      enchantedBoltProcActive,
     );
     const active = resolveCastHitUncached(
       rt,
@@ -313,6 +418,7 @@ function resolveCastHitUncached(
       isDot,
       convertedChannel,
       true,
+      enchantedBoltProcActive,
     );
     return mixResolution(inactive, active, frostMass);
   }
@@ -324,6 +430,36 @@ function resolveCastHitUncached(
     dotKind: hitSpec.dotKind,
     bleedId: hitSpec.bleedId,
   });
+  if (enchantedBoltProcActive === undefined) {
+    const chance = damageOnlyEnchantedBoltChance(rt, ability, provenance);
+    if (chance != null && chance > 0) {
+      const inactive = resolveCastHitUncached(
+        rt,
+        at,
+        hitSpec,
+        hitIndex,
+        ability,
+        snap,
+        isDot,
+        convertedChannel,
+        frostbladesActive,
+        false,
+      );
+      const active = resolveCastHitUncached(
+        rt,
+        at,
+        hitSpec,
+        hitIndex,
+        ability,
+        snap,
+        isDot,
+        convertedChannel,
+        frostbladesActive,
+        true,
+      );
+      return mixChanceResolution(inactive, active, chance);
+    }
+  }
   const modifiers = landTimeModifiers(
     rt,
     at,
@@ -335,6 +471,7 @@ function resolveCastHitUncached(
     hitSpec.dotKind,
     frostbladesActive,
     provenance,
+    enchantedBoltProcActive,
   );
 
   const firstEligible = hitIndex === snap.firstEligibleHitIndex;
@@ -398,6 +535,7 @@ function resolveCastHitUncached(
     attackKind: "ability",
     targetClassification: input.targetClassification,
     targetHealthFraction,
+    enchantedBoltProcActive,
   });
   if (ammunition.maximumHitBandFraction > 0) {
     band = {
@@ -418,12 +556,20 @@ function resolveCastHitUncached(
         equipmentEffects: input.equipmentEffects,
       })
     : input.accuracy;
+  const wenDamagePotentialDelta = snap.wenIcyPrecisionDamagePotentialAtCast
+    ? WEN_ICY_PRECISION_DAMAGE_POTENTIAL_DELTA
+    : 0;
   const effectiveAccuracy =
-    ammunition.damagePotentialDelta === 0
+    ammunition.damagePotentialDelta === 0 && wenDamagePotentialDelta === 0
       ? targetDamagePotentialBeforeAmmunition
       : Math.max(
           0,
-          Math.min(1, targetDamagePotentialBeforeAmmunition + ammunition.damagePotentialDelta),
+          Math.min(
+            1,
+            targetDamagePotentialBeforeAmmunition +
+              ammunition.damagePotentialDelta +
+              wenDamagePotentialDelta,
+          ),
         );
   const damageSource = outgoingSourceOf(provenance);
   const hitContext: import("../../types").CombatContext = {

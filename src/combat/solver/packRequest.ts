@@ -27,6 +27,7 @@ import { resolveModifierSourcesFromHost } from "../model/modifierSources";
 import { projectSerializableSimBase } from "../model/simulationInput";
 import type { PlayerPoisonProfile } from "../poison/mechanics";
 import type { ResolvedRangedAmmunitionProfile } from "../styles/ranged/ammunitionProfile";
+import type { EnchantedBoltChanceModifiers } from "../styles/ranged/enchantedBolt";
 import type { ResolvedTargetAccuracyProfile } from "../target/genericTarget";
 
 /**
@@ -53,6 +54,7 @@ export interface SolverPackSnapshot {
   strengthCape99?: boolean;
   preciseRank?: number;
   ammunition?: ResolvedRangedAmmunitionProfile | null;
+  enchantedBoltChanceModifiers?: EnchantedBoltChanceModifiers;
   conjureBasicDamageMult?: number;
   conjureDurationMult?: number;
   tumekensPieces?: number;
@@ -79,7 +81,13 @@ export interface SolverPackSnapshot {
   amZiFlatDamage?: number;
   amHejDamageBonus?: number;
   slayer?: { demon: number; dragon: number; undead: number };
-  target?: { demon?: boolean; dragon?: boolean; undead?: boolean };
+  target?: {
+    demon?: boolean;
+    dragon?: boolean;
+    undead?: boolean;
+    elementalWeakness?: "water" | "fire" | "other" | "unknown";
+    dragonfireImmune?: boolean;
+  };
   slayerHelmet?: SerializableModifierSources["slayerHelmet"];
   salve?: SerializableModifierSources["salve"];
   ultimatums?: number;
@@ -168,6 +176,7 @@ export function packSimBase(snapshot: SolverPackSnapshot): SerializableRevolutio
     strengthCape99: snapshot.strengthCape99,
     preciseRank: snapshot.preciseRank,
     ammunition: snapshot.ammunition,
+    enchantedBoltChanceModifiers: snapshot.enchantedBoltChanceModifiers,
     caromingRank: snapshot.caroming,
     conjureBasicDamageMult: snapshot.conjureBasicDamageMult,
     conjureDurationMult: snapshot.conjureDurationMult,

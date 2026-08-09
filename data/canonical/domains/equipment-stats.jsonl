@@ -77,6 +77,7 @@
 {"entityId":"item:apex-hide-cowl","stat":"life","value":850}
 {"entityId":"item:apex-hide-vambraces","stat":"armour","value":108.9}
 {"entityId":"item:apex-hide-vambraces","stat":"life","value":425}
+{"entityId":"item:araxyte-arrows","stat":"damage","value":864}
 {"entityId":"item:arcane-blood-necklace","stat":"accuracy","value":84}
 {"entityId":"item:arcane-blood-necklace","stat":"damage","value":46}
 {"entityId":"item:arcane-spirit-shield","stat":"armour","value":338.8}
@@ -106,6 +107,7 @@
 {"entityId":"item:armadyl-helmet","stat":"damage","value":17.5}
 {"entityId":"item:armadyl-helmet","stat":"prayer","value":1}
 {"entityId":"item:ascendri-bolts-e","stat":"damage","value":902.4}
+{"entityId":"item:ascension-bolts","stat":"damage","value":864}
 {"entityId":"item:ascension-crossbow","stat":"accuracy","value":2458}
 {"entityId":"item:ascension-grips","stat":"armour","value":108.9}
 {"entityId":"item:ascension-grips","stat":"damage","value":14}
@@ -151,6 +153,7 @@
 {"entityId":"item:bik-arrows","stat":"damage","value":960}
 {"entityId":"item:black-salamander","stat":"accuracy","value":1486}
 {"entityId":"item:black-salamander","stat":"damage","value":892.5}
+{"entityId":"item:black-stone-arrows","stat":"damage","value":883.2}
 {"entityId":"item:blade-of-avaryss","stat":"accuracy","value":2458}
 {"entityId":"item:blade-of-avaryss","stat":"damage","value":384}
 {"entityId":"item:blade-of-nymora","stat":"accuracy","value":2458}
@@ -172,6 +175,8 @@
 {"entityId":"item:bow-of-the-last-guardian","stat":"damage","value":1211.3}
 {"entityId":"item:brawlers-knockout-necklace","stat":"accuracy","value":84}
 {"entityId":"item:brawlers-knockout-necklace","stat":"damage","value":46}
+{"entityId":"item:bronze-arrows","stat":"damage","value":48}
+{"entityId":"item:bronze-bolts","stat":"damage","value":48}
 {"entityId":"item:camel-staff","stat":"accuracy","value":2178}
 {"entityId":"item:celestial-handwraps","stat":"armour","value":108.9}
 {"entityId":"item:celestial-handwraps","stat":"damage","value":14}
@@ -326,6 +331,8 @@
 {"entityId":"item:devourers-guard","stat":"damage","value":1415.5}
 {"entityId":"item:dharoks-greataxe","stat":"accuracy","value":1486}
 {"entityId":"item:dharoks-greataxe","stat":"damage","value":1564.5}
+{"entityId":"item:diamond-bakriminel-bolts-e","stat":"damage","value":912}
+{"entityId":"item:diamond-bolts-e","stat":"damage","value":672}
 {"entityId":"item:divine-spirit-shield","stat":"armour","value":338.8}
 {"entityId":"item:divine-spirit-shield","stat":"prayer","value":3}
 {"entityId":"item:dracolich-body","stat":"armour","value":500.9}
@@ -343,6 +350,8 @@
 {"entityId":"item:dracolich-legs","stat":"armour","value":479.1}
 {"entityId":"item:dracolich-legs","stat":"damage","value":28.1}
 {"entityId":"item:dracolich-legs","stat":"prayer","value":2}
+{"entityId":"item:dragon-arrows","stat":"damage","value":576}
+{"entityId":"item:dragon-bolts","stat":"damage","value":576}
 {"entityId":"item:dragon-claws","stat":"accuracy","value":1132}
 {"entityId":"item:dragon-claws","stat":"damage","value":576}
 {"entityId":"item:dragon-defender","stat":"accuracy","value":1132}
@@ -352,8 +361,12 @@
 {"entityId":"item:dragon-rider-amulet","stat":"prayer","value":10}
 {"entityId":"item:dragon-rider-lance","stat":"accuracy","value":2458}
 {"entityId":"item:dragon-rider-lance","stat":"damage","value":1788}
+{"entityId":"item:dragonbane-arrows","stat":"damage","value":768}
+{"entityId":"item:dragonbane-bolts","stat":"damage","value":768}
 {"entityId":"item:dragonfire-deflector","stat":"armour","value":297.2}
 {"entityId":"item:dragonfire-shield","stat":"armour","value":170}
+{"entityId":"item:dragonstone-bakriminel-bolts-e","stat":"damage","value":912}
+{"entityId":"item:dragonstone-bolts-e","stat":"damage","value":672}
 {"entityId":"item:drygore-longsword","stat":"accuracy","value":2458}
 {"entityId":"item:drygore-longsword","stat":"damage","value":1102.5}
 {"entityId":"item:drygore-mace","stat":"accuracy","value":2458}
@@ -430,6 +443,8 @@
 {"entityId":"item:emberkeen-boots","stat":"armour","value":108.9}
 {"entityId":"item:emberkeen-boots","stat":"damage","value":14}
 {"entityId":"item:emberkeen-boots","stat":"prayer","value":2}
+{"entityId":"item:emerald-bakriminel-bolts-e","stat":"damage","value":912}
+{"entityId":"item:emerald-bolts-e","stat":"damage","value":576}
 {"entityId":"item:enhanced-ancient-staff","stat":"accuracy","value":1694}
 {"entityId":"item:enhanced-blast-diffusion-boots","stat":"armour","value":108.9}
 {"entityId":"item:enhanced-blast-diffusion-boots","stat":"damage","value":14}
@@ -522,6 +537,7 @@
 {"entityId":"item:hood-of-subjugation","stat":"damage","value":17.5}
 {"entityId":"item:hood-of-subjugation","stat":"prayer","value":1}
 {"entityId":"item:hydra-bakriminel-bolts-e","stat":"damage","value":912}
+{"entityId":"item:hydrix-bakriminel-bolts-e","stat":"damage","value":912}
 {"entityId":"item:igneous-kal-ket","stat":"armour","value":57.7}
 {"entityId":"item:igneous-kal-ket","stat":"damage","value":37.1}
 {"entityId":"item:igneous-kal-ket","stat":"prayer","value":2}
@@ -549,6 +565,9 @@
 {"entityId":"item:illuminated-book-of-wisdom","stat":"prayer","value":4}
 {"entityId":"item:imperium-core","stat":"accuracy","value":2577}
 {"entityId":"item:inquisitor-staff","stat":"accuracy","value":1924}
+{"entityId":"item:jade-bakriminel-bolts-e","stat":"damage","value":912}
+{"entityId":"item:jade-bolts-e","stat":"damage","value":336}
+{"entityId":"item:jas-demonbane-arrows","stat":"damage","value":960}
 {"entityId":"item:jas-dragonbane-arrows","stat":"damage","value":960}
 {"entityId":"item:jaws-of-the-abyss","stat":"armour","value":384.8}
 {"entityId":"item:jaws-of-the-abyss","stat":"damage","value":21.2}
@@ -726,7 +745,12 @@
 {"entityId":"item:omni-guard","stat":"accuracy","value":2765}
 {"entityId":"item:omni-guard","stat":"damage","value":1415.5}
 {"entityId":"item:onyx-bakriminel-bolts-e","stat":"damage","value":912}
+{"entityId":"item:onyx-bolts-e","stat":"damage","value":768}
+{"entityId":"item:opal-bakriminel-bolts-e","stat":"damage","value":912}
+{"entityId":"item:opal-bolts-e","stat":"damage","value":192}
 {"entityId":"item:orb-of-the-cywir-elders","stat":"accuracy","value":2458}
+{"entityId":"item:pearl-bakriminel-bolts-e","stat":"damage","value":912}
+{"entityId":"item:pearl-bolts-e","stat":"damage","value":288}
 {"entityId":"item:pernix-body","stat":"armour","value":389.6}
 {"entityId":"item:pernix-body","stat":"damage","value":30}
 {"entityId":"item:pernix-body","stat":"prayer","value":3}
@@ -742,6 +766,7 @@
 {"entityId":"item:pernix-gloves","stat":"armour","value":84.7}
 {"entityId":"item:pernix-gloves","stat":"damage","value":12.5}
 {"entityId":"item:pernix-gloves","stat":"prayer","value":2}
+{"entityId":"item:pernix-quiver","stat":"prayer","value":4}
 {"entityId":"item:pneumatic-gloves","stat":"armour","value":108.9}
 {"entityId":"item:polypore-staff","stat":"accuracy","value":1694}
 {"entityId":"item:primal-2h-sword-plus-5","stat":"accuracy","value":2458}
@@ -806,6 +831,8 @@
 {"entityId":"item:roar-of-awakening","stat":"damage","value":912}
 {"entityId":"item:royal-crossbow","stat":"accuracy","value":1924}
 {"entityId":"item:royal-crossbow","stat":"damage","value":1020}
+{"entityId":"item:ruby-bakriminel-bolts-e","stat":"damage","value":912}
+{"entityId":"item:ruby-bolts-e","stat":"damage","value":576}
 {"entityId":"item:ruinous-crossbow","stat":"accuracy","value":3100}
 {"entityId":"item:ruinous-guard","stat":"accuracy","value":3100}
 {"entityId":"item:ruinous-guard","stat":"damage","value":1341}
@@ -816,9 +843,13 @@
 {"entityId":"item:ruinous-rapier","stat":"accuracy","value":3100}
 {"entityId":"item:ruinous-rapier","stat":"damage","value":1102.5}
 {"entityId":"item:ruinous-staff","stat":"accuracy","value":3100}
+{"entityId":"item:rune-arrows","stat":"damage","value":480}
+{"entityId":"item:rune-bolts","stat":"damage","value":480}
 {"entityId":"item:salve-amulet","stat":"prayer","value":3}
 {"entityId":"item:salve-amulet-e","stat":"damage","value":5.7}
 {"entityId":"item:salve-amulet-e","stat":"prayer","value":3}
+{"entityId":"item:sapphire-bakriminel-bolts-e","stat":"damage","value":912}
+{"entityId":"item:sapphire-bolts-e","stat":"damage","value":480}
 {"entityId":"item:saradomin-godsword","stat":"accuracy","value":1694}
 {"entityId":"item:saradomin-godsword","stat":"damage","value":1676.3}
 {"entityId":"item:saradomin-godsword","stat":"prayer","value":4}
@@ -954,6 +985,10 @@
 {"entityId":"item:tetsu-platelegs","stat":"armour","value":456.2}
 {"entityId":"item:tetsu-wakizashi","stat":"accuracy","value":2178}
 {"entityId":"item:tetsu-wakizashi","stat":"damage","value":520.6}
+{"entityId":"item:tirannwn-quiver-1","stat":"prayer","value":1}
+{"entityId":"item:tirannwn-quiver-2","stat":"prayer","value":2}
+{"entityId":"item:tirannwn-quiver-3","stat":"prayer","value":3}
+{"entityId":"item:tirannwn-quiver-4","stat":"prayer","value":4}
 {"entityId":"item:tokhaar-kal-ket","stat":"armour","value":44.5}
 {"entityId":"item:tokhaar-kal-ket","stat":"damage","value":31.8}
 {"entityId":"item:tokhaar-kal-ket","stat":"prayer","value":2}
@@ -975,6 +1010,8 @@
 {"entityId":"item:toktz-xil-ul","stat":"accuracy","value":1132}
 {"entityId":"item:toktz-xil-ul","stat":"damage","value":894}
 {"entityId":"item:tome-of-the-icyene","stat":"prayer","value":50}
+{"entityId":"item:topaz-bakriminel-bolts-e","stat":"damage","value":912}
+{"entityId":"item:topaz-bolts-e","stat":"damage","value":384}
 {"entityId":"item:torags-hammer","stat":"accuracy","value":1486}
 {"entityId":"item:torags-hammer","stat":"damage","value":1564.5}
 {"entityId":"item:torva-boots","stat":"armour","value":84.7}

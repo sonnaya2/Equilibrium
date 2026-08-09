@@ -81,9 +81,16 @@ export interface ScheduledEvent<RT = unknown> {
   resolve: (rt: RT, landTick: number) => EventResolution;
 }
 
+export interface AppliedEventEffect {
+  id: string;
+  stackCount?: number;
+  remainingTicks?: number;
+}
+
 export interface ResolvedEvent<RT = unknown> extends Omit<ScheduledEvent<RT>, "resolve"> {
   damage: ResolvedDamage;
   components?: readonly AttachedDamageComponent[];
+  appliedEffects?: readonly AppliedEventEffect[];
   stackCount?: number;
   remainingTicks?: number;
 }

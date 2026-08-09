@@ -28,6 +28,7 @@ export interface AdrenalineTransaction {
 
   listedGain: number;
   furyOfTheSmallGain: number;
+  boltDeathmarkGain: number;
   impatientGain: number;
   gainBeforeInvigorating: number;
   invigoratingMultiplier: number;

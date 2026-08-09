@@ -38,7 +38,6 @@ describe("uiRunFingerprint", () => {
     combatModel,
     queue: ["attack", "rend"] as const,
     autoWeave: true,
-    ammo: "none",
     useBuild: true,
   };
 
@@ -80,7 +79,6 @@ describe("uiRunFingerprint", () => {
       combatModel,
       queue: ["attack", "rend"],
       autoWeave: true,
-      ammo: "none",
       useBuild: true,
     });
     expect(again).toBe(uiRunFingerprint(manualParts));
@@ -129,7 +127,6 @@ describe("uiRunFingerprint", () => {
       mode: "manual" as const,
       queue: ["attack"] as const,
       autoWeave: false,
-      ammo: "none",
       useBuild: true,
     };
     const a = uiRunFingerprint({
@@ -169,7 +166,6 @@ describe("uiRunFingerprint", () => {
       mode: "manual" as const,
       queue: ["attack"] as const,
       autoWeave: false,
-      ammo: "none",
       useBuild: true,
     };
     const undead = resolve(undeadLoadout);

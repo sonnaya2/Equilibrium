@@ -346,7 +346,13 @@ describe("toResolvedCombatModel", () => {
       perks: { ...DEFAULT_LOADOUT.perks, ultimatums: 3, lunging: 2, precise: 4 },
       buffs: { ...DEFAULT_LOADOUT.buffs, vulnerability: true },
       equipmentSlots: { helmet: FULL_SLAYER_HELMET_ITEM_ID },
-      target: { ...TARGET_DEFAULTS, onSlayerTask: true, demon: true },
+      target: {
+        ...TARGET_DEFAULTS,
+        onSlayerTask: true,
+        demon: true,
+        elementalWeakness: "water",
+        dragonfireImmune: true,
+      },
     });
     const model = toResolvedCombatModel(loadout, { now: NOW });
     const fromModel = projectSerializableSimBase(model);
@@ -355,6 +361,10 @@ describe("toResolvedCombatModel", () => {
 
     expect(fromPack).toEqual(fromModel);
     expect(fromSnap).toEqual(fromModel);
+    expect(fromModel.modifierSources.target).toMatchObject({
+      elementalWeakness: "water",
+      dragonfireImmune: true,
+    });
   });
 
   it("keeps poison sources separate from canonical ammo, modifier, and target inputs", () => {

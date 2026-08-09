@@ -109,8 +109,11 @@ export interface ResolveRangedAmmunitionHitEffectsInput {
   readonly targetClassification?: {
     readonly demon?: boolean;
     readonly dragon?: boolean;
+    readonly elementalWeakness?: RangedElementalWeakness;
+    readonly dragonfireImmune?: boolean;
   };
   readonly targetHealthFraction?: number | null;
+  readonly enchantedBoltProcActive?: boolean;
 }
 
 export interface DiamondResearchGate {
@@ -314,6 +317,10 @@ export function resolveRangedAmmunitionHitEffects(
           : "other";
     sourceHit = baneSourceHitModifier(targetRace, mechanicId, input.attackKind);
     accuracy = baneAccuracyModifier(targetRace, mechanicId);
+  } else if (input.enchantedBoltProcActive && mechanicId === "opal") {
+    sourceHit = opalSourceHitModifier();
+  } else if (input.enchantedBoltProcActive && mechanicId === "pearl") {
+    sourceHit = pearlSourceHitModifier(input.targetClassification?.elementalWeakness ?? "unknown");
   }
 
   const pernix = input.ammunition?.quiver?.passiveIds.includes("pernix-quiver-max-hit-band")

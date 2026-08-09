@@ -19,6 +19,7 @@ import type { RegionId } from "@/league";
 import type { CombatContext, CombatStyle } from "../../types";
 import type { PlayerPoisonProfile } from "../../poison/mechanics";
 import type { ResolvedRangedAmmunitionProfile } from "../../styles/ranged/ammunitionProfile";
+import type { EnchantedBoltChanceModifiers } from "../../styles/ranged/enchantedBolt";
 import type { ResolvedTargetAccuracyProfile } from "../../target/genericTarget";
 import type { TrueEquilibriumResolution } from "../../league/ruleset";
 
@@ -60,6 +61,8 @@ export interface SerializableModifierSources {
     demon?: boolean;
     dragon?: boolean;
     undead?: boolean;
+    elementalWeakness?: "water" | "fire" | "other" | "unknown";
+    dragonfireImmune?: boolean;
   };
   /** Pre-resolved Full Slayer Helmet on-hit damage (host resolve; never re-equip). */
   slayerHelmet?: SerializableSlayerHelmetSource | null;
@@ -124,6 +127,7 @@ export interface SerializableRevolutionSimBase {
   strengthCape99?: boolean;
   preciseRank?: number;
   ammunition?: ResolvedRangedAmmunitionProfile | null;
+  enchantedBoltChanceModifiers?: EnchantedBoltChanceModifiers;
   /** Caroming rank 1-4 for Ricochet band construction. */
   caromingRank?: number;
   conjureBasicDamageMult?: number;
@@ -199,6 +203,8 @@ export interface SerializableLoadoutPlain {
     dragon?: boolean;
     undead?: boolean;
     poisonImmune?: boolean;
+    elementalWeakness?: "water" | "fire" | "other" | "unknown";
+    dragonfireImmune?: boolean;
   };
   startingAdrenaline?: number;
   base?: number;

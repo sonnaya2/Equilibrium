@@ -22,7 +22,6 @@ export type ManualRunFingerprintParts = SharedRunParts & {
   mode: "manual";
   queue: readonly string[];
   autoWeave: boolean;
-  ammo: string;
   useBuild: boolean;
   /** Manual damage line when useBuild is false. */
   manual?: {
@@ -66,7 +65,6 @@ export function uiRunFingerprint(parts: UiRunFingerprintParts): string {
       core,
       queue: [...parts.queue],
       autoWeave: parts.autoWeave,
-      ammo: parts.ammo,
       useBuild: parts.useBuild,
       manual: parts.useBuild ? null : (parts.manual ?? null),
     });

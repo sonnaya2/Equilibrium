@@ -88,6 +88,7 @@ export function projectSerializableSimBase(
     strengthCape99: model.strengthCape99,
     preciseRank: model.preciseRank,
     ammunition: model.ammunition,
+    enchantedBoltChanceModifiers: model.enchantedBoltChanceModifiers,
     caromingRank: model.caromingRank,
     conjureBasicDamageMult: model.conjureBasicDamageMult,
     conjureDurationMult: model.conjureDurationMult,

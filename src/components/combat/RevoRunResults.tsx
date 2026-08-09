@@ -37,6 +37,7 @@ import {
   runScoreBadge,
   shouldShowRunScoreChrome,
 } from "./revoStochasticLabels";
+import { rangedEffectDisplayName } from "@/combat/styles/ranged/ammunitionEffects";
 import { combatEffectDisplayName, combatEffectIconPath } from "./effectPresentation";
 
 export type RevoRunResultsProps = {
@@ -95,7 +96,11 @@ export function RevoRunResults({
   const castLog = result ? (showAllCasts ? result.casts : result.casts.slice(0, 40)) : [];
   const conjureDurationMult = stats.conjureDurationMult ?? 1;
   const effectLabel = (id: string) =>
-    combatEffectDisplayName(id) ?? nameById.get(id) ?? spiritEffectDisplayName(id) ?? id;
+    rangedEffectDisplayName(id) ??
+    combatEffectDisplayName(id) ??
+    nameById.get(id) ??
+    spiritEffectDisplayName(id) ??
+    id;
   const effectIcon = (id: string, kind?: string, blessingId?: string) => {
     const spec = ENGINE_SPECS.get(id);
     return spec

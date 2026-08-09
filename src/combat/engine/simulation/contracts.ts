@@ -9,6 +9,7 @@ import type { ResolvedLeagueRules } from "../../league/ruleset";
 import type { AdrenalineTransaction } from "../../shared/adrenalineTransaction";
 import type { PlayerPoisonProfile } from "../../poison/mechanics";
 import type { ResolvedRangedAmmunitionProfile } from "../../styles/ranged/ammunitionProfile";
+import type { EnchantedBoltChanceModifiers } from "../../styles/ranged/enchantedBolt";
 import type { ResolvedTargetAccuracyProfile } from "../../target/genericTarget";
 
 /** One queued cast; the simulator advances to its first legal tick. */
@@ -66,6 +67,8 @@ export interface TargetClassification {
   readonly demon?: boolean;
   readonly dragon?: boolean;
   readonly undead?: boolean;
+  readonly elementalWeakness?: "water" | "fire" | "other" | "unknown";
+  readonly dragonfireImmune?: boolean;
 }
 
 /**
@@ -109,6 +112,7 @@ export interface SimulateInput {
   equipmentIds?: readonly string[];
   weaponConfiguration?: "twohand" | "dualwield" | "mainhand" | "shield" | "defender" | "necromancy";
   ammunition?: ResolvedRangedAmmunitionProfile | null;
+  enchantedBoltChanceModifiers?: EnchantedBoltChanceModifiers;
   /** Caroming rank 1-4; rewrites Ricochet hit bands at prepare. */
   caromingRank?: number;
   /** Use the style Basic Attack through idle GCDs and adrenaline shortfalls. */

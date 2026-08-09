@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { resolveAbilityCatalogue } from "../../abilities/catalogue";
+import { combatEquipment } from "../../data";
 import { buildSimulationInputBase, toRevolutionInput } from "../../model";
 import { simulateRevolution } from "../../engine/simulation/revolution";
 import { packSimBaseFromModel } from "../../solver/packRequest";
@@ -59,6 +60,74 @@ function positivePerfectEquilibriumEvents(result: ReturnType<typeof simulateRevo
 }
 
 describe("BotLG resolved-loadout projection", () => {
+  it("accepts every arrow and rejects every bolt without gating Perfect Equilibrium", () => {
+    const catalogue = resolveAbilityCatalogue();
+    const bar = [catalogue.byId.get("ranged_attack")!];
+    const ammunition = combatEquipment.records.filter(
+      (record) => record.ammunition != null && record.slot === "ammo",
+    );
+    const arrows = ammunition.filter((record) => record.ammunition?.family === "arrows");
+    const bolts = ammunition.filter((record) => record.ammunition?.family === "bolts");
+
+    expect(arrows.map((record) => record.id)).toEqual(
+      expect.arrayContaining([
+        "item:bronze-arrows",
+        "item:black-stone-arrows",
+        "item:deathspore-arrows",
+        "item:splintering-arrows",
+        "item:bik-arrows",
+        "item:wen-arrows",
+        "item:ful-arrows",
+        "item:jas-dragonbane-arrows",
+        "item:jas-demonbane-arrows",
+      ]),
+    );
+    expect(bolts.length).toBeGreaterThan(0);
+
+    for (const arrow of arrows) {
+      const resolved = resolveLoadoutCombat(
+        {
+          ...botlgLoadout(false),
+          equipmentSlots: {
+            ...botlgLoadout(false).equipmentSlots,
+            ammo: arrow.id,
+          },
+        },
+        { now: NOW },
+      );
+      expect(resolved.model.base, arrow.id).toBeGreaterThan(0);
+      expect(resolved.model.ammunition?.projectile?.itemId, arrow.id).toBe(arrow.id);
+      expect(resolved.model.equipmentEffects.activeWeapon?.passiveIds, arrow.id).toContain(
+        "perfect-equilibrium",
+      );
+      const result = simulateRevolution(
+        toRevolutionInput(buildSimulationInputBase(resolved.model, catalogue), {
+          bar,
+          style: "ranged",
+          durationTicks: 30,
+        }),
+        { stochasticSeed: 1, stochasticLanes: 128 },
+      );
+      expect(result.ok, arrow.id).toBe(true);
+      expect(positivePerfectEquilibriumEvents(result), arrow.id).not.toHaveLength(0);
+    }
+
+    for (const bolt of bolts) {
+      const resolved = resolveLoadoutCombat(
+        {
+          ...botlgLoadout(false),
+          equipmentSlots: {
+            ...botlgLoadout(false).equipmentSlots,
+            ammo: bolt.id,
+          },
+        },
+        { now: NOW },
+      );
+      expect(resolved.model.base, bolt.id).toBe(0);
+      expect(resolved.model.ammunition?.projectile, bolt.id).toBeNull();
+    }
+  });
+
   it("carries the canonical bow passive and special into Revolution and the worker", () => {
     const on = resolveLoadoutCombat(botlgLoadout(true), { now: NOW });
     const off = resolveLoadoutCombat(botlgLoadout(false), { now: NOW });

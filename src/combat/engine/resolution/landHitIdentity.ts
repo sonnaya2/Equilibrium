@@ -184,6 +184,8 @@ export function landHitIdentity(
     snap.songPreCastStacks,
     mag.song.essenceCorruption.stacks,
     mag.song.essenceCorruption.expiresAtTick,
+    b(!!snap.wenIcyPrecisionDamageAtCast),
+    b(!!snap.wenIcyPrecisionDamagePotentialAtCast),
     snap.critLayers.chance,
     snap.critLayers.damageBonus ?? 0,
     b(!!snap.critLayers.guaranteed),

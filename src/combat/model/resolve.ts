@@ -105,6 +105,10 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
     strengthCape99: input.strengthCape99 === true,
     preciseRank: input.preciseRank ?? 0,
     ammunition: input.ammunition ?? null,
+    enchantedBoltChanceModifiers: {
+      rangedCape: input.enchantedBoltChanceModifiers?.rangedCape === true,
+      eliteSeersVillage: input.enchantedBoltChanceModifiers?.eliteSeersVillage === true,
+    },
     caromingRank: Math.max(0, Math.min(4, Math.floor(input.caromingRank ?? input.caroming ?? 0))),
     conjureBasicDamageMult: input.conjureBasicDamageMult ?? 1,
     conjureDurationMult: input.conjureDurationMult ?? 1,
@@ -116,6 +120,8 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
       dragon: input.target?.dragon,
       undead: input.target?.undead,
       poisonImmune: input.target?.poisonImmune === true,
+      elementalWeakness: input.target?.elementalWeakness ?? "unknown",
+      dragonfireImmune: input.target?.dragonfireImmune === true,
     },
     playerPoison: {
       potion: normalizeWeaponPoisonChoice(poison.potion),

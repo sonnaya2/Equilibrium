@@ -34,7 +34,6 @@ import {
   evolvingToxinPoisonModifier,
   poisonProfileDamageModifier,
 } from "../../poison/mechanics";
-import { isRangedAmmoActive } from "../../styles/ranged/ammoModel";
 import type { ScheduledEvent } from "../runtime/events";
 import { NO_DAMAGE, recordResolved } from "../resolution";
 import type { AttachedDamageComponent, EventResolution } from "../resolution/types";
@@ -206,7 +205,7 @@ function scheduleSpiritPoison(rt: SimulationRuntime, spirit: ActivePutridZombie)
       );
       const poisonModifiers = [
         poisonProfileDamageModifier(input.playerPoison, spirit.poison.nextTick),
-        isRangedAmmoActive(input.ammo, input.context?.style, input.equipmentIds)
+        input.context?.style === "ranged" && input.ammunition?.projectile?.mechanicId === "bik"
           ? evolvingToxinPoisonModifier(stacks)
           : null,
       ].filter((modifier): modifier is CombatModifier => modifier !== null);

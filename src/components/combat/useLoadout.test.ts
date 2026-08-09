@@ -237,6 +237,7 @@ describe("normalizeLoadout", () => {
   it("fills missing buffs and equipmentSlots", () => {
     const next = normalizeLoadout({ style: "magic", level: 99 });
     expect(next.buffs).toEqual({
+      useEquippedWeaponSpecial: false,
       vulnerability: false,
       weaponPoison: "none",
       kwuarmPotency: 0,
@@ -256,6 +257,7 @@ describe("normalizeLoadout", () => {
       powerburstOfVitalityCooldownUntil: null,
       strengthCape99: false,
       attackCape120: false,
+      eliteSeersVillage: false,
       protectionPrayer: false,
       berserkersFury: false,
       furyOfTheSmall: false,
@@ -714,5 +716,38 @@ describe("skillcape buffs", () => {
     expect(normalizeLoadout({ buffs: { strengthCape99: true } }).buffs.strengthCape99).toBe(true);
     expect(normalizeLoadout({ buffs: { attackCape120: 1 } }).buffs.attackCape120).toBe(false);
     expect(normalizeLoadout({ buffs: { attackCape120: true } }).buffs.attackCape120).toBe(true);
+  });
+
+  it("normalizes enchanted-bolt account and target facts conservatively", () => {
+    expect(DEFAULT_LOADOUT.buffs.eliteSeersVillage).toBe(false);
+    expect(
+      normalizeLoadout({
+        buffs: { eliteSeersVillage: true },
+        target: { defenceLevel: 80, affinity: "same" },
+      }),
+    ).toMatchObject({
+      buffs: { eliteSeersVillage: true },
+      target: { elementalWeakness: "unknown", dragonfireImmune: false },
+    });
+    expect(
+      normalizeLoadout({
+        target: {
+          defenceLevel: 80,
+          affinity: "same",
+          elementalWeakness: "water",
+          dragonfireImmune: true,
+        },
+      }).target,
+    ).toMatchObject({ elementalWeakness: "water", dragonfireImmune: true });
+    expect(
+      normalizeLoadout({
+        target: {
+          defenceLevel: 80,
+          affinity: "same",
+          elementalWeakness: "invented",
+          dragonfireImmune: 1,
+        },
+      }).target,
+    ).toMatchObject({ elementalWeakness: "unknown", dragonfireImmune: false });
   });
 });

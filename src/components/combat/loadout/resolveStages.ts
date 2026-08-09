@@ -626,6 +626,7 @@ export function resolveAccuracyDp(
         loadout.target.affinity,
         loadout.target.hasApplicableWeakness === true,
         leagueBundle.league,
+        loadout.target.weaknessAffinity,
       )
     : undefined;
   const targetAccuracyProfile = loadout.target

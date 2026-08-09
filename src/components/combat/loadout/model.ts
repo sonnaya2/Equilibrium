@@ -44,11 +44,16 @@ import {
   type WeaponPoisonChoice,
 } from "@/combat/poison/mechanics";
 import { STYLE_CURSES as STYLE_CURSE_BOOSTS, styleCurseById } from "@/combat/shared/prayers";
+import { targetPresetById } from "@/combat/data";
 import {
   isAffinityKind,
   resolveAffinityPercent,
   sanitizeAffinity,
 } from "@/combat/target/genericTarget";
+import {
+  materializeTargetPreset,
+  targetDiffersFromPreset,
+} from "@/combat/target/presetAdapter";
 import type { CombatStyle } from "@/combat/types";
 import type { RegionId } from "@/league";
 
@@ -77,6 +82,13 @@ export interface LoadoutTarget {
   armour?: number;
   /** Exact affinity percent (1-100). Legacy kind strings migrate on load. */
   affinity: number;
+  /**
+   * Catalogue preset id when this target was applied from a boss preset.
+   * Materialized fields remain authoritative if the preset is renamed or removed.
+   */
+  targetPresetId?: string;
+  /** Exact weakness affinity from a preset; used by Demon's Mark when applicable. */
+  weaknessAffinity?: number;
   additiveHitChance?: number;
   damagePotentialOverride?: number;
   /** Optional target life-points % (0-100) for HP-dependent mechanics; absent = unavailable. */
@@ -917,9 +929,37 @@ export function weaponConfigurationFor(
 
 export function withCombatStyle(loadout: Loadout, style: CombatStyle): Loadout {
   if (style === loadout.style) return loadout;
+  let target = loadout.target;
+  if (target?.targetPresetId) {
+    const preset = targetPresetById(target.targetPresetId);
+    if (preset) {
+      const previousStyleFields = materializeTargetPreset(preset, {
+        style: loadout.style,
+        useWeaknessAffinity: target.hasApplicableWeakness === true,
+      });
+      const nextStyleFields = materializeTargetPreset(preset, {
+        style,
+        useWeaknessAffinity: target.hasApplicableWeakness === true,
+      });
+      if (
+        previousStyleFields &&
+        nextStyleFields &&
+        !targetDiffersFromPreset(target, previousStyleFields)
+      ) {
+        target = {
+          ...target,
+          affinity: nextStyleFields.affinity,
+          ...(nextStyleFields.weaknessAffinity != null
+            ? { weaknessAffinity: nextStyleFields.weaknessAffinity }
+            : {}),
+        };
+      }
+    }
+  }
   return {
     ...loadout,
     style,
+    target,
     // Melee damage level is Strength; leave/enter melee seeds `level` from strengthLevel.
     level: style === "melee" || loadout.style === "melee" ? loadout.strengthLevel : loadout.level,
     buffs: { ...loadout.buffs, styleCurse: curseForStyle(loadout.buffs.styleCurse, style) },
@@ -1264,6 +1304,13 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
             armour: Math.max(0, num(rawTarget.armour, 0)),
             affinity: parseLoadoutAffinity(rawTarget.affinity)!,
             additiveHitChance: clamp(rawTarget.additiveHitChance, -100, 100, 0),
+            ...(typeof rawTarget.targetPresetId === "string" &&
+            rawTarget.targetPresetId.length > 0
+              ? { targetPresetId: rawTarget.targetPresetId }
+              : {}),
+            ...(parseLoadoutAffinity(rawTarget.weaknessAffinity) != null
+              ? { weaknessAffinity: parseLoadoutAffinity(rawTarget.weaknessAffinity)! }
+              : {}),
             ...(Number.isFinite(rawTarget.damagePotentialOverride)
               ? {
                   damagePotentialOverride: Math.min(

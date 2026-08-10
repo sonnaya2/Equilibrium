@@ -1,4 +1,4 @@
-import { AFFINITY_MAX, AFFINITY_MIN } from "../../target/genericTarget";
+import { AFFINITY_MAX, AFFINITY_MIN } from "../../target/affinityBounds";
 import type { CombatDataset, TargetPresetRecord } from "../records";
 import type { CombatDataCatalogue } from "./contracts";
 

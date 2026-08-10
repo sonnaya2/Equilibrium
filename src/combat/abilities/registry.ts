@@ -1,4 +1,4 @@
-import { abilityById } from "../data";
+import { combatDataCatalogue } from "../data/catalogue";
 import type { AbilityCategory, UnlockInfo } from "../data/records";
 import type { AbilitySpec, SupportStatus } from "../pipeline/calculateAbility";
 import { MAGIC_ABILITIES } from "../styles/magic/abilities";
@@ -71,7 +71,8 @@ function fromRecord(recordId: string | null | undefined): {
   category?: AbilityCategory;
 } {
   if (!recordId) return {};
-  const record = abilityById(recordId);
+  // Catalogue map only - avoid data/index (circular with equipment/validate).
+  const record = combatDataCatalogue.abilitiesById.get(recordId);
   if (!record) return {};
   return { level: record.level, unlock: record.unlock, category: record.category };
 }

@@ -3,6 +3,17 @@
 import Link from "next/link";
 import { useEffect } from "react";
 
+function shortMessage(error: Error): string {
+  const raw = (error.message || "").trim().replace(/\s+/g, " ");
+  if (!raw) return "";
+  // Drop Next/React noise prefixes when present.
+  const cleaned = raw
+    .replace(/^Application error:\s*/i, "")
+    .replace(/^Error:\s*/i, "")
+    .slice(0, 220);
+  return cleaned;
+}
+
 export default function Error({
   error,
   reset,
@@ -14,12 +25,17 @@ export default function Error({
     console.error(error);
   }, [error]);
 
+  const detail = shortMessage(error);
+
   return (
     <div className="px-3 py-3">
       <section className="surface-panel max-w-sm">
         <div className="surface-panel__header">Page error</div>
         <div className="surface-panel__body space-y-2">
           <p className="text-sm text-parch-300">Try again, or open Overview or Map.</p>
+          {detail ? (
+            <p className="font-mono text-xs leading-snug text-parch-400 break-words">{detail}</p>
+          ) : null}
           {error.digest ? (
             <p className="font-mono text-xs text-parch-500">Ref {error.digest}</p>
           ) : null}

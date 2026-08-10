@@ -1,6 +1,7 @@
 import { damagePotential } from "../core/damagePotential";
 import { applyEquipmentDamagePotential, type ActiveEquipmentEffects } from "../shared/equipment";
 import { effectiveBaseArmourAtTick, type BlackStoneArmourState } from "../styles/ranged/blackStone";
+import { AFFINITY_MAX, AFFINITY_MIN } from "./affinityBounds";
 
 /**
  * Generic-target accuracy model:
@@ -10,6 +11,8 @@ import { effectiveBaseArmourAtTick, type BlackStoneArmourState } from "../styles
  *   hit chance       = affinity × accuracy / armour + additive modifiers, capped at 100%
  * Exact affinity is a percent (1-100). Named defaults are UI convenience only.
  */
+
+export { AFFINITY_MAX, AFFINITY_MIN } from "./affinityBounds";
 
 /** Named defaults for UI convenience. Stored values are exact percents. */
 export const DEFAULT_AFFINITIES = {
@@ -23,9 +26,6 @@ export const DEFAULT_AFFINITIES = {
 export const AFFINITY = DEFAULT_AFFINITIES;
 
 export type AffinityKind = keyof typeof DEFAULT_AFFINITIES;
-
-export const AFFINITY_MIN = 1;
-export const AFFINITY_MAX = 100;
 
 export function isAffinityKind(value: unknown): value is AffinityKind {
   return value === "weak" || value === "same" || value === "strong" || value === "weakness";

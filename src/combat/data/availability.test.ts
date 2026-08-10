@@ -6,14 +6,28 @@ import {
 } from "./availability";
 
 describe("data/availability", () => {
-  it("missing unlock → unknown", () => {
+  it("missing unlock → unknown (obtainable without includeUnknown)", () => {
     expect(resolveAvailability(undefined)).toBe("unknown");
     expect(resolveAvailability(null)).toBe("unknown");
+    expect(isObtainableInRegions(undefined, ["misthalin"]).obtainable).toBe(true);
   });
 
   it("level empty regions is global; codex empty is unknown", () => {
     expect(resolveAvailability({ type: "level", regions: [] })).toBe("global");
     expect(resolveAvailability({ type: "codex", regions: [] })).toBe("unknown");
+  });
+
+  it("equipment/drop/activity empty regions are global for region obtainability", () => {
+    expect(resolveAvailability({ type: "equipment", regions: [] })).toBe("global");
+    expect(resolveAvailability({ type: "drop", regions: [] })).toBe("global");
+    expect(resolveAvailability({ type: "activity", regions: [] })).toBe("global");
+    expect(resolveAvailability({ type: "ability", regions: [] })).toBe("global");
+    expect(
+      isObtainableInRegions({ type: "equipment", regions: [] }, ["misthalin"]).obtainable,
+    ).toBe(true);
+    expect(isObtainableInRegions({ type: "drop", regions: [] }, ["misthalin"]).obtainable).toBe(
+      true,
+    );
   });
 
   it("regional forinthry and removed", () => {

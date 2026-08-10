@@ -86,6 +86,18 @@ describe("filterAbilitiesForLoadout — region gate (Limit to regions)", () => {
     }
   });
 
+  it("keeps global level abilities when Limit ON without Kandarin", () => {
+    const magic = filterAbilitiesForLoadout(byStyle("magic"), {
+      unlockedRegions: ["misthalin", "asgarnia"],
+      includeUnknownAvailability: false,
+    }).map((a) => a.id);
+    // Level unlocks stay; World Wakes Sunshine needs Kandarin.
+    expect(magic).toContain("omnipower");
+    expect(magic).toContain("asphyxiate");
+    expect(magic).not.toContain("sunshine");
+    expect(magic).not.toContain("corruption_blast");
+  });
+
   it("without unlockedRegions leaves regional abilities visible", () => {
     const ids = filterAbilitiesForLoadout(byStyle("ranged"), { passiveIds: [] }).map((a) => a.id);
     expect(ids).toContain("corruption_shot");

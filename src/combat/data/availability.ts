@@ -12,13 +12,30 @@ export type UnlockLike = {
   regionMode?: RegionRequirementMode;
 };
 
-/** Empty regions is unknown unless type is level (base skill unlocks are global). */
+/**
+ * Empty regions:
+ * - level → global (base skill unlocks)
+ * - equipment / drop / activity / shop / ability → global for region obtainability
+ *   (gated by gear, passives, or cast state - not league region stamps)
+ * - codex / quest with no stamp → unknown (Limit-to-regions denies until stamped)
+ */
+const NON_REGIONAL_EMPTY_TYPES = new Set([
+  "level",
+  "equipment",
+  "drop",
+  "activity",
+  "shop",
+  "ability",
+]);
+
 export function resolveAvailability(unlock: UnlockLike | null | undefined): AbilityAvailability {
   if (unlock == null) return "unknown";
   if (unlock.type === "removed") return "removed";
   if (unlock.availability) return unlock.availability;
   if ((unlock.regions?.length ?? 0) > 0) return "regional";
-  if (unlock.type === "level") return "global";
+  if (unlock.type != null && NON_REGIONAL_EMPTY_TYPES.has(String(unlock.type))) {
+    return "global";
+  }
   return "unknown";
 }
 
@@ -40,6 +57,11 @@ export function isObtainableInRegions(
   }
   if (availability === "unknown") {
     if (options?.includeUnknown) return { obtainable: true, availability };
+    // No unlock row at all (engine-only / unmapped): do not region-deny.
+    // Other cast gates (weapon, passive, special) still apply.
+    if (unlock == null) {
+      return { obtainable: true, availability, reason: "no-unlock-metadata" };
+    }
     return { obtainable: false, availability, reason: "unknown-availability" };
   }
   // regional

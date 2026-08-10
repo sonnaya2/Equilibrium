@@ -1,4 +1,8 @@
-import { pickPrimaryRecord, recordsForEngineId } from "../abilities/engineMap";
+import {
+  ENGINE_LINK_OVERRIDES,
+  pickPrimaryRecord,
+  recordsForEngineId,
+} from "../abilities/engineMap";
 import { abilityById, equipmentById } from "../data";
 import { isObtainableInRegions } from "../data/availability";
 import type { EquipmentRecord, ItemPassiveId, UnlockInfo } from "../data/records";
@@ -9,12 +13,27 @@ import {
 } from "../league/abilityAvailability";
 import type { ResolvedLeagueRules } from "../league/ruleset";
 
-/** Unlock for an engine ability via record map - no registry import (cycle with data). */
+/**
+ * Unlock for an engine ability via record map + link overrides.
+ * Igneous / cast-stage / setup variants inherit parentRecordId when present.
+ * No registry import (cycle with data).
+ */
 function unlockForEngineAbility(engineId: string): UnlockInfo | undefined {
+  const override = ENGINE_LINK_OVERRIDES[engineId];
   const mapped = recordsForEngineId(engineId);
-  if (mapped.length === 0) return undefined;
-  const recordId = pickPrimaryRecord(engineId, mapped);
-  return abilityById(recordId)?.unlock;
+  const recordId =
+    override?.recordId !== undefined && override.recordId !== null
+      ? override.recordId
+      : mapped.length > 0
+        ? pickPrimaryRecord(engineId, mapped)
+        : null;
+  if (recordId) {
+    const unlock = abilityById(recordId)?.unlock;
+    if (unlock) return unlock;
+  }
+  const parentId = override?.parentRecordId;
+  if (parentId) return abilityById(parentId)?.unlock;
+  return undefined;
 }
 
 export type WeaponConfiguration =

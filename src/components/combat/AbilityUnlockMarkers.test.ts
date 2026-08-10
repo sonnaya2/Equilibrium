@@ -44,6 +44,22 @@ describe("ability unlock markers", () => {
     });
   });
 
+  it("labels Sunshine as Kandarin quest unlock (The World Wakes)", () => {
+    expect(abilityUnlockMarkerData({ id: "sunshine", name: "Sunshine" })).toEqual({
+      regions: ["kandarin"],
+      codex: null,
+      label: "Kandarin",
+    });
+  });
+
+  it("labels Death's Swiftness as Kandarin quest unlock (The World Wakes)", () => {
+    expect(abilityUnlockMarkerData({ id: "deaths_swiftness", name: "Death's Swiftness" })).toEqual({
+      regions: ["kandarin"],
+      codex: null,
+      label: "Kandarin",
+    });
+  });
+
   it("labels Chaos Roar as Misthalin ability codex (Zamorak)", () => {
     expect(abilityUnlockMarkerData({ id: "chaos_roar", name: "Chaos Roar" })).toEqual({
       regions: ["misthalin"],

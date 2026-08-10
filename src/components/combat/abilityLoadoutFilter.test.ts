@@ -66,6 +66,26 @@ describe("filterAbilitiesForLoadout — region gate (Limit to regions)", () => {
     }
   });
 
+  it("gates Sunshine and Death's Swiftness to Kandarin (The World Wakes)", () => {
+    const cases = [
+      { style: "magic" as const, id: "sunshine" },
+      { style: "ranged" as const, id: "deaths_swiftness" },
+    ];
+    for (const c of cases) {
+      const pool = byStyle(c.style);
+      const without = filterAbilitiesForLoadout(pool, {
+        unlockedRegions: ["misthalin", "asgarnia"],
+        includeUnknownAvailability: false,
+      }).map((a) => a.id);
+      expect(without).not.toContain(c.id);
+      const withKandarin = filterAbilitiesForLoadout(pool, {
+        unlockedRegions: ["misthalin", "asgarnia", "kandarin"],
+        includeUnknownAvailability: false,
+      }).map((a) => a.id);
+      expect(withKandarin).toContain(c.id);
+    }
+  });
+
   it("without unlockedRegions leaves regional abilities visible", () => {
     const ids = filterAbilitiesForLoadout(byStyle("ranged"), { passiveIds: [] }).map((a) => a.id);
     expect(ids).toContain("corruption_shot");

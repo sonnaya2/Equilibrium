@@ -2849,6 +2849,7 @@
 {"entityId":"magic:magma-tempest","regionId":"misthalin","relation":"hint"}
 {"entityId":"magic:magma-tempest","regionId":"misthalin","relation":"required"}
 {"entityId":"magic:plank-make-lunar","regionId":"fremennik","relation":"hint"}
+{"entityId":"magic:sunshine","regionId":"kandarin","relation":"required"}
 {"entityId":"melee:chaos-roar","regionId":"misthalin","relation":"required"}
 {"entityId":"melee:greater-barge","regionId":"forinthry","relation":"required"}
 {"entityId":"melee:greater-flurry","regionId":"forinthry","relation":"required"}

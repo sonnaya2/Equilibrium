@@ -7,7 +7,8 @@ import { accuracyCurve } from "../target/genericTarget";
  * totalArmour = shared Total Armor Value from equipment (Loadout/Hero; no Defence level).
  * blockArmourRating d = floor(equipmentArmour + f(blockLevel)); hit-chance denom only.
  * f(x)=x^3/1250+4x+40; blockLevel = visible+prayer or Fortitude x1.15 (incompatible with curse Def).
- * Armour-% effects read either totalArmour or blockArmourRating according to their mechanic.
+ * Aegis / Striking Light / Barkscales / Bash armour-% read totalArmour only.
+ * blockArmourRating is the hit-chance denominator, not an Aegis input.
  * Wiki sources below.
  */
 export const DEFENCE_LEVEL_ARMOUR_SOURCE: SourceReference = {
@@ -72,7 +73,7 @@ export interface DefenceStats {
   blockLevel: number;
   equipmentArmour: number;
   armourBonus: number;
-  /** Shared Total Armor Value; armour-% effects read this, never block-only boosts. */
+  /** Shared Total Armor Value from equipment; Aegis and other armour-% blessings read this. */
   totalArmour: number;
   /** f(blockLevel), unfloored; the floor belongs to the rating. */
   blockLevelArmour: number;

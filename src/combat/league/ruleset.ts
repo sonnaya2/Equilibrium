@@ -348,12 +348,14 @@ export interface AegisArmourBonus {
 }
 
 /**
- * Teragard's Aegis: base ability damage +25% of Armour rating (50% with
- * defender, 75% with shield). The flat share is floored once.
+ * Teragard's Aegis: base ability damage +25% of equipment Total Armour
+ * (50% with defender, 75% with shield). Live game uses only the armour bonus
+ * from equipped armour - not blockArmourRating (Defence / Fortitude / prayer).
+ * Flat share is floored once.
  */
 export function aegisArmourBonus(
   rule: BlessingChoice["combat"] | undefined,
-  armour: { blockArmourRating: number },
+  armour: { totalArmour: number },
   offhand: "shield" | "defender" | null,
 ): AegisArmourBonus {
   const multiplier =
@@ -366,7 +368,7 @@ export function aegisArmourBonus(
   return {
     offhand: offhand ?? "none",
     armourPercent,
-    baseAbilityDamageBonus: mulFloor(armour.blockArmourRating, armourPercent),
+    baseAbilityDamageBonus: mulFloor(armour.totalArmour, armourPercent),
   };
 }
 

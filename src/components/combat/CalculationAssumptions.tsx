@@ -139,7 +139,7 @@ export function CalculationAssumptions({
       ? ([
           [
             "Aegis armour",
-            `${formatNumber(stats.defence.blockArmourRating)} · ${PERCENT_FORMAT.format(
+            `${formatNumber(stats.defence.totalArmour)} · ${PERCENT_FORMAT.format(
               stats.aegis.armourPercent,
             )}`,
           ],

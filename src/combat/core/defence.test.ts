@@ -59,7 +59,7 @@ describe("defenceStats", () => {
     expect(fortified.visibleLevel).toBe(99);
     expect(fortified.blockLevel).toBeCloseTo(113.85);
     expect(fortified.blockArmourRating).toBeGreaterThan(plain.blockArmourRating);
-    // Total Armour stays equipment-only; effects that use Armour rating read blockArmourRating.
+    // Total Armour stays equipment-only; Aegis/Light/Barkscales use it, not block rating.
     expect(fortified.totalArmour).toBe(plain.totalArmour);
     expect(fortified.totalArmour).toBe(1_000);
   });

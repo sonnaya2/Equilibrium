@@ -222,15 +222,16 @@ Status: `partially modeled`, `mechanics unverified`
   from wiki `Hit chance`. Fortitude's ×1.15, prayer and curse block levels, and the Defence level
   itself live here and nowhere else.
 
-Aegis reads `blockArmourRating`. Striking Light, Barkscales, and Steadfast Will's Bash read
-`totalArmour`; boosts that only move the block calculation do not reach those mechanics.
+Aegis, Striking Light, Barkscales, and Steadfast Will's Bash all read `totalArmour`
+(equipment Total Armour). Live confirmation: Aegis does **not** use `blockArmourRating`;
+Defence, Fortitude, and prayer block levels do not change the Aegis share.
 
 Implementation:
 
-- add 25% of the Armour rating to base ability damage, 50% wielding a defender, 75% wielding a
+- add 25% of equipment Total Armour to base ability damage, 50% wielding a defender, 75% wielding a
   shield — the card's three flat shares, so the percentage resolves before a single rounding:
-  `floor(armour × 0.75)`, not `floor(armour × 0.25) × 3`;
-- it is additive base ability damage, never a final-damage multiplier. At 1,000 qualifying armour a
+  `floor(totalArmour × 0.75)`, not `floor(totalArmour × 0.25) × 3`;
+- it is additive base ability damage, never a final-damage multiplier. At 1,000 equipment armour a
   later 150% band reads 1,875 / 2,250 / 2,625 raw, not 1.25×/1.5×/1.75× of final damage;
 - the wielded off-hand comes from `wieldedOffhandKind`, over the canonical resolved equipped state,
   so a stored shield or defender under a two-handed weapon cannot multiply it, a Necromancy conduit
@@ -239,7 +240,6 @@ Implementation:
 
 Still unverified:
 
-- whether the resolved Armour-rating interpretation matches live-game magnitudes;
 - whether the Loadout screen's combat-triangle style bonus adjusts the qualifying value;
 - the rounding stage against live values;
 - regeneration tick timing.

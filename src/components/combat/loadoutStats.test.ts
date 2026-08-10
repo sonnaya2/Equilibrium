@@ -1250,7 +1250,8 @@ describe("loadoutStats", () => {
       const aegis = loadoutStats(aegisLoadout, {
         blessingPicks: ["Order", "Order", "Order"],
       });
-      expect(aegis.leagueBaseAbilityDamageBonus).toBe(428);
+      // mock:defence-body equipment Total Armour 500 × 25%.
+      expect(aegis.leagueBaseAbilityDamageBonus).toBe(125);
       expect(aegis.aegis).toMatchObject({
         offhand: "none",
         armourPercent: 0.25,
@@ -1381,7 +1382,8 @@ describe("loadoutStats", () => {
         {
           picks: ["Order", "Order", "Order", "Balance"] as const,
           count: 2,
-          base: 2_239,
+          // Aegis: floor(100 equipment armour × 25%) = 25 (not block rating).
+          base: 1_936,
           armour: 100,
           life: 10_900,
           crit: 0.1,
@@ -1391,7 +1393,8 @@ describe("loadoutStats", () => {
         {
           picks: ["Order", "Balance", "Chaos", "Balance"] as const,
           count: 3,
-          base: 2_326,
+          // Aegis: floor(150 × 25%) = 37.
+          base: 2_023,
           armour: 150,
           life: 11_400,
           crit: 0.15,
@@ -1441,7 +1444,7 @@ describe("loadoutStats", () => {
         blessingPicks: ["Order", "Order", "Order", "Balance"],
         relics: ["Icyenic Faith"],
       });
-      expect(stats.base).toBe(2_239);
+      expect(stats.base).toBe(1_936);
       expect(stats.defence.totalArmour).toBe(100);
       expect(stats.league.prayerBonus).toBe(10);
       expect(stats.icyenic.totalPrayerBonus).toBe(0);
@@ -1453,7 +1456,7 @@ describe("loadoutStats", () => {
           relics: ["Icyenic Faith"],
         },
       );
-      expect(withTome.base).toBe(2_507);
+      expect(withTome.base).toBe(2_168);
       expect(withTome.league.prayerBonus).toBe(60);
       expect(withTome.icyenic.totalPrayerBonus).toBe(60);
       // TE 10% + Icyenic crit from prayer stack; no manual crit baseline.
@@ -1461,7 +1464,7 @@ describe("loadoutStats", () => {
       expect(withTome.baseAbilityDamageBreakdown).toEqual(
         expect.arrayContaining([
           { label: "True Equilibrium", value: 150 },
-          { label: "Icyenic Faith", value: 268 },
+          { label: "Icyenic Faith", value: 232 },
         ]),
       );
       expect(withTome.critDamageSources).toEqual(
@@ -1473,11 +1476,11 @@ describe("loadoutStats", () => {
       const stats = loadoutStats(base, {
         blessingPicks: ["Order", "Order", "Order", "Order"],
       });
-      expect(stats.base).toBe(2_683);
+      expect(stats.base).toBe(2_289);
       expect(stats.leagueBaseAbilityDamageMultiplier).toBe(1.3);
       expect(stats.league.blessingIds.has("higher-power")).toBe(true);
       expect(stats.baseAbilityDamageBreakdown).toEqual(
-        expect.arrayContaining([{ label: "Higher Power", value: 619 }]),
+        expect.arrayContaining([{ label: "Higher Power", value: 528 }]),
       );
     });
 

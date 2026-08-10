@@ -34,20 +34,21 @@ describe("Teragard's Aegis and Basic Attacks", () => {
     expect(plain.totalExpected).toBe(1_200);
 
     // Aegis is applied at loadout resolve (aegisArmourBonus → base), not inside simulate.
+    // 1,000 equipment Total Armour × 25% = 250 (block rating is not an input).
     const aegisBonus = aegisArmourBonus(
       blessingChoice(1, "Order")!.combat,
-      { blockArmourRating: 2_212 },
+      { totalArmour: 1_000 },
       null,
     ).baseAbilityDamageBonus;
-    expect(aegisBonus).toBe(553);
+    expect(aegisBonus).toBe(250);
 
     const aegis = simulate({
       ...baseInput,
       base: baseInput.base + aegisBonus,
       rotation: rotationOf("attack"),
     });
-    // Mid of 110-130% on 1,553 ability damage.
-    expect(aegis.totalExpected).toBe(1_863);
+    // Mid of 110-130% on 1,250 ability damage.
+    expect(aegis.totalExpected).toBe(1_500);
   });
 });
 

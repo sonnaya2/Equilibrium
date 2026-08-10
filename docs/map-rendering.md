@@ -199,9 +199,10 @@ context and yields a board that draws but does not receive pointer events
 (dev-only). If the map paints but ignores hover/click, start here.
 
 R3F never disposes a custom `gl`, and `WebGPURenderer` has no `forceContextLoss`.
-WeakMap GC alone does not free GPU resources. `DisposeGlOnUnmount` schedules
-`renderer.dispose()` on a 0ms timer after the canvas fiber leaves; a remount on
-the same canvas cancels that timer. Route leave / flat switch must free the
+WeakMap GC alone does not free GPU resources. Ownership lives in
+`webgpuRendererLifetime.ts`: deferred dispose with a generation claim so a
+same-canvas remount cancels before `dispose()`, and a replaced renderer is not
+torn down under a live second context. Route leave / flat switch must free the
 renderer or each `/map` visit leaks roughly half a megabyte.
 
 Anything the frame loop owns (`position.y`, `visible`, `scale`) must not also be

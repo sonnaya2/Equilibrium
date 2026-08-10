@@ -89,9 +89,9 @@ and cannot be hovered or clicked — dev only, production always fine. If you ar
 debugging "the map draws but does not respond", start here.
 
 R3F never disposes custom `gl`; `WebGPURenderer` has no `forceContextLoss`.
-`DisposeGlOnUnmount` defers `renderer.dispose()` past StrictMode replay (cancel on
-same-canvas remount). Do not drop dispose "because WeakMap owns lifetime" — that
-leaked ~0.5MB per `/map` visit.
+`webgpuRendererLifetime.ts` owns reuse + deferred dispose (generation claim;
+cancel on same-canvas remount). Do not drop dispose "because WeakMap owns
+lifetime" — that leaked ~0.5MB per `/map` visit.
 
 ## frameloop="demand" — one heartbeat
 

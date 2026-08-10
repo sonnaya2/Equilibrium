@@ -45,9 +45,9 @@ const config: NextConfig = {
   // Browsing via 127.0.0.1 instead of localhost is normal on this machine.
   allowedDevOrigins: ["127.0.0.1"],
   experimental: {
-    // Next 16.3: drop stale route compile results from RAM (dev-only).
-    // Without this, multi-agent HMR sessions grew until Node OOM (~30GB).
-    // Requires turbopackFileSystemCacheForDev (default true in 16.3).
+    // Pin 16.3 default explicitly: evict stale route compiles from RAM in dev.
+    // Multi-agent HMR on 16.2 grew to ~30GB OOM; requires FS cache for dev
+    // (also default true in 16.3). Primary fix is the Next version pin.
     turbopackMemoryEviction: "auto",
   },
   async headers() {

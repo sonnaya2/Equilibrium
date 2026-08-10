@@ -47,7 +47,7 @@
     "art:aliases": "node scripts/assets/check-aliases.mjs",
     "art:check": "node scripts/assets/check.mjs",
     "predev": "npm run data:rebuild",
-    "dev": "node --max-old-space-size=8192 node_modules/next/dist/bin/next dev",
+    "dev": "node --max-old-space-size=8192 ./node_modules/next/dist/bin/next dev",
     "prebuild": "npm run build:data",
     "build": "next build",
     "build:data": "npm run data:rebuild",

@@ -251,7 +251,12 @@ describe("ResolvedCombatModel equality", () => {
   });
 
   it("preserves attunedCrystalWeaponry through buildResolvedCombatModel and sim projection", () => {
-    const crystal = { active: true as const, procChance: 0.12, agilityLevel: 99 };
+    const crystal = {
+      active: true as const,
+      procChance: 0.12,
+      agilityLevel: 99,
+      armourProcBonus: 0,
+    };
     const model = buildResolvedCombatModel(
       baseInput({
         equipmentEffects: {

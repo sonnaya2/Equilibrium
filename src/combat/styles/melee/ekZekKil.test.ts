@@ -104,9 +104,12 @@ describe("Ek-ZekKil native special and Flamebound Rival", () => {
       style: "melee",
       equipmentSlots: { twohand: "item:ek-zekkil" },
     });
+    const activeWeapon = canonicalSwordEffects.activeWeapon;
+    expect(activeWeapon).toBeDefined();
+    if (!activeWeapon) throw new Error("expected Ek-ZekKil active weapon");
 
-    expect(canonicalSwordEffects.activeWeapon.specialAttackId).toBe("igneous_showdown");
-    expect(canonicalSwordEffects.activeWeapon.passiveIds).toContain("ashen-vow");
+    expect(activeWeapon.specialAttackId).toBe("igneous_showdown");
+    expect(activeWeapon.passiveIds).toContain("ashen-vow");
 
     expect(ability.adrenaline?.cost).toBe(50);
     expect(ability.cooldownSeconds).toBe(60);

@@ -575,7 +575,12 @@ describe("fingerprint changes one field at a time", () => {
         ...s,
         equipmentEffects: {
           ...s.equipmentEffects,
-          attunedCrystalWeaponry: { active: true, procChance: 0.12, agilityLevel: 99 },
+          attunedCrystalWeaponry: {
+            active: true,
+            procChance: 0.12,
+            agilityLevel: 99,
+            armourProcBonus: 0,
+          },
         },
       })),
     );

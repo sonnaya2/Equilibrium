@@ -12,6 +12,7 @@ import { DEFAULT_LOADOUT, normalizeLoadout } from "@/components/combat/useLoadou
 import { loadoutStats } from "@/components/combat/loadoutStats";
 import { toResolvedCombatModel } from "@/components/combat/toResolvedCombatModel";
 import { buildSimulationInputBase } from "@/combat/model";
+import { resolveAbilityCatalogue } from "@/combat/abilities/catalogue";
 
 const staffEffects = activeEquipmentEffects({
   style: "magic",
@@ -106,12 +107,10 @@ describe("attuned crystal weaponry in simulation", () => {
     const stats = loadoutStats(loadout);
     expect(stats.equipmentEffects.attunedCrystalWeaponry?.procChance).toBe(0.12);
 
-    const model = toResolvedCombatModel(loadout, { stats });
+    const model = toResolvedCombatModel(loadout, {}, stats);
     expect(model.equipmentEffects.attunedCrystalWeaponry?.procChance).toBe(0.12);
 
-    const simBase = buildSimulationInputBase(model, MAGIC_ABILITIES, {
-      abilities: MAGIC_ABILITIES,
-    });
+    const simBase = buildSimulationInputBase(model, resolveAbilityCatalogue());
     expect(simBase.equipmentEffects?.attunedCrystalWeaponry?.procChance).toBe(0.12);
 
     const result = simulate({

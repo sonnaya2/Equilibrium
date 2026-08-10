@@ -1,11 +1,17 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { WebgpuRendererLifetime } from "./webgpuRendererLifetime";
+import {
+  WebgpuRendererLifetime,
+  type DisposableRenderer,
+} from "./webgpuRendererLifetime";
 
 type FakeCanvas = { id: string };
-type FakeRenderer = { dispose: ReturnType<typeof vi.fn> };
+type FakeRenderer = DisposableRenderer & {
+  dispose: (() => void) & ReturnType<typeof vi.fn>;
+};
 
 function makeRenderer(): FakeRenderer {
-  return { dispose: vi.fn() };
+  const dispose = vi.fn(() => {}) as (() => void) & ReturnType<typeof vi.fn>;
+  return { dispose };
 }
 
 describe("WebgpuRendererLifetime", () => {

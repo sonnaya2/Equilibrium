@@ -65,10 +65,10 @@ describe("normalizeLoadout", () => {
     expect(manual.hitCapEnabled).toBe(true);
   });
 
-  it("migrates pre-v2 stored startingAdrenaline 0 to product default 100", () => {
-    expect(normalizeLoadout({ startingAdrenaline: 0 }).startingAdrenaline).toBe(100);
+  it("migrates pre-v2 stored startingAdrenaline 0 to open-at-max null", () => {
+    expect(normalizeLoadout({ startingAdrenaline: 0 }).startingAdrenaline).toBeNull();
     expect(normalizeLoadout({ startingAdrenaline: 0 }).loadoutSchemaVersion).toBe(2);
-    expect(normalizeLoadout({}).startingAdrenaline).toBe(100);
+    expect(normalizeLoadout({}).startingAdrenaline).toBeNull();
     // Intentional 0 after schema v2 is preserved.
     expect(
       normalizeLoadout({ loadoutSchemaVersion: 2, startingAdrenaline: 0 }).startingAdrenaline,

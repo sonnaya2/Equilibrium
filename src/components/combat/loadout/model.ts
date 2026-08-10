@@ -436,6 +436,27 @@ export function normalizeArchaeology(
 /** Bump when normalizeLoadout needs a one-shot field migration. */
 export const LOADOUT_SCHEMA_VERSION = 2;
 
+/** null stored start = open at max adrenaline for this loadout. */
+export function resolvedStartingAdrenaline(
+  stored: number | null | undefined,
+  maxAdrenaline: number,
+): number {
+  const cap = Number.isFinite(maxAdrenaline) ? Math.max(0, Math.round(maxAdrenaline)) : 100;
+  if (stored == null || !Number.isFinite(stored)) return cap;
+  return Math.min(cap, Math.max(0, Math.round(stored)));
+}
+
+/** Persist UI input; at or above max stays open-at-max (null). */
+export function persistStartingAdrenaline(
+  value: number,
+  maxAdrenaline: number,
+): number | null {
+  const cap = Number.isFinite(maxAdrenaline) ? Math.max(0, Math.round(maxAdrenaline)) : 100;
+  if (!Number.isFinite(value)) return null;
+  const n = Math.min(cap, Math.max(0, Math.round(value)));
+  return n >= cap ? null : n;
+}
+
 export interface Loadout {
   style: CombatStyle;
   /**
@@ -470,13 +491,17 @@ export interface Loadout {
   styleDamageBonus: number;
   weaponConfiguration: LoadoutWeaponConfiguration;
   baseDamage: BaseDamageSettings;
-  startingAdrenaline: number;
+  /**
+   * Opening adrenaline percent. null = open at max for this loadout
+   * (Vestments 120, T4/HS 125, stacked caps). Explicit 0 is allowed (schema >=2).
+   */
+  startingAdrenaline: number | null;
   /**
    * Persist schema (in-JSON). Storage key stays `eq:loadout:v1`.
    * Pre-v2: startingAdrenaline defaulted to 0 (broke ultimates) and full-object
    * saves always wrote 0, so intentional zero cannot be distinguished from the
-   * old default - migrate schema<2 && raw===0 to 100 once. Post-v2: user 0 is kept.
-   * Missing field always uses product default 100.
+   * old default - migrate schema<2 && raw===0 to null (open at max). Post-v2:
+   * user 0 is kept. Missing field uses product default null.
    */
   loadoutSchemaVersion: number;
   hitCapEnabled: boolean;
@@ -526,9 +551,8 @@ export const DEFAULT_LOADOUT: Loadout = {
   styleDamageBonus: 0,
   weaponConfiguration: "twohand",
   baseDamage: { mode: "automatic" },
-  // Combat open is full adren in almost every PvM setup; 0 made ultimates
-  // (Death's Swiftness, Sunshine, Berserk) look "broken" until Stats was touched.
-  startingAdrenaline: 100,
+  // null = open at max adren (T4 125 / Vestments 120 / HS stack). Explicit 0 is ok.
+  startingAdrenaline: null,
   loadoutSchemaVersion: LOADOUT_SCHEMA_VERSION,
   hitCapEnabled: false,
   accuracy: 100,
@@ -1301,15 +1325,17 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       ? Math.floor(Number((raw as { loadoutSchemaVersion: number }).loadoutSchemaVersion))
       : 0;
   // Pre-v2 full-object saves always wrote startingAdrenaline:0 as default.
-  // Impossible to tell intentional zero from that default; rewrite 0->100 once.
-  // Schema >=2 stamps intentional zeros; missing field still uses product default.
+  // Impossible to tell intentional zero from that default; rewrite 0 -> null
+  // (open at max). Schema >=2 keeps intentional zeros; missing field is null.
   const rawStart = raw.startingAdrenaline;
   const startingAdrenaline =
-    typeof rawStart === "number" && Number.isFinite(rawStart)
-      ? rawSchemaVersion < 2 && rawStart === 0
-        ? Math.min(startingAdrenalineCap, DEFAULT_LOADOUT.startingAdrenaline)
-        : Math.min(startingAdrenalineCap, Math.max(0, rawStart))
-      : DEFAULT_LOADOUT.startingAdrenaline;
+    rawStart === null
+      ? null
+      : typeof rawStart === "number" && Number.isFinite(rawStart)
+        ? rawSchemaVersion < 2 && rawStart === 0
+          ? null
+          : Math.min(startingAdrenalineCap, Math.max(0, Math.round(rawStart)))
+        : DEFAULT_LOADOUT.startingAdrenaline;
 
   return {
     style,

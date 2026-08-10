@@ -31,7 +31,7 @@ import type { ResolvedCombatModel } from "@/combat/model";
 import { SLIVER_OF_EDICTS_ID } from "@/combat/league/naragiEdict";
 import { hasEssenceOfFinalityEquipped } from "@/combat/shared/requirements";
 import { eofStorableSpecials } from "@/combat/shared/eofStoredSpecials";
-import { normalizeEofStoredSpecialId } from "./loadout/model";
+import { normalizeEofStoredSpecialId, persistStartingAdrenaline } from "./loadout/model";
 import {
   applyLoadoutVariantsToSlots,
   barOptionLabel,
@@ -660,6 +660,31 @@ export function RevolutionPanel({
             <span>s</span>
           </span>
         </label>
+        {setLoadout ? (
+          <label className="revo-status-control">
+            <span>Start adren</span>
+            <span>
+              <input
+                type="number"
+                value={loadout.startingAdrenaline ?? stats.maxAdrenaline}
+                min={0}
+                max={stats.maxAdrenaline}
+                step={1}
+                onChange={(event) => {
+                  const next = persistStartingAdrenaline(
+                    Number(event.target.value),
+                    stats.maxAdrenaline,
+                  );
+                  setLoadout({ ...loadout, startingAdrenaline: next });
+                }}
+                data-testid="revo-start-adren"
+                aria-label="Starting adrenaline percent"
+                disabled={runBusy}
+              />
+              <span>%</span>
+            </span>
+          </label>
+        ) : null}
         {setLoadout ? (
           <div className="revo-spec-strip" data-testid="revo-spec-strip">
             <button

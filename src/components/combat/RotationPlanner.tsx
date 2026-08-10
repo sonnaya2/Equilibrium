@@ -40,6 +40,7 @@ import {
   shouldShowRunScoreChrome,
 } from "./revoStochasticLabels";
 import type { Loadout, SetLoadout } from "./useLoadout";
+import { persistStartingAdrenaline } from "./loadout/model";
 import { activeLeagueRelicNames,  unlockedRegions  } from "@/league";
 import { useBuild as useLeagueBuild } from "@/league/useBuild";
 import { uiRunFingerprint } from "./uiSimFingerprint";
@@ -450,7 +451,6 @@ export function RotationPlanner({
                   ["Level", setupStats.level],
                   ["Base", setupStats.base],
                   ["DP", `${Math.round(setupStats.dp * 1000) / 10}%`],
-                  ["Start adren", `Open at max (${setupStats.maxAdrenaline}%)`],
                 ] as const
               ).map(([label, value]) => (
                 <div key={label}>
@@ -459,6 +459,30 @@ export function RotationPlanner({
                 </div>
               ))}
             </dl>
+            <label className="revo-status-control">
+              <span>Start adren</span>
+              <span>
+                <input
+                  type="number"
+                  value={loadout.startingAdrenaline ?? setupStats.maxAdrenaline}
+                  min={0}
+                  max={setupStats.maxAdrenaline}
+                  step={1}
+                  onChange={(e) =>
+                    setLoadout({
+                      ...loadout,
+                      startingAdrenaline: persistStartingAdrenaline(
+                        Number(e.target.value),
+                        setupStats.maxAdrenaline,
+                      ),
+                    })
+                  }
+                  data-testid="rotation-start-adren"
+                  aria-label="Starting adrenaline percent"
+                />
+                <span>%</span>
+              </span>
+            </label>
           </>
         ) : (
           <div className="rotation-settings__manual">

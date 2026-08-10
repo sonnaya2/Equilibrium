@@ -92,7 +92,12 @@ export function CalculationAssumptions({
     ["Style damage", stats.equipmentStyleDamageBonus],
     ["Base mode", stats.baseDamageMode],
     ["Base damage", stats.base],
-    ["Start adren", `Open at max (${stats.maxAdrenaline}%)`],
+    [
+      "Start adren",
+      stats.startingAdrenaline === stats.maxAdrenaline
+        ? `Open at max (${stats.maxAdrenaline}%)`
+        : `${stats.startingAdrenaline}%`,
+    ],
     ["Max adren", `${stats.maxAdrenaline}%`],
     ...adrenEconomyAssumptionRows(stats),
     [

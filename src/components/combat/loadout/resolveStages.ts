@@ -1189,8 +1189,11 @@ export function resolveCombatRules(
       pieceContribution: setPieceContribution,
     }),
     maxAdrenaline,
-    // Always open at max adren (Vestments 120, T4/HS 125, stacked caps, etc.).
-    startingAdrenaline: maxAdrenaline,
+    // null loadout start = open at max (Vestments 120, T4/HS 125, stacked caps).
+    startingAdrenaline:
+      loadout.startingAdrenaline == null
+        ? maxAdrenaline
+        : Math.min(maxAdrenaline, Math.max(0, Math.round(loadout.startingAdrenaline))),
     cap: {
       cap: STANDARD_HIT_CAP,
       // User toggle only; league does not force bypass under equilibrium.

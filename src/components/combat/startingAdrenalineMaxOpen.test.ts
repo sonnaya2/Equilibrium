@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { loadoutStats } from "./loadoutStats";
-import { DEFAULT_LOADOUT } from "./useLoadout";
+import { DEFAULT_LOADOUT, persistStartingAdrenaline } from "./useLoadout";
 import { toResolvedCombatModel } from "./toResolvedCombatModel";
 import {
   buildSimulationInputBase,
@@ -32,6 +32,21 @@ describe("startingAdrenaline max open", () => {
     const rt = createRuntime(simBase);
     expect(rt.state.adrenalineCap).toBe(125);
     expect(rt.state.adrenaline).toBe(125);
+  });
+
+  it("honors an explicit start below max", () => {
+    const options = { blessingPicks: [...t4Picks] };
+    const loadout = { ...DEFAULT_LOADOUT, startingAdrenaline: 80 };
+    const stats = loadoutStats(loadout, options);
+    expect(stats.maxAdrenaline).toBe(125);
+    expect(stats.startingAdrenaline).toBe(80);
+    expect(toResolvedCombatModel(loadout, options, stats).startingAdrenaline).toBe(80);
+  });
+
+  it("stores max-or-above as open-at-max null", () => {
+    expect(persistStartingAdrenaline(125, 125)).toBeNull();
+    expect(persistStartingAdrenaline(100, 125)).toBe(100);
+    expect(persistStartingAdrenaline(0, 125)).toBe(0);
   });
 
   it("rejects start above cap when league is absent", () => {

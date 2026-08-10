@@ -53,7 +53,7 @@
     "build:data": "npm run data:rebuild",
     "start": "next start",
     "pretypecheck": "npm run data:rebuild",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.tests.json",
     "lint": "eslint . --max-warnings=0",
     "format:check": "prettier --check --end-of-line auto \"app/**/*.{ts,tsx,css,mjs}\" \"src/**/*.{ts,tsx,css}\" \"eslint.config.mjs\" \"vitest.config.ts\" \"next.config.ts\" \"playwright.config.ts\" \"playwright.combat.config.ts\" \"playwright.reuse.config.ts\" \"playwright.webgpu.config.ts\"",
     "pretest": "npm run data:rebuild",

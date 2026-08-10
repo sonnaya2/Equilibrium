@@ -40,7 +40,14 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "e2e",
+    "playwright.config.ts",
+    "playwright.combat.config.ts",
+    "playwright.webgpu.config.ts",
+    "vitest.config.ts"
   ]
 }
 

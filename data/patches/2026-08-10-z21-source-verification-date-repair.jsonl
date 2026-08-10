@@ -1,5 +1,5 @@
 # Correct future-dated verification metadata authored in the 2026-08-03 patch commits.
-# The 2026-08-08 through 2026-08-11 patch filenames were not source verification dates.
+# Later patch filenames were not source verification dates.
 {"op":"upsert","entity":"activity:content:airuts","set":{"verified_at":"2026-08-03"},"reason":"Correct verification date: the source was checked in the 2026-08-03 patch commit; later patch filenames were not verification dates."}
 {"op":"upsert","entity":"activity:content:airuts-desert","set":{"verified_at":"2026-08-03"},"reason":"Correct verification date: the source was checked in the 2026-08-03 patch commit; later patch filenames were not verification dates."}
 {"op":"upsert","entity":"activity:content:araxxor-araxxi","set":{"verified_at":"2026-08-03"},"reason":"Correct verification date: the source was checked in the 2026-08-03 patch commit; later patch filenames were not verification dates."}

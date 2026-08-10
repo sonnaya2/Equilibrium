@@ -225,18 +225,36 @@ export type BuildMaxDpsPowerArchiveOptions = {
    * use standard craft max and skip ancient-only perks (Relentless, Ruthless).
    */
   ancient?: boolean;
+  /**
+   * Include Equilibrium in the fill. Default false: Equilibrium raises mean
+   * band but disables crits, so max-crit bot fills lose DPS.
+   */
+  includeEquilibrium?: boolean;
 };
 
 /**
- * Build a full bot loadout of every combatScope:"offensive" perk at craft max
- * (one perk per gizmo so every DPS perk is present after highest-wins).
- * Replaces any previous Archive contents when applied.
+ * Offensive perks never auto-filled by "Add all DPS boosting perks".
+ * Still combatScope:"offensive" and manually assignable on the bot.
+ */
+export const MAX_DPS_FILL_EXCLUDE: ReadonlySet<PowerArchivePerkId> = new Set([
+  "equilibrium",
+]);
+
+/**
+ * Build a full bot loadout of offensive perks at craft max (one perk per gizmo
+ * so highest-wins still covers the DPS set). Skips Equilibrium by default
+ * (crit disable). Replaces any previous Archive contents when applied.
  */
 export function buildMaxDpsPowerArchiveState(
   options: BuildMaxDpsPowerArchiveOptions = {},
 ): PowerArchiveState {
   const ancient = options.ancient !== false;
-  const offensive = POWER_ARCHIVE_PERKS.filter((p) => p.combatScope === "offensive");
+  const includeEquilibrium = options.includeEquilibrium === true;
+  const offensive = POWER_ARCHIVE_PERKS.filter((p) => {
+    if (p.combatScope !== "offensive") return false;
+    if (!includeEquilibrium && MAX_DPS_FILL_EXCLUDE.has(p.id)) return false;
+    return true;
+  });
   const rawSlots: PowerArchiveGizmoSlot[] = [];
   for (let i = 0; i < offensive.length && rawSlots.length < POWER_ARCHIVE_SLOT_CAP; i++) {
     const def = offensive[i]!;

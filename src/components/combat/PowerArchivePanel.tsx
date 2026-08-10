@@ -10,6 +10,7 @@ import {
   canAddPowerArchiveSlot,
   emptyPowerArchiveState,
   gizmoAcceptsPerk,
+  MAX_DPS_FILL_EXCLUDE,
   powerArchivePerk,
   replacePowerArchiveSlot,
   storedMaxForShell,
@@ -388,11 +389,11 @@ export function PowerArchivePanel({
 
   const activeCapacity = 2;
   const activeHeld = selected?.perks.length ?? 0;
-  const fillableDpsCount = POWER_ARCHIVE_PERKS.filter(
-    (p) =>
-      p.combatScope === "offensive" &&
-      gizmoAcceptsPerk(p.gizmoKind === "armour" ? "armour" : "weapon", p, ancientAllowed),
-  ).length;
+  const fillableDpsCount = POWER_ARCHIVE_PERKS.filter((p) => {
+    if (p.combatScope !== "offensive") return false;
+    if (MAX_DPS_FILL_EXCLUDE.has(p.id)) return false;
+    return gizmoAcceptsPerk(p.gizmoKind === "armour" ? "armour" : "weapon", p, ancientAllowed);
+  }).length;
 
   return (
     <div className="loadout-panel loadout-panel-wide power-archive-panel">
@@ -403,8 +404,8 @@ export function PowerArchivePanel({
           onClick={fillMaxDps}
           title={
             ancientAllowed
-              ? `Fill the bot with ${fillableDpsCount} offensive perks at ancient craft max`
-              : `Fill the bot with ${fillableDpsCount} offensive perks at standard craft max (no Relentless/Ruthless)`
+              ? `Fill the bot with ${fillableDpsCount} offensive perks at ancient craft max (skips Equilibrium)`
+              : `Fill the bot with ${fillableDpsCount} offensive perks at standard craft max (no Relentless/Ruthless; skips Equilibrium)`
           }
         >
           Add all DPS boosting perks

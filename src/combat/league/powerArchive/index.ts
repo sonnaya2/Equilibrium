@@ -14,6 +14,7 @@ export {
   effectiveCombatRank,
   emptyPowerArchiveState,
   equipmentRanksFromLoadoutPerks,
+  MAX_DPS_FILL_EXCLUDE,
   normalizePowerArchiveState,
   replacePowerArchiveSlot,
   resolvePowerArchivePerks,

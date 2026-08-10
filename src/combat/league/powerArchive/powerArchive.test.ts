@@ -290,13 +290,16 @@ describe("Power Archive resolve", () => {
     expect(archiveEffectiveMax(powerArchivePerk("relentless"), true)).toBe(10);
   });
 
-  it("buildMaxDpsPowerArchiveState fills every offensive perk at ancient max", () => {
+  it("buildMaxDpsPowerArchiveState fills offensive perks at ancient max (skips Equilibrium)", () => {
     const state = buildMaxDpsPowerArchiveState({ ancient: true });
-    const offensive = POWER_ARCHIVE_PERKS.filter((p) => p.combatScope === "offensive");
-    expect(state.slots.length).toBe(offensive.length);
+    const fillable = POWER_ARCHIVE_PERKS.filter(
+      (p) => p.combatScope === "offensive" && p.id !== "equilibrium",
+    );
+    expect(state.slots.length).toBe(fillable.length);
     expect(state.slots.length).toBeLessThanOrEqual(POWER_ARCHIVE_SLOT_CAP);
     const ids = new Set(state.slots.flatMap((s) => s.perks.map((p) => p.perkId)));
-    for (const perk of offensive) {
+    expect(ids.has("equilibrium")).toBe(false);
+    for (const perk of fillable) {
       expect(ids.has(perk.id), perk.id).toBe(true);
     }
     expect(state.slots.every((s) => s.ancient)).toBe(true);
@@ -310,6 +313,13 @@ describe("Power Archive resolve", () => {
     expect(resolved.get("aftershock")?.effectiveRank).toBe(8);
     expect(resolved.get("relentless")?.effectiveRank).toBe(10);
     expect(resolved.get("ruthless")?.effectiveRank).toBe(6);
+    expect(resolved.get("equilibrium")).toBeUndefined();
+  });
+
+  it("buildMaxDpsPowerArchiveState can opt in Equilibrium", () => {
+    const state = buildMaxDpsPowerArchiveState({ ancient: true, includeEquilibrium: true });
+    const ids = new Set(state.slots.flatMap((s) => s.perks.map((p) => p.perkId)));
+    expect(ids.has("equilibrium")).toBe(true);
   });
 
   it("buildMaxDpsPowerArchiveState standard fill skips Relentless and Ruthless", () => {
@@ -317,6 +327,7 @@ describe("Power Archive resolve", () => {
     const ids = new Set(state.slots.flatMap((s) => s.perks.map((p) => p.perkId)));
     expect(ids.has("relentless")).toBe(false);
     expect(ids.has("ruthless")).toBe(false);
+    expect(ids.has("equilibrium")).toBe(false);
     expect(state.slots.every((s) => !s.ancient)).toBe(true);
     const caroming = state.slots.find((s) => s.perks.some((p) => p.perkId === "caroming"));
     expect(caroming?.perks[0]?.rank).toBe(3);

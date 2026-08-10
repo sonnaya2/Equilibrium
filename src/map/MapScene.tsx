@@ -18,16 +18,52 @@ import { useMapFocus } from "./useMapFocus";
 
 extend(THREE as never);
 
-/** One renderer per canvas across StrictMode replays, weakly keyed by canvas lifetime. */
+/**
+ * One renderer per canvas across StrictMode replays.
+ * WeakMap alone does not free GPU resources - R3F never disposes custom gl,
+ * and WebGPURenderer has no forceContextLoss. Dispose on real unmount (route
+ * leave / flat switch); cancel if the same canvas remounts before the timer.
+ */
 const RENDERERS = new WeakMap<HTMLCanvasElement, Promise<THREE.WebGPURenderer>>();
+const DISPOSE_TIMERS = new WeakMap<HTMLCanvasElement, ReturnType<typeof setTimeout>>();
 
 type RendererParams = ConstructorParameters<typeof THREE.WebGPURenderer>[0];
+
+function cancelRendererDispose(canvas: HTMLCanvasElement | undefined): void {
+  if (!canvas) return;
+  const timer = DISPOSE_TIMERS.get(canvas);
+  if (timer == null) return;
+  clearTimeout(timer);
+  DISPOSE_TIMERS.delete(canvas);
+}
+
+function scheduleRendererDispose(canvas: HTMLCanvasElement | undefined): void {
+  if (!canvas) return;
+  cancelRendererDispose(canvas);
+  DISPOSE_TIMERS.set(
+    canvas,
+    setTimeout(() => {
+      DISPOSE_TIMERS.delete(canvas);
+      const pending = RENDERERS.get(canvas);
+      RENDERERS.delete(canvas);
+      if (!pending) return;
+      void pending
+        .then((renderer) => {
+          renderer.dispose();
+        })
+        .catch(() => {
+          // Init failed; catch path already dropped the WeakMap entry.
+        });
+    }, 0),
+  );
+}
 
 function rendererFor(
   props: Record<string, unknown>,
   onFail?: () => void,
 ): Promise<THREE.WebGPURenderer> {
   const canvas = props.canvas as HTMLCanvasElement | undefined;
+  cancelRendererDispose(canvas);
   const existing = canvas ? RENDERERS.get(canvas) : undefined;
   if (existing) return existing;
   const made = (async () => {
@@ -44,6 +80,17 @@ function rendererFor(
   })();
   if (canvas) RENDERERS.set(canvas, made);
   return made;
+}
+
+/** Dispose the custom WebGPU gl when the canvas fiber really leaves (not StrictMode replay). */
+function DisposeGlOnUnmount() {
+  const gl = useThree((s) => s.gl);
+  useEffect(() => {
+    const canvas = gl.domElement as HTMLCanvasElement;
+    cancelRendererDispose(canvas);
+    return () => scheduleRendererDispose(canvas);
+  }, [gl]);
+  return null;
 }
 
 function InvalidateOnBuild() {
@@ -71,7 +118,6 @@ export default function MapScene() {
   failRef.current = () => setSupported(false);
   const { focus, unframe } = useMapFocus();
   const reducedMotion = useReducedMotion();
-  // Reuse the renderer during StrictMode remounts; parallel initialization breaks R3F events.
 
   const [narrow, setNarrow] = useState(false);
   useEffect(() => {
@@ -172,8 +218,9 @@ export default function MapScene() {
             reducedMotion={reducedMotion}
           />
           {mapFlags().bloom && !mapFlags().debugGeometry ? <BloomWhenNeeded /> : null}
+          <DisposeGlOnUnmount />
           <InvalidateOnBuild />
-          {/* First paint after Suspense resolves — demand loop has nothing until this. */}
+          {/* First paint after Suspense resolves - demand loop has nothing until this. */}
           <KickFirstFrame />
         </Canvas>
       </div>

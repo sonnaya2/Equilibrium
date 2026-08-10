@@ -44,6 +44,12 @@ const config: NextConfig = {
   turbopack: { root: import.meta.dirname },
   // Browsing via 127.0.0.1 instead of localhost is normal on this machine.
   allowedDevOrigins: ["127.0.0.1"],
+  experimental: {
+    // Next 16.3: drop stale route compile results from RAM (dev-only).
+    // Without this, multi-agent HMR sessions grew until Node OOM (~30GB).
+    // Requires turbopackFileSystemCacheForDev (default true in 16.3).
+    turbopackMemoryEviction: "auto",
+  },
   async headers() {
     return [
       {

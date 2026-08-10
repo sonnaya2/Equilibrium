@@ -47,7 +47,7 @@
     "art:aliases": "node scripts/assets/check-aliases.mjs",
     "art:check": "node scripts/assets/check.mjs",
     "predev": "npm run data:rebuild",
-    "dev": "next dev",
+    "dev": "node --max-old-space-size=8192 node_modules/next/dist/bin/next dev",
     "prebuild": "npm run build:data",
     "build": "next build",
     "build:data": "npm run data:rebuild",
@@ -84,7 +84,7 @@
   "dependencies": {
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",
-    "next": "^16.2.11",
+    "next": "16.3.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "sanitize-html": "^2.17.6",

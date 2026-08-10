@@ -78,7 +78,7 @@ three were bugs first:
 
 Runs that cannot be reconciled ship unsimplified — denser, but identical.
 
-## The renderer WeakMap
+## The renderer WeakMap + dispose
 
 `MapScene.tsx` caches the renderer *promise* in a `WeakMap` keyed by canvas.
 
@@ -87,6 +87,11 @@ second `WebGPURenderer` gets built over the same canvas, the second
 `getContext('webgpu')` displaces the first, and you get a board that renders perfectly
 and cannot be hovered or clicked — dev only, production always fine. If you are
 debugging "the map draws but does not respond", start here.
+
+R3F never disposes custom `gl`; `WebGPURenderer` has no `forceContextLoss`.
+`DisposeGlOnUnmount` defers `renderer.dispose()` past StrictMode replay (cancel on
+same-canvas remount). Do not drop dispose "because WeakMap owns lifetime" — that
+leaked ~0.5MB per `/map` visit.
 
 ## frameloop="demand" — one heartbeat
 

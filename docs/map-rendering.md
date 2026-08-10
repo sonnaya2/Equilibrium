@@ -192,11 +192,17 @@ advances the shared `mapClock` in `materials/shared.ts`.
 - Transitions invalidate while moving and stop when settled.
   `e2e/map-ocean.spec.ts` covers tick behaviour when WebGPU is available.
 
-**Renderer WeakMap:** `MapScene` caches the `WebGPURenderer` *promise* in a
-`WeakMap` keyed by canvas. React StrictMode remounts cannot rely on a ref alone:
-a second `WebGPURenderer` on the same canvas displaces the first context and
-yields a board that draws but does not receive pointer events (dev-only). If the
-map paints but ignores hover/click, start here.
+**Renderer WeakMap + deferred dispose:** `MapScene` caches the `WebGPURenderer`
+*promise* in a `WeakMap` keyed by canvas. React StrictMode remounts cannot rely
+on a ref alone: a second `WebGPURenderer` on the same canvas displaces the first
+context and yields a board that draws but does not receive pointer events
+(dev-only). If the map paints but ignores hover/click, start here.
+
+R3F never disposes a custom `gl`, and `WebGPURenderer` has no `forceContextLoss`.
+WeakMap GC alone does not free GPU resources. `DisposeGlOnUnmount` schedules
+`renderer.dispose()` on a 0ms timer after the canvas fiber leaves; a remount on
+the same canvas cancels that timer. Route leave / flat switch must free the
+renderer or each `/map` visit leaks roughly half a megabyte.
 
 Anything the frame loop owns (`position.y`, `visible`, `scale`) must not also be
 driven as a JSX prop — R3F re-applies the prop and teleports the transition.

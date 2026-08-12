@@ -273,15 +273,15 @@ Attached components are excluded by the hit-count integrity rule; blessing damag
 nothing recurses. Damage Potential replaces hit/miss rolls against NPCs, so there is no missed-hit
 case, and a zero-damage event is excluded by the caller.
 
-Quick calculation keeps Inferno's closed-form Bernoulli/geometric expectation. Full simulation uses
-the fixed 128-lane stochastic ensemble: a successful Cinders roll or Critual parent crit schedules
-integer-multiplicity Inferno events, and an Inferno crit can continue the Critual chain. Every
-materialized event has `expectedOccurrences`, `expectedActivations`, and `expectedSeparateHits` of
-1 with no occurrence model wrapper. The terminal event is noncritical; continuing events are
-critical. Inferno may roll weapon poison once and host Big Boned. A separate Inferno hit can grant
-Tsunami adrenaline only when its resolved combat style is Magic; ranged, melee, and Necromancy
-Infernos cannot. Inferno never reopens Cinders. A Cinders-origin continuation is attributed to
-Unholy Critual after the independent Cinders start.
+Quick calculation keeps Inferno's closed-form Bernoulli expectation: Cinders at on-hit chance, Critual
+at parent crit chance (capped). Full simulation uses the fixed 128-lane stochastic ensemble: a
+successful Cinders roll or Critual parent crit schedules exactly one unit-multiplicity Inferno event
+each. Inferno may crit for damage and riders (Lightning Surge, Big Boned, poison) but does **not**
+schedule further Critual Infernos. Materialized events have `expectedOccurrences`,
+`expectedActivations`, and `expectedSeparateHits` of 1 with no occurrence model wrapper. Inferno may
+roll weapon poison once and host Big Boned. A separate Inferno hit can grant Tsunami adrenaline only
+when its resolved combat style is Magic; ranged, melee, and Necromancy Infernos cannot. Inferno never
+reopens Cinders.
 
 Still unverified:
 
@@ -472,7 +472,7 @@ Until testing proves otherwise:
 - an unspecified on-hit proc uses the first qualifying hit of an attack;
 - a blessing that explicitly applies to all hits overrides that default;
 - proc chance described per attack rolls once per attack or ability use;
-- blessing-generated damage cannot trigger the same blessing recursively, except Unholy Critual may continue from a critical Inferno; Cinders itself never reopens;
+- blessing-generated damage cannot trigger the same blessing recursively; Unholy Critual schedules one Inferno per eligible parent crit only (no Inferno-on-Inferno chain); Cinders never reopens;
 - ordinary downstream target modifiers still apply;
 - interactions with unrelated poison, healing, proc counters, or other blessings remain unverified unless tested.
 

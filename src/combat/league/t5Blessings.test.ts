@@ -118,7 +118,7 @@ describe("Tier 5 and Tier 6 blessing mechanics", () => {
         .find((row) => row.id === "inferno-of-zamorak")
         ?.sourceBreakdown?.find((source) => source.blessingId === "unholy-critual")
         ?.expectedActivations,
-    ).toBeCloseTo(1.05, 0);
+    ).toBeCloseTo(0.5, 0);
     const infernoRow = unholyPerfidious.analysis.byEffect.find(
       (row) => row.id === "inferno-of-zamorak",
     );
@@ -132,7 +132,7 @@ describe("Tier 5 and Tier 6 blessing mechanics", () => {
         expect.objectContaining({
           blessingId: "unholy-critual",
           expectedTriggerRolls: 0.5,
-          expectedActivations: expect.closeTo(1.2, 0),
+          expectedActivations: 0.5,
         }),
       ]),
     );
@@ -278,9 +278,8 @@ describe("Tier 5 and Tier 6 blessing mechanics", () => {
     expect(inferno?.hitDetail?.critChance).toBeCloseTo(0.5, 12);
     expect(inferno?.hitDetail?.critDamageBonus).toBeCloseTo(1, 12);
     expect(inferno?.occurrenceModel).toMatchObject({
-      kind: "geometric",
-      startProbability: 0.5,
-      continuationProbability: 0.5,
+      kind: "bernoulli",
+      probability: 0.5,
     });
   });
 
@@ -300,8 +299,9 @@ describe("Tier 5 and Tier 6 blessing mechanics", () => {
     const poison = result.analysis.byEffect.find((row) => row.id === PLAYER_POISON_EFFECT_ID);
     expect(inferno).toBeDefined();
     expect(inferno?.expectedTriggerRolls).toBeGreaterThan(0);
-    expect(inferno?.expectedActivations).toBeCloseTo(1, 0);
-    expect(inferno?.expectedSeparateHits).toBeCloseTo(1, 0);
+    // One ranged_attack at p=0.5 -> 0.5 Inferno (no recursive chain; DoT excluded).
+    expect(inferno?.expectedActivations).toBeCloseTo(0.5, 0);
+    expect(inferno?.expectedSeparateHits).toBeCloseTo(0.5, 0);
     expect(corruption?.dotDamage).toBeGreaterThan(0);
     expect(poison?.expectedSeparateHits).toBeGreaterThan(0);
     expect(
@@ -328,8 +328,12 @@ describe("Tier 5 and Tier 6 blessing mechanics", () => {
       },
       { stochasticLanes: 128 },
     );
+    // Critual converts guaranteed to p=0.5; three skull hits * 0.5 = 1.5 Infernos (no recursion).
     expect(critical.analysis.byEffect.find((row) => row.id === "inferno-of-zamorak")).toMatchObject(
-      { expectedActivations: expect.closeTo(3, 0), expectedSeparateHits: expect.closeTo(3, 0) },
+      {
+        expectedActivations: expect.closeTo(1.5, 0),
+        expectedSeparateHits: expect.closeTo(1.5, 0),
+      },
     );
     const skulls = critical.events.filter((event) => event.abilityId === "death_skulls");
     expect(skulls).toHaveLength(3);
@@ -352,7 +356,7 @@ describe("Tier 5 and Tier 6 blessing mechanics", () => {
     ).toBeUndefined();
   });
 
-  it("materializes Unholy Inferno recursion without requiring Cinders", () => {
+  it("materializes one Unholy Inferno per parent crit without requiring Cinders", () => {
     const league = picks("Order", "Order", "Order", "Order", "Chaos");
     expect(league.blessingIds.has("abyssal-cinders")).toBe(false);
     // Explicit multi-lane ensemble for EV activation totals (product UI is single-path).
@@ -367,9 +371,10 @@ describe("Tier 5 and Tier 6 blessing mechanics", () => {
       { stochasticLanes: 128 },
     );
     const infernos = result.events.filter((event) => event.abilityId === "inferno-of-zamorak");
+    // 7 Greater Ricochet hits * 0.5 crit = 3.5 Infernos EV (no recursive chain).
     expect(result.analysis.byEffect.find((row) => row.id === "inferno-of-zamorak")).toMatchObject({
-      expectedActivations: expect.closeTo(7, 0),
-      expectedSeparateHits: expect.closeTo(7, 0),
+      expectedActivations: expect.closeTo(3.5, 0),
+      expectedSeparateHits: expect.closeTo(3.5, 0),
     });
     for (const event of infernos) {
       expect(event.occurrenceModel).toBeUndefined();
@@ -377,15 +382,13 @@ describe("Tier 5 and Tier 6 blessing mechanics", () => {
       expect(event.expectedActivations).toBe(1);
       expect(event.expectedSeparateHits).toBe(1);
     }
-    const chains = new Map<number, typeof infernos>();
-    for (const event of infernos) {
-      const chain = chains.get(event.derivedFrom ?? -1) ?? [];
-      chain.push(event);
-      chains.set(event.derivedFrom ?? -1, chain);
-    }
-    for (const chain of chains.values()) {
-      expect(chain.at(-1)?.damage.critical?.outcome).toBe(false);
-      expect(chain.slice(0, -1).every((event) => event.damage.critical?.outcome)).toBe(true);
+    const parents = result.events.filter(
+      (event) => event.abilityId === "greater_ricochet" && event.family === "hit",
+    );
+    const parentCrits = parents.filter((event) => event.damage.critical?.outcome === true);
+    expect(infernos).toHaveLength(parentCrits.length);
+    for (const parent of parentCrits) {
+      expect(infernos.filter((event) => event.derivedFrom === parent.seq)).toHaveLength(1);
     }
   });
 

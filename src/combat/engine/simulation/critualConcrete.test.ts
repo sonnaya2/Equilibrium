@@ -66,16 +66,18 @@ function scheduledInfernoRun(
 }
 
 describe("concrete Unholy Critual runtime", () => {
-  it("matches p/(1-q) across 128 concrete single-parent histories", () => {
+  it("matches parent crit rate (one Inferno, no recursive chain) across 128 histories", () => {
     const lanes = Array.from({ length: 128 }, (_, laneIndex) =>
       laneRun(baseInput, "attack", laneIndex, "melee"),
     );
     const infernoCounts = lanes.map(
       (rt) => rt.events.filter((event) => event.abilityId === "inferno-of-zamorak").length,
     );
+    expect(infernoCounts.every((count) => count === 0 || count === 1)).toBe(true);
     expect(infernoCounts.some((count) => count === 0)).toBe(true);
-    expect(infernoCounts.some((count) => count > 0)).toBe(true);
-    expect(infernoCounts.reduce((sum, count) => sum + count, 0) / lanes.length).toBeCloseTo(1, 0);
+    expect(infernoCounts.some((count) => count === 1)).toBe(true);
+    // Parent crit chance 0.5 -> one Inferno on crit only (no geometric recursion).
+    expect(infernoCounts.reduce((sum, count) => sum + count, 0) / lanes.length).toBeCloseTo(0.5, 0);
     for (const rt of lanes) {
       for (const event of rt.events.filter((entry) => entry.abilityId === "inferno-of-zamorak")) {
         expect(event.expectedOccurrences).toBe(1);
@@ -88,7 +90,7 @@ describe("concrete Unholy Critual runtime", () => {
     }
   });
 
-  it("rolls Critual once per eligible Greater Ricochet hitsplat and orders chains", () => {
+  it("rolls Critual once per eligible Greater Ricochet hitsplat (no recursive Infernos)", () => {
     const rt = laneRun(rangedInput, "greater_ricochet", 37, "ranged");
     const parents = rt.events.filter(
       (event) => event.abilityId === "greater_ricochet" && event.family === "hit",
@@ -97,18 +99,11 @@ describe("concrete Unholy Critual runtime", () => {
     expect(infernos.every((event) => event.combatStyle === "ranged")).toBe(true);
     expect(parents).toHaveLength(7);
     expect(parents.every((event) => event.damage.critical?.outcome !== undefined)).toBe(true);
-    expect(infernos.filter((event) => event.expectedTriggerRolls === 1).length).toBe(
-      parents.filter((event) => event.damage.critical?.outcome === true).length,
-    );
-    const chains = new Map<number, typeof infernos>();
-    for (const event of infernos) {
-      const chain = chains.get(event.derivedFrom ?? -1) ?? [];
-      chain.push(event);
-      chains.set(event.derivedFrom ?? -1, chain);
-    }
-    for (const chain of chains.values()) {
-      expect(chain.at(-1)?.damage.critical?.outcome).toBe(false);
-      expect(chain.slice(0, -1).every((event) => event.damage.critical?.outcome)).toBe(true);
+    const parentCrits = parents.filter((event) => event.damage.critical?.outcome === true);
+    expect(infernos).toHaveLength(parentCrits.length);
+    expect(infernos.every((event) => event.expectedTriggerRolls === 1)).toBe(true);
+    for (const parent of parentCrits) {
+      expect(infernos.filter((event) => event.derivedFrom === parent.seq)).toHaveLength(1);
     }
   });
 
@@ -132,7 +127,12 @@ describe("concrete Unholy Critual runtime", () => {
         event.damage.critical?.outcome === true,
     );
     expect(magicCriticalInfernos.length).toBeGreaterThan(0);
-    expect(magicInfernos.at(-1)?.damage.critical?.outcome).toBe(false);
+    // One Inferno per parent crit; it may itself crit (no forced terminal non-crit).
+    expect(magicInfernos.length).toBe(
+      magic.events.filter(
+        (e) => e.abilityId === "magic_attack" && e.damage.critical?.outcome === true,
+      ).length,
+    );
     expect(magic.state.adrenaline - magicBaseline.state.adrenaline).toBe(
       magicCriticalEvents.length * 8,
     );
@@ -191,8 +191,9 @@ describe("concrete Unholy Critual runtime", () => {
         .filter((event) => event.abilityId === "corruption_shot" || event.family === "poison")
         .every((event) => (event.damage.critical?.mode ?? "none") === "none"),
     ).toBe(true);
+    // One ranged_attack at p=0.5 crit -> 0.5 Inferno EV (corruption DoT does not Critual).
     expect(
       result.analysis.byEffect.find((row) => row.id === "inferno-of-zamorak")?.expectedActivations,
-    ).toBeCloseTo(1, 0);
+    ).toBeCloseTo(0.5, 0);
   });
 });

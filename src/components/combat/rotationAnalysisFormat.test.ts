@@ -6,23 +6,36 @@ import {
 } from "./rotationAnalysisFormat";
 
 describe("rotation analysis presentation", () => {
-  it("keeps the legacy Quick geometric note separate from concrete runtime events", () => {
+  it("omits Critual Bernoulli Inferno; still labels generic geometric packs", () => {
     expect(
       occurrenceModelNote(
         {
           abilityId: "inferno-of-zamorak",
           blessingId: "unholy-critual",
-          expectedActivations: 1,
+          expectedActivations: 0.5,
           occurrenceModel: {
-            kind: "geometric",
-            startProbability: 0.5,
-            continuationProbability: 0.5,
+            kind: "bernoulli",
+            probability: 0.5,
           },
         },
         "Inferno",
       ),
+    ).toBeNull();
+    expect(
+      occurrenceModelNote(
+        {
+          abilityId: "recursive-proc",
+          expectedActivations: 0.05 / 0.95,
+          occurrenceModel: {
+            kind: "geometric",
+            startProbability: 0.05,
+            continuationProbability: 0.05,
+          },
+        },
+        "proc",
+      ),
     ).toBe(
-      "Critual recursive chain: 1 expected Inferno per eligible parent (50.0% start; 50.0% continuation)",
+      "Recursive geometric chain: 0.05 expected proc per eligible parent (5.0% start; 5.0% continuation)",
     );
   });
 

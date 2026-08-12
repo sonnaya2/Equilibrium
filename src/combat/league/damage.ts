@@ -485,27 +485,7 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
     guaranteed: false,
     damageBonus: (globalCrit.damageBonus ?? 0) + (unholy?.infernoCritDamageBonus ?? 0),
   };
-  const infernoCritChance = unholy
-    ? boundedCritualProbability(critProbability(infernoCrit), "continuation")
-    : 0;
-  const chainExpected = (start: number) => {
-    if (!unholy) return start;
-    const boundedStart = boundedCritualProbability(start, "trigger");
-    const denominator = 1 - infernoCritChance;
-    if (denominator < 0.5) {
-      throw new RangeError(`Critual continuation probability ${infernoCritChance} exceeds 0.5`);
-    }
-    return boundedStart / denominator;
-  };
-  const chainModel = (start: number): StatefulOccurrenceModel | undefined =>
-    unholy
-      ? {
-          kind: "geometric",
-          startProbability: start,
-          continuationProbability: infernoCritChance,
-        }
-      : undefined;
-
+  // Critual no longer multiplies Inferno by a geometric crit chain; one Inferno per trigger.
   const hitSpec = input.ability.hits[input.hitIndex];
   if (input.includeAttachedHost !== false && hitSpec && (eligible.rider || eligible.cinders)) {
     const attachedHost = resolveLeagueAttachedHost({
@@ -567,8 +547,7 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
       provenance: prov,
       context: { ...separateShared.context, provenance: prov },
     });
-    const expectedActivations = chainExpected(infernoChance);
-    const maxActivations = unholy ? expectedActivations : 1;
+    const expectedActivations = infernoChance;
     components.push({
       effectId: "inferno-of-zamorak",
       blessingId: "abyssal-cinders",
@@ -577,15 +556,15 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
       expectedTriggerRolls: 1,
       expectedActivations,
       expectedSeparateHits: expectedActivations,
-      occurrenceModel: chainModel(infernoChance) ?? {
+      occurrenceModel: {
         kind: "bernoulli",
         probability: infernoChance,
       },
-      damage: weightedDamage(inferno.hit, expectedActivations, 0, maxActivations),
+      damage: weightedDamage(inferno.hit, expectedActivations, 0, 1),
       hitDetail: inferno.hit,
       sourcePrecritDistribution,
       components: inferno.components.map((component) =>
-        attachedResolutionComponent(component, expectedActivations, 0, maxActivations),
+        attachedResolutionComponent(component, expectedActivations, 0, 1),
       ),
     });
   }
@@ -617,7 +596,8 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
       provenance: prov,
       context: { ...separateShared.context, provenance: prov },
     });
-    const expectedActivations = chainExpected(unholyTriggerChance);
+    // One Inferno when the parent crits - no geometric recursive chain.
+    const expectedActivations = unholyTriggerChance;
     components.push({
       effectId: "inferno-of-zamorak",
       blessingId: "unholy-critual",
@@ -626,15 +606,15 @@ export function leagueDamageComponents(input: LeagueDamageInput): LeagueDamageCo
       expectedTriggerRolls: expectedActivations,
       expectedActivations,
       expectedSeparateHits: expectedActivations,
-      occurrenceModel: chainModel(unholyTriggerChance) ?? {
+      occurrenceModel: {
         kind: "bernoulli",
         probability: unholyTriggerChance,
       },
-      damage: weightedDamage(inferno.hit, expectedActivations, 0, expectedActivations),
+      damage: weightedDamage(inferno.hit, expectedActivations, 0, 1),
       hitDetail: inferno.hit,
       sourcePrecritDistribution,
       components: inferno.components.map((component) =>
-        attachedResolutionComponent(component, expectedActivations, 0, expectedActivations),
+        attachedResolutionComponent(component, expectedActivations, 0, 1),
       ),
     });
   }

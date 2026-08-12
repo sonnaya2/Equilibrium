@@ -280,9 +280,10 @@ describe("overlayAnalysisStatLine", () => {
     expect(analysis.hits[0]?.critChance).toBeCloseTo(0.5, 10);
     expect(analysis.expected).toBeCloseTo(summary.totalExpected, 6);
     expect(Number.isFinite(analysis.expected)).toBe(true);
+    // Critual-capped parent crit p=0.5 -> one Inferno at p=0.5 (no recursive chain).
     expect(
       summary.analysis.byEffect.find((row) => row.id === "inferno-of-zamorak")?.expectedActivations,
-    ).toBeCloseTo(1, 0);
+    ).toBeCloseTo(0.5, 0);
     for (const inferno of infernos) {
       expect(inferno.occurrenceModel).toBeUndefined();
       expect(inferno.expectedOccurrences).toBe(1);

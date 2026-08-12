@@ -44,9 +44,8 @@ export function occurrenceModelNote(
   const expected = event.expectedActivations ?? event.expectedOccurrences;
   const expectedLabel =
     expected === undefined ? "packed EV" : `${expectedNumber.format(expected)} expected`;
-  const prefix =
-    event.blessingId === "unholy-critual" ? "Critual recursive chain" : "Recursive geometric chain";
-  return `${prefix}: ${expectedLabel} ${effectLabel} per eligible parent (${percent(
+  // Critual uses bernoulli (one Inferno per parent crit); geometric is for other recursive procs.
+  return `Recursive geometric chain: ${expectedLabel} ${effectLabel} per eligible parent (${percent(
     model.startProbability,
   )} start; ${percent(model.continuationProbability)} continuation)`;
 }

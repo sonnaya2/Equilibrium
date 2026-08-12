@@ -16,9 +16,8 @@ const unholyWithBigBoned = resolveLeagueRules(
 );
 
 /**
- * Unholy Critual Inferno: geometric chain forces intermediate outcomes true and
- * the terminal false. Chance stays at the Critual cap (0.5), never guaranteed.
- * Damage pins to the matching band - not EV blend, not double-pinned excess.
+ * Unholy Critual Inferno: one Inferno per parent crit (no recursive chain).
+ * Inferno crit chance stays at the Critual cap (0.5), never guaranteed.
  */
 describe("Unholy Critual Inferno crit pin", () => {
   it("does not force every Inferno outcome true or chance >= 1", () => {
@@ -63,8 +62,7 @@ describe("Unholy Critual Inferno crit pin", () => {
     expect(samples.every((s) => Math.abs((s.chance ?? 0) - 0.5) < 1e-9)).toBe(true);
   });
 
-  it("pins continuing Infernos to critExpected and terminals to nonCritExpected", () => {
-    let sawChain = false;
+  it("schedules at most one Inferno per parent (no recursive chain)", () => {
     for (let lane = 0; lane < 128; lane++) {
       const rt = createRuntime(
         {
@@ -79,34 +77,18 @@ describe("Unholy Critual Inferno crit pin", () => {
       );
       expect(performCast(rt, rt.byId.get("attack")!, 0, false).ok).toBe(true);
       advanceTo(rt, rt.endTick);
+      const parents = rt.events.filter((e) => e.abilityId === "attack" && e.family === "hit");
       const infernos = rt.events.filter((e) => e.abilityId === "inferno-of-zamorak");
-      if (infernos.length < 2) continue;
-      sawChain = true;
-      const chains = new Map<number, typeof infernos>();
-      for (const event of infernos) {
-        const key = event.derivedFrom ?? -1;
-        const list = chains.get(key) ?? [];
-        list.push(event);
-        chains.set(key, list);
-      }
-      for (const chain of chains.values()) {
-        const terminal = chain.at(-1)!;
-        expect(terminal.damage.critical?.outcome).toBe(false);
-        // non-crit mid of 100-200% of base 1000
-        expect(terminal.damage.expected).toBeCloseTo(1500, 10);
-        expect(terminal.damage.expected).toBeLessThan(terminal.damage.critExpected ?? Infinity);
-        for (const continuing of chain.slice(0, -1)) {
-          expect(continuing.damage.critical?.outcome).toBe(true);
-          expect(continuing.damage.expected).toBeCloseTo(continuing.damage.critExpected ?? 0, 10);
-          // Regression: pre-pin + attachedMass double-count produced 3750 vs 3000.
-          expect(continuing.damage.expected).toBeLessThanOrEqual(
-            (continuing.damage.critExpected ?? 0) + 1e-9,
-          );
+      expect(infernos.length).toBeLessThanOrEqual(parents.length);
+      for (const parent of parents) {
+        const children = infernos.filter((e) => e.derivedFrom === parent.seq);
+        if (parent.damage.critical?.outcome === true) {
+          expect(children).toHaveLength(1);
+        } else {
+          expect(children).toHaveLength(0);
         }
       }
-      break;
     }
-    expect(sawChain).toBe(true);
   });
 
   it("adds Big Boned once after concrete pin (no double shared rider)", () => {

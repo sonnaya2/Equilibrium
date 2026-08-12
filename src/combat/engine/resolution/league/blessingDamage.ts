@@ -21,7 +21,7 @@ import {
 import { isBasicAttack } from "../../../shared/adrenalineGain";
 import { statefulOccurrenceProbability } from "../../analysis/multiplicity";
 import { noteBlessingDamageCache } from "../../../profiling/allocation";
-import { critProbability, type CritLayers } from "../../../core/critical";
+import type { CritLayers } from "../../../core/critical";
 import type { CombatContext, CombatModifier } from "../../../types";
 import { calculateNonCriticalHitDistribution } from "../../../pipeline/calculateHit";
 
@@ -95,7 +95,6 @@ function resolveConcreteInferno(
   context: CombatContext,
   modifiers: readonly CombatModifier[],
   band: readonly [number, number],
-  forcedOutcome?: boolean,
 ): EventResolution {
   const provenance: DamageProvenance = { kind: "blessing", detail: "inferno-of-zamorak" };
   const inferno = resolveLeagueAttachedHost({
@@ -142,12 +141,7 @@ function resolveConcreteInferno(
   // Match castHit: hitDetail is pure host (baseHit). Shared riders stay as
   // components so materialize rebuilds host band + each component once.
   const base = inferno.baseHit;
-  const critical = packageCritical(
-    base.critChance,
-    base.critExpected,
-    base.nonCritExpected,
-    forcedOutcome === undefined ? undefined : { outcome: forcedOutcome },
-  );
+  const critical = packageCritical(base.critChance, base.critExpected, base.nonCritExpected);
   const components = inferno.components.map((component) =>
     attachedResolutionComponent(component),
   );
@@ -173,10 +167,7 @@ function resolveConcreteInferno(
       capLoss,
       critical,
     },
-    hitDetail: {
-      ...base,
-      ...(forcedOutcome === undefined ? {} : { critOutcome: forcedOutcome }),
-    },
+    hitDetail: base,
     sourcePrecritDistribution,
     components,
   };
@@ -192,7 +183,8 @@ function blessingLightningSurgeFlag(
     : {};
 }
 
-function scheduleConcreteInfernoChain(
+/** Schedule one Inferno from a parent hit. Critual does not recurse on Inferno crits. */
+function scheduleConcreteInferno(
   rt: SimulationRuntime,
   parent: ScheduledEvent<SimulationRuntime>,
   style: CombatContext["style"],
@@ -200,50 +192,43 @@ function scheduleConcreteInfernoChain(
   modifiers: readonly CombatModifier[],
   band: readonly [number, number],
   blessingId: "abyssal-cinders" | "unholy-critual",
-  count: number,
-  forceChainOutcomes: boolean,
 ): void {
-  for (let index = 0; index < count; index++) {
-    const forcedOutcome = forceChainOutcomes ? index < count - 1 : undefined;
-    const eventBlessingId = index === 0 ? blessingId : "unholy-critual";
-    scheduleEvent(rt, {
-      tick: parent.tick,
-      family: "blessing",
-      abilityId: "inferno-of-zamorak",
-      sourceCast: parent.sourceCast,
-      hitIndex: parent.hitIndex,
-      attached: false,
-      procEligible: false,
-      recursionAllowed: false,
-      derivedFrom: parent.seq,
-      blessingId: eventBlessingId,
-      bonusTargetId: "inferno-of-zamorak",
-      originKind: "blessing",
-      provenance: { kind: "blessing", detail: "inferno-of-zamorak" },
-      expectedOccurrences: 1,
-      expectedTriggerRolls: index === 0 ? 1 : 0,
-      expectedActivations: 1,
-      expectedSeparateHits: 1,
-      combatStyle: style,
-      resourceEligible: true,
-      castSnap: parent.castSnap,
-      ...blessingLightningSurgeFlag(style, parent.castSnap),
-      resolve: (runtime) =>
-        resolveConcreteInferno(
-          runtime,
-          {
-            ...parent,
-            blessingId: eventBlessingId,
-            abilityId: "inferno-of-zamorak",
-          },
-          style,
-          context,
-          modifiers,
-          band,
-          forcedOutcome,
-        ),
-    });
-  }
+  scheduleEvent(rt, {
+    tick: parent.tick,
+    family: "blessing",
+    abilityId: "inferno-of-zamorak",
+    sourceCast: parent.sourceCast,
+    hitIndex: parent.hitIndex,
+    attached: false,
+    procEligible: false,
+    recursionAllowed: false,
+    derivedFrom: parent.seq,
+    blessingId,
+    bonusTargetId: "inferno-of-zamorak",
+    originKind: "blessing",
+    provenance: { kind: "blessing", detail: "inferno-of-zamorak" },
+    expectedOccurrences: 1,
+    expectedTriggerRolls: 1,
+    expectedActivations: 1,
+    expectedSeparateHits: 1,
+    combatStyle: style,
+    resourceEligible: true,
+    castSnap: parent.castSnap,
+    ...blessingLightningSurgeFlag(style, parent.castSnap),
+    resolve: (runtime) =>
+      resolveConcreteInferno(
+        runtime,
+        {
+          ...parent,
+          blessingId,
+          abilityId: "inferno-of-zamorak",
+        },
+        style,
+        context,
+        modifiers,
+        band,
+      ),
+  });
 }
 
 /** Compose deterministic league blessing damage and schedule concrete stateful procs. */
@@ -379,9 +364,6 @@ export function applyBlessingDamage(
   const parentCanTriggerCritual =
     parentCapabilities.canTriggerCritual ?? parentCapabilities.canCrit;
   const parentCritOutcome = resolution.damage.critical?.outcome;
-  const infernoCritChance = unholy
-    ? Math.min(0.5, Math.max(0, critProbability(infernoCritLayers(rt))))
-    : 0;
   const infernoBand = unholy?.infernoAbilityDamageBand ?? cinders?.inferno?.abilityDamageBand;
   if (infernoBand && !event.attached) {
     const cindersChance = eligible.cinders
@@ -399,15 +381,8 @@ export function applyBlessingDamage(
       cindersChance > 0 &&
       rt.stochastic.bernoulli(`blessing:cinders:${event.seq}`, cindersChance)
     ) {
-      const count =
-        unholy && infernoCritChance > 0
-          ? 1 +
-            rt.stochastic.geometricSuccesses(
-              `blessing:critual-chain:cinders:${event.seq}`,
-              infernoCritChance,
-            )
-          : 1;
-      scheduleConcreteInfernoChain(
+      // One Inferno only - Critual no longer chains recursive Infernos on crit.
+      scheduleConcreteInferno(
         rt,
         event,
         style,
@@ -415,24 +390,16 @@ export function applyBlessingDamage(
         modifiers,
         cinders?.inferno?.abilityDamageBand ?? unholy!.infernoAbilityDamageBand,
         "abyssal-cinders",
-        count,
-        unholy !== undefined,
       );
     }
     if (
       unholy &&
       parentCanTriggerCritual &&
       parentCritOutcome === true &&
-      infernoCritChance >= 0 &&
       unholy.infernoAbilityDamageBand
     ) {
-      const count =
-        1 +
-        rt.stochastic.geometricSuccesses(
-          `blessing:critual-chain:parent:${event.seq}`,
-          infernoCritChance,
-        );
-      scheduleConcreteInfernoChain(
+      // One Inferno per eligible parent crit; no geometric continuation chain.
+      scheduleConcreteInferno(
         rt,
         event,
         style,
@@ -440,8 +407,6 @@ export function applyBlessingDamage(
         modifiers,
         unholy.infernoAbilityDamageBand,
         "unholy-critual",
-        count,
-        true,
       );
     }
   }

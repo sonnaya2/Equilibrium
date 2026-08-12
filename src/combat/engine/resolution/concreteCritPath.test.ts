@@ -70,7 +70,7 @@ describe("concrete crit path (multi-lane / Critual)", () => {
     }
   });
 
-  it("Inferno only on parent crit (not always); chain terminal No crit; damages differ", () => {
+  it("Inferno only on parent crit (not always); one Inferno per crit, no recursive chain", () => {
     expect(critualOnlyLeague.blessingIds.has("unholy-critual")).toBe(true);
     expect(critualOnlyLeague.blessingIds.has("abyssal-cinders")).toBe(false);
 
@@ -103,7 +103,7 @@ describe("concrete crit path (multi-lane / Critual)", () => {
     expect(parentNon.length).toBeGreaterThan(0);
 
     const infernos = summary.events.filter((e) => e.abilityId === "inferno-of-zamorak");
-    expect(infernos.length).toBeGreaterThan(0);
+    expect(infernos.length).toBe(parentCrits.length);
 
     for (const inf of infernos) {
       const parent = parentBySeq.get(inf.derivedFrom ?? -1);
@@ -120,25 +120,14 @@ describe("concrete crit path (multi-lane / Critual)", () => {
       const children = infernos.filter((inf) => inf.derivedFrom === parent.seq);
       expect(children).toHaveLength(0);
     }
-
-    const chains = new Map<number, typeof infernos>();
-    for (const event of infernos) {
-      const key = event.derivedFrom ?? -1;
-      const chain = chains.get(key) ?? [];
-      chain.push(event);
-      chains.set(key, chain);
-    }
-    for (const chain of chains.values()) {
-      expect(chain.at(-1)?.damage.critical?.outcome).toBe(false);
-      expect(chain.slice(0, -1).every((event) => event.damage.critical?.outcome === true)).toBe(
-        true,
-      );
+    for (const parent of parentCrits) {
+      expect(infernos.filter((inf) => inf.derivedFrom === parent.seq)).toHaveLength(1);
     }
 
     const critInf = infernos.filter((e) => e.damage.critical?.outcome === true);
     const nonInf = infernos.filter((e) => e.damage.critical?.outcome === false);
-    expect(nonInf.length).toBeGreaterThan(0);
-    if (critInf.length > 0) {
+    expect(critInf.length + nonInf.length).toBe(infernos.length);
+    if (critInf.length > 0 && nonInf.length > 0) {
       expect(critInf[0]!.damage.expected).toBeGreaterThan(nonInf[0]!.damage.expected);
     }
 

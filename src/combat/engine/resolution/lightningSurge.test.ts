@@ -449,7 +449,7 @@ describe("Lightning Surge proc event", () => {
       const surges = rt.events.filter(
         (e) => e.family === "proc" && e.provenance.detail === "lightning_surge",
       );
-      // Parent ability crit + Critual-chain Inferno crits can each fire LS.
+      // Parent ability crit fires LS; Inferno may also fire LS if it crits (no Critual chain).
       const parentSurge = surges.find((e) => e.derivedFrom === source.seq);
       expect(parentSurge).toBeDefined();
       expect(parentSurge!.expectedActivations).toBe(1);

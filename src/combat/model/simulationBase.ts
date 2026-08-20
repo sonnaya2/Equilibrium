@@ -239,6 +239,9 @@ export function toHybridManualCombatModel(
       poisonImmune: scaffold.target.poisonImmune,
       elementalWeakness: scaffold.target.elementalWeakness,
       dragonfireImmune: scaffold.target.dragonfireImmune,
+      ...(scaffold.target.incomingHitIntervalSeconds != null
+        ? { incomingHitIntervalSeconds: scaffold.target.incomingHitIntervalSeconds }
+        : {}),
     },
     slayerHelmet: null,
     salve: null,

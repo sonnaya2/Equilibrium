@@ -85,6 +85,17 @@ function emptySourceLedger(blessingId: string): EffectAnalysisSourceLedger {
   };
 }
 
+export function accountAnalysisCast(
+  analysis: RuntimeAnalysisState,
+  id: string,
+  kind: DamageSourceKind,
+): void {
+  const existing = analysis.effects.get(id);
+  const ledger = existing ?? emptyLedger(id, kind);
+  ledger.expectedCasts += 1;
+  analysis.effects.set(id, ledger);
+}
+
 function sourceLedger(
   ledger: EffectAnalysisLedger,
   blessingId: string,
@@ -277,21 +288,6 @@ export function accountAnalysisEvent(
     analysis.effects.set(component.id, componentLedger);
 
     ledger.bonusDamage += component.damage.expected;
-  }
-
-  // Cast identity is committed once per ability/sourceCast for player-owned
-  // hit/dot/command events. Blessings and procs use activations, not casts.
-  if (
-    event.sourceCast >= 0 &&
-    !event.attached &&
-    (event.family === "hit" || event.family === "dot" || event.family === "command") &&
-    !event.blessingId
-  ) {
-    const key = `${event.abilityId}:${event.sourceCast}`;
-    if (!analysis.castKeys.has(key)) {
-      analysis.castKeys.add(key);
-      ledger.expectedCasts += 1;
-    }
   }
 
   analysis.effects.set(event.abilityId, ledger);

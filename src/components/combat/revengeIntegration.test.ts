@@ -183,5 +183,19 @@ describe("Revenge loadout integration", () => {
     expect(result.bar).toContain("preparation");
     expect(casts).toContain("revenge");
     expect(casts).toContain("preparation");
+    expect(run.summary.analysis.byEffect.find((row) => row.id === "revenge")).toMatchObject({
+      totalDamage: 0,
+      expectedCasts: expect.any(Number),
+    });
+    expect(
+      run.summary.analysis.byEffect.find((row) => row.id === "revenge")!.expectedCasts,
+    ).toBeGreaterThan(0);
+    expect(run.summary.analysis.byEffect.find((row) => row.id === "preparation")).toMatchObject({
+      totalDamage: 0,
+      expectedCasts: expect.any(Number),
+    });
+    expect(
+      run.summary.analysis.byEffect.find((row) => row.id === "preparation")!.expectedCasts,
+    ).toBeGreaterThan(0);
   }, 120_000);
 });

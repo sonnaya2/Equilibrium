@@ -5,6 +5,7 @@ export {
   type RuntimeAnalysisState,
 } from "./contracts";
 export {
+  accountAnalysisCast,
   accountAnalysisEvent,
   accountAppliedEffect,
   accountPlayerPoisonHits,

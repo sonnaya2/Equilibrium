@@ -185,15 +185,12 @@ export function RotationPlanner({
   }, []);
 
   const loadoutOptions = useMemo(
-    () =>
-      useBuild
-        ? {
-            blessingPicks: build.blessingPicks,
-            relics: activeLeagueRelicNames(build),
-            unlockedRegions: unlockedRegions(build),
-          }
-        : { ruleset: "base" as const },
-    [useBuild, build],
+    () => ({
+      blessingPicks: build.blessingPicks,
+      relics: activeLeagueRelicNames(build),
+      unlockedRegions: unlockedRegions(build),
+    }),
+    [build],
   );
 
   // One loadoutStats + one model, shared `now` (powerburst tick freeze).
@@ -393,7 +390,14 @@ export function RotationPlanner({
 
   const groups = liveResult?.analysis.groups ?? [];
   const contributions =
-    liveResult?.analysis.byEffect.filter((row) => row.analysisGroupId == null) ?? [];
+    liveResult?.analysis.byEffect.filter(
+      (row) =>
+        row.analysisGroupId == null &&
+        (row.totalDamage !== 0 ||
+          row.expectedActivations !== 0 ||
+          row.expectedTriggerRolls !== 0 ||
+          row.expectedAttachedComponents !== 0),
+    ) ?? [];
   const scoreBadge = liveResult ? runScoreBadge(liveResult) : null;
   const scoreNote = liveResult ? runDiagnosticsNote(liveResult) : null;
   const expectedLabel = liveResult ? primaryExpectedLabel(liveResult) : "Expected";

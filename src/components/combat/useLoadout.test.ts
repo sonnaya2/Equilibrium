@@ -78,7 +78,7 @@ describe("normalizeLoadout", () => {
     ).toBe(72);
   });
 
-  it("migrates a pre-v4 boss preset attack rate for incoming-hit effects", () => {
+  it("restores a missing boss preset attack rate for incoming-hit effects", () => {
     const migrated = normalizeLoadout({
       loadoutSchemaVersion: 3,
       style: "melee",
@@ -105,7 +105,7 @@ describe("normalizeLoadout", () => {
     });
     expect(manual.target?.incomingHitIntervalSeconds).toBe(4.2);
 
-    const clearedAfterMigration = normalizeLoadout({
+    const alreadyV4 = normalizeLoadout({
       loadoutSchemaVersion: 4,
       style: "melee",
       target: {
@@ -115,7 +115,7 @@ describe("normalizeLoadout", () => {
         affinity: 55,
       },
     });
-    expect(clearedAfterMigration.target?.incomingHitIntervalSeconds).toBeUndefined();
+    expect(alreadyV4.target?.incomingHitIntervalSeconds).toBe(1.2);
   });
 
   it("ignores legacy manual base values", () => {

@@ -32,6 +32,7 @@ import {
 import { abilityIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import { combatEffectDisplayName, combatEffectIconPath } from "./effectPresentation";
+import { RotationAnalysisCastTimeline } from "./RotationAnalysisCastTimeline";
 
 const SOURCE_LABEL: Record<DamageSourceKind, string> = {
   "ability-direct": "Direct abilities",
@@ -832,6 +833,8 @@ export function RotationAnalysisModal({
               </div>
             </section>
           </div>
+
+          <RotationAnalysisCastTimeline casts={result.casts} nameForId={nameForId} />
 
           <section className="rotation-analysis-section rotation-analysis-timeline">
             <h3 className="combat-section-title rotation-analysis-section__title">

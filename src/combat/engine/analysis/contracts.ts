@@ -47,7 +47,6 @@ export interface RuntimeAnalysisState {
   dotDamage: number;
   criticalContribution: number;
   capLoss: number;
-  castKeys: Set<string>;
   supportMinOffset: number;
   supportMaxOffset: number;
   song: SongDamageAnalysis;
@@ -63,7 +62,6 @@ export function emptyAnalysisState(): RuntimeAnalysisState {
     dotDamage: 0,
     criticalContribution: 0,
     capLoss: 0,
-    castKeys: new Set(),
     supportMinOffset: 0,
     supportMaxOffset: 0,
     song: {
@@ -107,7 +105,6 @@ export function cloneAnalysisState(state: RuntimeAnalysisState): RuntimeAnalysis
     dotDamage: state.dotDamage,
     criticalContribution: state.criticalContribution,
     capLoss: state.capLoss,
-    castKeys: new Set(state.castKeys),
     supportMinOffset: state.supportMinOffset,
     supportMaxOffset: state.supportMaxOffset,
     song: { ...state.song },

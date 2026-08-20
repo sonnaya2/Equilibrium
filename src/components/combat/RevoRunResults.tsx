@@ -83,7 +83,14 @@ export function RevoRunResults({
 }: RevoRunResultsProps) {
   const groups = result?.analysis.groups ?? [];
   const contributions =
-    result?.analysis.byEffect.filter((row) => row.analysisGroupId == null) ?? [];
+    result?.analysis.byEffect.filter(
+      (row) =>
+        row.analysisGroupId == null &&
+        (row.totalDamage !== 0 ||
+          row.expectedActivations !== 0 ||
+          row.expectedTriggerRolls !== 0 ||
+          row.expectedAttachedComponents !== 0),
+    ) ?? [];
   const basicCount = result?.casts.filter((c) => c.auto).length ?? 0;
   const horizonTicks = result?.horizonTicks ?? 0;
   const castLog = result ? (showAllCasts ? result.casts : result.casts.slice(0, 40)) : [];

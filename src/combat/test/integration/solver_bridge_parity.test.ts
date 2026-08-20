@@ -420,8 +420,15 @@ describe("hybrid manual model: Run === Optimize pack", () => {
       withLoadout({
         perks: { ...DEFAULT_LOADOUT.perks, ultimatums: 4 },
         buffs: { ...DEFAULT_LOADOUT.buffs, vulnerability: true },
+        target: {
+          targetPresetId: "boss:commander-zilyana",
+          defenceLevel: 75,
+          armour: 1694,
+          affinity: 55,
+          incomingHitIntervalSeconds: 1.2,
+        },
       }),
-      { now: NOW },
+      { now: NOW, blessingPicks: ["Order", "Order", "Order"] },
     );
     const hybrid = toHybridManualCombatModel(scaffold, {
       base: 1500,
@@ -434,6 +441,8 @@ describe("hybrid manual model: Run === Optimize pack", () => {
     expect(hybrid.modifierSources.vulnerability).toBe(false);
     expect(hybrid.equipmentIds).toEqual([...scaffold.equipmentIds]);
     expect(hybrid.adrenaline).toEqual(scaffold.adrenaline);
+    expect(hybrid.league.blessingIds).toContain("steadfast-will");
+    expect(hybrid.target.incomingHitIntervalSeconds).toBe(1.2);
   });
 
   it("direct revo from hybrid model matches packSimBaseFromModel identity", () => {

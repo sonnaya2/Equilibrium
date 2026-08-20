@@ -580,7 +580,7 @@ test("Revo++ optimizes Revenge with a shield and incoming attacks", async ({ pag
     localStorage.setItem(
       "eq:loadout:v1",
       JSON.stringify({
-        loadoutSchemaVersion: 3,
+        loadoutSchemaVersion: 4,
         style: "melee",
         startingAdrenaline: 100,
         equipmentSlots: {
@@ -607,6 +607,117 @@ test("Revo++ optimizes Revenge with a shield and incoming attacks", async ({ pag
   await expect(timeline).toBeVisible({ timeout: 120_000 });
   await expect(timeline).toContainText("Revenge");
   await expect(timeline).toContainText("Preparation");
+
+  await page.getByRole("button", { name: "Analyze damage" }).click();
+  let analysis = page.getByRole("dialog", { name: "Damage analysis" });
+  await expect(analysis.locator('tr[data-effect-id="revenge"]')).toContainText("Revenge");
+  await expect(analysis.locator('tr[data-effect-id="preparation"]')).toContainText("Preparation");
+  await expect(analysis.getByTestId("analysis-cast-timeline")).toContainText("Revenge");
+  await expect(analysis.getByTestId("analysis-cast-timeline")).toContainText("Preparation");
+  await expect(analysis.getByText("Revenge peak", { exact: true })).toBeVisible();
+  await analysis.getByRole("button", { name: "Close damage analysis" }).click();
+
+  await page.getByRole("checkbox", { name: "Use Loadout" }).uncheck();
+  await page.getByTestId("revo-run-button").click();
+  await expect(page.getByRole("button", { name: "Analyze damage" })).toBeVisible({
+    timeout: 120_000,
+  });
+  await page.getByRole("button", { name: "Analyze damage" }).click();
+  analysis = page.getByRole("dialog", { name: "Damage analysis" });
+  await expect(analysis.getByText("Revenge peak", { exact: true })).toBeVisible();
+  await expect(analysis.locator('tr[data-effect-id="revenge"]')).toContainText("Revenge");
+  await expect(analysis.locator('tr[data-effect-id="preparation"]')).toContainText("Preparation");
+});
+
+test("Damage analysis shows defensive casts for current-schema ranged shield saves", async ({
+  page,
+}) => {
+  test.setTimeout(180_000);
+  await openCombat(page);
+  await page.evaluate(() => {
+    localStorage.setItem(
+      "eq:build:v1",
+      JSON.stringify({
+        elective: [],
+        relics: {},
+        blessingPicks: ["Balance", "Chaos", "Order", "Balance", "Chaos", "Chaos"],
+        blessingSelections: [],
+        blessingResetsUsed: 0,
+      }),
+    );
+    localStorage.setItem(
+      "eq:loadout:v1",
+      JSON.stringify({
+        loadoutSchemaVersion: 4,
+        style: "ranged",
+        startingAdrenaline: 100,
+        equipmentSlots: {
+          mainhand: "item:blightbound-crossbow",
+          offhand: "item:vengeful-kiteshield",
+          gloves: "item:cinderbane-gloves",
+          cape: "item:igneous-kal-xil",
+          ammo: "item:hydrix-bakriminel-bolts-e",
+        },
+        selectedAmmunitionId: "item:hydrix-bakriminel-bolts-e",
+        buffs: {
+          weaponPoison: "weapon-plus-plus-plus",
+          herbloreLevel: 120,
+        },
+        target: {
+          targetPresetId: "boss:commander-zilyana",
+          defenceLevel: 75,
+          armour: 1694,
+          affinity: 55,
+        },
+      }),
+    );
+    localStorage.setItem(
+      "eq:rotation-workspace:v1",
+      JSON.stringify({
+        version: 1,
+        mode: "revolution",
+        activeBars: {
+          "ranged|shield": [
+            "revenge",
+            "preparation",
+            "galeshot",
+            "rapid_fire",
+            "greater_ricochet",
+            "snap_shot",
+            "deadshot_igneous",
+            "snipe",
+          ],
+        },
+        runDurationSeconds: 60,
+        limitToRegions: false,
+      }),
+    );
+  });
+  await page.reload();
+  await page.getByRole("tab", { name: "Rotation", exact: true }).click();
+
+  expect(
+    await page.evaluate(
+      () =>
+        JSON.parse(localStorage.getItem("eq:loadout:v1") ?? "{}").target
+          ?.incomingHitIntervalSeconds,
+    ),
+  ).toBe(1.2);
+
+  await page.getByTestId("revo-run-button").click();
+  const timeline = page.getByTestId("revo-cast-timeline");
+  await expect(timeline).toContainText("Revenge", { timeout: 120_000 });
+  await expect(timeline).toContainText("Preparation");
+
+  await page.getByRole("button", { name: "Analyze damage" }).click();
+  const analysis = page.getByRole("dialog", { name: "Damage analysis" });
+  await expect(analysis.getByText("Revenge peak", { exact: true })).toBeVisible();
+  await expect(analysis.getByText("20 stacks", { exact: true })).toBeVisible();
+  await expect(analysis.getByText("+100% damage", { exact: true })).toBeVisible();
+  await expect(analysis.locator('tr[data-effect-id="revenge"]')).toContainText("Revenge");
+  await expect(analysis.locator('tr[data-effect-id="preparation"]')).toContainText("Preparation");
+  await expect(analysis.getByTestId("analysis-cast-timeline")).toContainText("Revenge");
+  await expect(analysis.getByTestId("analysis-cast-timeline")).toContainText("Preparation");
 });
 
 test("inline loadout edits persist and refresh engine-backed summary values", async ({ page }) => {

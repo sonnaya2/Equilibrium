@@ -1334,11 +1334,7 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       ? Number(rawTarget?.incomingHitIntervalSeconds)
       : undefined;
   let incomingHitIntervalSeconds = storedIncomingHitIntervalSeconds;
-  if (
-    incomingHitIntervalSeconds == null &&
-    rawSchemaVersion < 4 &&
-    typeof rawTarget?.targetPresetId === "string"
-  ) {
+  if (incomingHitIntervalSeconds == null && typeof rawTarget?.targetPresetId === "string") {
     const preset = targetPresetById(rawTarget.targetPresetId);
     const fields = preset ? materializeTargetPreset(preset, { style }) : null;
     incomingHitIntervalSeconds = fields?.incomingHitIntervalSeconds;

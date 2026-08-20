@@ -16,6 +16,9 @@ import {
   ESSENCE_CORRUPTION_EMPOWERMENT_CHANCE,
   activeEssenceCorruptionStacks,
 } from "../../styles/magic/songOfDestruction";
+import { isBasicAttack } from "../../shared/adrenalineGain";
+import { accountAnalysisCast } from "../analysis";
+import { keepsAnalysisLedgers, type DamageSourceKind } from "../simulation/contracts";
 
 function songEmpowermentForCast(
   rt: SimulationRuntime,
@@ -146,6 +149,16 @@ export function commitCast(
 
   noteCastsGrowth();
   if (!rt.casts.includes(record)) rt.casts.push(record);
+  if (keepsAnalysisLedgers(rt.detailLevel)) {
+    const kind: DamageSourceKind = isBasicAttack(prepared.ability)
+      ? "basic-attack"
+      : prepared.working.hits.length === 0
+        ? "other-modeled"
+        : prepared.working.hits.every((hit) => hit.dot === true)
+          ? "ability-dot"
+          : "ability-direct";
+    accountAnalysisCast(rt.analysis, prepared.ability.id, kind);
+  }
 }
 
 /**
@@ -241,5 +254,8 @@ export function performOffGcdCast(rt: SimulationRuntime, ability: AbilitySpec): 
   };
   noteCastsGrowth();
   rt.casts.push(record);
+  if (keepsAnalysisLedgers(rt.detailLevel)) {
+    accountAnalysisCast(rt.analysis, ability.id, "other-modeled");
+  }
   rt.endTick = Math.max(rt.endTick, rt.state.tick + 1);
 }

@@ -247,3 +247,27 @@ describe("Barkscales through a Setup loadout", () => {
     expect(stats.barkscales.triggers).toBe(2);
   });
 });
+
+describe("Steadfast Will through a Setup loadout", () => {
+  it("threads genuine shield armour, total armour, and visible Defence into combat rules", () => {
+    const stats = aegisOf({
+      equipmentSlots: { mainhand: "mock:mainhand", offhand: "mock:shield", body: "mock:body-1000" },
+    });
+    expect(stats.league.offhandArmourValue).toBe(200);
+    expect(stats.league.totalArmour).toBe(1_200);
+    expect(stats.league.defenceLevel).toBe(stats.defence.visibleLevel);
+  });
+
+  it("does not count a stale shield under a two-handed weapon", () => {
+    const stats = aegisOf({
+      equipmentSlots: {
+        mainhand: "mock:mainhand",
+        offhand: "mock:shield",
+        twohand: "mock:2h",
+        body: "mock:body-1000",
+      },
+    });
+    expect(stats.league.offhandArmourValue).toBe(0);
+    expect(stats.league.totalArmour).toBe(1_000);
+  });
+});

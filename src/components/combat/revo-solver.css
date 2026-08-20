@@ -1129,6 +1129,76 @@
   }
 }
 
+.ability-bar-slot {
+  appearance: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.ability-bar-slot.is-selected {
+  outline: 2px solid var(--combat-gem-bright);
+  outline-offset: 2px;
+}
+
+.revo-bar-editor {
+  display: grid;
+  grid-template-columns: minmax(12rem, 1fr) auto minmax(12rem, 1fr) auto;
+  align-items: end;
+  gap: 0.45rem;
+  padding: 0.55rem 0.65rem;
+  border-top: 1px solid var(--combat-gold-dim);
+  background: color-mix(in srgb, var(--combat-inset) 88%, black);
+}
+
+.revo-bar-editor label {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+  color: var(--combat-muted);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+}
+
+.revo-bar-editor select {
+  min-width: 0;
+  height: 2rem;
+  border: 1px solid var(--combat-gold-dim);
+  border-radius: 2px;
+  background: var(--combat-panel);
+  color: var(--combat-text);
+  padding: 0 0.45rem;
+  font-size: 0.75rem;
+  text-transform: none;
+}
+
+.revo-bar-editor__actions,
+.revo-bar-editor__add {
+  display: flex !important;
+  align-items: end;
+  gap: 0.25rem !important;
+}
+
+.revo-bar-editor__add select {
+  flex: 1 1 auto;
+}
+
+.revo-bar-editor .combat-button {
+  min-height: 2rem;
+  padding: 0.25rem 0.55rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 980px) {
+  .revo-bar-editor {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .revo-bar-editor__add {
+    grid-column: 1 / -1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .revo-solver-track__sheen,
   .revo-solver-track__tip,

@@ -5,7 +5,7 @@ import {
   weaponConfigurationFromBarSetup,
   type AdaptiveStrikeWeaponConfiguration,
 } from "../styles/melee/abilities";
-import { abilityStyleForBar } from "../styles/shared/constitutionAbilities";
+import { abilityStyleForBar } from "../styles/shared/allStyleAbilities";
 import { abilityById } from "./index";
 import type { AbilityRecord, RevolutionBarRecord } from "./records";
 
@@ -100,7 +100,7 @@ export function resolveBarSlot(
     return {
       name: slot.name,
       modelledBy: "engine",
-      // Shared Constitution abilities adopt the bar combat style (berserk / DS / etc.).
+      // Shared all-style abilities adopt the bar combat style.
       spec: abilityStyleForBar(engineSpec, barStyle),
     };
   }

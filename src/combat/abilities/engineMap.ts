@@ -172,6 +172,15 @@ export const ENGINE_LINK_OVERRIDES: Readonly<Record<string, EngineLinkOverride>>
     linkKind: "factory",
     forceSolver: true,
   },
+  bash: {
+    linkKind: "factory",
+  },
+  preparation: {
+    linkKind: "factory",
+  },
+  debilitate: {
+    linkKind: "factory",
+  },
   // Manual-only weapon specials: cast in Manual rotations, not Revo++ solver pool.
   instability: {
     linkKind: "canonical",

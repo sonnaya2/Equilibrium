@@ -173,6 +173,8 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
       blessingIds: [...input.league.blessingIds],
       relics: [...(input.league.relics ?? [])],
       totalArmour: input.league.totalArmour,
+      offhandArmourValue: input.league.offhandArmourValue ?? 0,
+      defenceLevel: input.league.defenceLevel ?? 1,
       maximumLife: input.league.maximumLife,
       powerburstUntilTick: Math.max(0, Math.floor(input.league.powerburstUntilTick ?? 0)),
       targetSize: input.league.targetSize,

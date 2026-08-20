@@ -400,6 +400,27 @@ test("manual rotation queue persists into the compact loadout rotation", async (
 test("Revolution keeps the active bar and run results across reload", async ({ page }) => {
   await openCombat(page);
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
+  const editor = page.getByTestId("revo-bar-editor");
+  const bar = page.getByRole("group", { name: "Revolution bar" });
+  const initialCount = await bar.getByRole("button").count();
+  expect(initialCount).toBeGreaterThan(1);
+
+  await bar.getByRole("button").nth(1).click();
+  const slotTwo = editor.getByRole("combobox", { name: "Ability in slot 2" });
+  const movedAbility = await slotTwo.inputValue();
+  await editor.getByRole("button", { name: "Move selected ability left" }).click();
+  await expect(editor.getByRole("combobox", { name: "Ability in slot 1" })).toHaveValue(
+    movedAbility,
+  );
+
+  await editor.getByRole("button", { name: "Remove", exact: true }).click();
+  await expect(bar.getByRole("button")).toHaveCount(initialCount - 1);
+  await editor.getByRole("button", { name: "Add slot", exact: true }).click();
+  await expect(bar.getByRole("button")).toHaveCount(initialCount);
+  const editedNames = await bar
+    .getByRole("button")
+    .evaluateAll((buttons) => buttons.map((button) => button.getAttribute("title")));
+
   const duration = page.getByTestId("revo-run-duration");
   await duration.fill("6");
   await page.getByTestId("revo-run-button").click();
@@ -411,6 +432,15 @@ test("Revolution keeps the active bar and run results across reload", async ({ p
   await page.reload();
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await expect(page.locator(".revo-status-rail")).toContainText("Complete");
+  await expect(page.getByRole("group", { name: "Revolution bar" }).getByRole("button")).toHaveCount(
+    initialCount,
+  );
+  expect(
+    await page
+      .getByRole("group", { name: "Revolution bar" })
+      .getByRole("button")
+      .evaluateAll((buttons) => buttons.map((button) => button.getAttribute("title"))),
+  ).toEqual(editedNames);
   await expect(page.getByTestId("revo-active-bar").locator(".revo-bar-library__icon")).toHaveCount(
     activeCount,
   );

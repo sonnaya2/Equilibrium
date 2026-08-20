@@ -42,6 +42,7 @@ export type StateEffectId =
   | "living_death"
   | "runic_charge"
   | "shadow_imbued"
+  | "preparation"
   | "balance_by_force";
 
 export type AppliedEffectId =
@@ -135,7 +136,13 @@ export interface AbilitySpec {
    * necro shape. Other styles use twohand / dualwield / mainhand.
    */
   weaponRequirement?:
-    "twohand" | "dualwield" | "mainhand" | "mainhand-empty" | "conduit" | "death-guard-and-conduit";
+    | "twohand"
+    | "dualwield"
+    | "mainhand"
+    | "mainhand-empty"
+    | "shield-or-defender"
+    | "conduit"
+    | "death-guard-and-conduit";
   /** At least one of these catalogue items must be equipped. */
   requiredEquipmentAnyOf?: readonly string[];
   /**

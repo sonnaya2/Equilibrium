@@ -61,6 +61,37 @@ export function reduceCooldown(
   };
 }
 
+export function reduceActiveCooldowns(
+  state: RotationState,
+  ticks: number,
+  floorTick: number,
+  excludedKeys: readonly string[] = [],
+): RotationState {
+  if (ticks <= 0) return state;
+  const excluded = new Set(excludedKeys);
+  let changed = false;
+  const cooldowns = { ...state.cooldowns };
+  for (const [key, ready] of Object.entries(cooldowns)) {
+    if (excluded.has(key) || ready <= floorTick) continue;
+    const next = Math.max(floorTick, ready - ticks);
+    if (next === ready) continue;
+    cooldowns[key] = next;
+    changed = true;
+  }
+  const charges = { ...state.charges };
+  for (const [key, recovering] of Object.entries(charges)) {
+    if (excluded.has(key)) continue;
+    const next = recovering
+      .map((ready) => (ready > floorTick ? Math.max(floorTick, ready - ticks) : ready))
+      .sort((a, b) => a - b);
+    if (next.some((ready, index) => ready !== recovering[index])) {
+      charges[key] = next;
+      changed = true;
+    }
+  }
+  return changed ? { ...state, cooldowns, charges } : state;
+}
+
 /** Cooldown resets granted by a cast (Living Death clears ToD and Death Skulls). */
 export function resetCooldowns(fx: CastEffectContext, ids: readonly string[]): void {
   fx.rt.state = clearCooldowns(fx.rt.state, ids);

@@ -4,7 +4,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { resolveBar, type ResolvedSlot } from "@/combat/data/specs";
 import type { RotationSummary } from "@/combat/engine/simulation/simulate";
 import { secondsToTicks } from "@/combat/core/ticks";
-import { engineSpecs as ENGINE_SPECS, entryByEngineId } from "@/combat/abilities/registry";
+import {
+  engineSpecs as ENGINE_SPECS,
+  engineSpecsForStyle,
+  entryByEngineId,
+} from "@/combat/abilities/registry";
 import {
   preferredAgentCount,
   packSimBaseFromModel,
@@ -71,6 +75,7 @@ const DEFAULT_DURATION_SECONDS = 60;
 /** Hard cap for manual Run bar horizon (seconds). */
 export const MAX_RUN_DURATION_SECONDS = 1000;
 const MIN_RUN_DURATION_SECONDS = 6;
+const MAX_EDITABLE_BAR_SLOTS = 14;
 
 function clampRunDurationSeconds(raw: number): number {
   if (!Number.isFinite(raw)) return DEFAULT_DURATION_SECONDS;
@@ -125,6 +130,8 @@ export function RevolutionPanel({
   };
   const [analysisOpen, setAnalysisOpen] = useState(false);
   const [activeBarIds, setActiveBarIds] = useState<string[] | null>(null);
+  const [selectedBarSlot, setSelectedBarSlot] = useState(0);
+  const [addAbilityId, setAddAbilityId] = useState("");
   const runGenRef = useRef(0);
   const runCancelRef = useRef(false);
   const weaponConfiguration = stats.weaponConfiguration;
@@ -144,9 +151,8 @@ export function RevolutionPanel({
         saveActiveRevoBar(loadout.style, weaponConfiguration, null);
         return;
       }
-      const normalized = ensureNecroConjuresOnBarIds(ids, loadout.style, weaponConfiguration);
-      setActiveBarIds(normalized);
-      saveActiveRevoBar(loadout.style, weaponConfiguration, normalized);
+      setActiveBarIds(ids);
+      saveActiveRevoBar(loadout.style, weaponConfiguration, ids);
     },
     [loadout.style, weaponConfiguration],
   );
@@ -173,8 +179,8 @@ export function RevolutionPanel({
   // Solver bars can drop conjure_*; merge wiki early-bar conjures for necro Run/display.
   const effectiveActiveBarIds = useMemo(() => {
     if (!activeBarIds?.length) return null;
-    return ensureNecroConjuresOnBarIds(activeBarIds, loadout.style, weaponConfiguration);
-  }, [activeBarIds, loadout.style, weaponConfiguration]);
+    return activeBarIds;
+  }, [activeBarIds]);
 
   const solvedSlots: ResolvedSlot[] | null = useMemo(() => {
     if (!effectiveActiveBarIds?.length) return null;
@@ -245,12 +251,9 @@ export function RevolutionPanel({
       : bar
         ? revoManagedModelled(bar, weaponConfiguration, igneousGate)
         : [];
-    const withConjures = ensureNecroConjuresOnSpecs(
-      base,
-      loadout.style,
-      weaponConfiguration,
-      igneousGate,
-    );
+    const withConjures = solvedSlots
+      ? base
+      : ensureNecroConjuresOnSpecs(base, loadout.style, weaponConfiguration, igneousGate);
     // Same cast gate as Higher Power: strip region-locked ids from the live bar.
     if (!limitToRegions) return withConjures;
     return filterAbilitiesForLoadout(withConjures, regionGate);
@@ -288,6 +291,67 @@ export function RevolutionPanel({
     () => (activeBarIds?.length ? activeBarIds : modelled.map((a) => a.id)),
     [activeBarIds, modelled],
   );
+  const editorAbilities = useMemo(() => {
+    const available = filterAbilitiesForLoadout(engineSpecsForStyle(loadout.style), regionGate);
+    return [...new Map(available.map((ability) => [ability.id, ability])).values()].sort((a, b) =>
+      a.name.localeCompare(b.name),
+    );
+  }, [loadout.style, regionGate]);
+  const selectedAbilityId = barIdsForKey[selectedBarSlot] ?? "";
+  const addableAbilities = useMemo(
+    () => editorAbilities.filter((ability) => !barIdsForKey.includes(ability.id)),
+    [barIdsForKey, editorAbilities],
+  );
+
+  useEffect(() => {
+    setSelectedBarSlot((current) => Math.max(0, Math.min(current, barIdsForKey.length - 1)));
+  }, [barIdsForKey.length]);
+
+  useEffect(() => {
+    if (addAbilityId && addableAbilities.some((ability) => ability.id === addAbilityId)) return;
+    setAddAbilityId(addableAbilities[0]?.id ?? "");
+  }, [addAbilityId, addableAbilities]);
+
+  const applyEditedBar = (next: string[]) => {
+    onActiveBar(next);
+    setResult(null);
+    setResultKey(null);
+  };
+
+  const replaceSelectedAbility = (id: string) => {
+    if (!id || selectedBarSlot < 0 || selectedBarSlot >= barIdsForKey.length) return;
+    const next = [...barIdsForKey];
+    const existing = next.indexOf(id);
+    if (existing >= 0 && existing !== selectedBarSlot) {
+      [next[selectedBarSlot], next[existing]] = [next[existing]!, next[selectedBarSlot]!];
+    } else {
+      next[selectedBarSlot] = id;
+    }
+    applyEditedBar(next);
+  };
+
+  const moveSelectedAbility = (direction: -1 | 1) => {
+    const target = selectedBarSlot + direction;
+    if (target < 0 || target >= barIdsForKey.length) return;
+    const next = [...barIdsForKey];
+    [next[selectedBarSlot], next[target]] = [next[target]!, next[selectedBarSlot]!];
+    setSelectedBarSlot(target);
+    applyEditedBar(next);
+  };
+
+  const removeSelectedAbility = () => {
+    if (barIdsForKey.length <= 1) return;
+    const next = barIdsForKey.filter((_, index) => index !== selectedBarSlot);
+    setSelectedBarSlot(Math.min(selectedBarSlot, next.length - 1));
+    applyEditedBar(next);
+  };
+
+  const appendAbility = () => {
+    if (!addAbilityId || barIdsForKey.length >= MAX_EDITABLE_BAR_SLOTS) return;
+    const next = [...barIdsForKey, addAbilityId];
+    setSelectedBarSlot(next.length - 1);
+    applyEditedBar(next);
+  };
   /**
    * Parent should pass run-aligned model (full loadout or hybrid manual).
    * Fallback: full loadout resolve (tests / isolated mount).
@@ -340,11 +404,8 @@ export function RevolutionPanel({
     const equipmentChanged = prevEquipKey.current !== equipKey;
     prevEquipKey.current = equipKey;
     const restored = loadActiveRevoBar(loadout.style, weaponConfiguration);
-    setActiveBarIds(
-      restored?.length
-        ? ensureNecroConjuresOnBarIds(restored, loadout.style, weaponConfiguration)
-        : null,
-    );
+    setActiveBarIds(restored?.length ? restored : null);
+    setSelectedBarSlot(0);
     if (!equipmentChanged) return;
     setResult(null);
     setResultKey(null);
@@ -429,7 +490,7 @@ export function RevolutionPanel({
   };
 
   const applySolverBar = (ids: readonly string[]) => {
-    onActiveBar([...ids]);
+    onActiveBar(ensureNecroConjuresOnBarIds(ids, loadout.style, weaponConfiguration));
     setResult(null);
   };
 
@@ -563,12 +624,96 @@ export function RevolutionPanel({
             </div>
           </header>
           <div className="ability-bar-row">
-            <RevoBarGraphic slots={slots} revoSize={revoSize} />
+            <RevoBarGraphic
+              slots={slots}
+              revoSize={revoSize}
+              selectedIndex={selectedBarSlot}
+              onSelectSlot={setSelectedBarSlot}
+            />
+          </div>
+          <div className="revo-bar-editor" data-testid="revo-bar-editor">
+            <label className="revo-bar-editor__ability">
+              <span>Slot {selectedBarSlot + 1}</span>
+              <select
+                aria-label={`Ability in slot ${selectedBarSlot + 1}`}
+                value={selectedAbilityId}
+                onChange={(event) => replaceSelectedAbility(event.target.value)}
+              >
+                {editorAbilities.map((ability) => (
+                  <option key={ability.id} value={ability.id}>
+                    {ability.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <div className="revo-bar-editor__actions" role="group" aria-label="Edit selected slot">
+              <button
+                type="button"
+                className="combat-button"
+                onClick={() => moveSelectedAbility(-1)}
+                disabled={selectedBarSlot <= 0}
+                aria-label="Move selected ability left"
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                className="combat-button"
+                onClick={() => moveSelectedAbility(1)}
+                disabled={selectedBarSlot >= barIdsForKey.length - 1}
+                aria-label="Move selected ability right"
+              >
+                →
+              </button>
+              <button
+                type="button"
+                className="combat-button"
+                onClick={removeSelectedAbility}
+                disabled={barIdsForKey.length <= 1}
+              >
+                Remove
+              </button>
+            </div>
+            <label className="revo-bar-editor__add">
+              <span className="sr-only">Ability to add</span>
+              <select
+                aria-label="Ability to add"
+                value={addAbilityId}
+                onChange={(event) => setAddAbilityId(event.target.value)}
+                disabled={addableAbilities.length === 0}
+              >
+                {addableAbilities.map((ability) => (
+                  <option key={ability.id} value={ability.id}>
+                    {ability.name}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                className="combat-button"
+                onClick={appendAbility}
+                disabled={!addAbilityId || barIdsForKey.length >= MAX_EDITABLE_BAR_SLOTS}
+              >
+                Add slot
+              </button>
+            </label>
+            <button
+              type="button"
+              className="combat-button revo-bar-editor__reset"
+              onClick={() => {
+                onActiveBar(null);
+                setResult(null);
+                setResultKey(null);
+              }}
+              disabled={activeBarIds == null}
+            >
+              Reset
+            </button>
           </div>
           <div className="revo-toolbar">
             <span className="revo-toolbar__meta" data-testid="revo-reference-bar">
               {activeBarIds ? (
-                <>Solved bar · {modelled.length} abilities</>
+                <>Active Revo++ · {modelled.length} abilities</>
               ) : bar ? (
                 <>
                   <span className="revo-toolbar__emphasis">{barOptionLabel(bar)}</span>

@@ -8,7 +8,7 @@ import type { AbilitySpec } from "../pipeline/calculateAbility";
 import { combatRevolutionBars } from "../data";
 import { revoManagedSlots } from "../data/specs";
 import { weaponConfigurationFromBarSetup } from "../styles/melee/abilities";
-import { isSharedConstitutionAbilityId } from "../styles/shared/constitutionAbilities";
+import { isSharedAllStyleAbilityId } from "../styles/shared/allStyleAbilities";
 import { buildCandidatePool } from "./candidatePool";
 import type { PoolAbility } from "./contracts";
 import { secondsToTicks } from "../core/ticks";
@@ -47,7 +47,7 @@ export function regionDenyList(
 ): string[] {
   const deny: string[] = [...disabled];
   for (const spec of allEngineSpecs()) {
-    if (spec.style !== style && !isSharedConstitutionAbilityId(spec.id)) continue;
+    if (spec.style !== style && !isSharedAllStyleAbilityId(spec.id)) continue;
     if (disabled.has(spec.id)) continue;
     const entry = entryByEngineId(spec.id);
     const unlock = entry?.unlock;

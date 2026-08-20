@@ -7,7 +7,7 @@ import { keepsAnalysisLedgers, resolveDetailLevel } from "../simulation/contract
 import type { AdrenalineTransaction } from "../../shared/adrenalineTransaction";
 import { abilityBehaviorFingerprint } from "../../shared/abilityFingerprint";
 import { isBasicAttack } from "../../shared/adrenalineGain";
-import { isSharedConstitutionAbilityId } from "../../styles/shared/constitutionAbilities";
+import { isSharedAllStyleAbilityId } from "../../styles/shared/allStyleAbilities";
 import { assertProvenance } from "../../shared/damageProvenance";
 import { cloneAnalysisState, emptyAnalysisState, type RuntimeAnalysisState } from "../analysis";
 import { EventQueue, type ResolvedEvent, type ScheduledEvent } from "./events";
@@ -193,9 +193,9 @@ export function mapAbilitiesById(abilities: readonly AbilitySpec[]): Map<string,
       // Catalogue/bar merges may list the same id twice. Silent overwrite is
       // banned: keep the first registration, throw when a later entry conflicts.
       if (abilityBehaviorFingerprint(prev) !== abilityBehaviorFingerprint(ability)) {
-        // Shared Constitution (Sacrifice): one engine id, style remapped per bar.
+        // Shared all-style abilities use one engine id, remapped per bar.
         // Later registration wins (bar / pool overlay after registry placeholder).
-        if (isSharedConstitutionAbilityId(ability.id)) {
+        if (isSharedAllStyleAbilityId(ability.id)) {
           byId.set(ability.id, ability);
           continue;
         }

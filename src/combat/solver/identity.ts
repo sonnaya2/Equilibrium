@@ -356,6 +356,8 @@ export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBa
       blessingIds: sortedStrings(loadout.league.blessingIds as readonly string[]),
       relics: sortedStrings(loadout.league.relics),
       totalArmour: loadout.league.totalArmour,
+      offhandArmourValue: loadout.league.offhandArmourValue ?? 0,
+      defenceLevel: loadout.league.defenceLevel ?? 1,
       maximumLife: loadout.league.maximumLife,
       // Exact remaining ticks - different durations change damage; never collapse to boolean.
       powerburstUntilTick: powerburstRemainingTicksFromRequest(loadout),

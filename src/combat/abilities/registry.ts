@@ -7,9 +7,9 @@ import { NECROMANCY_ABILITIES, volleyOfSouls } from "../styles/necromancy/abilit
 import { RANGED_ABILITIES } from "../styles/ranged/abilities";
 import {
   abilityStyleForBar,
-  isSharedConstitutionAbilityId,
-  SHARED_CONSTITUTION_ABILITIES,
-} from "../styles/shared/constitutionAbilities";
+  isSharedAllStyleAbilityId,
+  SHARED_ALL_STYLE_ABILITIES,
+} from "../styles/shared/allStyleAbilities";
 import type { CombatStyle } from "../types";
 import { isBasicAttack } from "../shared/adrenalineGain";
 import {
@@ -122,7 +122,7 @@ const ENGINE_SPECS_LIST: AbilitySpec[] = [
   ...MAGIC_ABILITIES,
   ...NECROMANCY_ABILITIES,
   volleyOfSouls(3),
-  ...SHARED_CONSTITUTION_ABILITIES,
+  ...SHARED_ALL_STYLE_ABILITIES,
 ];
 
 /** Fail loud on duplicate engine ids at module load. */
@@ -172,7 +172,7 @@ export function allEngineSpecs(): AbilitySpec[] {
 
 export function engineSpecsForStyle(style: CombatStyle): AbilitySpec[] {
   return ABILITY_REGISTRY.filter(
-    (e) => e.style === style || isSharedConstitutionAbilityId(e.engineId),
+    (e) => e.style === style || isSharedAllStyleAbilityId(e.engineId),
   ).map((e) => abilityStyleForBar(e.spec, style));
 }
 
@@ -181,7 +181,7 @@ export function solverPalette(
   opts?: { includePartial?: boolean },
 ): AbilitySpec[] {
   return ABILITY_REGISTRY.filter((e) => {
-    if (e.style !== style && !isSharedConstitutionAbilityId(e.engineId)) return false;
+    if (e.style !== style && !isSharedAllStyleAbilityId(e.engineId)) return false;
     if (e.solverEligibleDefault) return true;
     if (
       opts?.includePartial &&

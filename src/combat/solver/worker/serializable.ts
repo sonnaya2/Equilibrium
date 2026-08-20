@@ -104,6 +104,8 @@ export interface SerializableLeagueRules {
   /** Active relic display names. */
   relics?: readonly string[];
   totalArmour: number;
+  offhandArmourValue?: number;
+  defenceLevel?: number;
   maximumLife: number;
   /** Frozen remaining Powerburst until-tick (half-open); 0 = inactive. */
   powerburstUntilTick: number;

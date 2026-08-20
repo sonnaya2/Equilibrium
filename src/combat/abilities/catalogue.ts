@@ -8,8 +8,8 @@ import { mapAbilitiesById } from "../engine/runtime/runtime";
 import { withStrengthCape99Dismember } from "../styles/melee/abilities";
 import {
   abilityStyleForBar,
-  isSharedConstitutionAbilityId,
-} from "../styles/shared/constitutionAbilities";
+  isSharedAllStyleAbilityId,
+} from "../styles/shared/allStyleAbilities";
 import { STRENGTH_CAPE_DISMEMBER_EXTRA_HITS } from "../shared/perks";
 import { isBasicAttack } from "../shared/adrenalineGain";
 import { allEngineSpecs } from "./registry";
@@ -100,7 +100,7 @@ export function resolveAbilitySpecsFromCatalogue(
 /**
  * Soft resolve: keep provided spec when id missing (legacy UI paths with partial bars).
  * Prefer resolveAbilitySpecsFromCatalogue when ids are known-good.
- * Shared Constitution specs keep the caller's bar style (berserk / DS / Sunshine gates).
+ * Shared all-style specs keep the caller's bar style.
  */
 export function mapSpecsThroughCatalogue(
   catalogue: ResolvedAbilityCatalogue,
@@ -109,7 +109,7 @@ export function mapSpecsThroughCatalogue(
   return specs.map((spec) => {
     const fromCat = catalogue.byId.get(spec.id);
     if (!fromCat) return spec;
-    if (isSharedConstitutionAbilityId(spec.id)) {
+    if (isSharedAllStyleAbilityId(spec.id)) {
       return abilityStyleForBar(fromCat, spec.style);
     }
     return fromCat;

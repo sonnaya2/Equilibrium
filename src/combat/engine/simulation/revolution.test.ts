@@ -61,7 +61,7 @@ function revoModelled(bar: RevolutionBarRecord) {
   return window.flatMap((slot) => (slot.spec ? [slot.spec] : []));
 }
 
-/** Catalogue + bar specs; bar stamps win (shared Constitution style remap). */
+/** Catalogue + bar specs; bar stamps win for shared all-style abilities. */
 function abilitiesForRevo(modelled: ReturnType<typeof revoModelled>) {
   const byId = new Map(ENGINE_SPECS);
   for (const spec of modelled) byId.set(spec.id, spec);

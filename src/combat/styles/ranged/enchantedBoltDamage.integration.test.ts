@@ -8,6 +8,7 @@ import {
 } from "../../league/ruleset";
 import { rangedInput } from "../../test/fixtures/inputs";
 import { testRangedAmmunition } from "../../testing/rangedAmmunition";
+import { vulnerabilityModifier } from "../../shared/vulnerability";
 import { resolveAmmunitionProfile } from "./ammunitionProfile";
 import type { RangedAmmunitionMechanicId } from "../../data/ammunition";
 
@@ -268,6 +269,48 @@ describe("damage-only enchanted bolts", () => {
       (event) => event.abilityId === "ammunition:emerald",
     );
     expect(immunePoison?.damage.expected).toBeCloseTo(buffedPoison, 8);
+  });
+
+  it("composes Big Boned inside Emerald poison modifiers", () => {
+    const league = resolveLeagueRules(
+      { ruleset: "equilibrium", blessingPicks: ["Balance"] },
+      { maximumLife: 10_000 },
+    );
+    const vulnerability = vulnerabilityModifier();
+    const result = simulate({
+      ...rangedInput,
+      league,
+      context: { style: "ranged", ruleset: "equilibrium" },
+      modifiers: [vulnerability],
+      playerPoisonModifiers: [vulnerability],
+      playerPoison: {
+        potion: "none",
+        potionUntilTick: 0,
+        kwuarmPotency: 4,
+        cinderbane: true,
+        blowpipe: false,
+        laniakea: false,
+      },
+      ammunition: boltAmmunition("emerald"),
+      rotation: rotationOf("ranged_attack"),
+    });
+    const emerald = result.events.find((event) => event.abilityId === "ammunition:emerald");
+    const bigBoned = emerald?.components?.find((component) => component.id === "big-boned");
+    const poisonDamage = (raw: number) => Math.floor(Math.floor(raw * 1.375) * 1.1);
+    const mean = (min: number, max: number) => {
+      let total = 0;
+      for (let damage = min; damage <= max; damage++) total += poisonDamage(damage);
+      return total / (max - min + 1);
+    };
+    const hostExpected = mean(20, 40) * 0.55;
+    const combinedExpected = mean(520, 540) * 0.55;
+
+    expect(emerald?.damage.expected).toBeCloseTo(combinedExpected, 10);
+    expect(bigBoned?.damage.expected).toBeCloseTo(combinedExpected - hostExpected, 10);
+    expect(bigBoned?.analysis?.expectedActivations).toBe(0.55);
+    expect(
+      result.analysis.byEffect.find((effect) => effect.id === "ammunition:emerald")?.bonusDamage,
+    ).toBeCloseTo(combinedExpected - hostExpected, 10);
   });
 
   it("keeps Jade, Topaz, and Sapphire control effects explicit", () => {

@@ -70,6 +70,10 @@ export interface ResolvedLeagueRules {
   relics: readonly string[];
   relicNames: ReadonlySet<string>;
   totalArmour: number;
+  /** Armour stat on the genuinely wielded shield or defender. */
+  offhandArmourValue?: number;
+  /** Visible Defence level used by Bash's ordinary damage formula. */
+  defenceLevel?: number;
   /**
    * Maximum life without Powerburst of Vitality doubling. Call
    * `resolveMaximumLife` at a land tick for the timed double.
@@ -187,6 +191,8 @@ export function resolveLeagueCritAtLand(
 
 export interface ResolveLeagueRulesDerived {
   totalArmour?: number;
+  offhandArmourValue?: number;
+  defenceLevel?: number;
   maximumLife?: number;
   powerburstUntilTick?: number;
   targetSize?: number;
@@ -236,6 +242,8 @@ export function resolveLeagueRules(
     relics,
     relicNames: new Set(relics),
     totalArmour: Math.max(0, derived.totalArmour ?? 0),
+    offhandArmourValue: Math.max(0, derived.offhandArmourValue ?? 0),
+    defenceLevel: Math.max(1, Math.floor(derived.defenceLevel ?? 1)),
     maximumLife: Math.max(0, derived.maximumLife ?? 0),
     powerburstUntilTick: Math.max(0, Math.floor(derived.powerburstUntilTick ?? 0)),
     targetSize: Math.max(1, Math.floor(derived.targetSize ?? 1)),

@@ -1,5 +1,5 @@
 import type { AbilitySpec } from "../../../pipeline/calculateAbility";
-import { runPipeline } from "../../../pipeline/modifierPipeline";
+import type { HitResult } from "../../../pipeline/calculateHit";
 import type { CombatModifier } from "../../../types";
 import {
   extendSearingWinds,
@@ -494,6 +494,16 @@ function emeraldPlayerPoisonModifiers(rt: SimulationRuntime): CombatModifier[] {
   return configured.filter((modifier) => modifier.appliesToPlayerPoison === true);
 }
 
+function weightedEmeraldDamage(hit: HitResult, chance: number): ResolvedDamage {
+  return {
+    min: 0,
+    max: hit.max,
+    expected: hit.expected * chance,
+    critExpected: 0,
+    capLoss: hit.capLoss * chance,
+  };
+}
+
 function scheduleEmeraldPoisonHit(
   rt: SimulationRuntime,
   event: ScheduledEvent<SimulationRuntime>,
@@ -554,8 +564,24 @@ function scheduleEmeraldPoisonHit(
     damageSource: "proc" as const,
     provenance,
   };
-  const apply = (value: number) => runPipeline({ damage: value }, modifiers, context).damage;
-  const expected = apply((payload.min + payload.max) / 2);
+  const resolved = resolveLeagueAttachedRawHost({
+    rules: rt.input.league,
+    source: provenance,
+    landTick: event.tick,
+    abilityBase: rt.input.base,
+    min: payload.min,
+    max: payload.max,
+    level: rt.input.level,
+    accuracy: 1,
+    crit: { chance: 0, eligible: false },
+    modifiers,
+    context,
+    cap: { cap: rt.input.cap?.cap ?? 30_000, bypass: true },
+    bonusTargetId: "ammunition:emerald",
+  });
+  const components = resolved.components.map((component) =>
+    attachedResolutionComponent(component, chance, 0, 1),
+  );
   scheduleEvent(rt, {
     tick: event.tick,
     family: "proc",
@@ -577,14 +603,8 @@ function scheduleEmeraldPoisonHit(
     combatStyle: "ranged",
     resourceEligible: false,
     resolve: () => ({
-      damage: {
-        min: 0,
-        max: 0,
-        expected: expected * chance,
-        critExpected: 0,
-        capLoss: 0,
-      },
-      hitDetail: undefined,
+      damage: weightedEmeraldDamage(resolved.hit, chance),
+      ...(components.length > 0 ? { components } : {}),
     }),
   });
 }

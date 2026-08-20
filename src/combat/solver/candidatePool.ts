@@ -5,8 +5,8 @@ import type { ItemPassiveId } from "../data/records";
 import { isBasicAttack } from "../shared/adrenalineGain";
 import {
   abilityStyleForBar,
-  isSharedConstitutionAbilityId,
-} from "../styles/shared/constitutionAbilities";
+  isSharedAllStyleAbilityId,
+} from "../styles/shared/allStyleAbilities";
 import type { CandidatePool, CandidatePoolOptions, PoolAbility } from "./contracts";
 
 function asPassiveIds(ids: readonly string[] | undefined): readonly ItemPassiveId[] | undefined {
@@ -96,8 +96,8 @@ export function buildCandidatePool(
   const selected: AbilitySpec[] = [];
   const seenIds = new Set<string>();
   for (const ability of catalogue) {
-    // Shared Constitution (Sacrifice): one registry id, remapped to pool style.
-    const effective = isSharedConstitutionAbilityId(ability.id)
+    // Shared all-style abilities use one registry id, remapped to the pool style.
+    const effective = isSharedAllStyleAbilityId(ability.id)
       ? abilityStyleForBar(ability, style)
       : ability;
     if (effective.style !== style) continue;

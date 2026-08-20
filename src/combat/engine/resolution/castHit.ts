@@ -22,6 +22,7 @@ import {
 import { applyDamagePotential } from "../../core/damagePotential";
 import { preciseMinHitAddition } from "../../shared/perks";
 import { TUSKAS_EMPOWERED_HIT_CAP } from "../../styles/shared/constitutionAbilities";
+import { bashRawDamageBand } from "../../styles/shared/defenceAbilities";
 import { FURY_CRIT_CHANCE_BONUS } from "../../styles/melee/effects";
 import {
   channelledMightCritBonus,
@@ -797,6 +798,16 @@ function resolveCastHitUncached(
   const tuskaFinalModifiers = modifiers.filter(
     (modifier) => modifier.id === "blessing:havoc-born" && modifier.stage === "postHit",
   );
+  const bashPrepared = snap.bashDamage
+    ? applyAbilityBaseModifiers(base, modifiers, hitContext)
+    : null;
+  const bashBand = bashPrepared ? bashRawDamageBand(bashPrepared.base, snap.bashDamage!) : null;
+  if (bashBand && (input.preciseRank ?? 0) > 0) {
+    bashBand.min = Math.min(
+      bashBand.max,
+      Math.floor(bashBand.min + preciseMinHitAddition(bashBand.max, input.preciseRank!)),
+    );
+  }
   const host =
     snap.tuskasEmpoweredDamage != null
       ? resolveLeagueAttachedRawHost({
@@ -813,6 +824,21 @@ function resolveCastHitUncached(
           context: hitContext,
           cap: { cap: TUSKAS_EMPOWERED_HIT_CAP },
         })
+      : bashBand && bashPrepared
+        ? resolveLeagueAttachedRawHost({
+            rules: input.league,
+            source: provenance,
+            landTick: at,
+            abilityBase: bashPrepared.base,
+            min: bashBand.min,
+            max: bashBand.max,
+            level,
+            accuracy: hitAccuracy,
+            crit,
+            modifiers: bashPrepared.modifiers,
+            context: hitContext,
+            cap: input.cap,
+          })
       : resolveLeagueAttachedHost({
           rules: input.league,
           source: provenance,

@@ -41,6 +41,7 @@ import {
   tuskasEmpoweredActive,
   tuskasEmpoweredDamage,
 } from "../../styles/shared/constitutionAbilities";
+import type { BashDamageProfile } from "../../styles/shared/defenceAbilities";
 import { costOf, spendOf } from "./rules";
 import { firstEligibleDirectHitIndex, hasDamagingHits, hasFuryConsumingHit } from "./hitKind";
 import type { CastSnapshot } from "./snapshot";
@@ -111,7 +112,13 @@ export type PreparedTransition =
   /** The next Combust cast consumes its Soulfire Conflagrate window. */
   | { kind: "consumeSongConflagrate" }
   /** A qualifying Basic replaces the timed Song adrenaline stream. */
-  | { kind: "armSongAdrenaline"; stacks: number };
+  | { kind: "armSongAdrenaline"; stacks: number }
+  | {
+      kind: "reduceActiveCooldowns";
+      ticks: number;
+      floorTick: number;
+      excludedKeys: readonly string[];
+    };
 
 /**
  * Everything one atomic cast needs, computed once against the advanced state
@@ -463,6 +470,21 @@ export function prepareCast(
     songTwoPieceActive: songSummary?.twoPiece === true,
     songPreCastStacks,
     ...(tuskasEmpoweredFlat !== undefined ? { tuskasEmpoweredDamage: tuskasEmpoweredFlat } : {}),
+    ...(ability.id === "bash"
+      ? {
+          bashDamage: {
+            offhandArmourValue: input.league?.offhandArmourValue ?? 0,
+            defenceLevel: input.league?.defenceLevel ?? 1,
+            totalArmour: input.league?.totalArmour ?? 0,
+            ...(blessingRule(input.league, "steadfast-will")?.steadfastWill?.bashArmourDamageBand
+              ? {
+                  steadfastArmourBand: blessingRule(input.league, "steadfast-will")!.steadfastWill!
+                    .bashArmourDamageBand,
+                }
+              : {}),
+          } satisfies BashDamageProfile,
+        }
+      : {}),
   };
 
   const transitions: PreparedTransition[] = [];
@@ -488,6 +510,19 @@ export function prepareCast(
   if (wen.nextState) transitions.push({ kind: "activateWenIcyPrecision", next: wen.nextState });
   if (songConflagrateActive) transitions.push({ kind: "consumeSongConflagrate" });
   if (songBasicStreamEligible) transitions.push({ kind: "armSongAdrenaline", stacks: songPreCastStacks });
+  const steadfastPreparation =
+    ability.id === "preparation"
+      ? blessingRule(input.league, "steadfast-will")?.steadfastWill
+          ?.preparationCooldownReductionTicks
+      : undefined;
+  if (steadfastPreparation != null && steadfastPreparation > 0) {
+    transitions.push({
+      kind: "reduceActiveCooldowns",
+      ticks: steadfastPreparation,
+      floorTick: candidate + 1,
+      excludedKeys: [ability.cooldownGroup ?? ability.replacementGroup ?? ability.id],
+    });
+  }
 
   const sonic = ability.id === "sonic_wave" || ability.id === "greater_sonic_wave";
   const flowReduction = sonic

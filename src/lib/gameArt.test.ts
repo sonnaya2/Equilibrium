@@ -145,6 +145,16 @@ describe("gameArt", () => {
     }
   });
 
+  it("routes shared defence abilities to the defence icon folder", () => {
+    expect(abilityIconPath("bash", "melee")).toBe("/game/combat/abilities/defence/bash.webp");
+    expect(abilityIconPath("preparation", "magic")).toBe(
+      "/game/combat/abilities/defence/preparation.webp",
+    );
+    expect(abilityIconPath("debilitate", "ranged")).toBe(
+      "/game/combat/abilities/defence/debilitate.webp",
+    );
+  });
+
   it("every style icon is published to public/game", () => {
     for (const style of Object.keys(STYLE_ICON) as Array<keyof typeof STYLE_ICON>) {
       const path = styleIconPath(style);

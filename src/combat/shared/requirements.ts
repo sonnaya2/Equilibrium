@@ -106,6 +106,8 @@ export function weaponRequirementMessage(ability: AbilitySpec): string {
         ? "death guard and conduit"
         : ability.weaponRequirement === "mainhand-empty"
           ? "main-hand only (empty off-hand)"
+          : ability.weaponRequirement === "shield-or-defender"
+            ? "a shield or defender"
           : (ability.weaponRequirement ??
             (ability.style === "necromancy" ? "a necromancy weapon" : `${ability.style} weapon`));
   return `${ability.id} requires ${requirement}`;
@@ -185,6 +187,9 @@ export function meetsWeaponRequirement(
   if (req === "mainhand") {
     // Loose non-2h (Icy Tempest); not the empty-OH Adaptive Strike form.
     return weaponConfiguration !== "twohand";
+  }
+  if (req === "shield-or-defender") {
+    return weaponConfiguration === "shield" || weaponConfiguration === "defender";
   }
   return weaponConfiguration === req;
 }

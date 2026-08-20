@@ -213,5 +213,10 @@ export function landHitIdentity(
     b(!!snap.critLayers.disabled),
     b(snap.critLayers.eligible !== false),
     snap.tuskasEmpoweredDamage ?? -1,
+    snap.bashDamage?.offhandArmourValue ?? -1,
+    snap.bashDamage?.defenceLevel ?? -1,
+    snap.bashDamage?.totalArmour ?? -1,
+    snap.bashDamage?.steadfastArmourBand?.[0] ?? -1,
+    snap.bashDamage?.steadfastArmourBand?.[1] ?? -1,
   ].join("\x1f");
 }

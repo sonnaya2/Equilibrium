@@ -1,5 +1,6 @@
 import type { CritLayers } from "../../core/critical";
 import type { CombatModifier } from "../../types";
+import type { BashDamageProfile } from "../../styles/shared/defenceAbilities";
 
 /**
  * What a cast captured at cast time for its scheduled hits. Time-windowed
@@ -54,4 +55,5 @@ export interface CastSnapshot {
    * Absent = off-task AD band path.
    */
   tuskasEmpoweredDamage?: number;
+  bashDamage?: BashDamageProfile;
 }

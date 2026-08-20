@@ -39,9 +39,11 @@ import {
   loadoutFirstNecromancerConjureDurationMult,
   setDamageModifiers,
   staticEquipmentCritBonus,
+  resolvedEquipmentSlots,
   wieldedOffhandKind,
   type ActiveEquipmentEffects,
 } from "@/combat/shared/equipment";
+import { equipmentById } from "@/combat/data";
 import {
   prayerBoostedStyleLevel,
   prayerDamageModifier,
@@ -540,10 +542,16 @@ export function resolveLeagueBundle(
       equipmentSlots: loadout.equipmentSlots,
       style: loadout.style,
     }).prayer;
+  const offhandKind = wieldedOffhandKind(loadout);
+  const offhandId = resolvedEquipmentSlots(loadout).offhand;
+  const offhandArmourValue =
+    offhandKind && offhandId ? (equipmentById(offhandId)?.bonuses.armour ?? 0) : 0;
   const league = resolveLeagueRules(
     leagueLoadout,
     {
       totalArmour: defenceLife.defence.totalArmour,
+      offhandArmourValue,
+      defenceLevel: defenceLife.defence.visibleLevel,
       maximumLife: defenceLife.maximumLifeForLeague,
       powerburstUntilTick: defenceLife.powerburstUntilTick,
       targetSize: loadout.target?.size,

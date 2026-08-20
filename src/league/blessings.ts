@@ -75,6 +75,10 @@ export interface BlessingCombatRules {
   baseAbilityDamageArmourPercent?: number;
   defenderArmourMultiplier?: number;
   shieldArmourMultiplier?: number;
+  steadfastWill?: {
+    bashArmourDamageBand: readonly [number, number];
+    preparationCooldownReductionTicks: number;
+  };
   damageMultiplier?: number;
   maximumLifeMultiplier?: number;
   armourMultiplier?: number;

@@ -5,6 +5,7 @@ import {
   consumeConflagrate,
 } from "../../../styles/magic/songOfDestruction";
 import type { CastEffectContext } from "./context";
+import { reduceActiveCooldowns } from "./cooldowns";
 
 /**
  * Apply the transitions preparation decided, in the order it recorded them.
@@ -84,6 +85,14 @@ export function applyPreparedTransitions(fx: CastEffectContext): void {
             ),
           },
         });
+        break;
+      case "reduceActiveCooldowns":
+        rt.state = reduceActiveCooldowns(
+          rt.state,
+          transition.ticks,
+          transition.floorTick,
+          transition.excludedKeys,
+        );
         break;
     }
   }

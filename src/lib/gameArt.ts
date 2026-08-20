@@ -77,6 +77,7 @@ const WEAPON_SPECIAL_ICON_EQUIPMENT: Record<string, string> = {
 
 /** Shared constitution-bar abilities live under abilities/constitution/. */
 const CONSTITUTION_ABILITY_IDS = new Set(["sacrifice", "tuskas_wrath"]);
+const DEFENCE_ABILITY_IDS = new Set(["bash", "preparation", "debilitate"]);
 
 /**
  * Local ability icons (synced from the wiki, never hotlinked).
@@ -98,8 +99,9 @@ export function abilityIconPath(
   const lookupId = withoutVariant.replace(/-/g, "_");
   let slug = withoutVariant.replace(/_/g, "-");
   slug = ABILITY_ICON_FORM_FALLBACK[slug] ?? slug;
-  const folder =
-    CONSTITUTION_ABILITY_IDS.has(lookupId) || style === "constitution"
+  const folder = DEFENCE_ABILITY_IDS.has(lookupId)
+    ? "defence"
+    : CONSTITUTION_ABILITY_IDS.has(lookupId) || style === "constitution"
       ? "constitution"
       : style in STYLE_ICON
         ? style

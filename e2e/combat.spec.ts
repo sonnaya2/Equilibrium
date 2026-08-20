@@ -563,7 +563,7 @@ test("revolution solver optimizes and apply keeps a runnable bar", async ({ page
   await expect(page.getByTestId("revo-optimize")).toHaveText("Optimize bar");
 
   await page.getByRole("button", { name: "Apply" }).first().click();
-  await expect(page.getByText(/Solved bar/)).toBeVisible();
+  await expect(page.getByText(/Active Revo\+\+/)).toBeVisible();
   await page.getByRole("button", { name: "Run bar" }).click();
   await expect(page.getByText("DPS", { exact: true })).toBeVisible();
   await expect(page.getByTestId("revo-casts")).toBeVisible();

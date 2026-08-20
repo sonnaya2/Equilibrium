@@ -132,7 +132,10 @@ export const solveFromRequest: SolveFn = async (
   });
 
   // Pool-legal only (weapon/region denylist already applied to the pool).
-  const searchPool: PoolAbility[] = pool.ids.map((id) => pool.byId.get(id)!);
+  const searchPool: PoolAbility[] = pool.ids.map((id) => {
+    const spec = pool.byId.get(id) as AbilitySpec;
+    return { ...spec, stateful: spec.stateEffect != null };
+  });
   const catalogueById = new Map(catalogue.map((a) => [a.id, a] as const));
   const authored = fitAuthoredSeeds(request, pool, denySet, catalogueById);
   const incumbentBar = fitIncumbentBar(request, pool, denySet, catalogueById);

@@ -114,11 +114,14 @@ export function fullCandidateList(
   state: SearchState,
   seedBestBar: readonly string[] | null,
 ): ScoredBar[] {
-  const shortlistSize = Math.max(
+  const baseShortlistSize = Math.max(
     2,
     state.config.fullShortlistSize ?? Math.max(state.config.topK, 5),
   );
   if (pool.length === 0 && !seedBestBar && state.seeds.length === 0) return [];
+
+  const statefulCoverage = statefulCoverageCandidates(state);
+  const shortlistSize = baseShortlistSize + statefulCoverage.length;
 
   const selected: ScoredBar[] = [];
   const seen = new Set<string>();
@@ -131,7 +134,8 @@ export function fullCandidateList(
     selected.push(s);
   };
 
-  // Priority: seed best + authored seeds (distinct composition), then diverse top scorers.
+  // Stateful casts can lose a short-horizon race before their buff or cooldown effect pays back.
+  // Give the best explored bar for each one a full-horizon score outside normal shortlist capacity.
   const ensureBar = (bar: readonly string[] | null | undefined, source: string) => {
     if (!bar || bar.length === 0 || selected.length >= shortlistSize) return;
     const fp = barKey(bar);
@@ -145,7 +149,9 @@ export function fullCandidateList(
   };
 
   ensureBar(seedBestBar, "seed-best-shortlist");
-  for (const seed of state.seeds) ensureBar(seed, "authored-seed-shortlist");
+  for (const candidate of statefulCoverage) {
+    ensureBar(candidate.bar, "stateful-coverage-shortlist");
+  }
 
   // Medium-stage incumbents (previous winners under robust-shaped mid horizon).
   ensureBar(state.bestMedium?.bar, "medium-best-shortlist");
@@ -157,6 +163,8 @@ export function fullCandidateList(
     ensureBar(m.bar, "medium-shortlist");
   }
 
+  for (const seed of state.seeds) ensureBar(seed, "authored-seed-shortlist");
+
   // Fill remaining slots with diverse high exploratory scorers.
   if (selected.length < shortlistSize && pool.length > 0) {
     const diversifyFrom = pool.slice(0, Math.min(pool.length, shortlistSize * 3));
@@ -165,6 +173,36 @@ export function fullCandidateList(
   }
 
   return selected;
+}
+
+function statefulCoverageCandidates(state: SearchState): ScoredBar[] {
+  const statefulIds = state.pool.filter((ability) => ability.stateful).map((ability) => ability.id);
+  if (statefulIds.length === 0) return [];
+
+  const bestSearchByAbility = new Map<string, ScoredBar>();
+  const bestMediumByAbility = new Map<string, ScoredBar>();
+  const consider = (candidate: ScoredBar | null | undefined) => {
+    if (!candidate || (!isSearchRankable(candidate) && !isMediumOk(candidate))) return;
+    for (const id of statefulIds) {
+      if (!candidate.bar.includes(id)) continue;
+      const target = candidate.mode === "medium" ? bestMediumByAbility : bestSearchByAbility;
+      const prior = target.get(id);
+      if (!prior || candidate.robustScore > prior.robustScore) target.set(id, candidate);
+    }
+  };
+
+  for (const candidate of state.archive) consider(candidate);
+  for (const seed of state.seeds) {
+    if (!statefulIds.some((id) => seed.includes(id))) continue;
+    consider(state.forceEval(seed, "search", "stateful-coverage-explore"));
+  }
+
+  const unique = new Map<string, ScoredBar>();
+  for (const id of statefulIds) {
+    const candidate = bestMediumByAbility.get(id) ?? bestSearchByAbility.get(id);
+    if (candidate) unique.set(candidate.fingerprint, candidate);
+  }
+  return [...unique.values()].sort((a, b) => b.robustScore - a.robustScore);
 }
 
 /** Full-horizon ranking re-score (session forceEval uses score-only detail). */

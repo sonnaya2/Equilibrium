@@ -447,7 +447,7 @@ export function defaultSerializableRequest(
     profileId: "balanced",
     maxBarSize: 11,
     minBarSize: 4,
-    permittedCategories: ["basic", "enhanced", "ultimate"],
+    permittedCategories: ["basic", "enhanced", "threshold", "ultimate"],
     unlockedRegions: [],
     blessingPicks: [],
     ruleset: "base",

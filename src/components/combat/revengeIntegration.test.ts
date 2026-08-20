@@ -1,12 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { resolveAbilityCatalogue } from "@/combat/abilities/catalogue";
+import { allEngineSpecs } from "@/combat/abilities/registry";
 import { simulateRevolution } from "@/combat/engine/simulation/revolution";
 import { buildSimulationInputBase, toRevolutionInput } from "@/combat/model";
 import { packSimBase } from "@/combat/solver/packRequest";
+import { solveFromRequest } from "@/combat/solver/solveFromRequest";
 import { runUiRevolution } from "@/combat/solver/worker/uiRunHost";
+import { emptyBuild, type BuildState } from "@/league";
 import { resolveLoadoutCombat } from "@/components/combat/toResolvedCombatModel";
 import { DEFAULT_LOADOUT, normalizeLoadout } from "./loadout/model";
 import { solverSnapshotFromResolvedModel } from "./solverSnapshot";
+import { packSolverRequestFromUi } from "./useRevolutionSolver";
 
 describe("Revenge loadout integration", () => {
   it("surfaces stacks and beats attack-only through Run and solver worker inputs", async () => {
@@ -99,4 +103,84 @@ describe("Revenge loadout integration", () => {
       workerWithoutRevenge.summary.totalExpected,
     );
   });
+
+  it("scores Revenge in the production Revo++ search", async () => {
+    const loadout = normalizeLoadout({
+      ...DEFAULT_LOADOUT,
+      style: "melee",
+      startingAdrenaline: 100,
+      equipmentSlots: {
+        mainhand: "item:drygore-mace",
+        offhand: "item:malevolent-kiteshield",
+      },
+      target: {
+        defenceLevel: 80,
+        affinity: 70,
+        incomingHitIntervalSeconds: 2.4,
+      },
+    });
+    const build: BuildState = {
+      ...emptyBuild(),
+      blessingPicks: ["Order", "Order", "Order"],
+    };
+    const { model } = resolveLoadoutCombat(loadout, {
+      blessingPicks: ["Order", "Order", "Order"],
+    });
+    const request = packSolverRequestFromUi({
+      combatModel: model,
+      loadout,
+      build,
+      modelled: [],
+      solverTier: "thorough",
+      solverProfile: "balanced",
+      limitToRegions: false,
+      barSizePreset: "range8_11",
+      now: 1_700_000_000_000,
+    });
+
+    const result = await solveFromRequest(request);
+
+    expect(request.permittedCategories).toContain("threshold");
+    expect(result.bar).toContain("revenge");
+  }, 120_000);
+
+  it("scores Preparation when its cooldown reduction beats a damage filler", async () => {
+    const loadout = normalizeLoadout({
+      ...DEFAULT_LOADOUT,
+      style: "melee",
+      startingAdrenaline: 100,
+      equipmentSlots: {
+        mainhand: "item:drygore-mace",
+        offhand: "item:malevolent-kiteshield",
+      },
+    });
+    const build: BuildState = {
+      ...emptyBuild(),
+      blessingPicks: ["Order", "Order", "Order"],
+    };
+    const { model } = resolveLoadoutCombat(loadout, {
+      blessingPicks: ["Order", "Order", "Order"],
+    });
+    const request = packSolverRequestFromUi({
+      combatModel: model,
+      loadout,
+      build,
+      modelled: [],
+      solverTier: "thorough",
+      solverProfile: "balanced",
+      limitToRegions: false,
+      barSizePreset: "fixed4",
+      now: 1_700_000_000_000,
+    });
+    const allowed = new Set(["berserk", "preparation", "overpower", "meteor_strike", "debilitate"]);
+
+    const result = await solveFromRequest({
+      ...request,
+      disabledAbilityIds: allEngineSpecs()
+        .map((ability) => ability.id)
+        .filter((id) => !allowed.has(id)),
+    });
+
+    expect(result.bar).toContain("preparation");
+  }, 120_000);
 });

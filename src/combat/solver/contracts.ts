@@ -302,6 +302,8 @@ export interface PoolAbility {
   autoAttack?: boolean;
   /** Rough expected ability damage for seed heuristics (hit-band mean if known). */
   averageDamage?: number;
+  /** The cast changes future simulation state even when it has no direct hit. */
+  stateful?: boolean;
   occupancyTicks?: number;
   cooldownTicks?: number;
   supportStatus?: "partially-modeled" | "not-modeled" | "mechanics-unverified";

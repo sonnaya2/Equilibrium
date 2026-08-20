@@ -3,10 +3,7 @@ import { entryByEngineId } from "../abilities/registry";
 import { resolveAbilityCastAvailability } from "../shared/requirements";
 import type { ItemPassiveId } from "../data/records";
 import { isBasicAttack } from "../shared/adrenalineGain";
-import {
-  abilityStyleForBar,
-  isSharedAllStyleAbilityId,
-} from "../styles/shared/allStyleAbilities";
+import { abilityStyleForBar, isSharedAllStyleAbilityId } from "../styles/shared/allStyleAbilities";
 import type { CandidatePool, CandidatePoolOptions, PoolAbility } from "./contracts";
 
 function asPassiveIds(ids: readonly string[] | undefined): readonly ItemPassiveId[] | undefined {
@@ -53,6 +50,7 @@ export function poolAbilityFromSpec(spec: AbilitySpec): PoolAbility {
     offGcd: spec.offGcd,
     basicAttack: isBasicAttack(spec),
     averageDamage,
+    stateful: spec.stateEffect != null,
     occupancyTicks: spec.channelTicks ?? GCD_TICKS,
     cooldownTicks:
       spec.cooldownSeconds !== undefined ? Math.round(spec.cooldownSeconds / 0.6) : undefined,

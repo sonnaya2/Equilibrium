@@ -563,6 +563,46 @@ test("Revenge raises damage through the editable shield bar", async ({ page }) =
   expect(withRevenge).toBeGreaterThan(withoutRevenge);
 });
 
+test("Revo++ optimizes Revenge with a shield and incoming attacks", async ({ page }) => {
+  test.setTimeout(180_000);
+  await openCombat(page);
+  await page.evaluate(() => {
+    localStorage.setItem(
+      "eq:build:v1",
+      JSON.stringify({
+        elective: [],
+        relics: {},
+        blessingPicks: ["Order", "Order", "Order"],
+        blessingSelections: [],
+        blessingResetsUsed: 0,
+      }),
+    );
+    localStorage.setItem(
+      "eq:loadout:v1",
+      JSON.stringify({
+        style: "melee",
+        startingAdrenaline: 100,
+        equipmentSlots: {
+          mainhand: "item:drygore-mace",
+          offhand: "item:malevolent-kiteshield",
+        },
+        target: {
+          defenceLevel: 80,
+          affinity: 70,
+          incomingHitIntervalSeconds: 2.4,
+        },
+      }),
+    );
+  });
+  await page.reload();
+  await page.getByRole("tab", { name: "Rotation", exact: true }).click();
+  await page.getByTestId("revo-optimize").click();
+
+  const results = page.getByTestId("revo-solver-results");
+  await expect(results).toBeVisible({ timeout: 120_000 });
+  await expect(results.locator("li").first()).toContainText("Revenge");
+});
+
 test("inline loadout edits persist and refresh engine-backed summary values", async ({ page }) => {
   await openCombat(page);
   const summary = page.getByRole("region", { name: "Combat results" });

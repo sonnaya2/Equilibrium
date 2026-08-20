@@ -53,7 +53,7 @@ describe("normalizeLoadout", () => {
     expect(legacy.baseDamage).toEqual({ mode: "automatic" });
     expect(legacy.startingAdrenaline).toBe(100);
     expect(legacy.hitCapEnabled).toBe(false);
-    expect(legacy.loadoutSchemaVersion).toBe(2);
+    expect(legacy.loadoutSchemaVersion).toBe(3);
 
     const manual = normalizeLoadout({
       baseDamage: { mode: "manual", manualValue: 1234 },
@@ -67,7 +67,7 @@ describe("normalizeLoadout", () => {
 
   it("migrates pre-v2 stored startingAdrenaline 0 to open-at-max null", () => {
     expect(normalizeLoadout({ startingAdrenaline: 0 }).startingAdrenaline).toBeNull();
-    expect(normalizeLoadout({ startingAdrenaline: 0 }).loadoutSchemaVersion).toBe(2);
+    expect(normalizeLoadout({ startingAdrenaline: 0 }).loadoutSchemaVersion).toBe(3);
     expect(normalizeLoadout({}).startingAdrenaline).toBeNull();
     // Intentional 0 after schema v2 is preserved.
     expect(
@@ -76,6 +76,34 @@ describe("normalizeLoadout", () => {
     expect(
       normalizeLoadout({ loadoutSchemaVersion: 2, startingAdrenaline: 72 }).startingAdrenaline,
     ).toBe(72);
+  });
+
+  it("migrates a pre-v3 boss preset attack rate for incoming-hit effects", () => {
+    const migrated = normalizeLoadout({
+      loadoutSchemaVersion: 2,
+      style: "melee",
+      target: {
+        targetPresetId: "boss:commander-zilyana",
+        defenceLevel: 75,
+        armour: 1694,
+        affinity: 55,
+      },
+    });
+    expect(migrated.loadoutSchemaVersion).toBe(3);
+    expect(migrated.target?.incomingHitIntervalSeconds).toBe(1.2);
+
+    const manual = normalizeLoadout({
+      loadoutSchemaVersion: 2,
+      style: "melee",
+      target: {
+        targetPresetId: "boss:commander-zilyana",
+        defenceLevel: 75,
+        armour: 1694,
+        affinity: 55,
+        incomingHitIntervalSeconds: 4.2,
+      },
+    });
+    expect(manual.target?.incomingHitIntervalSeconds).toBe(4.2);
   });
 
   it("ignores legacy manual base values", () => {
@@ -248,12 +276,12 @@ describe("normalizeLoadout", () => {
   });
 
   it("migrates legacy affinity kind strings to exact percents", () => {
-    expect(normalizeLoadout({ target: { defenceLevel: 80, affinity: "weak" } }).target?.affinity).toBe(
-      70,
-    );
-    expect(normalizeLoadout({ target: { defenceLevel: 80, affinity: "same" } }).target?.affinity).toBe(
-      60,
-    );
+    expect(
+      normalizeLoadout({ target: { defenceLevel: 80, affinity: "weak" } }).target?.affinity,
+    ).toBe(70);
+    expect(
+      normalizeLoadout({ target: { defenceLevel: 80, affinity: "same" } }).target?.affinity,
+    ).toBe(60);
     expect(
       normalizeLoadout({ target: { defenceLevel: 80, affinity: "strong" } }).target?.affinity,
     ).toBe(50);
@@ -266,16 +294,16 @@ describe("normalizeLoadout", () => {
     expect(normalizeLoadout({ target: { defenceLevel: 80, affinity: 55 } }).target?.affinity).toBe(
       55,
     );
-    expect(normalizeLoadout({ target: { defenceLevel: 80, affinity: 0 } }).target?.affinity).toBe(1);
+    expect(normalizeLoadout({ target: { defenceLevel: 80, affinity: 0 } }).target?.affinity).toBe(
+      1,
+    );
     expect(normalizeLoadout({ target: { defenceLevel: 80, affinity: 200 } }).target?.affinity).toBe(
       100,
     );
   });
 
   it("keeps a target when affinity is valid and drops only unusable affinity", () => {
-    expect(
-      normalizeLoadout({ target: { defenceLevel: 80, affinity: "nope" } }).target,
-    ).toBeNull();
+    expect(normalizeLoadout({ target: { defenceLevel: 80, affinity: "nope" } }).target).toBeNull();
     expect(
       normalizeLoadout({
         target: { defenceLevel: 99, armour: 10, affinity: 55, demon: true },

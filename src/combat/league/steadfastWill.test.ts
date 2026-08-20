@@ -10,6 +10,7 @@ import { shieldBashingPerkModifier } from "../shared/perks";
 import { meetsWeaponRequirement } from "../shared/requirements";
 import { buildCandidatePool } from "../solver/candidatePool";
 import { abilityStyleForBar } from "../styles/shared/allStyleAbilities";
+import { revengeDamageMultiplier } from "../styles/shared/revenge";
 import {
   BASH,
   DEBILITATE,
@@ -189,6 +190,7 @@ describe("Steadfast Will shield DPS", () => {
     expect(ctx.getState().defence.revenge.stacks).toBe(4);
     ctx.advanceTo(20);
     expect(ctx.getState().defence.revenge.stacks).toBe(20);
+    expect(revengeDamageMultiplier(ctx.getState().defence.revenge, 20)).toBe(2);
   });
 
   it("records the disclosed partial support boundary", () => {

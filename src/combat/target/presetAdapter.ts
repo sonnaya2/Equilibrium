@@ -15,10 +15,7 @@ export interface MaterializedTargetFields {
   undead?: boolean;
   demon?: boolean;
   dragon?: boolean;
-  /**
-   * Derived from wiki attackRateTicks (ticks * 0.6s). Seeds Barkscales/Icyenic/Revenge
-   * scenario only; not part of Modified defence/affinity comparison.
-   */
+  /** Derived from wiki attackRateTicks (ticks * 0.6s). */
   incomingHitIntervalSeconds?: number;
   /** Sourced wiki ticks when present; for UI rate labels. */
   attackRateTicks?: number;
@@ -38,10 +35,7 @@ export function necromancyAffinityFromProfile(profile: TargetAffinityProfile): n
 }
 
 /** Resolve one affinity percent from a style profile. */
-export function affinityForStyle(
-  profile: TargetAffinityProfile,
-  style: CombatStyle,
-): number {
+export function affinityForStyle(profile: TargetAffinityProfile, style: CombatStyle): number {
   if (style === "necromancy") return necromancyAffinityFromProfile(profile);
   if (style === "melee") return sanitizeAffinity(profile.melee);
   if (style === "ranged") return sanitizeAffinity(profile.ranged);
@@ -106,6 +100,7 @@ export function targetDiffersFromPreset(
     undead?: boolean;
     demon?: boolean;
     dragon?: boolean;
+    incomingHitIntervalSeconds?: number;
   },
   materialized: MaterializedTargetFields,
 ): boolean {
@@ -118,5 +113,11 @@ export function targetDiffersFromPreset(
   if ((target.undead === true) !== (materialized.undead === true)) return true;
   if ((target.demon === true) !== (materialized.demon === true)) return true;
   if ((target.dragon === true) !== (materialized.dragon === true)) return true;
+  if (
+    (target.incomingHitIntervalSeconds ?? null) !==
+    (materialized.incomingHitIntervalSeconds ?? null)
+  ) {
+    return true;
+  }
   return false;
 }

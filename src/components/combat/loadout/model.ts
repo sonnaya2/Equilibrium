@@ -9,10 +9,7 @@ import {
 import { equipmentById } from "@/combat/data";
 import type { EquipmentSlot } from "@/combat/data/records";
 import { hasEssenceOfFinalityEquipped } from "@/combat/shared/requirements";
-import {
-  normalizeSavedEquipmentId,
-  normalizeSelectedAmmunitionId,
-} from "./ammunitionSelection";
+import { normalizeSavedEquipmentId, normalizeSelectedAmmunitionId } from "./ammunitionSelection";
 import {
   isRelicGrantedItemAvailable,
   relicGrantedItemForRelic,
@@ -58,10 +55,7 @@ import {
   resolveAffinityPercent,
   sanitizeAffinity,
 } from "@/combat/target/genericTarget";
-import {
-  materializeTargetPreset,
-  targetDiffersFromPreset,
-} from "@/combat/target/presetAdapter";
+import { materializeTargetPreset, targetDiffersFromPreset } from "@/combat/target/presetAdapter";
 import type { CombatStyle } from "@/combat/types";
 import type { RegionId } from "@/league";
 
@@ -434,7 +428,7 @@ export function normalizeArchaeology(
 }
 
 /** Bump when normalizeLoadout needs a one-shot field migration. */
-export const LOADOUT_SCHEMA_VERSION = 2;
+export const LOADOUT_SCHEMA_VERSION = 3;
 
 /** null stored start = open at max adrenaline for this loadout. */
 export function resolvedStartingAdrenaline(
@@ -447,10 +441,7 @@ export function resolvedStartingAdrenaline(
 }
 
 /** Persist UI input; at or above max stays open-at-max (null). */
-export function persistStartingAdrenaline(
-  value: number,
-  maxAdrenaline: number,
-): number | null {
+export function persistStartingAdrenaline(value: number, maxAdrenaline: number): number | null {
   const cap = Number.isFinite(maxAdrenaline) ? Math.max(0, Math.round(maxAdrenaline)) : 100;
   if (!Number.isFinite(value)) return null;
   const n = Math.min(cap, Math.max(0, Math.round(value)));
@@ -1337,6 +1328,22 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
           : Math.min(startingAdrenalineCap, Math.max(0, Math.round(rawStart)))
         : DEFAULT_LOADOUT.startingAdrenaline;
 
+  const storedIncomingHitIntervalSeconds =
+    Number.isFinite(rawTarget?.incomingHitIntervalSeconds) &&
+    Number(rawTarget?.incomingHitIntervalSeconds) > 0
+      ? Number(rawTarget?.incomingHitIntervalSeconds)
+      : undefined;
+  let incomingHitIntervalSeconds = storedIncomingHitIntervalSeconds;
+  if (
+    incomingHitIntervalSeconds == null &&
+    rawSchemaVersion < 3 &&
+    typeof rawTarget?.targetPresetId === "string"
+  ) {
+    const preset = targetPresetById(rawTarget.targetPresetId);
+    const fields = preset ? materializeTargetPreset(preset, { style }) : null;
+    incomingHitIntervalSeconds = fields?.incomingHitIntervalSeconds;
+  }
+
   return {
     style,
     level,
@@ -1380,7 +1387,9 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
     startingAdrenaline,
     loadoutSchemaVersion: LOADOUT_SCHEMA_VERSION,
     hitCapEnabled: raw.hitCapEnabled === true,
-    ...(typeof raw.slayerLevel === 'number' && Number.isFinite(raw.slayerLevel) && raw.slayerLevel > 0
+    ...(typeof raw.slayerLevel === "number" &&
+    Number.isFinite(raw.slayerLevel) &&
+    raw.slayerLevel > 0
       ? { slayerLevel: Math.min(200, Math.floor(raw.slayerLevel)) }
       : {}),
     accuracy: clamp(raw.accuracy, 0, 100, DEFAULT_LOADOUT.accuracy),
@@ -1392,8 +1401,7 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
             armour: Math.max(0, num(rawTarget.armour, 0)),
             affinity: parseLoadoutAffinity(rawTarget.affinity)!,
             additiveHitChance: clamp(rawTarget.additiveHitChance, -100, 100, 0),
-            ...(typeof rawTarget.targetPresetId === "string" &&
-            rawTarget.targetPresetId.length > 0
+            ...(typeof rawTarget.targetPresetId === "string" && rawTarget.targetPresetId.length > 0
               ? { targetPresetId: rawTarget.targetPresetId }
               : {}),
             ...(parseLoadoutAffinity(rawTarget.weaknessAffinity) != null
@@ -1441,12 +1449,7 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
             ...(rawTarget.dragon === true ? { dragon: true } : {}),
             ...(rawTarget.onSlayerTask === true ? { onSlayerTask: true } : {}),
             ...(rawTarget.poisonImmune === true ? { poisonImmune: true } : {}),
-            ...(Number.isFinite(rawTarget.incomingHitIntervalSeconds) &&
-            Number(rawTarget.incomingHitIntervalSeconds) > 0
-              ? {
-                  incomingHitIntervalSeconds: Number(rawTarget.incomingHitIntervalSeconds),
-                }
-              : {}),
+            ...(incomingHitIntervalSeconds != null ? { incomingHitIntervalSeconds } : {}),
             ...(Number.isFinite(rawTarget.incomingHitDamage) &&
             Number(rawTarget.incomingHitDamage) >= 0
               ? { incomingHitDamage: Number(rawTarget.incomingHitDamage) }
@@ -1481,9 +1484,7 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
       undeadSlayer: legacyToggleRank(rawPerks.undeadSlayer),
     },
     gizmos: normalizeGizmos((raw as { gizmos?: unknown }).gizmos),
-    powerArchive: normalizePowerArchiveState(
-      (raw as { powerArchive?: unknown }).powerArchive,
-    ),
+    powerArchive: normalizePowerArchiveState((raw as { powerArchive?: unknown }).powerArchive),
     buffs: {
       useEquippedWeaponSpecial: rawBuffs.useEquippedWeaponSpecial === true,
       weaponSpecialAfterAbilityId:

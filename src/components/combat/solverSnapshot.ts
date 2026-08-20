@@ -56,6 +56,10 @@ export function solverSnapshotFromResolvedModel(model: ResolvedCombatModel): Sol
     ...(model.playerVitality ? { playerVitality: { ...model.playerVitality } } : {}),
     playerPoison: { ...model.playerPoison },
     targetPoisonImmune: model.target.poisonImmune === true,
+    ...(model.target.incomingHitIntervalSeconds != null &&
+    model.target.incomingHitIntervalSeconds > 0
+      ? { incomingHitIntervalSeconds: model.target.incomingHitIntervalSeconds }
+      : {}),
     cap: model.cap,
     startingAdrenaline: model.startingAdrenaline,
     ...(model.naturalInstinctUntilTick != null

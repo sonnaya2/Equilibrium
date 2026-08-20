@@ -46,12 +46,12 @@ describe("targetPresetUi", () => {
   });
 
   it("seeds Zilyana 2t and Graardor 6t intervals", () => {
-    expect(applyTargetPreset("boss:commander-zilyana", "melee", null)?.incomingHitIntervalSeconds).toBe(
-      1.2,
-    );
-    expect(applyTargetPreset("boss:general-graardor", "melee", null)?.incomingHitIntervalSeconds).toBe(
-      3.6,
-    );
+    expect(
+      applyTargetPreset("boss:commander-zilyana", "melee", null)?.incomingHitIntervalSeconds,
+    ).toBe(1.2);
+    expect(
+      applyTargetPreset("boss:general-graardor", "melee", null)?.incomingHitIntervalSeconds,
+    ).toBe(3.6);
   });
 
   it("marks modified when affinity is edited, reset restores", () => {
@@ -62,6 +62,17 @@ describe("targetPresetUi", () => {
     const reset = resetTargetToPreset(edited, "melee");
     expect(reset.affinity).toBe(55);
     expect(isTargetModifiedFromPreset(reset, "melee")).toBe(false);
+  });
+
+  it("marks a missing or edited preset attack interval as modified", () => {
+    const base = applyTargetPreset("boss:commander-zilyana", "melee", null)!;
+    expect(isTargetModifiedFromPreset(base, "melee")).toBe(false);
+    expect(
+      isTargetModifiedFromPreset({ ...base, incomingHitIntervalSeconds: undefined }, "melee"),
+    ).toBe(true);
+    expect(isTargetModifiedFromPreset({ ...base, incomingHitIntervalSeconds: 2.4 }, "melee")).toBe(
+      true,
+    );
   });
 
   it("keeps custom target when preset id is unknown", () => {

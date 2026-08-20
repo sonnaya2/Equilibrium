@@ -352,6 +352,7 @@ describe("toResolvedCombatModel", () => {
         demon: true,
         elementalWeakness: "water",
         dragonfireImmune: true,
+        incomingHitIntervalSeconds: 2.4,
       },
     });
     const model = toResolvedCombatModel(loadout, { now: NOW });
@@ -361,6 +362,7 @@ describe("toResolvedCombatModel", () => {
 
     expect(fromPack).toEqual(fromModel);
     expect(fromSnap).toEqual(fromModel);
+    expect(fromSnap.incomingHitIntervalSeconds).toBe(2.4);
     expect(fromModel.modifierSources.target).toMatchObject({
       elementalWeakness: "water",
       dragonfireImmune: true,

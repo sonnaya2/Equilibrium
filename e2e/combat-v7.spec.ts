@@ -492,6 +492,70 @@ test("a shield Revolution bar loads the new Defence ability icons", async ({ pag
   }
 });
 
+test("Revenge raises damage through the editable shield bar", async ({ page }) => {
+  await openCombat(page);
+  await page.evaluate(() => {
+    localStorage.setItem(
+      "eq:build:v1",
+      JSON.stringify({
+        elective: [],
+        relics: {},
+        blessingPicks: ["Order", "Order", "Order"],
+        blessingSelections: [],
+        blessingResetsUsed: 0,
+      }),
+    );
+    localStorage.setItem(
+      "eq:loadout:v1",
+      JSON.stringify({
+        style: "melee",
+        startingAdrenaline: 100,
+        equipmentSlots: {
+          mainhand: "item:drygore-mace",
+          offhand: "item:malevolent-kiteshield",
+        },
+        target: {
+          defenceLevel: 80,
+          affinity: 70,
+          incomingHitIntervalSeconds: 2.4,
+        },
+      }),
+    );
+    localStorage.setItem(
+      "eq:rotation-workspace:v1",
+      JSON.stringify({
+        version: 1,
+        mode: "revolution",
+        activeBars: { "melee|shield": ["revenge", "attack"] },
+        runDurationSeconds: 24,
+        limitToRegions: false,
+      }),
+    );
+  });
+  await page.reload();
+  await page.getByRole("tab", { name: "Rotation", exact: true }).click();
+  await page.getByTestId("revo-run-button").click();
+  await expect(page.getByTestId("revo-damage")).toBeVisible({ timeout: 120_000 });
+  const withIncoming = Number(
+    (await page.getByTestId("revo-damage").innerText()).replace(/,/g, ""),
+  );
+
+  await page.evaluate(() => {
+    const loadout = JSON.parse(localStorage.getItem("eq:loadout:v1") ?? "{}");
+    delete loadout.target.incomingHitIntervalSeconds;
+    localStorage.setItem("eq:loadout:v1", JSON.stringify(loadout));
+  });
+  await page.reload();
+  await page.getByRole("tab", { name: "Rotation", exact: true }).click();
+  await page.getByTestId("revo-run-button").click();
+  await expect(page.getByTestId("revo-damage")).toBeVisible({ timeout: 120_000 });
+  const withoutIncoming = Number(
+    (await page.getByTestId("revo-damage").innerText()).replace(/,/g, ""),
+  );
+
+  expect(withIncoming).toBeGreaterThan(withoutIncoming);
+});
+
 test("inline loadout edits persist and refresh engine-backed summary values", async ({ page }) => {
   await openCombat(page);
   const summary = page.getByRole("region", { name: "Combat results" });

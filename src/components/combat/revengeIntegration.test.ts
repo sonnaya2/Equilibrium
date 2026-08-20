@@ -9,7 +9,7 @@ import { DEFAULT_LOADOUT, normalizeLoadout } from "./loadout/model";
 import { solverSnapshotFromResolvedModel } from "./solverSnapshot";
 
 describe("Revenge loadout integration", () => {
-  it("keeps the target attack interval through Run and solver worker inputs", async () => {
+  it("surfaces stacks and beats attack-only through Run and solver worker inputs", async () => {
     const run = (incomingHitIntervalSeconds?: number) => {
       const loadout = normalizeLoadout({
         ...DEFAULT_LOADOUT,
@@ -33,11 +33,12 @@ describe("Revenge loadout integration", () => {
       return {
         input,
         solverBase: packSimBase(solverSnapshotFromResolvedModel(model)),
+        catalogue,
         summary: simulateRevolution(
           toRevolutionInput(input, {
             bar: [catalogue.byId.get("revenge")!, catalogue.byId.get("attack")!],
             style: "melee",
-            durationTicks: 24,
+            durationTicks: 100,
           }),
         ),
       };
@@ -45,6 +46,13 @@ describe("Revenge loadout integration", () => {
 
     const noIncoming = run();
     const incoming = run(2.4);
+    const withoutRevenge = simulateRevolution(
+      toRevolutionInput(incoming.input, {
+        bar: [incoming.catalogue.byId.get("attack")!],
+        style: "melee",
+        durationTicks: 100,
+      }),
+    );
 
     expect(incoming.input.incomingHitIntervalSeconds).toBe(2.4);
     expect(incoming.solverBase.incomingHitIntervalSeconds).toBe(2.4);
@@ -53,23 +61,42 @@ describe("Revenge loadout integration", () => {
     expect(incoming.summary.perAbility.attack).toBeGreaterThan(
       noIncoming.summary.perAbility.attack,
     );
+    expect(incoming.summary.totalExpected).toBeGreaterThan(withoutRevenge.totalExpected);
+    const revengeStates = incoming.summary.events.flatMap(
+      (event) => event.appliedEffects?.filter((effect) => effect.id === "revenge") ?? [],
+    );
+    expect(revengeStates.length).toBeGreaterThan(0);
+    expect(Math.max(...revengeStates.map((effect) => effect.stackCount ?? 0))).toBe(16);
+    expect(Math.max(...revengeStates.map((effect) => effect.damageMultiplier ?? 1))).toBe(1.8);
+    expect(
+      noIncoming.summary.events.some((event) =>
+        event.appliedEffects?.some((effect) => effect.id === "revenge"),
+      ),
+    ).toBe(false);
 
-    const workerRun = async (loadout: typeof incoming.solverBase) =>
+    const workerRun = async (
+      loadout: typeof incoming.solverBase,
+      barIds: readonly string[] = ["revenge", "attack"],
+    ) =>
       runUiRevolution(
         {
           loadout,
-          barIds: ["revenge", "attack"],
+          barIds,
           style: "melee",
-          durationTicks: 24,
+          durationTicks: 100,
         },
         { forceMainThread: true },
       );
-    const [workerNoIncoming, workerIncoming] = await Promise.all([
+    const [workerNoIncoming, workerIncoming, workerWithoutRevenge] = await Promise.all([
       workerRun(noIncoming.solverBase),
       workerRun(incoming.solverBase),
+      workerRun(incoming.solverBase, ["attack"]),
     ]);
     expect(workerIncoming.summary.perAbility.attack).toBeGreaterThan(
       workerNoIncoming.summary.perAbility.attack,
+    );
+    expect(workerIncoming.summary.totalExpected).toBeGreaterThan(
+      workerWithoutRevenge.summary.totalExpected,
     );
   });
 });

@@ -363,6 +363,9 @@ function EventTable({
                         <GameIcon src={effectIconPath(effect.id)} size={14} />
                         {effectName(effect.id, nameForId)}
                         {effect.stackCount != null ? ` · ${effect.stackCount} stacks` : ""}
+                        {effect.damageMultiplier != null
+                          ? ` · +${formatExpected((effect.damageMultiplier - 1) * 100)}% damage`
+                          : ""}
                         {effect.remainingTicks != null
                           ? ` · ${ticksToSeconds(effect.remainingTicks).toFixed(1)}s left`
                           : ""}
@@ -442,6 +445,17 @@ export function RotationAnalysisModal({
     () => bySourceRows.reduce((sum, row) => sum + row.damage, 0),
     [bySourceRows],
   );
+  const revengeAnalysis = useMemo(() => {
+    const states = result.events.flatMap(
+      (event) => event.appliedEffects?.filter((effect) => effect.id === "revenge") ?? [],
+    );
+    if (states.length === 0) return null;
+    return {
+      peakStacks: Math.max(...states.map((state) => state.stackCount ?? 0)),
+      peakMultiplier: Math.max(...states.map((state) => state.damageMultiplier ?? 1)),
+      boostedEvents: states.length,
+    };
+  }, [result.events]);
 
   return (
     <dialog
@@ -482,6 +496,16 @@ export function RotationAnalysisModal({
               ["DPS", formatNumber(result.dps)],
               ["Critical contribution", formatNumber(result.analysis.criticalContribution)],
               ["Lost to hit caps", formatNumber(result.analysis.capLoss)],
+              ...(revengeAnalysis
+                ? [
+                    ["Revenge peak", `${revengeAnalysis.peakStacks} stacks`],
+                    [
+                      "Peak Revenge modifier",
+                      `+${formatExpected((revengeAnalysis.peakMultiplier - 1) * 100)}% damage`,
+                    ],
+                    ["Revenge-boosted events", formatNumber(revengeAnalysis.boostedEvents)],
+                  ]
+                : []),
             ].map(([label, value]) => (
               <div key={label} className="rotation-analysis-metric">
                 <dt>{label}</dt>

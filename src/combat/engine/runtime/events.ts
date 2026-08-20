@@ -85,6 +85,7 @@ export interface AppliedEventEffect {
   id: string;
   stackCount?: number;
   remainingTicks?: number;
+  damageMultiplier?: number;
 }
 
 export interface ResolvedEvent<RT = unknown> extends Omit<ScheduledEvent<RT>, "resolve"> {

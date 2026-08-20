@@ -18,6 +18,7 @@ import { sacrificeExpectedHeal } from "../../styles/shared/constitutionAbilities
 import { shouldRetainHitDetail } from "./hitDetailsRetention";
 import { blessingRule } from "../../league/ruleset";
 import type { AppliedEventEffect } from "../runtime/events";
+import { revengeDamageMultiplier } from "../../styles/shared/revenge";
 
 export function recordAppliedEventEffect(
   rt: SimulationRuntime,
@@ -122,6 +123,17 @@ export function recordEventAccounting(
 
   const { resolve: _resolve, ...provenance } = event;
   const parasite = rt.state.target.melee.abyssalParasite;
+  const revenge = rt.state.defence.revenge;
+  const revengeMultiplier = revengeDamageMultiplier(revenge, event.tick);
+  const revengeEffect: AppliedEventEffect | null =
+    damage.expected > 0 && event.provenance.kind !== "target_status" && revengeMultiplier > 1
+      ? {
+          id: "revenge",
+          stackCount: revenge.stacks,
+          remainingTicks: Math.max(0, revenge.untilTick - event.tick),
+          damageMultiplier: revengeMultiplier,
+        }
+      : null;
   const spiritMeta = rt.spiritEventMeta.get(event.seq);
   const commandConjureId = COMMAND_REQUIRES_CONJURE[event.abilityId];
   const commandSpirit =
@@ -147,5 +159,6 @@ export function recordEventAccounting(
       : {}),
     ...(event.abilityId === "abyssal_parasite" ? { stackCount: parasite.stacks } : {}),
     ...(remainingTicks !== undefined ? { remainingTicks } : {}),
+    ...(revengeEffect ? { appliedEffects: [revengeEffect] } : {}),
   });
 }

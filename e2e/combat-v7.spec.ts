@@ -536,24 +536,31 @@ test("Revenge raises damage through the editable shield bar", async ({ page }) =
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await page.getByTestId("revo-run-button").click();
   await expect(page.getByTestId("revo-damage")).toBeVisible({ timeout: 120_000 });
-  const withIncoming = Number(
-    (await page.getByTestId("revo-damage").innerText()).replace(/,/g, ""),
-  );
+  const withRevenge = Number((await page.getByTestId("revo-damage").innerText()).replace(/,/g, ""));
+  await page.getByRole("button", { name: "Analyze damage" }).click();
+  const analysis = page.getByRole("dialog", { name: "Damage analysis" });
+  await expect(analysis.getByText("Revenge peak", { exact: true })).toBeVisible();
+  await expect(analysis.locator(".rotation-analysis-metrics").getByText("10 stacks")).toBeVisible();
+  await expect(
+    analysis.locator(".rotation-analysis-metrics").getByText("+50% damage"),
+  ).toBeVisible();
+  await expect(analysis.getByText(/Revenge · \d+ stacks · \+\d+% damage/).first()).toBeVisible();
+  await analysis.getByRole("button", { name: "Close damage analysis" }).click();
 
   await page.evaluate(() => {
-    const loadout = JSON.parse(localStorage.getItem("eq:loadout:v1") ?? "{}");
-    delete loadout.target.incomingHitIntervalSeconds;
-    localStorage.setItem("eq:loadout:v1", JSON.stringify(loadout));
+    const workspace = JSON.parse(localStorage.getItem("eq:rotation-workspace:v1") ?? "{}");
+    workspace.activeBars = { "melee|shield": ["attack"] };
+    localStorage.setItem("eq:rotation-workspace:v1", JSON.stringify(workspace));
   });
   await page.reload();
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
   await page.getByTestId("revo-run-button").click();
   await expect(page.getByTestId("revo-damage")).toBeVisible({ timeout: 120_000 });
-  const withoutIncoming = Number(
+  const withoutRevenge = Number(
     (await page.getByTestId("revo-damage").innerText()).replace(/,/g, ""),
   );
 
-  expect(withIncoming).toBeGreaterThan(withoutIncoming);
+  expect(withRevenge).toBeGreaterThan(withoutRevenge);
 });
 
 test("inline loadout edits persist and refresh engine-backed summary values", async ({ page }) => {

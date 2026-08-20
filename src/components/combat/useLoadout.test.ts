@@ -53,7 +53,7 @@ describe("normalizeLoadout", () => {
     expect(legacy.baseDamage).toEqual({ mode: "automatic" });
     expect(legacy.startingAdrenaline).toBe(100);
     expect(legacy.hitCapEnabled).toBe(false);
-    expect(legacy.loadoutSchemaVersion).toBe(3);
+    expect(legacy.loadoutSchemaVersion).toBe(4);
 
     const manual = normalizeLoadout({
       baseDamage: { mode: "manual", manualValue: 1234 },
@@ -67,7 +67,7 @@ describe("normalizeLoadout", () => {
 
   it("migrates pre-v2 stored startingAdrenaline 0 to open-at-max null", () => {
     expect(normalizeLoadout({ startingAdrenaline: 0 }).startingAdrenaline).toBeNull();
-    expect(normalizeLoadout({ startingAdrenaline: 0 }).loadoutSchemaVersion).toBe(3);
+    expect(normalizeLoadout({ startingAdrenaline: 0 }).loadoutSchemaVersion).toBe(4);
     expect(normalizeLoadout({}).startingAdrenaline).toBeNull();
     // Intentional 0 after schema v2 is preserved.
     expect(
@@ -78,9 +78,9 @@ describe("normalizeLoadout", () => {
     ).toBe(72);
   });
 
-  it("migrates a pre-v3 boss preset attack rate for incoming-hit effects", () => {
+  it("migrates a pre-v4 boss preset attack rate for incoming-hit effects", () => {
     const migrated = normalizeLoadout({
-      loadoutSchemaVersion: 2,
+      loadoutSchemaVersion: 3,
       style: "melee",
       target: {
         targetPresetId: "boss:commander-zilyana",
@@ -89,11 +89,11 @@ describe("normalizeLoadout", () => {
         affinity: 55,
       },
     });
-    expect(migrated.loadoutSchemaVersion).toBe(3);
+    expect(migrated.loadoutSchemaVersion).toBe(4);
     expect(migrated.target?.incomingHitIntervalSeconds).toBe(1.2);
 
     const manual = normalizeLoadout({
-      loadoutSchemaVersion: 2,
+      loadoutSchemaVersion: 3,
       style: "melee",
       target: {
         targetPresetId: "boss:commander-zilyana",
@@ -104,6 +104,18 @@ describe("normalizeLoadout", () => {
       },
     });
     expect(manual.target?.incomingHitIntervalSeconds).toBe(4.2);
+
+    const clearedAfterMigration = normalizeLoadout({
+      loadoutSchemaVersion: 4,
+      style: "melee",
+      target: {
+        targetPresetId: "boss:commander-zilyana",
+        defenceLevel: 75,
+        armour: 1694,
+        affinity: 55,
+      },
+    });
+    expect(clearedAfterMigration.target?.incomingHitIntervalSeconds).toBeUndefined();
   });
 
   it("ignores legacy manual base values", () => {

@@ -109,6 +109,7 @@ describe("Revenge loadout integration", () => {
   it("casts Revenge and Preparation in the production Revo++ search", async () => {
     const loadout = normalizeLoadout({
       ...DEFAULT_LOADOUT,
+      loadoutSchemaVersion: 3,
       style: "melee",
       startingAdrenaline: 100,
       equipmentSlots: {
@@ -116,9 +117,10 @@ describe("Revenge loadout integration", () => {
         offhand: "item:malevolent-kiteshield",
       },
       target: {
-        defenceLevel: 80,
-        affinity: 70,
-        incomingHitIntervalSeconds: 2.4,
+        targetPresetId: "boss:commander-zilyana",
+        defenceLevel: 75,
+        armour: 1694,
+        affinity: 55,
       },
     });
     const build: BuildState = {
@@ -176,6 +178,7 @@ describe("Revenge loadout integration", () => {
     const casts = run.summary.casts.map((cast) => cast.abilityId);
 
     expect(request.permittedCategories).toContain("threshold");
+    expect(model.target.incomingHitIntervalSeconds).toBe(1.2);
     expect(result.bar).toContain("revenge");
     expect(result.bar).toContain("preparation");
     expect(casts).toContain("revenge");

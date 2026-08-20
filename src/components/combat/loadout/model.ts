@@ -428,7 +428,7 @@ export function normalizeArchaeology(
 }
 
 /** Bump when normalizeLoadout needs a one-shot field migration. */
-export const LOADOUT_SCHEMA_VERSION = 3;
+export const LOADOUT_SCHEMA_VERSION = 4;
 
 /** null stored start = open at max adrenaline for this loadout. */
 export function resolvedStartingAdrenaline(
@@ -1336,7 +1336,7 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
   let incomingHitIntervalSeconds = storedIncomingHitIntervalSeconds;
   if (
     incomingHitIntervalSeconds == null &&
-    rawSchemaVersion < 3 &&
+    rawSchemaVersion < 4 &&
     typeof rawTarget?.targetPresetId === "string"
   ) {
     const preset = targetPresetById(rawTarget.targetPresetId);

@@ -580,6 +580,7 @@ test("Revo++ optimizes Revenge with a shield and incoming attacks", async ({ pag
     localStorage.setItem(
       "eq:loadout:v1",
       JSON.stringify({
+        loadoutSchemaVersion: 3,
         style: "melee",
         startingAdrenaline: 100,
         equipmentSlots: {
@@ -587,9 +588,10 @@ test("Revo++ optimizes Revenge with a shield and incoming attacks", async ({ pag
           offhand: "item:malevolent-kiteshield",
         },
         target: {
-          defenceLevel: 80,
-          affinity: 70,
-          incomingHitIntervalSeconds: 2.4,
+          targetPresetId: "boss:commander-zilyana",
+          defenceLevel: 75,
+          armour: 1694,
+          affinity: 55,
         },
       }),
     );

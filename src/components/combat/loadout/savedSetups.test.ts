@@ -169,6 +169,32 @@ describe("saved setup state", () => {
     expect(normalizeSavedSetupCollection(migrated)).toEqual(migrated);
   });
 
+  it("restores boss attack cadence in schema-three saved setups", () => {
+    const migrated = normalizeSavedSetupCollection({
+      version: 2,
+      activeSetupId: "zilyana",
+      setups: [
+        {
+          id: "zilyana",
+          name: "Zilyana",
+          loadout: {
+            loadoutSchemaVersion: 3,
+            style: "melee",
+            target: {
+              targetPresetId: "boss:commander-zilyana",
+              defenceLevel: 75,
+              armour: 1694,
+              affinity: 55,
+            },
+          },
+        },
+      ],
+    });
+
+    expect(migrated.setups[0].loadout.loadoutSchemaVersion).toBe(4);
+    expect(migrated.setups[0].loadout.target?.incomingHitIntervalSeconds).toBe(1.2);
+  });
+
   it("round-trips exports and rejects malformed or unsupported imports", () => {
     const collection = addSavedSetup(createSavedSetupCollection(), { name: "Second" });
     const imported = importSavedSetups(exportSavedSetups(collection));

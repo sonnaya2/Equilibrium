@@ -255,6 +255,51 @@ export type LeagueAttachedTerm = {
   amount: number;
 };
 
+function attachedHitDelta(after: HitResult, before: HitResult): HitResult {
+  return {
+    potential: after.potential,
+    min: after.min - before.min,
+    max: after.max - before.max,
+    critMin: after.critMin - before.critMin,
+    critMax: after.critMax - before.critMax,
+    critChance: after.critChance,
+    critDamageBonus: after.critDamageBonus,
+    nonCritExpected: after.nonCritExpected - before.nonCritExpected,
+    critExpected: after.critExpected - before.critExpected,
+    expected: after.expected - before.expected,
+    uncappedExpected: after.uncappedExpected - before.uncappedExpected,
+    capLoss: after.capLoss - before.capLoss,
+    ...(after.postDamagePotentialFlatContribution !== undefined ||
+    before.postDamagePotentialFlatContribution !== undefined
+      ? {
+          postDamagePotentialFlatContribution:
+            (after.postDamagePotentialFlatContribution ?? 0) -
+            (before.postDamagePotentialFlatContribution ?? 0),
+        }
+      : {}),
+  };
+}
+
+function composeLeagueAttachedResult(
+  composed: ReturnType<typeof calculateRawHitBandWithAttached>,
+  terms: readonly LeagueAttachedTerm[],
+  combinedHit: HitResult,
+  bigBonedHit: HitResult | undefined,
+  bonusTargetId?: string,
+): LeagueAttachedHostResult {
+  const pipelineHits = new Map(composed.attached.map((attached) => [attached.id, attached.hit]));
+  const deltas = terms.map((term) => {
+    const termHit = term.id === "big-boned" ? bigBonedHit : pipelineHits.get(term.id);
+    if (!termHit) throw new Error(`Missing attached damage result for ${term.id}`);
+    return { id: term.id, hit: termHit };
+  });
+  return {
+    hit: combinedHit,
+    baseHit: composed.baseHit,
+    components: leagueAttachedComponents(deltas, terms, bonusTargetId),
+  };
+}
+
 export function resolveLeagueAttachedTerms(input: {
   rules: ResolvedLeagueRules;
   source: BlessingDamageSource | DamageProvenance;
@@ -312,7 +357,7 @@ function leagueAttachedComponents(
   });
 }
 
-/** Resolve Big Boned and Cinders inside the host hit's own pipeline and cap. */
+/** Resolve Cinders in the host pipeline, then append Big Boned as late flat damage. */
 export function resolveLeagueAttachedHost(
   input: LeagueAttachedHostInput,
 ): LeagueAttachedHostResult {
@@ -350,19 +395,37 @@ export function resolveLeagueAttachedHost(
     rules: input.rules,
     abilityBase: input.attachedTermBase ?? prepared.base,
   });
+  const pipelineTerms = terms.filter((term) => term.id !== "big-boned");
+  const hitInput = {
+    ...input,
+    base: prepared.base,
+    modifiers: prepared.modifiers,
+    provenance,
+    context,
+    crit,
+  };
   const composed = calculateHitWithAttached(
-    {
-      ...input,
-      base: prepared.base,
-      modifiers: prepared.modifiers,
-      provenance,
-      context,
-      crit,
-    },
-    terms.map(({ id, amount }) => ({ id, amount })),
+    hitInput,
+    pipelineTerms.map(({ id, amount }) => ({ id, amount })),
   );
-  const components = leagueAttachedComponents(composed.attached, terms, input.bonusTargetId);
-  return { hit: composed.hit, baseHit: composed.baseHit, components };
+  const bigBoned = terms.find((term) => term.id === "big-boned");
+  const combined = bigBoned
+    ? calculateHitWithAttached(
+        {
+          ...hitInput,
+          postDamagePotentialCritFlat:
+            (hitInput.postDamagePotentialCritFlat ?? 0) + bigBoned.amount,
+        },
+        pipelineTerms.map(({ id, amount }) => ({ id, amount })),
+      )
+    : composed;
+  return composeLeagueAttachedResult(
+    composed,
+    terms,
+    combined.hit,
+    bigBoned ? attachedHitDelta(combined.hit, composed.hit) : undefined,
+    input.bonusTargetId,
+  );
 }
 
 export interface LeagueAttachedRawHostInput extends RawHitBandInput {
@@ -397,15 +460,30 @@ export function resolveLeagueAttachedRawHost(
     };
   }
   const terms = resolveLeagueAttachedTerms({ ...input, rules: input.rules });
+  const pipelineTerms = terms.filter((term) => term.id !== "big-boned");
+  const hitInput = { ...input, provenance, context, crit };
   const composed = calculateRawHitBandWithAttached(
-    { ...input, provenance, context, crit },
-    terms.map(({ id, amount }) => ({ id, amount })),
+    hitInput,
+    pipelineTerms.map(({ id, amount }) => ({ id, amount })),
   );
-  return {
-    hit: composed.hit,
-    baseHit: composed.baseHit,
-    components: leagueAttachedComponents(composed.attached, terms, input.bonusTargetId),
-  };
+  const bigBoned = terms.find((term) => term.id === "big-boned");
+  const combined = bigBoned
+    ? calculateRawHitBandWithAttached(
+        {
+          ...hitInput,
+          postDamagePotentialCritFlat:
+            (hitInput.postDamagePotentialCritFlat ?? 0) + bigBoned.amount,
+        },
+        pipelineTerms.map(({ id, amount }) => ({ id, amount })),
+      )
+    : composed;
+  return composeLeagueAttachedResult(
+    composed,
+    terms,
+    combined.hit,
+    bigBoned ? attachedHitDelta(combined.hit, composed.hit) : undefined,
+    input.bonusTargetId,
+  );
 }
 
 export function attachedResolutionComponent(

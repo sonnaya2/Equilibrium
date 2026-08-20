@@ -175,14 +175,14 @@ export function resolvePlayerPoison(
       max: band.max * poison.sourceDamageMultiplier,
     });
   const composed = resolveHostDamageInstance(
-    { host: baseBand, attached: attachedTerms },
+    { host: resolveBand(baseBand), attached: attachedTerms },
     {
       add: (host, amount) => ({
         min: host.min + amount,
         expected: host.expected + amount,
         max: host.max + amount,
       }),
-      resolve: resolveBand,
+      resolve: (band) => band,
       delta: poisonBandDelta,
     },
   );

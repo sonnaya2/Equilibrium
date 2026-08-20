@@ -257,7 +257,7 @@ describe("player poison simulation", () => {
     expect(result.playerPoison?.successfulApplications).toBeCloseTo(0.125, 12);
   });
 
-  it("applies poison source and target multipliers to Big Boned poison riders", () => {
+  it("keeps Big Boned flat after poison source and target multipliers", () => {
     const league = resolveLeagueRules(
       { ruleset: "equilibrium", blessingPicks: ["Balance"] },
       { maximumLife: 15_000 },
@@ -276,8 +276,8 @@ describe("player poison simulation", () => {
       );
     };
     const plain = run(0, false);
-    expect(run(4, false)).toBeCloseTo(plain * 1.1, 8);
-    expect(run(0, true)).toBeGreaterThan(plain * 1.09);
+    expect(run(4, false)).toBeCloseTo(plain, 8);
+    expect(run(0, true)).toBeCloseTo(plain, 8);
   });
 
   it("routes Vulnerability, Havoc Born, and Envenomed through the poison modifier pipeline", () => {

@@ -81,6 +81,8 @@ Required numeric fixtures before modifiers:
 
 - Source-local: effective poison tier, Cinderbane, Laniakea, Kwuarm, blowpipe cadence and half-damage.
 - Target-global at poison land: Evolving Toxin, Vulnerability, and any other explicitly sourced target poison multiplier.
+- Big Boned is appended after poison multipliers; Cinderbane, Laniakea, Kwuarm, Evolving Toxin,
+  Vulnerability, and Envenomed do not amplify its flat maximum-life term.
 - Excluded by default: critical strikes, Damage Potential/miss rolls, ability-specific windows, ordinary prayer modifiers, hit caps, life steal, resource gain, invention procs, blessing on-hit rolls, and style state.
 
 ## Trigger boundary

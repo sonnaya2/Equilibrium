@@ -271,7 +271,7 @@ describe("damage-only enchanted bolts", () => {
     expect(immunePoison?.damage.expected).toBeCloseTo(buffedPoison, 8);
   });
 
-  it("composes Big Boned inside Emerald poison modifiers", () => {
+  it("adds Big Boned after Emerald poison modifiers", () => {
     const league = resolveLeagueRules(
       { ruleset: "equilibrium", blessingPicks: ["Balance"] },
       { maximumLife: 10_000 },
@@ -303,14 +303,15 @@ describe("damage-only enchanted bolts", () => {
       return total / (max - min + 1);
     };
     const hostExpected = mean(20, 40) * 0.55;
-    const combinedExpected = mean(520, 540) * 0.55;
+    const bigBonedExpected = 500 * 0.55;
+    const combinedExpected = hostExpected + bigBonedExpected;
 
     expect(emerald?.damage.expected).toBeCloseTo(combinedExpected, 10);
-    expect(bigBoned?.damage.expected).toBeCloseTo(combinedExpected - hostExpected, 10);
+    expect(bigBoned?.damage.expected).toBeCloseTo(bigBonedExpected, 10);
     expect(bigBoned?.analysis?.expectedActivations).toBe(0.55);
     expect(
       result.analysis.byEffect.find((effect) => effect.id === "ammunition:emerald")?.bonusDamage,
-    ).toBeCloseTo(combinedExpected - hostExpected, 10);
+    ).toBeCloseTo(bigBonedExpected, 10);
   });
 
   it("keeps Jade, Topaz, and Sapphire control effects explicit", () => {

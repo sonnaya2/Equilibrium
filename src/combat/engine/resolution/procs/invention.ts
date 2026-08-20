@@ -69,16 +69,16 @@ function procResolution(
         abilityBase: rt.input.base,
       })
     : [];
+  const modifiedHits = rawHits.map((hit) => applyProcModifiers(rt, event, hit));
   const composed = resolveHostDamageInstance(
-    { host: rawHits, attached: terms },
+    { host: modifiedHits, attached: terms },
     {
       add: (hits, amount) => hits.map((hit) => hit + amount),
       resolve: (hits): ResolvedDamage => {
-        const resolved = hits.map((hit) => applyProcModifiers(rt, event, hit));
         return {
-          min: resolved[0]!,
-          max: resolved.at(-1)!,
-          expected: resolved.reduce((total, hit) => total + hit, 0) / resolved.length,
+          min: hits[0]!,
+          max: hits.at(-1)!,
+          expected: hits.reduce((total, hit) => total + hit, 0) / hits.length,
         };
       },
       delta: damageDelta,

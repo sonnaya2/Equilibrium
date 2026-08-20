@@ -92,7 +92,7 @@ describe("Big Boned and Cinders eligibility", () => {
 });
 
 describe("host-typed attached damage", () => {
-  it("runs both raw terms through the host modifiers exactly once", () => {
+  it("runs Cinders through host modifiers and appends Big Boned late", () => {
     const resolved = resolveLeagueAttachedRawHost({
       rules: combined(),
       source: { kind: "player_direct" },
@@ -107,12 +107,12 @@ describe("host-typed attached damage", () => {
       cap: { cap: 30_000 },
     });
 
-    expect(resolved.hit.expected).toBe(1_815);
+    expect(resolved.hit.expected).toBe(1_765);
     expect(resolved.components.map((component) => component.effectId)).toEqual([
       "big-boned",
       "abyssal-cinders",
     ]);
-    expect(resolved.components.map((component) => component.damage.expected)).toEqual([550, 165]);
+    expect(resolved.components.map((component) => component.damage.expected)).toEqual([500, 165]);
   });
 
   it("shares the host cap instead of capping attached terms independently", () => {
@@ -131,13 +131,13 @@ describe("host-typed attached damage", () => {
     });
 
     expect(resolved.hit.expected).toBe(1_000);
-    expect(resolved.components.map((component) => component.damage.expected)).toEqual([100, 0]);
+    expect(resolved.components.map((component) => component.damage.expected)).toEqual([0, 100]);
     expect(resolved.components.reduce((sum, component) => sum + component.damage.expected, 0)).toBe(
       100,
     );
   });
 
-  it("uses poison provenance and poison modifiers for Big Boned", () => {
+  it("appends Big Boned after poison modifiers", () => {
     const resolved = resolveLeagueAttachedRawHost({
       rules: bigBoned(10_000),
       source: { kind: "player_poison" },
@@ -151,9 +151,29 @@ describe("host-typed attached damage", () => {
       context: { style: "melee", ruleset: "equilibrium", dotKind: "poison" },
     });
 
-    expect(resolved.hit.expected).toBe(880);
+    expect(resolved.hit.expected).toBe(830);
     expect(resolved.components[0]?.effectId).toBe("big-boned");
-    expect(resolved.components[0]?.damage.expected).toBe(550);
+    expect(resolved.components[0]?.damage.expected).toBe(500);
+  });
+
+  it("keeps Big Boned after Damage Potential while inheriting the parent crit", () => {
+    const resolved = resolveLeagueAttachedRawHost({
+      rules: bigBoned(10_000),
+      source: { kind: "player_direct" },
+      abilityBase: 1_000,
+      min: 1_000,
+      max: 1_000,
+      level: 99,
+      accuracy: 0.5,
+      crit: { chance: 0, guaranteed: true, eligible: true },
+      modifiers: [],
+      context: { style: "melee", ruleset: "equilibrium" },
+      cap: { cap: 30_000, bypass: true },
+    });
+
+    expect(resolved.baseHit.expected).toBe(750);
+    expect(resolved.components[0]?.damage.expected).toBe(750);
+    expect(resolved.hit.expected).toBe(1_500);
   });
 });
 

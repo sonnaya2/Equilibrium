@@ -9,6 +9,7 @@ import {
 import { applyDamagePotential, damagePotential } from "../core/damagePotential";
 import { applyHitCap, normalizeHitCapRule, standardHitCap, type HitCapRule } from "../core/hitCaps";
 import { resolveHostDamageInstance } from "../core/hostDamage";
+import { mulFloor } from "../core/rounding";
 import {
   contextWithProvenance,
   isTrueDotDamage,
@@ -47,6 +48,8 @@ export interface HitInput {
   preciseRank?: number;
   /** Integer added after Damage Potential and before the hit cap. */
   postDamagePotentialFlat?: number;
+  /** Late flat damage that inherits this hit's critical outcome, then shares its hit cap. */
+  postDamagePotentialCritFlat?: number;
 }
 
 export interface HitResult {
@@ -107,6 +110,7 @@ interface HitPassKits {
   accuracy: number;
   capRule: HitCapRule;
   postDamagePotentialFlat: number;
+  postDamagePotentialCritFlat: number;
 }
 
 // Soft player_direct default inside contextWithProvenance is unit-test only.
@@ -124,9 +128,15 @@ function compileHitPassKits(input: SharedHitInput, critLive: boolean | null): Hi
   const baseMods = input.modifiers ?? [];
   const nonCrit = compileActiveModifiers(baseMods, context);
   const postDamagePotentialFlat = input.postDamagePotentialFlat ?? 0;
+  const postDamagePotentialCritFlat = input.postDamagePotentialCritFlat ?? 0;
   if (!Number.isInteger(postDamagePotentialFlat) || postDamagePotentialFlat < 0) {
     throw new RangeError(
       `calculateHit: postDamagePotentialFlat must be a non-negative integer, got ${postDamagePotentialFlat}`,
+    );
+  }
+  if (!Number.isInteger(postDamagePotentialCritFlat) || postDamagePotentialCritFlat < 0) {
+    throw new RangeError(
+      `calculateHit: postDamagePotentialCritFlat must be a non-negative integer, got ${postDamagePotentialCritFlat}`,
     );
   }
   return {
@@ -136,6 +146,7 @@ function compileHitPassKits(input: SharedHitInput, critLive: boolean | null): Hi
     accuracy: input.accuracy,
     capRule: normalizeHitCapRule(input.cap ?? standardHitCap),
     postDamagePotentialFlat,
+    postDamagePotentialCritFlat,
   };
 }
 
@@ -155,7 +166,11 @@ function runPass(
     criticalDamageMultiplier ?? undefined,
   );
   const scaled = applyDamagePotential(state.damage, kits.accuracy);
-  const resolved = Math.floor(scaled) + kits.postDamagePotentialFlat;
+  const inheritedCritFlat =
+    criticalDamageMultiplier == null
+      ? kits.postDamagePotentialCritFlat
+      : mulFloor(kits.postDamagePotentialCritFlat, criticalDamageMultiplier);
+  const resolved = Math.floor(scaled) + kits.postDamagePotentialFlat + inheritedCritFlat;
   return cap ? applyHitCap(resolved, kits.capRule) : resolved;
 }
 

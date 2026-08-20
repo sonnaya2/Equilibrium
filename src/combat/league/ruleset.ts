@@ -48,8 +48,9 @@ export interface LeagueLoadout {
 
 /** Big Boned 5% max-life outgoing rider is always on when picked (no opt-out). */
 export const BIG_BONED_OUTGOING_ASSUMPTIONS = [
-  "Per unique hit (Mod Sponge Discord): flat 5% of maximum life inside the host damage instance",
-  "Inherits the host damage family, modifiers, critical result, Damage Potential, rounding, and shared hit cap",
+  "Per unique hit (Mod Sponge Discord): flat 5% of maximum life attached to the host damage instance",
+  "Added after host source, target, poison, and Damage Potential modifiers; those multipliers do not amplify it",
+  "Inherits the host critical result and shares the final hit cap",
   "Creates no separate event or proc roll; composes once beside Cinders and never rides itself",
   "5% of maximum life including Big Boned's own +50% max-life boost; Powerburst is time-bounded",
   "Rides represented poison, conjure, proc, reflected, derived, Light, Inferno, and Grasp hosts; those sources do not inherit Cinders eligibility",

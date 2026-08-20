@@ -236,7 +236,7 @@ describe("Invention procs - Aftershock charge eligibility", () => {
  * conjure_command can; conjureAuto family fails the family gate.
  */
 describe("Invention procs - Crackling eligibility", () => {
-  it("applies global target modifiers to the proc and its Big Boned term once", () => {
+  it("applies global target modifiers before the flat Big Boned term", () => {
     const league = resolveLeagueRules(
       { ruleset: "equilibrium", blessingPicks: ["Balance", "Balance", "Balance", "Chaos"] },
       { maximumLife: 10_000 },
@@ -252,8 +252,8 @@ describe("Invention procs - Crackling eligibility", () => {
     const crackling = summary.events.find((event) => event.abilityId === "crackling")!;
     const rider = crackling.components?.find((component) => component.id === "big-boned");
 
-    expect(crackling.damage.expected).toBe(3_000);
-    expect(rider?.damage.expected).toBe(600);
+    expect(crackling.damage.expected).toBe(2_900);
+    expect(rider?.damage.expected).toBe(500);
   });
 
   it("schedules Crackling from command family with canTriggerProcs true", () => {

@@ -194,7 +194,11 @@ instance, through the shared eligibility policy below.
 Implementation:
 
 - per unique hit: attached flat bonus = 5% of `resolveMaximumLife` at land tick;
-- attached bonus inheriting the host hit's crit result, `attached: true`, `expectedSeparateHits: 0`;
+- resolve the host's source, target, poison, and Damage Potential modifiers first, then add the flat
+  rider;
+- the rider does not inherit those host multipliers, but it does inherit the host hit's critical
+  result and shares the final hit cap;
+- `attached: true`, `expectedSeparateHits: 0`;
 - its own +50% maximum-life increase contributes to the 5% amount;
 - temporary max-life (Fortitude, bonfires, thermal baths, Powerburst) raises the bonus while active;
 - BB and Cinders may attach independently to the same qualifying attack hit, but BB never rides the attached Cinders component;
@@ -203,7 +207,7 @@ Implementation:
 
 Still unverified:
 
-- exact formula stage and hit-cap treatment details;
+- exact rounding details within the late-flat stage;
 - DoT / conjure / poison / reflected-damage edge cases if any differ from the shared rider policy;
 - live magnitude confirmation beyond the card + Sponge ruling.
 

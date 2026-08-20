@@ -2,6 +2,7 @@ import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { bandOf } from "../../core/abilityDamage";
 import { mulFloor } from "../../core/rounding";
 import type { CombatStyle, SourceReference } from "../../types";
+import { REVENGE_SOURCE } from "./revenge";
 
 const SHARED_PLACEHOLDER_STYLE: CombatStyle = "melee";
 
@@ -65,7 +66,26 @@ export const DEBILITATE: AbilitySpec = {
     "20-100% ability damage. The damage-reduction duration does not affect outgoing DPS.",
 };
 
-export const SHARED_DEFENCE_ABILITIES: readonly AbilitySpec[] = [BASH, PREPARATION, DEBILITATE];
+export const REVENGE: AbilitySpec = {
+  id: "revenge",
+  name: "Revenge",
+  style: SHARED_PLACEHOLDER_STYLE,
+  category: "threshold",
+  stateEffect: "revenge",
+  hits: [],
+  adrenaline: { cost: 15 },
+  cooldownSeconds: 45,
+  weaponRequirement: "shield-or-defender",
+  supportNote:
+    "Incoming attacks use the target attack interval. Each stack gives 5% total damage with a shield or 2.5% with a defender; Steadfast Will doubles duration and cooldown and raises the cap to 20.",
+};
+
+export const SHARED_DEFENCE_ABILITIES: readonly AbilitySpec[] = [
+  BASH,
+  PREPARATION,
+  REVENGE,
+  DEBILITATE,
+];
 
 export interface BashDamageProfile {
   offhandArmourValue: number;
@@ -106,4 +126,8 @@ export function preparationSource(): SourceReference {
 
 export function debilitateSource(): SourceReference {
   return DEBILITATE_WIKI;
+}
+
+export function revengeSource(): SourceReference {
+  return REVENGE_SOURCE;
 }

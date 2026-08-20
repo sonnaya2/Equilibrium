@@ -77,7 +77,7 @@ const WEAPON_SPECIAL_ICON_EQUIPMENT: Record<string, string> = {
 
 /** Shared constitution-bar abilities live under abilities/constitution/. */
 const CONSTITUTION_ABILITY_IDS = new Set(["sacrifice", "tuskas_wrath"]);
-const DEFENCE_ABILITY_IDS = new Set(["bash", "preparation", "debilitate"]);
+const DEFENCE_ABILITY_IDS = new Set(["bash", "preparation", "revenge", "debilitate"]);
 
 /**
  * Local ability icons (synced from the wiki, never hotlinked).

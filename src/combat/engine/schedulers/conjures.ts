@@ -43,6 +43,7 @@ import { patchConjures, patchTarget } from "../runtime/state";
 import { refreshPlayerPoisonImmunity, playerPoisonDamageAllowed } from "./playerPoisonState";
 import { envenomedPoisonImmunityDisableTicks } from "../../league/ruleset";
 import { attachedResolutionComponent, resolveLeagueAttachedHost } from "../../league/damage";
+import { revengeDamageModifier } from "../../styles/shared/revenge";
 
 /**
  * Spirit track schedulers: one pending auto and (zombie) poison event per summon.
@@ -88,8 +89,11 @@ export function resolveConjureModifiers(
   return conjureEligibleModifiers(resolved);
 }
 
-function conjureModifiers(rt: SimulationRuntime): CombatModifier[] {
-  return resolveConjureModifiers(rt.input.modifiers);
+function conjureModifiers(rt: SimulationRuntime, at: number): CombatModifier[] {
+  const modifiers = resolveConjureModifiers(rt.input.modifiers);
+  const revenge = revengeDamageModifier(rt.state.defence.revenge, at);
+  if (revenge) modifiers.push(revenge);
+  return modifiers;
 }
 
 function spiritEventLive(
@@ -135,7 +139,7 @@ function scheduleSpiritAuto(rt: SimulationRuntime, spirit: AutoAttackingConjure)
       if (!profile || !live || live.untilTick !== spirit.untilTick) return NO_DAMAGE;
       const mult = live.id === "skeleton_warrior" ? skeletonRageMult(live.rageStacks) : 1;
       const scale = input.conjureBasicDamageMult ?? 1;
-      const modifiers = conjureModifiers(eventRt);
+      const modifiers = conjureModifiers(eventRt, spirit.auto.nextTick);
       const hitMods = scale === 1 ? modifiers : [...modifiers, conjureBasicDamageModifier(scale)];
       const provenance = {
         kind: "conjure_auto" as const,
@@ -219,7 +223,7 @@ function scheduleSpiritPoison(rt: SimulationRuntime, spirit: ActivePutridZombie)
         level: input.level,
         accuracy: CONJURE_DAMAGE_POTENTIAL,
         crit: { chance: 0, eligible: false },
-        modifiers: [...conjureModifiers(eventRt), ...poisonModifiers],
+        modifiers: [...conjureModifiers(eventRt, spirit.poison.nextTick), ...poisonModifiers],
         provenance,
         context: {
           style: input.context?.style ?? "necromancy",

@@ -15,6 +15,7 @@ import type { ScheduledEvent } from "../runtime/events";
 import type { SimulationRuntime } from "../runtime/runtime";
 import type { TargetWeaponPoisonHitMultiplicity, TargetWeaponPoisonState } from "../runtime/state";
 import { keepsAnalysisLedgers } from "../simulation/contracts";
+import { revengeDamageModifier, revengeDamageMultiplier } from "../../styles/shared/revenge";
 
 export interface PlayerPoisonEventOrder {
   tick: number;
@@ -119,12 +120,14 @@ export function resolvePlayerPoison(
         abilityBase: baseAbilityDamage,
       })
     : [];
+  const revengeMultiplier = revengeDamageMultiplier(rt.state.defence.revenge, atTick);
   const cacheKey = [
     baseAbilityDamage,
     poison.effectiveTier,
     decayIndex,
     poison.sourceDamageMultiplier,
     stacks,
+    revengeMultiplier,
     attachedTerms.map((term) => `${term.id}:${term.amount}`).join(","),
   ].join("\x1f");
   const cached = rt.playerPoisonDamageCache.get(cacheKey) as ResolvedPlayerPoisonHit | undefined;
@@ -149,6 +152,8 @@ export function resolvePlayerPoison(
     ? evolvingToxinPoisonModifier(stacks)
     : null;
   if (toxinModifier) modifiers.push(toxinModifier);
+  const revenge = revengeDamageModifier(rt.state.defence.revenge, atTick);
+  if (revenge) modifiers.push(revenge);
   const provenance = { kind: "player_poison" as const };
   const context = contextWithProvenance(
     {

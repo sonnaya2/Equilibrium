@@ -48,6 +48,15 @@
     "canonicalPage": "https://runescape.wiki/w/Balanced_Strike"
   },
   {
+    "id": "ability-bash",
+    "label": "Bash",
+    "category": "rs3/combat/abilities/defence",
+    "path": "public/game/combat/abilities/defence/bash",
+    "fileTitle": "Bash.png",
+    "search": "Bash ability icon",
+    "canonicalPage": "https://runescape.wiki/w/Bash"
+  },
+  {
     "id": "ability-berserk",
     "label": "Berserk",
     "category": "rs3/combat/abilities/melee",
@@ -501,6 +510,15 @@
     "alsoAt": ["public/game/combat/abilities/ranged/ranged-attack.webp"]
   },
   {
+    "id": "ability-preparation",
+    "label": "Preparation",
+    "category": "rs3/combat/abilities/defence",
+    "path": "public/game/combat/abilities/defence/preparation",
+    "fileTitle": "Preparation.png",
+    "search": "Preparation ability icon",
+    "canonicalPage": "https://runescape.wiki/w/Preparation"
+  },
+  {
     "id": "ability-punish",
     "label": "Punish",
     "category": "rs3/combat/abilities/melee",
@@ -539,6 +557,15 @@
     "path": "public/game/combat/abilities/defence/resonance",
     "search": "Resonance ability icon",
     "canonicalPage": "https://runescape.wiki/w/Resonance"
+  },
+  {
+    "id": "ability-revenge",
+    "label": "Revenge",
+    "category": "rs3/combat/abilities/defence",
+    "path": "public/game/combat/abilities/defence/revenge",
+    "fileTitle": "Revenge.png",
+    "search": "Revenge ability icon",
+    "canonicalPage": "https://runescape.wiki/w/Revenge"
   },
   {
     "id": "ability-ricochet",

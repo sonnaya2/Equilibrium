@@ -56,6 +56,12 @@ import {
   conflagrateActive,
   prepareEssenceCorruptionEmpowerment,
 } from "../../styles/magic/songOfDestruction";
+import {
+  activateRevenge,
+  REVENGE_BASE_DURATION_TICKS,
+  REVENGE_BASE_MAXIMUM_STACKS,
+  type RevengeState,
+} from "../../styles/shared/revenge";
 
 /** Explicit Greater Barge opener idle policy when lastAttackTick is unset (default 0). */
 export const GREATER_BARGE_OPENER_IDLE_TICKS = 0;
@@ -118,7 +124,8 @@ export type PreparedTransition =
       ticks: number;
       floorTick: number;
       excludedKeys: readonly string[];
-    };
+    }
+  | { kind: "activateRevenge"; next: RevengeState };
 
 /**
  * Everything one atomic cast needs, computed once against the advanced state
@@ -370,6 +377,17 @@ export function prepareCast(
     };
   }
 
+  const steadfastRevenge =
+    ability.id === "revenge"
+      ? blessingRule(input.league, "steadfast-will")?.steadfastWill
+      : undefined;
+  if (steadfastRevenge?.revengeCooldownMultiplier != null) {
+    working = {
+      ...working,
+      cooldownSeconds: (ability.cooldownSeconds ?? 0) * steadfastRevenge.revengeCooldownMultiplier,
+    };
+  }
+
   const meleeIdleTicks = meleeIdleTicksAt(rt, candidate, ability.style, working.hits.length);
   let endlessAssaultGrantUntilTick: number | undefined;
   if (ability.id === "greater_barge" && working.hits.length > 0) {
@@ -521,6 +539,24 @@ export function prepareCast(
       ticks: steadfastPreparation,
       floorTick: candidate + 1,
       excludedKeys: [ability.cooldownGroup ?? ability.replacementGroup ?? ability.id],
+    });
+  }
+  if (ability.id === "revenge") {
+    const intervalSeconds = input.incomingHitIntervalSeconds;
+    const intervalTicks =
+      intervalSeconds != null && intervalSeconds > 0 && Number.isFinite(intervalSeconds)
+        ? Math.max(1, secondsToTicks(intervalSeconds))
+        : 0;
+    transitions.push({
+      kind: "activateRevenge",
+      next: activateRevenge({
+        atTick: candidate,
+        durationTicks:
+          REVENGE_BASE_DURATION_TICKS * (steadfastRevenge?.revengeDurationMultiplier ?? 1),
+        maximumStacks: steadfastRevenge?.revengeMaximumStacks ?? REVENGE_BASE_MAXIMUM_STACKS,
+        incomingHitIntervalTicks: intervalTicks,
+        defender: input.weaponConfiguration === "defender",
+      }),
     });
   }
 

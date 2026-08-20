@@ -29,7 +29,7 @@ function resolveParasiteDamage(rt: SimulationRuntime, at: number) {
     return { damage: { min: 0, max: 0, expected: 0 } };
   }
   const { min, max } = abyssalParasiteDamage(parasite.stacks);
-  const modifiers = targetAndPostHitModifiers(rt);
+  const modifiers = targetAndPostHitModifiers(rt, at);
   const enduringRuin = rt.state.target.melee.enduringRuin;
   if (enduringRuin.bleedVulnerability > 0 && at < enduringRuin.untilTick) {
     const modifier: CombatModifier = {

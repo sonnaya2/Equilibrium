@@ -34,6 +34,7 @@ import {
   songOfDestructionModifiers,
   songOfDestructionSummary,
 } from "../../styles/magic/songOfDestruction";
+import { revengeDamageModifier } from "../../styles/shared/revenge";
 
 /** Applies flat buffs at onCast so intermediate rounding follows stage order. */
 export function buffMultiplier(
@@ -53,6 +54,7 @@ export function buffMultiplier(
 
 export function targetAndPostHitModifiers(
   rt: SimulationRuntime,
+  at: number,
   ability?: AbilitySpec,
 ): CombatModifier[] {
   const representative = ability ?? rt.byId.values().next().value;
@@ -62,9 +64,12 @@ export function targetAndPostHitModifiers(
         ? rt.input.modifiers(representative)
         : []
       : (rt.input.modifiers ?? []);
-  return configured.filter(
+  const modifiers = configured.filter(
     (modifier) => modifier.stage === "target" || modifier.stage === "postHit",
   );
+  const revenge = revengeDamageModifier(rt.state.defence.revenge, at);
+  if (revenge) modifiers.push(revenge);
+  return modifiers;
 }
 
 /**
@@ -251,6 +256,8 @@ export function landTimeModifiers(
       scope: ability.id === "corruption_blast" ? "parent" : "hit",
     }),
   );
+  const revenge = revengeDamageModifier(state.defence.revenge, at);
+  if (revenge) modifiers.push(revenge);
   if (!isDot || convertedChannel) return modifiers;
   return modifiers.filter(
     (m) => !m.id.startsWith("prayer:") && !DOT_IGNORED_MODIFIER_IDS.has(m.id),

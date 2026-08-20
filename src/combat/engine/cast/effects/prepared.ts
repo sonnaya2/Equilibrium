@@ -1,5 +1,11 @@
 import { spendBloodlust } from "../../../styles/melee/bloodlust";
-import { patchMagic, patchMelee, patchRanged, patchTarget } from "../../runtime/state";
+import {
+  patchDefence,
+  patchMagic,
+  patchMelee,
+  patchRanged,
+  patchTarget,
+} from "../../runtime/state";
 import {
   armSongAdrenalineStream,
   consumeConflagrate,
@@ -93,6 +99,9 @@ export function applyPreparedTransitions(fx: CastEffectContext): void {
           transition.floorTick,
           transition.excludedKeys,
         );
+        break;
+      case "activateRevenge":
+        rt.state = patchDefence(rt.state, { revenge: transition.next });
         break;
     }
   }

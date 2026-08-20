@@ -126,7 +126,7 @@ export function resolveDerivedHit(
     level: rt.input.level,
     accuracy: source.potential,
     crit: inheritedCrit,
-    modifiers: targetAndPostHitModifiers(rt, ability),
+    modifiers: targetAndPostHitModifiers(rt, tick, ability),
     context: {
       ...(rt.input.context ?? { style: ability?.style ?? "melee" }),
       damageSource: outgoingSourceOf(provenance),

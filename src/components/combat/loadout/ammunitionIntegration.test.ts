@@ -3,6 +3,7 @@ import { resolveAbilityCatalogue } from "@/combat/abilities/catalogue";
 import { baseAbilityDamage } from "@/combat/core/abilityDamage";
 import { simulateRevolution } from "@/combat/engine/simulation/revolution";
 import { buildSimulationInputBase, toRevolutionInput } from "@/combat/model";
+import { PLAYER_POISON_EFFECT_ID } from "@/combat/poison/mechanics";
 import { weaponAmmunitionCapabilityFromEquipment } from "@/combat/styles/ranged/ammunitionEquipment";
 import { reviveRevolutionBase } from "@/combat/solver/worker/revive";
 import { projectSerializableSimBase } from "@/combat/model/simulationInput";
@@ -117,6 +118,63 @@ describe("loadout-owned ranged ammunition resolution", () => {
       summary.analysis.byEffect.find(({ id }) => id === "ammunition:ruby")
         ?.expectedActivations,
     ).toBeGreaterThan(0);
+  });
+
+  it("tracks poison with Big Boned and blocks Emerald on poison-immune targets", () => {
+    const makeLoadout = (poisonImmune: boolean) =>
+      normalizeLoadout({
+        ...rangedLoadout({
+          twohand: "item:royal-crossbow",
+          gloves: "item:cinderbane-gloves",
+          ammo: "item:emerald-bakriminel-bolts-e",
+        }),
+        buffs: {
+          ...DEFAULT_LOADOUT.buffs,
+          weaponPoison: "weapon-plus-plus-plus",
+        },
+        target: {
+          defenceLevel: 80,
+          affinity: 70,
+          hpPercent: 100,
+          maximumLifePoints: 1_000_000,
+          poisonImmune,
+        },
+      });
+    const run = (poisonImmune: boolean) => {
+      const { model } = resolveLoadoutCombat(makeLoadout(poisonImmune), {
+        blessingPicks: ["Balance"],
+      });
+      const catalogue = resolveAbilityCatalogue();
+      return simulateRevolution(
+        toRevolutionInput(buildSimulationInputBase(model, catalogue), {
+          bar: [catalogue.byId.get("ranged_attack")!],
+          style: "ranged",
+          durationTicks: 100,
+        }),
+        { stochasticSeed: 31, stochasticLanes: 128 },
+      );
+    };
+
+    const poisonable = run(false);
+    const poison = poisonable.analysis.byEffect.find(({ id }) => id === PLAYER_POISON_EFFECT_ID);
+    expect(poison?.totalDamage).toBeGreaterThan(0);
+    expect(poison?.expectedSeparateHits).toBeGreaterThan(0);
+    expect(poisonable.playerPoison?.separateHits).toBeGreaterThan(0);
+    expect(poisonable.events.some(({ provenance }) => provenance.kind === "player_poison")).toBe(
+      true,
+    );
+    expect(poisonable.events.some(({ abilityId }) => abilityId === "ammunition:emerald")).toBe(
+      true,
+    );
+    expect(
+      poisonable.analysis.byEffect.find(({ id }) => id === "ammunition:emerald")?.totalDamage,
+    ).toBeGreaterThan(0);
+
+    const immune = run(true);
+    expect(immune.events.some(({ abilityId }) => abilityId === "ammunition:emerald")).toBe(false);
+    expect(immune.analysis.byEffect.some(({ id }) => id === "ammunition:emerald")).toBe(false);
+    expect(immune.analysis.byEffect.some(({ id }) => id === PLAYER_POISON_EFFECT_ID)).toBe(false);
+    expect(immune.playerPoison).toBeUndefined();
   });
 
   it("invalidates a required bow with missing or wrong-family ammunition", () => {

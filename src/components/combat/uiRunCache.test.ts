@@ -52,7 +52,10 @@ function installMemoryLocalStorage(): void {
 installMemoryLocalStorage();
 
 describe("uiRunCache", () => {
-  beforeEach(() => clearUiRunCache());
+  beforeEach(() => {
+    window.localStorage.clear();
+    clearUiRunCache();
+  });
 
   it("returns null on miss and stores hits", () => {
     expect(getUiRunCache("a")).toBeNull();
@@ -67,6 +70,18 @@ describe("uiRunCache", () => {
     expect(window.localStorage.getItem(UI_RUN_CACHE_KEY)).not.toBeNull();
     reloadUiRunCacheForTests();
     expect(getUiRunCache("persisted")?.summary.totalExpected).toBe(42);
+  });
+
+  it("ignores summaries from the previous combat cache revision", () => {
+    window.localStorage.setItem(
+      "eq:combat-run-cache:v1",
+      JSON.stringify({
+        version: 1,
+        entries: [{ fingerprint: "legacy", entry: { summary: fakeSummary(99) } }],
+      }),
+    );
+    reloadUiRunCacheForTests();
+    expect(getUiRunCache("legacy")).toBeNull();
   });
 
   it("evicts oldest when over capacity", () => {

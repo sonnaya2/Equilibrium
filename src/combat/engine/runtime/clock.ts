@@ -20,6 +20,12 @@ import {
   normalizeSongAdrenalineStream,
 } from "../../styles/magic/songOfDestruction";
 import { expireWenArrowState } from "../../styles/ranged/wen";
+import {
+  applyRevengeIncomingHit,
+  nextRevengeIncomingHitTick,
+  normalizeRevengeState,
+} from "../../styles/shared/revenge";
+import { patchDefence } from "./state";
 
 /**
  * The canonical simulation clock. Time moves only through advanceTo: it lands
@@ -32,6 +38,18 @@ function processDueEvents(rt: SimulationRuntime, bound: number): void {
   for (;;) {
     const event = rt.queue.peek();
     const poison = nextPlayerPoisonEvent(rt);
+    const revengeTick = nextRevengeIncomingHitTick(rt.state.defence.revenge);
+    if (
+      revengeTick != null &&
+      revengeTick <= bound &&
+      (poison == null || revengeTick <= poison.tick) &&
+      (event == null || revengeTick <= event.tick)
+    ) {
+      rt.state = patchDefence(rt.state, {
+        revenge: applyRevengeIncomingHit(rt.state.defence.revenge, revengeTick),
+      });
+      continue;
+    }
     if (playerPoisonPrecedes(poison, event)) {
       if (!poison || poison.tick > bound) return;
       processNextPlayerPoisonEvent(rt, bound);
@@ -181,4 +199,8 @@ export function advanceTo(rt: SimulationRuntime, targetTick: number): void {
   }
   const wen = expireWenArrowState(rt.state.ranged.wen, rt.state.tick);
   if (wen !== rt.state.ranged.wen) rt.state = patchRanged(rt.state, { wen });
+  const revenge = normalizeRevengeState(rt.state.defence.revenge, rt.state.tick);
+  if (revenge !== rt.state.defence.revenge) {
+    rt.state = patchDefence(rt.state, { revenge });
+  }
 }

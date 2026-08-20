@@ -1,22 +1,25 @@
 import { describe, expect, it } from "vitest";
 import { blessingChoice } from "../../league/blessings";
-import { entryByEngineId, solverPalette } from "../abilities/registry";
+import { allEngineSpecs, entryByEngineId } from "../abilities/registry";
 import { rotationOf } from "../engine/simulation/contracts";
-import { simulate } from "../engine/simulation/simulate";
+import { createCastContext, simulate } from "../engine/simulation/simulate";
 import { reduceActiveCooldowns } from "../engine/cast/effects/cooldowns";
 import { createRuntime } from "../engine/runtime/runtime";
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 import { shieldBashingPerkModifier } from "../shared/perks";
 import { meetsWeaponRequirement } from "../shared/requirements";
+import { buildCandidatePool } from "../solver/candidatePool";
 import { abilityStyleForBar } from "../styles/shared/allStyleAbilities";
 import {
   BASH,
   DEBILITATE,
   PREPARATION,
+  REVENGE,
   bashRawDamageBand,
   bashSource,
   debilitateSource,
   preparationSource,
+  revengeSource,
 } from "../styles/shared/defenceAbilities";
 import { baseInput } from "../test/fixtures/inputs";
 import { resolveLeagueRules } from "./ruleset";
@@ -39,19 +42,31 @@ describe("Steadfast Will shield DPS", () => {
       cooldownSeconds: 30,
       adrenaline: { cost: 15 },
     });
-    for (const source of [bashSource(), preparationSource(), debilitateSource()]) {
+    expect(REVENGE).toMatchObject({
+      category: "threshold",
+      cooldownSeconds: 45,
+      adrenaline: { cost: 15 },
+    });
+    for (const source of [bashSource(), preparationSource(), debilitateSource(), revengeSource()]) {
       expect(source.verifiedAt).toBe("2026-08-19");
     }
     expect(entryByEngineId("bash")?.linkKind).toBe("factory");
     expect(entryByEngineId("bash")?.support.status).toBe("full");
     expect(entryByEngineId("preparation")?.support.status).toBe("full");
-    expect(solverPalette("magic").map((ability) => ability.id)).toEqual(
-      expect.arrayContaining(["bash", "preparation", "debilitate"]),
-    );
+    expect(entryByEngineId("preparation")?.solverEligibleDefault).toBe(true);
+    expect(entryByEngineId("revenge")?.solverEligibleDefault).toBe(true);
+    expect(entryByEngineId("reflect")).toBeUndefined();
+
+    const pool = buildCandidatePool(allEngineSpecs(), "magic", {
+      weaponConfiguration: "shield",
+    });
+    expect(pool.byId.has("preparation")).toBe(true);
+    expect(pool.byId.has("revenge")).toBe(true);
+    expect(pool.byId.has("reflect")).toBe(false);
   });
 
-  it("requires a wielded shield or defender for Bash and Preparation", () => {
-    for (const ability of [BASH, PREPARATION]) {
+  it("requires a wielded shield or defender for Bash, Preparation, and Revenge", () => {
+    for (const ability of [BASH, PREPARATION, REVENGE]) {
       expect(meetsWeaponRequirement(ability, "shield")).toBe(true);
       expect(meetsWeaponRequirement(ability, "defender")).toBe(true);
       expect(meetsWeaponRequirement(ability, "twohand")).toBe(false);
@@ -125,16 +140,70 @@ describe("Steadfast Will shield DPS", () => {
     expect(reduced.charges).toEqual({ stun: [6, 10], preparation: [45] });
   });
 
+  it("builds Revenge stacks from the target incoming-hit interval", () => {
+    const revenge = abilityStyleForBar(REVENGE, "melee");
+    const attack: AbilitySpec = {
+      id: "revenge_test_attack",
+      name: "Revenge test attack",
+      style: "melee",
+      category: "basic",
+      hits: [{ band: { minPct: 100, maxPct: 100 } }],
+      adrenaline: { gain: 9 },
+    };
+    const run = (weaponConfiguration: "shield" | "defender", interval?: number) =>
+      simulate({
+        ...baseInput,
+        abilities: [...baseInput.abilities, revenge, attack],
+        startingAdrenaline: 100,
+        weaponConfiguration,
+        ...(interval ? { incomingHitIntervalSeconds: interval } : {}),
+        rotation: rotationOf("revenge", "revenge_test_attack"),
+      });
+
+    const noIncoming = run("shield");
+    const shield = run("shield", 2.4);
+    const defender = run("defender", 2.4);
+    expect(noIncoming.ok && shield.ok && defender.ok).toBe(true);
+    expect(shield.casts.map((cast) => cast.tick)).toEqual([0, 3]);
+    expect(noIncoming.perAbility.revenge_test_attack).toBe(1_000);
+    expect(shield.perAbility.revenge_test_attack).toBe(1_050);
+    expect(defender.perAbility.revenge_test_attack).toBe(1_025);
+  });
+
+  it("doubles Revenge before Sacred Fervor cooldown reduction and raises its cap to 20", () => {
+    const revenge = abilityStyleForBar(REVENGE, "melee");
+    const ctx = createCastContext({
+      ...baseInput,
+      abilities: [...baseInput.abilities, revenge],
+      startingAdrenaline: 100,
+      weaponConfiguration: "shield",
+      incomingHitIntervalSeconds: 0.6,
+      league: steadfast,
+    });
+    expect(ctx.performCast(revenge, 0, false).ok).toBe(true);
+    expect(ctx.getState().cooldowns.revenge).toBe(105);
+    expect(ctx.getState().defence.revenge).toMatchObject({
+      maximumStacks: 20,
+      untilTick: 64,
+    });
+    expect(ctx.getState().defence.revenge.stacks).toBe(4);
+    ctx.advanceTo(20);
+    expect(ctx.getState().defence.revenge.stacks).toBe(20);
+  });
+
   it("records the disclosed partial support boundary", () => {
     const choice = blessingChoice(3, "Order")!;
     expect(choice.combat.steadfastWill).toEqual({
       bashArmourDamageBand: [3.5, 4.5],
       preparationCooldownReductionTicks: 20,
+      revengeDurationMultiplier: 2,
+      revengeCooldownMultiplier: 2,
+      revengeMaximumStacks: 20,
     });
     expect(choice.support.status).toBe("partially-modeled");
     expect(choice.support.mechanicsUnverified).toBe(true);
     expect(choice.support.excluded.join(" ")).toMatch(/Reflect/);
-    expect(choice.support.excluded.join(" ")).toMatch(/Revenge/);
+    expect(choice.support.excluded.join(" ")).not.toMatch(/Revenge/);
   });
 
   it("includes Debilitate and its Shield Bashing perk damage", () => {

@@ -449,6 +449,49 @@ test("Revolution keeps the active bar and run results across reload", async ({ p
   await expect(page.locator(".compact-rotation-list li")).toHaveCount(activeCount);
 });
 
+test("a shield Revolution bar loads the new Defence ability icons", async ({ page }) => {
+  await openCombat(page);
+  await page.evaluate(() => {
+    localStorage.setItem(
+      "eq:loadout:v1",
+      JSON.stringify({
+        style: "melee",
+        equipmentSlots: {
+          mainhand: "item:drygore-mace",
+          offhand: "item:malevolent-kiteshield",
+        },
+        target: {
+          defenceLevel: 80,
+          affinity: 70,
+          incomingHitIntervalSeconds: 2.4,
+        },
+      }),
+    );
+  });
+  await page.reload();
+  await page.getByRole("tab", { name: "Rotation", exact: true }).click();
+
+  const slot = page
+    .getByTestId("revo-bar-editor")
+    .getByRole("combobox", { name: "Ability in slot 1" });
+  for (const [id, name] of [
+    ["bash", "Bash"],
+    ["preparation", "Preparation"],
+    ["revenge", "Revenge"],
+    ["debilitate", "Debilitate"],
+  ] as const) {
+    await slot.selectOption(id);
+    await expect(slot).toHaveValue(id);
+    await expect(slot.locator(`option[value="${id}"]`)).toHaveText(name);
+    const icon = page
+      .getByRole("group", { name: "Revolution bar" })
+      .getByRole("button", { name: new RegExp(name) })
+      .locator("img");
+    await expect(icon).toHaveAttribute("src", new RegExp(`/abilities/defence/${id}\\.webp$`));
+    expect(await icon.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0);
+  }
+});
+
 test("inline loadout edits persist and refresh engine-backed summary values", async ({ page }) => {
   await openCombat(page);
   const summary = page.getByRole("region", { name: "Combat results" });

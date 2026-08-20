@@ -171,8 +171,8 @@ export interface SimulateInput {
   playerPoisonModifiers?: readonly CombatModifier[];
   targetPoisonImmune?: boolean;
   /**
-   * Seconds between qualifying incoming hits (Barkscales / Icyenic scenario).
-   * From target manual field or wiki boss attack rate. Absent = no scenario Grasps.
+   * Seconds between qualifying incoming hits (Barkscales / Icyenic / Revenge).
+   * From target manual field or wiki boss attack rate.
    */
   incomingHitIntervalSeconds?: number;
   /** Optional fixed manual window; landed damage uses the half-open [0, horizonTicks) interval. */

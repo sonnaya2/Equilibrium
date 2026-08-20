@@ -146,13 +146,18 @@ describe("gameArt", () => {
   });
 
   it("routes shared defence abilities to the defence icon folder", () => {
-    expect(abilityIconPath("bash", "melee")).toBe("/game/combat/abilities/defence/bash.webp");
-    expect(abilityIconPath("preparation", "magic")).toBe(
-      "/game/combat/abilities/defence/preparation.webp",
-    );
-    expect(abilityIconPath("debilitate", "ranged")).toBe(
-      "/game/combat/abilities/defence/debilitate.webp",
-    );
+    const cases = [
+      ["bash", "melee"],
+      ["preparation", "magic"],
+      ["revenge", "melee"],
+      ["debilitate", "ranged"],
+    ] as const;
+
+    for (const [id, style] of cases) {
+      const path = abilityIconPath(id, style);
+      expect(path).toBe(`/game/combat/abilities/defence/${id}.webp`);
+      expect(existsSync(join(PUBLIC, path)), path).toBe(true);
+    }
   });
 
   it("every style icon is published to public/game", () => {

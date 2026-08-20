@@ -33,7 +33,7 @@ function applyProcModifiers(
   damage: number,
 ): number {
   const ability = rt.byId.get(event.abilityId) ?? rt.byId.values().next().value;
-  const modifiers = targetAndPostHitModifiers(rt, ability);
+  const modifiers = targetAndPostHitModifiers(rt, event.tick, ability);
   if (modifiers.length === 0) return damage;
   const provenance = {
     kind: "invention_proc" as const,

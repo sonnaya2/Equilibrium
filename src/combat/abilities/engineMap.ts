@@ -178,6 +178,9 @@ export const ENGINE_LINK_OVERRIDES: Readonly<Record<string, EngineLinkOverride>>
   preparation: {
     linkKind: "factory",
   },
+  revenge: {
+    linkKind: "factory",
+  },
   debilitate: {
     linkKind: "factory",
   },

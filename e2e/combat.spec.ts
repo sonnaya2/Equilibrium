@@ -877,6 +877,67 @@ test("ranged passive, ammunition, poison, perk, and blessing rows use game art",
   await expect(inferno).toContainText("Perfect Equilibrium");
 });
 
+test("Big Boned keeps poison in the timeline and poison immunity blocks Emerald", async ({
+  page,
+}) => {
+  await page.evaluate(() => {
+    localStorage.setItem(
+      "eq:build:v1",
+      JSON.stringify({
+        elective: [],
+        relics: {},
+        blessingPicks: ["Balance"],
+        blessingSelections: [],
+        blessingResetsUsed: 0,
+      }),
+    );
+    localStorage.setItem(
+      "eq:loadout:v1",
+      JSON.stringify({
+        style: "ranged",
+        equipmentSlots: {
+          twohand: "item:royal-crossbow",
+          gloves: "item:cinderbane-gloves",
+          ammo: "item:emerald-bakriminel-bolts-e",
+        },
+        buffs: { weaponPoison: "weapon-plus-plus-plus" },
+        target: {
+          defenceLevel: 80,
+          affinity: 70,
+          hpPercent: 100,
+          maximumLifePoints: 1_000_000,
+        },
+      }),
+    );
+  });
+  await page.reload();
+  await page.getByRole("tab", { name: "Rotation", exact: true }).click();
+  await page.getByRole("button", { name: "Run bar" }).click();
+  await page.getByRole("button", { name: "Analyze damage" }).click();
+  let analysis = page.getByRole("dialog", { name: "Damage analysis" });
+  let timeline = analysis.getByRole("heading", { name: "Resolved timeline" }).locator("..");
+  await expect(
+    timeline.getByRole("row").filter({ hasText: "Weapon poison" }).first(),
+  ).toBeVisible();
+  await analysis.getByRole("button", { name: "Close" }).click();
+
+  await page.evaluate(() => {
+    const stored = JSON.parse(localStorage.getItem("eq:loadout:v1") ?? "{}");
+    localStorage.setItem(
+      "eq:loadout:v1",
+      JSON.stringify({ ...stored, target: { ...stored.target, poisonImmune: true } }),
+    );
+  });
+  await page.reload();
+  await page.getByRole("tab", { name: "Rotation", exact: true }).click();
+  await page.getByRole("button", { name: "Run bar" }).click();
+  await page.getByRole("button", { name: "Analyze damage" }).click();
+  analysis = page.getByRole("dialog", { name: "Damage analysis" });
+  timeline = analysis.getByRole("heading", { name: "Resolved timeline" }).locator("..");
+  await expect(timeline.getByRole("row").filter({ hasText: "Emerald" })).toHaveCount(0);
+  await expect(analysis.locator('[data-effect-id="ammunition:emerald"]')).toHaveCount(0);
+});
+
 test("equipped passives appear under Gear and disappear when the item is removed", async ({
   page,
 }) => {

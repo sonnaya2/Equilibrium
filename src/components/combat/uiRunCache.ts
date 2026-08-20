@@ -6,23 +6,30 @@ export type UiRunCacheEntry = {
 };
 
 type StoredRunCache = {
-  version: 1;
+  version: 2;
   entries: Array<{ fingerprint: string; entry: UiRunCacheEntry }>;
 };
 
-export const UI_RUN_CACHE_KEY = "eq:combat-run-cache:v1";
+const UI_RUN_CACHE_VERSION = 2;
+export const UI_RUN_CACHE_KEY = "eq:combat-run-cache:v2";
 const MAX = 12;
 const order: string[] = [];
 const map = new Map<string, UiRunCacheEntry>();
 let hydrated = false;
 
 function normalizeStoredRunCache(raw: unknown): StoredRunCache {
-  if (!raw || typeof raw !== "object") return { version: 1, entries: [] };
+  if (
+    !raw ||
+    typeof raw !== "object" ||
+    (raw as { version?: unknown }).version !== UI_RUN_CACHE_VERSION
+  ) {
+    return { version: UI_RUN_CACHE_VERSION, entries: [] };
+  }
   const entries = Array.isArray((raw as { entries?: unknown }).entries)
     ? (raw as { entries: unknown[] }).entries
     : [];
   return {
-    version: 1,
+    version: UI_RUN_CACHE_VERSION,
     entries: entries
       .flatMap((candidate) => {
         if (!candidate || typeof candidate !== "object") return [];
@@ -53,7 +60,7 @@ function normalizeStoredRunCache(raw: unknown): StoredRunCache {
 
 function persist(): void {
   saveState(UI_RUN_CACHE_KEY, {
-    version: 1,
+    version: UI_RUN_CACHE_VERSION,
     entries: order.flatMap((fingerprint) => {
       const entry = map.get(fingerprint);
       return entry ? [{ fingerprint, entry }] : [];
@@ -66,7 +73,7 @@ function hydrate(): void {
   hydrated = true;
   const stored = loadState<StoredRunCache>(
     UI_RUN_CACHE_KEY,
-    { version: 1, entries: [] },
+    { version: UI_RUN_CACHE_VERSION, entries: [] },
     normalizeStoredRunCache,
   );
   for (const { fingerprint, entry } of stored.entries) {

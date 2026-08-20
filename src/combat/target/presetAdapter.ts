@@ -16,7 +16,7 @@ export interface MaterializedTargetFields {
   demon?: boolean;
   dragon?: boolean;
   /**
-   * Derived from wiki attackRateTicks (ticks * 0.6s). Seeds Barkscales/Icyenic
+   * Derived from wiki attackRateTicks (ticks * 0.6s). Seeds Barkscales/Icyenic/Revenge
    * scenario only; not part of Modified defence/affinity comparison.
    */
   incomingHitIntervalSeconds?: number;

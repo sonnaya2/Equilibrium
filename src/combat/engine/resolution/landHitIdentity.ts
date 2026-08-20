@@ -23,6 +23,7 @@ import type { CastSnapshot } from "../cast/snapshot";
 import type { SimulationRuntime } from "../runtime/runtime";
 import { liveTargetDamagePotential } from "../../target/genericTarget";
 import { effectiveBaseArmourAtTick } from "../../styles/ranged/blackStone";
+import { revengeDamageMultiplier } from "../../styles/shared/revenge";
 
 const objectIds = new WeakMap<object, number>();
 let nextObjectId = 1;
@@ -105,6 +106,7 @@ export function landHitIdentity(
       })
     : input.accuracy;
   const statefulAmmunition = input.ammunition?.projectile?.mechanicId;
+  const revengeMultiplier = revengeDamageMultiplier(state.defence.revenge, at);
   const statefulBoltEligible =
     (statefulAmmunition === "ruby" || statefulAmmunition === "onyx") &&
     isAmmunitionHitEligible({
@@ -207,6 +209,7 @@ export function landHitIdentity(
     b(!!snap.wenIcyPrecisionDamageAtCast),
     b(!!snap.wenIcyPrecisionDamagePotentialAtCast),
     b(flameboundRival),
+    revengeMultiplier,
     snap.critLayers.chance,
     snap.critLayers.damageBonus ?? 0,
     b(!!snap.critLayers.guaranteed),

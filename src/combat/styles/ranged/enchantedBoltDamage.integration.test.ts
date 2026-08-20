@@ -312,6 +312,19 @@ describe("damage-only enchanted bolts", () => {
     expect(
       result.analysis.byEffect.find((effect) => effect.id === "ammunition:emerald")?.bonusDamage,
     ).toBeCloseTo(bigBonedExpected, 10);
+
+    const immune = simulate({
+      ...rangedInput,
+      league,
+      context: { style: "ranged", ruleset: "equilibrium" },
+      ammunition: boltAmmunition("emerald"),
+      targetPoisonImmune: true,
+      rotation: rotationOf("ranged_attack"),
+    });
+    expect(immune.events.some((event) => event.abilityId === "ammunition:emerald")).toBe(false);
+    expect(immune.analysis.byEffect.some((effect) => effect.id === "ammunition:emerald")).toBe(
+      false,
+    );
   });
 
   it("keeps Jade, Topaz, and Sapphire control effects explicit", () => {

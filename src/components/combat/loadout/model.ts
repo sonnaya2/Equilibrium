@@ -123,7 +123,7 @@ export interface LoadoutTarget {
   onSlayerTask?: boolean;
   /** Poison-immune targets take no Grasp of Guthix damage; absent = poisonable. */
   poisonImmune?: boolean;
-  /** Seconds between hits large enough for Barkscales; omit when no incoming scenario. */
+  /** Seconds between qualifying incoming hits; omit when no incoming scenario. */
   incomingHitIntervalSeconds?: number;
   /** Optional assumed hit size for Icyenic 100% protect mitigation totals. */
   incomingHitDamage?: number;

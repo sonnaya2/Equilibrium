@@ -24,6 +24,7 @@ import { firstChargeReadyTick, maxChargesFor } from "./charges";
 import type { PoisonTier } from "../../poison/mechanics";
 import type { TimedTargetStatus } from "../../target/timedStatus";
 import type { BlackStoneArmourState } from "../../styles/ranged/blackStone";
+import { inactiveRevengeState, type RevengeState } from "../../styles/shared/revenge";
 
 export type { MeleeRotationState, RangedRotationState, MagicRotationState };
 export type { NecroRotationState, NecromancyRotationState, ConjureState };
@@ -230,6 +231,9 @@ export interface RotationState {
     aftershockPending: boolean;
   };
   naturalInstinctUntilTick: number;
+  defence: {
+    revenge: RevengeState;
+  };
   league?: LeagueRotationState;
   /** Player LP / revive / level-override / Naragi runtime (optional). */
   player?: PlayerRuntimeState;
@@ -274,6 +278,7 @@ export function newRotationState(
       aftershockPending: false,
     },
     naturalInstinctUntilTick: opts.naturalInstinctUntilTick ?? 0,
+    defence: { revenge: inactiveRevengeState() },
     ...(opts.league
       ? {
           league: {
@@ -307,6 +312,13 @@ export function patchPlayer(
 ): RotationState {
   const base = state.player ?? newPlayerRuntimeState();
   return { ...state, player: { ...base, ...patch } };
+}
+
+export function patchDefence(
+  state: RotationState,
+  patch: Partial<RotationState["defence"]>,
+): RotationState {
+  return { ...state, defence: { ...state.defence, ...patch } };
 }
 
 export function gainAdrenaline(state: RotationState, amount: number): RotationState {

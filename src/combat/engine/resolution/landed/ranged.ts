@@ -53,6 +53,7 @@ import {
   rubyRecoilDamage,
   resolveRangedAmmunitionHitEffects,
 } from "../../../styles/ranged/ammunitionPayloads";
+import { revengeDamageModifier } from "../../../styles/shared/revenge";
 import { ammunitionAppliedEffectId } from "../../../styles/ranged/ammunitionEffects";
 import {
   chromaticChoirActive,
@@ -158,7 +159,7 @@ function schedulePunctureSequence(
           level: eventRt.input.level,
           accuracy: 1,
           crit: { chance: 0, eligible: false },
-          modifiers: targetAndPostHitModifiers(eventRt),
+          modifiers: targetAndPostHitModifiers(eventRt, tick),
           context: {
             ...(eventRt.input.context ?? { style: "ranged" }),
             style: "ranged",
@@ -480,7 +481,7 @@ function applyChromaticChoirFreeProc(
   applyChoirHydrix(rt, event);
 }
 
-function emeraldPlayerPoisonModifiers(rt: SimulationRuntime): CombatModifier[] {
+function emeraldPlayerPoisonModifiers(rt: SimulationRuntime, at: number): CombatModifier[] {
   const configured =
     rt.input.playerPoisonModifiers ??
     (() => {
@@ -491,7 +492,10 @@ function emeraldPlayerPoisonModifiers(rt: SimulationRuntime): CombatModifier[] {
           : []
         : (rt.input.modifiers ?? []);
     })();
-  return configured.filter((modifier) => modifier.appliesToPlayerPoison === true);
+  const modifiers = configured.filter((modifier) => modifier.appliesToPlayerPoison === true);
+  const revenge = revengeDamageModifier(rt.state.defence.revenge, at);
+  if (revenge) modifiers.push(revenge);
+  return modifiers;
 }
 
 function weightedEmeraldDamage(hit: HitResult, chance: number): ResolvedDamage {
@@ -552,7 +556,7 @@ function scheduleEmeraldPoisonHit(
     evolvingToxinPoisonModifier(
       activeEvolvingToxinStacks(toxin.stacks, toxin.expiresAtTick, event.tick),
     ),
-    ...emeraldPlayerPoisonModifiers(rt),
+    ...emeraldPlayerPoisonModifiers(rt, event.tick),
   ].filter((modifier): modifier is CombatModifier => modifier != null);
   const provenance = { kind: "equipment_proc" as const, detail: "emerald" };
   const context = {

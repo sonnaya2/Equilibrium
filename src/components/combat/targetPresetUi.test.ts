@@ -40,7 +40,7 @@ describe("targetPresetUi", () => {
       defenceLevel: 60,
       armour: 1132,
       affinity: 50,
-      // Wiki attack rate 4t -> 2.4s seeds Barkscales/Icyenic scenario.
+      // Wiki attack rate 4t -> 2.4s seeds Barkscales, Icyenic Faith, and Revenge.
       incomingHitIntervalSeconds: 2.4,
     });
   });

@@ -43,6 +43,7 @@ export type StateEffectId =
   | "runic_charge"
   | "shadow_imbued"
   | "preparation"
+  | "revenge"
   | "balance_by_force";
 
 export type AppliedEffectId =

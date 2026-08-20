@@ -78,6 +78,9 @@ export interface BlessingCombatRules {
   steadfastWill?: {
     bashArmourDamageBand: readonly [number, number];
     preparationCooldownReductionTicks: number;
+    revengeDurationMultiplier: number;
+    revengeCooldownMultiplier: number;
+    revengeMaximumStacks: number;
   };
   damageMultiplier?: number;
   maximumLifeMultiplier?: number;

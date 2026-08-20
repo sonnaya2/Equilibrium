@@ -136,7 +136,7 @@ These alter future cast legality or cooldown state.
 - Inferno of Zamorak's proc roll.
 - Sacred Fervor.
 - Preparation.
-- Revenge, if incoming-combat state is added later.
+- Revenge incoming-hit cadence, stacks, duration, and cooldown.
 
 Do not reduce state-changing RNG to a flat average when it can change which later abilities are legal.
 
@@ -149,7 +149,6 @@ Display these effects, but do not assign estimated damage value to them.
 - Big Boned's survival benefit.
 - Barkscales incoming-damage reduction and automatic five-hit trigger timing.
 - Reflect without incoming-attack simulation.
-- Revenge without incoming-attack simulation.
 - Mobility, ammo conservation, and rune conservation.
 
 ## Current support rulings
@@ -399,6 +398,7 @@ Still unverified:
 - do not reduce Preparation's own cooldown;
 - do not reduce another cooldown completely to zero;
 - use the simulator's existing cooldown state rather than rewriting canonical ability data.
+- keep Preparation eligible for generated Revo++ bars with a shield or defender.
 
 The minimum remaining cooldown is still unresolved and must not be invented.
 
@@ -411,9 +411,14 @@ The minimum remaining cooldown is still unresolved and must not be invented.
 
 #### Revenge
 
-- not modeled without incoming-attack and stack simulation;
-- display doubled duration, doubled cooldown, and a maximum of 20 stacks;
-- do not estimate a damage contribution.
+- model one qualifying incoming attack per target attack interval, with the first at the end of the first interval;
+- base Revenge lasts 32 ticks, has a 75-tick cooldown, and caps at 10 stacks;
+- each stack gives 5% total damage with a shield or 2.5% with a defender;
+- Steadfast doubles the duration to 64 ticks and cooldown to 150 ticks and raises the cap to 20;
+- an incoming attack due on the same tick as outgoing damage adds its stack first;
+- without an incoming interval, keep the active window at zero stacks rather than estimating damage;
+- fixed loadouts do not model hard-typeless exclusions, irregular attacks, or removing the shield mid-window;
+- Big Boned remains a flat attachment after the Revenge multiplier.
 
 ### Demon's Mark
 

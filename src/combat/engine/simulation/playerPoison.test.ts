@@ -249,10 +249,15 @@ describe("player poison simulation", () => {
     });
     const poison = result.analysis.byEffect.find((row) => row.id === PLAYER_POISON_EFFECT_ID);
     const bigBoned = result.analysis.byEffect.find((row) => row.id === "big-boned");
+    expect(poison?.totalDamage).toBeGreaterThan(0);
+    expect(poison?.expectedSeparateHits).toBeGreaterThan(0);
     expect(bigBoned?.totalDamage).toBeGreaterThan(0);
     expect(bigBoned?.expectedAttachedComponents).toBeGreaterThan(0);
     expect(poison?.bonusDamage).toBeGreaterThan(0);
     expect(poison?.bonusDamage).toBeLessThan(bigBoned?.totalDamage ?? 0);
+    expect(result.playerPoison?.separateHits).toBeGreaterThan(0);
+    expect(result.playerPoison?.expectedDamage).toBeGreaterThan(poison?.bonusDamage ?? 0);
+    expect(result.perAbility[PLAYER_POISON_EFFECT_ID]).toBeGreaterThan(0);
     expect(result.playerPoison?.applicationAttempts).toBe(1);
     expect(result.playerPoison?.successfulApplications).toBeCloseTo(0.125, 12);
   });

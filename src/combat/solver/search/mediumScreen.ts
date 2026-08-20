@@ -67,7 +67,7 @@ export async function runMediumScreenAsync(
 
   const pivot = state.bestExploratory?.bar ?? state.best?.bar;
   if (pivot) {
-    for (const bar of statefulMediumCandidates(state, pivot)) {
+    for (const bar of statefulCandidateBars(state, pivot)) {
       if (!state.canEval()) break;
       state.tryEval(bar, "medium", "medium-stateful");
       if (yieldCtx) await maybeYield(state, yieldCtx);
@@ -111,7 +111,12 @@ export async function runMediumScreenAsync(
   }
 }
 
-function statefulMediumCandidates(state: SearchState, pivot: readonly string[]): string[][] {
+export function statefulCandidateBars(
+  state: SearchState,
+  pivot: readonly string[],
+  onlyAbilityId?: string,
+  repositionExisting = false,
+): string[][] {
   const out: string[][] = [];
   const seen = new Set<string>();
   const push = (bar: string[]) => {
@@ -122,7 +127,20 @@ function statefulMediumCandidates(state: SearchState, pivot: readonly string[]):
   };
 
   for (const ability of state.pool) {
-    if (!ability.stateful || pivot.includes(ability.id)) continue;
+    if (!ability.stateful || (onlyAbilityId != null && ability.id !== onlyAbilityId)) {
+      continue;
+    }
+    if (pivot.includes(ability.id)) {
+      if (!repositionExisting) continue;
+      const without = pivot.filter((id) => id !== ability.id);
+      if (!canAdd(without, ability.id, state.byId)) continue;
+      for (const position of statefulCandidatePositions(without.length)) {
+        const repositioned = [...without];
+        repositioned.splice(position, 0, ability.id);
+        push(repositioned);
+      }
+      continue;
+    }
     if (pivot.length < state.sizeBounds.max && canAdd(pivot, ability.id, state.byId)) {
       for (const position of statefulCandidatePositions(pivot.length)) {
         const inserted = [...pivot];

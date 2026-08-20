@@ -25,7 +25,7 @@ import {
  * solve-job cache keys cannot reuse bars found under a different search regime.
  * Evaluation identity deliberately omits this.
  */
-export const SEARCH_POLICY_VERSION = 2 as const;
+export const SEARCH_POLICY_VERSION = 3 as const;
 
 /** Proof labels that may enter the verified solve cache. */
 export const VERIFIED_CACHEABLE_PROOFS: ReadonlySet<ProofLabel> = new Set([

@@ -600,7 +600,11 @@ test("Revo++ optimizes Revenge with a shield and incoming attacks", async ({ pag
 
   const results = page.getByTestId("revo-solver-results");
   await expect(results).toBeVisible({ timeout: 120_000 });
-  await expect(results.locator("li").first()).toContainText("Revenge");
+  await page.getByTestId("revo-run-button").click();
+  const timeline = page.getByTestId("revo-cast-timeline");
+  await expect(timeline).toBeVisible({ timeout: 120_000 });
+  await expect(timeline).toContainText("Revenge");
+  await expect(timeline).toContainText("Preparation");
 });
 
 test("inline loadout edits persist and refresh engine-backed summary values", async ({ page }) => {

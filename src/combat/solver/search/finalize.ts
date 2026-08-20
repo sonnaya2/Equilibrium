@@ -9,6 +9,7 @@ import {
 import { diverseSelect } from "../diversity";
 import { estimateFeasibleCount } from "./exhaustive";
 import { barKey } from "../fingerprint";
+import { statefulCandidateBars } from "./mediumScreen";
 import type { SearchState } from "./types";
 
 export interface FinalizeOptions {
@@ -216,6 +217,58 @@ function rescoreFull(state: SearchState, fullCandidates: ScoredBar[]): ScoredBar
   return rescored;
 }
 
+function bestFullAnchor(
+  shortlistFull: readonly ScoredBar[],
+  incumbentRaw: ScoredBar | null,
+): ScoredBar | null {
+  const candidates = incumbentRaw ? [...shortlistFull, incumbentRaw] : [...shortlistFull];
+  return candidates.filter(isFullRankable).sort((a, b) => b.robustScore - a.robustScore)[0] ?? null;
+}
+
+function statefulRefinementIds(state: SearchState): string[] {
+  return state.pool.filter((ability) => ability.stateful).map((ability) => ability.id);
+}
+
+const STATEFUL_FULL_REFINEMENT_LIMIT = 8;
+const STATEFUL_REFINEMENT_PASSES = 2;
+
+function statefulMediumShortlist(
+  state: SearchState,
+  anchor: ScoredBar,
+  abilityId: string,
+): ScoredBar[] {
+  const candidates = new Map<string, ScoredBar>();
+  for (const bar of statefulCandidateBars(state, anchor.bar, abilityId, true)) {
+    if (barKey(bar) === anchor.fingerprint) continue;
+    const medium = state.forceEval(bar, "medium", "stateful-refine-screen");
+    if (!isMediumOk(medium)) continue;
+    candidates.set(medium.fingerprint, medium);
+  }
+  return [...candidates.values()]
+    .sort((a, b) => b.robustScore - a.robustScore)
+    .slice(0, STATEFUL_FULL_REFINEMENT_LIMIT);
+}
+
+function refineStatefulFull(state: SearchState, initialAnchor: ScoredBar | null): ScoredBar[] {
+  if (!initialAnchor || state.config.mediumHorizonTicks == null) return [];
+  const refined: ScoredBar[] = [];
+  let anchor = initialAnchor;
+  const refinementIds = statefulRefinementIds(state);
+  for (let pass = 0; pass < STATEFUL_REFINEMENT_PASSES; pass++) {
+    const startingFingerprint = anchor.fingerprint;
+    for (const abilityId of refinementIds) {
+      for (const medium of statefulMediumShortlist(state, anchor, abilityId)) {
+        const full = state.forceEval(medium.bar, "full", "stateful-refine");
+        if (!isFullRankable(full)) continue;
+        refined.push(full);
+        if (full.robustScore > anchor.robustScore) anchor = full;
+      }
+    }
+    if (anchor.fingerprint === startingFingerprint) break;
+  }
+  return refined;
+}
+
 /**
  * Always full-rescore the first-class incumbent, outside shortlist capacity.
  * Cache hit is fine when the bar already landed on the shortlist.
@@ -401,6 +454,7 @@ export function finalizeSearch(state: SearchState, opts: FinalizeOptions): Solve
   const shortlistFull = rescoreFull(state, fullCandidates);
   // Outside shortlist capacity: always full-eval incumbent (cache hit OK).
   const incumbentRaw = forceEvalIncumbentFull(state);
+  shortlistFull.push(...refineStatefulFull(state, bestFullAnchor(shortlistFull, incumbentRaw)));
   return assembleResult(
     state,
     opts,
@@ -491,10 +545,63 @@ export async function finalizeSearchAsync(
     await yieldSlice();
   }
 
+  let refinementAnchor = bestFullAnchor(shortlistFull, incumbentRaw);
+  const refinementIds =
+    refinementAnchor && state.config.mediumHorizonTicks != null ? statefulRefinementIds(state) : [];
+  const refinementCapacity =
+    refinementIds.length * STATEFUL_FULL_REFINEMENT_LIMIT * STATEFUL_REFINEMENT_PASSES;
+  const finalTotalSteps = totalSteps + refinementCapacity;
+  let refinementDone = 0;
+  for (let pass = 0; pass < STATEFUL_REFINEMENT_PASSES && refinementAnchor; pass++) {
+    const startingFingerprint = refinementAnchor.fingerprint;
+    for (let i = 0; i < refinementIds.length && refinementAnchor; i++) {
+      throwIfCancelled();
+      const abilityId = refinementIds[i]!;
+      const candidates = new Map<string, ScoredBar>();
+      for (const bar of statefulCandidateBars(state, refinementAnchor.bar, abilityId, true)) {
+        if (barKey(bar) === refinementAnchor.fingerprint) continue;
+        throwIfCancelled();
+        const medium = state.forceEval(bar, "medium", "stateful-refine-screen");
+        if (isMediumOk(medium)) candidates.set(medium.fingerprint, medium);
+        await yieldSlice();
+      }
+      const mediumShortlist = [...candidates.values()]
+        .sort((a, b) => b.robustScore - a.robustScore)
+        .slice(0, STATEFUL_FULL_REFINEMENT_LIMIT);
+
+      for (const medium of mediumShortlist) {
+        throwIfCancelled();
+        const step = totalSteps + refinementDone;
+        opts.onStep?.({
+          done: step,
+          total: Math.max(1, finalTotalSteps),
+          label: `Stateful ${pass + 1}.${i + 1}`,
+          bar: medium.bar,
+        });
+        await yieldSlice();
+        throwIfCancelled();
+        const full = state.forceEval(medium.bar, "full", "stateful-refine");
+        if (isFullRankable(full)) {
+          shortlistFull.push(full);
+          if (full.robustScore > refinementAnchor.robustScore) refinementAnchor = full;
+        }
+        refinementDone++;
+        opts.onStep?.({
+          done: totalSteps + refinementDone,
+          total: Math.max(1, finalTotalSteps),
+          label: `Stateful ${pass + 1}.${i + 1}`,
+          bar: medium.bar,
+        });
+        await yieldSlice();
+      }
+    }
+    if (refinementAnchor.fingerprint === startingFingerprint) break;
+  }
+
   throwIfCancelled();
   opts.onStep?.({
-    done: totalSteps,
-    total: Math.max(1, totalSteps),
+    done: finalTotalSteps,
+    total: Math.max(1, finalTotalSteps),
     label: "Done",
   });
 

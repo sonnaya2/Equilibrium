@@ -161,8 +161,8 @@ describe("canonical identity", () => {
   it("includes SEARCH_POLICY_VERSION and schema/objective versions in solve context", () => {
     const payload = solveContextPayload(sampleRequest());
     expect(payload).toContain(`"searchPolicyVersion":${SEARCH_POLICY_VERSION}`);
-    expect(SEARCH_POLICY_VERSION).toBe(2);
-    expect(payload).toContain('"searchPolicyVersion":2');
+    expect(SEARCH_POLICY_VERSION).toBe(3);
+    expect(payload).toContain('"searchPolicyVersion":3');
     expect(payload).toContain('"schema":');
     expect(payload).toContain('"objectiveVersion":');
   });

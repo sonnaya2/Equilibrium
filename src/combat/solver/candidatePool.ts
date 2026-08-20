@@ -50,7 +50,7 @@ export function poolAbilityFromSpec(spec: AbilitySpec): PoolAbility {
     offGcd: spec.offGcd,
     basicAttack: isBasicAttack(spec),
     averageDamage,
-    stateful: spec.stateEffect != null,
+    stateful: spec.stateEffect != null && spec.hits.length === 0,
     occupancyTicks: spec.channelTicks ?? GCD_TICKS,
     cooldownTicks:
       spec.cooldownSeconds !== undefined ? Math.round(spec.cooldownSeconds / 0.6) : undefined,

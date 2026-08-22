@@ -66,12 +66,34 @@ describe("Steadfast Will shield DPS", () => {
     expect(pool.byId.has("reflect")).toBe(false);
   });
 
-  it("requires a wielded shield or defender for Bash, Preparation, and Revenge", () => {
-    for (const ability of [BASH, PREPARATION, REVENGE]) {
+  it("keeps Preparation available without a shield while Bash and Revenge stay gated", () => {
+    for (const ability of [BASH, REVENGE]) {
       expect(meetsWeaponRequirement(ability, "shield")).toBe(true);
       expect(meetsWeaponRequirement(ability, "defender")).toBe(true);
       expect(meetsWeaponRequirement(ability, "twohand")).toBe(false);
       expect(meetsWeaponRequirement(ability, "mainhand")).toBe(false);
+    }
+
+    for (const configuration of [
+      "shield",
+      "defender",
+      "twohand",
+      "dualwield",
+      "mainhand",
+    ] as const) {
+      expect(meetsWeaponRequirement(PREPARATION, configuration)).toBe(true);
+    }
+
+    for (const [style, weaponConfiguration] of [
+      ["melee", "twohand"],
+      ["ranged", "twohand"],
+      ["magic", "twohand"],
+      ["necromancy", "necromancy"],
+    ] as const) {
+      const pool = buildCandidatePool(allEngineSpecs(), style, { weaponConfiguration });
+      expect(pool.byId.has("preparation")).toBe(true);
+      expect(pool.byId.has("bash")).toBe(false);
+      expect(pool.byId.has("revenge")).toBe(false);
     }
   });
 
@@ -122,7 +144,7 @@ describe("Steadfast Will shield DPS", () => {
         ...baseInput,
         abilities: [...baseInput.abilities, longCooldown, preparation],
         league,
-        weaponConfiguration: "shield",
+        weaponConfiguration: "twohand",
         rotation: rotationOf("test_long_cooldown", "preparation", "test_long_cooldown"),
       });
 

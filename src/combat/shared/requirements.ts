@@ -108,8 +108,8 @@ export function weaponRequirementMessage(ability: AbilitySpec): string {
           ? "main-hand only (empty off-hand)"
           : ability.weaponRequirement === "shield-or-defender"
             ? "a shield or defender"
-          : (ability.weaponRequirement ??
-            (ability.style === "necromancy" ? "a necromancy weapon" : `${ability.style} weapon`));
+            : (ability.weaponRequirement ??
+              (ability.style === "necromancy" ? "a necromancy weapon" : `${ability.style} weapon`));
   return `${ability.id} requires ${requirement}`;
 }
 
@@ -144,12 +144,16 @@ export function meetsWeaponRequirement(
 ): boolean {
   if (weaponConfiguration === undefined) return true;
 
+  const req = ability.weaponRequirement;
+  if (req === "shield-or-defender") {
+    return weaponConfiguration === "shield" || weaponConfiguration === "defender";
+  }
+
   if (ability.style === "necromancy") {
     // Sim shape is "necromancy" when a conduit is equipped. Loadout store may still
     // say "dualwield" for death-guard + lantern; treat that as conduit-capable so
     // conjures are not silently skipped on Run.
     const necroDual = weaponConfiguration === "dualwield";
-    const req = ability.weaponRequirement;
     if (req === "conduit" || req === "death-guard-and-conduit") {
       return weaponConfiguration === "necromancy" || necroDual;
     }
@@ -164,7 +168,6 @@ export function meetsWeaponRequirement(
 
   if (weaponConfiguration === "necromancy") return false;
 
-  const req = ability.weaponRequirement;
   if (req === "conduit" || req === "death-guard-and-conduit") return false;
   if (req === undefined) return true;
 
@@ -187,9 +190,6 @@ export function meetsWeaponRequirement(
   if (req === "mainhand") {
     // Loose non-2h (Icy Tempest); not the empty-OH Adaptive Strike form.
     return weaponConfiguration !== "twohand";
-  }
-  if (req === "shield-or-defender") {
-    return weaponConfiguration === "shield" || weaponConfiguration === "defender";
   }
   return weaponConfiguration === req;
 }

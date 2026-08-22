@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { allEngineSpecs } from "@/combat/abilities/registry";
+import { allEngineSpecs, engineSpecsForStyle } from "@/combat/abilities/registry";
 import { activeEquipmentEffects } from "@/combat/shared/equipment";
 import {
   equipAbilityForLoadout,
@@ -202,5 +202,24 @@ describe("filterAbilitiesForLoadout — igneous only-version", () => {
     );
 
     expect(ordered).toEqual(groups.flat());
+  });
+});
+
+describe("filterAbilitiesForLoadout weapon gates", () => {
+  it("keeps Preparation available while Bash and Revenge remain shield-gated", () => {
+    for (const [style, weaponConfiguration] of [
+      ["melee", "twohand"],
+      ["ranged", "twohand"],
+      ["magic", "twohand"],
+      ["necromancy", "necromancy"],
+    ] as const) {
+      const ids = filterAbilitiesForLoadout(engineSpecsForStyle(style), {
+        weaponConfiguration,
+      }).map((ability) => ability.id);
+
+      expect(ids).toContain("preparation");
+      expect(ids).not.toContain("bash");
+      expect(ids).not.toContain("revenge");
+    }
   });
 });

@@ -49,9 +49,8 @@ export const PREPARATION: AbilitySpec = {
   hits: [],
   adrenaline: { gain: 9 },
   cooldownSeconds: 20.4,
-  weaponRequirement: "shield-or-defender",
   supportNote:
-    "Outgoing cooldown effects are modeled. Base incoming-hit Resonance/Divert reduction and Bone Shield casting are outside the DPS simulation.",
+    "Outgoing cooldown effects are modeled. Bone Shield access is assumed; rune costs and the base incoming-hit Resonance/Divert reduction are outside the DPS simulation.",
 };
 
 export const DEBILITATE: AbilitySpec = {

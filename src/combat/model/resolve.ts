@@ -9,6 +9,7 @@ import {
   normalizeKwuarmPotency,
   normalizeWeaponPoisonChoice,
 } from "../poison/mechanics";
+import { normalizeMagicCombatSpell } from "../styles/magic/ancientSpells";
 
 function freezeDeep<T>(value: T): T {
   if (value === null || typeof value !== "object") return value;
@@ -79,6 +80,7 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
   const poison = input.playerPoison ?? NO_PLAYER_POISON;
   const model: ResolvedCombatModel = {
     style: input.style,
+    magicSpell: normalizeMagicCombatSpell(input.magicSpell),
     base: input.base,
     poisonBase: input.poisonBase ?? input.base,
     level: input.level,

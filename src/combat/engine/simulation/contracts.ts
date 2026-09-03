@@ -11,6 +11,7 @@ import type { PlayerPoisonProfile } from "../../poison/mechanics";
 import type { ResolvedRangedAmmunitionProfile } from "../../styles/ranged/ammunitionProfile";
 import type { EnchantedBoltChanceModifiers } from "../../styles/ranged/enchantedBolt";
 import type { ResolvedTargetAccuracyProfile } from "../../target/genericTarget";
+import type { MagicCombatSpell } from "../../styles/magic/ancientSpells";
 
 /** One queued cast; the simulator advances to its first legal tick. */
 export interface RotationAction {
@@ -104,6 +105,8 @@ export interface SimulateInput {
    */
   activateNaragiAtStart?: boolean;
   accuracy: number;
+  /** Selected Magic combat spell; defaults to no Senntisten spell effect. */
+  magicSpell?: MagicCombatSpell;
   /** Host-resolved target facts; absent preserves the scalar accuracy fallback. */
   targetAccuracyProfile?: ResolvedTargetAccuracyProfile;
   crit: Omit<CritLayers, "eligible">;

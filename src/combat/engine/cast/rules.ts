@@ -24,6 +24,7 @@ import {
   resolveEquippedAbilityVariant,
   type WeaponConfiguration,
 } from "./requirements";
+import { activeSpellStacks, glacialTsunamiReduction } from "../../styles/magic/ancientSpells";
 
 export {
   equipmentRecordPassiveIds,
@@ -113,6 +114,12 @@ export function costOf(state: RotationState, ability: AbilitySpec, tick: number)
     ability.style === "necromancy"
       ? necroAdrenalineCost(ability, state.necromancy.resources, tick)
       : (ability.adrenaline?.cost ?? 0);
+  if (ability.id === "tsunami" && listed > 0) {
+    listed = Math.max(
+      0,
+      listed - glacialTsunamiReduction(activeSpellStacks(state.magic.glacialEmbrace, tick)),
+    );
+  }
   // Flow (Sonic Wave): flat adren-point reduction while open, never below zero.
   // Defence/Constitution/weapon specials never benefit.
   if (

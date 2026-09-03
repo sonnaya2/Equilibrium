@@ -20,6 +20,7 @@ import type { PlayerPoisonProfile } from "../poison/mechanics";
 import type { ResolvedRangedAmmunitionProfile } from "../styles/ranged/ammunitionProfile";
 import type { EnchantedBoltChanceModifiers } from "../styles/ranged/enchantedBolt";
 import type { ResolvedTargetAccuracyProfile } from "../target/genericTarget";
+import type { MagicCombatSpell } from "../styles/magic/ancientSpells";
 
 /** Static crit layers for sim (no per-hit eligibility). */
 export interface ResolvedCritInput {
@@ -57,6 +58,7 @@ export type ResolvedWeaponConfiguration = SerializableRevolutionSimBase["weaponC
  */
 export interface ResolvedCombatModel {
   readonly style: CombatStyle;
+  readonly magicSpell: MagicCombatSpell;
 
   readonly base: number;
   readonly poisonBase: number;
@@ -124,6 +126,7 @@ export interface ResolvedCombatModel {
  */
 export interface HostCombatResolveInput {
   readonly style: CombatStyle;
+  readonly magicSpell?: MagicCombatSpell;
   readonly base: number;
   readonly poisonBase?: number;
   readonly level: number;

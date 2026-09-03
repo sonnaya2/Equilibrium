@@ -20,6 +20,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { GameIcon } from "../GameIcon";
 import { CombatFrame } from "./CombatFrame";
 import { NumberField } from "./NumberField";
+import { MagicSpellPicker } from "./MagicSpellPicker";
 import { prayerIconPath } from "./PrayerPicker";
 import {
   withAttackLevel,
@@ -427,6 +428,7 @@ export function EquipmentColumn({
             );
           })}
         </div>
+        <MagicSpellPicker loadout={loadout} setLoadout={setLoadout} />
         <div className="setup-equipment-footer">
           <EquipmentLevels loadout={loadout} setLoadout={setLoadout} />
           <section className="setup-equipment-passives" aria-labelledby="passives-card-title">

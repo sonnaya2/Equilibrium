@@ -53,6 +53,7 @@ export * from "./shared/salveAmulet";
 export * from "./shared/onHitEligibility";
 export * from "./shared/archaeologyRelics";
 export * from "./shared/potions";
+export * from "./styles/magic/ancientSpells";
 
 export type {
   DamageEffectBreakdown,

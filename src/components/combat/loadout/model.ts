@@ -57,6 +57,10 @@ import {
 } from "@/combat/target/genericTarget";
 import { materializeTargetPreset, targetDiffersFromPreset } from "@/combat/target/presetAdapter";
 import type { CombatStyle } from "@/combat/types";
+import {
+  normalizeMagicCombatSpell,
+  type MagicCombatSpell,
+} from "@/combat/styles/magic/ancientSpells";
 import type { RegionId } from "@/league";
 
 /** Setup-written combat loadout (Rotation/Analysis read). localStorage key below; old shapes normalize. */
@@ -450,6 +454,8 @@ export function persistStartingAdrenaline(value: number, maxAdrenaline: number):
 
 export interface Loadout {
   style: CombatStyle;
+  /** Selected Magic combat spell and its modeled on-cast effect. */
+  magicSpell: MagicCombatSpell;
   /**
    * Non-melee style level. For melee, alias of strengthLevel (damage/crit).
    * Prefer attackLevel / strengthLevel for melee.
@@ -526,6 +532,7 @@ export interface Loadout {
 
 export const DEFAULT_LOADOUT: Loadout = {
   style: "melee",
+  magicSpell: "none",
   // Style combat levels default to 120 (melee Attack/Strength, ranged, magic, necro).
   level: 120,
   attackLevel: 120,
@@ -1342,6 +1349,7 @@ export function normalizeLoadout(value: unknown, now = Date.now()): Loadout {
 
   return {
     style,
+    magicSpell: normalizeMagicCombatSpell(raw.magicSpell),
     level,
     attackLevel,
     strengthLevel,

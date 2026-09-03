@@ -147,6 +147,7 @@ describe("EoF store packs through model → wire → revive → identity", () =>
     // assert simulationBase from a hand-built model shape matching ResolvedCombatModel.
     const model = {
       style: "magic" as const,
+      magicSpell: "none" as const,
       base: 1000,
       poisonBase: 1000,
       level: 99,

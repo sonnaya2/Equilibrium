@@ -112,6 +112,11 @@ const FAMILIES: FamilyRow[] = [
     detailPattern: "lightning_surge",
   },
   {
+    id: "frost_surge",
+    kind: "spell_proc",
+    detailPattern: "frost_surge",
+  },
+  {
     id: "converted_channel",
     kind: "player_converted_channel",
     note: "Endless Assault converted channel: DoT family for gear, keeps prayer/crit.",

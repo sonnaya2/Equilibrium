@@ -178,6 +178,7 @@ export interface CalcStats {
   effectiveDamageLevel: number;
   mainhandTier: number;
   offhandTier: number | null;
+  magicSpell: Loadout["magicSpell"];
   spellTier: number | null;
   ammunitionTier: number | null;
   ammunition: ReturnType<typeof loadoutRangedAmmunitionProfile>;
@@ -361,6 +362,7 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     effectiveDamageLevel: levels.effectiveDamageLevel,
     mainhandTier: equipment.mainhandTier,
     offhandTier: equipment.offhandTier,
+    magicSpell: loadout.magicSpell,
     spellTier: equipment.spellTier,
     ammunitionTier: equipment.ammunitionTier,
     ammunition: equipment.ammunitionProfile,

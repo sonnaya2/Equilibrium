@@ -98,6 +98,7 @@ export function hostInputFromResolvedModel(
     : model.crit;
   return {
     style: model.style,
+    magicSpell: model.magicSpell,
     base,
     level,
     accuracy,

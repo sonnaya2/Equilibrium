@@ -74,6 +74,7 @@ export function projectSerializableSimBase(
 ): SerializableRevolutionSimBase {
   return {
     base: model.base,
+    magicSpell: model.magicSpell,
     poisonBase: model.poisonBase,
     level: model.level,
     ...(model.overrideBase != null ? { overrideBase: model.overrideBase } : {}),

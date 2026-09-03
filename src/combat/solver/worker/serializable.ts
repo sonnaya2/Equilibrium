@@ -26,6 +26,7 @@ import type { ResolvedRangedAmmunitionProfile } from "../../styles/ranged/ammuni
 import type { EnchantedBoltChanceModifiers } from "../../styles/ranged/enchantedBolt";
 import type { ResolvedTargetAccuracyProfile } from "../../target/genericTarget";
 import type { TrueEquilibriumResolution } from "../../league/ruleset";
+import type { MagicCombatSpell } from "../../styles/magic/ancientSpells";
 
 export { SOLVER_SCHEMA_VERSION };
 export type { AbilityCategory };
@@ -123,6 +124,7 @@ export interface SerializableLeagueRules {
  */
 export interface SerializableRevolutionSimBase {
   base: number;
+  magicSpell?: MagicCombatSpell;
   poisonBase?: number;
   level: number;
   /** Base AD while temporary level override is active (Naragi 255). */

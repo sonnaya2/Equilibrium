@@ -16,6 +16,7 @@ export function solverSnapshotFromResolvedModel(model: ResolvedCombatModel): Sol
   const sources = model.modifierSources;
   return {
     base: model.base,
+    magicSpell: model.magicSpell,
     poisonBase: model.poisonBase,
     level: model.level,
     ...(model.overrideBase != null ? { overrideBase: model.overrideBase } : {}),

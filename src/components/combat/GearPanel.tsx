@@ -18,6 +18,7 @@ import { PrayerPicker } from "./PrayerPicker";
 import { SetEffectsList } from "./SetEffectsList";
 import { rangedAmmunitionEffectPresentation } from "./ammunitionEffectPresentation";
 import { clearEquipment, equipInSlot, type Loadout, type SetLoadout } from "./useLoadout";
+import { MagicSpellPicker } from "./MagicSpellPicker";
 
 const REGION_NAMES = new Map(regionsData.records.map((r) => [r.id, r.name]));
 
@@ -336,6 +337,8 @@ export function GearPanel({ loadout, setLoadout }: { loadout: Loadout; setLoadou
     <div className="gear-layout">
       <CombatFrame className="paper-doll">
         <h2 className="combat-section-title text-sm font-medium text-parch-50">Loadout</h2>
+
+        <MagicSpellPicker loadout={loadout} setLoadout={setLoadout} />
 
         <div className="paper-doll-grid" role="group" aria-label="Equipment slots">
           {DOLL_LAYOUT.flatMap((row, rowIdx) =>

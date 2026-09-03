@@ -232,6 +232,7 @@ export function powerburstRemainingTicksFromRequest(
 export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBase): unknown {
   return {
     base: roundN(loadout.base, 3),
+    magicSpell: loadout.magicSpell ?? "none",
     poisonBase: roundN(loadout.poisonBase ?? loadout.base, 3),
     level: loadout.level,
     // Temporary level override (Naragi etc.) changes land-path AD; must bust eval cache.

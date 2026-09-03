@@ -26,6 +26,7 @@ import {
   normalizeRevengeState,
 } from "../../styles/shared/revenge";
 import { patchDefence } from "./state";
+import { normalizeSpellStacks } from "../../styles/magic/ancientSpells";
 
 /**
  * The canonical simulation clock. Time moves only through advanceTo: it lands
@@ -193,6 +194,19 @@ export function advanceTo(rt: SimulationRuntime, targetTick: number): void {
   }
   if (targetTick > rt.state.tick) rt.state = { ...rt.state, tick: targetTick };
   normalizeSongClocks(rt, rt.state.tick);
+  const bloodTithe = normalizeSpellStacks(rt.state.magic.bloodTithe, rt.state.tick);
+  const glacialEmbrace = normalizeSpellStacks(rt.state.magic.glacialEmbrace, rt.state.tick);
+  const frostSurgeReadyTick =
+    rt.state.magic.frostSurgeReadyTick > 0 && rt.state.magic.frostSurgeReadyTick <= rt.state.tick
+      ? 0
+      : rt.state.magic.frostSurgeReadyTick;
+  if (
+    bloodTithe !== rt.state.magic.bloodTithe ||
+    glacialEmbrace !== rt.state.magic.glacialEmbrace ||
+    frostSurgeReadyTick !== rt.state.magic.frostSurgeReadyTick
+  ) {
+    rt.state = patchMagic(rt.state, { bloodTithe, glacialEmbrace, frostSurgeReadyTick });
+  }
   const ice = expirePrimordialIce(rt.state.melee.primordialIce, rt.state.tick);
   if (ice !== rt.state.melee.primordialIce) {
     rt.state = patchMelee(rt.state, { primordialIce: ice });

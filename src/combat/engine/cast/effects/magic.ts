@@ -18,6 +18,14 @@ import {
   armKerapacWristWraps,
   KERAPAC_WRIST_WRAPS_PASSIVE_ID,
 } from "../../../styles/magic/kerapacWristWraps";
+import {
+  BLOOD_TITHE_MAX_STACKS,
+  FROST_SURGE_COOLDOWN_TICKS,
+  gainSpellStack,
+  GLACIAL_EMBRACE_MAX_STACKS,
+} from "../../../styles/magic/ancientSpells";
+import { scheduleEvent } from "../../runtime/runtime";
+import { resolveFrostSurge } from "../../resolution/frostSurge";
 
 function clearCombust(state: import("../../../styles/magic/burn").BurnState) {
   const active = { ...state.active };
@@ -47,6 +55,47 @@ export function applyMagicCastEffects(fx: CastEffectContext): void {
   const spendCharge = () => {
     rt.state = patchMagic(rt.state, { runicCharge: consumeAnima(rt.state.magic.runicCharge) });
   };
+
+  if (rt.input.magicSpell === "exsanguinate") {
+    rt.state = patchMagic(rt.state, {
+      bloodTithe: gainSpellStack(rt.state.magic.bloodTithe, candidate, BLOOD_TITHE_MAX_STACKS),
+    });
+  } else if (rt.input.magicSpell === "incite-fear") {
+    const glacialEmbrace = gainSpellStack(
+      rt.state.magic.glacialEmbrace,
+      candidate,
+      GLACIAL_EMBRACE_MAX_STACKS,
+    );
+    const frostReady =
+      glacialEmbrace.stacks === GLACIAL_EMBRACE_MAX_STACKS &&
+      candidate >= rt.state.magic.frostSurgeReadyTick;
+    rt.state = patchMagic(rt.state, {
+      glacialEmbrace,
+      ...(frostReady ? { frostSurgeReadyTick: candidate + FROST_SURGE_COOLDOWN_TICKS } : {}),
+    });
+    if (frostReady) {
+      const targetCount = Math.min(9, Math.max(1, Math.floor(rt.input.league?.areaTargets ?? 1)));
+      scheduleEvent(rt, {
+        tick: candidate,
+        family: "proc",
+        abilityId: "frost_surge",
+        sourceCast: prepared.snap.castSeq,
+        hitIndex: 0,
+        attached: false,
+        procEligible: false,
+        recursionAllowed: false,
+        expectedOccurrences: targetCount,
+        expectedTriggerRolls: 0,
+        expectedActivations: 1,
+        expectedSeparateHits: targetCount,
+        originKind: "proc",
+        combatStyle: "magic",
+        provenance: { kind: "spell_proc", detail: "frost_surge" },
+        resolve: (eventRt, at) =>
+          resolveFrostSurge(eventRt, at, prepared.snap.castSeq, targetCount),
+      });
+    }
+  }
 
   if (ability.appliesEffect === "sunshine" || ability.appliesEffect === "greater_sunshine") {
     const greater = ability.appliesEffect === "greater_sunshine";

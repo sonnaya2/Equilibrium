@@ -9,6 +9,7 @@ import {
 } from "@/combat/styles/ranged/ammunitionEquipment";
 import type { ResolvedRangedAmmunitionProfile } from "@/combat/styles/ranged/ammunitionProfile";
 import type { EquipmentRecord } from "@/combat/data/records";
+import { effectiveMagicSpellTier } from "@/combat/styles/magic/ancientSpells";
 import type { Loadout } from "./model";
 
 const clampLevel = (value: number) => Math.min(Math.max(1, value), 145);
@@ -248,7 +249,12 @@ export function loadoutWeaponConfig(
           };
         })()
       : loadout.style === "magic"
-        ? { spellTier: effectiveWeaponProfileTier(loadout.spellTier, overrides) }
+        ? {
+            spellTier: effectiveWeaponProfileTier(
+              effectiveMagicSpellTier(loadout.magicSpell, loadout.spellTier),
+              overrides,
+            ),
+          }
         : {};
   if (twohandTier != null) {
     return {

@@ -19,6 +19,7 @@ export type DamageProvenanceKind =
   | "conjure_auto"
   | "conjure_poison"
   | "conjure_command"
+  | "spell_proc"
   | "equipment_proc"
   | "invention_proc"
   | "attached"
@@ -217,6 +218,24 @@ const CAPS: Record<DamageProvenanceKind, DamageCapabilities> = {
     canTriggerProcs: true,
     recursiveDamage: false,
     prayerMods: false,
+    canApplyAbyssalParasite: false,
+    canApplyWeaponPoison: false,
+    canApplyEvolvingToxin: false,
+  },
+  spell_proc: {
+    playerAttack: false,
+    directHit: false,
+    onHitGear: false,
+    blessingRider: false,
+    cindersOnHit: false,
+    blessingOnHit: false,
+    canCrit: false,
+    canGeneratePerfectEquilibrium: false,
+    canApplyAmmunition: false,
+    canGenerateResources: false,
+    canTriggerProcs: false,
+    recursiveDamage: false,
+    prayerMods: true,
     canApplyAbyssalParasite: false,
     canApplyWeaponPoison: false,
     canApplyEvolvingToxin: false,
@@ -454,6 +473,7 @@ export function outgoingSourceOf(p: DamageProvenance): OutgoingDamageSource {
     case "conjure_command":
       return "command";
     case "equipment_proc":
+    case "spell_proc":
     case "invention_proc":
     case "reflected":
     case "target_status":

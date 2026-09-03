@@ -29,6 +29,7 @@ import type { PlayerPoisonProfile } from "../poison/mechanics";
 import type { ResolvedRangedAmmunitionProfile } from "../styles/ranged/ammunitionProfile";
 import type { EnchantedBoltChanceModifiers } from "../styles/ranged/enchantedBolt";
 import type { ResolvedTargetAccuracyProfile } from "../target/genericTarget";
+import type { MagicCombatSpell } from "../styles/magic/ancientSpells";
 
 /**
  * Neutral combat-domain snapshot for solver packing.
@@ -36,6 +37,7 @@ import type { ResolvedTargetAccuracyProfile } from "../target/genericTarget";
  */
 export interface SolverPackSnapshot {
   base: number;
+  magicSpell?: MagicCombatSpell;
   poisonBase?: number;
   level: number;
   overrideBase?: number;
@@ -176,6 +178,7 @@ function modifierSourcesFrom(snapshot: SolverPackSnapshot): SerializableModifier
 export function packSimBase(snapshot: SolverPackSnapshot): SerializableRevolutionSimBase {
   return {
     base: snapshot.base,
+    magicSpell: snapshot.magicSpell,
     ...(snapshot.poisonBase != null ? { poisonBase: snapshot.poisonBase } : {}),
     level: snapshot.level,
     ...(snapshot.overrideBase != null ? { overrideBase: snapshot.overrideBase } : {}),

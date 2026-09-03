@@ -137,6 +137,7 @@ describe("outgoingSourceOf", () => {
     ["conjure_auto", "conjure"],
     ["conjure_poison", "conjure"],
     ["conjure_command", "command"],
+    ["spell_proc", "proc"],
     ["equipment_proc", "proc"],
     ["invention_proc", "proc"],
     ["blessing", "blessing"],
@@ -182,6 +183,14 @@ describe("isOnHitPlayerDamage via capabilities", () => {
     expect(capabilitiesOf({ kind: "equipment_proc", detail: "lightning_surge" }).onHitGear).toBe(
       false,
     );
+  });
+
+  it("Frost Surge cannot re-open poison or blessing effects", () => {
+    const caps = capabilitiesOf({ kind: "spell_proc", detail: "frost_surge" });
+    expect(caps.canApplyWeaponPoison).toBe(false);
+    expect(caps.blessingRider).toBe(false);
+    expect(caps.blessingOnHit).toBe(false);
+    expect(caps.canTriggerProcs).toBe(false);
   });
 
   it("explicit provenance wins over bare omit=direct", () => {

@@ -248,7 +248,19 @@ export function CalculationAssumptions({
     ...conjureStAreaAssumptionRows(result?.casts),
   ];
   if (!manualInputsOnly && stats.combatStyle === "magic")
-    rows.splice(4, 0, ["Spell tier", stats.spellTier ?? "—"]);
+    rows.splice(
+      4,
+      0,
+      [
+        "Combat spell",
+        stats.magicSpell === "exsanguinate"
+          ? "Exsanguinate"
+          : stats.magicSpell === "incite-fear"
+            ? "Incite Fear"
+            : "Manual tier",
+      ],
+      ["Spell tier", stats.spellTier ?? "—"],
+    );
   if (!manualInputsOnly && stats.combatStyle === "ranged")
     rows.splice(4, 0, ["Ammo tier", stats.ammunitionTier ?? "—"]);
   if (result) {

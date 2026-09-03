@@ -8,6 +8,7 @@ import {
 } from "./songOfDestruction";
 import type { SourceReference } from "../../types";
 import type { DiscreteUniformCritDamageLayer } from "../../core/critical";
+import { inactiveSpellStacks, type TimedSpellStacks } from "./ancientSpells";
 
 /**
  * Channelled Might (30 Mar 2026): full Asphyxiate channel → +15% magic crit damage
@@ -122,6 +123,10 @@ export interface MagicRotationState {
   blastInfusedUntilTick: number;
   /** Dragon Breath wrist-wrap window end (half-open); 0 = inactive. */
   kerapacWristWrapsUntilTick: number;
+  bloodTithe: TimedSpellStacks;
+  glacialEmbrace: TimedSpellStacks;
+  /** Earliest tick another Frost Surge may trigger. */
+  frostSurgeReadyTick: number;
 }
 
 export const newMagicRotationState = (): MagicRotationState => ({
@@ -137,6 +142,9 @@ export const newMagicRotationState = (): MagicRotationState => ({
   tsunamiCritAdrenUntilTick: 0,
   blastInfusedUntilTick: 0,
   kerapacWristWrapsUntilTick: 0,
+  bloodTithe: inactiveSpellStacks(),
+  glacialEmbrace: inactiveSpellStacks(),
+  frostSurgeReadyTick: 0,
 });
 
 /** Half-open: active while tick < untilTick. */

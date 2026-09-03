@@ -24,6 +24,7 @@ import type { SimulationRuntime } from "../runtime/runtime";
 import { liveTargetDamagePotential } from "../../target/genericTarget";
 import { effectiveBaseArmourAtTick } from "../../styles/ranged/blackStone";
 import { revengeDamageMultiplier } from "../../styles/shared/revenge";
+import { activeSpellStacks } from "../../styles/magic/ancientSpells";
 
 const objectIds = new WeakMap<object, number>();
 let nextObjectId = 1;
@@ -73,6 +74,12 @@ export function landHitIdentity(
   const berserkOn = ability.style === "melee" && at < m.berserkUntilTick;
   const sunOn = ability.style === "magic" && sunshineActive(mag.sunshine, at);
   const sunSelf = mag.sunshine.grantedByCast === snap.castSeq;
+  const bloodTithe =
+    input.magicSpell === "exsanguinate" &&
+    ability.style === "magic" &&
+    (ability.category === "basic" || ability.id === "instability_lightning_surge")
+      ? activeSpellStacks(mag.bloodTithe, at)
+      : 0;
   const concLive =
     ability.style === "magic" && isConcentratedBlast(ability.id)
       ? mag.concCritStacks * mag.concCritPerStackPct
@@ -156,6 +163,7 @@ export function landHitIdentity(
     dracolichCrit,
     b(sunOn),
     b(sunSelf),
+    bloodTithe,
     concLive,
     might,
     bleedCount,

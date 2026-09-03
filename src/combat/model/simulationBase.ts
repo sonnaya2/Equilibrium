@@ -39,6 +39,7 @@ export function buildSimulationInputBase(
   const modFactory = modifiersFromSources(model.modifierSources, league);
   return {
     base: model.base,
+    magicSpell: model.magicSpell,
     poisonBase: model.poisonBase,
     level: model.level,
     ...(model.overrideBase != null ? { overrideBase: model.overrideBase } : {}),
@@ -187,6 +188,7 @@ export function toHybridManualCombatModel(
   const critChance = Math.min(Math.max(0, line.critChance), 1);
   const input: HostCombatResolveInput = {
     style: scaffold.style,
+    magicSpell: scaffold.magicSpell,
     base,
     level,
     accuracy,

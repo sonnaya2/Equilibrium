@@ -99,6 +99,7 @@ export function hostInputFromLoadoutStats(
 
   return {
     style: loadout.style,
+    magicSpell: loadout.magicSpell,
     base: stats.base,
     poisonBase: stats.poisonBase,
     level: stats.level,

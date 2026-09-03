@@ -3169,6 +3169,11 @@
   flex: 0 0 auto;
 }
 
+.combat-screen .setup-equipment-card > .magic-spell-picker {
+  flex: 0 0 auto;
+  margin: 0 0.55rem 0.2rem;
+}
+
 .combat-screen .setup-equipment-footer {
   display: grid;
   flex: 0 0 auto;

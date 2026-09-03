@@ -391,7 +391,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     cooldownSeconds: 60,
     supportStatus: "partially-modeled",
     supportNote:
-      "ST primary + crit-adren window modeled (Bernoulli adren). AoE secondaries, Glacial Embrace cost, Lightning Surge nested crit-adren not modeled.",
+      "ST primary, Glacial Embrace cost, and crit-adren window modeled. AoE secondaries and Lightning Surge nested crit-adren are not modeled.",
     source: wikiAbility("Tsunami"),
   },
   {

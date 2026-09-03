@@ -42,6 +42,7 @@ import {
   KERAPAC_WRIST_WRAPS_SOURCE,
   kerapacWristWrapsFlamesActive,
 } from "../../styles/magic/kerapacWristWraps";
+import { activeSpellStacks, bloodTitheDamageModifier } from "../../styles/magic/ancientSpells";
 
 /** Applies flat buffs at onCast so intermediate rounding follows stage order. */
 export function buffMultiplier(
@@ -254,6 +255,14 @@ export function landTimeModifiers(
         flamesActive ? KERAPAC_WRIST_WRAPS_FLAMES_SOURCE : KERAPAC_WRIST_WRAPS_SOURCE,
       ),
     );
+  }
+  if (
+    rt.input.magicSpell === "exsanguinate" &&
+    ability.style === "magic" &&
+    (ability.category === "basic" || ability.id === "instability_lightning_surge")
+  ) {
+    const bloodTithe = bloodTitheDamageModifier(activeSpellStacks(state.magic.bloodTithe, at));
+    if (bloodTithe) modifiers.push(bloodTithe);
   }
   // Blast Infused: magic basics incl. Combust DoT ticks (wiki Inner Wrath).
   if (

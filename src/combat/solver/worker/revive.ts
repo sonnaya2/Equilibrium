@@ -47,6 +47,7 @@ export function reviveRevolutionBase(sim: SerializableRevolutionSimBase): Revive
   const league = reviveLeague(sim.league);
   return {
     base: sim.base,
+    magicSpell: sim.magicSpell,
     poisonBase: sim.poisonBase,
     level: sim.level,
     overrideBase: sim.overrideBase,

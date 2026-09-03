@@ -319,13 +319,13 @@ describe("loadoutStats", () => {
   });
 
   it("exposes Unholy Critual's uncapped, effective, and converted chance", () => {
-    // Manual crit slider is ignored; only gear / perks / league layers count.
+    // Manual crit slider is ignored; base, gear, perks, and league layers count.
     const stats = loadoutStats(
       { ...base, critChance: 40 },
       { blessingPicks: ["Chaos", "Chaos", "Chaos", "Chaos", "Chaos", "Chaos"] },
     );
-    expect(stats.uncappedCritChance).toBeCloseTo(0.15, 10);
-    expect(stats.critChance).toBeCloseTo(0.15, 10);
+    expect(stats.uncappedCritChance).toBeCloseTo(0.25, 10);
+    expect(stats.critChance).toBeCloseTo(0.25, 10);
     expect(stats.convertedCritChance).toBeCloseTo(0, 10);
     expect(stats.critChanceSources).toEqual(
       expect.arrayContaining([{ label: "Unholy Critual", value: 0.15 }]),
@@ -459,10 +459,7 @@ describe("loadoutStats", () => {
       });
       expect(qbd?.affinity).toBe(70);
       expect(qbd?.weaknessAffinity).toBe(40);
-      const stats = loadoutStats(
-        { ...markBase, target: qbd },
-        { blessingPicks: [...markPicks] },
-      );
+      const stats = loadoutStats({ ...markBase, target: qbd }, { blessingPicks: [...markPicks] });
       expect(stats.targetAffinity).toBe(70);
       expect(stats.damagePotentialSource).toBe("target stats");
     });
@@ -512,7 +509,7 @@ describe("loadoutStats", () => {
 
   it("set crit wiring: tectonic +3%, elite clamps at 100%, Tumeken is dynamic-only", () => {
     const plain = loadoutStats(base);
-    expect(plain.critChance).toBeCloseTo(0, 10);
+    expect(plain.critChance).toBeCloseTo(0.1, 10);
 
     const tectonic = loadoutStats({
       ...base,
@@ -522,9 +519,9 @@ describe("loadoutStats", () => {
         legs: "item:tectonic-legs",
       },
     });
-    expect(tectonic.critChance).toBeCloseTo(0.03, 10);
+    expect(tectonic.critChance).toBeCloseTo(0.13, 10);
 
-    // Elite tectonic +6% set crit; no manual slider, so stack gear until clamp.
+    // Elite tectonic adds 6% set crit above the universal base chance.
     const eliteClamp = loadoutStats({
       ...base,
       critChance: 97,
@@ -534,7 +531,7 @@ describe("loadoutStats", () => {
         legs: "item:elite-tectonic-robe-bottom",
       },
     });
-    expect(eliteClamp.critChance).toBeCloseTo(0.06, 10);
+    expect(eliteClamp.critChance).toBeCloseTo(0.16, 10);
     expect(
       Object.values(eliteClamp.critChanceBreakdown).reduce((sum, value) => sum + value, 0),
     ).toBeCloseTo(eliteClamp.critChance, 10);
@@ -547,18 +544,18 @@ describe("loadoutStats", () => {
         legs: "item:tumekens-resplendence-legs",
       },
     });
-    expect(tumeken.critChance).toBeCloseTo(0, 10);
+    expect(tumeken.critChance).toBeCloseTo(0.1, 10);
     expect(tumeken.tumekensPieces).toBe(3);
   });
 
   it("Biting adds +2%/rank crit (+2.2% with level-20 flag)", () => {
     const r4 = loadoutStats({ ...base, perks: { ...base.perks, biting: 4 } });
-    expect(r4.critChance).toBeCloseTo(0.08, 10);
+    expect(r4.critChance).toBeCloseTo(0.18, 10);
     const r4l20 = loadoutStats({
       ...base,
       perks: { ...base.perks, biting: 4, bitingLevel20: true },
     });
-    expect(r4l20.critChance).toBeCloseTo(0.088, 10);
+    expect(r4l20.critChance).toBeCloseTo(0.188, 10);
   });
 
   it("surfaces Warpriest of Tuska in the loadout crit breakdown and set summary", () => {
@@ -571,7 +568,7 @@ describe("loadoutStats", () => {
       ...base,
       equipmentSlots,
     });
-    expect(stats.critChance).toBeCloseTo(0.03, 10);
+    expect(stats.critChance).toBeCloseTo(0.13, 10);
     expect(stats.critChanceBreakdown.sets).toBeCloseTo(0.03, 10);
     expect(stats.equipmentEffects.setCritChance).toEqual({
       unconditional: 0.03,
@@ -1367,7 +1364,7 @@ describe("loadoutStats", () => {
     });
 
     it("resolves True Equilibrium once for one, two, and three unique paths", () => {
-      // Crit is TE only (no manual loadout crit baseline).
+      // Crit includes the 10% universal base chance plus True Equilibrium.
       const fixtures = [
         {
           picks: ["Balance", "Balance", "Balance", "Balance"] as const,
@@ -1375,7 +1372,7 @@ describe("loadoutStats", () => {
           base: 1_836,
           armour: 50,
           life: 15_600,
-          crit: 0.05,
+          crit: 0.15,
           prayer: 5,
           critDamage: 0.075,
         },
@@ -1386,7 +1383,7 @@ describe("loadoutStats", () => {
           base: 1_936,
           armour: 100,
           life: 10_900,
-          crit: 0.1,
+          crit: 0.2,
           prayer: 10,
           critDamage: 0.15,
         },
@@ -1397,7 +1394,7 @@ describe("loadoutStats", () => {
           base: 2_023,
           armour: 150,
           life: 11_400,
-          crit: 0.15,
+          crit: 0.25,
           prayer: 15,
           critDamage: 0.225,
         },
@@ -1459,8 +1456,8 @@ describe("loadoutStats", () => {
       expect(withTome.base).toBe(2_168);
       expect(withTome.league.prayerBonus).toBe(60);
       expect(withTome.icyenic.totalPrayerBonus).toBe(60);
-      // TE 10% + Icyenic crit from prayer stack; no manual crit baseline.
-      expect(withTome.critChance).toBeCloseTo(0.22, 10);
+      // Base 10% + TE 10% + Icyenic crit from the prayer stack.
+      expect(withTome.critChance).toBeCloseTo(0.32, 10);
       expect(withTome.baseAbilityDamageBreakdown).toEqual(
         expect.arrayContaining([
           { label: "True Equilibrium", value: 150 },

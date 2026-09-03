@@ -226,7 +226,7 @@ export function ResolvedBreakdown({
             percent
             total={stats.critChance}
             items={[
-              { label: "Configured", value: stats.critChanceBreakdown.configured },
+              { label: "Base", value: stats.critChanceBreakdown.base },
               { label: "Biting", value: stats.critChanceBreakdown.biting },
               { label: "Set Effects", value: stats.critChanceBreakdown.sets },
               ...stats.critChanceSources,

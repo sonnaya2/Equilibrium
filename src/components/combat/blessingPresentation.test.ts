@@ -13,6 +13,7 @@ import {
   strikingLightBasicCastNote,
   strikingLightBasicRowMark,
   strikingLightChoice,
+  tearingThornsAssumptionRows,
   temperedHeartAssumptionRows,
 } from "./blessingPresentation";
 
@@ -179,6 +180,43 @@ describe("blessingPresentation", () => {
     ]);
     expect(temperedHeartAssumptionRows([tempered])).toEqual([
       ["Tempered Heart", "+6 adrenaline every 1.2s (2 ticks) · first pulse at t2"],
+    ]);
+  });
+
+  it("explains which Tearing Thorns term Higher Power scales", () => {
+    const tearing = {
+      ...strikingPlate(),
+      id: "tearing-thorns" as const,
+      name: "Tearing Thorns",
+      tier: 5,
+      combat: {
+        tearingThorns: {
+          durationMultiplier: 2,
+          graspAbilityDamageBand: [80, 120] as const,
+          graspMaxLifeDamageBand: [0.2, 0.3] as const,
+          graspMaxTargets: 9,
+          hitsPerGrasp: 5,
+        },
+      },
+    };
+    const higherPower = {
+      ...strikingPlate(),
+      id: "higher-power" as const,
+      name: "Higher Power",
+      tier: 4,
+      combat: { baseAbilityDamageMultiplier: 1.3 },
+    };
+
+    expect(tearingThornsAssumptionRows(undefined)).toEqual([]);
+    expect(tearingThornsAssumptionRows([tearing])).toEqual([
+      ["Tearing Thorns", "80-120% poison ability damage + 20-30% maximum life per Grasp"],
+    ]);
+    expect(tearingThornsAssumptionRows([tearing, higherPower])).toEqual([
+      ["Tearing Thorns", "80-120% poison ability damage + 20-30% maximum life per Grasp"],
+      [
+        "Higher Power → Grasp",
+        "Boosts the poison ability-damage term by 30%; the maximum-life term is unchanged",
+      ],
     ]);
   });
 

@@ -63,6 +63,7 @@ import {
   type RevengeState,
 } from "../../styles/shared/revenge";
 import { kerapacWristWrapsActive } from "../../styles/magic/kerapacWristWraps";
+import { scriptureOfAmascutDamageActive } from "../../passives/scriptureOfAmascut";
 
 /** Explicit Greater Barge opener idle policy when lastAttackTick is unset (default 0). */
 export const GREATER_BARGE_OPENER_IDLE_TICKS = 0;
@@ -452,9 +453,7 @@ export function prepareCast(
     ability.id === "combust" &&
     conflagrateActive(rt.state.magic.song.conflagrateUntilTick, candidate);
   const songBasicStreamEligible =
-    songSummary?.enabled === true &&
-    songPreCastStacks >= 25 &&
-    ability.category === "basic";
+    songSummary?.enabled === true && songPreCastStacks >= 25 && ability.category === "basic";
   const kerapacCombustActive =
     ability.id === "combust" &&
     hasPassive(input.equipmentEffects, "kerapac-combust") &&
@@ -499,6 +498,10 @@ export function prepareCast(
     songTwoPieceActive: songSummary?.twoPiece === true,
     songPreCastStacks,
     kerapacCombustActive,
+    scriptureOfAmascutDamageAtCast: scriptureOfAmascutDamageActive(
+      rt.state.scriptureOfAmascut,
+      candidate,
+    ),
     ...(tuskasEmpoweredFlat !== undefined ? { tuskasEmpoweredDamage: tuskasEmpoweredFlat } : {}),
     ...(ability.id === "bash"
       ? {
@@ -539,7 +542,8 @@ export function prepareCast(
   if (perfectEquilibriumTrigger) transitions.push({ kind: "consumePerfectEquilibrium" });
   if (wen.nextState) transitions.push({ kind: "activateWenIcyPrecision", next: wen.nextState });
   if (songConflagrateActive) transitions.push({ kind: "consumeSongConflagrate" });
-  if (songBasicStreamEligible) transitions.push({ kind: "armSongAdrenaline", stacks: songPreCastStacks });
+  if (songBasicStreamEligible)
+    transitions.push({ kind: "armSongAdrenaline", stacks: songPreCastStacks });
   const steadfastPreparation =
     ability.id === "preparation"
       ? blessingRule(input.league, "steadfast-will")?.steadfastWill
@@ -580,13 +584,7 @@ export function prepareCast(
 
   // costOf / spendOf share Vigour special discount; Icy Tempest stack reduction is spend-only.
   const cost = costOf(rt.state, ability, candidate);
-  const spend = spendOf(
-    rt.state,
-    ability,
-    candidate,
-    input.ammunition,
-    selectedIcyTempestOutcome,
-  );
+  const spend = spendOf(rt.state, ability, candidate, input.ammunition, selectedIcyTempestOutcome);
   const specialRefund = igneousShowdownRepeat
     ? IGNEOUS_SHOWDOWN_REPEAT_REFUND * (candidate < rt.state.naturalInstinctUntilTick ? 2 : 1)
     : 0;

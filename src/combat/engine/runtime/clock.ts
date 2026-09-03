@@ -27,6 +27,8 @@ import {
 } from "../../styles/shared/revenge";
 import { patchDefence } from "./state";
 import { normalizeSpellStacks } from "../../styles/magic/ancientSpells";
+import { normalizeScriptureOfAmascutState } from "../../passives/scriptureOfAmascut";
+import { patchScriptureOfAmascut } from "./state";
 
 /**
  * The canonical simulation clock. Time moves only through advanceTo: it lands
@@ -146,10 +148,7 @@ function grantSongAdrenaline(
 
 function normalizeSongClocks(rt: SimulationRuntime, tick: number): void {
   const current = rt.state.magic.song;
-  const essenceCorruption = normalizeEssenceCorruptionState(
-    current.essenceCorruption,
-    tick,
-  );
+  const essenceCorruption = normalizeEssenceCorruptionState(current.essenceCorruption, tick);
   const conflagrateUntilTick =
     current.conflagrateUntilTick > 0 && current.conflagrateUntilTick <= tick
       ? 0
@@ -216,5 +215,12 @@ export function advanceTo(rt: SimulationRuntime, targetTick: number): void {
   const revenge = normalizeRevengeState(rt.state.defence.revenge, rt.state.tick);
   if (revenge !== rt.state.defence.revenge) {
     rt.state = patchDefence(rt.state, { revenge });
+  }
+  const scriptureOfAmascut = normalizeScriptureOfAmascutState(
+    rt.state.scriptureOfAmascut,
+    rt.state.tick,
+  );
+  if (scriptureOfAmascut !== rt.state.scriptureOfAmascut) {
+    rt.state = patchScriptureOfAmascut(rt.state, scriptureOfAmascut);
   }
 }

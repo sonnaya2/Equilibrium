@@ -14,6 +14,7 @@ import { resolveLeagueCritAtLand } from "../../league/ruleset";
 import { dynamicEquipmentCritBonus } from "../../shared/equipment";
 import { activeBleedCount } from "../../styles/melee/effects";
 import { resolveEffectiveCombatLevel } from "../../core/effectiveLevel";
+import type { CastSnapshot } from "../cast/snapshot";
 import {
   NO_SONG_OF_DESTRUCTION,
   essenceCorruptionFlatBonus,
@@ -67,7 +68,7 @@ export function resolveLightningSurge(
     songConflagrateActive: false,
     songTwoPieceActive: false,
     songPreCastStacks: 0,
-  } as const;
+  } as CastSnapshot;
   const equipmentCrit = dynamicEquipmentCritBonus(
     input.equipmentEffects,
     LIGHTNING_SURGE_ABILITY,
@@ -144,12 +145,9 @@ export function resolveLightningSurge(
       expected,
       critExpected,
       capLoss,
-      critical: packageCritical(
-        base.critChance,
-        base.critExpected,
-        base.nonCritExpected,
-        { scale: sourceCritChance },
-      ),
+      critical: packageCritical(base.critChance, base.critExpected, base.nonCritExpected, {
+        scale: sourceCritChance,
+      }),
     },
     hitDetail: base,
     ...(base.postDamagePotentialFlatContribution !== undefined

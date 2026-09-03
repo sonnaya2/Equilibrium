@@ -2,7 +2,11 @@ import { defenceStats, type DefenceStats } from "@/combat/core/defence";
 import { lifePointStats, type LifePointStats } from "@/combat/core/lifePoints";
 import { TICK_SECONDS } from "@/combat/core/ticks";
 import { baseAbilityDamage } from "@/combat/core/abilityDamage";
-import { baseCritDamageMultiplier, type CritLayers } from "@/combat/core/critical";
+import {
+  BASE_CRIT_CHANCE,
+  baseCritDamageMultiplier,
+  type CritLayers,
+} from "@/combat/core/critical";
 import { STANDARD_HIT_CAP, type HitCapRule } from "@/combat/core/hitCaps";
 import { mulFloor } from "@/combat/core/rounding";
 import {
@@ -576,10 +580,7 @@ export function resolveLeagueBundle(
     {
       incomingHitIntervalSeconds: loadout.target?.incomingHitIntervalSeconds,
       targetsStruck: loadout.target?.areaTargets,
-      poisonImmune: targetPoisonImmuneForBlessingPoison(
-        loadout.target?.poisonImmune,
-        league,
-      ),
+      poisonImmune: targetPoisonImmuneForBlessingPoison(loadout.target?.poisonImmune, league),
     },
     blessingRule(league, "perfidious")?.perfidious?.barkscalesHitsPerTrigger,
   );
@@ -817,7 +818,7 @@ export interface ResolvedCrit {
   uncappedCritChance: number;
   convertedCritChance: number;
   critChanceBreakdown: {
-    configured: number;
+    base: number;
     biting: number;
     sets: number;
     equipment: number;
@@ -902,10 +903,9 @@ export function resolveCrit(
       ? bitingCritChanceBonus(loadout.perks.biting, loadout.perks.bitingLevel20)
       : 0;
   const setCrit = equipment.equipmentEffects.setCritChance.unconditional;
-  // No manual crit slider - only gear, perks, sets, and league layers.
-  const configuredCrit = 0;
+  const baseCrit = BASE_CRIT_CHANCE;
   const critSubtotal =
-    configuredCrit + biting + setCrit + equipmentCrit.chance + icyenicCrit + trueEquilibriumCrit;
+    baseCrit + biting + setCrit + equipmentCrit.chance + icyenicCrit + trueEquilibriumCrit;
   // Invention perk Equilibrium zeros crit - not the League.
   const critsDisabled = loadout.perks.equilibrium > 0;
   const critual = resolveLeagueCritualStats(leagueBundle?.league, critSubtotal, critsDisabled);
@@ -927,7 +927,7 @@ export function resolveCrit(
     uncappedCritChance: critual.uncappedChance,
     convertedCritChance: critual.convertedChance,
     critChanceBreakdown: {
-      configured: configuredCrit,
+      base: baseCrit,
       biting,
       sets: setCrit,
       equipment: equipmentCrit.chance,
@@ -1149,7 +1149,13 @@ export function resolveCombatRules(
           "ranged:binding-shot",
           "necromancy:soul-strike",
         ]);
-        if (flankingIds.has(id) || id.endsWith(":soul-strike") || id.endsWith(":backhand") || id.endsWith(":impact") || id.endsWith(":binding-shot")) {
+        if (
+          flankingIds.has(id) ||
+          id.endsWith(":soul-strike") ||
+          id.endsWith(":backhand") ||
+          id.endsWith(":impact") ||
+          id.endsWith(":binding-shot")
+        ) {
           const mult = 1 + flankingDamageBonus(loadout.perks.flanking);
           mods.push({
             id: `perk:flanking:${loadout.perks.flanking}`,
@@ -1185,10 +1191,7 @@ export function resolveCombatRules(
         }
       }
       if (loadout.perks.ruthless > 0 && loadout.buffs.ruthlessStacks > 0) {
-        const ruthless = ruthlessPerkModifier(
-          loadout.perks.ruthless,
-          loadout.buffs.ruthlessStacks,
-        );
+        const ruthless = ruthlessPerkModifier(loadout.perks.ruthless, loadout.buffs.ruthlessStacks);
         mods.push(ruthless);
       }
       return mods;

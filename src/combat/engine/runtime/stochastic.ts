@@ -7,7 +7,8 @@ import type { AbilitySpec } from "../../pipeline/calculateAbility";
 import { resolvePoisonApplication, type PlayerPoisonProfile } from "../../poison/mechanics";
 import { isBasicAttack } from "../../shared/adrenalineGain";
 import type { ActiveEquipmentEffects } from "../../shared/equipment";
-import { deathdealerApplicationChance } from "../../shared/equipment";
+import { deathdealerApplicationChance, hasPassive } from "../../shared/equipment";
+import { SCRIPTURE_OF_AMASCUT_PASSIVE_ID } from "../../passives/scriptureOfAmascut";
 import type { ResolvedRangedAmmunitionProfile } from "../../styles/ranged/ammunitionProfile";
 import type { PlayerVitalityInput } from "../simulation/contracts";
 
@@ -119,6 +120,24 @@ function hasBoltDeathmarkApplicationOpportunity(
   return canActivateBoltDeathmark(basic);
 }
 
+function canActivateScriptureOfAmascut(ability: AbilitySpec | undefined): boolean {
+  return ability?.hits.some((hit) => hit.band.maxPct > 0 || hit.band.minPct > 0) === true;
+}
+
+function hasScriptureOfAmascutOpportunity(
+  input: StatefulRngInput,
+  activeAbilityIds: Iterable<string>,
+): boolean {
+  for (const abilityId of activeAbilityIds) {
+    if (canActivateScriptureOfAmascut(abilityForId(input, abilityId))) return true;
+  }
+  if (!input.style) return false;
+  const basic =
+    input.abilityRegistry?.basicByStyle.get(input.style) ??
+    input.abilities?.find((ability) => ability.style === input.style && isBasicAttack(ability));
+  return canActivateScriptureOfAmascut(basic);
+}
+
 export function needsStochasticLanes(
   input: StatefulRngInput,
   activeAbilityIds: Iterable<string>,
@@ -131,6 +150,12 @@ export function needsStochasticLanes(
   // and land materializes parent critOutcome for one Inferno per parent crit.
   // Cinders 5% needs the ensemble - rare single-lane samples starve analysis.
   if (hasBlessing(input.league, "abyssal-cinders")) return true;
+  if (
+    hasPassive(input.equipmentEffects, SCRIPTURE_OF_AMASCUT_PASSIVE_ID) &&
+    hasScriptureOfAmascutOpportunity(input, abilityIds)
+  ) {
+    return true;
+  }
   if (
     input.playerPoison !== undefined &&
     resolvePoisonApplication(input.playerPoison, 0) !== null &&

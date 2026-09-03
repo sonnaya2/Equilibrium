@@ -69,6 +69,7 @@ function emptyPerfectEquilibriumSnapshot(baseMods: CombatModifier[]): CastSnapsh
     songConflagrateActive: false,
     songTwoPieceActive: false,
     songPreCastStacks: 0,
+    scriptureOfAmascutDamageAtCast: false,
   };
 }
 

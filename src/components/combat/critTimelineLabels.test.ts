@@ -11,9 +11,9 @@ import { eventCritLabel } from "./RotationAnalysis";
 
 const NOW = 1_700_000_000_000;
 
-function magicSummary(critPct: number) {
+function magicSummary() {
   let loadout = equipInSlot(DEFAULT_LOADOUT, "twohand", "item:staff-of-light");
-  loadout = { ...loadout, style: "magic", critChance: critPct };
+  loadout = { ...loadout, style: "magic" };
   const stats = loadoutStats(loadout, { now: NOW });
   const model = toResolvedCombatModel(loadout, { now: NOW }, stats);
   const catalogue = resolveAbilityCatalogue();
@@ -49,10 +49,10 @@ describe("castCritLabel / eventCritLabel (concrete outcomes)", () => {
 });
 
 describe("revo single-path concrete crit timeline", () => {
-  it("materializes Crit/No crit chrome at 55% without EV wording", () => {
-    const { stats, summary } = magicSummary(55);
+  it("materializes Crit/No crit chrome at the 10% base rate without EV wording", () => {
+    const { stats, summary } = magicSummary();
     expect(summary.ok).toBe(true);
-    expect(stats.critChance).toBeCloseTo(0.55, 10);
+    expect(stats.critChance).toBeCloseTo(0.1, 10);
     expect(summary.rng?.lanes ?? 1).toBe(1);
     const labels = summary.casts.map((c) => castCritLabel(c.result));
     expect(labels.every((l) => l === "Crit" || l === "No crit")).toBe(true);
@@ -66,16 +66,16 @@ describe("revo single-path concrete crit timeline", () => {
     }
   });
 
-  it("Critual caps at 50% with concrete chrome (128-lane ensemble)", () => {
+  it("Critual adds 15% to base crit with concrete chrome (128-lane ensemble)", () => {
     let loadout = equipInSlot(DEFAULT_LOADOUT, "twohand", "item:staff-of-light");
-    loadout = { ...loadout, style: "magic", critChance: 80 };
+    loadout = { ...loadout, style: "magic" };
     const opts = {
       now: NOW,
       blessingPicks: ["Chaos", "Chaos", "Chaos", "Chaos", "Chaos"] as const,
     };
     const stats = loadoutStats(loadout, opts);
     expect(stats.league.blessingIds.has("unholy-critual")).toBe(true);
-    expect(stats.critChance).toBeCloseTo(0.5, 10);
+    expect(stats.critChance).toBeCloseTo(0.25, 10);
     const model = toResolvedCombatModel(loadout, opts, stats);
     const catalogue = resolveAbilityCatalogue();
     const summary = simulateRevolution(
@@ -93,6 +93,6 @@ describe("revo single-path concrete crit timeline", () => {
       expect(e.damage.critical.outcome === true || e.damage.critical.outcome === false).toBe(true);
       expect(eventCritLabel(e)).toMatch(/^(Crit|No crit)$/);
     }
-    expect(Math.max(...hits.map((e) => e.damage.critical?.chance ?? 0))).toBeCloseTo(0.5, 10);
+    expect(Math.max(...hits.map((e) => e.damage.critical?.chance ?? 0))).toBeCloseTo(0.25, 10);
   });
 });

@@ -25,6 +25,11 @@ import {
   type WeaponConfiguration,
 } from "./requirements";
 import { activeSpellStacks, glacialTsunamiReduction } from "../../styles/magic/ancientSpells";
+import { hasPassive, type ActiveEquipmentEffects } from "../../shared/equipment";
+import {
+  SCRIPTURE_OF_AMASCUT_PASSIVE_ID,
+  SCRIPTURE_OF_AMASCUT_PROC_CHANCE,
+} from "../../passives/scriptureOfAmascut";
 
 export {
   equipmentRecordPassiveIds,
@@ -282,6 +287,7 @@ export function rngPointsFor(
   spend: number,
   rules?: AdrenalineRules,
   league?: ResolvedLeagueRules,
+  equipmentEffects?: ActiveEquipmentEffects,
 ): RngPoint[] {
   const points: RngPoint[] = [];
   const isBasic = ability.category === "basic";
@@ -304,6 +310,13 @@ export function rngPointsFor(
     avernic?.procChance !== undefined
   ) {
     points.push({ id: "avernic-rampage", chance: avernic.procChance });
+  }
+  if (
+    hasPassive(equipmentEffects, SCRIPTURE_OF_AMASCUT_PASSIVE_ID) &&
+    candidate >= state.scriptureOfAmascut.readyTick &&
+    hasDamagingHits(ability.hits)
+  ) {
+    points.push({ id: "scripture-of-amascut", chance: SCRIPTURE_OF_AMASCUT_PROC_CHANCE });
   }
   // Spectral Scythe casts 1-2: 25% residual soul, state-changing when under cap.
   const soulChance = (ability as { soulChance?: number }).soulChance;

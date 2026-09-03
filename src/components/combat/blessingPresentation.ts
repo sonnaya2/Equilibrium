@@ -167,16 +167,41 @@ export function temperedHeartAssumptionRows(
   ];
 }
 
+export function tearingThornsAssumptionRows(
+  blessings: readonly BlessingChoice[] | undefined,
+): Array<[string, string]> {
+  const tearing = blessings?.find((choice) => choice.id === "tearing-thorns")?.combat.tearingThorns;
+  if (!tearing) return [];
+  const higherPower = blessings?.some((choice) => choice.id === "higher-power") === true;
+  return [
+    [
+      "Tearing Thorns",
+      `${tearing.graspAbilityDamageBand[0]}-${tearing.graspAbilityDamageBand[1]}% poison ability damage + ${Math.round(tearing.graspMaxLifeDamageBand[0] * 100)}-${Math.round(tearing.graspMaxLifeDamageBand[1] * 100)}% maximum life per Grasp`,
+    ],
+    ...(higherPower
+      ? ([
+          [
+            "Higher Power → Grasp",
+            "Boosts the poison ability-damage term by 30%; the maximum-life term is unchanged",
+          ],
+        ] as Array<[string, string]>)
+      : []),
+  ];
+}
+
 /** One-line note when the selected cast is a basic (category) under Striking Light. */
 export function strikingLightBasicCastNote(
   blessings: readonly BlessingChoice[] | undefined,
-  ability: {
-    id?: string;
-    category?: string;
-    abilityCategory?: string;
-    basicAttack?: boolean;
-    autoAttack?: boolean;
-  } | null | undefined,
+  ability:
+    | {
+        id?: string;
+        category?: string;
+        abilityCategory?: string;
+        basicAttack?: boolean;
+        autoAttack?: boolean;
+      }
+    | null
+    | undefined,
 ): string | null {
   const choice = strikingLightChoice(blessings);
   const mult = choice?.combat.basicDamageMultiplier;

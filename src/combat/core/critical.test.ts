@@ -1,8 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { baseCritDamageMultiplier, critProbability, rollsCrit } from "./critical";
+import { BASE_CRIT_CHANCE, baseCritDamageMultiplier, critProbability, rollsCrit } from "./critical";
 
 describe("critical", () => {
-  it("follows the sourced stepwise progression (wiki, verified 2026-07-31)", () => {
+  it("uses the sourced 10% base critical-strike chance", () => {
+    expect(BASE_CRIT_CHANCE).toBe(0.1);
+  });
+
+  it("follows the sourced stepwise progression (wiki, verified 2026-09-03)", () => {
     const expected: [level: number, multiplier: number][] = [
       [1, 1.1],
       [19, 1.1],

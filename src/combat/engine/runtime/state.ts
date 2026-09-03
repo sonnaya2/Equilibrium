@@ -25,6 +25,10 @@ import type { PoisonTier } from "../../poison/mechanics";
 import type { TimedTargetStatus } from "../../target/timedStatus";
 import type { BlackStoneArmourState } from "../../styles/ranged/blackStone";
 import { inactiveRevengeState, type RevengeState } from "../../styles/shared/revenge";
+import {
+  newScriptureOfAmascutState,
+  type ScriptureOfAmascutState,
+} from "../../passives/scriptureOfAmascut";
 
 export type { MeleeRotationState, RangedRotationState, MagicRotationState };
 export type { NecroRotationState, NecromancyRotationState, ConjureState };
@@ -231,6 +235,7 @@ export interface RotationState {
     aftershockPending: boolean;
   };
   naturalInstinctUntilTick: number;
+  scriptureOfAmascut: ScriptureOfAmascutState;
   defence: {
     revenge: RevengeState;
   };
@@ -278,6 +283,7 @@ export function newRotationState(
       aftershockPending: false,
     },
     naturalInstinctUntilTick: opts.naturalInstinctUntilTick ?? 0,
+    scriptureOfAmascut: newScriptureOfAmascutState(),
     defence: { revenge: inactiveRevengeState() },
     ...(opts.league
       ? {
@@ -319,6 +325,13 @@ export function patchDefence(
   patch: Partial<RotationState["defence"]>,
 ): RotationState {
   return { ...state, defence: { ...state.defence, ...patch } };
+}
+
+export function patchScriptureOfAmascut(
+  state: RotationState,
+  scriptureOfAmascut: ScriptureOfAmascutState,
+): RotationState {
+  return { ...state, scriptureOfAmascut };
 }
 
 export function gainAdrenaline(state: RotationState, amount: number): RotationState {

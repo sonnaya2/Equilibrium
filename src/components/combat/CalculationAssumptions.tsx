@@ -27,6 +27,7 @@ import {
 import {
   lordOfLightAssumptionRows,
   strikingLightAssumptionRows,
+  tearingThornsAssumptionRows,
   temperedHeartAssumptionRows,
 } from "./blessingPresentation";
 import { stochasticAssumptionRows } from "./revoStochasticLabels";
@@ -62,6 +63,9 @@ export function CalculationAssumptions({
   const manualInputsOnly = stats.baseDamageMode === "manual" && stats.mainhandTier === 0;
   const barkscalesPicked = stats.league.blessings.some((choice) => choice.id === "barkscales");
   const bigBonedPicked = stats.league.blessings.some((choice) => choice.id === "big-boned");
+  const poisonBasisRelevant = stats.league.blessings.some(
+    (choice) => choice.id === "higher-power" || choice.id === "tearing-thorns",
+  );
   const unholyPicked = stats.league.blessings.some((choice) => choice.id === "unholy-critual");
   const icyenicActive = stats.league.relicNames?.has("Icyenic Faith") === true;
   const naragiActive = stats.league.relicNames?.has(NARAGI_EDICT_RELIC) === true;
@@ -80,18 +84,15 @@ export function CalculationAssumptions({
     ...(manualInputsOnly
       ? []
       : ([
-          [
-            stats.weaponConfiguration === "twohand" ? "Two-hand" : "Main-hand",
-            stats.mainhandTier,
-          ],
-          [
-            stats.combatStyle === "necromancy" ? "Conduit" : "Off-hand",
-            stats.offhandTier ?? "—",
-          ],
+          [stats.weaponConfiguration === "twohand" ? "Two-hand" : "Main-hand", stats.mainhandTier],
+          [stats.combatStyle === "necromancy" ? "Conduit" : "Off-hand", stats.offhandTier ?? "—"],
         ] as Array<[string, string | number]>)),
     ["Style damage", stats.equipmentStyleDamageBonus],
     ["Base mode", stats.baseDamageMode],
     ["Base damage", stats.base],
+    ...(poisonBasisRelevant
+      ? ([["Poison ability damage", stats.poisonBase]] as Array<[string, string | number]>)
+      : []),
     [
       "Start adren",
       stats.startingAdrenaline === stats.maxAdrenaline
@@ -116,9 +117,9 @@ export function CalculationAssumptions({
       : []),
     ["Crit damage", `+${PERCENT_FORMAT.format(stats.totalCritDamageBonus)}`],
     ...(result?.playerPoison?.targetState
-      ? ([
-          ["Bik stacks", formatNumber(result.playerPoison.targetState.bikStacks)],
-        ] as Array<[string, string | number]>)
+      ? ([["Bik stacks", formatNumber(result.playerPoison.targetState.bikStacks)]] as Array<
+          [string, string | number]
+        >)
       : []),
     ["Hit cap", stats.cap.bypass ? "Off" : "On (30k)"],
     ...(stats.league.blessings.length > 0
@@ -154,6 +155,15 @@ export function CalculationAssumptions({
       stats.league.areaTargets,
     ),
     ...temperedHeartAssumptionRows(stats.league.blessings),
+    ...tearingThornsAssumptionRows(stats.league.blessings),
+    ...(stats.plantedFeet && stats.combatStyle === "magic"
+      ? ([
+          [
+            "Planted Feet",
+            "Base Sunshine lasts 63 ticks; Greater lasts 64. Beam damage is removed from both",
+          ],
+        ] as Array<[string, string | number]>)
+      : []),
     ...(bigBonedPicked
       ? ([["Big Boned", BIG_BONED_OUTGOING_ASSUMPTIONS.join("; ")]] as Array<
           [string, string | number]

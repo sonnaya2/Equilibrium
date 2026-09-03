@@ -11,6 +11,10 @@ describe("combat effect presentation", () => {
     expect(combatEffectDisplayName("ammunition:bik")).toBe("Evolving Toxin");
     expect(combatEffectDisplayName("player_weapon_poison")).toBe("Weapon poison");
     expect(combatEffectDisplayName("song:essence-corruption")).toBe("Essence Corruption");
+    expect(combatEffectDisplayName("devourers_contagion")).toBe("Devourer's Contagion");
+    expect(combatEffectIconPath("devourers_contagion")).toBe(
+      "/game/combat/equipment/scripture-of-amascut.webp",
+    );
   });
 
   it("names FSoA Lightning Surge proc and Surging Storm passive ids", () => {
@@ -39,9 +43,7 @@ describe("combat effect presentation", () => {
     );
     expect(combatEffectIconPath("surging-storm")).toBe("/game/combat/status/surging-storm.webp");
     expect(combatEffectDisplayName("song:conflagrate")).toBe("Conflagrate");
-    expect(combatEffectIconPath("soulfire")).toBe(
-      "/game/combat/equipment/roar-of-awakening.webp",
-    );
+    expect(combatEffectIconPath("soulfire")).toBe("/game/combat/equipment/roar-of-awakening.webp");
     expect(combatEffectIconPath("song:conflagrate")).toBe("/game/combat/status/soulfire.webp");
   });
 

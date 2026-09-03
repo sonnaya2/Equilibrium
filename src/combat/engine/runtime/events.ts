@@ -13,15 +13,7 @@ import {
 export type { EventResolution, ResolvedDamage } from "../resolution/types";
 
 export type EventFamily =
-  | "hit"
-  | "dot"
-  | "proc"
-  | "blessing"
-  | "conjureAuto"
-  | "command"
-  | "poison"
-  | "player"
-  | "status";
+  "hit" | "dot" | "proc" | "blessing" | "conjureAuto" | "command" | "poison" | "player" | "status";
 
 export type StatefulOccurrenceModel =
   | { readonly kind: "bernoulli"; readonly probability: number }
@@ -32,14 +24,7 @@ export type StatefulOccurrenceModel =
     };
 
 export type DamageOriginKind =
-  | "direct"
-  | "dot"
-  | "command"
-  | "conjure"
-  | "proc"
-  | "blessing"
-  | "poison"
-  | "status";
+  "direct" | "dot" | "command" | "conjure" | "proc" | "blessing" | "poison" | "status";
 
 export interface ScheduledEvent<RT = unknown> {
   tick: number;
@@ -68,6 +53,8 @@ export interface ScheduledEvent<RT = unknown> {
   flowReduction?: number;
   convertedChannel?: boolean;
   dotKind?: DamageOverTimeKind;
+  /** Counts this scheduled DoT hit toward Tearing Thorns. */
+  tearingThornsEligible?: boolean;
   bleedId?: BleedId;
   bleedExpiresAtTick?: number;
   /** Resolved combat style for separate events without an AbilitySpec. */

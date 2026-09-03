@@ -9,6 +9,24 @@ import {
 import { graspOfGuthixComponents } from "../../../league/damage";
 import type { ResolvedDamage } from "../types";
 import { poisonAbilityDamageAt } from "../castHit";
+import type { AbilitySpec } from "../../../pipeline/calculateAbility";
+
+function tearingThornsAbility(
+  rt: SimulationRuntime,
+  event: ScheduledEvent<SimulationRuntime>,
+): AbilitySpec | undefined {
+  const catalogAbility = rt.byId.get(event.abilityId);
+  if (catalogAbility) return catalogAbility;
+  if (!event.tearingThornsEligible || !event.combatStyle) return undefined;
+  return {
+    id: event.abilityId,
+    name: event.abilityId,
+    style: event.combatStyle,
+    category: "utility",
+    hits: [],
+    tearingThornsEligible: true,
+  };
+}
 
 export function applyLeagueLandedHitEffects(
   rt: SimulationRuntime,
@@ -23,19 +41,29 @@ export function applyLeagueLandedHitEffects(
     event.sourceCast < 0 ||
     damage.expected <= 0 ||
     !hasBlessing(rt.input.league, "tearing-thorns") ||
-    (event.provenance.kind !== "player_dot" && event.provenance.kind !== "derived_tail")
+    (event.tearingThornsEligible !== true &&
+      event.provenance.kind !== "player_dot" &&
+      event.provenance.kind !== "derived_tail")
   ) {
     return;
   }
-  const ability = rt.byId.get(event.abilityId);
+  const ability = tearingThornsAbility(rt, event);
   const tearing = blessingRule(rt.input.league, "tearing-thorns")?.tearingThorns;
-  if (!ability?.tearingThornsEligible || !tearing) return;
+  if (
+    !(event.tearingThornsEligible === true || ability?.tearingThornsEligible) ||
+    !ability ||
+    !tearing
+  ) {
+    return;
+  }
 
-  const nextCount = (rt.state.league?.tearingThornsHitCount ?? 0) + 1;
+  const landedHits = Math.max(1, Math.floor(event.expectedSeparateHits ?? 1));
+  const nextCount = (rt.state.league?.tearingThornsHitCount ?? 0) + landedHits;
   const threshold = Math.max(1, Math.floor(tearing.hitsPerGrasp));
-  const count = nextCount >= threshold ? nextCount - threshold : nextCount;
+  const triggers = Math.floor(nextCount / threshold);
+  const count = nextCount % threshold;
   rt.state = patchLeague(rt.state, { tearingThornsHitCount: count });
-  if (nextCount < threshold) return;
+  if (triggers === 0) return;
 
   const modifiers =
     typeof rt.input.modifiers === "function"
@@ -47,7 +75,7 @@ export function applyLeagueLandedHitEffects(
   );
   const components = graspOfGuthixComponents({
     rules: rt.input.league,
-    triggers: 1,
+    triggers,
     targetsStruck: targets,
     base: poisonAbilityDamageAt(rt, event.tick),
     level: rt.input.level,

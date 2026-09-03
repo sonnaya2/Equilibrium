@@ -724,7 +724,7 @@
 {"entityId":"item:scrimshaw-of-cruelty","slot":"pocket","style":"ranged","tier":85}
 {"entityId":"item:scrimshaw-of-the-elements","slot":"pocket","style":"magic","tier":85}
 {"entityId":"item:scrimshaw-of-vampyrism","slot":"pocket","style":"melee","tier":85}
-{"entityId":"item:scripture-of-amascut","slot":"pocket","style":"magic","tier":95}
+{"entityId":"item:scripture-of-amascut","slot":"pocket","style":"hybrid"}
 {"entityId":"item:scripture-of-bik","slot":"pocket","style":"magic"}
 {"entityId":"item:scripture-of-elidinis","slot":"pocket"}
 {"entityId":"item:scripture-of-ful","slot":"pocket","style":"melee","tier":70}

@@ -47,11 +47,8 @@ export const PASSIVE_SOURCE = {
   perfectEquilibrium: wiki("Bow of the Last Guardian", "Bow_of_the_Last_Guardian", "2026-08-09"),
   attunedCrystalWeaponry: wiki("Crystal equipment", "Crystal_equipment", "2026-08-09"),
   windsEnd: wiki("Fleeting boots", "Fleeting_boots", "2026-08-09"),
-  kerapacCombust: wiki(
-    "Kerapac's wrist wraps",
-    "Kerapac%27s_wrist_wraps",
-    "2026-09-03",
-  ),
+  kerapacCombust: wiki("Kerapac's wrist wraps", "Kerapac%27s_wrist_wraps", "2026-09-03"),
+  scriptureOfAmascut: wiki("Scripture of Amascut", "Scripture_of_Amascut", "2026-09-03"),
 } as const;
 
 /**
@@ -125,10 +122,7 @@ export const PASSIVE_DEFINITIONS: readonly PassiveDefinition[] = [
     duplicatePolicy: "mutually-exclusive",
     lifecycle: ["crit-provider", "loadout-static"],
     implementationOwners: ["shared/equipment.ts"],
-    effects: [
-      "+5% critical strike chance.",
-      "−5% hit chance (multiplicative; e.g. 50% → 47.5%).",
-    ],
+    effects: ["+5% critical strike chance.", "−5% hit chance (multiplicative; e.g. 50% → 47.5%)."],
     source: PASSIVE_SOURCE.reaver,
   },
   {
@@ -445,10 +439,7 @@ export const PASSIVE_DEFINITIONS: readonly PassiveDefinition[] = [
     support: "modeled",
     duplicatePolicy: "collapse",
     lifecycle: ["landed-hit"],
-    implementationOwners: [
-      "styles/ranged/fleetingBoots.ts",
-      "engine/resolution/landed/ranged.ts",
-    ],
+    implementationOwners: ["styles/ranged/fleetingBoots.ts", "engine/resolution/landed/ranged.ts"],
     effects: [
       "Piercing Shot reduces Snipe CD by 6 ticks (3.6s) per hit instead of 4 (2.4s).",
       "Ranged Basic Attack also reduces Snipe CD by 6 ticks (3.6s) per hit.",
@@ -472,6 +463,24 @@ export const PASSIVE_DEFINITIONS: readonly PassiveDefinition[] = [
       "Empowered Combust deals 25% more damage and lands all remaining hits on its next normal hit tick.",
     ],
     source: PASSIVE_SOURCE.kerapacCombust,
+  },
+  {
+    id: "scripture-of-amascut",
+    label: "Devourer's Corruption",
+    support: "modeled",
+    duplicatePolicy: "collapse",
+    lifecycle: ["cast-start", "timed-runtime", "modifier-provider", "landed-hit"],
+    implementationOwners: [
+      "passives/scriptureOfAmascut.ts",
+      "engine/cast/effects/equipment.ts",
+      "engine/resolution/scriptureOfAmascut.ts",
+      "engine/resolution/modifiers.ts",
+    ],
+    effects: [
+      "Damaging attacks have a 6.6% chance to grant +10% base damage for 10.2 seconds.",
+      "Soul residue deals up to nine 24-40% ability-damage DoT hits per target in a 3x3 area; 15-second cooldown.",
+    ],
+    source: PASSIVE_SOURCE.scriptureOfAmascut,
   },
 ];
 

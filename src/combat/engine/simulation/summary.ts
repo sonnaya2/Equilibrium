@@ -129,6 +129,10 @@ function buildPlayerPoisonAnalysis(
     minimumDamage: (row?.minimumDamage ?? 0) + (row?.bonusDamage ?? 0),
     expectedDamage: (row?.totalDamage ?? 0) + (row?.bonusDamage ?? 0),
     maximumDamage: (row?.maximumDamage ?? 0) + (row?.bonusDamage ?? 0),
+    hostMinimumDamage: row?.minimumDamage ?? 0,
+    hostExpectedDamage: row?.totalDamage ?? 0,
+    hostMaximumDamage: row?.maximumDamage ?? 0,
+    attachedBonusDamage: row?.bonusDamage ?? 0,
     targetState,
     probabilityMass: 1,
     supportStatus: "partially-modeled",
@@ -891,6 +895,10 @@ export function combineStochasticSummaries(
           minimumDamage: (poisonRow?.minimumDamage ?? 0) + (poisonRow?.bonusDamage ?? 0),
           expectedDamage: (poisonRow?.totalDamage ?? 0) + (poisonRow?.bonusDamage ?? 0),
           maximumDamage: (poisonRow?.maximumDamage ?? 0) + (poisonRow?.bonusDamage ?? 0),
+          hostMinimumDamage: poisonRow?.minimumDamage ?? 0,
+          hostExpectedDamage: poisonRow?.totalDamage ?? 0,
+          hostMaximumDamage: poisonRow?.maximumDamage ?? 0,
+          attachedBonusDamage: poisonRow?.bonusDamage ?? 0,
           cinderbaneContinuationAttempts: mix(
             (summary) => summary.playerPoison?.cinderbaneContinuationAttempts ?? 0,
           ),
@@ -977,9 +985,7 @@ export function combineStochasticSummaries(
             immediateHitCount: mix((s) => s.analysis.song.immediateHitCount),
             soulfireCasts: mix((s) => s.analysis.song.soulfireCasts),
             conflagrateConsumptions: mix((s) => s.analysis.song.conflagrateConsumptions),
-            essenceFlatBonusDamage: toKnownMass(
-              mix((s) => s.analysis.song.essenceFlatBonusDamage),
-            ),
+            essenceFlatBonusDamage: toKnownMass(mix((s) => s.analysis.song.essenceFlatBonusDamage)),
             timedAdrenalineGained: mix((s) => s.analysis.song.timedAdrenalineGained),
           },
         }

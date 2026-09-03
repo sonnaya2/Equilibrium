@@ -43,6 +43,13 @@ import {
   kerapacWristWrapsFlamesActive,
 } from "../../styles/magic/kerapacWristWraps";
 import { activeSpellStacks, bloodTitheDamageModifier } from "../../styles/magic/ancientSpells";
+import { hasPassive } from "../../shared/equipment";
+import {
+  isDevourersContagion,
+  SCRIPTURE_OF_AMASCUT_PASSIVE_ID,
+  scriptureOfAmascutDamageActive,
+  scriptureOfAmascutDamageModifier,
+} from "../../passives/scriptureOfAmascut";
 
 /** Applies flat buffs at onCast so intermediate rounding follows stage order. */
 export function buffMultiplier(
@@ -111,6 +118,17 @@ export function landTimeModifiers(
   const { state } = rt;
   const modifiers = [...snap.baseMods];
   const equipment = rt.input.equipmentEffects;
+  const triggeringScriptureCast = snap.castSeq === state.scriptureOfAmascut.triggeringCast;
+  const scriptureDamageActive = isDot
+    ? snap.scriptureOfAmascutDamageAtCast
+    : scriptureOfAmascutDamageActive(state.scriptureOfAmascut, at) && !triggeringScriptureCast;
+  if (
+    scriptureDamageActive &&
+    hasPassive(equipment, SCRIPTURE_OF_AMASCUT_PASSIVE_ID) &&
+    !isDevourersContagion(provenance ?? { kind: "unknown" })
+  ) {
+    modifiers.push(scriptureOfAmascutDamageModifier());
+  }
   if (equipment?.amZiFlatDamage && !modifiers.some((modifier) => modifier.id === "item:am-zi")) {
     modifiers.push(amZiModifier(equipment.amZiFlatDamage));
   }

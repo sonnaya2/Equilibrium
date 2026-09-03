@@ -137,7 +137,7 @@ export interface CalcStats {
   uncappedCritChance: number;
   convertedCritChance: number;
   critChanceBreakdown: {
-    configured: number;
+    base: number;
     biting: number;
     sets: number;
     equipment: number;

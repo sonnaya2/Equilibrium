@@ -13,6 +13,7 @@ const PROCEDURAL_EFFECT_LABEL: Readonly<Record<string, string>> = {
   "surging-storm": "Surging Storm",
   soulfire: "Soulfire",
   "attuned-crystal-weaponry": "Attuned crystal weaponry",
+  devourers_contagion: "Devourer's Contagion",
 };
 
 const EFFECT_ICON_PATH: Readonly<Record<string, string>> = {
@@ -47,6 +48,7 @@ const EFFECT_ICON_PATH: Readonly<Record<string, string>> = {
   "ammunition:hydrix": "/game/combat/equipment/hydrix-bakriminel-bolts-e.webp",
   "ammunition:ascendri": "/game/combat/equipment/ascendri-bolts-e.webp",
   "attuned-crystal-weaponry": "/game/combat/equipment/attuned-crystal-staff.webp",
+  devourers_contagion: "/game/combat/equipment/scripture-of-amascut.webp",
 };
 
 const BLESSING_EFFECT_SOURCE: Readonly<Record<string, string>> = {

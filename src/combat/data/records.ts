@@ -144,7 +144,9 @@ export type ItemPassiveId =
   /** Fleeting / enhanced fleeting boots: Winds End Snipe CD reduction. */
   | "winds-end"
   /** Kerapac wrist wraps: Dragon Breath empowers and condenses Combust. */
-  | "kerapac-combust";
+  | "kerapac-combust"
+  /** Scripture of Amascut: Devourer's Corruption buff and Contagion DoT. */
+  | "scripture-of-amascut";
 
 /**
  * Role for attuned-crystal weaponry eligibility and armour set proc bonus.

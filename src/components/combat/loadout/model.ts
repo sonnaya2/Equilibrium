@@ -554,7 +554,7 @@ export const DEFAULT_LOADOUT: Loadout = {
   loadoutSchemaVersion: LOADOUT_SCHEMA_VERSION,
   hitCapEnabled: false,
   accuracy: 100,
-  // Manual crit removed from loadout UI; resolveCrit ignores this (gear/perks only).
+  // Legacy persisted field; the resolver owns the sourced 10% base chance.
   critChance: 0,
   target: null,
   perks: {

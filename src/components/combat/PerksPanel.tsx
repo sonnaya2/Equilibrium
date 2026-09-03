@@ -35,7 +35,8 @@ const PERKS: readonly PerkDef[] = [
   {
     key: "plantedFeet",
     label: "Planted Feet",
-    effect: "+25% Sunshine and Death's Swiftness base duration (→ 63 ticks)",
+    effect:
+      "Base Sunshine/Death's Swiftness → 63 ticks; removes Sunshine beam damage, including Greater Sunshine",
     max: 1,
     icon: PERK_ICON("planted-feet"),
   },

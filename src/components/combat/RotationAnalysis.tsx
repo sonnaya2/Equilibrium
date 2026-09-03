@@ -300,7 +300,9 @@ function EventTable({
                     {!compact && isConjureDamageEvent(event) ? (
                       <AbilityCategoryChip category="conjure" />
                     ) : null}
-                    {parent ? <span className="revo-muted revo-event-secondary">on {parent}</span> : null}
+                    {parent ? (
+                      <span className="revo-muted revo-event-secondary">on {parent}</span>
+                    ) : null}
                     {compact && isExpectedProcEvent(event) && weight !== undefined ? (
                       <span className="revo-inline-note revo-event-secondary">
                         ×{formatExpectedOccurrence(weight)}
@@ -528,8 +530,8 @@ export function RotationAnalysisModal({
                 </span>
               </header>
               <p className="rotation-analysis-poison__line">
-                {result.playerPoison.sourceLabel} · tier {result.playerPoison.effectiveTier} ·
-                proc {formatPercent(result.playerPoison.procChance)}
+                {result.playerPoison.sourceLabel} · tier {result.playerPoison.effectiveTier} · proc{" "}
+                {formatPercent(result.playerPoison.procChance)}
               </p>
               <dl className="rotation-analysis-poison-grid">
                 <div>
@@ -544,12 +546,22 @@ export function RotationAnalysisModal({
                   <dd>{formatExpected(result.playerPoison.separateHits)}</dd>
                 </div>
                 <div>
-                  <dt>Damage band</dt>
+                  <dt>Host rotation range</dt>
                   <dd>
-                    {formatNumber(result.playerPoison.minimumDamage)} /{" "}
-                    {formatNumber(result.playerPoison.expectedDamage)} /{" "}
-                    {formatNumber(result.playerPoison.maximumDamage)}
+                    {formatNumber(result.playerPoison.hostMinimumDamage)} /{" "}
+                    {formatNumber(result.playerPoison.hostExpectedDamage)} /{" "}
+                    {formatNumber(result.playerPoison.hostMaximumDamage)}
                   </dd>
+                </div>
+                {result.playerPoison.attachedBonusDamage > 0 ? (
+                  <div>
+                    <dt>Attached bonuses</dt>
+                    <dd>{formatNumber(result.playerPoison.attachedBonusDamage)}</dd>
+                  </div>
+                ) : null}
+                <div>
+                  <dt>Poison total</dt>
+                  <dd>{formatNumber(result.playerPoison.expectedDamage)}</dd>
                 </div>
                 <div>
                   <dt>Sampled state</dt>
@@ -686,7 +698,9 @@ export function RotationAnalysisModal({
                       {effectName(group.id, nameForId)}
                       <span className="rotation-analysis-group__tag">grouped</span>
                     </span>
-                    <span className="font-mono text-parch-50">{formatNumber(group.totalDamage)}</span>
+                    <span className="font-mono text-parch-50">
+                      {formatNumber(group.totalDamage)}
+                    </span>
                     <span className="font-mono text-parch-300">
                       ×{formatExpected(group.expectedActivations)}
                     </span>
@@ -748,11 +762,7 @@ export function RotationAnalysisModal({
                   </thead>
                   <tbody>
                     {effectRows.map((effect) => (
-                      <tr
-                        key={effect.id}
-                        data-effect-id={effect.id}
-                        data-effect-kind={effect.kind}
-                      >
+                      <tr key={effect.id} data-effect-id={effect.id} data-effect-kind={effect.kind}>
                         <td>
                           <span className="rotation-analysis-effect-name">
                             <GameIcon
@@ -797,9 +807,7 @@ export function RotationAnalysisModal({
                                 </span>
                               ) : null;
                             })()}
-                            {effect.dotDamage > 0 ? (
-                              <span className="revo-muted">DoT</span>
-                            ) : null}
+                            {effect.dotDamage > 0 ? <span className="revo-muted">DoT</span> : null}
                           </span>
                         </td>
                         <td className="text-right font-mono tabular-nums text-parch-50">
@@ -839,9 +847,7 @@ export function RotationAnalysisModal({
           <section className="rotation-analysis-section rotation-analysis-timeline">
             <h3 className="combat-section-title rotation-analysis-section__title">
               Resolved timeline
-              <span className="rotation-analysis-section__meta">
-                {result.events.length} events
-              </span>
+              <span className="rotation-analysis-section__meta">{result.events.length} events</span>
             </h3>
             <div className="rotation-analysis-timeline__table">
               <EventTable events={result.events} nameForId={nameForId} />

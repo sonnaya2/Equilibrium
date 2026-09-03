@@ -34,9 +34,12 @@ function songEmpowermentForCast(
     return false;
   }
   const forced = rng?.["essence-corruption-empowerment"];
-  return forced ?? rt.stochastic.bernoulli(
-    "cast:essence-corruption-empowerment",
-    ESSENCE_CORRUPTION_EMPOWERMENT_CHANCE,
+  return (
+    forced ??
+    rt.stochastic.bernoulli(
+      "cast:essence-corruption-empowerment",
+      ESSENCE_CORRUPTION_EMPOWERMENT_CHANCE,
+    )
   );
 }
 
@@ -224,6 +227,7 @@ export function performCast(
     prepared.spend,
     rt.input.adrenaline,
     rt.input.league,
+    rt.input.equipmentEffects,
   )) {
     sampledRng[point.id] = rt.stochastic.bernoulli(`cast:${point.id}`, point.chance);
   }

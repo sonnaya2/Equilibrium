@@ -62,8 +62,8 @@ describe("player poison simulation", () => {
 
     expect(aegisLike.playerPoison?.expectedDamage).toBe(baseline.playerPoison?.expectedDamage);
     expect(
-      (higherPowerLike.playerPoison?.expectedDamage ?? 0) /
-        (aegisLike.playerPoison?.expectedDamage ?? 1),
+      (higherPowerLike.playerPoison?.hostExpectedDamage ?? 0) /
+        (aegisLike.playerPoison?.hostExpectedDamage ?? 1),
     ).toBeCloseTo(1.3, 10);
   });
 
@@ -277,6 +277,13 @@ describe("player poison simulation", () => {
     expect(poison?.bonusDamage).toBeLessThan(bigBoned?.totalDamage ?? 0);
     expect(result.playerPoison?.separateHits).toBeGreaterThan(0);
     expect(result.playerPoison?.expectedDamage).toBeGreaterThan(poison?.bonusDamage ?? 0);
+    expect(result.playerPoison?.hostExpectedDamage).toBeCloseTo(poison?.totalDamage ?? 0, 10);
+    expect(result.playerPoison?.attachedBonusDamage).toBeCloseTo(poison?.bonusDamage ?? 0, 10);
+    expect(result.playerPoison?.expectedDamage).toBeCloseTo(
+      (result.playerPoison?.hostExpectedDamage ?? 0) +
+        (result.playerPoison?.attachedBonusDamage ?? 0),
+      10,
+    );
     expect(result.perAbility[PLAYER_POISON_EFFECT_ID]).toBeGreaterThan(0);
     expect(result.playerPoison?.applicationAttempts).toBe(1);
     expect(result.playerPoison?.successfulApplications).toBeCloseTo(0.125, 12);

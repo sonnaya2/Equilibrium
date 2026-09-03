@@ -57,7 +57,8 @@ export type CastRngPointId =
   | "relentless"
   | "avernic-rampage"
   | "spectral_scythe_soul"
-  | "essence-corruption-empowerment";
+  | "essence-corruption-empowerment"
+  | "scripture-of-amascut";
 export type CastRng = Readonly<Partial<Record<CastRngPointId, boolean>>>;
 
 export function rngProc(rng: CastRng | undefined, id: CastRngPointId): boolean {
@@ -447,6 +448,10 @@ export interface PlayerPoisonAnalysis {
   minimumDamage: number;
   expectedDamage: number;
   maximumDamage: number;
+  hostMinimumDamage: number;
+  hostExpectedDamage: number;
+  hostMaximumDamage: number;
+  attachedBonusDamage: number;
   /** Concrete terminal state from the sampled presentation lane. */
   targetState: PlayerPoisonTargetState;
   /** Lane-weighted state; may be fractional and is not a concrete state. */

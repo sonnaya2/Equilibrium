@@ -158,9 +158,7 @@ test("the main-hand picker accepts two-handed weapons and locks off-hand", async
   await expect(weapons.getByText("Locked")).toBeVisible();
   await closeLoadoutEditor(page);
 
-  await expect(
-    page.getByRole("button", { name: /Main Hand:.*Masterwork 2h sword/ }),
-  ).toBeVisible();
+  await expect(page.getByRole("button", { name: /Main Hand:.*Masterwork 2h sword/ })).toBeVisible();
   // Equipment column shows locked off-hand; the picker disables the slot inside the dialog.
   await expect(
     page.getByRole("button", { name: /Off-hand: Locked, two-handed weapon/ }),
@@ -619,7 +617,10 @@ test("loadout base damage follows equipped weapon tier and persists into Revolut
 
   await openEquipmentEditor(page);
   const gear = page.getByRole("dialog", { name: "Change equipment" });
-  await gear.getByRole("group", { name: "Weapon and body slots" }).getByRole("button", { name: /^Main-hand/ }).click();
+  await gear
+    .getByRole("group", { name: "Weapon and body slots" })
+    .getByRole("button", { name: /^Main-hand/ })
+    .click();
   await gear.getByRole("searchbox", { name: "Search" }).fill("Masterwork 2h sword");
   await gear.getByRole("button", { name: /Masterwork 2h sword/ }).click();
   await closeLoadoutEditor(page);
@@ -717,9 +718,7 @@ test("v1 loadout migration and Defence/life controls persist across reload", asy
 
   await openEffectsEditor(page);
   const reopened = page.getByRole("dialog", { name: "Active effects" });
-  await expect(reopened.getByRole("spinbutton", { name: "Current Hitpoints" })).toHaveValue(
-    "6000",
-  );
+  await expect(reopened.getByRole("spinbutton", { name: "Current Hitpoints" })).toHaveValue("6000");
   await expect(reopened.getByRole("button", { name: /Fortitude/ })).toHaveAttribute(
     "aria-pressed",
     "true",
@@ -765,11 +764,15 @@ test("Powerburst doubles life for six seconds and persists its cooldown", async 
   await closeLoadoutEditor(page);
 
   await expect(summaryMetric(page, "Current Hitpoints").getByText("8,000")).toBeVisible();
-  await expect(summaryMetric(page, "Maximum Hitpoints").getByText("19,800", { exact: true })).toBeVisible();
+  await expect(
+    summaryMetric(page, "Maximum Hitpoints").getByText("19,800", { exact: true }),
+  ).toBeVisible();
   await expect(summaryMetric(page, "Current Hitpoints").getByText("4,000")).toBeVisible({
     timeout: 8000,
   });
-  await expect(summaryMetric(page, "Maximum Hitpoints").getByText("9,900", { exact: true })).toBeVisible();
+  await expect(
+    summaryMetric(page, "Maximum Hitpoints").getByText("9,900", { exact: true }),
+  ).toBeVisible();
 
   await openEffectsEditor(page);
   const powerburst = page
@@ -963,6 +966,26 @@ test("equipped passives appear under Gear and disappear when the item is removed
     passives.getByText("Defenders, reprisers, and rebounders have +3% accuracy."),
   ).toBeVisible();
   await expect(passives.getByText("Active", { exact: true })).toBeVisible();
+
+  await closeLoadoutEditor(page);
+});
+
+test("Scripture of Amascut exposes Devourer's Corruption under Gear", async ({ page }) => {
+  await openEquipmentEditor(page);
+  const gear = page.getByRole("dialog", { name: "Change equipment" });
+  const passives = gear.getByRole("heading", { name: "Passives" }).locator("..");
+
+  await gear.getByRole("checkbox", { name: "Match style" }).uncheck();
+  await gear.getByRole("button", { name: /^Pocket/ }).click();
+  await gear.getByRole("searchbox", { name: "Search" }).fill("Scripture of Amascut");
+  await gear.getByRole("button", { name: /Scripture of Amascut/ }).click();
+
+  await expect(passives.getByText("Devourer's Corruption", { exact: true })).toBeVisible();
+  await expect(
+    passives.getByText(
+      "Soul residue deals up to nine 24-40% ability-damage DoT hits per target in a 3x3 area; 15-second cooldown.",
+    ),
+  ).toBeVisible();
   await closeLoadoutEditor(page);
 });
 

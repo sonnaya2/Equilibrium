@@ -101,6 +101,7 @@ export function scheduleCastEvents(
       ...(prepared.flowReduction !== undefined ? { flowReduction: prepared.flowReduction } : {}),
       ...(prepared.channelAsDot ? { convertedChannel: true } : {}),
       ...(hitSpec.dotKind ? { dotKind: hitSpec.dotKind } : {}),
+      ...(ability.tearingThornsSelfDamagePerHit ? { tearingThornsEligible: true as const } : {}),
       ...(hitSpec.bleedId
         ? {
             bleedId: hitSpec.bleedId,

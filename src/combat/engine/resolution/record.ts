@@ -181,7 +181,7 @@ export function recordResolved(
   const { damage } = composed;
   if (!event.blessingId) applyInventionProcs(rt, event, damage);
 
-  if (!event.attached && event.family === "dot") {
+  if (!event.attached && (event.family === "dot" || event.tearingThornsEligible === true)) {
     applyLeagueLandedHitEffects(rt, event, damage);
   }
 

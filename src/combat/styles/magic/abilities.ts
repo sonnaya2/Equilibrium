@@ -76,7 +76,7 @@ export const CORRUPTION_BLAST_TAIL_FRACTIONS_PCT = [80, 60, 40, 20] as const;
 
 /**
  * Smoke Tendrils escalating hits (wiki Usage): 55-65, 65-80, 75-95, 85-110
- * every 1.2s (2 ticks). Guaranteed crit; self-damage is not modelled.
+ * every 1.2s (2 ticks). Guaranteed crit; self-damage only advances Tearing Thorns.
  */
 function smokeTendrilHits() {
   const bands = [
@@ -303,6 +303,7 @@ export const MAGIC_ABILITIES: MagicAbilitySpec[] = [
     name: "Smoke Tendrils",
     style: "magic",
     category: "enhanced",
+    tearingThornsSelfDamagePerHit: true,
     // Wiki: 4 hits over 4.2s (7 ticks occupancy); free after last hit offset + 1.
     channelTicks: 7,
     hits: smokeTendrilHits(),
@@ -491,7 +492,7 @@ export const MAGIC_EFFECTS = [
     id: "smoke_tendrils_self",
     name: "Smoke Tendrils self-damage",
     notes:
-      "4 self hits of 35-40% ability damage; unaffected by damage modifiers and crit. Not modelled as target damage.",
+      "4 self hits of 35-40% ability damage; unaffected by damage modifiers and crit. Not modelled as target damage; each advances Tearing Thorns.",
     source: wikiAbility("Smoke Tendrils"),
   },
   {

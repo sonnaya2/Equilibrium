@@ -14,6 +14,7 @@ import { buildCandidatePool } from "./candidatePool";
 import { allEngineSpecs } from "../abilities/registry";
 import { fingerprintSolveContext, solveContextPayload } from "./solutionStore";
 import { rotationOf } from "../engine/simulation/contracts";
+import { simulateRevolution } from "../engine/simulation/revolution";
 import { simulate } from "../engine/simulation/simulate";
 import { baseInput } from "../test/fixtures/inputs";
 
@@ -250,6 +251,96 @@ describe("solveFromRequest", () => {
   it("returns a legal bar under naked base rules (simple path)", async () => {
     const result = await solveFromRequest(nakedRequest());
     assertLegalResult(result, { min: 3, max: 6 });
+  }, 120_000);
+
+  it("finds Smoke Tendrils' Tearing Thorns triggers in a tiny Magic pool", async () => {
+    const league = resolveLeagueRules(
+      {
+        ruleset: "equilibrium",
+        blessingPicks: ["Balance", "Balance", "Balance", "Balance", "Balance"],
+      },
+      { maximumLife: 10_000 },
+    );
+    const allowed = new Set(["smoke_tendrils", "dragon_breath", "impact"]);
+    const disabledAbilityIds = allEngineSpecs()
+      .filter((ability) => !allowed.has(ability.id))
+      .map((ability) => ability.id);
+    const loadout: SerializableRevolutionSimBase = {
+      base: 1_000,
+      level: 99,
+      accuracy: 1,
+      crit: { chance: 0 },
+      equipmentEffects: emptyEffects,
+      league: serializeLeague(league),
+      context: { style: "magic", ruleset: "equilibrium" },
+      equipmentIds: [],
+      weaponConfiguration: "dualwield",
+      startingAdrenaline: 100,
+      modifierSources: emptyModifierSources(),
+    };
+    const request = defaultSerializableRequest({
+      style: "magic",
+      durationTicks: 100,
+      exploreDurationTicks: 40,
+      tier: "thorough",
+      profileId: "balanced",
+      seed: 17,
+      minBarSize: 2,
+      maxBarSize: 2,
+      permittedCategories: ["basic", "enhanced"],
+      disabledAbilityIds,
+      unlockedRegions: [...REGION_IDS],
+      ruleset: "equilibrium",
+      blessingPicks: ["Balance", "Balance", "Balance", "Balance", "Balance"],
+      loadout,
+    });
+    const pool = buildCandidatePool(allEngineSpecs(), "magic", {
+      allow: [...allowed],
+      weaponConfiguration: loadout.weaponConfiguration,
+      equipmentIds: loadout.equipmentIds,
+      league,
+    });
+    const sim = {
+      ...loadout,
+      abilities: allEngineSpecs(),
+      league,
+      modifiers: reviveModifiers(loadout.modifierSources, league),
+    };
+    const oracle = pool.ids
+      .flatMap((left) =>
+        pool.ids
+          .filter((right) => right !== left)
+          .map((right) =>
+            evaluateRevolutionBar({
+              bar: [left, right],
+              style: "magic",
+              durationTicks: request.durationTicks,
+              pool,
+              sim,
+              profileId: "balanced",
+              size: { min: 2, max: 2 },
+            }),
+          ),
+      )
+      .filter((evaluation) => evaluation.ok)
+      .sort((left, right) => right.score - left.score)[0]!;
+
+    const solved = await solveFromRequest(request);
+    const catalogue = new Map(allEngineSpecs().map((ability) => [ability.id, ability] as const));
+    const winner = simulateRevolution({
+      ...sim,
+      bar: solved.bar.map((id) => catalogue.get(id)!),
+      style: "magic",
+      durationTicks: request.durationTicks,
+    });
+    const grasps = winner.events.filter((event) => event.abilityId === "grasp-of-guthix-poison");
+
+    expect(solved.bar).toContain("smoke_tendrils");
+    expect(solved.score).toBeCloseTo(oracle.score, 10);
+    expect(grasps.length).toBeGreaterThan(0);
+    expect(
+      grasps.every((event) => winner.casts[event.sourceCast]?.abilityId === "smoke_tendrils"),
+    ).toBe(true);
   }, 120_000);
 
   it("structuredClone round-trips a blessing-heavy request (worker wire)", () => {

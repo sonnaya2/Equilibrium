@@ -53,7 +53,7 @@ export interface ScheduledEvent<RT = unknown> {
   flowReduction?: number;
   convertedChannel?: boolean;
   dotKind?: DamageOverTimeKind;
-  /** Counts this scheduled DoT hit toward Tearing Thorns. */
+  /** Counts this scheduled event toward Tearing Thorns. */
   tearingThornsEligible?: boolean;
   bleedId?: BleedId;
   bleedExpiresAtTick?: number;

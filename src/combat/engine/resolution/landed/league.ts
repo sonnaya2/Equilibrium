@@ -35,7 +35,7 @@ export function applyLeagueLandedHitEffects(
 ): void {
   if (
     !rt.input.league ||
-    event.family !== "dot" ||
+    (event.family !== "dot" && event.tearingThornsEligible !== true) ||
     event.attached ||
     event.blessingId ||
     event.sourceCast < 0 ||

@@ -85,6 +85,8 @@ export interface AbilitySpec {
   hits: AbilityHit[];
   /** Canonical player DoT metadata used by Tearing Thorns. */
   tearingThornsEligible?: boolean;
+  /** Each listed hit has a matching self-damage occurrence that advances Tearing Thorns. */
+  tearingThornsSelfDamagePerHit?: boolean;
   /** Song of Destruction Essence Corruption stack and flat-damage capability. */
   essenceCorruptionEligible?: boolean;
   essenceCorruptionMagicHitEligible?: boolean;

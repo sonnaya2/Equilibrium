@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { rotationOf } from "../engine/simulation/contracts";
+import { simulateRevolution } from "../engine/simulation/revolution";
 import { simulate } from "../engine/simulation/simulate";
 import { baseInput, necroInput, rangedInput } from "../test/fixtures/inputs";
+import { MAGIC_ABILITIES } from "../styles/magic/abilities";
 import { MELEE_ABILITIES } from "../styles/melee/abilities";
 import { PLAYER_POISON_EFFECT_ID, type PlayerPoisonProfile } from "../poison/mechanics";
 import {
@@ -467,6 +469,35 @@ describe("Tier 5 and Tier 6 blessing mechanics", () => {
     expect(
       immuneResult.events.filter((event) => event.abilityId === "grasp-of-guthix-poison"),
     ).toHaveLength(0);
+  });
+
+  it("counts each Smoke Tendrils self-damage occurrence toward Tearing Thorns in Revo++", () => {
+    const league = resolveLeagueRules(
+      {
+        ruleset: "equilibrium",
+        blessingPicks: ["Balance", "Balance", "Balance", "Balance", "Balance"],
+      },
+      { maximumLife: 10_000 },
+    );
+    const smoke = MAGIC_ABILITIES.find((ability) => ability.id === "smoke_tendrils")!;
+    const result = simulateRevolution({
+      ...baseInput,
+      abilities: MAGIC_ABILITIES,
+      league,
+      context: { style: "magic", ruleset: "equilibrium" },
+      bar: [smoke],
+      style: "magic",
+      durationTicks: 83,
+      startingAdrenaline: 100,
+    });
+    const smokeHits = result.events.filter((event) => event.abilityId === "smoke_tendrils");
+    const grasps = result.events.filter((event) => event.abilityId === "grasp-of-guthix-poison");
+
+    expect(smokeHits).toHaveLength(8);
+    expect(smokeHits.every((event) => event.family === "hit")).toBe(true);
+    expect(grasps).toHaveLength(1);
+    expect(grasps[0]?.tick).toBe(76);
+    expect(result.casts[grasps[0]!.sourceCast]?.abilityId).toBe("smoke_tendrils");
   });
 
   it("resolves Tearing Thorns as one uncapped poison hit with Splash and Envenomed", () => {

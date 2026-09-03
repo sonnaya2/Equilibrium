@@ -38,6 +38,7 @@ export const ITEM_PASSIVE_IDS: readonly ItemPassiveId[] = [
   "perfect-equilibrium",
   "attuned-crystal-weaponry",
   "winds-end",
+  "kerapac-combust",
 ];
 
 /** Return validation errors for the passive registry (empty = ok). */

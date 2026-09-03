@@ -32,6 +32,12 @@ const combined = (maximumLife = 10_000) =>
     { maximumLife },
   );
 
+const perfidious = () =>
+  resolveLeagueRules({
+    ruleset: "equilibrium",
+    blessingPicks: ["Chaos", "Chaos", "Chaos", "Chaos", "Chaos", "Chaos"],
+  });
+
 const ranged = (id: string) => RANGED_ABILITIES.find((ability) => ability.id === id)!;
 
 function components(summary: ReturnType<typeof simulate>, id: string) {
@@ -178,6 +184,22 @@ describe("host-typed attached damage", () => {
 });
 
 describe("Cinders direct-hit rolls", () => {
+  it("raises the original Inferno chance from 5% to 30% with Perfidious", () => {
+    const quick = calculateLeagueAbility(ranged("ranged_attack"), {
+      base: 1_000,
+      level: 99,
+      accuracy: 1,
+      crit: { chance: 0 },
+      context: { style: "ranged", ruleset: "equilibrium" },
+      rules: perfidious(),
+    });
+    const inferno = quick.leagueContributions.find(
+      (component) => component.effectId === "inferno-of-zamorak",
+    );
+
+    expect(inferno?.expectedActivations).toBeCloseTo(0.3, 12);
+  });
+
   it.each([
     ["attack", baseInput, 1],
     ["greater_ricochet", rangedInput, 7],

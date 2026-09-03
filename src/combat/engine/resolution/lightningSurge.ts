@@ -63,6 +63,7 @@ export function resolveLightningSurge(
     wenIcyPrecisionDamageAtCast: false,
     wenIcyPrecisionDamagePotentialAtCast: false,
     songEmpowered: false,
+    kerapacCombustActive: false,
     songConflagrateActive: false,
     songTwoPieceActive: false,
     songPreCastStacks: 0,

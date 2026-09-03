@@ -1,0 +1,3 @@
+{"op":"link-region","entity":"item:enhanced-kerapacs-wrist-wraps","region":"anachronia","relation":"required","order":1,"group":"","reason":"A shadow spike from Raksha is required to enhance the Misthalin wrist wraps."}
+{"op":"remove-requirement","entity":"item:enhanced-kerapacs-wrist-wraps","description":"League self-supply: misthalin","kind":"text","reason":"Replace the incomplete single-region requirement."}
+{"op":"add-requirement","entity":"item:enhanced-kerapacs-wrist-wraps","description":"Kerapac's wrist wraps and a shadow spike","kind":"text","reason":"Record both components of the enhanced item."}

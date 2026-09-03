@@ -2165,6 +2165,7 @@
 {"entityId":"item:enhanced-fleeting-boots","regionId":"anachronia","relation":"required"}
 {"entityId":"item:enhanced-gloves-of-passage","regionId":"desert","relation":"required"}
 {"entityId":"item:enhanced-gloves-of-passage","ordinal":1,"regionId":"misthalin","relation":"required"}
+{"entityId":"item:enhanced-kerapacs-wrist-wraps","ordinal":1,"regionId":"anachronia","relation":"required"}
 {"entityId":"item:enhanced-kerapacs-wrist-wraps","regionId":"misthalin","relation":"required"}
 {"entityId":"item:enhanced-laceration-boots","regionId":"anachronia","relation":"required"}
 {"entityId":"item:enhanced-nightmare-gauntlets","regionId":"kandarin","relation":"required"}

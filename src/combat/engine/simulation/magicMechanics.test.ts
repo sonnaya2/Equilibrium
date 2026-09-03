@@ -231,6 +231,11 @@ describe("Channelled Might", () => {
 });
 
 describe("Dragon Breath vs Combust", () => {
+  const wristEffects = {
+    ...activeEquipmentEffects({ style: "magic" }),
+    passiveIds: ["kerapac-combust" as const],
+  };
+
   it("deals 1.25x while the target burns and normal damage after it ends", () => {
     const s = simulate({
       ...magicInput,
@@ -246,6 +251,49 @@ describe("Dragon Breath vs Combust", () => {
     expect(breaths[0].result.expected).toBeCloseTo(1499.6268656716418, 10);
     // Second cast at tick 30: the 10-tick burn (0→30) has just lapsed.
     expect(breaths[1].result.expected).toBeCloseTo(1200);
+  });
+
+  it("empowers and condenses Combust cast during the Dragon Breath window", () => {
+    const context = createCastContext({ ...magicInput, equipmentEffects: wristEffects });
+    context.performCast(context.byId.get("dragon_breath")!, 0, false);
+    context.performCast(context.byId.get("combust")!, context.getState().tick, false);
+    const summary = context.finish();
+    const combust = summary.events.filter((event) => event.abilityId === "combust");
+
+    expect(combust).toHaveLength(10);
+    expect(new Set(combust.map((event) => event.tick))).toEqual(new Set([3]));
+    expect(combust.every((event) => Math.abs(event.damage.expected - 375) < 0.5)).toBe(true);
+    expect(context.getState().target.burns.active.combust).toBeUndefined();
+  });
+
+  it("detonates only remaining Combust hits when Dragon Breath follows it", () => {
+    const context = createCastContext({ ...magicInput, equipmentEffects: wristEffects });
+    context.performCast(context.byId.get("combust")!, 0, false);
+    context.performCast(context.byId.get("dragon_breath")!, context.getState().tick, false);
+    const summary = context.finish();
+    const combust = summary.events.filter((event) => event.abilityId === "combust");
+
+    expect(combust).toHaveLength(10);
+    expect(combust.filter((event) => event.tick === 3).map((event) => event.damage.expected)).toEqual([
+      300,
+    ]);
+    expect(combust.filter((event) => event.tick === 6)).toHaveLength(9);
+    expect(
+      combust
+        .filter((event) => event.tick === 6)
+        .every((event) => Math.abs(event.damage.expected - 375) < 0.5),
+    ).toBe(true);
+  });
+
+  it("keeps a Combust at the 10-tick boundary unempowered", () => {
+    const context = createCastContext({ ...magicInput, equipmentEffects: wristEffects });
+    context.performCast(context.byId.get("dragon_breath")!, 0, false);
+    context.performCast(context.byId.get("combust")!, 10, false);
+    const summary = context.finish();
+    const combust = summary.events.filter((event) => event.abilityId === "combust");
+
+    expect(combust.map((event) => event.tick)).toEqual([13, 16, 19, 22, 25, 28, 31, 34, 37, 40]);
+    expect(combust[0]?.damage.expected).toBe(300);
   });
 });
 

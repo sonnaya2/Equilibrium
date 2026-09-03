@@ -120,6 +120,10 @@ export interface MagicRotationState {
   tsunamiCritAdrenUntilTick: number;
   /** Blast Infused window end after Wild Magic with boots (half-open); 0 = inactive. */
   blastInfusedUntilTick: number;
+  /** Dragon Breath wrist-wrap window end (half-open); 0 = inactive. */
+  kerapacWristWrapsUntilTick: number;
+  /** Tick when Dragon Breath collapses pending Combust hits; 0 = inactive. */
+  kerapacCombustDetonationTick: number;
 }
 
 export const newMagicRotationState = (): MagicRotationState => ({
@@ -134,6 +138,8 @@ export const newMagicRotationState = (): MagicRotationState => ({
   channelledMight: newChannelledMight(),
   tsunamiCritAdrenUntilTick: 0,
   blastInfusedUntilTick: 0,
+  kerapacWristWrapsUntilTick: 0,
+  kerapacCombustDetonationTick: 0,
 });
 
 /** Half-open: active while tick < untilTick. */

@@ -47,6 +47,11 @@ export const PASSIVE_SOURCE = {
   perfectEquilibrium: wiki("Bow of the Last Guardian", "Bow_of_the_Last_Guardian", "2026-08-09"),
   attunedCrystalWeaponry: wiki("Crystal equipment", "Crystal_equipment", "2026-08-09"),
   windsEnd: wiki("Fleeting boots", "Fleeting_boots", "2026-08-09"),
+  kerapacCombust: wiki(
+    "Kerapac's wrist wraps",
+    "Kerapac%27s_wrist_wraps",
+    "2026-09-03",
+  ),
 } as const;
 
 /**
@@ -449,6 +454,24 @@ export const PASSIVE_DEFINITIONS: readonly PassiveDefinition[] = [
       "Ranged Basic Attack also reduces Snipe CD by 6 ticks (3.6s) per hit.",
     ],
     source: PASSIVE_SOURCE.windsEnd,
+  },
+  {
+    id: "kerapac-combust",
+    label: "Kerapac's wrist wraps",
+    support: "modeled",
+    duplicatePolicy: "collapse",
+    lifecycle: ["cast-preparation", "cast-start", "timed-runtime", "modifier-provider"],
+    implementationOwners: [
+      "styles/magic/kerapacWristWraps.ts",
+      "engine/cast/prepare.ts",
+      "engine/cast/effects/magic.ts",
+      "engine/resolution/modifiers.ts",
+    ],
+    effects: [
+      "Dragon Breath empowers Combust for 10 ticks (6 seconds).",
+      "Empowered Combust deals 25% more damage and lands all remaining hits on its next normal hit tick.",
+    ],
+    source: PASSIVE_SOURCE.kerapacCombust,
   },
 ];
 

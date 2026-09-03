@@ -35,6 +35,10 @@ import {
   songOfDestructionSummary,
 } from "../../styles/magic/songOfDestruction";
 import { revengeDamageModifier } from "../../styles/shared/revenge";
+import {
+  KERAPAC_WRIST_WRAPS_COMBUST_MULTIPLIER,
+  KERAPAC_WRIST_WRAPS_SOURCE,
+} from "../../styles/magic/kerapacWristWraps";
 
 /** Applies flat buffs at onCast so intermediate rounding follows stage order. */
 export function buffMultiplier(
@@ -233,6 +237,18 @@ export function landTimeModifiers(
         "buff:dragon_breath_combust",
         1 + DRAGON_BREATH_COMBUST_BONUS_PCT / 100,
         MODERNISATION_WIKI,
+      ),
+    );
+  }
+  if (
+    ability.id === "combust" &&
+    (snap.kerapacCombustActive || state.magic.kerapacCombustDetonationTick === at)
+  ) {
+    modifiers.push(
+      buffMultiplier(
+        "equipment:kerapac-combust",
+        KERAPAC_WRIST_WRAPS_COMBUST_MULTIPLIER,
+        KERAPAC_WRIST_WRAPS_SOURCE,
       ),
     );
   }

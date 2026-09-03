@@ -92,7 +92,8 @@ describe("canonical blessings data contract", () => {
         choice.id === "unholy-critual" ||
         choice.id === "perfidious" ||
         choice.id === "genesis-essence" ||
-        choice.id === "chaotic-insight"
+        choice.id === "chaotic-insight" ||
+        choice.id === "power-archive"
       ) {
         continue;
       }
@@ -153,7 +154,7 @@ describe("canonical blessings data contract", () => {
       support: { status: "modeled", excluded: [] },
       combat: {
         strikingLightCooldownTicks: 8,
-        perfidious: { cindersChanceMultiplier: 5, barkscalesHitsPerTrigger: 2 },
+        perfidious: { cindersChanceMultiplier: 6, barkscalesHitsPerTrigger: 2 },
       },
     });
     expect(lateChoices.find((choice) => choice.id === "genesis-essence")).toMatchObject({
@@ -192,8 +193,13 @@ describe("canonical blessings data contract", () => {
     expect(
       activeBlessings([O, O, O]).find((choice) => choice.id === "steadfast-will")?.support,
     ).toMatchObject({
-      status: "not-modeled",
-      excluded: ["Bash", "Preparation cooldown reduction", "Reflect", "Revenge"],
+      status: "partially-modeled",
+      excluded: [
+        "Preparation's ordinary incoming-hit reduction for Resonance and Divert",
+        "Reflect, because outgoing DPS requires incoming hit damage and timing",
+        "Irregular incoming attacks, hard-typeless exclusions and mid-window shield swaps",
+        "Bone Shield ability access",
+      ],
     });
   });
 });

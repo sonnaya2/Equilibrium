@@ -1626,7 +1626,7 @@
 {"description":"Enhanced Excalibur","entityId":"item:enhanced-excalibur","ordinal":0}
 {"description":"Raksha boot upgrades","entityId":"item:enhanced-fleeting-boots","ordinal":0}
 {"description":"Leng artefact T90 glove upgrades (shared Arch-Glacor)","entityId":"item:enhanced-gloves-of-passage","ordinal":0}
-{"description":"League self-supply: misthalin","entityId":"item:enhanced-kerapacs-wrist-wraps","ordinal":0}
+{"description":"Kerapac's wrist wraps and a shadow spike","entityId":"item:enhanced-kerapacs-wrist-wraps","ordinal":0}
 {"description":"Raksha boot upgrades","entityId":"item:enhanced-laceration-boots","ordinal":0}
 {"description":"League self-supply: kandarin + misthalin","entityId":"item:enhanced-nightmare-gauntlets","ordinal":0}
 {"description":"League self-supply: tirannwn","entityId":"item:erethdors-grimoire","ordinal":0}
@@ -1710,7 +1710,7 @@
 {"description":"League self-supply: morytania","entityId":"item:karils-crossbow","ordinal":0}
 {"description":"League self-supply: morytania","entityId":"item:karils-off-hand-pistol-crossbow","ordinal":0}
 {"description":"League self-supply: morytania","entityId":"item:karils-pistol-crossbow","ordinal":0}
-{"description":"League self-supply: misthalin","entityId":"item:kerapacs-wrist-wraps","ordinal":0}
+{"description":"Kerapac, the bound","entityId":"item:kerapacs-wrist-wraps","ordinal":0}
 {"description":"Khopesh of Tumeken / Elidinis (Magister DW melee)","entityId":"item:khopesh-of-elidinis","ordinal":0}
 {"description":"Khopesh of Tumeken / Elidinis (Magister DW melee)","entityId":"item:khopesh-of-the-kharidian","ordinal":0}
 {"description":"Khopesh of Tumeken / Elidinis (Magister DW melee)","entityId":"item:khopesh-of-tumeken","ordinal":0}

@@ -94,6 +94,17 @@ describe("passive registry", () => {
     expect(ITEM_PASSIVE_IDS).toContain("winds-end");
     expect(presentPassive("winds-end", emptyCtx).support).toBe("modeled");
   });
+
+  it("registers the Kerapac wrist-wrap Combust passive", () => {
+    const def = definitionById("kerapac-combust");
+    expect(def).toMatchObject({
+      label: "Kerapac's wrist wraps",
+      support: "modeled",
+      duplicatePolicy: "collapse",
+    });
+    expect(def?.implementationOwners).toContain("engine/cast/effects/magic.ts");
+    expect(ITEM_PASSIVE_IDS).toContain("kerapac-combust");
+  });
 });
 
 describe("presentPassive parity", () => {

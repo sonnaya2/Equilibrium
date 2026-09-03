@@ -50,6 +50,8 @@ export interface CastSnapshot {
   songConflagrateActive: boolean;
   songTwoPieceActive: boolean;
   songPreCastStacks: number;
+  /** Kerapac wrist-wrap damage and timing were active for this Combust cast. */
+  kerapacCombustActive: boolean;
   /**
    * Tuska's Wrath on-task empowered flat damage (100x Slayer, 15k cap).
    * Absent = off-task AD band path.

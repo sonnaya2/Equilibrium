@@ -1,0 +1,2 @@
+{"op":"remove-requirement","entity":"item:kerapacs-wrist-wraps","description":"League self-supply: misthalin","kind":"text","reason":"Replace the generic region requirement with the sourced drop source."}
+{"op":"add-requirement","entity":"item:kerapacs-wrist-wraps","description":"Kerapac, the bound","kind":"text","reason":"Record the base wrist-wrap drop source."}

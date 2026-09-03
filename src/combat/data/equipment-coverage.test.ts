@@ -104,6 +104,27 @@ describe("equipment corpus coverage (expanded combat gear)", () => {
     });
   });
 
+  it("ships both Kerapac wrist-wrap tiers with the shared passive", () => {
+    expect(equipmentById("item:kerapacs-wrist-wraps")).toMatchObject({
+      tier: 85,
+      slot: "gloves",
+      style: "magic",
+      armourClass: "power",
+      bonuses: { armour: 96.2, damage: 13.2 },
+      passiveId: "kerapac-combust",
+      unlock: { regions: ["misthalin"] },
+    });
+    expect(equipmentById("item:enhanced-kerapacs-wrist-wraps")).toMatchObject({
+      tier: 90,
+      slot: "gloves",
+      style: "magic",
+      armourClass: "power",
+      bonuses: { armour: 108.9, damage: 14 },
+      passiveId: "kerapac-combust",
+      unlock: { regions: ["misthalin", "anachronia"], regionMode: "all" },
+    });
+  });
+
   // Retired cross-region twin is status=removed and no longer exported into the
   // equipment shard; the Anachronia survivor keeps the passive.
   it("keeps the passive on the surviving Channeller's ring", () => {

@@ -142,7 +142,9 @@ export type ItemPassiveId =
    */
   | "attuned-crystal-weaponry"
   /** Fleeting / enhanced fleeting boots: Winds End Snipe CD reduction. */
-  | "winds-end";
+  | "winds-end"
+  /** Kerapac wrist wraps: Dragon Breath empowers and condenses Combust. */
+  | "kerapac-combust";
 
 /**
  * Role for attuned-crystal weaponry eligibility and armour set proc bonus.

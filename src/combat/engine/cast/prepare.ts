@@ -62,6 +62,7 @@ import {
   REVENGE_BASE_MAXIMUM_STACKS,
   type RevengeState,
 } from "../../styles/shared/revenge";
+import { kerapacWristWrapsActive } from "../../styles/magic/kerapacWristWraps";
 
 /** Explicit Greater Barge opener idle policy when lastAttackTick is unset (default 0). */
 export const GREATER_BARGE_OPENER_IDLE_TICKS = 0;
@@ -454,6 +455,16 @@ export function prepareCast(
     songSummary?.enabled === true &&
     songPreCastStacks >= 25 &&
     ability.category === "basic";
+  const kerapacCombustActive =
+    ability.id === "combust" &&
+    hasPassive(input.equipmentEffects, "kerapac-combust") &&
+    kerapacWristWrapsActive(rt.state.magic.kerapacWristWrapsUntilTick, candidate);
+  if (kerapacCombustActive && !songEmpowerment.empowered) {
+    working = {
+      ...working,
+      hits: working.hits.map((hit) => ({ ...hit, tickOffset: 0 })),
+    };
+  }
 
   const snap: CastSnapshot = {
     castSeq: rt.nextCastSeq,
@@ -487,6 +498,7 @@ export function prepareCast(
     songConflagrateActive,
     songTwoPieceActive: songSummary?.twoPiece === true,
     songPreCastStacks,
+    kerapacCombustActive,
     ...(tuskasEmpoweredFlat !== undefined ? { tuskasEmpoweredDamage: tuskasEmpoweredFlat } : {}),
     ...(ability.id === "bash"
       ? {

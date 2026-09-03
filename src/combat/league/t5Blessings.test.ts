@@ -112,7 +112,7 @@ describe("Tier 5 and Tier 6 blessing mechanics", () => {
         .find((row) => row.id === "inferno-of-zamorak")
         ?.sourceBreakdown?.find((source) => source.blessingId === "abyssal-cinders")
         ?.expectedActivations,
-    ).toBeCloseTo(0.25, 1);
+    ).toBeCloseTo(0.3, 1);
     expect(
       unholyBase.analysis.byEffect
         .find((row) => row.id === "inferno-of-zamorak")
@@ -126,8 +126,8 @@ describe("Tier 5 and Tier 6 blessing mechanics", () => {
       expect.arrayContaining([
         expect.objectContaining({
           blessingId: "abyssal-cinders",
-          expectedTriggerRolls: 0.25,
-          expectedActivations: 0.25,
+          expectedTriggerRolls: 38 / 128,
+          expectedActivations: 38 / 128,
         }),
         expect.objectContaining({
           blessingId: "unholy-critual",
@@ -397,7 +397,7 @@ describe("Tier 5 and Tier 6 blessing mechanics", () => {
     const league = picks("Chaos", "Chaos", "Chaos", "Chaos", "Chaos", "Chaos");
     const cinders = blessingRule(league, "abyssal-cinders")!;
     const perfidious = blessingRule(league, "perfidious")!.perfidious!;
-    expect(perfidious.cindersChanceMultiplier).toBe(5);
+    expect(perfidious.cindersChanceMultiplier).toBe(6);
     expect(perfidious.barkscalesHitsPerTrigger).toBe(2);
     expect(cinders.inferno?.chance).toBe(0.05);
     expect(

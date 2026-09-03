@@ -18,39 +18,11 @@ import {
   armKerapacWristWraps,
   KERAPAC_WRIST_WRAPS_PASSIVE_ID,
 } from "../../../styles/magic/kerapacWristWraps";
-import { burnActive } from "../../../styles/magic/burn";
-import type { SimulationRuntime } from "../../runtime/runtime";
 
 function clearCombust(state: import("../../../styles/magic/burn").BurnState) {
   const active = { ...state.active };
   delete active.combust;
   return { active };
-}
-
-function detonateRemainingCombust(rt: SimulationRuntime, castTick: number): number {
-  if (!burnActive(rt.state.target.burns, "combust", castTick)) return 0;
-  const pending = rt.queue
-    .pending()
-    .filter((event) => event.abilityId === "combust" && event.family === "dot");
-  const detonationTick = pending[0]?.tick;
-  if (detonationTick === undefined) return 0;
-  const seqs = new Set(pending.map((event) => event.seq));
-  rt.queue.cancelWhere((event) => seqs.has(event.seq));
-  for (const event of pending) {
-    rt.queue.push({
-      ...event,
-      tick: detonationTick,
-      castSnap: event.castSnap
-        ? { ...event.castSnap, kerapacCombustActive: true }
-        : event.castSnap,
-    });
-  }
-  rt.state = patchTarget(rt.state, {
-    burns: {
-      active: { ...rt.state.target.burns.active, combust: detonationTick + 1 },
-    },
-  });
-  return detonationTick;
 }
 
 /** Per-stack crit grant a Concentrated Blast cast sets for its channel. */
@@ -114,10 +86,8 @@ export function applyMagicCastEffects(fx: CastEffectContext): void {
     ability.id === "dragon_breath" &&
     hasPassive(rt.input.equipmentEffects, KERAPAC_WRIST_WRAPS_PASSIVE_ID)
   ) {
-    const detonationTick = detonateRemainingCombust(rt, candidate);
     rt.state = patchMagic(rt.state, {
       kerapacWristWrapsUntilTick: armKerapacWristWraps(candidate),
-      kerapacCombustDetonationTick: detonationTick,
     });
   }
   if (isConcentratedBlast(ability.id)) {

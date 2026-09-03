@@ -272,23 +272,24 @@ describe("Dragon Breath vs Combust", () => {
     expect(context.getState().target.burns.active.combust).toBeUndefined();
   });
 
-  it("detonates only remaining Combust hits when Dragon Breath follows it", () => {
-    const context = createCastContext({ ...magicInput, equipmentEffects: wristEffects });
-    context.performCast(context.byId.get("combust")!, 0, false);
-    context.performCast(context.byId.get("dragon_breath")!, context.getState().tick, false);
-    const summary = context.finish();
+  it("does not empower an opening Revo++ Combust when Dragon Breath follows it", () => {
+    const byId = new Map(MAGIC_ABILITIES.map((ability) => [ability.id, ability]));
+    const summary = simulateRevolution({
+      ...magicInput,
+      equipmentEffects: wristEffects,
+      bar: [byId.get("combust")!, byId.get("dragon_breath")!],
+      style: "magic",
+      durationTicks: 7,
+    });
     const combust = summary.events.filter((event) => event.abilityId === "combust");
 
-    expect(combust).toHaveLength(10);
-    expect(
-      combust.filter((event) => event.tick === 3).map((event) => event.damage.expected),
-    ).toEqual([300]);
-    expect(combust.filter((event) => event.tick === 6)).toHaveLength(9);
-    expect(
-      combust
-        .filter((event) => event.tick === 6)
-        .every((event) => Math.abs(event.damage.expected - 375) < 0.5),
-    ).toBe(true);
+    expect(summary.ok).toBe(true);
+    expect(summary.casts.slice(0, 2).map((cast) => cast.abilityId)).toEqual([
+      "combust",
+      "dragon_breath",
+    ]);
+    expect(combust.map((event) => event.tick)).toEqual([3, 6]);
+    expect(combust.map((event) => event.damage.expected)).toEqual([300, 300]);
   });
 
   it("keeps a Combust at the 10-tick boundary unempowered", () => {

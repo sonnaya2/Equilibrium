@@ -243,10 +243,7 @@ export function landTimeModifiers(
       ),
     );
   }
-  if (
-    ability.id === "combust" &&
-    (snap.kerapacCombustActive || state.magic.kerapacCombustDetonationTick === at)
-  ) {
+  if (ability.id === "combust" && snap.kerapacCombustActive) {
     const flamesActive = kerapacWristWrapsFlamesActive(rt.input.equipmentEffects, at);
     modifiers.push(
       buffMultiplier(

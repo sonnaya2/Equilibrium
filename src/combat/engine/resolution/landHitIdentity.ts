@@ -205,7 +205,6 @@ export function landHitIdentity(
     b(!!snap.songTwoPieceActive),
     snap.songPreCastStacks,
     b(!!snap.kerapacCombustActive),
-    mag.kerapacCombustDetonationTick,
     mag.song.essenceCorruption.stacks,
     mag.song.essenceCorruption.expiresAtTick,
     b(!!snap.wenIcyPrecisionDamageAtCast),

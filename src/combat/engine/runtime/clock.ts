@@ -176,13 +176,6 @@ function normalizeSongClocks(rt: SimulationRuntime, tick: number): void {
   }
 }
 
-function normalizeKerapacCombustDetonation(rt: SimulationRuntime, tick: number): void {
-  const detonationTick = rt.state.magic.kerapacCombustDetonationTick;
-  if (detonationTick > 0 && detonationTick <= tick) {
-    rt.state = patchMagic(rt.state, { kerapacCombustDetonationTick: 0 });
-  }
-}
-
 export function advanceTo(rt: SimulationRuntime, targetTick: number): void {
   if (targetTick < rt.state.tick) return;
   const bounds = clockAdvanceBounds(targetTick, rt.horizon);
@@ -200,7 +193,6 @@ export function advanceTo(rt: SimulationRuntime, targetTick: number): void {
   }
   if (targetTick > rt.state.tick) rt.state = { ...rt.state, tick: targetTick };
   normalizeSongClocks(rt, rt.state.tick);
-  normalizeKerapacCombustDetonation(rt, rt.state.tick);
   const ice = expirePrimordialIce(rt.state.melee.primordialIce, rt.state.tick);
   if (ice !== rt.state.melee.primordialIce) {
     rt.state = patchMelee(rt.state, { primordialIce: ice });

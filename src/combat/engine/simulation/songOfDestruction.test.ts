@@ -385,6 +385,40 @@ describe("Song of Destruction adrenaline stream", () => {
     expect(rt.state.cooldowns.combust).toBeUndefined();
   });
 
+  it("can recast empowered Combust on the next global cooldown", () => {
+    const effects = {
+      ...activeEquipmentEffects({ style: "magic" }),
+      songOfDestruction: songOfDestructionSummary(1),
+    };
+    const rt = createRuntime({
+      ...baseInput,
+      abilities: MAGIC_ABILITIES,
+      context: { style: "magic" },
+      equipmentEffects: effects,
+      startingAdrenaline: 100,
+    });
+    rt.state = patchMagic(rt.state, {
+      song: {
+        ...rt.state.magic.song,
+        essenceCorruption: { stacks: 1, expiresAtTick: 50 },
+      },
+    });
+    const combust = rt.byId.get("combust")!;
+
+    expect(performCast(rt, combust, 0, false, { "essence-corruption-empowerment": true })).toEqual({
+      ok: true,
+    });
+    expect(performCast(rt, combust, 3, false, { "essence-corruption-empowerment": true })).toEqual({
+      ok: true,
+    });
+
+    expect(rt.casts.map((cast) => ({ id: cast.abilityId, tick: cast.tick }))).toEqual([
+      { id: "combust", tick: 0 },
+      { id: "combust", tick: 3 },
+    ]);
+    expect(rt.state.cooldowns.combust).toBeUndefined();
+  });
+
   it("adds one prospective flat term to each Corruption tail without reapplying Song", () => {
     const effects = {
       ...activeEquipmentEffects({ style: "magic" }),

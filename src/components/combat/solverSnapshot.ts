@@ -16,8 +16,10 @@ export function solverSnapshotFromResolvedModel(model: ResolvedCombatModel): Sol
   const sources = model.modifierSources;
   return {
     base: model.base,
+    poisonBase: model.poisonBase,
     level: model.level,
     ...(model.overrideBase != null ? { overrideBase: model.overrideBase } : {}),
+    ...(model.poisonOverrideBase != null ? { poisonOverrideBase: model.poisonOverrideBase } : {}),
     ...(model.overrideLevel != null ? { overrideLevel: model.overrideLevel } : {}),
     ...(model.activateNaragiAtStart === true ? { activateNaragiAtStart: true } : {}),
     accuracy: model.accuracy,

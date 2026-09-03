@@ -10,6 +10,7 @@ import {
 import type { CombatModifier } from "../../../types";
 import type { SimulationRuntime } from "../../runtime/runtime";
 import { scheduleEvent } from "../../runtime/runtime";
+import { poisonAbilityDamageAt } from "../castHit";
 
 /** Host mods plus any missing league poison mods (Envenomed, Havoc on poison). */
 function modifiersForGraspScenario(
@@ -52,12 +53,8 @@ export function scheduleBarkscalesScenarioGrasps(rt: SimulationRuntime): void {
   if (horizon == null || !(horizon > 0)) return;
 
   const windowSeconds = ticksToSeconds(horizon);
-  const hitsOverride =
-    blessingRule(league, "perfidious")?.perfidious?.barkscalesHitsPerTrigger;
-  const poisonBlocked = targetPoisonImmuneForBlessingPoison(
-    rt.input.targetPoisonImmune,
-    league,
-  );
+  const hitsOverride = blessingRule(league, "perfidious")?.perfidious?.barkscalesHitsPerTrigger;
+  const poisonBlocked = targetPoisonImmuneForBlessingPoison(rt.input.targetPoisonImmune, league);
   const outcome = barkscalesOutcome(
     blessingRule(league, "barkscales"),
     league.totalArmour,
@@ -88,7 +85,7 @@ export function scheduleBarkscalesScenarioGrasps(rt: SimulationRuntime): void {
       rules: league,
       triggers: 1,
       targetsStruck: outcome.targetsStruck,
-      base: rt.input.base,
+      base: poisonAbilityDamageAt(rt, landTick),
       level: rt.input.level,
       accuracy: rt.input.accuracy,
       modifiers,

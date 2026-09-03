@@ -1039,7 +1039,11 @@ export function RevolutionPanel({
           <div>
             <dt>Hit cap</dt>
             <dd data-testid="revo-run-hit-cap">
-              {loadout.hitCapEnabled ? "On (30,000)" : "Off"}
+              {stats.cap.bypass
+                ? stats.league.ruleset === "equilibrium"
+                  ? "Removed in League"
+                  : "Off"
+                : "On (30,000)"}
             </dd>
           </div>
           <div>

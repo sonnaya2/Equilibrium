@@ -22,7 +22,7 @@ const SOURCE_KINDS: readonly DamageSourceKind[] = [
 ];
 
 const GRASP_GROUP_ID = "grasp-of-guthix";
-const GRASP_CHILD_IDS = new Set(["grasp-of-guthix-max-life", "grasp-of-guthix-poison"]);
+const GRASP_CHILD_IDS = new Set(["grasp-of-guthix-poison"]);
 const GRASP_BIG_BONED_ID = "grasp-of-guthix-big-boned";
 
 function mergeSourceBreakdowns(

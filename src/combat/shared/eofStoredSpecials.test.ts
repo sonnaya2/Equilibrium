@@ -148,6 +148,7 @@ describe("EoF store packs through model → wire → revive → identity", () =>
     const model = {
       style: "magic" as const,
       base: 1000,
+      poisonBase: 1000,
       level: 99,
       accuracy: 1,
       crit: { chance: 0 },

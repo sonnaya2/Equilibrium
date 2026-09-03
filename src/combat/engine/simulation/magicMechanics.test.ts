@@ -7,7 +7,7 @@ import { simulate, type CastRecord, type SimulateInput } from "./simulate";
 import { createCastContext } from "./simulate";
 import { simulateRevolution } from "./revolution";
 import { activeEquipmentEffects } from "../../shared/equipment";
-import { resolveLeagueRules } from "../../league/ruleset";
+import { leagueModifiers, resolveLeagueRules } from "../../league/ruleset";
 
 /**
  * Wild Magic crit layers, Concentrated Blast / Greater Concentrated Blast crit
@@ -236,6 +236,12 @@ describe("Dragon Breath vs Combust", () => {
     passiveIds: ["kerapac-combust" as const],
   };
 
+  const flamesEffects = activeEquipmentEffects({
+    style: "magic",
+    equipmentSlots: { gloves: "item:enhanced-kerapacs-wrist-wraps" },
+    enchantments: ["flames"],
+  });
+
   it("deals 1.25x while the target burns and normal damage after it ends", () => {
     const s = simulate({
       ...magicInput,
@@ -274,9 +280,9 @@ describe("Dragon Breath vs Combust", () => {
     const combust = summary.events.filter((event) => event.abilityId === "combust");
 
     expect(combust).toHaveLength(10);
-    expect(combust.filter((event) => event.tick === 3).map((event) => event.damage.expected)).toEqual([
-      300,
-    ]);
+    expect(
+      combust.filter((event) => event.tick === 3).map((event) => event.damage.expected),
+    ).toEqual([300]);
     expect(combust.filter((event) => event.tick === 6)).toHaveLength(9);
     expect(
       combust
@@ -294,6 +300,64 @@ describe("Dragon Breath vs Combust", () => {
 
     expect(combust.map((event) => event.tick)).toEqual([13, 16, 19, 22, 25, 28, 31, 34, 37, 40]);
     expect(combust[0]?.damage.expected).toBe(300);
+  });
+
+  it("raises empowered Combust from 25% to 40% after Flames has been worn for 9 seconds", () => {
+    const before = createCastContext({ ...magicInput, equipmentEffects: flamesEffects });
+    before.performCast(before.byId.get("dragon_breath")!, 0, false);
+    before.performCast(before.byId.get("combust")!, before.getState().tick, false);
+    expect(
+      before
+        .finish()
+        .events.filter((event) => event.abilityId === "combust")
+        .every((event) => Math.abs(event.damage.expected - 375) < 0.5),
+    ).toBe(true);
+
+    const active = createCastContext({ ...magicInput, equipmentEffects: flamesEffects });
+    active.performCast(active.byId.get("dragon_breath")!, 12, false);
+    active.performCast(active.byId.get("combust")!, active.getState().tick, false);
+    expect(
+      active
+        .finish()
+        .events.filter((event) => event.abilityId === "combust")
+        .every((event) => Math.abs(event.damage.expected - 420) < 0.5),
+    ).toBe(true);
+  });
+
+  it("detonates all 20 Tearing Thorns hits and triggers four combined Grasps", () => {
+    const league = resolveLeagueRules(
+      {
+        ruleset: "equilibrium",
+        blessingPicks: ["Balance", "Balance", "Balance", "Balance", "Balance", "Balance"],
+      },
+      { maximumLife: 20_000, targetSize: 3, areaTargets: 1, herbloreLevel: 120 },
+    );
+    const context = createCastContext({
+      ...magicInput,
+      base: 4_000,
+      poisonBase: 4_000,
+      equipmentEffects: flamesEffects,
+      league,
+      modifiers: leagueModifiers(league),
+      context: { style: "magic", ruleset: "equilibrium" },
+      cap: { cap: 30_000 },
+    });
+    context.performCast(context.byId.get("dragon_breath")!, 12, false);
+    context.performCast(context.byId.get("combust")!, context.getState().tick, false);
+    const summary = context.finish();
+    const combust = summary.events.filter((event) => event.abilityId === "combust");
+    const grasps = summary.events.filter((event) => event.abilityId === "grasp-of-guthix-poison");
+
+    expect(combust).toHaveLength(20);
+    expect(new Set(combust.map((event) => event.tick))).toEqual(new Set([15]));
+    expect(grasps).toHaveLength(4);
+    expect(grasps.map((event) => event.hitIndex)).toEqual([4, 9, 14, 19]);
+    expect(new Set(grasps.map((event) => event.tick))).toEqual(new Set([15]));
+    expect(grasps.every((event) => event.damage.min === 41_716)).toBe(true);
+    expect(grasps.every((event) => event.damage.max === 62_074)).toBe(true);
+    expect(summary.events.some((event) => event.abilityId === "grasp-of-guthix-max-life")).toBe(
+      false,
+    );
   });
 });
 

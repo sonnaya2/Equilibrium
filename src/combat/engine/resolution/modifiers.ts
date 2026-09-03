@@ -37,7 +37,10 @@ import {
 import { revengeDamageModifier } from "../../styles/shared/revenge";
 import {
   KERAPAC_WRIST_WRAPS_COMBUST_MULTIPLIER,
+  KERAPAC_WRIST_WRAPS_FLAMES_MULTIPLIER,
+  KERAPAC_WRIST_WRAPS_FLAMES_SOURCE,
   KERAPAC_WRIST_WRAPS_SOURCE,
+  kerapacWristWrapsFlamesActive,
 } from "../../styles/magic/kerapacWristWraps";
 
 /** Applies flat buffs at onCast so intermediate rounding follows stage order. */
@@ -244,11 +247,14 @@ export function landTimeModifiers(
     ability.id === "combust" &&
     (snap.kerapacCombustActive || state.magic.kerapacCombustDetonationTick === at)
   ) {
+    const flamesActive = kerapacWristWrapsFlamesActive(rt.input.equipmentEffects, at);
     modifiers.push(
       buffMultiplier(
-        "equipment:kerapac-combust",
-        KERAPAC_WRIST_WRAPS_COMBUST_MULTIPLIER,
-        KERAPAC_WRIST_WRAPS_SOURCE,
+        flamesActive ? "equipment:kerapac-combust:flames" : "equipment:kerapac-combust",
+        flamesActive
+          ? KERAPAC_WRIST_WRAPS_FLAMES_MULTIPLIER
+          : KERAPAC_WRIST_WRAPS_COMBUST_MULTIPLIER,
+        flamesActive ? KERAPAC_WRIST_WRAPS_FLAMES_SOURCE : KERAPAC_WRIST_WRAPS_SOURCE,
       ),
     );
   }
@@ -264,9 +270,7 @@ export function landTimeModifiers(
   }
   modifiers.push(
     ...songOfDestructionModifiers({
-      summary: snap.songTwoPieceActive
-        ? songOfDestructionSummary(2)
-        : NO_SONG_OF_DESTRUCTION,
+      summary: snap.songTwoPieceActive ? songOfDestructionSummary(2) : NO_SONG_OF_DESTRUCTION,
       ability,
       conflagrateActive: snap.songConflagrateActive,
       scope: ability.id === "corruption_blast" ? "parent" : "hit",

@@ -16,6 +16,7 @@ import {
   envenomedPoisonDamageMultiplier,
   leagueModifiers,
   resolveLeagueRules,
+  resolveRulesetHitCap,
   type ResolveLeagueRulesDerived,
 } from "./ruleset";
 
@@ -228,7 +229,7 @@ describe("Splash Zone", () => {
     expect(splashModifier(5, 1).apply({ damage: 1_000 }, context).damage).toBe(1_550);
   });
 
-  it("ignores untagged attacks and blessing-generated damage", () => {
+  it("ignores untagged attacks and blessing damage except Grasp", () => {
     const modifier = splashModifier(5);
     expect(modifier.applies({ style: "magic", ruleset: "equilibrium" })).toBe(false);
     expect(
@@ -239,6 +240,35 @@ describe("Splash Zone", () => {
         provenance: { kind: "blessing" },
       }),
     ).toBe(false);
+    expect(
+      modifier.applies({
+        style: "magic",
+        ruleset: "equilibrium",
+        area: "aoe",
+        provenance: { kind: "blessing", detail: "grasp-of-guthix-poison" },
+      }),
+    ).toBe(true);
+  });
+});
+
+describe("Equilibrium hit cap", () => {
+  it("forces the ordinary 30,000 cap off", () => {
+    const league = rules(["Order"]);
+    expect(resolveRulesetHitCap(league, { cap: 30_000 })).toEqual({
+      cap: 30_000,
+      bypass: true,
+    });
+    const result = simulate({
+      ...baseInput,
+      base: 40_000,
+      cap: { cap: 30_000 },
+      league,
+      context: { style: "melee", ruleset: "equilibrium" },
+      rotation: rotationOf("attack"),
+    });
+    expect(result.events.find((event) => event.abilityId === "attack")?.damage.max).toBeGreaterThan(
+      30_000,
+    );
   });
 });
 

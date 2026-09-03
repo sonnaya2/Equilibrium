@@ -54,7 +54,6 @@ const BLESSING_EFFECT_SOURCE: Readonly<Record<string, string>> = {
   "big-boned": "big-boned",
   "grasp-of-guthix": "barkscales",
   "grasp-of-guthix-big-boned": "big-boned",
-  "grasp-of-guthix-max-life": "tearing-thorns",
   // Shared Grasp poison id; UI prefers event.blessingId (barkscales or tearing-thorns).
   "grasp-of-guthix-poison": "barkscales",
   "inferno-of-zamorak": "abyssal-cinders",

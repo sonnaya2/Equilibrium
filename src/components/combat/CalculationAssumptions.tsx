@@ -167,7 +167,7 @@ export function CalculationAssumptions({
             `-${formatNumber(stats.barkscales.perHit)} / hit · ${stats.barkscales.hitsPerTrigger} to trigger`,
           ],
           ...((): Array<[string, string | number]> => {
-            const minNote = barkscalesMinGraspNote(stats.barkscales, stats.base);
+            const minNote = barkscalesMinGraspNote(stats.barkscales, stats.poisonBase);
             return minNote ? [["Grasp min", minNote]] : [];
           })(),
         ] as Array<[string, string | number]>)

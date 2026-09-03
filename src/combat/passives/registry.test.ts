@@ -21,6 +21,7 @@ const EMPTY_CTX = {
   hasHeroism: false,
   hasShadows: false,
   hasMetaphysics: false,
+  kerapacFlamesActive: false,
 };
 
 describe("passives registry", () => {
@@ -122,6 +123,7 @@ describe("passives registry", () => {
       hasHeroism: true,
       hasShadows: true,
       hasMetaphysics: false,
+      kerapacFlamesActive: false,
     });
   });
 

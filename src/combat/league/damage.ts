@@ -31,6 +31,7 @@ import {
   blessingRule,
   resolveLeagueCritAtLand,
   resolveMaximumLife,
+  resolveRulesetHitCap,
   type ResolvedLeagueRules,
 } from "./ruleset";
 import type { BlessingId } from "../../league/blessings";
@@ -799,77 +800,47 @@ export function graspOfGuthixComponents(input: GraspOfGuthixInput): LeagueDamage
   const barkscales = blessingRule(input.rules, "barkscales")?.barkscales;
   const tearing = blessingRule(input.rules, "tearing-thorns")?.tearingThorns;
   if ((!barkscales && !tearing) || input.triggers <= 0 || input.targetsStruck <= 0) return [];
+  const poisonBand = tearing?.graspAbilityDamageBand ?? barkscales?.graspAbilityDamageBand;
+  if (!poisonBand || input.poisonImmune === true) return [];
+
   const applications = input.triggers * input.targetsStruck;
-  const targetModifiers = input.modifiers.filter(
-    (modifier) => modifier.stage === "target" || modifier.stage === "postHit",
+  const modifiers = input.modifiers.filter(
+    (modifier) =>
+      modifier.stage === "target" ||
+      modifier.stage === "postHit" ||
+      modifier.id === "blessing:splash-zone",
   );
-  const components: LeagueDamageComponent[] = [];
-  const blessingProvenance = (detail: string): DamageProvenance => ({
+  const provenance: DamageProvenance = {
     kind: "blessing",
-    detail,
-  });
-  const shared = {
+    detail: "grasp-of-guthix-poison",
+  };
+  const maximumLife = tearing ? resolveMaximumLife(input.rules, input.landTick ?? 0) : 0;
+  const min =
+    Math.floor(input.base * (poisonBand[0] / 100)) +
+    (tearing ? Math.floor(maximumLife * tearing.graspMaxLifeDamageBand[0]) : 0);
+  const max =
+    Math.floor(input.base * (poisonBand[1] / 100)) +
+    (tearing ? Math.floor(maximumLife * tearing.graspMaxLifeDamageBand[1]) : 0);
+  const resolved = resolveLeagueAttachedRawHost({
+    rules: input.rules,
+    source: provenance,
+    min,
+    max,
+    abilityBase: input.base,
     level: input.level,
     accuracy: input.accuracy,
-    modifiers: targetModifiers,
-    cap: input.cap,
-  };
-
-  if (tearing) {
-    const maximumLife = resolveMaximumLife(input.rules, input.landTick ?? 0);
-    const min = Math.floor(maximumLife * tearing.graspMaxLifeDamageBand[0]);
-    const max = Math.floor(maximumLife * tearing.graspMaxLifeDamageBand[1]);
-    const provenance = blessingProvenance("grasp-of-guthix-max-life");
-    const resolved = resolveLeagueAttachedRawHost({
-      ...shared,
-      source: provenance,
-      min,
-      max,
-      abilityBase: input.base,
-      context: {
-        ...input.context,
-        damageSource: "blessing",
-        provenance,
-      },
-      crit: { chance: 0, eligible: false },
-    });
-    components.push({
-      effectId: "grasp-of-guthix-max-life",
-      blessingId: "tearing-thorns",
-      attached: false,
-      analysisGroupId: "grasp-of-guthix",
-      analysisGroupActivations: input.triggers,
-      expectedOccurrences: applications,
-      expectedTriggerRolls: 0,
-      expectedActivations: applications,
-      expectedSeparateHits: applications,
-      damage: weightedDamage(resolved.hit, applications, applications, applications),
-      hitDetail: resolved.hit,
-      components: resolved.components.map((component) =>
-        attachedResolutionComponent(component, applications, applications, applications),
-      ),
-    });
-  }
-
-  const poisonBand = tearing?.graspAbilityDamageBand ?? barkscales?.graspAbilityDamageBand;
-  if (poisonBand && input.targetsStruck > 0 && input.poisonImmune !== true) {
-    const provenance = blessingProvenance("grasp-of-guthix-poison");
-    const resolved = resolveLeagueAttachedRawHost({
-      ...shared,
-      rules: input.rules,
-      source: provenance,
-      min: Math.floor(input.base * (poisonBand[0] / 100)),
-      max: Math.floor(input.base * (poisonBand[1] / 100)),
-      abilityBase: input.base,
-      context: {
-        ...input.context,
-        damageSource: "blessing",
-        dotKind: "poison",
-        provenance,
-      },
-      crit: { chance: 0, eligible: false },
-    });
-    components.push({
+    modifiers,
+    cap: resolveRulesetHitCap(input.rules, input.cap),
+    context: {
+      ...input.context,
+      damageSource: "blessing",
+      dotKind: "poison",
+      provenance,
+    },
+    crit: { chance: 0, eligible: false },
+  });
+  return [
+    {
       effectId: "grasp-of-guthix-poison",
       blessingId: tearing ? "tearing-thorns" : "barkscales",
       attached: false,
@@ -884,9 +855,8 @@ export function graspOfGuthixComponents(input: GraspOfGuthixInput): LeagueDamage
       components: resolved.components.map((component) =>
         attachedResolutionComponent(component, applications, applications, applications),
       ),
-    });
-  }
-  return components;
+    },
+  ];
 }
 
 /**
@@ -945,6 +915,7 @@ export function calculateLeagueAbility(
   input: LeagueAbilityInput,
 ): LeagueAbilityResult {
   const { rules, strikingLightReady, lordOfLightReady, ...baseInput } = input;
+  const cap = resolveRulesetHitCap(rules, input.cap);
   const working = extendTearingThornsAbility(
     ability,
     blessingRule(rules, "tearing-thorns")?.tearingThorns?.durationMultiplier,
@@ -953,6 +924,7 @@ export function calculateLeagueAbility(
   const normalizedCritByHit = input.critByHit?.map((crit) => resolveLeagueCritAtLand(rules, crit));
   const ordinary = calculateAbility(working, {
     ...baseInput,
+    cap,
     crit: globalCrit,
     ...(normalizedCritByHit ? { critByHit: normalizedCritByHit } : {}),
   });
@@ -988,7 +960,7 @@ export function calculateLeagueAbility(
         damageSource: source,
         provenance,
       },
-      cap: input.cap,
+      cap,
       preciseRank: input.preciseRank,
     };
     const components = leagueDamageComponents({

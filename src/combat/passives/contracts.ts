@@ -47,6 +47,7 @@ export interface PassivePresentationContext {
   hasHeroism: boolean;
   hasShadows: boolean;
   hasMetaphysics: boolean;
+  kerapacFlamesActive?: boolean;
 }
 
 export interface PassivePresentation {

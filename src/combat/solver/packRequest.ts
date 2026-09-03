@@ -36,8 +36,10 @@ import type { ResolvedTargetAccuracyProfile } from "../target/genericTarget";
  */
 export interface SolverPackSnapshot {
   base: number;
+  poisonBase?: number;
   level: number;
   overrideBase?: number;
+  poisonOverrideBase?: number;
   overrideLevel?: number;
   activateNaragiAtStart?: boolean;
   accuracy: number;
@@ -174,8 +176,12 @@ function modifierSourcesFrom(snapshot: SolverPackSnapshot): SerializableModifier
 export function packSimBase(snapshot: SolverPackSnapshot): SerializableRevolutionSimBase {
   return {
     base: snapshot.base,
+    ...(snapshot.poisonBase != null ? { poisonBase: snapshot.poisonBase } : {}),
     level: snapshot.level,
     ...(snapshot.overrideBase != null ? { overrideBase: snapshot.overrideBase } : {}),
+    ...(snapshot.poisonOverrideBase != null
+      ? { poisonOverrideBase: snapshot.poisonOverrideBase }
+      : {}),
     ...(snapshot.overrideLevel != null ? { overrideLevel: snapshot.overrideLevel } : {}),
     ...(snapshot.activateNaragiAtStart === true ? { activateNaragiAtStart: true } : {}),
     accuracy: snapshot.accuracy,

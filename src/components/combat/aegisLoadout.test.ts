@@ -158,6 +158,25 @@ describe("Aegis through a Setup loadout", () => {
       equipmentSlots: { mainhand: "mock:mainhand", offhand: "mock:shield", body: "mock:body-1000" },
     });
     expect(shielded.base).toBe(shielded.rawBase + 900);
+    expect(shielded.poisonBase).toBe(shielded.rawBase);
+  });
+
+  it("keeps Higher Power in poison base while excluding Aegis", () => {
+    const stats = loadoutStats(
+      {
+        ...DEFAULT_LOADOUT,
+        style: "melee",
+        equipmentSlots: {
+          mainhand: "mock:mainhand",
+          offhand: "mock:shield",
+          body: "mock:body-1000",
+        },
+      } as Loadout,
+      { blessingPicks: ["Order", "Order", "Order", "Order"] },
+    );
+    const withoutAegis = stats.rawBase + stats.league.trueEquilibrium.baseAbilityDamage;
+    expect(stats.poisonBase).toBe(Math.floor(withoutAegis * 1.3));
+    expect(stats.base).toBe(Math.floor((withoutAegis + stats.aegis.baseAbilityDamageBonus) * 1.3));
   });
 
   it("ignores Fortitude for Aegis (equipment Total Armour only)", () => {

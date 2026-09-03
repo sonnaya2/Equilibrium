@@ -47,6 +47,26 @@ describe("player poison simulation", () => {
     expect(result.rng?.representative.eventsReconcileWithWeightedTotals).toBe(false);
   });
 
+  it("uses poison base instead of direct base for weapon-poison damage", () => {
+    const run = (base: number, poisonBase: number) =>
+      simulate({
+        ...baseInput,
+        base,
+        poisonBase,
+        rotation: rotationOf("attack"),
+        playerPoison: profile(),
+      });
+    const baseline = run(1_000, 1_000);
+    const aegisLike = run(2_000, 1_000);
+    const higherPowerLike = run(2_000, 1_300);
+
+    expect(aegisLike.playerPoison?.expectedDamage).toBe(baseline.playerPoison?.expectedDamage);
+    expect(
+      (higherPowerLike.playerPoison?.expectedDamage ?? 0) /
+        (aegisLike.playerPoison?.expectedDamage ?? 1),
+    ).toBeCloseTo(1.3, 10);
+  });
+
   it("uses 17.5% for Laniakea without creating a source by itself", () => {
     const active = simulate({
       ...baseInput,

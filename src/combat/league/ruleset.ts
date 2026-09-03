@@ -13,6 +13,7 @@ import {
   type MaximumAdrenalineResolution,
   type MaximumAdrenalineSource,
 } from "../shared/adrenalineCap";
+import { STANDARD_HIT_CAP, type HitCapRule } from "../core/hitCaps";
 import { mulFloor } from "../core/rounding";
 import { isStrikingLightHost } from "../shared/adrenalineGain";
 import { resolveCombatProvenance } from "../shared/damageProvenance";
@@ -91,6 +92,14 @@ export interface ResolvedLeagueRules {
   prayerBonus: number;
   trueEquilibrium: TrueEquilibriumResolution;
   herbloreLevel?: number;
+}
+
+// https://runescape.wiki/w/Equilibrium_League/Blessings: the ordinary 30,000 maximum-hit cap is removed.
+export function resolveRulesetHitCap(
+  rules: ResolvedLeagueRules | undefined,
+  configured: HitCapRule = { cap: STANDARD_HIT_CAP },
+): HitCapRule {
+  return rules?.ruleset === "equilibrium" ? { cap: configured.cap, bypass: true } : configured;
 }
 
 export interface TrueEquilibriumResolution {
@@ -553,10 +562,14 @@ export function leagueModifiers(rules: ResolvedLeagueRules | undefined): CombatM
       id: "blessing:splash-zone",
       stage: "ability",
       priority: 910,
-      applies: (context) =>
-        context.ruleset === "equilibrium" &&
-        notBlessingDamage(context) &&
-        (context.area === "aoe" || context.area === "multi-target"),
+      applies: (context) => {
+        const provenance = resolveCombatProvenance(context);
+        return (
+          context.ruleset === "equilibrium" &&
+          (provenance.kind !== "blessing" || provenance.detail === "grasp-of-guthix-poison") &&
+          (context.area === "aoe" || context.area === "multi-target")
+        );
+      },
       apply: (state, context) => ({
         ...state,
         damage: mulFloor(

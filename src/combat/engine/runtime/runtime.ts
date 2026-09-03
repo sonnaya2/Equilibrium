@@ -22,6 +22,7 @@ import {
   hasBlessing,
   hasNaragiEdict,
   resolveMaximumAdrenaline,
+  resolveRulesetHitCap,
   type ResolvedLeagueRules,
 } from "../../league/ruleset";
 
@@ -65,23 +66,27 @@ type PreparedModifierResolver = ((ability: AbilitySpec) => CombatModifier[]) & {
 };
 
 export function prepareRuntimeInput<T extends CastContextInput>(input: T): T {
+  let prepared = input;
   if (
-    typeof input.modifiers !== "function" ||
-    (input.modifiers as Partial<PreparedModifierResolver>)[preparedModifierResolver] === true
+    typeof input.modifiers === "function" &&
+    (input.modifiers as Partial<PreparedModifierResolver>)[preparedModifierResolver] !== true
   ) {
-    return input;
+    const source = input.modifiers;
+    const modifiersByAbility = new WeakMap<AbilitySpec, CombatModifier[]>();
+    const modifiers = ((ability: AbilitySpec) => {
+      const cached = modifiersByAbility.get(ability);
+      if (cached) return cached;
+      const resolved = source(ability);
+      modifiersByAbility.set(ability, resolved);
+      return resolved;
+    }) as PreparedModifierResolver;
+    Object.defineProperty(modifiers, preparedModifierResolver, { value: true });
+    prepared = { ...prepared, modifiers };
   }
-  const source = input.modifiers;
-  const modifiersByAbility = new WeakMap<AbilitySpec, CombatModifier[]>();
-  const modifiers = ((ability: AbilitySpec) => {
-    const cached = modifiersByAbility.get(ability);
-    if (cached) return cached;
-    const resolved = source(ability);
-    modifiersByAbility.set(ability, resolved);
-    return resolved;
-  }) as PreparedModifierResolver;
-  Object.defineProperty(modifiers, preparedModifierResolver, { value: true });
-  return { ...input, modifiers };
+  if (prepared.league?.ruleset === "equilibrium" && prepared.cap?.bypass !== true) {
+    prepared = { ...prepared, cap: resolveRulesetHitCap(prepared.league, prepared.cap) };
+  }
+  return prepared;
 }
 
 /**

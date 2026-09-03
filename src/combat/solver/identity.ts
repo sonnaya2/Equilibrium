@@ -232,9 +232,12 @@ export function powerburstRemainingTicksFromRequest(
 export function canonicalSimulationIdentity(loadout: SerializableRevolutionSimBase): unknown {
   return {
     base: roundN(loadout.base, 3),
+    poisonBase: roundN(loadout.poisonBase ?? loadout.base, 3),
     level: loadout.level,
     // Temporary level override (Naragi etc.) changes land-path AD; must bust eval cache.
     overrideBase: loadout.overrideBase != null ? roundN(loadout.overrideBase, 3) : null,
+    poisonOverrideBase:
+      loadout.poisonOverrideBase != null ? roundN(loadout.poisonOverrideBase, 3) : null,
     overrideLevel: loadout.overrideLevel ?? null,
     activateNaragiAtStart: loadout.activateNaragiAtStart === true,
     accuracy: roundN(loadout.accuracy, 6),

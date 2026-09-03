@@ -87,12 +87,15 @@ export interface AbilityRegistry {
 
 export interface SimulateInput {
   base: number;
+  /** Poison ability-damage basis; defaults to base for direct engine callers. */
+  poisonBase?: number;
   level: number;
   /**
    * Precomputed base ability damage while a temporary effective-level override is active
    * (e.g. Naragi Edict 255). Land path swaps to this when state.player.levelOverride matches.
    */
   overrideBase?: number;
+  poisonOverrideBase?: number;
   /** Level value that pairs with overrideBase (default 255 when overrideBase set). */
   overrideLevel?: number;
   /**

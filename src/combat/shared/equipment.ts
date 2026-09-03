@@ -224,7 +224,13 @@ export function songOfDestructionEquipmentSummary(
 
 export const EQUIPMENT_SET_ACTIVATION = "pre-activated-static-loadout" as const;
 
-export const EQUIPMENT_ENCHANTMENTS = ["agony", "heroism", "shadows", "metaphysics"] as const;
+export const EQUIPMENT_ENCHANTMENTS = [
+  "agony",
+  "flames",
+  "heroism",
+  "shadows",
+  "metaphysics",
+] as const;
 export type EquipmentEnchantmentId = (typeof EQUIPMENT_ENCHANTMENTS)[number];
 
 export interface ActiveEquipmentEffects {
@@ -234,6 +240,8 @@ export interface ActiveEquipmentEffects {
   /** Capability of the resolved twohand or mainhand weapon only. */
   activeWeapon?: ActiveWeaponCapability;
   enchantments: readonly EquipmentEnchantmentId[];
+  /** Enhanced wraps plus the permanent Flames unlock; activates after 9 seconds worn. */
+  kerapacFlamesActive?: boolean;
   weaponClass: WeaponClass | null;
   defenderEquipped: boolean;
   passage: {
@@ -430,6 +438,9 @@ export function activeEquipmentEffects(
     passiveIds,
     activeWeapon,
     enchantments,
+    kerapacFlamesActive:
+      loadout.equipmentSlots?.gloves === "item:enhanced-kerapacs-wrist-wraps" &&
+      enchantments.includes("flames"),
     weaponClass,
     defenderEquipped: offhand?.defender === true,
     passage: {

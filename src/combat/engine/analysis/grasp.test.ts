@@ -25,14 +25,14 @@ function row(result: ReturnType<typeof simulate>, id: string) {
 }
 
 describe("Grasp of Guthix analysis grouping", () => {
-  it("rolls real child damage into a non-additive grouped presentation", () => {
+  it("rolls the combined poison hit into a non-additive grouped presentation", () => {
     const result = simulate(graspInput, { detailLevel: "full-analysis" });
     const maxLife = row(result, "grasp-of-guthix-max-life");
     const poison = row(result, "grasp-of-guthix-poison");
     const group = result.analysis.groups?.find((entry) => entry.id === "grasp-of-guthix");
 
     expect(result.ok).toBe(true);
-    expect(maxLife).toBeDefined();
+    expect(maxLife).toBeUndefined();
     expect(poison).toBeDefined();
     expect(group).toBeDefined();
     expect(row(result, "grasp-of-guthix")).toBeUndefined();
@@ -42,46 +42,36 @@ describe("Grasp of Guthix analysis grouping", () => {
         .filter((event) => event.abilityId.startsWith("grasp-of-guthix-"))
         .every((event) => event.damageTag === undefined && event.bonusTargetId === undefined),
     ).toBe(true);
-    expect(group!.totalDamage).toBeCloseTo(
-      maxLife!.totalDamage + poison!.totalDamage + maxLife!.bonusDamage + poison!.bonusDamage,
-      6,
-    );
+    expect(group!.totalDamage).toBeCloseTo(poison!.totalDamage + poison!.bonusDamage, 6);
     expect(group!.totalDamage).toBeCloseTo(
       group!.components.reduce((sum, component) => sum + component.totalDamage, 0),
       6,
     );
     expect(group!.expectedActivations).toBe(3);
-    expect(maxLife!.expectedActivations).toBe(9);
     expect(poison!.expectedActivations).toBe(9);
     expect(group!.components.map((component) => component.id)).toEqual([
-      "grasp-of-guthix-max-life",
       "grasp-of-guthix-poison",
       "grasp-of-guthix-big-boned",
     ]);
     expect(
       group!.components.find((component) => component.id === "grasp-of-guthix-big-boned"),
     ).toMatchObject({
-      totalDamage: maxLife!.bonusDamage + poison!.bonusDamage,
+      totalDamage: poison!.bonusDamage,
       expectedSeparateHits: 0,
     });
   });
 
-  it("keeps source, direct, poison-immunity, and fifth-hit attribution coherent", () => {
+  it("keeps source, poison-immunity, and fifth-hit attribution coherent", () => {
     const result = simulate(graspInput, { detailLevel: "full-analysis" });
     const immune = simulate(
       { ...graspInput, targetPoisonImmune: true },
       { detailLevel: "full-analysis" },
     );
-    const maxLife = row(result, "grasp-of-guthix-max-life")!;
     const poison = row(result, "grasp-of-guthix-poison")!;
-    const immuneMaxLife = row(immune, "grasp-of-guthix-max-life")!;
     const group = result.analysis.groups?.find((entry) => entry.id === "grasp-of-guthix");
     const immuneGroup = immune.analysis.groups?.find((entry) => entry.id === "grasp-of-guthix");
-    if (!group || !immuneGroup) throw new Error("Grasp group was not produced");
+    if (!group) throw new Error("Grasp group was not produced");
 
-    expect(maxLife.sourceBreakdown).toEqual(
-      expect.arrayContaining([expect.objectContaining({ blessingId: "tearing-thorns" })]),
-    );
     expect(poison.sourceBreakdown).toEqual(
       expect.arrayContaining([expect.objectContaining({ blessingId: "tearing-thorns" })]),
     );
@@ -107,18 +97,11 @@ describe("Grasp of Guthix analysis grouping", () => {
     expect(immune.analysis.byEffect.some((effect) => effect.id === "grasp-of-guthix-poison")).toBe(
       false,
     );
-    expect(immuneMaxLife.totalDamage + immuneMaxLife.bonusDamage).toBeCloseTo(
-      maxLife.totalDamage + maxLife.bonusDamage,
-      6,
-    );
     expect(result.totalExpected - immune.totalExpected).toBeCloseTo(
       poison.totalDamage + poison.bonusDamage,
       6,
     );
-    expect(immuneGroup.totalDamage).toBeCloseTo(
-      immuneMaxLife.totalDamage + immuneMaxLife.bonusDamage,
-      6,
-    );
+    expect(immuneGroup).toBeUndefined();
 
     const perfidiousLeague = resolveLeagueRules(
       {
@@ -138,8 +121,8 @@ describe("Grasp of Guthix analysis grouping", () => {
       result.events.filter((event) => event.abilityId === "dismember").length,
     );
     expect(
-      perfidious.events.filter((event) => event.abilityId === "grasp-of-guthix-max-life").length,
-    ).toBe(result.events.filter((event) => event.abilityId === "grasp-of-guthix-max-life").length);
+      perfidious.events.filter((event) => event.abilityId === "grasp-of-guthix-poison").length,
+    ).toBe(result.events.filter((event) => event.abilityId === "grasp-of-guthix-poison").length);
   });
 
   it("does not double-count the roll-up and keeps score-only totals identical", () => {

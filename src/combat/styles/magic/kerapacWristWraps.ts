@@ -1,13 +1,23 @@
 import type { SourceReference } from "../../types";
+import type { ActiveEquipmentEffects } from "../../shared/equipment";
 
 export const KERAPAC_WRIST_WRAPS_PASSIVE_ID = "kerapac-combust" as const;
 export const KERAPAC_WRIST_WRAPS_WINDOW_TICKS = 10;
 export const KERAPAC_WRIST_WRAPS_COMBUST_MULTIPLIER = 1.25;
+export const KERAPAC_WRIST_WRAPS_FLAMES_MULTIPLIER = 1.4;
+export const KERAPAC_WRIST_WRAPS_FLAMES_ACTIVATION_TICKS = 15;
 
 export const KERAPAC_WRIST_WRAPS_SOURCE: SourceReference = {
   source: "runescape-wiki",
   url: "https://runescape.wiki/w/Kerapac%27s_wrist_wraps",
   title: "Kerapac's wrist wraps",
+  verifiedAt: "2026-09-03",
+};
+
+export const KERAPAC_WRIST_WRAPS_FLAMES_SOURCE: SourceReference = {
+  source: "runescape-wiki",
+  url: "https://runescape.wiki/w/Enchantment_of_flames",
+  title: "Enchantment of flames",
   verifiedAt: "2026-09-03",
 };
 
@@ -17,4 +27,13 @@ export function armKerapacWristWraps(castTick: number): number {
 
 export function kerapacWristWrapsActive(untilTick: number, castTick: number): boolean {
   return untilTick > 0 && castTick < untilTick;
+}
+
+export function kerapacWristWrapsFlamesActive(
+  effects: ActiveEquipmentEffects | undefined,
+  landTick: number,
+): boolean {
+  return (
+    effects?.kerapacFlamesActive === true && landTick >= KERAPAC_WRIST_WRAPS_FLAMES_ACTIVATION_TICKS
+  );
 }

@@ -81,6 +81,11 @@ export function hostInputFromLoadoutStats(
     stats.base,
     stats.weaponTierOverride,
   );
+  const { on: poisonOverrideBase } = naragiBaseDamageCompare(
+    loadout,
+    stats.poisonBase,
+    stats.weaponTierOverride,
+  );
   const sliverWorn = loadout.equipmentSlots?.pocket === SLIVER_OF_EDICTS_ID;
   const naragiPicked =
     options.relics?.includes(NARAGI_EDICT_RELIC) === true ||
@@ -95,8 +100,10 @@ export function hostInputFromLoadoutStats(
   return {
     style: loadout.style,
     base: stats.base,
+    poisonBase: stats.poisonBase,
     level: stats.level,
     overrideBase,
+    poisonOverrideBase,
     overrideLevel: NARAGI_LEVEL_OVERRIDE,
     ...(activateNaragiAtStart ? { activateNaragiAtStart: true } : {}),
     accuracy: stats.dp,

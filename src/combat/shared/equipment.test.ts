@@ -54,9 +54,7 @@ describe("shared/equipment set effects", () => {
     expect(equippedSetCounts(pinsOnly).size).toBe(0);
     expect(setEffectsSummary(pinsOnly)).toEqual([]);
     expect(loadoutSetCritChance(pinsOnly)).toBe(0);
-    expect(
-      activeEquipmentEffects({ style: "melee", ...pinsOnly }).vestments,
-    ).toMatchObject({
+    expect(activeEquipmentEffects({ style: "melee", ...pinsOnly }).vestments).toMatchObject({
       pieces: 0,
       heraldOfChaos: false,
       berserkExtension: false,
@@ -68,11 +66,7 @@ describe("shared/equipment set effects", () => {
         helmet: "item:tectonic-helm",
         body: "item:tectonic-body",
       },
-      equipmentIds: [
-        "item:tectonic-helm",
-        "item:tectonic-body",
-        "item:tectonic-legs",
-      ],
+      equipmentIds: ["item:tectonic-helm", "item:tectonic-body", "item:tectonic-legs"],
     };
     // Worn helm+body only: pin legs must not make count 3.
     expect(equippedSetCounts(wornPlusPin).get("tectonic")).toBe(2);
@@ -242,6 +236,29 @@ describe("shared/equipment set effects", () => {
     expect(rows[0]!.source.url).toMatch(/^https:\/\/runescape\.wiki\//);
     expect(rows[1]).toMatchObject({ label: "Enduring Ruin + Agony", support: "modeled" });
     expect(equippedPassiveSummaries({ equipmentSlots: {} })).toEqual([]);
+  });
+
+  it("activates Flames only for enhanced Kerapac wraps", () => {
+    const enhanced = activeEquipmentEffects({
+      style: "magic",
+      equipmentSlots: { gloves: "item:enhanced-kerapacs-wrist-wraps" },
+      enchantments: ["flames"],
+    });
+    const base = activeEquipmentEffects({
+      style: "magic",
+      equipmentSlots: { gloves: "item:kerapacs-wrist-wraps" },
+      enchantments: ["flames"],
+    });
+
+    expect(enhanced.kerapacFlamesActive).toBe(true);
+    expect(base.kerapacFlamesActive).toBe(false);
+    expect(
+      equippedPassiveSummaries({
+        style: "magic",
+        equipmentSlots: { gloves: "item:enhanced-kerapacs-wrist-wraps" },
+        enchantments: ["flames"],
+      })[0],
+    ).toMatchObject({ label: "Kerapac's wrist wraps + Flames", support: "modeled" });
   });
 
   it("collapses Kal-Zuk multi-igneous passives into one Gear row", () => {

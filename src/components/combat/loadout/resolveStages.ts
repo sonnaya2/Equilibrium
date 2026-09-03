@@ -691,6 +691,7 @@ export interface ResolvedBaseDamage {
   baseDamageMode: "automatic";
   rawBase: number;
   base: number;
+  poisonBase: number;
   baseAbilityDamageBreakdown: readonly BreakdownRow[];
   equipmentDamageBreakdown: readonly BreakdownRow[];
   styleMismatchNotes: readonly string[];
@@ -713,12 +714,20 @@ export function resolveBaseDamage(
     afterPerksBase +
     leagueBundle.aegis.baseAbilityDamageBonus +
     leagueBundle.league.trueEquilibrium.baseAbilityDamage;
+  const poisonFlatLeagueBonuses =
+    afterPerksBase + leagueBundle.league.trueEquilibrium.baseAbilityDamage;
   const withHigherPower =
     leagueBundle.leagueBaseAbilityDamageMultiplier === 1
       ? withFlatLeagueBonuses
       : mulFloor(withFlatLeagueBonuses, leagueBundle.leagueBaseAbilityDamageMultiplier);
+  const poisonWithHigherPower =
+    leagueBundle.leagueBaseAbilityDamageMultiplier === 1
+      ? poisonFlatLeagueBonuses
+      : mulFloor(poisonFlatLeagueBonuses, leagueBundle.leagueBaseAbilityDamageMultiplier);
   const icyenicMult = leagueBundle.icyenic.baseAbilityDamageMultiplier;
   const resolvedBase = icyenicMult === 1 ? withHigherPower : mulFloor(withHigherPower, icyenicMult);
+  const poisonBase =
+    icyenicMult === 1 ? poisonWithHigherPower : mulFloor(poisonWithHigherPower, icyenicMult);
   const styleMismatchNotes = equipment.styleContributions
     .filter((row) => row.blockedByStyle)
     .map(
@@ -793,6 +802,7 @@ export function resolveBaseDamage(
     baseDamageMode: "automatic",
     rawBase: enteredBase,
     base: resolvedBase,
+    poisonBase,
     baseAbilityDamageBreakdown,
     equipmentDamageBreakdown,
     styleMismatchNotes,
@@ -1204,8 +1214,7 @@ export function resolveCombatRules(
         : Math.min(maxAdrenaline, Math.max(0, Math.round(loadout.startingAdrenaline))),
     cap: {
       cap: STANDARD_HIT_CAP,
-      // User toggle only; league does not force bypass under equilibrium.
-      bypass: !loadout.hitCapEnabled,
+      bypass: leagueBundle.league.ruleset === "equilibrium" || !loadout.hitCapEnabled,
     },
     activePassives: (() => {
       // Equipment list may already include "Ring of Vigour"; collapse to one

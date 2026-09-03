@@ -515,6 +515,7 @@ describe("normalizeLoadout", () => {
   it("defaults missing account enchantments on and preserves an explicit choice", () => {
     expect(normalizeLoadout({}).enchantments).toEqual([
       "agony",
+      "flames",
       "heroism",
       "shadows",
       "metaphysics",

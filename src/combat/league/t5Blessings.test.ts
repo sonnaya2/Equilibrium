@@ -6,11 +6,16 @@ import { MELEE_ABILITIES } from "../styles/melee/abilities";
 import { PLAYER_POISON_EFFECT_ID, type PlayerPoisonProfile } from "../poison/mechanics";
 import {
   blessingRule,
+  leagueModifiers,
   resolveLeagueCritAtLand,
   resolveLeagueCritualStats,
   resolveLeagueRules,
 } from "./ruleset";
-import { calculateLeagueAbility, resolveLeagueAttachedRawHost } from "./damage";
+import {
+  calculateLeagueAbility,
+  graspOfGuthixComponents,
+  resolveLeagueAttachedRawHost,
+} from "./damage";
 import { barkscalesOutcome } from "./barkscales";
 
 const poisonProfile = {
@@ -138,22 +143,20 @@ describe("Tier 5 and Tier 6 blessing mechanics", () => {
     );
     expect(infernoRow?.totalDamage).toBeGreaterThan(0);
 
-    const tearingEvents = (result: ReturnType<typeof simulate>) => [
-      ...blessingStream(result, "tearing-thorns", "grasp-of-guthix-max-life"),
-      ...blessingStream(result, "tearing-thorns", "grasp-of-guthix-poison"),
-    ];
+    const tearingEvents = (result: ReturnType<typeof simulate>) =>
+      blessingStream(result, "tearing-thorns", "grasp-of-guthix-poison");
     expect(tearingBase.events.filter((event) => event.abilityId === "dismember")).toHaveLength(16);
     expect(
       tearingPerfidious.events.filter((event) => event.abilityId === "dismember"),
     ).toHaveLength(16);
     expect(tearingEvents(tearingBase)).toEqual(tearingEvents(tearingPerfidious));
-    expect(tearingEvents(tearingBase).map((event) => event.tick)).toEqual([10, 20, 30, 10, 20, 30]);
-    for (const effectId of ["grasp-of-guthix-max-life", "grasp-of-guthix-poison"]) {
-      const row = tearingBase.analysis.byEffect.find((effect) => effect.id === effectId);
-      expect(row?.sourceBreakdown).toEqual(
-        expect.arrayContaining([expect.objectContaining({ blessingId: "tearing-thorns" })]),
-      );
-    }
+    expect(tearingEvents(tearingBase).map((event) => event.tick)).toEqual([10, 20, 30]);
+    const tearingRow = tearingBase.analysis.byEffect.find(
+      (effect) => effect.id === "grasp-of-guthix-poison",
+    );
+    expect(tearingRow?.sourceBreakdown).toEqual(
+      expect.arrayContaining([expect.objectContaining({ blessingId: "tearing-thorns" })]),
+    );
 
     const lordEvents = (result: ReturnType<typeof simulate>) =>
       blessingStream(result, "lord-of-light", "light-of-saradomin");
@@ -451,9 +454,6 @@ describe("Tier 5 and Tier 6 blessing mechanics", () => {
     });
     expect(result.events.filter((event) => event.abilityId === "dismember")).toHaveLength(16);
     expect(
-      result.events.filter((event) => event.abilityId === "grasp-of-guthix-max-life"),
-    ).toHaveLength(3);
-    expect(
       result.events.filter((event) => event.abilityId === "grasp-of-guthix-poison"),
     ).toHaveLength(3);
 
@@ -465,10 +465,68 @@ describe("Tier 5 and Tier 6 blessing mechanics", () => {
       rotation: rotationOf("dismember"),
     });
     expect(
-      immuneResult.events.filter((event) => event.abilityId === "grasp-of-guthix-max-life"),
-    ).toHaveLength(3);
-    expect(
       immuneResult.events.filter((event) => event.abilityId === "grasp-of-guthix-poison"),
     ).toHaveLength(0);
+  });
+
+  it("resolves Tearing Thorns as one uncapped poison hit with Splash and Envenomed", () => {
+    const league = resolveLeagueRules(
+      {
+        ruleset: "equilibrium",
+        blessingPicks: ["Balance", "Balance", "Balance", "Balance", "Balance", "Balance"],
+      },
+      { maximumLife: 10_000, targetSize: 3, herbloreLevel: 120 },
+    );
+    const components = graspOfGuthixComponents({
+      rules: league,
+      triggers: 1,
+      targetsStruck: 1,
+      base: 1_000,
+      level: 120,
+      accuracy: 1,
+      modifiers: leagueModifiers(league),
+      context: { style: "magic", ruleset: "equilibrium", area: "aoe" },
+      cap: { cap: 30_000 },
+    });
+
+    expect(components).toHaveLength(1);
+    expect(components[0]).toMatchObject({
+      effectId: "grasp-of-guthix-poison",
+      blessingId: "tearing-thorns",
+      expectedSeparateHits: 1,
+    });
+    expect(components[0]!.hitDetail).toMatchObject({ min: 16_334, max: 24_251, capLoss: 0 });
+    expect(components[0]!.components).toHaveLength(1);
+    expect(components[0]!.components?.[0]).toMatchObject({
+      id: "big-boned",
+      damage: { min: 500, max: 500, expected: 500 },
+    });
+  });
+
+  it("uses the poison ability-damage basis for Tearing Thorns Grasp", () => {
+    const league = resolveLeagueRules(
+      {
+        ruleset: "equilibrium",
+        blessingPicks: ["Balance", "Balance", "Balance", "Balance", "Balance"],
+      },
+      { maximumLife: 0 },
+    );
+    const run = (base: number, poisonBase: number) =>
+      simulate({
+        ...baseInput,
+        base,
+        poisonBase,
+        league,
+        context: { style: "melee", ruleset: "equilibrium" },
+        rotation: rotationOf("dismember"),
+      });
+    const baseline = run(1_000, 1_000);
+    const aegisLike = run(2_000, 1_000);
+    const higherPowerLike = run(2_000, 1_300);
+    const poisonDamage = (result: ReturnType<typeof simulate>) =>
+      result.analysis.byEffect.find((row) => row.id === "grasp-of-guthix-poison")!.totalDamage;
+
+    expect(poisonDamage(aegisLike)).toBe(poisonDamage(baseline));
+    expect(poisonDamage(higherPowerLike) / poisonDamage(aegisLike)).toBeCloseTo(1.3, 10);
   });
 });

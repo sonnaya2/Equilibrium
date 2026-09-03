@@ -115,6 +115,20 @@ export function abilityDamageAt(rt: SimulationRuntime, landTick: number): number
   return combatBaseAt(rt, landTick, level);
 }
 
+export function poisonAbilityDamageAt(rt: SimulationRuntime, landTick: number): number {
+  const level = combatLevelAt(rt, landTick);
+  const overrideLevel = rt.input.overrideLevel ?? NARAGI_LEVEL_OVERRIDE;
+  if (
+    rt.input.poisonOverrideBase != null &&
+    level === overrideLevel &&
+    rt.state.player?.levelOverride &&
+    landTick < rt.state.player.levelOverride.untilTick
+  ) {
+    return rt.input.poisonOverrideBase;
+  }
+  return rt.input.poisonBase ?? rt.input.base;
+}
+
 function mix(a: number, b: number, weight: number): number {
   return a + (b - a) * weight;
 }
@@ -238,7 +252,10 @@ function mixExactDamageDistributions(
 ): readonly ExactDamageDistribution[] {
   const weights = new Map<number, number>();
   for (const outcome of inactive) {
-    weights.set(outcome.damage, (weights.get(outcome.damage) ?? 0) + outcome.weight * (1 - activeWeight));
+    weights.set(
+      outcome.damage,
+      (weights.get(outcome.damage) ?? 0) + outcome.weight * (1 - activeWeight),
+    );
   }
   for (const outcome of active) {
     weights.set(outcome.damage, (weights.get(outcome.damage) ?? 0) + outcome.weight * activeWeight);
@@ -322,7 +339,12 @@ function damageOnlyEnchantedBoltChance(
   provenance: ReturnType<typeof provenanceForCastHit>,
 ): number | null {
   const mechanicId = rt.input.ammunition?.projectile?.mechanicId;
-  if (mechanicId !== "opal" && mechanicId !== "pearl" && mechanicId !== "diamond" && mechanicId !== "onyx") {
+  if (
+    mechanicId !== "opal" &&
+    mechanicId !== "pearl" &&
+    mechanicId !== "diamond" &&
+    mechanicId !== "onyx"
+  ) {
     return null;
   }
   if (mechanicId === "onyx" && (rt.state.player?.vitality.maximumLifePoints ?? 0) > 0) return null;
@@ -363,13 +385,7 @@ function ammunitionSourceDamageDistribution(args: {
   const cap = normalizeHitCapRule(args.cap ?? standardHitCap);
   const postDamagePotentialFlat = args.postDamagePotentialFlat ?? 0;
   const resolve = (roll: number, critMultiplier?: number): number => {
-    const state = runOrderedPipeline(
-      { damage: roll },
-      ordered,
-      args.context,
-      true,
-      critMultiplier,
-    );
+    const state = runOrderedPipeline({ damage: roll }, ordered, args.context, true, critMultiplier);
     return applyHitCap(
       Math.floor(applyDamagePotential(state.damage, args.accuracy)) + postDamagePotentialFlat,
       cap,
@@ -393,7 +409,7 @@ function ammunitionSourceDamageDistribution(args: {
       grouped.set(damage, (grouped.get(damage) ?? 0) + rollWeight * (1 - critChance));
     }
     if (critBonuses.length > 0) {
-      const critWeight = rollWeight * critChance / critBonuses.length;
+      const critWeight = (rollWeight * critChance) / critBonuses.length;
       for (const bonus of critBonuses) {
         const damage = resolve(roll, baseCritDamageMultiplier(args.level, bonus));
         grouped.set(damage, (grouped.get(damage) ?? 0) + critWeight);
@@ -433,8 +449,7 @@ function sourceDistributionForPerfectEquilibrium(args: {
   if (args.ability.style !== "ranged" || args.isDot || args.convertedChannel) return false;
   const capabilities = capabilitiesOf(args.provenance);
   return (
-    (args.snap.perfectEquilibriumAtCast &&
-      capabilities.canGeneratePerfectEquilibrium === true) ||
+    (args.snap.perfectEquilibriumAtCast && capabilities.canGeneratePerfectEquilibrium === true) ||
     (args.ability.id === "balance_by_force" && args.snap.perfectEquilibriumTrigger === true)
   );
 }
@@ -597,10 +612,7 @@ function resolveCastHitUncached(
         enchantedBoltStatefulProcStream(snap.castSeq, hitIndex),
         chance,
       );
-      rt.boltProcOutcomes.set(
-        enchantedBoltStatefulProcStream(snap.castSeq, hitIndex),
-        activeState,
-      );
+      rt.boltProcOutcomes.set(enchantedBoltStatefulProcStream(snap.castSeq, hitIndex), activeState);
       return activeState ? active : inactive;
     }
   }
@@ -839,25 +851,25 @@ function resolveCastHitUncached(
             context: hitContext,
             cap: input.cap,
           })
-      : resolveLeagueAttachedHost({
-          rules: input.league,
-          source: provenance,
-          landTick: at,
-          base,
-          band,
-          level,
-          accuracy: hitAccuracy,
-          crit,
-          ...(snap.surgingStormAtCast
-            ? { critDamageDistribution: SURGING_STORM_CRIT_DAMAGE_DISTRIBUTION }
-            : {}),
-          modifiers: isCommand ? conjureEligibleModifiers(modifiers) : modifiers,
-          context: hitContext,
-          cap: input.cap,
-          preciseRank: input.preciseRank,
-          ...(attachedTermBase !== undefined ? { attachedTermBase } : {}),
-          ...(essenceFlat > 0 ? { postDamagePotentialFlat: essenceFlat } : {}),
-        });
+        : resolveLeagueAttachedHost({
+            rules: input.league,
+            source: provenance,
+            landTick: at,
+            base,
+            band,
+            level,
+            accuracy: hitAccuracy,
+            crit,
+            ...(snap.surgingStormAtCast
+              ? { critDamageDistribution: SURGING_STORM_CRIT_DAMAGE_DISTRIBUTION }
+              : {}),
+            modifiers: isCommand ? conjureEligibleModifiers(modifiers) : modifiers,
+            context: hitContext,
+            cap: input.cap,
+            preciseRank: input.preciseRank,
+            ...(attachedTermBase !== undefined ? { attachedTermBase } : {}),
+            ...(essenceFlat > 0 ? { postDamagePotentialFlat: essenceFlat } : {}),
+          });
   const hit = host.baseHit;
 
   // Choir free DS uses the same mass as ammo dragonstone; build whenever either may need it.
@@ -1033,10 +1045,7 @@ function resolveCastHitUncached(
     isAttunedCrystalWeaponryHitEligible(provenance) &&
     attunedCrystal.procChance > 0
   ) {
-    const bonusExpected = attunedCrystalExpectedBonus(
-      host.hit.expected,
-      attunedCrystal.procChance,
-    );
+    const bonusExpected = attunedCrystalExpectedBonus(host.hit.expected, attunedCrystal.procChance);
     if (bonusExpected > 0) {
       components.push({
         id: ATTUNED_CRYSTAL_COMPONENT_ID,

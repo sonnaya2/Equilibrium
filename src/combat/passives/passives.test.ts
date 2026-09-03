@@ -18,6 +18,7 @@ const emptyCtx = {
   hasHeroism: false,
   hasShadows: false,
   hasMetaphysics: false,
+  kerapacFlamesActive: false,
 };
 
 describe("passive registry", () => {

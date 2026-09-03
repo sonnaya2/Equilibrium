@@ -123,9 +123,11 @@ export interface SerializableLeagueRules {
  */
 export interface SerializableRevolutionSimBase {
   base: number;
+  poisonBase?: number;
   level: number;
   /** Base AD while temporary level override is active (Naragi 255). */
   overrideBase?: number;
+  poisonOverrideBase?: number;
   overrideLevel?: number;
   /** Activate Sliver of Edicts at combat start. */
   activateNaragiAtStart?: boolean;

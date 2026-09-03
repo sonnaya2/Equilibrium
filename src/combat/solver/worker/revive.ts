@@ -47,8 +47,10 @@ export function reviveRevolutionBase(sim: SerializableRevolutionSimBase): Revive
   const league = reviveLeague(sim.league);
   return {
     base: sim.base,
+    poisonBase: sim.poisonBase,
     level: sim.level,
     overrideBase: sim.overrideBase,
+    poisonOverrideBase: sim.poisonOverrideBase,
     overrideLevel: sim.overrideLevel,
     ...(sim.activateNaragiAtStart === true ? { activateNaragiAtStart: true } : {}),
     accuracy: sim.accuracy,

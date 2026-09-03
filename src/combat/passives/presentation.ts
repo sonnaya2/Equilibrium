@@ -65,6 +65,17 @@ export function presentPassive(
           : def.effects,
         support,
       };
+    case "kerapac-combust":
+      return {
+        label: ctx.kerapacFlamesActive ? "Kerapac's wrist wraps + Flames" : "Kerapac's wrist wraps",
+        effects: ctx.kerapacFlamesActive
+          ? [
+              "Dragon Breath empowers Combust for 10 ticks (6 seconds).",
+              "After 9 seconds worn, empowered Combust deals 40% more damage and lands all remaining hits on its next normal hit tick.",
+            ]
+          : def.effects,
+        support,
+      };
     default:
       return { label: def.label, effects: def.effects, support };
   }
@@ -94,11 +105,13 @@ export function lengCombinedPresentation(): PassivePresentation {
 export function presentationContextFromEffects(effects: {
   passage: { agonyActive: boolean };
   enchantments: readonly string[];
+  kerapacFlamesActive?: boolean;
 }): PassivePresentationContext {
   return {
     passageAgonyActive: effects.passage.agonyActive,
     hasHeroism: effects.enchantments.includes("heroism"),
     hasShadows: effects.enchantments.includes("shadows"),
     hasMetaphysics: effects.enchantments.includes("metaphysics"),
+    kerapacFlamesActive: effects.kerapacFlamesActive === true,
   };
 }

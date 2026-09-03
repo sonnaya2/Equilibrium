@@ -41,6 +41,7 @@ function copyEquipmentEffects(
         }
       : undefined,
     enchantments: [...effects.enchantments],
+    kerapacFlamesActive: effects.kerapacFlamesActive === true,
     weaponClass: effects.weaponClass,
     defenderEquipped: effects.defenderEquipped,
     passage: { ...effects.passage },
@@ -60,9 +61,7 @@ function copyEquipmentEffects(
           gems: [...effects.chromaticChoir.gems],
         }
       : undefined,
-    songOfDestruction: effects.songOfDestruction
-      ? { ...effects.songOfDestruction }
-      : undefined,
+    songOfDestruction: effects.songOfDestruction ? { ...effects.songOfDestruction } : undefined,
     attunedCrystalWeaponry: effects.attunedCrystalWeaponry
       ? { ...effects.attunedCrystalWeaponry }
       : undefined,
@@ -81,8 +80,10 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
   const model: ResolvedCombatModel = {
     style: input.style,
     base: input.base,
+    poisonBase: input.poisonBase ?? input.base,
     level: input.level,
     ...(input.overrideBase != null ? { overrideBase: input.overrideBase } : {}),
+    ...(input.poisonOverrideBase != null ? { poisonOverrideBase: input.poisonOverrideBase } : {}),
     ...(input.overrideLevel != null ? { overrideLevel: input.overrideLevel } : {}),
     ...(input.activateNaragiAtStart === true ? { activateNaragiAtStart: true } : {}),
     accuracy: input.accuracy,
@@ -125,10 +126,7 @@ export function buildResolvedCombatModel(input: HostCombatResolveInput): Resolve
       eliteSeersVillage: input.enchantedBoltChanceModifiers?.eliteSeersVillage === true,
     },
     // Formula domain includes Power Archive effective ranks (up to 8).
-    caromingRank: Math.max(
-      0,
-      Math.min(8, Math.floor(input.caromingRank ?? input.caroming ?? 0)),
-    ),
+    caromingRank: Math.max(0, Math.min(8, Math.floor(input.caromingRank ?? input.caroming ?? 0))),
     conjureBasicDamageMult: input.conjureBasicDamageMult ?? 1,
     conjureDurationMult: input.conjureDurationMult ?? 1,
     tumekensPieces: input.tumekensPieces ?? 0,

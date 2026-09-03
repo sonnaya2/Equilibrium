@@ -59,9 +59,11 @@ export interface ResolvedCombatModel {
   readonly style: CombatStyle;
 
   readonly base: number;
+  readonly poisonBase: number;
   readonly level: number;
   /** Base AD while temporary level override is active (Naragi 255). */
   readonly overrideBase?: number;
+  readonly poisonOverrideBase?: number;
   readonly overrideLevel?: number;
   /** Activate Sliver of Edicts at combat start (Rotation toggle). */
   readonly activateNaragiAtStart?: boolean;
@@ -123,8 +125,10 @@ export interface ResolvedCombatModel {
 export interface HostCombatResolveInput {
   readonly style: CombatStyle;
   readonly base: number;
+  readonly poisonBase?: number;
   readonly level: number;
   readonly overrideBase?: number;
+  readonly poisonOverrideBase?: number;
   readonly overrideLevel?: number;
   readonly activateNaragiAtStart?: boolean;
   readonly accuracy: number;

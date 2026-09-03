@@ -104,6 +104,8 @@ export interface CalcStats {
   baseDamageMode: "automatic" | "manual";
   rawBase: number;
   base: number;
+  /** Ability-damage basis for poison; Teragard's Aegis does not contribute. */
+  poisonBase: number;
   /**
    * Level feeding the crit damage layer. Strength for melee; style level for
    * Ranged / Magic / Necromancy. Base AD uses loadoutEffectiveDamageLevel.
@@ -323,6 +325,7 @@ export function loadoutStats(loadout: Loadout, options: LoadoutStatsOptions = {}
     baseDamageMode: baseDamage.baseDamageMode,
     rawBase: baseDamage.rawBase,
     base: baseDamage.base,
+    poisonBase: baseDamage.poisonBase,
     level: levels.level,
     attackLevel: levels.attackLevel,
     dp: accuracyDp.dp,

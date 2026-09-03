@@ -10,7 +10,7 @@ import {
 import { runPipeline } from "../../pipeline/modifierPipeline";
 import { contextWithProvenance } from "../../shared/damageProvenance";
 import type { CombatModifier } from "../../types";
-import { abilityDamageAt } from "../resolution/castHit";
+import { poisonAbilityDamageAt } from "../resolution/castHit";
 import type { ScheduledEvent } from "../runtime/events";
 import type { SimulationRuntime } from "../runtime/runtime";
 import type { TargetWeaponPoisonHitMultiplicity, TargetWeaponPoisonState } from "../runtime/state";
@@ -111,7 +111,7 @@ export function resolvePlayerPoison(
 ): ResolvedPlayerPoisonHit {
   const toxin = rt.state.target.evolvingToxin;
   const stacks = activeEvolvingToxinStacks(toxin.stacks, toxin.expiresAtTick, atTick);
-  const baseAbilityDamage = abilityDamageAt(rt, atTick);
+  const baseAbilityDamage = poisonAbilityDamageAt(rt, atTick);
   const attachedTerms = rt.input.league
     ? resolveLeagueAttachedTerms({
         rules: rt.input.league,
@@ -149,8 +149,8 @@ export function resolvePlayerPoison(
   );
   const toxinModifier =
     rt.input.context?.style === "ranged" && rt.input.ammunition?.projectile?.mechanicId === "bik"
-    ? evolvingToxinPoisonModifier(stacks)
-    : null;
+      ? evolvingToxinPoisonModifier(stacks)
+      : null;
   if (toxinModifier) modifiers.push(toxinModifier);
   const revenge = revengeDamageModifier(rt.state.defence.revenge, atTick);
   if (revenge) modifiers.push(revenge);

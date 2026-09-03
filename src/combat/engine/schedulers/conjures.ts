@@ -44,6 +44,7 @@ import { refreshPlayerPoisonImmunity, playerPoisonDamageAllowed } from "./player
 import { envenomedPoisonImmunityDisableTicks } from "../../league/ruleset";
 import { attachedResolutionComponent, resolveLeagueAttachedHost } from "../../league/damage";
 import { revengeDamageModifier } from "../../styles/shared/revenge";
+import { poisonAbilityDamageAt } from "../resolution/castHit";
 
 /**
  * Spirit track schedulers: one pending auto and (zombie) poison event per summon.
@@ -218,7 +219,7 @@ function scheduleSpiritPoison(rt: SimulationRuntime, spirit: ActivePutridZombie)
         rules: input.league,
         source: provenance,
         landTick: spirit.poison.nextTick,
-        base: input.base,
+        base: poisonAbilityDamageAt(eventRt, spirit.poison.nextTick),
         band: { minPct: ZOMBIE_POISON_BAND.minPct, maxPct: ZOMBIE_POISON_BAND.maxPct },
         level: input.level,
         accuracy: CONJURE_DAMAGE_POTENTIAL,

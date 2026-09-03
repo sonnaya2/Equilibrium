@@ -100,6 +100,10 @@ const ENCHANTMENTS: Record<EquipmentEnchantmentId, { label: string; effect: stri
     label: "Agony",
     effect: "Enhances Enduring Ruin while enhanced Gloves of Passage are equipped",
   },
+  flames: {
+    label: "Flames",
+    effect: "Enhanced Kerapac's wraps: +40% empowered Combust damage after 9 seconds worn",
+  },
   heroism: {
     label: "Heroism",
     effect: "Champion's ring: 4% crit chance and +1.5% crit damage per active bleed",
@@ -217,10 +221,11 @@ function CombatValues({
       <label className="loadout-check setup-input-check">
         <input
           type="checkbox"
-          checked={loadout.hitCapEnabled}
+          checked={!stats.cap.bypass}
+          disabled={stats.league.ruleset === "equilibrium"}
           onChange={(event) => setLoadout({ ...loadout, hitCapEnabled: event.target.checked })}
         />
-        Hit cap
+        {stats.league.ruleset === "equilibrium" ? "Hit cap removed in League" : "Hit cap"}
       </label>
     </section>
   );

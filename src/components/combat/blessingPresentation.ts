@@ -12,7 +12,6 @@ export const BLESSING_DAMAGE_EFFECT_IDS = [
   "light-of-saradomin",
   "inferno-of-zamorak",
   "grasp-of-guthix",
-  "grasp-of-guthix-max-life",
   "grasp-of-guthix-poison",
   "grasp-of-guthix-big-boned",
 ] as const;
@@ -27,7 +26,6 @@ export const BLESSING_EFFECT_LABEL: Readonly<Record<BlessingDamageEffectId, stri
   // Hit name (card is Striking Light); keep distinct in timeline / byEffect.
   "light-of-saradomin": "Light of Saradomin",
   "grasp-of-guthix": "Grasp of Guthix",
-  "grasp-of-guthix-max-life": "Grasp of Guthix · Max life",
   "grasp-of-guthix-poison": "Grasp of Guthix · Poison",
   "grasp-of-guthix-big-boned": "Big Boned · attached to Grasp",
 };

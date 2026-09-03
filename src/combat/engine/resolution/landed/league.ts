@@ -8,6 +8,7 @@ import {
 } from "../../../league/ruleset";
 import { graspOfGuthixComponents } from "../../../league/damage";
 import type { ResolvedDamage } from "../types";
+import { poisonAbilityDamageAt } from "../castHit";
 
 export function applyLeagueLandedHitEffects(
   rt: SimulationRuntime,
@@ -48,7 +49,7 @@ export function applyLeagueLandedHitEffects(
     rules: rt.input.league,
     triggers: 1,
     targetsStruck: targets,
-    base: rt.input.base,
+    base: poisonAbilityDamageAt(rt, event.tick),
     level: rt.input.level,
     accuracy: rt.input.accuracy,
     modifiers,
@@ -60,10 +61,7 @@ export function applyLeagueLandedHitEffects(
     },
     cap: rt.input.cap,
     landTick: event.tick,
-    poisonImmune: targetPoisonImmuneForBlessingPoison(
-      rt.input.targetPoisonImmune,
-      rt.input.league,
-    ),
+    poisonImmune: targetPoisonImmuneForBlessingPoison(rt.input.targetPoisonImmune, rt.input.league),
   });
   for (const component of components) {
     scheduleEvent(rt, {

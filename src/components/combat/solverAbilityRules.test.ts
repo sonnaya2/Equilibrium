@@ -39,18 +39,18 @@ describe("optimizer ability rules", () => {
     });
   });
 
-  it("prunes rules when the loadout or region pool changes", () => {
-    expect(
-      pruneSolverAbilityRules(
-        {
-          lockedAbilityIds: ["slice", "berserk"],
-          disabledAbilityIds: ["cleave", "dismember"],
-        },
-        new Set(["berserk", "dismember"]),
-      ),
-    ).toEqual({
+  it("derives applicable rules without mutating the saved set", () => {
+    const saved = {
+      lockedAbilityIds: ["slice", "berserk"],
+      disabledAbilityIds: ["cleave", "dismember"],
+    };
+    expect(pruneSolverAbilityRules(saved, new Set(["berserk", "dismember"]))).toEqual({
       lockedAbilityIds: ["berserk"],
       disabledAbilityIds: ["dismember"],
+    });
+    expect(saved).toEqual({
+      lockedAbilityIds: ["slice", "berserk"],
+      disabledAbilityIds: ["cleave", "dismember"],
     });
   });
 

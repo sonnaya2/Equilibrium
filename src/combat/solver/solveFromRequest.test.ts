@@ -253,7 +253,7 @@ describe("solveFromRequest", () => {
     assertLegalResult(result, { min: 3, max: 6 });
   }, 120_000);
 
-  it("scores the current bar without applying search-only ability rules", async () => {
+  it("disqualifies a current bar that violates ability rules", async () => {
     const allowed = new Set(["greater_sunshine", "dragon_breath"]);
     const disabledAbilityIds = allEngineSpecs()
       .filter((ability) => !allowed.has(ability.id))
@@ -276,8 +276,11 @@ describe("solveFromRequest", () => {
 
     const result = await solveFromRequest(request);
 
-    expect(result.baselineBar).toEqual(["asphyxiate", "sunshine"]);
-    expect(Number.isFinite(result.baselineScore)).toBe(true);
+    expect(result.baselineBar).toBeNull();
+    expect(result.bar).toContain("dragon_breath");
+    expect(result.bar.every((id) => !disabledAbilityIds.includes(id))).toBe(true);
+    expect(result.isUpgrade).toBe(true);
+    expect(result.validForApply).toBe(true);
     expect(result.honesty?.currentBarScore).toBe(result.baselineScore);
   }, 120_000);
 

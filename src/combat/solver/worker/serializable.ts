@@ -288,7 +288,7 @@ export interface SerializableSolverRequest {
   permittedCategories?: readonly AbilityCategory[];
   includePartial?: boolean;
   includeUnknownAvailability?: boolean;
-  /** User-selected abilities excluded from searched bars; does not rewrite the incumbent. */
+  /** User-selected abilities excluded from searched bars and incumbent eligibility. */
   disabledAbilityIds?: readonly string[];
   /** User-selected abilities that must appear in every searched bar. */
   lockedAbilityIds?: readonly string[];

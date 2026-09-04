@@ -13,24 +13,60 @@ test.beforeEach(async ({ page }) => {
   await page.reload();
 });
 
-test("ability rules lock, disable, and clear abilities", async ({ page }) => {
+test("bar rules lock, ban, persist across modes, and clear", async ({ page }) => {
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
+
+  const editor = page.getByTestId("revo-bar-editor");
+  await editor
+    .getByRole("combobox", { name: "Ability in slot 1" })
+    .selectOption({ label: "Dismember" });
+  const directLock = editor.getByTestId("revo-lock-selected");
+  await expect(directLock).toHaveAccessibleName("Lock Dismember");
+  await directLock.click();
+  await expect(directLock).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(".ability-bar-slot.is-selected")).toHaveAttribute(
+    "data-rule",
+    "locked",
+  );
+  await expect(page.locator(".ability-bar-slot.is-selected")).toHaveAccessibleName(
+    "Slot 1: Dismember, Locked for optimizer",
+  );
+
+  const mode = page.getByRole("group", { name: "Rotation mode" });
+  await mode.getByRole("button", { name: "Manual", exact: true }).click();
+  await page
+    .getByRole("group", { name: "Rotation mode" })
+    .getByRole("button", { name: "Revolution", exact: true })
+    .click();
+
+  const restoredEditor = page.getByTestId("revo-bar-editor");
+  await expect(restoredEditor.getByTestId("revo-lock-selected")).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  const directBan = restoredEditor.getByTestId("revo-ban-selected");
+  await directBan.click();
+  await expect(directBan).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(".ability-bar-slot.is-selected")).toHaveAttribute(
+    "data-rule",
+    "disabled",
+  );
 
   const rules = page.getByTestId("revo-ability-rules");
   await rules.locator("summary").click();
   await rules.getByTestId("revo-ability-rules-search").fill("Dismember");
 
   const lock = rules.getByRole("button", { name: "Lock Dismember" });
-  const disable = rules.getByRole("button", { name: "Disable Dismember" });
+  const ban = rules.getByRole("button", { name: "Ban Dismember" });
   await lock.click();
   await expect(lock).toHaveAttribute("aria-pressed", "true");
-  await expect(disable).toHaveAttribute("aria-pressed", "false");
-  await expect(rules.locator("summary")).toContainText("1 locked · 0 disabled");
+  await expect(ban).toHaveAttribute("aria-pressed", "false");
+  await expect(rules.locator("summary")).toContainText("1 locked · 0 banned");
 
-  await disable.click();
+  await ban.click();
   await expect(lock).toHaveAttribute("aria-pressed", "false");
-  await expect(disable).toHaveAttribute("aria-pressed", "true");
-  await expect(rules.locator("summary")).toContainText("0 locked · 1 disabled");
+  await expect(ban).toHaveAttribute("aria-pressed", "true");
+  await expect(rules.locator("summary")).toContainText("0 locked · 1 banned");
 
   await rules.getByRole("button", { name: "Clear rules" }).click();
   await expect(rules.locator("summary")).toContainText("All available");
@@ -44,7 +80,9 @@ test("ability rules lock, disable, and clear abilities", async ({ page }) => {
 
 test("ability rules constrain a completed solve and stale progress clears", async ({ page }) => {
   test.setTimeout(60_000);
+  await page.getByRole("button", { name: "New setup", exact: true }).click();
   await page.getByRole("tab", { name: "Rotation", exact: true }).click();
+  await page.getByRole("checkbox", { name: "Use Loadout" }).uncheck();
 
   const editor = page.getByTestId("revo-bar-editor");
   const barSlots = page.locator(".ability-bar-slot");
@@ -53,7 +91,7 @@ test("ability rules constrain a completed solve and stale progress clears", asyn
     await editor.getByRole("button", { name: "Remove", exact: true }).click();
   }
   await editor.getByRole("combobox", { name: "Ability in slot 1" }).selectOption({
-    label: "Berserk",
+    label: "Backhand",
   });
   for (const ability of ["Dismember", "Rend", "Punish"]) {
     await editor.getByRole("combobox", { name: "Ability to add" }).selectOption({ label: ability });
@@ -66,10 +104,10 @@ test("ability rules constrain a completed solve and stale progress clears", asyn
 
   const keptAbilities = new Set(["Berserk", "Dismember", "Rend", "Punish"]);
   const disableLabels = await rules
-    .locator('button[aria-label^="Disable "]')
+    .locator('button[aria-label^="Ban "]')
     .evaluateAll((buttons) => buttons.map((button) => button.getAttribute("aria-label") ?? ""));
   for (const label of disableLabels) {
-    const ability = label.replace(/^Disable /, "");
+    const ability = label.replace(/^Ban /, "");
     if (!keptAbilities.has(ability)) {
       await rules.getByRole("button", { name: label, exact: true }).click();
     }
@@ -82,6 +120,13 @@ test("ability rules constrain a completed solve and stale progress clears", asyn
   await expect(results).toBeVisible({ timeout: 45_000 });
   await expect(results).toContainText("Dismember");
   await expect(results).not.toContainText("Backhand");
+
+  const apply = results.getByRole("button", { name: "Apply", exact: true }).first();
+  await expect(apply).toBeEnabled();
+  await apply.click();
+  const activeBar = page.getByRole("group", { name: "Revolution bar" });
+  await expect(activeBar.getByTitle(/^Dismember/)).toHaveCount(1);
+  await expect(activeBar.getByTitle(/^Backhand/)).toHaveCount(0);
 
   await page.getByTestId("revo-solver-profile").selectOption("burst");
   await expect(page.getByTestId("revo-solver-progress")).toHaveCount(0);

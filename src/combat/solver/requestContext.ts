@@ -315,7 +315,8 @@ function fitBarIds(
  * First-class user bar: preserve order and composition.
  * Resolve equipped variants; drop only denied / unknown / impossible under loadout.
  * Generation-pool exclusion (forceSolver:false) does NOT drop a user slot.
- * Search constraints remain search-only; do not inject, pad, truncate, or rewrite exclusives.
+ * A bar that violates a user lock/ban is not a valid incumbent.
+ * Do not inject, pad, truncate, or rewrite exclusives.
  * Null when absent or no remaining simulable ids.
  */
 export function fitIncumbentBar(
@@ -335,6 +336,8 @@ export function fitIncumbentBar(
       equipmentIds: loadout.equipmentIds,
     }),
   );
+  const disabled = new Set(request.disabledAbilityIds ?? []);
+  if (upgraded.some((id) => disabled.has(id))) return null;
   const cleaned: string[] = [];
   for (const id of upgraded) {
     if (denySet.has(id)) continue;
@@ -352,6 +355,8 @@ export function fitIncumbentBar(
     if (!availability.available) continue;
     cleaned.push(id);
   }
+  const present = new Set(cleaned);
+  if ((request.lockedAbilityIds ?? []).some((id) => !present.has(id))) return null;
   return cleaned.length > 0 ? cleaned : null;
 }
 

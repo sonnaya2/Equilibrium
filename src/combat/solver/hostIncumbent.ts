@@ -31,7 +31,7 @@ export type HostIncumbentBaseline = {
   score: number;
 };
 
-/** Sync host baseline. Null when the request has no user bar or cannot score. */
+/** Sync host baseline. Null when the user bar violates rules or cannot score. */
 export function evaluateHostIncumbentBaseline(
   request: SerializableSolverRequest,
 ): HostIncumbentBaseline | null {

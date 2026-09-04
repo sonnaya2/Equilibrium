@@ -328,7 +328,7 @@ describe("fitIncumbentBar catalogue vs pool", () => {
     ).toThrow("2 required abilities exceed max bar size 1");
   });
 
-  it("keeps locks out of the current-bar baseline", () => {
+  it("disqualifies a current bar that misses a locked ability", () => {
     const catalogue = [
       miniSpec("a"),
       miniSpec("fury", { replacementGroup: "fury" }),
@@ -342,7 +342,7 @@ describe("fitIncumbentBar catalogue vs pool", () => {
     });
     const catMap = new Map(catalogue.map((ability) => [ability.id, ability] as const));
 
-    expect(fitIncumbentBar(request, pool, new Set(), catMap)).toEqual(["a", "fury"]);
+    expect(fitIncumbentBar(request, pool, new Set(), catMap)).toBeNull();
   });
 
   it("preserves an oversized incumbent that already contains its locks", () => {
@@ -358,7 +358,7 @@ describe("fitIncumbentBar catalogue vs pool", () => {
     expect(fitIncumbentBar(request, pool, new Set(), catMap)).toEqual(["a", "b", "c"]);
   });
 
-  it("keeps search-only exclusions on the host incumbent bar", () => {
+  it("disqualifies a host incumbent that violates lock and ban rules", () => {
     const request = miniRequest({
       style: "magic",
       userBar: ["asphyxiate", "sunshine"],
@@ -371,8 +371,7 @@ describe("fitIncumbentBar catalogue vs pool", () => {
 
     const baseline = evaluateHostIncumbentBaseline(request);
 
-    expect(baseline?.bar).toEqual(["asphyxiate", "sunshine"]);
-    expect(Number.isFinite(baseline?.score)).toBe(true);
+    expect(baseline).toBeNull();
   });
 });
 

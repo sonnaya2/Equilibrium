@@ -483,6 +483,16 @@ describe("Phase 4 apply / validation failure gates", () => {
       }),
     ).toBe("+80");
     expect(
+      formatSolverUpgradeChrome(
+        {
+          isUpgrade: true,
+          scoreImprovement: 42_000,
+          baselineBar: null,
+        },
+        { rulesApplied: true },
+      ),
+    ).toBe("rules applied");
+    expect(
       formatSolverUpgradeChrome({
         isUpgrade: true,
         scoreImprovement: 0,

@@ -97,7 +97,12 @@ export function RevoSolverSection({
   const applySolverBar = (ids: readonly string[]) => onApplyBar(ids);
   // Phase 4/5: Apply only for residual-free verified upgrades; stopped never Apply.
   const canApplyStopped = mayApplyStoppedPreview();
-  const upgradeChrome = solverResult ? formatSolverUpgradeChrome(solverResult) : null;
+  const upgradeChrome = solverResult
+    ? formatSolverUpgradeChrome(solverResult, {
+        rulesApplied:
+          abilityRules.lockedAbilityIds.length + abilityRules.disabledAbilityIds.length > 0,
+      })
+    : null;
 
   return (
     <section className="revo-solver-controls">

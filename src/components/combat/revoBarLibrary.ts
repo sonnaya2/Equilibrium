@@ -5,6 +5,7 @@
  */
 
 import { loadState, saveState } from "@/lib/storage";
+import type { SolverAbilityRules } from "./solverAbilityRules";
 
 export const REVO_BAR_LIBRARY_KEY = "eq:revo-bars:v2";
 /** @deprecated read-only migration from pre-context storage */
@@ -53,6 +54,7 @@ type RotationWorkspace = {
   version: 1;
   mode: RotationMode;
   activeBars: Record<string, string[]>;
+  abilityRules: Record<string, SolverAbilityRules>;
   runDurationSeconds: number;
   /** Solver + ability: only Build regions when true. */
   limitToRegions: boolean;
@@ -77,6 +79,7 @@ const EMPTY_WORKSPACE: RotationWorkspace = {
   version: 1,
   mode: "revolution",
   activeBars: {},
+  abilityRules: {},
   runDurationSeconds: 60,
   limitToRegions: true,
 };
@@ -93,8 +96,28 @@ function rotationContext(style: string, weaponConfiguration: string): string {
   return `${style}|${weaponConfiguration}`;
 }
 
+function normalizeAbilityRuleIds(raw: unknown): string[] {
+  if (!Array.isArray(raw)) return [];
+  return [...new Set(raw.filter((id): id is string => typeof id === "string" && id.length > 0))];
+}
+
+function normalizeAbilityRules(raw: unknown): SolverAbilityRules {
+  if (!raw || typeof raw !== "object") {
+    return { lockedAbilityIds: [], disabledAbilityIds: [] };
+  }
+  const record = raw as Record<string, unknown>;
+  const lockedAbilityIds = normalizeAbilityRuleIds(record.lockedAbilityIds);
+  const locked = new Set(lockedAbilityIds);
+  const disabledAbilityIds = normalizeAbilityRuleIds(record.disabledAbilityIds).filter(
+    (id) => !locked.has(id),
+  );
+  return { lockedAbilityIds, disabledAbilityIds };
+}
+
 function normalizeRotationWorkspace(raw: unknown): RotationWorkspace {
-  if (!raw || typeof raw !== "object") return { ...EMPTY_WORKSPACE, activeBars: {} };
+  if (!raw || typeof raw !== "object") {
+    return { ...EMPTY_WORKSPACE, activeBars: {}, abilityRules: {} };
+  }
   const record = raw as Record<string, unknown>;
   const mode: RotationMode = record.mode === "manual" ? "manual" : "revolution";
   const runDurationSeconds =
@@ -107,10 +130,20 @@ function normalizeRotationWorkspace(raw: unknown): RotationWorkspace {
       if (isStringArray(bar) && bar.length > 0) activeBars[context] = [...bar];
     }
   }
+  const abilityRules: Record<string, SolverAbilityRules> = {};
+  if (record.abilityRules && typeof record.abilityRules === "object") {
+    for (const [context, value] of Object.entries(record.abilityRules)) {
+      const rules = normalizeAbilityRules(value);
+      if (rules.lockedAbilityIds.length > 0 || rules.disabledAbilityIds.length > 0) {
+        abilityRules[context] = rules;
+      }
+    }
+  }
   return {
     version: 1,
     mode,
     activeBars,
+    abilityRules,
     runDurationSeconds,
     limitToRegions: record.limitToRegions === true,
   };
@@ -119,7 +152,7 @@ function normalizeRotationWorkspace(raw: unknown): RotationWorkspace {
 function loadRotationWorkspace(): RotationWorkspace {
   return loadState(
     ROTATION_WORKSPACE_KEY,
-    { ...EMPTY_WORKSPACE, activeBars: {} },
+    { ...EMPTY_WORKSPACE, activeBars: {}, abilityRules: {} },
     normalizeRotationWorkspace,
   );
 }
@@ -206,6 +239,36 @@ export function saveActiveRevoBar(
   if (bar?.length) activeBars[context] = [...bar];
   else delete activeBars[context];
   saveRotationWorkspace({ ...workspace, activeBars });
+}
+
+export function loadRevoAbilityRules(
+  style: string,
+  weaponConfiguration: string,
+): SolverAbilityRules {
+  const rules = loadRotationWorkspace().abilityRules[rotationContext(style, weaponConfiguration)];
+  return rules
+    ? {
+        lockedAbilityIds: [...rules.lockedAbilityIds],
+        disabledAbilityIds: [...rules.disabledAbilityIds],
+      }
+    : { lockedAbilityIds: [], disabledAbilityIds: [] };
+}
+
+export function saveRevoAbilityRules(
+  style: string,
+  weaponConfiguration: string,
+  rules: SolverAbilityRules,
+): void {
+  const workspace = loadRotationWorkspace();
+  const context = rotationContext(style, weaponConfiguration);
+  const abilityRules = { ...workspace.abilityRules };
+  const normalized = normalizeAbilityRules(rules);
+  if (normalized.lockedAbilityIds.length > 0 || normalized.disabledAbilityIds.length > 0) {
+    abilityRules[context] = normalized;
+  } else {
+    delete abilityRules[context];
+  }
+  saveRotationWorkspace({ ...workspace, abilityRules });
 }
 
 export function barFingerprint(bar: readonly string[]): string {

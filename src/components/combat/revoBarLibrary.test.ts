@@ -7,6 +7,7 @@ import {
   loadBarLibrary,
   loadActiveRevoBar,
   loadLimitToRegions,
+  loadRevoAbilityRules,
   loadRevoRunDuration,
   loadRotationMode,
   MAX_RECENT_BARS,
@@ -16,6 +17,7 @@ import {
   resetBarLibraryForTests,
   saveActiveRevoBar,
   saveLimitToRegions,
+  saveRevoAbilityRules,
   saveRevoRunDuration,
   saveRotationMode,
   barScoreContext,
@@ -91,6 +93,40 @@ describe("revoBarLibrary", () => {
     expect(window.localStorage.getItem(ROTATION_WORKSPACE_KEY)).not.toBeNull();
   });
 
+  it("restores optimizer ability rules per style and weapon context", () => {
+    saveRevoAbilityRules("melee", "dualwield", {
+      lockedAbilityIds: ["dismember"],
+      disabledAbilityIds: ["slice"],
+    });
+    saveRevoAbilityRules("melee", "twohand", {
+      lockedAbilityIds: ["cleave"],
+      disabledAbilityIds: [],
+    });
+
+    expect(loadRevoAbilityRules("melee", "dualwield")).toEqual({
+      lockedAbilityIds: ["dismember"],
+      disabledAbilityIds: ["slice"],
+    });
+    expect(loadRevoAbilityRules("melee", "twohand")).toEqual({
+      lockedAbilityIds: ["cleave"],
+      disabledAbilityIds: [],
+    });
+    expect(loadRevoAbilityRules("magic", "dualwield")).toEqual({
+      lockedAbilityIds: [],
+      disabledAbilityIds: [],
+    });
+
+    saveRevoAbilityRules("melee", "dualwield", {
+      lockedAbilityIds: [],
+      disabledAbilityIds: [],
+    });
+    expect(loadRevoAbilityRules("melee", "dualwield")).toEqual({
+      lockedAbilityIds: [],
+      disabledAbilityIds: [],
+    });
+    expect(loadRevoAbilityRules("melee", "twohand").lockedAbilityIds).toEqual(["cleave"]);
+  });
+
   it("persists Limit to regions; default ON when unset", () => {
     expect(loadLimitToRegions()).toBe(true);
     saveLimitToRegions(true);
@@ -108,10 +144,23 @@ describe("revoBarLibrary", () => {
   it("drops corrupt active bars and falls back to Revolution mode", () => {
     window.localStorage.setItem(
       ROTATION_WORKSPACE_KEY,
-      JSON.stringify({ mode: "other", activeBars: { "melee|dualwield": ["slice", 3] } }),
+      JSON.stringify({
+        mode: "other",
+        activeBars: { "melee|dualwield": ["slice", 3] },
+        abilityRules: {
+          "melee|dualwield": {
+            lockedAbilityIds: ["dismember", "dismember", 3],
+            disabledAbilityIds: ["dismember", "slice", null],
+          },
+        },
+      }),
     );
     expect(loadRotationMode()).toBe("revolution");
     expect(loadActiveRevoBar("melee", "dualwield")).toBeNull();
+    expect(loadRevoAbilityRules("melee", "dualwield")).toEqual({
+      lockedAbilityIds: ["dismember"],
+      disabledAbilityIds: ["slice"],
+    });
     expect(loadRevoRunDuration()).toBe(60);
   });
 

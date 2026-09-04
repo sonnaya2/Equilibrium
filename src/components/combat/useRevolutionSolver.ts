@@ -27,12 +27,15 @@ import {
   type WorkerPlan,
 } from "@/combat/solver";
 import { isSerializableSimBase } from "@/combat/solver/worker/serializable";
+import { solverPalette } from "@/combat/abilities/registry";
 import { REGION_IDS, type BuildState } from "@/league";
 import type { ResolvedCombatModel } from "@/combat/model";
 import type { CalcStats } from "./loadoutStats";
 import {
   loadBarLibrary,
+  loadRevoAbilityRules,
   saveBarLibrary,
+  saveRevoAbilityRules,
   withPermanentBar,
   withRecentBar,
   withoutRecentBar,
@@ -65,6 +68,11 @@ import {
   type SolverAbilityRule,
   type SolverAbilityRules,
 } from "./solverAbilityRules";
+
+const EMPTY_ABILITY_RULES: SolverAbilityRules = {
+  lockedAbilityIds: [],
+  disabledAbilityIds: [],
+};
 
 /** Build initial SolverProgress agent strip from a worker plan. */
 export function seedProgressFromPlan(plan: WorkerPlan, tier: SolverSearchTier): SolverProgress {
@@ -222,10 +230,23 @@ export function useRevolutionSolver({
   const [solverTier, setSolverTier] = useState<SolverSearchTier>("thorough");
   const [solverProfile, setSolverProfile] = useState<ObjectiveProfileId>("balanced");
   const [barSizePreset, setBarSizePreset] = useState<BarSizePresetId>(DEFAULT_BAR_SIZE_PRESET);
-  const [abilityRules, setAbilityRules] = useState<SolverAbilityRules>({
-    lockedAbilityIds: [],
-    disabledAbilityIds: [],
-  });
+  const abilityRuleContext = `${loadout.style}|${combatModel.weaponConfiguration}`;
+  const [storedAbilityRules, setStoredAbilityRules] = useState<{
+    context: string | null;
+    rules: SolverAbilityRules;
+  }>({ context: null, rules: EMPTY_ABILITY_RULES });
+  const persistedAbilityRules =
+    storedAbilityRules.context === abilityRuleContext
+      ? storedAbilityRules.rules
+      : EMPTY_ABILITY_RULES;
+  const availableAbilityIds = useMemo(
+    () => new Set(solverAbilities.map((ability) => ability.id)),
+    [solverAbilities],
+  );
+  const abilityRules = useMemo(
+    () => pruneSolverAbilityRules(persistedAbilityRules, availableAbilityIds),
+    [availableAbilityIds, persistedAbilityRules],
+  );
   const [solving, setSolving] = useState(false);
   const [stopping, setStopping] = useState(false);
   const [solverProgress, setSolverProgress] = useState<SolverProgress | null>(null);
@@ -358,14 +379,12 @@ export function useRevolutionSolver({
   }, []);
 
   useEffect(() => {
-    const availableIds = new Set(solverAbilities.map((ability) => ability.id));
-    const needsPrune =
-      abilityRules.lockedAbilityIds.some((id) => !availableIds.has(id)) ||
-      abilityRules.disabledAbilityIds.some((id) => !availableIds.has(id));
-    if (!needsPrune) return;
-    setAbilityRules((current) => pruneSolverAbilityRules(current, availableIds));
+    setStoredAbilityRules({
+      context: abilityRuleContext,
+      rules: loadRevoAbilityRules(loadout.style, combatModel.weaponConfiguration),
+    });
     clearSolverUi();
-  }, [abilityRules, clearSolverUi, solverAbilities]);
+  }, [abilityRuleContext, clearSolverUi, combatModel.weaponConfiguration, loadout.style]);
 
   useEffect(() => {
     return () => {
@@ -693,18 +712,32 @@ export function useRevolutionSolver({
 
   const setAbilityRule = useCallback(
     (abilityId: string, rule: SolverAbilityRule) => {
-      setAbilityRules((current) =>
-        applySolverAbilityRule(current, abilityId, rule, solverAbilities),
-      );
+      const current =
+        storedAbilityRules.context === abilityRuleContext
+          ? storedAbilityRules.rules
+          : loadRevoAbilityRules(loadout.style, combatModel.weaponConfiguration);
+      const next = applySolverAbilityRule(current, abilityId, rule, solverPalette(loadout.style));
+      setStoredAbilityRules({ context: abilityRuleContext, rules: next });
+      saveRevoAbilityRules(loadout.style, combatModel.weaponConfiguration, next);
       clearSolverUi();
     },
-    [clearSolverUi, solverAbilities],
+    [
+      abilityRuleContext,
+      clearSolverUi,
+      combatModel.weaponConfiguration,
+      loadout.style,
+      storedAbilityRules,
+    ],
   );
 
   const clearAbilityRules = useCallback(() => {
-    setAbilityRules({ lockedAbilityIds: [], disabledAbilityIds: [] });
+    setStoredAbilityRules({
+      context: abilityRuleContext,
+      rules: EMPTY_ABILITY_RULES,
+    });
+    saveRevoAbilityRules(loadout.style, combatModel.weaponConfiguration, EMPTY_ABILITY_RULES);
     clearSolverUi();
-  }, [clearSolverUi]);
+  }, [abilityRuleContext, clearSolverUi, combatModel.weaponConfiguration, loadout.style]);
 
   const saveCurrentBar = (
     currentSaveBar: string[] | null,

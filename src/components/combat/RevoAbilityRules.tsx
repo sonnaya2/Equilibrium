@@ -40,7 +40,7 @@ export const RevoAbilityRules = memo(function RevoAbilityRules({
         <span>Ability rules</span>
         {ruleCount > 0 ? (
           <span className="revo-ability-rules__count">
-            {rules.lockedAbilityIds.length} locked · {rules.disabledAbilityIds.length} disabled
+            {rules.lockedAbilityIds.length} locked · {rules.disabledAbilityIds.length} banned
           </span>
         ) : (
           <span className="revo-ability-rules__count">All available</span>
@@ -69,7 +69,7 @@ export const RevoAbilityRules = memo(function RevoAbilityRules({
           </button>
         </div>
         <p className="revo-ability-rules__help">
-          Locked abilities must appear in every searched bar. Disabled abilities are excluded from
+          Locked abilities must appear in every searched bar. Banned abilities are excluded from
           searched bars.
         </p>
         <ul className="revo-ability-rules__list">
@@ -99,13 +99,13 @@ export const RevoAbilityRules = memo(function RevoAbilityRules({
                   <button
                     type="button"
                     aria-pressed={rule === "disabled"}
-                    aria-label={`Disable ${ability.name}`}
+                    aria-label={`Ban ${ability.name}`}
                     disabled={controlsDisabled}
                     onClick={() =>
                       onRuleChange(ability.id, rule === "disabled" ? "normal" : "disabled")
                     }
                   >
-                    Off
+                    Ban
                   </button>
                 </div>
               </li>

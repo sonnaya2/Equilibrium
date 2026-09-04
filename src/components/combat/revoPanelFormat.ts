@@ -255,25 +255,30 @@ export function mayApplyStoppedPreview(): boolean {
 }
 
 /** Upgrade / remains-best fragment for results chrome; null when nothing to add. */
-export function formatSolverUpgradeChrome(dto: {
-  isUpgrade?: boolean;
-  scoreImprovement?: number;
-  percentImprovement?: number | null;
-  validForApply?: boolean;
-  honesty?: {
-    residualMass?: number;
-    applyAllowed?: boolean;
-    beatsBar?: boolean;
-  };
-  rng?: { residualWeight?: number };
-  summary?: { rng?: { residualWeight?: number } };
-}): string | null {
+export function formatSolverUpgradeChrome(
+  dto: {
+    isUpgrade?: boolean;
+    scoreImprovement?: number;
+    percentImprovement?: number | null;
+    baselineBar?: readonly string[] | null;
+    validForApply?: boolean;
+    honesty?: {
+      residualMass?: number;
+      applyAllowed?: boolean;
+      beatsBar?: boolean;
+    };
+    rng?: { residualWeight?: number };
+    summary?: { rng?: { residualWeight?: number } };
+  },
+  options: { rulesApplied?: boolean } = {},
+): string | null {
   const residual = residualMassOfDto(dto as SolverResultDTO);
   if (residual > 0) return "residual blocks apply";
   if (dto.isUpgrade === false || dto.honesty?.beatsBar === false) {
     return CURRENT_BAR_REMAINS_BEST;
   }
   if (dto.isUpgrade !== true && dto.honesty?.beatsBar !== true) return null;
+  if (options.rulesApplied && dto.baselineBar == null) return "rules applied";
   const abs = dto.scoreImprovement;
   if (typeof abs !== "number" || !Number.isFinite(abs) || abs <= 0) return null;
   const pct = dto.percentImprovement;

@@ -3,23 +3,34 @@
 import type { ResolvedSlot } from "@/combat/data/specs";
 import { abilityIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
+import { solverAbilityRuleFor, type SolverAbilityRules } from "./solverAbilityRules";
 
 export function RevoBarGraphic({
   slots,
   revoSize,
   selectedIndex,
   onSelectSlot,
+  abilityRules,
 }: {
   slots: ResolvedSlot[];
   revoSize: number;
   selectedIndex?: number;
   onSelectSlot?: (index: number) => void;
+  abilityRules?: SolverAbilityRules;
 }) {
   return (
     <div className="ability-bar" role="group" aria-label="Revolution bar">
       {slots.map((slot, index) => {
         const isKeybind = index >= revoSize;
         const unmodelled = !isKeybind && slot.modelledBy === "unmodelled";
+        const abilityRule =
+          slot.spec && abilityRules ? solverAbilityRuleFor(abilityRules, slot.spec.id) : "normal";
+        const abilityRuleLabel =
+          abilityRule === "locked"
+            ? "Locked for optimizer"
+            : abilityRule === "disabled"
+              ? "Banned from optimizer"
+              : null;
         const cat =
           slot.spec?.category === "enhanced"
             ? "enhanced"
@@ -36,10 +47,12 @@ export function RevoBarGraphic({
           <button
             key={`${slot.name}-${index}`}
             type="button"
-            title={slot.name}
+            title={abilityRuleLabel ? `${slot.name} · ${abilityRuleLabel}` : slot.name}
+            aria-label={`Slot ${index + 1}: ${slot.name}${abilityRuleLabel ? `, ${abilityRuleLabel}` : ""}`}
             aria-pressed={selectedIndex === index}
             onClick={() => onSelectSlot?.(index)}
             data-category={cat}
+            data-rule={abilityRule}
             className={`ability-bar-slot border${selectedIndex === index ? " is-selected" : ""} ${
               isKeybind
                 ? "border-dashed border-stone-750/40 text-parch-300/45"
@@ -49,6 +62,11 @@ export function RevoBarGraphic({
             }`}
           >
             <div className="ability-bar-slot__number font-mono">{index + 1}</div>
+            {abilityRuleLabel ? (
+              <div className="ability-bar-slot__rule" aria-hidden="true">
+                {abilityRule === "locked" ? "Lock" : "Ban"}
+              </div>
+            ) : null}
             {slot.spec ? (
               <GameIcon
                 src={abilityIconPath(slot.spec.id, slot.spec.style)}

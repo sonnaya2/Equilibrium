@@ -69,7 +69,7 @@ import { adrenEconomyAssumptionRows } from "./adrenalinePresentation";
 import { filterAbilitiesForLoadout } from "./abilityLoadoutFilter";
 import { abilityIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
-import { filterSolverAbilitiesByCategory } from "./solverAbilityRules";
+import { filterSolverAbilitiesByCategory, solverAbilityRuleFor } from "./solverAbilityRules";
 import "./revo-solver.css";
 
 const EOF_ICON = "/game/upgrades/permanent-equipment/essence-of-finality.webp";
@@ -430,6 +430,13 @@ export function RevolutionPanel({
     }),
     [solver.lockedAbilityIds, solver.disabledAbilityIds],
   );
+  const selectedSolverAbility = useMemo(
+    () => solverAbilities.find((ability) => ability.id === selectedAbilityId) ?? null,
+    [selectedAbilityId, solverAbilities],
+  );
+  const selectedAbilityRule = selectedSolverAbility
+    ? solverAbilityRuleFor(solverAbilityRules, selectedSolverAbility.id)
+    : "normal";
 
   useEffect(() => {
     const equipmentChanged = prevEquipKey.current !== equipKey;
@@ -660,6 +667,7 @@ export function RevolutionPanel({
               revoSize={revoSize}
               selectedIndex={selectedBarSlot}
               onSelectSlot={setSelectedBarSlot}
+              abilityRules={solverAbilityRules}
             />
           </div>
           <div className="revo-bar-editor" data-testid="revo-bar-editor">
@@ -703,6 +711,40 @@ export function RevolutionPanel({
                 disabled={barIdsForKey.length <= 1}
               >
                 Remove
+              </button>
+              <button
+                type="button"
+                className="combat-button revo-bar-editor__rule revo-bar-editor__rule--lock"
+                aria-label={`Lock ${selectedSolverAbility?.name ?? "selected ability"}`}
+                aria-pressed={selectedAbilityRule === "locked"}
+                data-testid="revo-lock-selected"
+                disabled={solver.solving || selectedSolverAbility == null}
+                onClick={() =>
+                  selectedSolverAbility &&
+                  solver.setAbilityRule(
+                    selectedSolverAbility.id,
+                    selectedAbilityRule === "locked" ? "normal" : "locked",
+                  )
+                }
+              >
+                Lock
+              </button>
+              <button
+                type="button"
+                className="combat-button revo-bar-editor__rule revo-bar-editor__rule--ban"
+                aria-label={`Ban ${selectedSolverAbility?.name ?? "selected ability"}`}
+                aria-pressed={selectedAbilityRule === "disabled"}
+                data-testid="revo-ban-selected"
+                disabled={solver.solving || selectedSolverAbility == null}
+                onClick={() =>
+                  selectedSolverAbility &&
+                  solver.setAbilityRule(
+                    selectedSolverAbility.id,
+                    selectedAbilityRule === "disabled" ? "normal" : "disabled",
+                  )
+                }
+              >
+                Ban
               </button>
             </div>
             <label className="revo-bar-editor__add">

@@ -39,7 +39,6 @@ import { dracolichInfusionCritChance } from "../../styles/ranged/dracolich";
 import { WEN_ICY_PRECISION_DAMAGE_POTENTIAL_DELTA } from "../../styles/ranged/wen";
 import {
   COMMAND_REQUIRES_CONJURE,
-  CONJURE_DAMAGE_POTENTIAL,
   conjureEligibleModifiers,
   findConjure,
   skeletonRageMult,

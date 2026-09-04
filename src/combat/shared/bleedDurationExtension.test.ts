@@ -9,8 +9,10 @@ import {
   additionalBleedHitsFromExtension,
   eligibleBleedHitCount,
   extendBleedHitList,
+  extensionBaseBleedHitCount,
   resolveAbilityWithEquipment,
 } from "./bleedDurationExtension";
+import { STRENGTH_CAPE_DISMEMBER_EXTRA_HITS } from "./perks";
 
 function byId(id: string) {
   const a = MELEE_ABILITIES.find((x) => x.id === id);
@@ -52,6 +54,19 @@ describe("bleed duration extension math", () => {
       },
     ];
     expect(eligibleBleedHitCount(hits)).toBe(1);
+  });
+
+  it("excludes flatBleedHitBonus from the spear extension base", () => {
+    // Cape-patched Dismember is 11 bleeds with flat bonus 3; spear base stays 8.
+    expect(extensionBaseBleedHitCount(byId("dismember").hits, 0)).toBe(8);
+    const caped = withStrengthCape99Dismember(
+      [byId("dismember")],
+      STRENGTH_CAPE_DISMEMBER_EXTRA_HITS,
+    )[0]!;
+    expect(caped.hits).toHaveLength(11);
+    expect(caped.flatBleedHitBonus).toBe(3);
+    expect(extensionBaseBleedHitCount(caped.hits, caped.flatBleedHitBonus)).toBe(8);
+    expect(additionalBleedHitsFromExtension(8)).toBe(4);
   });
 });
 
@@ -119,15 +134,28 @@ describe("resolveAbilityWithEquipment", () => {
     expect(dismember.hits).toHaveLength(8);
   });
 
-  // Wiki: 8 + floor(8*0.5) + 3 cape = 15; not floor(11*0.5) on top of cape (=16).
-  it("Strength cape + Masterwork spear Dismember totals 15 hits", () => {
+  it("Strength cape + spear stacks to 15 Dismember hits (additive, not 16)", () => {
     const base = byId("dismember");
-    const caped = withStrengthCape99Dismember([base], 3)[0]!;
+    const caped = withStrengthCape99Dismember(
+      [base],
+      STRENGTH_CAPE_DISMEMBER_EXTRA_HITS,
+    )[0]!;
     expect(caped.hits).toHaveLength(11);
     expect(caped.flatBleedHitBonus).toBe(3);
     expect(resolveAbilityWithEquipment(base, spear).hits).toHaveLength(12);
     expect(resolveAbilityWithEquipment(caped, ordinary).hits).toHaveLength(11);
-    expect(resolveAbilityWithEquipment(caped, spear).hits).toHaveLength(15);
+    const resolved = resolveAbilityWithEquipment(caped, spear);
+    expect(resolved.hits).toHaveLength(15);
+    expect(resolved.flatBleedHitBonus).toBe(3);
+    expect(resolved.hits.map((h) => h.tickOffset)).toEqual([
+      2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30,
+    ]);
+    for (const hit of resolved.hits) {
+      expect(hit.dot).toBe(true);
+      expect(hit.dotKind).toBe("bleed");
+      expect(hit.bleedId).toBe("dismember");
+      expect(hit.band).toEqual({ minPct: 25, maxPct: 35 });
+    }
   });
 
   it("is a no-op for abilities that do not declare bleedDurationExtension", () => {

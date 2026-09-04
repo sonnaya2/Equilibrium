@@ -136,6 +136,35 @@ describe("calculateHit", () => {
     expect(r.min).toBe(1217);
   });
 
+  it("Precise does not raise min on true DoT hits", () => {
+    const bare = calculateHit(baseInput);
+    for (const context of [
+      { style: "melee" as const, provenance: { kind: "player_dot" as const } },
+      { style: "melee" as const, damageSource: "dot" as const },
+      { style: "melee" as const, dotKind: "bleed" as const },
+      { style: "magic" as const, dotKind: "burn" as const },
+      { style: "melee" as const, provenance: { kind: "derived_tail" as const } },
+    ]) {
+      const r = calculateHit({ ...baseInput, preciseRank: 6, context });
+      expect(r.min).toBe(bare.min);
+      expect(r.max).toBe(bare.max);
+    }
+  });
+
+  it("Precise still applies to converted channels (not true DoTs)", () => {
+    const r = calculateHit({
+      ...baseInput,
+      preciseRank: 6,
+      context: {
+        style: "melee",
+        provenance: { kind: "player_converted_channel" },
+        damageSource: "dot",
+      },
+    });
+    expect(r.min).toBe(1217);
+    expect(r.max).toBe(1300);
+  });
+
   it("guaranteed crits use the level-90 multiplier", () => {
     const r = calculateHit({ ...baseInput, crit: { chance: 0, guaranteed: true } });
     expect(r.critMin).toBe(1650);

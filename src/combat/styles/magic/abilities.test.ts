@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { calculateAbility } from "../../pipeline/calculateAbility";
+import { berserkersFuryModifier } from "../../shared/berserkersFury";
 import { RUNIC_EMPOWERMENTS } from "./runicCharge";
 import { MAGIC_ABILITIES, MAGIC_EFFECTS, resplendentAsphyxiate } from "./abilities";
 
@@ -10,6 +11,25 @@ const byId = (id: string) => {
 };
 
 describe("magic ability data", () => {
+  it("Precise and Berserker's Fury do not buff Combust DoT hits (no dotKind required)", () => {
+    const combust = byId("combust");
+    expect(combust.hits.every((h) => h.dot === true && h.dotKind == null)).toBe(true);
+    const baseInput = {
+      base: 1000,
+      level: 99,
+      accuracy: 1,
+      crit: { chance: 0 },
+    };
+    const plain = calculateAbility(combust, baseInput);
+    const withPrecise = calculateAbility(combust, { ...baseInput, preciseRank: 6 });
+    expect(withPrecise.min).toBe(plain.min);
+    expect(withPrecise.expected).toBe(plain.expected);
+
+    const fury = berserkersFuryModifier(0.03)!;
+    const withFury = calculateAbility(combust, { ...baseInput, modifiers: [fury] });
+    expect(withFury.expected).toBe(plain.expected);
+  });
+
   it("promotes Revo-priority bands from verified wiki ranges", () => {
     const basic = byId("magic_attack");
     expect(basic.hits[0].band).toEqual({ minPct: 90, maxPct: 110 });
@@ -129,6 +149,21 @@ describe("magic ability data", () => {
     expect(sun.adrenaline?.cost).toBe(100);
     expect(sun.hits[0].tickOffset).toBe(3);
     expect(sun.hits[15].tickOffset).toBe(48);
+  });
+
+  // Wiki hit chance: Sunshine / Greater Sunshine zone DoT bypasses hit chance (full DP).
+  it("Sunshine zone DoT uses full Damage Potential regardless of input accuracy", () => {
+    const input = { base: 1000, level: 99, accuracy: 0.5, crit: { chance: 0 as const } };
+    for (const id of ["sunshine", "greater_sunshine"] as const) {
+      const half = calculateAbility(byId(id), input);
+      const full = calculateAbility(byId(id), { ...input, accuracy: 1 });
+      expect(half.expected).toBeCloseTo(full.expected, 10);
+      expect(half.hits.every((h) => h.potential === 1)).toBe(true);
+    }
+    // Ordinary magic still scales with Damage Potential.
+    const basicHalf = calculateAbility(byId("magic_attack"), input);
+    const basicFull = calculateAbility(byId("magic_attack"), { ...input, accuracy: 1 });
+    expect(basicHalf.expected).toBeLessThan(basicFull.expected);
   });
 
   it("no longer exposes Runic-Charged Dragon Breath as a separate ability", () => {

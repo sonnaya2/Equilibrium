@@ -226,6 +226,26 @@ describe("sunshine — buff window through the simulator", () => {
     );
     expect(plainNext.result.expected).toBeCloseTo(pfNext.result.expected);
   });
+
+  // Wiki hit chance: Sunshine / Greater Sunshine zone DoT bypasses hit chance (full DP).
+  it.each(["sunshine", "greater_sunshine"] as const)(
+    "%s beam DoT uses full Damage Potential (hit-chance bypass)",
+    (abilityId) => {
+      const rotation = rotationOf(...Array(12).fill("magic_attack"), abilityId);
+      const full = simulate({ ...magicInput, rotation });
+      const half = simulate({ ...magicInput, accuracy: 0.5, rotation });
+      expect(full.ok && half.ok).toBe(true);
+      expect(half.perAbility[abilityId]).toBeCloseTo(full.perAbility[abilityId]!, 10);
+      const cast = findCast(
+        half,
+        (c) => c.abilityId === abilityId,
+        `Missing ${abilityId} cast`,
+      );
+      expect(cast.result.hits.every((h) => h.potential === 1)).toBe(true);
+      // Control: auto-weave basics still scale with partial Damage Potential.
+      expect(half.perAbility["magic_attack"]!).toBeLessThan(full.perAbility["magic_attack"]!);
+    },
+  );
 });
 
 describe("instability — surge damage through the simulator", () => {

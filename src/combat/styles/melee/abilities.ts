@@ -612,7 +612,9 @@ export function withStrengthCape99Dismember<T extends AbilitySpec>(
     if (ability.id !== "dismember") return ability;
     const baseHits = ability.hits;
     if (baseHits.length === 0) return ability;
+    // Skip if already patched (flat bonus and/or hit count).
     if ((ability.flatBleedHitBonus ?? 0) >= extraHits) return ability;
+    // Base kit is 8 ticks; skip if already patched without the bonus field.
     if (baseHits.length >= 8 + extraHits) return ability;
     const sample = baseHits[baseHits.length - 1]!;
     const step =

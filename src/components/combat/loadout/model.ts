@@ -116,7 +116,7 @@ export interface LoadoutTarget {
   dragon?: boolean;
   /**
    * Current Slayer assignment (scenario). Independent of undead race.
-   * Gates Full Slayer Helmet damage/accuracy.
+   * Gates Full Slayer Helmet damage/accuracy and Tuska's Wrath empower.
    */
   onSlayerTask?: boolean;
   /** Poison-immune targets take no Grasp of Guthix damage; absent = poisonable. */

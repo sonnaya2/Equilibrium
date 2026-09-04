@@ -173,8 +173,9 @@ export interface AbilitySpec {
     equipmentPassive: "masterwork-spear-bleed-extension";
   };
   /**
-   * Flat bleed hits already in the list (Strength cape on Dismember).
-   * Excluded from spear floor(n*0.5) so cape+spear totals 15, not 16.
+   * Flat extra bleed hits already present in `hits` (Strength cape +3 on Dismember).
+   * Excluded from Masterwork spear floor(base * 0.5) so cape+spear totals 15, not 16.
+   * Wiki: https://runescape.wiki/w/Masterwork_Spear_of_Annihilation
    */
   flatBleedHitBonus?: number;
   /**
@@ -225,6 +226,7 @@ export function calculateAbility(
   },
 ): AbilityResult {
   // Wiki hit chance: Sunshine / Greater Sunshine zone DoT uses full Damage Potential.
+  // https://runescape.wiki/w/Hit_chance
   const accuracy =
     ability.id === "sunshine" || ability.id === "greater_sunshine" ? 1 : input.accuracy;
   const hits = ability.hits.map((hit, index) => {

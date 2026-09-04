@@ -1217,7 +1217,8 @@ export function resolveCombatRules(
         : Math.min(maxAdrenaline, Math.max(0, Math.round(loadout.startingAdrenaline))),
     cap: {
       cap: STANDARD_HIT_CAP,
-      bypass: leagueBundle.league.ruleset === "equilibrium" || !loadout.hitCapEnabled,
+      // User toggle only; league does not force bypass (toggle stays honest under equilibrium).
+      bypass: !loadout.hitCapEnabled,
     },
     activePassives: (() => {
       // Equipment list may already include "Ring of Vigour"; collapse to one

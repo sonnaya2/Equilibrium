@@ -235,8 +235,8 @@ function rawHitBand(input: HitInput): { min: number; max: number } {
   let min = band.min;
   const max = band.max;
   const precise = input.preciseRank ?? 0;
-  // Wiki Precise: true DoTs ignore Precise. Converted channels keep it.
-  // Bloat parent is player_direct so it still receives Precise.
+  // Wiki Precise: DoTs ignore Precise. Converted channels keep it (not true DoTs).
+  // Bloat parent is player_direct so it still receives Precise; tails are derived fractions.
   if (precise > 0 && !isTrueDotDamage(resolvedHitContext(input))) {
     min = Math.min(max, Math.floor(min + preciseMinHitAddition(max, precise)));
   }

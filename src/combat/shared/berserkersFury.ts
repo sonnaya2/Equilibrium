@@ -13,8 +13,8 @@ import { isTrueDotDamage } from "./damageProvenance";
  *   [91%, 100%) -> 0.5% ... [1%, 11%) -> 5.0%
  *   (0%, 1%) -> 5.5% (LP 1 .. floor(0.01*max)-1)
  * Not linear in missing health. Display steps of 0.5% up to 5.5%.
- * Affects Basic Attacks, abilities, and channels; not bleeds (wiki).
- * Core stage after roll, before crit -> pipeline stage "roll".
+ * Affects Basic Attacks, abilities, and channels; not true DoTs (wiki).
+ * Converted channels keep BF. Core stage after roll, before crit -> "roll".
  */
 
 export const BERSERKERS_FURY_ID = "berserkers_fury";
@@ -96,7 +96,7 @@ export function berserkersFuryModifier(bonus: number): CombatModifier | null {
     id: `relic:${BERSERKERS_FURY_ID}`,
     stage: "roll",
     priority: 200,
-    // All true DoTs (not only bleed). Converted channels keep BF.
+    // True DoTs skip this modifier; converted channels remain eligible.
     applies: (context: CombatContext) => !isTrueDotDamage(context),
     apply: (state) => ({ ...state, damage: mulFloor(state.damage, mult) }),
     source: BERSERKERS_FURY_SOURCE,

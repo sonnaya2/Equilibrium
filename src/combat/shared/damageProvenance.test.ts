@@ -4,6 +4,7 @@ import {
   assertProvenance,
   capabilitiesOf,
   contextWithProvenance,
+  isTrueDotDamage,
   outgoingSourceOf,
   provenanceForCastHit,
   provenanceFromLegacy,
@@ -11,6 +12,27 @@ import {
   type DamageProvenance,
   type DamageProvenanceKind,
 } from "./damageProvenance";
+
+describe("isTrueDotDamage", () => {
+  it("classifies player_dot / poison / tails / dotKind / damageSource as true DoT", () => {
+    expect(isTrueDotDamage({ style: "melee", provenance: { kind: "player_dot" } })).toBe(true);
+    expect(isTrueDotDamage({ style: "melee", provenance: { kind: "player_poison" } })).toBe(true);
+    expect(isTrueDotDamage({ style: "melee", provenance: { kind: "derived_tail" } })).toBe(true);
+    expect(isTrueDotDamage({ style: "melee", dotKind: "burn" })).toBe(true);
+    expect(isTrueDotDamage({ style: "melee", damageSource: "dot" })).toBe(true);
+  });
+
+  it("excludes converted channels even when damageSource is projected as dot", () => {
+    expect(
+      isTrueDotDamage({
+        style: "melee",
+        provenance: { kind: "player_converted_channel" },
+        damageSource: "dot",
+      }),
+    ).toBe(false);
+    expect(isTrueDotDamage({ style: "melee", provenance: { kind: "player_direct" } })).toBe(false);
+  });
+});
 
 describe("assertProvenance", () => {
   it("returns valid provenance", () => {

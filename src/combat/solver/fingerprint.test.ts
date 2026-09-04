@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { SOLVER_SCHEMA_VERSION } from "./contracts";
-import { barKey, fingerprintBar, fingerprintEvaluationKey, stableStringify } from "./fingerprint";
+import {
+  barKey,
+  createEvaluationKeyTemplate,
+  fingerprintBar,
+  fingerprintEvaluationKey,
+  fingerprintEvaluationKeyFromTemplate,
+  stableStringify,
+} from "./fingerprint";
 import { EvalCache } from "./cache";
 
 describe("fingerprintBar", () => {
@@ -91,6 +98,23 @@ describe("fingerprintEvaluationKey", () => {
     const a = fingerprintEvaluationKey({ bar: ["x"], context: { gear: "t90" } });
     const b = fingerprintEvaluationKey({ bar: ["x"], context: { gear: "t95" } });
     expect(a).not.toBe(b);
+  });
+
+  it("builds the identical key from a precomputed invariant template", () => {
+    const bar = ["a", "b"] as const;
+    const invariant = {
+      mode: "medium" as const,
+      horizonTicks: 250,
+      profileId: "custom",
+      customWeights: { steady: 3, opening: 1 },
+      context: '{"already":"serialized"}',
+      objectiveVersion: 17,
+    };
+    const template = createEvaluationKeyTemplate(invariant);
+
+    expect(fingerprintEvaluationKeyFromTemplate(barKey(bar), template)).toBe(
+      fingerprintEvaluationKey({ bar, ...invariant }),
+    );
   });
 });
 

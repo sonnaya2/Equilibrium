@@ -19,9 +19,10 @@ import { MIN_SOLVER_BAR_SIZE } from "./solutionStore";
 import { remainingCandidates } from "./eligibility";
 import { resolveAbilityCastAvailability, resolveEquippedAbilityId } from "../shared/requirements";
 import type { ItemPassiveId } from "../data/records";
-import type {
-  SerializableRevolutionSimBase,
-  SerializableSolverRequest,
+import {
+  isSerializableSimBase,
+  type SerializableRevolutionSimBase,
+  type SerializableSolverRequest,
 } from "./worker/serializable";
 import { reviveLeague } from "../model/simulationInput";
 import {
@@ -57,6 +58,18 @@ export function regionDenyList(
     if (!check.obtainable) deny.push(spec.id);
   }
   return deny;
+}
+
+/** Region-unavailable ids only; search preferences do not rewrite the current bar. */
+export function incumbentRegionDenySet(request: SerializableSolverRequest): Set<string> {
+  return new Set(
+    regionDenyList(
+      request.style,
+      request.unlockedRegions,
+      request.includeUnknownAvailability === true,
+      new Set(),
+    ),
+  );
 }
 
 export function authoredSeedsFromCatalogue(
@@ -126,24 +139,23 @@ export function buildCandidatePoolForRequest(
     league,
   } as const;
 
-  let pool = buildCandidatePool(catalogue, request.style, {
+  const regionOnlyDeny = incumbentRegionDenySet(request);
+  const availabilityPool = buildCandidatePool(catalogue, request.style, {
     ...poolOpts,
-    deny: [...denySet],
+    deny: [...regionOnlyDeny],
   });
 
   // One twin per exclusive ult pair (Sunshine/DS by codex pool presence; igneous by cape).
   const twinDeny = dualVersionDenyIds({
     style: request.style,
     passiveIds,
-    availableIds: pool.ids,
+    availableIds: availabilityPool.ids,
   });
-  if (twinDeny.length > 0) {
-    for (const id of twinDeny) denySet.add(id);
-    pool = buildCandidatePool(catalogue, request.style, {
-      ...poolOpts,
-      deny: [...denySet],
-    });
-  }
+  for (const id of twinDeny) denySet.add(id);
+  let pool = buildCandidatePool(catalogue, request.style, {
+    ...poolOpts,
+    deny: [...denySet],
+  });
 
   // Category filter (optional) - rebuild pool rather than mutate.
   if (request.permittedCategories?.length) {
@@ -160,12 +172,71 @@ export function buildCandidatePoolForRequest(
   return { catalogue, pool };
 }
 
-/** Style-required abilities present in the pool (empty rows skipped). */
+/** Style-required and user-locked abilities present in the pool. */
 export function requiredAbilitiesForRequest(
   request: SerializableSolverRequest,
   pool: ReturnType<typeof buildCandidatePool>,
 ): string[] {
-  return styleRequiredAbilityIds(request.style, pool.ids);
+  const locked = lockedAbilitiesForRequest(request, pool);
+  const required = [...styleRequiredAbilityIds(request.style, pool.ids)];
+  for (const id of locked) {
+    if (!required.includes(id)) required.push(id);
+  }
+
+  const byGroup = new Map<string, string>();
+  for (const id of required) {
+    const ability = pool.byId.get(id);
+    const group = ability?.exclusiveGroup ?? ability?.replacementGroup;
+    if (!group) continue;
+    const prior = byGroup.get(group);
+    if (prior && prior !== id) {
+      throw new Error(
+        `solver constraints: required abilities "${prior}" and "${id}" conflict in group "${group}"`,
+      );
+    }
+    byGroup.set(group, id);
+  }
+
+  if (required.length > request.maxBarSize) {
+    throw new Error(
+      `solver constraints: ${required.length} required abilities exceed max bar size ${request.maxBarSize}`,
+    );
+  }
+  return required;
+}
+
+export function lockedAbilitiesForRequest(
+  request: SerializableSolverRequest,
+  pool: ReturnType<typeof buildCandidatePool>,
+): string[] {
+  const locked = [...new Set(request.lockedAbilityIds ?? [])].sort();
+  const disabled = new Set(request.disabledAbilityIds ?? []);
+  for (const id of locked) {
+    if (disabled.has(id)) {
+      throw new Error(`solver constraints: ability "${id}" cannot be both locked and disabled`);
+    }
+    if (!pool.byId.has(id)) {
+      throw new Error(`solver constraints: locked ability "${id}" is unavailable`);
+    }
+  }
+  return locked;
+}
+
+export function minimumConstrainedBarSizeForRequest(request: SerializableSolverRequest): number {
+  if (!isSerializableSimBase(request.loadout)) {
+    throw new Error("solver constraints: serialized simulation loadout required");
+  }
+  const disabled = new Set(request.disabledAbilityIds ?? []);
+  const denySet = new Set(
+    regionDenyList(
+      request.style,
+      request.unlockedRegions,
+      request.includeUnknownAvailability === true,
+      disabled,
+    ),
+  );
+  const { pool } = buildCandidatePoolForRequest(request, request.loadout, denySet);
+  return Math.max(request.minBarSize, requiredAbilitiesForRequest(request, pool).length);
 }
 
 export function computeHorizonsAndBudget(request: SerializableSolverRequest) {
@@ -195,6 +266,7 @@ function fitBarIds(
   pool: ReturnType<typeof buildCandidatePool>,
   denySet: Set<string>,
   catalogueById?: ReadonlyMap<string, AbilitySpec>,
+  requiredAbilityIds?: readonly string[],
 ): string[] | null {
   const legalId = (id: string) => pool.byId.has(id) && !denySet.has(id);
   const searchPool: PoolAbility[] = pool.ids.map((id) => pool.byId.get(id)!);
@@ -210,8 +282,8 @@ function fitBarIds(
           }),
         )
       : ids;
-  const required = styleRequiredAbilityIds(request.style, pool.ids);
-  // Prepend style-required abilities so every legal seed carries them.
+  const required = requiredAbilityIds ?? requiredAbilitiesForRequest(request, pool);
+  // Prepend required abilities so every legal seed carries them.
   const withRequired = ensureRequiredAbilityIds(upgraded.filter(legalId), required).filter(legalId);
   // Drop exclusive-group conflicts after required inject (keep first occurrence).
   const cleaned: string[] = [];
@@ -243,7 +315,7 @@ function fitBarIds(
  * First-class user bar: preserve order and composition.
  * Resolve equipped variants; drop only denied / unknown / impossible under loadout.
  * Generation-pool exclusion (forceSolver:false) does NOT drop a user slot.
- * Never inject style-required abilities, pad, truncate, or rewrite exclusives.
+ * Search constraints remain search-only; do not inject, pad, truncate, or rewrite exclusives.
  * Null when absent or no remaining simulable ids.
  */
 export function fitIncumbentBar(
@@ -288,6 +360,7 @@ export function fitAuthoredSeeds(
   pool: ReturnType<typeof buildCandidatePool>,
   denySet: Set<string>,
   catalogueById?: ReadonlyMap<string, AbilitySpec>,
+  requiredAbilityIds?: readonly string[],
 ): string[][] {
   // Catalogue + authoredSeedBars only. userBar is first-class via fitIncumbentBar.
   return [
@@ -298,6 +371,6 @@ export function fitAuthoredSeeds(
     ),
     ...request.authoredSeedBars.map((s) => s.abilityIds),
   ]
-    .map((ids) => fitBarIds(ids, request, pool, denySet, catalogueById))
+    .map((ids) => fitBarIds(ids, request, pool, denySet, catalogueById, requiredAbilityIds))
     .filter((s): s is string[] => s != null && s.length >= 2);
 }

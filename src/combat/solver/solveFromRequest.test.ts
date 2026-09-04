@@ -253,6 +253,34 @@ describe("solveFromRequest", () => {
     assertLegalResult(result, { min: 3, max: 6 });
   }, 120_000);
 
+  it("scores the current bar without applying search-only ability rules", async () => {
+    const allowed = new Set(["greater_sunshine", "dragon_breath"]);
+    const disabledAbilityIds = allEngineSpecs()
+      .filter((ability) => !allowed.has(ability.id))
+      .map((ability) => ability.id);
+    const base = nakedRequest();
+    const request = defaultSerializableRequest({
+      ...base,
+      style: "magic",
+      durationTicks: 100,
+      exploreDurationTicks: 30,
+      minBarSize: 2,
+      maxBarSize: 2,
+      userBar: ["asphyxiate", "sunshine"],
+      disabledAbilityIds,
+      lockedAbilityIds: ["dragon_breath"],
+      permittedCategories: ["basic", "ultimate"],
+      unlockedRegions: [...REGION_IDS],
+      includeUnknownAvailability: true,
+    });
+
+    const result = await solveFromRequest(request);
+
+    expect(result.baselineBar).toEqual(["asphyxiate", "sunshine"]);
+    expect(Number.isFinite(result.baselineScore)).toBe(true);
+    expect(result.honesty?.currentBarScore).toBe(result.baselineScore);
+  }, 120_000);
+
   it("finds Smoke Tendrils' Tearing Thorns triggers in a tiny Magic pool", async () => {
     const league = resolveLeagueRules(
       {
@@ -289,6 +317,7 @@ describe("solveFromRequest", () => {
       maxBarSize: 2,
       permittedCategories: ["basic", "enhanced"],
       disabledAbilityIds,
+      lockedAbilityIds: ["smoke_tendrils"],
       unlockedRegions: [...REGION_IDS],
       ruleset: "equilibrium",
       blessingPicks: ["Balance", "Balance", "Balance", "Balance", "Balance"],
@@ -336,6 +365,13 @@ describe("solveFromRequest", () => {
     const grasps = winner.events.filter((event) => event.abilityId === "grasp-of-guthix-poison");
 
     expect(solved.bar).toContain("smoke_tendrils");
+    for (const candidate of [solved.bar, ...(solved.top ?? []).map((entry) => entry.bar)]) {
+      expect(candidate).toContain("smoke_tendrils");
+      expect(candidate.every((id) => !disabledAbilityIds.includes(id))).toBe(true);
+    }
+    expect(solved.proof?.notes).toContain(
+      "search-objective exhaustive completed (does not prove full-objective global optimum alone)",
+    );
     expect(solved.score).toBeCloseTo(oracle.score, 10);
     expect(grasps.length).toBeGreaterThan(0);
     expect(

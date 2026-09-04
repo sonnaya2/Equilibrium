@@ -1,20 +1,32 @@
 import { describe, expect, it } from "vitest";
-import { applyHostIncumbentBaseline, type HostIncumbentBaseline } from "./hostIncumbent";
+import {
+  applyHostIncumbentBaseline,
+  evaluateHostIncumbentBaseline,
+  type HostIncumbentBaseline,
+} from "./hostIncumbent";
 import { mergeResults } from "./worker/pool";
 import {
   defaultSerializableRequest,
   emptyModifierSources,
+  type SerializableRevolutionSimBase,
+  type SerializableSolverRequest,
   type SolverResultDTO,
 } from "./worker/serializable";
 import { solveIdentityFromRequest } from "./identity";
 import type { ActiveEquipmentEffects } from "../shared/equipment";
-import { fitIncumbentBar } from "./requestContext";
+import {
+  buildCandidatePoolForRequest,
+  fitIncumbentBar,
+  minimumConstrainedBarSizeForRequest,
+  regionDenyList,
+  requiredAbilitiesForRequest,
+} from "./requestContext";
 import { buildCandidatePool } from "./candidatePool";
 import { packSolverRequest } from "./packRequest";
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 import { DEFAULT_LOADOUT } from "@/components/combat/useLoadout";
 import { toResolvedCombatModel } from "@/components/combat/toResolvedCombatModel";
-import { emptyBuild } from "@/league";
+import { emptyBuild, REGION_IDS } from "@/league";
 
 const emptyEffects: ActiveEquipmentEffects = {
   activation: "pre-activated-static-loadout",
@@ -183,19 +195,14 @@ describe("fitIncumbentBar catalogue vs pool", () => {
     };
   }
 
-  it("keeps forceSolver-excluded catalogue ids on the user bar", () => {
-    // Pool only has a,b; catalogue also has an implicit Basic Attack and claws.
-    const attack = miniSpec("attack", { basicAttack: true });
-    const claws = miniSpec("claws_of_guthix", { category: "enhanced" as const });
-    const catalogue = [miniSpec("a"), miniSpec("b"), attack, claws];
-    const pool = buildCandidatePool([miniSpec("a"), miniSpec("b")], "melee");
-    expect(pool.byId.has("claws_of_guthix")).toBe(false);
-    const request = defaultSerializableRequest({
+  function miniRequest(
+    partial: Partial<SerializableSolverRequest> = {},
+  ): SerializableSolverRequest {
+    return defaultSerializableRequest({
       style: "melee",
       durationTicks: 100,
       minBarSize: 2,
       maxBarSize: 6,
-      userBar: ["a", "attack", "claws_of_guthix", "b"],
       loadout: {
         base: 1000,
         level: 99,
@@ -217,10 +224,155 @@ describe("fitIncumbentBar catalogue vs pool", () => {
         startingAdrenaline: 100,
         modifierSources: emptyModifierSources(),
       },
+      ...partial,
+    });
+  }
+
+  it("keeps forceSolver-excluded catalogue ids on the user bar", () => {
+    // Pool only has a,b; catalogue also has an implicit Basic Attack and claws.
+    const attack = miniSpec("attack", { basicAttack: true });
+    const claws = miniSpec("claws_of_guthix", { category: "enhanced" as const });
+    const catalogue = [miniSpec("a"), miniSpec("b"), attack, claws];
+    const pool = buildCandidatePool([miniSpec("a"), miniSpec("b")], "melee");
+    expect(pool.byId.has("claws_of_guthix")).toBe(false);
+    const request = miniRequest({
+      userBar: ["a", "attack", "claws_of_guthix", "b"],
     });
     const catMap = new Map(catalogue.map((s) => [s.id, s] as const));
     const fitted = fitIncumbentBar(request, pool, new Set(), catMap);
     expect(fitted).toEqual(["a", "attack", "claws_of_guthix", "b"]);
+  });
+
+  it("unions locks with style-required abilities", () => {
+    const catalogue = [miniSpec("a"), miniSpec("berserk", { category: "ultimate" })];
+    const pool = buildCandidatePool(catalogue, "melee");
+    const required = requiredAbilitiesForRequest(
+      miniRequest({ lockedAbilityIds: ["a", "a"] }),
+      pool,
+    );
+    expect(required).toEqual(["berserk", "a"]);
+  });
+
+  it("derives the worker length floor from style defaults and locks", () => {
+    const request = miniRequest({
+      lockedAbilityIds: ["punish"],
+      unlockedRegions: [...REGION_IDS],
+      includeUnknownAvailability: true,
+    });
+    expect(minimumConstrainedBarSizeForRequest(request)).toBe(2);
+  });
+
+  it.each([
+    ["magic", "sunshine", "greater_sunshine"],
+    ["ranged", "deaths_swiftness", "greater_deaths_swiftness"],
+  ] as const)(
+    "does not restore %s's base ultimate when its greater form is disabled",
+    (style, baseId, greaterId) => {
+      const request = miniRequest({
+        style,
+        disabledAbilityIds: [greaterId],
+        unlockedRegions: [...REGION_IDS],
+        includeUnknownAvailability: true,
+      });
+      const disabled = new Set(request.disabledAbilityIds);
+      const denySet = new Set(
+        regionDenyList(
+          request.style,
+          request.unlockedRegions,
+          request.includeUnknownAvailability === true,
+          disabled,
+        ),
+      );
+      const { pool } = buildCandidatePoolForRequest(
+        request,
+        request.loadout as SerializableRevolutionSimBase,
+        denySet,
+      );
+
+      expect(pool.ids).not.toContain(baseId);
+      expect(pool.ids).not.toContain(greaterId);
+      expect(denySet).toContain(baseId);
+      expect(denySet).toContain(greaterId);
+    },
+  );
+
+  it("rejects overlapping, unavailable, exclusive, and oversized locks", () => {
+    const catalogue = [
+      miniSpec("a"),
+      miniSpec("b"),
+      miniSpec("fury", { replacementGroup: "fury" }),
+      miniSpec("greater_fury", { replacementGroup: "fury" }),
+    ];
+    const pool = buildCandidatePool(catalogue, "melee");
+
+    expect(() =>
+      requiredAbilitiesForRequest(
+        miniRequest({ lockedAbilityIds: ["a"], disabledAbilityIds: ["a"] }),
+        pool,
+      ),
+    ).toThrow('ability "a" cannot be both locked and disabled');
+    expect(() =>
+      requiredAbilitiesForRequest(miniRequest({ lockedAbilityIds: ["missing"] }), pool),
+    ).toThrow('locked ability "missing" is unavailable');
+    expect(() =>
+      requiredAbilitiesForRequest(
+        miniRequest({ lockedAbilityIds: ["fury", "greater_fury"] }),
+        pool,
+      ),
+    ).toThrow('required abilities "fury" and "greater_fury" conflict in group "fury"');
+    expect(() =>
+      requiredAbilitiesForRequest(
+        miniRequest({ lockedAbilityIds: ["a", "b"], maxBarSize: 1 }),
+        pool,
+      ),
+    ).toThrow("2 required abilities exceed max bar size 1");
+  });
+
+  it("keeps locks out of the current-bar baseline", () => {
+    const catalogue = [
+      miniSpec("a"),
+      miniSpec("fury", { replacementGroup: "fury" }),
+      miniSpec("greater_fury", { replacementGroup: "fury" }),
+    ];
+    const pool = buildCandidatePool(catalogue, "melee");
+    const request = miniRequest({
+      userBar: ["a", "fury"],
+      lockedAbilityIds: ["greater_fury"],
+      maxBarSize: 2,
+    });
+    const catMap = new Map(catalogue.map((ability) => [ability.id, ability] as const));
+
+    expect(fitIncumbentBar(request, pool, new Set(), catMap)).toEqual(["a", "fury"]);
+  });
+
+  it("preserves an oversized incumbent that already contains its locks", () => {
+    const catalogue = [miniSpec("a"), miniSpec("b"), miniSpec("c")];
+    const pool = buildCandidatePool(catalogue, "melee");
+    const request = miniRequest({
+      userBar: ["a", "b", "c"],
+      lockedAbilityIds: ["b"],
+      maxBarSize: 2,
+    });
+    const catMap = new Map(catalogue.map((ability) => [ability.id, ability] as const));
+
+    expect(fitIncumbentBar(request, pool, new Set(), catMap)).toEqual(["a", "b", "c"]);
+  });
+
+  it("keeps search-only exclusions on the host incumbent bar", () => {
+    const request = miniRequest({
+      style: "magic",
+      userBar: ["asphyxiate", "sunshine"],
+      disabledAbilityIds: ["asphyxiate"],
+      lockedAbilityIds: ["greater_sunshine"],
+      permittedCategories: ["ultimate"],
+      unlockedRegions: [...REGION_IDS],
+      includeUnknownAvailability: true,
+    });
+
+    const baseline = evaluateHostIncumbentBaseline(request);
+
+    expect(baseline?.bar).toEqual(["asphyxiate", "sunshine"]);
+    expect(Number.isFinite(baseline?.score)).toBe(true);
   });
 });
 

@@ -65,17 +65,38 @@ export interface EvaluationKeyParts {
   objectiveVersion?: number;
 }
 
+export type EvaluationKeyTemplate = Readonly<{
+  beforeBar: string;
+  afterBar: string;
+}>;
+
+export function createEvaluationKeyTemplate(
+  parts: Omit<EvaluationKeyParts, "bar" | "barKey">,
+): EvaluationKeyTemplate {
+  return {
+    beforeBar: [
+      `v${SOLVER_SCHEMA_VERSION}`,
+      `ov${parts.objectiveVersion ?? OBJECTIVE_VERSION}`,
+      `mode=${parts.mode ?? "search"}`,
+    ].join("\0"),
+    afterBar: [
+      parts.profileId ?? "",
+      parts.horizonTicks === undefined ? "" : String(parts.horizonTicks),
+      stableStringify(parts.customWeights ?? null),
+      stableStringify(parts.context ?? null),
+    ].join("\0"),
+  };
+}
+
+export function fingerprintEvaluationKeyFromTemplate(
+  barFp: string,
+  template: EvaluationKeyTemplate,
+): string {
+  return `${template.beforeBar}\0${barFp}\0${template.afterBar}`;
+}
+
 /** Cache key for a bar evaluation - includes schema, objective version, and mode. */
 export function fingerprintEvaluationKey(parts: EvaluationKeyParts): string {
   const barFp = parts.barKey ?? fingerprintBar(parts.bar);
-  return [
-    `v${SOLVER_SCHEMA_VERSION}`,
-    `ov${parts.objectiveVersion ?? OBJECTIVE_VERSION}`,
-    `mode=${parts.mode ?? "search"}`,
-    barFp,
-    parts.profileId ?? "",
-    parts.horizonTicks === undefined ? "" : String(parts.horizonTicks),
-    stableStringify(parts.customWeights ?? null),
-    stableStringify(parts.context ?? null),
-  ].join("\0");
+  return fingerprintEvaluationKeyFromTemplate(barFp, createEvaluationKeyTemplate(parts));
 }

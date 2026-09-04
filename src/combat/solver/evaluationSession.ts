@@ -8,21 +8,28 @@ import type { EvaluateFn, EvalMode, RevolutionBarEvaluation, ScoreableSummary } 
 import { evaluateRevolutionBar } from "./evaluate";
 import { createEligibilityMemo } from "./eligibility";
 import { readEvalMemo, writeEvalMemo } from "./evalMemo";
-import { barKey, fingerprintEvaluationKey, stableStringify } from "./fingerprint";
+import {
+  barKey,
+  createEvaluationKeyTemplate,
+  fingerprintEvaluationKeyFromTemplate,
+  stableStringify,
+} from "./fingerprint";
 import { OBJECTIVE_VERSION } from "./contracts";
 import { canonicalEvaluationContext } from "./identity";
 import type { SerializableSolverRequest } from "./worker/serializable";
 import { isSerializableSimBase } from "./worker/serializable";
+import type { RevivedRevolutionBase } from "./worker/revive";
 import type { SolveRuntimeOptions } from "./worker/solveTypes";
 import type { ProgressState } from "./progressReporter";
 import { emitProgress } from "./progressReporter";
 import { noteEval, noteUniqueBar } from "./profiling/counters";
 import { compileEvaluationContext, type CompiledEvaluationContext } from "./compiledContext";
 import { summaryObjectiveIneligibilityReason } from "./objective";
-import { fitIncumbentBar, regionDenyList } from "./requestContext";
+import { fitIncumbentBar, incumbentRegionDenySet } from "./requestContext";
 
-// Same structural fields as the inline simCommon object in solveFromRequest.
-export type SessionSimCommon = Parameters<typeof evaluateRevolutionBar>[0]["sim"];
+export type SessionSimCommon = RevivedRevolutionBase & {
+  abilities: readonly AbilitySpec[];
+};
 
 /**
  * Stable evaluation-context string for process-local eval memo.
@@ -76,17 +83,47 @@ export function createEvaluateFn(args: {
   };
   const allowExpectedDamageApproximation =
     ((simWithCatalogue as { procs?: { aftershockRank?: number } }).procs?.aftershockRank ?? 0) > 0;
+  const mediumDurationTicks = mediumTicks != null && mediumTicks > 0 ? mediumTicks : exploreTicks;
+  const evaluationKeyTemplates = {
+    search: createEvaluationKeyTemplate({
+      mode: "search",
+      horizonTicks: exploreTicks,
+      profileId: request.profileId,
+      customWeights: request.customWeights,
+      context: memoContext,
+      objectiveVersion: OBJECTIVE_VERSION,
+    }),
+    medium: createEvaluationKeyTemplate({
+      mode: "medium",
+      horizonTicks: mediumDurationTicks,
+      profileId: request.profileId,
+      customWeights: request.customWeights,
+      context: memoContext,
+      objectiveVersion: OBJECTIVE_VERSION,
+    }),
+    full: createEvaluationKeyTemplate({
+      mode: "full",
+      horizonTicks: fullTicks,
+      profileId: request.profileId,
+      customWeights: request.customWeights,
+      context: memoContext,
+      objectiveVersion: OBJECTIVE_VERSION,
+    }),
+  };
 
   const weaponConfiguration = simCommon.weaponConfiguration;
   const equipmentIds = simCommon.equipmentIds;
-  const passiveIds = (simCommon as { equipmentEffects?: { passiveIds?: readonly string[] } })
-    .equipmentEffects?.passiveIds;
+  const equipmentEffects = simCommon.equipmentEffects;
+  const passiveIds = equipmentEffects?.passiveIds;
   const eligibilityOpts = {
     includePartial: request.includePartial,
     size: { min: request.minBarSize, max: request.maxBarSize },
     weaponConfiguration,
     equipmentIds,
+    activeWeapon: equipmentEffects?.activeWeapon,
     passiveIds,
+    eofStoredSpecialId: simCommon.eofStoredSpecialId,
+    league: simCommon.league,
   };
   // One eligibility LRU per solve; pool + options fixed for search + full rescoring.
   const eligibilityMemo = createEligibilityMemo(pool, eligibilityOpts);
@@ -94,18 +131,10 @@ export function createEvaluateFn(args: {
   // Fitted incumbent key for baseline eval (size / outside-pool relaxations).
   let incumbentFp: string | null = null;
   if (request.userBar?.length && isSerializableSimBase(request.loadout)) {
-    const deny = new Set(
-      regionDenyList(
-        request.style,
-        request.unlockedRegions,
-        request.includeUnknownAvailability === true,
-        new Set(request.disabledAbilityIds ?? []),
-      ),
-    );
     const fitted = fitIncumbentBar(
       request,
       pool,
-      deny,
+      incumbentRegionDenySet(request),
       compiled.byId as ReadonlyMap<string, AbilitySpec>,
     );
     if (fitted?.length) incumbentFp = barKey(fitted);
@@ -124,11 +153,7 @@ export function createEvaluateFn(args: {
     state.activePreview = nextActive;
     const useFull = mode === "full" || mode === "finalize";
     const useMedium = mode === "medium" && !useFull;
-    const durationTicks = useFull
-      ? fullTicks
-      : useMedium && mediumTicks != null && mediumTicks > 0
-        ? mediumTicks
-        : exploreTicks;
+    const durationTicks = useFull ? fullTicks : useMedium ? mediumDurationTicks : exploreTicks;
     const scoreMode = useFull ? "full" : useMedium ? "medium" : "search";
     const kind = useFull ? ("full" as const) : ("search" as const);
     const fidelity = useFull
@@ -146,16 +171,7 @@ export function createEvaluateFn(args: {
     if (peer?.fullScore != null && peer.fullScore > state.bestFullScore) {
       state.bestFullScore = peer.fullScore;
     }
-    const memoKey = fingerprintEvaluationKey({
-      bar,
-      barKey: key,
-      mode: scoreMode,
-      horizonTicks: durationTicks,
-      profileId: request.profileId,
-      customWeights: request.customWeights,
-      context: memoContext,
-      objectiveVersion: OBJECTIVE_VERSION,
-    });
+    const memoKey = fingerprintEvaluationKeyFromTemplate(key, evaluationKeyTemplates[scoreMode]);
     const memoHit = readEvalMemo(memoKey);
     if (memoHit) {
       // Count as evaluation for progress honesty but skip the heavy sim.

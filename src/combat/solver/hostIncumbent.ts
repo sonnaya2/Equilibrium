@@ -14,8 +14,9 @@ import {
   buildCandidatePoolForRequest,
   computeHorizonsAndBudget,
   fitIncumbentBar,
+  incumbentRegionDenySet,
   poolAsSpecs,
-  regionDenyList,
+  requiredAbilitiesForRequest,
 } from "./requestContext";
 import { buildSolverResultHonesty } from "./solverDtoHonesty";
 import { CURRENT_BAR_REMAINS_BEST_NOTE, type SolverResultDTO } from "./worker/serializable";
@@ -24,7 +25,7 @@ import { isSerializableSimBase } from "./worker/serializable";
 import { reviveRevolutionBase } from "./worker/revive";
 
 export type HostIncumbentBaseline = {
-  /** Normalized user bar (order preserved; only illegal ids dropped). */
+  /** Normalized current user bar. */
   bar: readonly string[];
   /** Full-horizon rankable score, or -Infinity when unrankable. */
   score: number;
@@ -39,16 +40,12 @@ export function evaluateHostIncumbentBaseline(
 
   const simBase = request.loadout;
   const disabled = new Set(request.disabledAbilityIds ?? []);
-  const deny = regionDenyList(
-    request.style,
-    request.unlockedRegions,
-    request.includeUnknownAvailability === true,
-    disabled,
-  );
-  const denySet = new Set(deny);
+  const incumbentDenySet = incumbentRegionDenySet(request);
+  const denySet = new Set([...incumbentDenySet, ...disabled]);
   const { catalogue, pool } = buildCandidatePoolForRequest(request, simBase, denySet);
+  requiredAbilitiesForRequest(request, pool);
   const catalogueById = new Map(catalogue.map((a) => [a.id, a] as const));
-  const bar = fitIncumbentBar(request, pool, denySet, catalogueById);
+  const bar = fitIncumbentBar(request, pool, incumbentDenySet, catalogueById);
   if (!bar?.length) return null;
 
   const poolSpecs = poolAsSpecs(pool.ids, pool.byId);

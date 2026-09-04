@@ -38,19 +38,6 @@ export async function runLocalSearchAsync(state: SearchState, yieldCtx?: YieldCt
       }
     }
 
-    if (!improved) {
-      for (const nb of order) {
-        if (!state.canEval()) break;
-        const scored = state.tryEval(nb, "search", "local");
-        if (yieldCtx) await maybeYield(state, yieldCtx);
-        if (!scored || !Number.isFinite(scored.robustScore)) continue;
-        if (scored.robustScore > improvedScore) {
-          improved = [...scored.bar];
-          improvedScore = scored.robustScore;
-        }
-      }
-    }
-
     if (!improved || improvedScore <= currentScore) break;
     current = improved;
     currentScore = improvedScore;
@@ -90,7 +77,10 @@ export function generateNeighbors(state: SearchState, bar: readonly string[]): s
   }
 
   if (n > min) {
-    for (let i = 0; i < n; i++) push(removeAt(bar, i));
+    for (let i = 0; i < n; i++) {
+      if (state.requiredAbilityIds.includes(bar[i]!)) continue;
+      push(removeAt(bar, i));
+    }
   }
 
   if (n < max) {
@@ -103,6 +93,7 @@ export function generateNeighbors(state: SearchState, bar: readonly string[]): s
   }
 
   for (let i = 0; i < n; i++) {
+    if (state.requiredAbilityIds.includes(bar[i]!)) continue;
     const without = removeAt(bar, i);
     let replaced = 0;
     for (const a of state.pool) {

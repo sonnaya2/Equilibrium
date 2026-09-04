@@ -499,6 +499,195 @@
   cursor: not-allowed;
 }
 
+.revo-ability-rules {
+  position: relative;
+  margin-top: 0.5rem;
+  border-top: 1px solid color-mix(in srgb, var(--combat-gold-dim) 68%, transparent);
+}
+
+.revo-ability-rules > summary {
+  display: list-item;
+  width: max-content;
+  max-width: 100%;
+  margin-left: 1rem;
+  padding-top: 0.45rem;
+  color: var(--combat-text);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+}
+
+.revo-ability-rules > summary::marker {
+  color: var(--combat-gold-mid);
+}
+
+.revo-ability-rules__count {
+  margin-left: 0.55rem;
+  color: var(--combat-muted);
+  font-size: 0.6875rem;
+  font-weight: 400;
+}
+
+.revo-ability-rules__panel {
+  margin-top: 0.45rem;
+  border: 1px solid var(--combat-gold-dim);
+  background: color-mix(in srgb, var(--combat-inset) 95%, black);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 42%);
+}
+
+.revo-ability-rules__toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--combat-gold-dim) 68%, transparent);
+}
+
+.revo-ability-rules__toolbar label {
+  flex: 1;
+  min-width: 8rem;
+}
+
+.revo-ability-rules__toolbar input {
+  width: 100%;
+  min-height: 1.9rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--combat-gold-dim);
+  border-radius: 1px;
+  background: var(--combat-inset);
+  color: var(--combat-text);
+  font-size: 0.875rem;
+}
+
+.revo-ability-rules__toolbar input:focus {
+  border-color: var(--combat-gem);
+  outline: 1px solid color-mix(in srgb, var(--combat-gem) 45%, transparent);
+  outline-offset: 1px;
+}
+
+.revo-ability-rules__clear {
+  min-height: 1.9rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--combat-gold-dim);
+  border-radius: 1px;
+  background: transparent;
+  color: var(--combat-muted);
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.revo-ability-rules__clear:hover:not(:disabled) {
+  border-color: var(--combat-gold-mid);
+  color: var(--combat-text);
+}
+
+.revo-ability-rules__clear:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.revo-ability-rules__help,
+.revo-ability-rules__empty {
+  margin: 0;
+  padding: 0.4rem 0.5rem;
+  color: var(--combat-muted);
+  font-size: 0.6875rem;
+}
+
+.revo-ability-rules__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  max-height: 14rem;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  border-top: 1px solid color-mix(in srgb, var(--combat-gold-dim) 45%, transparent);
+  list-style: none;
+}
+
+.revo-ability-rules__list li {
+  display: grid;
+  grid-template-columns: 1.5rem minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.45rem;
+  padding: 0.3rem 0.4rem;
+  border-right: 1px solid color-mix(in srgb, var(--combat-gold-dim) 38%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--combat-gold-dim) 38%, transparent);
+}
+
+.revo-ability-rules__list li[data-rule="locked"] {
+  background: color-mix(in srgb, var(--combat-gem-dark, #0d5c44) 24%, transparent);
+}
+
+.revo-ability-rules__list li[data-rule="disabled"] {
+  background: rgb(98 53 45 / 18%);
+}
+
+.revo-ability-rules__icon {
+  opacity: 0.94;
+}
+
+.revo-ability-rules__name {
+  overflow: hidden;
+  color: var(--combat-text);
+  font-size: 0.875rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.revo-ability-rules__category {
+  max-width: 6rem;
+  overflow: hidden;
+  color: var(--combat-muted);
+  font-size: 0.6875rem;
+  text-overflow: ellipsis;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.revo-ability-rules__actions {
+  display: inline-flex;
+}
+
+.revo-ability-rules__actions button {
+  min-width: 2.7rem;
+  min-height: 1.9rem;
+  padding: 0.12rem 0.35rem;
+  border: 1px solid var(--combat-gold-dim);
+  background: transparent;
+  color: var(--combat-muted);
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.revo-ability-rules__actions button + button {
+  border-left: 0;
+}
+
+.revo-ability-rules__actions button[aria-pressed="true"]:first-child {
+  border-color: var(--combat-gem);
+  background: color-mix(in srgb, var(--combat-gem-dark, #0d5c44) 48%, var(--combat-inset));
+  color: var(--combat-gem-bright);
+}
+
+.revo-ability-rules__actions button[aria-pressed="true"]:last-child {
+  border-color: #9d675b;
+  background: rgb(98 53 45 / 48%);
+  color: #e0aaa0;
+}
+
+.revo-ability-rules__actions button:hover:not(:disabled) {
+  border-color: var(--combat-gold-mid);
+  color: var(--combat-text);
+}
+
+.revo-ability-rules__actions button:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+}
+
 /* Solver live status - stone plate, gem progression track, mini best-bar strip */
 .revo-solver-status {
   margin-top: 0.55rem;
@@ -1196,6 +1385,34 @@
 
   .revo-bar-editor__add {
     grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 560px) {
+  .revo-ability-rules__toolbar {
+    flex-wrap: wrap;
+  }
+
+  .revo-ability-rules__toolbar label {
+    flex-basis: 100%;
+  }
+
+  .revo-ability-rules__list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .revo-ability-rules__list li {
+    grid-template-columns: 1.5rem minmax(0, 1fr) auto;
+  }
+
+  .revo-ability-rules__category {
+    display: none;
+  }
+
+  .revo-ability-rules__actions button {
+    min-width: 3rem;
+    min-height: 2.25rem;
+    font-size: 0.875rem;
   }
 }
 

@@ -40,7 +40,7 @@ export async function maybeYield(state: SearchState, ctx: YieldCtx): Promise<voi
 }
 
 export function yieldEveryForTier(tier: string): number {
-  if (tier === "unhinged") return 16;
-  if (tier === "extreme") return 8;
-  return 4;
+  if (tier === "unhinged") return 128;
+  if (tier === "extreme") return 64;
+  return 32;
 }

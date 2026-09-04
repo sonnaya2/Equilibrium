@@ -111,6 +111,8 @@ function sampleRequest(): SerializableSolverRequest {
     now: 1_700_000_000_000,
     authoredSeedBars: [{ id: "seed-a", abilityIds: ["melee:slice"], baseline: true }],
     userBar: ["melee:slice"],
+    disabledAbilityIds: ["slaughter"],
+    lockedAbilityIds: ["berserk"],
   };
 }
 
@@ -119,6 +121,8 @@ describe("solver worker serializable boundary", () => {
     const request = sampleRequest();
     const cloned = structuredClone(request);
     expect(cloned).toEqual(request);
+    expect(cloned.disabledAbilityIds).toEqual(["slaughter"]);
+    expect(cloned.lockedAbilityIds).toEqual(["berserk"]);
     expect(isSerializableSimBase(cloned.loadout)).toBe(true);
     expect(requireSimBase(cloned.loadout).base).toBe(1200);
   });
@@ -248,11 +252,7 @@ describe("solver worker serializable boundary", () => {
 
     const sim = {
       ...sampleSimBase(),
-      equipmentIds: [
-        "item:eldritch-crossbow",
-        "item:sirenic-hauberk",
-        "item:sirenic-chaps",
-      ],
+      equipmentIds: ["item:eldritch-crossbow", "item:sirenic-hauberk", "item:sirenic-chaps"],
       equipmentEffects: effects,
     } satisfies SerializableRevolutionSimBase;
     const cloned = structuredClone(sim);

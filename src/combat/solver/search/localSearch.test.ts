@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { PoolAbility } from "../contracts";
 import { barKey } from "../fingerprint";
-import { generateNeighbors } from "./localSearch";
+import { generateNeighbors, runLocalSearchAsync } from "./localSearch";
 import { createSearchState, moveAt, swapAt } from "./types";
 
 const pool: PoolAbility[] = [
@@ -38,12 +38,16 @@ const baseConfig = {
   exhaustiveMax: 0,
 };
 
-function makeState(bounds: { min: number; max: number } = { min: 1, max: 5 }) {
+function makeState(
+  bounds: { min: number; max: number } = { min: 1, max: 5 },
+  requiredAbilityIds: readonly string[] = [],
+) {
   return createSearchState({
     pool,
     sizeBounds: bounds,
     evaluate: mockEval(),
     config: baseConfig,
+    requiredAbilityIds,
   });
 }
 
@@ -106,5 +110,34 @@ describe("generateNeighbors", () => {
     const lens = new Set(neighbors.map((n) => n.length));
     expect(lens.has(2)).toBe(true);
     expect(lens.has(4)).toBe(true);
+  });
+
+  it("never removes or replaces a required ability", () => {
+    const state = makeState({ min: 2, max: 4 }, ["b"]);
+    const neighbors = generateNeighbors(state, ["a", "b", "c"]);
+
+    expect(neighbors.length).toBeGreaterThan(0);
+    expect(neighbors.every((bar) => bar.includes("b"))).toBe(true);
+    expect(neighbors.some((bar) => bar.length === 2)).toBe(true);
+  });
+});
+
+describe("runLocalSearchAsync", () => {
+  it("visits a non-improving neighbor batch once", async () => {
+    const state = makeState({ min: 3, max: 3 });
+    const bar = ["a", "b", "c"];
+    expect(state.tryEval(bar, "search", "seed")).not.toBeNull();
+    const neighborCount = generateNeighbors(state, bar).length;
+    const tryEval = state.tryEval.bind(state);
+    let attempts = 0;
+    state.tryEval = (...args) => {
+      attempts += 1;
+      return tryEval(...args);
+    };
+
+    await runLocalSearchAsync(state);
+
+    expect(attempts).toBe(neighborCount);
+    expect(state.best?.bar).toEqual(bar);
   });
 });

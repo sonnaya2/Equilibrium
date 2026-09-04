@@ -7,7 +7,14 @@ import { clampSolverBarSizes, MIN_SOLVER_BAR_SIZE } from "./barPolicy";
 
 const NOW = 1_700_000_000_000;
 
-function packBounds(minBarSize?: number, maxBarSize?: number) {
+function packBounds(
+  minBarSize?: number,
+  maxBarSize?: number,
+  abilityRules: {
+    disabledAbilityIds?: readonly string[];
+    lockedAbilityIds?: readonly string[];
+  } = {},
+) {
   const loadout = { ...DEFAULT_LOADOUT };
   const model = toResolvedCombatModel(loadout, { now: NOW });
   return packSolverRequest({
@@ -17,6 +24,7 @@ function packBounds(minBarSize?: number, maxBarSize?: number) {
     now: NOW,
     minBarSize,
     maxBarSize,
+    ...abilityRules,
   });
 }
 
@@ -57,5 +65,17 @@ describe("packSolverRequest bar bounds", () => {
   it("preserves fixed 7..11 lengths", () => {
     expect(packBounds(7, 7)).toMatchObject({ minBarSize: 7, maxBarSize: 7 });
     expect(packBounds(11, 11)).toMatchObject({ minBarSize: 11, maxBarSize: 11 });
+  });
+
+  it("packs disabled and locked ability ids", () => {
+    expect(
+      packBounds(4, 6, {
+        disabledAbilityIds: ["slice"],
+        lockedAbilityIds: ["berserk"],
+      }),
+    ).toMatchObject({
+      disabledAbilityIds: ["slice"],
+      lockedAbilityIds: ["berserk"],
+    });
   });
 });

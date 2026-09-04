@@ -47,17 +47,29 @@ async function runBeamBody(state: SearchState, yieldCtx: YieldCtx | null): Promi
   const { beamWidth, beamInsertAllPositions } = state.config;
   let beam: ScoredBar[] = [];
 
-  for (const a of state.pool) {
-    if (!state.canEval() && state.sizeBounds.min > 1) break;
-    if (state.sizeBounds.min <= 1) {
-      if (!state.canEval()) break;
-      const scored = state.tryEval([a.id], "search", "beam");
-      noteBeamChild(a.id);
+  if (state.requiredAbilityIds.length > 0) {
+    const required = [...state.requiredAbilityIds];
+    noteBeamChild(barKey(required));
+    if (required.length >= state.sizeBounds.min) {
+      const scored = state.tryEval(required, "search", "beam");
       if (scored && Number.isFinite(scored.robustScore)) beam.push(scored);
       if (yieldCtx) await maybeYield(state, yieldCtx);
     } else {
-      noteBeamChild(a.id);
-      beam.push(partialBar(state, [a.id]));
+      beam.push(partialBar(state, required));
+    }
+  } else {
+    for (const a of state.pool) {
+      if (!state.canEval() && state.sizeBounds.min > 1) break;
+      if (state.sizeBounds.min <= 1) {
+        if (!state.canEval()) break;
+        const scored = state.tryEval([a.id], "search", "beam");
+        noteBeamChild(a.id);
+        if (scored && Number.isFinite(scored.robustScore)) beam.push(scored);
+        if (yieldCtx) await maybeYield(state, yieldCtx);
+      } else {
+        noteBeamChild(a.id);
+        beam.push(partialBar(state, [a.id]));
+      }
     }
   }
 

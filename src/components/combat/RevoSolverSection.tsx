@@ -1,6 +1,7 @@
 "use client";
 
 import { engineSpecs as ENGINE_SPECS } from "@/combat/abilities/registry";
+import type { AbilitySpec } from "@/combat/pipeline/calculateAbility";
 import {
   preferredAgentCount,
   TIER_BUDGETS,
@@ -13,6 +14,8 @@ import {
 import { abilityIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
 import { RegionCrest } from "../RegionCrest";
+import { RevoAbilityRules } from "./RevoAbilityRules";
+import type { SolverAbilityRule, SolverAbilityRules } from "./solverAbilityRules";
 import {
   BAR_SIZE_PRESETS,
   formatNumber,
@@ -34,6 +37,10 @@ import "./revo-solver.css";
 
 export type RevoSolverSectionProps = {
   regions: readonly string[];
+  solverAbilities: readonly AbilitySpec[];
+  abilityRules: SolverAbilityRules;
+  setAbilityRule: (abilityId: string, rule: SolverAbilityRule) => void;
+  clearAbilityRules: () => void;
   solving: boolean;
   stopping: boolean;
   solverProgress: SolverProgress | null;
@@ -58,6 +65,10 @@ export type RevoSolverSectionProps = {
 
 export function RevoSolverSection({
   regions,
+  solverAbilities,
+  abilityRules,
+  setAbilityRule,
+  clearAbilityRules,
   solving,
   stopping,
   solverProgress,
@@ -202,6 +213,13 @@ export function RevoSolverSection({
           Limit to regions
         </label>
       </div>
+      <RevoAbilityRules
+        abilities={solverAbilities}
+        rules={abilityRules}
+        controlsDisabled={solving}
+        onRuleChange={setAbilityRule}
+        onClear={clearAbilityRules}
+      />
       {(solving || solverProgress) && (
         <div
           className={`revo-solver-status${stopping ? " is-stopping" : ""}${

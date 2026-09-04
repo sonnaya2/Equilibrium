@@ -145,6 +145,7 @@ export {
 export type { SerializableUiRunRequest } from "./worker/uiRunTypes";
 export { runMediumScreen, collectMediumIncumbents } from "./search/mediumScreen";
 export { solveFromRequest, resolveSolvedBar } from "./solveFromRequest";
+export { minimumConstrainedBarSizeForRequest } from "./requestContext";
 export {
   evaluateHostIncumbentBaseline,
   applyHostIncumbentBaseline,
@@ -241,6 +242,7 @@ export type {
   SerializableRevolutionSimBase,
   SolverSearchTier,
 } from "./worker/serializable";
+export { DEFAULT_SOLVER_PERMITTED_CATEGORIES } from "./worker/serializable";
 export {
   buildSolverResultHonesty,
   dtoAllowsApply,

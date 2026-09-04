@@ -9,6 +9,7 @@ import {
   isPresentableSolverResult,
   isVerifiedCacheableResult,
   lookupSolvedBar,
+  minimumConstrainedBarSizeForRequest,
   packSolverRequest,
   planWorkers,
   preferredAgentCount,
@@ -58,6 +59,12 @@ import {
   type SolverStoppedPreview,
 } from "./revoPanelFormat";
 import type { Loadout } from "./useLoadout";
+import {
+  pruneSolverAbilityRules,
+  setSolverAbilityRule as applySolverAbilityRule,
+  type SolverAbilityRule,
+  type SolverAbilityRules,
+} from "./solverAbilityRules";
 
 /** Build initial SolverProgress agent strip from a worker plan. */
 export function seedProgressFromPlan(plan: WorkerPlan, tier: SolverSearchTier): SolverProgress {
@@ -151,6 +158,7 @@ export type UseRevolutionSolverArgs = {
   combatModel: ResolvedCombatModel;
   build: BuildState;
   modelled: AbilitySpec[];
+  solverAbilities: AbilitySpec[];
   onActiveBar: (ids: string[] | null) => void;
   onClearSimResult: () => void;
   /** Controlled Limit-to-regions (parent owns persistence). */
@@ -167,6 +175,8 @@ type MaterialSolveInputs = {
   solverProfile: ObjectiveProfileId;
   limitToRegions: boolean;
   barSizePreset: BarSizePresetId;
+  lockedAbilityIds?: readonly string[];
+  disabledAbilityIds?: readonly string[];
 };
 
 function packFromMaterial(
@@ -187,6 +197,8 @@ function packFromMaterial(
     minBarSize: bounds.minBarSize,
     maxBarSize: bounds.maxBarSize,
     userBar,
+    lockedAbilityIds: m.lockedAbilityIds,
+    disabledAbilityIds: m.disabledAbilityIds,
     seed: opts?.seed ?? 1,
     now: opts?.now,
     useBuildRegions: m.limitToRegions,
@@ -201,6 +213,7 @@ export function useRevolutionSolver({
   combatModel,
   build,
   modelled,
+  solverAbilities,
   onActiveBar,
   onClearSimResult,
   limitToRegions,
@@ -209,6 +222,10 @@ export function useRevolutionSolver({
   const [solverTier, setSolverTier] = useState<SolverSearchTier>("thorough");
   const [solverProfile, setSolverProfile] = useState<ObjectiveProfileId>("balanced");
   const [barSizePreset, setBarSizePreset] = useState<BarSizePresetId>(DEFAULT_BAR_SIZE_PRESET);
+  const [abilityRules, setAbilityRules] = useState<SolverAbilityRules>({
+    lockedAbilityIds: [],
+    disabledAbilityIds: [],
+  });
   const [solving, setSolving] = useState(false);
   const [stopping, setStopping] = useState(false);
   const [solverProgress, setSolverProgress] = useState<SolverProgress | null>(null);
@@ -242,6 +259,8 @@ export function useRevolutionSolver({
     solverProfile,
     limitToRegions,
     barSizePreset,
+    lockedAbilityIds: abilityRules.lockedAbilityIds,
+    disabledAbilityIds: abilityRules.disabledAbilityIds,
   });
 
   materialRef.current = {
@@ -253,6 +272,8 @@ export function useRevolutionSolver({
     solverProfile,
     limitToRegions,
     barSizePreset,
+    lockedAbilityIds: abilityRules.lockedAbilityIds,
+    disabledAbilityIds: abilityRules.disabledAbilityIds,
   };
   // Single live request: full identity includes the incumbent user bar.
   // Progress path is string compare against liveIdentityRef - no pack per event.
@@ -268,6 +289,8 @@ export function useRevolutionSolver({
           solverProfile,
           limitToRegions,
           barSizePreset,
+          lockedAbilityIds: abilityRules.lockedAbilityIds,
+          disabledAbilityIds: abilityRules.disabledAbilityIds,
         },
         { seed: 1 },
       ),
@@ -280,6 +303,8 @@ export function useRevolutionSolver({
       solverProfile,
       limitToRegions,
       barSizePreset,
+      abilityRules.lockedAbilityIds,
+      abilityRules.disabledAbilityIds,
     ],
   );
   const liveIdentity = useMemo(() => solveContextPayload(liveRequest), [liveRequest]);
@@ -317,10 +342,30 @@ export function useRevolutionSolver({
     });
   }
 
+  const clearSolverUi = useCallback(() => {
+    progressRafRef.current?.cancel();
+    latestProgressRef.current = null;
+    setSolverProgress(null);
+    setSolverResult(null);
+    setStoppedPreview(null);
+    setSolverError(null);
+    setBestPulse(false);
+  }, []);
+
   useEffect(() => {
     setBarLibrary(loadBarLibrary());
     setSolverAgents(preferredAgentCount("thorough"));
   }, []);
+
+  useEffect(() => {
+    const availableIds = new Set(solverAbilities.map((ability) => ability.id));
+    const needsPrune =
+      abilityRules.lockedAbilityIds.some((id) => !availableIds.has(id)) ||
+      abilityRules.disabledAbilityIds.some((id) => !availableIds.has(id));
+    if (!needsPrune) return;
+    setAbilityRules((current) => pruneSolverAbilityRules(current, availableIds));
+    clearSolverUi();
+  }, [abilityRules, clearSolverUi, solverAbilities]);
 
   useEffect(() => {
     return () => {
@@ -346,10 +391,8 @@ export function useRevolutionSolver({
   useEffect(() => {
     if (solving) return;
     if (!solverResult || !completedResultStale) return;
-    setSolverResult(null);
-    setStoppedPreview(null);
-    setSolverError(null);
-  }, [completedResultStale, solverResult, solving]);
+    clearSolverUi();
+  }, [clearSolverUi, completedResultStale, solverResult, solving]);
 
   const sessionIsLive = useCallback((gen: number): boolean => {
     const identity = sessionIdentityRef.current;
@@ -489,6 +532,7 @@ export function useRevolutionSolver({
       const plan = planWorkers({
         minBarSize: baseRequest.minBarSize,
         maxBarSize: baseRequest.maxBarSize,
+        minimumRequiredBarSize: minimumConstrainedBarSizeForRequest(baseRequest),
         tier: baseRequest.tier,
         baseSeed: baseRequest.seed,
       });
@@ -647,11 +691,20 @@ export function useRevolutionSolver({
     progressRafRef.current?.flush();
   };
 
-  const clearSolverUi = useCallback(() => {
-    setSolverResult(null);
-    setStoppedPreview(null);
-    setSolverError(null);
-  }, []);
+  const setAbilityRule = useCallback(
+    (abilityId: string, rule: SolverAbilityRule) => {
+      setAbilityRules((current) =>
+        applySolverAbilityRule(current, abilityId, rule, solverAbilities),
+      );
+      clearSolverUi();
+    },
+    [clearSolverUi, solverAbilities],
+  );
+
+  const clearAbilityRules = useCallback(() => {
+    setAbilityRules({ lockedAbilityIds: [], disabledAbilityIds: [] });
+    clearSolverUi();
+  }, [clearSolverUi]);
 
   const saveCurrentBar = (
     currentSaveBar: string[] | null,
@@ -711,6 +764,10 @@ export function useRevolutionSolver({
     setLimitToRegions,
     barSizePreset,
     setBarSizePreset,
+    lockedAbilityIds: abilityRules.lockedAbilityIds,
+    disabledAbilityIds: abilityRules.disabledAbilityIds,
+    setAbilityRule,
+    clearAbilityRules,
     solving,
     stopping,
     solverProgress,

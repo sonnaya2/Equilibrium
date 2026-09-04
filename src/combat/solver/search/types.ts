@@ -11,7 +11,7 @@ import type {
 } from "../contracts";
 import { OBJECTIVE_VERSION } from "../contracts";
 import { indexPool } from "../candidatePool";
-import { canAdd } from "../eligibility";
+import { isCandidateBarLegal } from "../eligibility";
 import { fingerprintBar } from "../fingerprint";
 import { noteBarKeySeen, noteDuplicateEvalAttempt } from "../profiling";
 import { isFiniteEval } from "../objective";
@@ -68,7 +68,7 @@ export interface SearchState {
    */
   fullEvaluatedFingerprints: Set<string>;
   /**
-   * Distinct bar fingerprints with a valid full-horizon rankable score.
+   * Distinct policy-checked candidate fingerprints with a valid full-horizon rankable score.
    * full-objective-global-optimum requires this set to cover every feasible bar.
    */
   fullSuccessFingerprints: Set<string>;
@@ -87,7 +87,7 @@ export interface SearchState {
    */
   incumbentBar: string[] | null;
   /**
-   * Style-required ability ids (must appear on every rankable complete bar).
+   * Style-required and user-locked ids (must appear on every searched complete bar).
    * Empty when unavailable for the loadout.
    */
   requiredAbilityIds: readonly string[];
@@ -125,7 +125,7 @@ export function createSearchState(opts: {
   seeds?: readonly (readonly string[])[];
   /** Normalized current user bar; always full-rescored at finalize. */
   incumbentBar?: readonly string[] | null;
-  /** Style-required ids; enforced when bar length >= min. */
+  /** Style-required and user-locked ids; enforced when bar length >= min. */
   requiredAbilityIds?: readonly string[];
   shouldSkipFingerprint?: (fingerprint: string) => boolean;
   isSearchStopped?: () => boolean;
@@ -183,7 +183,7 @@ export function createSearchState(opts: {
   return state;
 }
 
-/** Candidate-policy gates (size band, style-required ids). Not for first-class incumbent. */
+/** Candidate-policy gates (size band, required ids). Not for first-class incumbent. */
 type EvalBarOpts = { skipCandidatePolicy?: boolean };
 
 function evalBar(
@@ -202,10 +202,8 @@ function evalBar(
   } else if (bar.length < state.sizeBounds.min || bar.length > state.sizeBounds.max) {
     return null;
   }
-  for (let i = 0; i < bar.length; i++) {
-    if (!canAdd(bar.slice(0, i), bar[i]!, state.byId)) return null;
-  }
-  // Generated candidates must carry style-required abilities; incumbent does not.
+  if (!skipPolicy && !isCandidateBarLegal(bar, state.byId)) return null;
+  // Generated candidates must carry required abilities; incumbent does not.
   if (
     !skipPolicy &&
     bar.length >= state.sizeBounds.min &&
@@ -233,7 +231,9 @@ function evalBar(
     else {
       state.fullCacheHits += 1;
       state.fullEvaluatedFingerprints.add(fp);
-      if (cached.scored.validForFinalRanking) state.fullSuccessFingerprints.add(fp);
+      if (!skipPolicy && cached.scored.validForFinalRanking) {
+        state.fullSuccessFingerprints.add(fp);
+      }
     }
     // Cache hit: update mode-specific best only; full/medium never mutate search best.
     if (scoreMode === "search") touchSearchBest(state, cached.scored);
@@ -286,7 +286,7 @@ function evalBar(
     pushArchive(state, scored);
   } else {
     // Full results never update search best (scale mismatch).
-    if (scored.validForFinalRanking) state.fullSuccessFingerprints.add(fp);
+    if (!skipPolicy && scored.validForFinalRanking) state.fullSuccessFingerprints.add(fp);
     touchFullBest(state, scored);
     pushArchive(state, scored);
   }

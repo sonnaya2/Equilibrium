@@ -4,6 +4,7 @@ import type { AbilitySpec } from "../pipeline/calculateAbility";
 import { simulateRevolution } from "../engine/simulation/revolution";
 import { buildCandidatePool } from "./candidatePool";
 import { compileEvaluationContext } from "./compiledContext";
+import { createEligibilityMemo } from "./eligibility";
 import { evaluateRevolutionBar } from "./evaluate";
 import {
   OBJECTIVE_HORIZON_TICKS,
@@ -147,6 +148,24 @@ describe("evaluateRevolutionBar", () => {
     expect(evaluation.summary).toBeUndefined();
     expect(evaluation.score).toBe(Number.NEGATIVE_INFINITY);
     expect(evaluation.reasons.some((reason) => reason.code === "off-gcd")).toBe(true);
+  });
+
+  it("does not reuse an eligibility memo with different size bounds", () => {
+    const pool = buildCandidatePool(catalogue, "melee");
+    const eligibilityMemo = createEligibilityMemo(pool, { size: { min: 1, max: 1 } });
+    const evaluation = evaluateRevolutionBar({
+      bar: ["alpha"],
+      style: "melee",
+      durationTicks: 30,
+      pool,
+      sim: baseSim,
+      profileId: "balanced",
+      size: { min: 2, max: 2 },
+      eligibilityMemo,
+    });
+
+    expect(evaluation.ok).toBe(false);
+    expect(evaluation.reasons.some((reason) => reason.code === "size-below-min")).toBe(true);
   });
 
   it("keeps robust score-failed visible after a successful simulation (no synthetic windows)", () => {

@@ -4,7 +4,7 @@ import type { ResolvedLeagueRules } from "../league/ruleset";
 import type { ActiveWeaponCapability } from "../shared/equipment";
 
 /** Bumped when evaluation inputs change shape (e.g. Basic Attack subtype). */
-export const SOLVER_SCHEMA_VERSION = 13 as const;
+export const SOLVER_SCHEMA_VERSION = 14 as const;
 
 /**
  * Bumped when objective math or score tagging semantics change.

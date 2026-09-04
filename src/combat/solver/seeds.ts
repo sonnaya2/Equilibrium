@@ -1,6 +1,7 @@
 import type { PoolAbility, SizeBounds } from "./contracts";
 import { remainingCandidates } from "./eligibility";
 import type { Rng } from "./rng";
+import { ensureRequiredAbilityIds } from "./stylePolicy";
 
 export interface SeedOptions {
   pool: readonly PoolAbility[];
@@ -8,6 +9,8 @@ export interface SeedOptions {
   rng: Rng;
   /** Authored bars (wiki/PvME/user) accepted when legal. */
   authored?: readonly (readonly string[])[];
+  /** Abilities that every generated seed must contain. */
+  requiredAbilityIds?: readonly string[];
   /** How many random / heuristic seeds to emit (excluding authored). */
   count?: number;
 }
@@ -44,6 +47,7 @@ export function normalizeAuthoredSeed(
 export function buildSeeds(opts: SeedOptions): string[][] {
   const { pool, sizeBounds, rng } = opts;
   const byId = new Map(pool.map((a) => [a.id, a] as const));
+  const requiredAbilityIds = opts.requiredAbilityIds ?? [];
   const count = opts.count ?? 12;
   const out: string[][] = [];
   const seen = new Set<string>();
@@ -57,8 +61,9 @@ export function buildSeeds(opts: SeedOptions): string[][] {
   };
 
   const pushHeuristic = (bar: string[]) => {
+    const constrained = ensureRequiredAbilityIds(bar, requiredAbilityIds, sizeBounds.max);
     const built: string[] = [];
-    for (const id of bar) {
+    for (const id of constrained) {
       if (built.length >= sizeBounds.max) break;
       const a = byId.get(id);
       if (a && remainingCandidates(built, [a], byId).length) built.push(id);
@@ -67,7 +72,8 @@ export function buildSeeds(opts: SeedOptions): string[][] {
   };
 
   for (const a of opts.authored ?? []) {
-    const norm = normalizeAuthoredSeed(a, pool, sizeBounds);
+    const constrained = ensureRequiredAbilityIds(a, requiredAbilityIds, sizeBounds.max);
+    const norm = normalizeAuthoredSeed(constrained, pool, sizeBounds);
     if (norm) pushBuilt(norm);
   }
 

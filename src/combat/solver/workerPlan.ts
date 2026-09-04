@@ -33,6 +33,7 @@ export const RESERVES_UI_CORE = true;
 export interface WorkerPlanInput {
   minBarSize: number;
   maxBarSize: number;
+  minimumRequiredBarSize?: number;
   tier: SearchTier;
   /** Base RNG seed from the packed request. */
   baseSeed?: number;
@@ -132,7 +133,17 @@ function assignmentKey(
  * Uniqueness key: bar bounds + recipe + seed (no duplicate assignments).
  */
 export function planWorkers(input: WorkerPlanInput): WorkerPlan {
-  const bounds = clampSolverBarSizes(input.minBarSize, input.maxBarSize);
+  const requestedBounds = clampSolverBarSizes(input.minBarSize, input.maxBarSize);
+  const minimumRequiredBarSize = Math.max(0, Math.floor(input.minimumRequiredBarSize ?? 0) || 0);
+  if (minimumRequiredBarSize > requestedBounds.maxBarSize) {
+    throw new Error(
+      `worker plan: required bar size ${minimumRequiredBarSize} exceeds max ${requestedBounds.maxBarSize}`,
+    );
+  }
+  const bounds = {
+    minBarSize: Math.max(requestedBounds.minBarSize, minimumRequiredBarSize),
+    maxBarSize: requestedBounds.maxBarSize,
+  };
   const tier = input.tier ?? "thorough";
   const hw = input.hardwareCores ?? detectHardwareCores();
   const tierCap = preferredAgentCount(tier, hw);

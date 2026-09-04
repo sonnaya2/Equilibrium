@@ -408,8 +408,7 @@ export function canonicalObjectiveIdentity(request: SerializableSolverRequest): 
   };
 }
 
-/** Pool filters that change which bars are legal / which abilities appear. */
-export function canonicalPoolFilterIdentity(request: SerializableSolverRequest): unknown {
+function canonicalEvaluationPoolFilterIdentity(request: SerializableSolverRequest) {
   return {
     regions: sortedStrings(request.unlockedRegions as readonly string[]),
     disabled: sortedStrings(request.disabledAbilityIds),
@@ -417,6 +416,14 @@ export function canonicalPoolFilterIdentity(request: SerializableSolverRequest):
       ? sortedStrings(request.permittedCategories as readonly string[])
       : null,
     includeUnknownAvailability: request.includeUnknownAvailability === true,
+  };
+}
+
+/** Pool filters that change which bars are legal / which abilities appear. */
+export function canonicalPoolFilterIdentity(request: SerializableSolverRequest): unknown {
+  return {
+    ...canonicalEvaluationPoolFilterIdentity(request),
+    locked: sortedStrings(request.lockedAbilityIds),
   };
 }
 
@@ -455,7 +462,7 @@ export function canonicalNormalizedIdentity(
   const evaluation = {
     objective,
     simulation,
-    pool: canonicalPoolFilterIdentity(request),
+    pool: canonicalEvaluationPoolFilterIdentity(request),
   };
   return { objective, simulation, solveJob, evaluation };
 }

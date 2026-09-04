@@ -137,6 +137,7 @@ export interface PackSolverRequestInput {
   includePartial?: boolean;
   includeUnknownAvailability?: boolean;
   disabledAbilityIds?: readonly string[];
+  lockedAbilityIds?: readonly string[];
   /** Final exact horizon seconds (default: tier fullSeconds). */
   durationSeconds?: number;
   /** Explore horizon seconds (default: tier exploreSeconds). */
@@ -343,6 +344,7 @@ export function packSolverRequest(input: PackSolverRequestInput): SerializableSo
     includePartial: input.includePartial,
     includeUnknownAvailability,
     disabledAbilityIds: input.disabledAbilityIds,
+    lockedAbilityIds: input.lockedAbilityIds,
     unlockedRegions: regions as RegionId[],
     blessingPicks: input.build.blessingPicks as readonly BlessingPath[],
     ruleset,

@@ -10,7 +10,7 @@ import { INCUMBENT_SCORE_TOLERANCE } from "../contracts";
 import { buildCandidatePool } from "../candidatePool";
 import { barKey } from "../fingerprint";
 import { fitAuthoredSeeds, fitIncumbentBar } from "../requestContext";
-import { configForTier } from "../solve";
+import { configForTier, solve } from "../solve";
 import { defaultSerializableRequest, emptyModifierSources } from "../worker/serializable";
 import { createSearchState } from "./types";
 import { finalizeSearch, fullCandidateList } from "./finalize";
@@ -89,6 +89,46 @@ function seedExploreArchive(
 }
 
 describe("incumbent finalize (Phase 5)", () => {
+  it("full-evaluates an incumbent ability outside the search pool", () => {
+    const incumbent = ["outside-pool"] as const;
+    const fullCalls: string[] = [];
+    const result = solve({
+      pool: tinyPool,
+      sizeBounds: { min: 1, max: 1 },
+      incumbentBar: incumbent,
+      evaluate: ({ bar, mode }) => {
+        const full = mode === "full" || mode === "finalize";
+        if (full) fullCalls.push(barKey(bar));
+        const score = barKey(bar) === barKey(incumbent) ? 1_000 : 10;
+        return {
+          score,
+          finite: true,
+          mode: full ? "full" : "search",
+          exploratory: !full,
+          validForFinalRanking: full,
+          fidelity: full ? "full" : "short",
+        };
+      },
+      tier: "thorough",
+      config: {
+        evaluationBudget: 30,
+        exhaustiveMax: 10,
+        beamWidth: 4,
+        localIterations: 0,
+        fullShortlistSize: 1,
+        topK: 1,
+        searchHorizonTicks: 10,
+        fullHorizonTicks: 20,
+      },
+    });
+
+    expect(fullCalls).toContain(barKey(incumbent));
+    expect(result.incumbentBar).toEqual([...incumbent]);
+    expect(result.incumbentScore).toBe(1_000);
+    expect(result.best?.bar).toEqual([...incumbent]);
+    expect(result.isUpgrade).toBe(false);
+  });
+
   it("always full-evals incumbent outside shortlist capacity", () => {
     const incumbent = ["a", "b"] as const;
     const fullCalls: string[] = [];

@@ -36,6 +36,19 @@ describe("estimateFeasibleCount", () => {
     // k=1: 3, k=2: 4 → 7
     expect(estimateFeasibleCount(gPool, { min: 1, max: 2 })).toBe(7);
   });
+
+  it("counts only bars containing every required ability", () => {
+    // Required b: [b], four ordered pairs, and all six length-three permutations.
+    expect(estimateFeasibleCount(pool, { min: 1, max: 3 }, ["b"])).toBe(11);
+
+    const gPool: PoolAbility[] = [
+      { id: "x", exclusiveGroup: "g" },
+      { id: "y", exclusiveGroup: "g" },
+      { id: "z" },
+    ];
+    // Required x excludes y: [x], [x,z], [z,x].
+    expect(estimateFeasibleCount(gPool, { min: 1, max: 2 }, ["x"])).toBe(3);
+  });
 });
 
 describe("shouldRunExhaustive", () => {
@@ -80,6 +93,27 @@ describe("runExhaustive", () => {
     expect(completed).toBe(false);
     expect(tiny.exhaustiveCompleted).toBe(false);
   });
+
+  it("enumerates the constrained space without attempting bars missing locks", () => {
+    const state = createSearchState({
+      pool,
+      sizeBounds: { min: 1, max: 3 },
+      evaluate: mockEvaluate,
+      requiredAbilityIds: ["b"],
+      config: configForTier("thorough", 42),
+    });
+    const attempted: string[][] = [];
+    const tryEval = state.tryEval.bind(state);
+    state.tryEval = (...args) => {
+      attempted.push([...args[0]]);
+      return tryEval(...args);
+    };
+
+    expect(runExhaustive(state)).toBe(true);
+    expect(attempted).toHaveLength(11);
+    expect(attempted.every((bar) => bar.includes("b"))).toBe(true);
+    expect(state.searchEvaluations).toBe(11);
+  });
 });
 
 describe("solve orchestrator (tiny pool)", () => {
@@ -105,5 +139,30 @@ describe("solve orchestrator (tiny pool)", () => {
     expect(result.fullEvaluations).toBeGreaterThan(0);
     expect(result.searchEvaluations).toBeGreaterThan(0);
     expect(result.best!.robustScore).toBeGreaterThanOrEqual(result.seedBestScore);
+  });
+
+  it("returns only locked bars from a pool with disabled ids removed", () => {
+    const evaluated: string[][] = [];
+    const enabledPool = pool.filter((ability) => ability.id !== "c");
+    const result = solve({
+      pool: enabledPool,
+      sizeBounds: { min: 1, max: 2 },
+      evaluate: (input) => {
+        evaluated.push([...input.bar]);
+        return mockEvaluate(input);
+      },
+      requiredAbilityIds: ["b"],
+      tier: "thorough",
+      seed: 9,
+    });
+
+    expect(result.exhaustiveCompleted).toBe(true);
+    expect(evaluated.length).toBeGreaterThan(0);
+    expect(evaluated.every((bar) => bar.includes("b") && !bar.includes("c"))).toBe(true);
+    for (const candidate of [result.best, ...result.top]) {
+      expect(candidate).not.toBeNull();
+      expect(candidate!.bar).toContain("b");
+      expect(candidate!.bar).not.toContain("c");
+    }
   });
 });

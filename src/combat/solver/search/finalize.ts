@@ -381,7 +381,11 @@ function assembleResult(
     }
   }
 
-  const feasibleCount = estimateFeasibleCount(state.pool, state.sizeBounds);
+  const feasibleCount = estimateFeasibleCount(
+    state.pool,
+    state.sizeBounds,
+    state.requiredAbilityIds,
+  );
   const proof = chooseProof(state, status, rankedFull, feasibleCount);
 
   // Debug / progress only - never applied as the solved bar.

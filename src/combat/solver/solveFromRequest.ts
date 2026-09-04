@@ -16,8 +16,8 @@ import {
   computeHorizonsAndBudget,
   fitAuthoredSeeds,
   fitIncumbentBar,
+  incumbentRegionDenySet,
   poolAsSpecs,
-  regionDenyList,
   requiredAbilitiesForRequest,
   resolveSpecs,
 } from "./requestContext";
@@ -53,13 +53,8 @@ export const solveFromRequest: SolveFn = async (
 
   const simBase = requireSimBase(request.loadout);
   const disabled = new Set(request.disabledAbilityIds ?? []);
-  const deny = regionDenyList(
-    request.style,
-    request.unlockedRegions,
-    request.includeUnknownAvailability === true,
-    disabled,
-  );
-  const denySet = new Set(deny);
+  const incumbentDenySet = incumbentRegionDenySet(request);
+  const denySet = new Set([...incumbentDenySet, ...disabled]);
 
   const { catalogue, pool } = buildCandidatePoolForRequest(request, simBase, denySet);
   const poolSpecs = poolAsSpecs(pool.ids, pool.byId);
@@ -137,9 +132,9 @@ export const solveFromRequest: SolveFn = async (
     return { ...spec, stateful: spec.stateEffect != null && spec.hits.length === 0 };
   });
   const catalogueById = new Map(catalogue.map((a) => [a.id, a] as const));
-  const authored = fitAuthoredSeeds(request, pool, denySet, catalogueById);
-  const incumbentBar = fitIncumbentBar(request, pool, denySet, catalogueById);
   const requiredAbilityIds = requiredAbilitiesForRequest(request, pool);
+  const authored = fitAuthoredSeeds(request, pool, denySet, catalogueById, requiredAbilityIds);
+  const incumbentBar = fitIncumbentBar(request, pool, incumbentDenySet, catalogueById);
 
   emitProgress(options, state, true);
   if (options?.yieldSlice) await options.yieldSlice();

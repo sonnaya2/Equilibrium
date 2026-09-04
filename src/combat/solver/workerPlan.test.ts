@@ -112,6 +112,29 @@ describe("workerPlan", () => {
     });
     expect(plan.agentCount).toBe(4);
   });
+
+  it("does not assign lengths below the required ability count", () => {
+    const plan = planWorkers({
+      minBarSize: 4,
+      maxBarSize: 11,
+      minimumRequiredBarSize: 8,
+      tier: "thorough",
+      hardwareCores: 16,
+    });
+    expect(plan.assignments.map((assignment) => assignment.targetLength)).toEqual([8, 9, 10, 11]);
+  });
+
+  it("rejects a required ability count above the requested maximum", () => {
+    expect(() =>
+      planWorkers({
+        minBarSize: 4,
+        maxBarSize: 6,
+        minimumRequiredBarSize: 7,
+        tier: "thorough",
+        hardwareCores: 16,
+      }),
+    ).toThrow("required bar size 7 exceeds max 6");
+  });
 });
 
 describe("RESERVES_UI_CORE capacity guard", () => {

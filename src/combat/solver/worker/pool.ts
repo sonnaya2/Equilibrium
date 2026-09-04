@@ -40,6 +40,7 @@ import {
   solverFailureFromWorkerMessage,
 } from "./failure";
 import { noteSolverHost } from "./hostDiagnostics";
+import { minimumConstrainedBarSizeForRequest } from "../requestContext";
 
 const MAX_POOL = SAFE_GLOBAL_AGENT_CEILING;
 
@@ -662,9 +663,11 @@ export class SolverAgentPool {
     this.cancel();
 
     const hardwareCores = detectHardwareCores();
+    const minimumRequiredBarSize = minimumConstrainedBarSizeForRequest(request);
     const plan = planWorkers({
       minBarSize: request.minBarSize,
       maxBarSize: request.maxBarSize,
+      minimumRequiredBarSize,
       tier: request.tier,
       baseSeed: request.seed ?? 1,
       agents: options?.agents,

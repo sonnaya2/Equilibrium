@@ -36,7 +36,11 @@ export async function runLargeNeighborhoodAsync(
 }
 
 function destroy(bar: readonly string[], k: number, state: SearchState): string[] {
-  const idx = state.rng.shuffle(bar.map((_, i) => i)).slice(0, k);
+  const removable = bar
+    .map((id, index) => ({ id, index }))
+    .filter(({ id }) => !state.requiredAbilityIds.includes(id))
+    .map(({ index }) => index);
+  const idx = state.rng.shuffle(removable).slice(0, Math.min(k, removable.length));
   const drop = new Set(idx);
   return bar.filter((_, i) => !drop.has(i));
 }

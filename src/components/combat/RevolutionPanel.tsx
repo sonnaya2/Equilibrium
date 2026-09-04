@@ -8,8 +8,11 @@ import {
   engineSpecs as ENGINE_SPECS,
   engineSpecsForStyle,
   entryByEngineId,
+  solverPalette,
 } from "@/combat/abilities/registry";
 import {
+  DEFAULT_SOLVER_PERMITTED_CATEGORIES,
+  dualVersionDenyIds,
   preferredAgentCount,
   packSimBaseFromModel,
   runUiRevolution,
@@ -66,6 +69,7 @@ import { adrenEconomyAssumptionRows } from "./adrenalinePresentation";
 import { filterAbilitiesForLoadout } from "./abilityLoadoutFilter";
 import { abilityIconPath } from "@/lib/gameArt";
 import { GameIcon } from "../GameIcon";
+import { filterSolverAbilitiesByCategory } from "./solverAbilityRules";
 import "./revo-solver.css";
 
 const EOF_ICON = "/game/upgrades/permanent-equipment/essence-of-finality.webp";
@@ -206,6 +210,7 @@ export function RevolutionPanel({
             includeUnknownAvailability: false as const,
             league: stats.league,
             passiveIds: stats.equipmentEffects.passiveIds,
+            activeWeapon: stats.equipmentEffects.activeWeapon,
             equipmentIds: stats.equipmentIds,
             weaponConfiguration,
             eofStoredSpecialId: loadout.eofStoredSpecialId,
@@ -213,6 +218,7 @@ export function RevolutionPanel({
         : {
             league: stats.league,
             passiveIds: stats.equipmentEffects.passiveIds,
+            activeWeapon: stats.equipmentEffects.activeWeapon,
             equipmentIds: stats.equipmentIds,
             weaponConfiguration,
             eofStoredSpecialId: loadout.eofStoredSpecialId,
@@ -222,6 +228,7 @@ export function RevolutionPanel({
       regions,
       stats.league,
       stats.equipmentEffects.passiveIds,
+      stats.equipmentEffects.activeWeapon,
       stats.equipmentIds,
       weaponConfiguration,
       loadout.eofStoredSpecialId,
@@ -296,6 +303,22 @@ export function RevolutionPanel({
     return [...new Map(available.map((ability) => [ability.id, ability])).values()].sort((a, b) =>
       a.name.localeCompare(b.name),
     );
+  }, [loadout.style, regionGate]);
+  const solverAbilities = useMemo(() => {
+    const available = filterSolverAbilitiesByCategory(
+      filterAbilitiesForLoadout(solverPalette(loadout.style), regionGate),
+      DEFAULT_SOLVER_PERMITTED_CATEGORIES,
+    );
+    const denied = new Set(
+      dualVersionDenyIds({
+        style: loadout.style,
+        passiveIds: regionGate.passiveIds,
+        availableIds: available.map((ability) => ability.id),
+      }),
+    );
+    return [...new Map(available.map((ability) => [ability.id, ability])).values()]
+      .filter((ability) => !denied.has(ability.id))
+      .sort((a, b) => a.name.localeCompare(b.name));
   }, [loadout.style, regionGate]);
   const selectedAbilityId = barIdsForKey[selectedBarSlot] ?? "";
   const addableAbilities = useMemo(
@@ -394,11 +417,19 @@ export function RevolutionPanel({
     combatModel,
     build,
     modelled,
+    solverAbilities,
     onActiveBar,
     onClearSimResult,
     limitToRegions,
     setLimitToRegions,
   });
+  const solverAbilityRules = useMemo(
+    () => ({
+      lockedAbilityIds: solver.lockedAbilityIds,
+      disabledAbilityIds: solver.disabledAbilityIds,
+    }),
+    [solver.lockedAbilityIds, solver.disabledAbilityIds],
+  );
 
   useEffect(() => {
     const equipmentChanged = prevEquipKey.current !== equipKey;
@@ -739,6 +770,10 @@ export function RevolutionPanel({
 
         <RevoSolverSection
           regions={regions}
+          solverAbilities={solverAbilities}
+          abilityRules={solverAbilityRules}
+          setAbilityRule={solver.setAbilityRule}
+          clearAbilityRules={solver.clearAbilityRules}
           solving={solver.solving}
           stopping={solver.stopping}
           solverProgress={solver.solverProgress}

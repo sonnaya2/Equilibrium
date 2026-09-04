@@ -33,6 +33,13 @@ export type { AbilityCategory };
 
 export type SolverSearchTier = SearchTier;
 
+export const DEFAULT_SOLVER_PERMITTED_CATEGORIES = [
+  "basic",
+  "enhanced",
+  "threshold",
+  "ultimate",
+] as const satisfies readonly AbilityCategory[];
+
 /**
  * Data needed to rebuild cast modifiers without shipping function closures across
  * the worker boundary. Mirrors the non-function parts of loadoutStats' modifier
@@ -281,8 +288,10 @@ export interface SerializableSolverRequest {
   permittedCategories?: readonly AbilityCategory[];
   includePartial?: boolean;
   includeUnknownAvailability?: boolean;
-  /** Ownership / availability overrides - these ability ids are treated as locked out. */
+  /** User-selected abilities excluded from searched bars; does not rewrite the incumbent. */
   disabledAbilityIds?: readonly string[];
+  /** User-selected abilities that must appear in every searched bar. */
+  lockedAbilityIds?: readonly string[];
   unlockedRegions: readonly RegionId[];
   /** Final evaluation horizon in ticks. */
   durationTicks: number;
@@ -451,7 +460,7 @@ export function defaultSerializableRequest(
     profileId: "balanced",
     maxBarSize: 11,
     minBarSize: 4,
-    permittedCategories: ["basic", "enhanced", "threshold", "ultimate"],
+    permittedCategories: [...DEFAULT_SOLVER_PERMITTED_CATEGORIES],
     unlockedRegions: [],
     blessingPicks: [],
     ruleset: "base",

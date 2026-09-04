@@ -296,14 +296,24 @@ export async function runScoreAnalysisParityGate(
     const cand = candidates[i]!;
     const bar = [...cand.bar];
     const fp = cand.fingerprint || barKey(bar);
+    const incumbentBaseline = result.incumbentBar != null && barsEqual(bar, result.incumbentBar);
     const label = `parity ${i + 1}/${total}`;
     input.onProgress?.({ done: i, total, label, bar });
+
+    const candidateEvalBase = incumbentBaseline
+      ? {
+          ...evalBase,
+          includePartial: true,
+          size: { min: bar.length, max: Math.max(1, bar.length) },
+          incumbentBaseline: true,
+        }
+      : evalBase;
 
     // Same fixed lanes as finalize ranking; only detailLevel differs.
     const scoreOnlyEval =
       input.scoreOnlyEvaluations?.get(fp) ??
       evaluateRevolutionBar({
-        ...evalBase,
+        ...candidateEvalBase,
         bar,
         durationTicks: fullTicks,
         detailLevel: "score-only",
@@ -325,7 +335,7 @@ export async function runScoreAnalysisParityGate(
     if (input.isCancelled?.()) throwCancelled();
 
     const fullEval = evaluateRevolutionBar({
-      ...evalBase,
+      ...candidateEvalBase,
       bar,
       durationTicks: fullTicks,
       detailLevel: "full-analysis",

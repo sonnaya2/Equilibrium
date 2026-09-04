@@ -1,5 +1,6 @@
 import type { ScoredBar } from "../contracts";
 import { exclusiveKey, remainingCandidates } from "../eligibility";
+import { ensureRequiredAbilityIds } from "../stylePolicy";
 import { compareScored, insertAt, removeAt, replaceAt, swapAt, type SearchState } from "./types";
 import { maybeYield, type YieldCtx } from "./yield";
 
@@ -70,8 +71,8 @@ function seedPopulation(state: SearchState, size: number): ScoredBar[] {
 
 function randomLegalBar(state: SearchState): string[] | null {
   const { min, max } = state.sizeBounds;
-  const len = min + state.rng.int(max - min + 1);
-  const bar: string[] = [];
+  const len = Math.max(state.requiredAbilityIds.length, min + state.rng.int(max - min + 1));
+  const bar: string[] = [...state.requiredAbilityIds];
   const pool = state.rng.shuffle([...state.pool]);
   for (const a of pool) {
     if (bar.length >= len) break;
@@ -92,8 +93,12 @@ export function orderCrossover(
   p2: readonly string[],
   state: SearchState,
 ): string[] {
-  if (p1.length === 0) return [...p2];
-  if (p2.length === 0) return [...p1];
+  if (p1.length === 0) {
+    return ensureRequiredAbilityIds(p2, state.requiredAbilityIds, state.sizeBounds.max);
+  }
+  if (p2.length === 0) {
+    return ensureRequiredAbilityIds(p1, state.requiredAbilityIds, state.sizeBounds.max);
+  }
   const n = Math.max(p1.length, p2.length);
   const i = state.rng.int(Math.min(p1.length, n) || 1);
   const j = state.rng.int(Math.min(p1.length, n) || 1);
@@ -132,7 +137,7 @@ export function orderCrossover(
     child.push(p2filtered[p2i++]!);
   }
   while (child.length > state.sizeBounds.max) child.pop();
-  return child;
+  return ensureRequiredAbilityIds(child, state.requiredAbilityIds, state.sizeBounds.max);
 }
 
 function mutate(state: SearchState, bar: string[]): string[] {
@@ -159,7 +164,11 @@ function mutate(state: SearchState, bar: string[]): string[] {
     }
     case 2: {
       if (bar.length <= state.sizeBounds.min) return bar;
-      return removeAt(bar, state.rng.int(bar.length));
+      const removable = bar
+        .map((id, index) => ({ id, index }))
+        .filter(({ id }) => !state.requiredAbilityIds.includes(id));
+      if (removable.length === 0) return bar;
+      return removeAt(bar, removable[state.rng.int(removable.length)]!.index);
     }
     case 3: {
       if (bar.length >= state.sizeBounds.max) return bar;
@@ -168,7 +177,11 @@ function mutate(state: SearchState, bar: string[]): string[] {
       return insertAt(bar, state.rng.int(bar.length + 1), state.rng.pick(remain).id);
     }
     default: {
-      const idx = state.rng.int(bar.length);
+      const replaceable = bar
+        .map((id, index) => ({ id, index }))
+        .filter(({ id }) => !state.requiredAbilityIds.includes(id));
+      if (replaceable.length === 0) return bar;
+      const idx = replaceable[state.rng.int(replaceable.length)]!.index;
       const without = removeAt(bar, idx);
       const remain = remainingCandidates(without, state.pool, state.byId);
       if (!remain.length) return bar;

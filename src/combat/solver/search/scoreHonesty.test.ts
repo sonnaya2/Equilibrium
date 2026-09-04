@@ -217,6 +217,35 @@ describe("score honesty", () => {
     expect(result.proof).toBe("full-shortlist-best");
   });
 
+  it("does not count an out-of-constraint incumbent toward full-objective coverage", () => {
+    const evaluate: EvaluateFn = ({ bar, mode }) => ({
+      score: mode === "full" || mode === "finalize" ? fullScore(bar) : searchScore(bar),
+      finite: true,
+      mode: mode === "full" || mode === "finalize" ? "full" : "search",
+      exploratory: mode !== "full" && mode !== "finalize",
+      validForFinalRanking: mode === "full" || mode === "finalize",
+    });
+    const result = solve({
+      pool: [...tinyPool, { id: "d", category: "basic", averageDamage: 20, occupancyTicks: 3 }],
+      sizeBounds: { min: 2, max: 2 },
+      requiredAbilityIds: ["a"],
+      incumbentBar: ["outside-pool"],
+      evaluate,
+      tier: "thorough",
+      seed: 1,
+      config: {
+        evaluationBudget: 100,
+        exhaustiveMax: 10,
+        fullShortlistSize: 5,
+        topK: 1,
+      },
+    });
+
+    expect(result.exhaustiveCompleted).toBe(true);
+    expect(result.fullEvaluations).toBe(6);
+    expect(result.proof).toBe("full-shortlist-best");
+  });
+
   it("never emits legacy globally-optimal / converged / best-found proof labels", () => {
     const evaluate: EvaluateFn = ({ bar, mode }) => ({
       score: mode === "full" || mode === "finalize" ? fullScore(bar) : searchScore(bar),

@@ -494,6 +494,20 @@ describe("live identity (pack+payload; progress is string compare)", () => {
       }),
     ).toBe(false);
   });
+
+  it("packs locked and disabled ability rules into the solve identity", () => {
+    const base = material();
+    const unconstrained = packSolverRequestFromUi(base);
+    const constrained = packSolverRequestFromUi({
+      ...base,
+      lockedAbilityIds: ["dismember"],
+      disabledAbilityIds: ["slaughter"],
+    });
+
+    expect(constrained.lockedAbilityIds).toEqual(["dismember"]);
+    expect(constrained.disabledAbilityIds).toEqual(["slaughter"]);
+    expect(solveContextPayload(constrained)).not.toBe(solveContextPayload(unconstrained));
+  });
 });
 
 describe("progress rAF gate", () => {

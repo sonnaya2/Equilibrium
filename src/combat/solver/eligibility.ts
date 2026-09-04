@@ -1,7 +1,10 @@
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 import type { ItemPassiveId } from "../data/records";
 import type { ActiveWeaponCapability } from "../shared/equipment";
-import { resolveAbilityCastAvailability } from "../shared/requirements";
+import {
+  resolveAbilityCastAvailability,
+  type AbilityCastAvailability,
+} from "../shared/requirements";
 import { EvalCache } from "./cache";
 import type {
   BarSizeBounds,
@@ -22,6 +25,9 @@ export interface EligibilityMemo {
   /** Fingerprint of resolved options used when the memo was created. */
   readonly optionKey: string;
   readonly cache: EvalCache<ExclusionReason[]>;
+  readonly skipSizeBounds: boolean;
+  readonly outsidePoolById: EligibilityOptions["outsidePoolById"];
+  validate(bar: readonly string[]): ExclusionReason[];
 }
 
 export interface EligibilityOptions {
@@ -50,10 +56,44 @@ export interface EligibilityOptions {
 const DEFAULT_SIZE: SizeBounds = { min: 1, max: 10 };
 const DEFAULT_MEMO_ENTRIES = 2_048;
 
+type ResolvedEligibilityOptions = {
+  includePartial: boolean;
+  size: SizeBounds;
+  weaponConfiguration: CandidatePool["options"]["weaponConfiguration"];
+  equipmentIds: readonly string[] | undefined;
+  activeWeapon: ActiveWeaponCapability | undefined;
+  passiveIds: readonly string[] | undefined;
+  eofStoredSpecialId: string | null | undefined;
+  league: CandidatePool["options"]["league"];
+  outsidePoolById: EligibilityOptions["outsidePoolById"];
+  skipSizeBounds: boolean;
+};
+
 export function normalizeSizeBounds(size?: BarSizeBounds): SizeBounds {
   if (!size) return DEFAULT_SIZE;
   if ("min" in size && "max" in size) return { min: size.min, max: size.max };
   return { min: size.minSlots, max: size.maxSlots };
+}
+
+function resolveEligibilityOptions(
+  pool: CandidatePool,
+  options: EligibilityOptions,
+): ResolvedEligibilityOptions {
+  return {
+    includePartial: options.includePartial ?? pool.options.includePartial ?? false,
+    size: normalizeSizeBounds(options.size),
+    weaponConfiguration: options.weaponConfiguration ?? pool.options.weaponConfiguration,
+    equipmentIds: options.equipmentIds ?? pool.options.equipmentIds,
+    activeWeapon: options.activeWeapon ?? pool.options.activeWeapon,
+    passiveIds: options.passiveIds ?? pool.options.passiveIds,
+    eofStoredSpecialId:
+      options.eofStoredSpecialId !== undefined
+        ? options.eofStoredSpecialId
+        : pool.options.eofStoredSpecialId,
+    league: options.league ?? pool.options.league,
+    outsidePoolById: options.outsidePoolById,
+    skipSizeBounds: options.skipSizeBounds === true,
+  };
 }
 
 /** Resolved option fingerprint; must match validateBarEligibility's defaults. */
@@ -107,10 +147,23 @@ export function createEligibilityMemo(
   options: EligibilityOptions = {},
   maxEntries: number = DEFAULT_MEMO_ENTRIES,
 ): EligibilityMemo {
+  const resolved = resolveEligibilityOptions(pool, options);
+  const availabilityById = compileAvailabilityById(pool, resolved);
+  const cache = new EvalCache<ExclusionReason[]>(maxEntries);
   return {
     pool,
     optionKey: eligibilityOptionKey(pool, options),
-    cache: new EvalCache(maxEntries),
+    cache,
+    skipSizeBounds: resolved.skipSizeBounds,
+    outsidePoolById: resolved.outsidePoolById,
+    validate(bar) {
+      const key = barMemoKey(bar);
+      const hit = cache.get(key);
+      if (hit) return hit;
+      const issues = validateBarEligibilityUncached(bar, pool, resolved, availabilityById);
+      cache.set(key, issues);
+      return issues;
+    },
   };
 }
 
@@ -150,6 +203,25 @@ export function canAdd(
   return true;
 }
 
+export function isCandidateBarLegal(
+  bar: readonly string[],
+  byId: ReadonlyMap<string, { exclusiveGroup?: string; replacementGroup?: string }>,
+): boolean {
+  const ids = new Set<string>();
+  const groups = new Set<string>();
+  for (const id of bar) {
+    if (ids.has(id)) return false;
+    ids.add(id);
+    const ability = byId.get(id);
+    if (!ability) return false;
+    const group = exclusiveKey(ability);
+    if (!group) continue;
+    if (groups.has(group)) return false;
+    groups.add(group);
+  }
+  return true;
+}
+
 /** Pool members still legal to append given the current bar prefix. */
 export function remainingCandidates<
   T extends { id: string; exclusiveGroup?: string; replacementGroup?: string },
@@ -184,35 +256,96 @@ function supportIssue(ability: PoolAbility): ExclusionReason | null {
   };
 }
 
+type ReplacementPeer = Pick<
+  AbilitySpec,
+  "id" | "name" | "replacementGroup" | "requiredPassiveAnyOf"
+>;
+
+function availabilityForAbility(
+  ability: PoolAbility | AbilitySpec,
+  pool: CandidatePool,
+  options: ResolvedEligibilityOptions,
+): AbilityCastAvailability {
+  const peers: ReplacementPeer[] = [];
+  if (ability.replacementGroup !== undefined) {
+    for (const peer of pool.byId.values()) {
+      if (peer.replacementGroup !== ability.replacementGroup) continue;
+      peers.push({
+        id: peer.id,
+        name: peer.name ?? peer.id,
+        replacementGroup: peer.replacementGroup,
+        requiredPassiveAnyOf: peer.requiredPassiveAnyOf as readonly ItemPassiveId[] | undefined,
+      });
+    }
+  }
+  return resolveAbilityCastAvailability(ability as AbilitySpec, {
+    weaponConfiguration: options.weaponConfiguration,
+    equipmentIds: options.equipmentIds,
+    activeWeapon: options.activeWeapon,
+    eofStoredSpecialId: options.eofStoredSpecialId,
+    passiveIds: options.passiveIds as readonly ItemPassiveId[] | undefined,
+    league: options.league,
+    groupPeers: peers,
+  });
+}
+
+function compileAvailabilityById(
+  pool: CandidatePool,
+  options: ResolvedEligibilityOptions,
+): ReadonlyMap<string, AbilityCastAvailability> {
+  const peersByGroup = new Map<string, ReplacementPeer[]>();
+  for (const ability of pool.byId.values()) {
+    if (ability.replacementGroup === undefined) continue;
+    const peers = peersByGroup.get(ability.replacementGroup) ?? [];
+    peers.push({
+      id: ability.id,
+      name: ability.name ?? ability.id,
+      replacementGroup: ability.replacementGroup,
+      requiredPassiveAnyOf: ability.requiredPassiveAnyOf as readonly ItemPassiveId[] | undefined,
+    });
+    peersByGroup.set(ability.replacementGroup, peers);
+  }
+
+  const availabilityById = new Map<string, AbilityCastAvailability>();
+  for (const ability of pool.byId.values()) {
+    availabilityById.set(
+      ability.id,
+      resolveAbilityCastAvailability(ability as AbilitySpec, {
+        weaponConfiguration: options.weaponConfiguration,
+        equipmentIds: options.equipmentIds,
+        activeWeapon: options.activeWeapon,
+        eofStoredSpecialId: options.eofStoredSpecialId,
+        passiveIds: options.passiveIds as readonly ItemPassiveId[] | undefined,
+        league: options.league,
+        groupPeers:
+          ability.replacementGroup === undefined
+            ? []
+            : (peersByGroup.get(ability.replacementGroup) ?? []),
+      }),
+    );
+  }
+  return availabilityById;
+}
+
 function validateBarEligibilityUncached(
   bar: readonly string[],
   pool: CandidatePool,
-  options: EligibilityOptions,
+  options: ResolvedEligibilityOptions,
+  availabilityById?: ReadonlyMap<string, AbilityCastAvailability>,
 ): ExclusionReason[] {
   const issues: ExclusionReason[] = [];
-  const size = normalizeSizeBounds(options.size);
-  const includePartial = options.includePartial ?? pool.options.includePartial ?? false;
-  const weaponConfiguration = options.weaponConfiguration ?? pool.options.weaponConfiguration;
-  const equipmentIds = options.equipmentIds ?? pool.options.equipmentIds;
-  const passiveIds = options.passiveIds ?? pool.options.passiveIds;
-  const activeWeapon = options.activeWeapon ?? pool.options.activeWeapon;
-  const eofStoredSpecialId =
-    options.eofStoredSpecialId !== undefined
-      ? options.eofStoredSpecialId
-      : pool.options.eofStoredSpecialId;
-  const league = options.league ?? pool.options.league;
 
   if (!options.skipSizeBounds) {
-    if (bar.length < size.min) {
+    if (bar.length < options.size.min) {
       issues.push({
         code: "size-below-min",
-        message: `bar has ${bar.length} slots; minimum is ${size.min}`,
+        message: `bar has ${bar.length} slots; minimum is ${options.size.min}`,
       });
     }
-    if (bar.length > size.max) {
+    if (bar.length > options.size.max) {
       issues.push({
         code: "size-above-max",
-        message: `bar has ${bar.length} slots; maximum is ${size.max}`,
+        message: `bar has ${bar.length} slots; maximum is ${options.size.max}`,
       });
     }
   }
@@ -271,26 +404,7 @@ function validateBarEligibilityUncached(
         groups.set(group, id);
       }
     }
-    const peers =
-      ability.replacementGroup === undefined
-        ? []
-        : [...pool.byId.values()].filter(
-            (peer) => peer.replacementGroup === ability.replacementGroup,
-          );
-    const availability = resolveAbilityCastAvailability(asSpec, {
-      weaponConfiguration,
-      equipmentIds,
-      activeWeapon,
-      eofStoredSpecialId,
-      passiveIds: passiveIds as readonly ItemPassiveId[] | undefined,
-      league,
-      groupPeers: peers.map((peer) => ({
-        id: peer.id,
-        name: peer.name ?? peer.id,
-        replacementGroup: peer.replacementGroup,
-        requiredPassiveAnyOf: peer.requiredPassiveAnyOf as readonly ItemPassiveId[] | undefined,
-      })),
-    });
+    const availability = availabilityById?.get(id) ?? availabilityForAbility(asSpec, pool, options);
     if (!availability.available) {
       const code =
         availability.reason === "weapon-requirement"
@@ -308,7 +422,7 @@ function validateBarEligibilityUncached(
         message: availability.message,
       });
     }
-    if (!includePartial) {
+    if (!options.includePartial) {
       const support = supportIssue(ability);
       if (support) issues.push(support);
     }
@@ -329,19 +443,19 @@ export function validateBarEligibility(
   pool: CandidatePool,
   options: EligibilityOptions = {},
 ): ExclusionReason[] {
+  const resolved = resolveEligibilityOptions(pool, options);
   const memo = options.memo;
   if (memo && memo.pool === pool) {
     const optionKey = eligibilityOptionKey(pool, options);
-    if (optionKey === memo.optionKey) {
-      const key = barMemoKey(bar);
-      const hit = memo.cache.get(key);
-      if (hit) return hit;
-      const issues = validateBarEligibilityUncached(bar, pool, options);
-      memo.cache.set(key, issues);
-      return issues;
+    if (
+      optionKey === memo.optionKey &&
+      resolved.skipSizeBounds === memo.skipSizeBounds &&
+      resolved.outsidePoolById === memo.outsidePoolById
+    ) {
+      return memo.validate(bar);
     }
   }
-  return validateBarEligibilityUncached(bar, pool, options);
+  return validateBarEligibilityUncached(bar, pool, resolved);
 }
 
 export function isBarEligible(

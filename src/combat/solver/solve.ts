@@ -1,7 +1,6 @@
 import type { EvaluateFn, PoolAbility, SizeBounds, SolveResult, SolveTier } from "./contracts";
 import { createRng } from "./rng";
 import { buildSeeds } from "./seeds";
-import { ensureRequiredAbilityIds } from "./stylePolicy";
 import { createSearchState, type SearchConfig } from "./search/types";
 import { runExhaustive, runExhaustiveAsync } from "./search/exhaustive";
 import { runConstructiveBeam, runConstructiveBeamAsync } from "./search/constructiveBeam";
@@ -135,7 +134,7 @@ export interface SolveInput {
    * Always full-rescored at finalize; not subject to shortlist capacity exclusion.
    */
   incumbentBar?: readonly string[] | null;
-  /** Style-required ability ids for complete bars (melee berserk, etc.). */
+  /** Style-required and user-locked ability ids for complete searched bars. */
   requiredAbilityIds?: readonly string[];
   config?: Partial<SearchConfig>;
   shouldSkipFingerprint?: (fingerprint: string) => boolean;
@@ -190,18 +189,18 @@ export function solve(input: SolveInput): SolveResult {
   const incumbentBar = resolveIncumbentBar(input);
   const rng = createRng(config.seed);
   // Incumbent also enters the seed list for explore, but finalize treats it first-class.
-  const maxLen = input.sizeBounds.max;
   const authored = [
     ...(incumbentBar ? [incumbentBar] : []),
     ...(input.authoredSeeds ?? []).map((s) => [...s]),
-  ].map((s) => ensureRequiredAbilityIds(s, requiredAbilityIds, maxLen));
+  ];
   const seeds = buildSeeds({
     pool: input.pool,
     sizeBounds: input.sizeBounds,
     rng,
     authored,
+    requiredAbilityIds,
     count: tier === "thorough" ? 8 : 16,
-  }).map((s) => ensureRequiredAbilityIds(s, requiredAbilityIds, maxLen));
+  });
 
   const state = createSearchState({
     pool: input.pool,
@@ -254,18 +253,18 @@ export async function solveAsync(input: SolveInput, hooks?: SolveAsyncHooks): Pr
   const requiredAbilityIds = input.requiredAbilityIds ?? [];
   const incumbentBar = resolveIncumbentBar(input);
   const rng = createRng(config.seed);
-  const maxLen = input.sizeBounds.max;
   const authored = [
     ...(incumbentBar ? [incumbentBar] : []),
     ...(input.authoredSeeds ?? []).map((s) => [...s]),
-  ].map((s) => ensureRequiredAbilityIds(s, requiredAbilityIds, maxLen));
+  ];
   const seeds = buildSeeds({
     pool: input.pool,
     sizeBounds: input.sizeBounds,
     rng,
     authored,
+    requiredAbilityIds,
     count: tier === "thorough" ? 8 : 16,
-  }).map((s) => ensureRequiredAbilityIds(s, requiredAbilityIds, maxLen));
+  });
 
   const state = createSearchState({
     pool: input.pool,

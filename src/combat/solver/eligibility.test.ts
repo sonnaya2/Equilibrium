@@ -1,7 +1,13 @@
 import { describe, expect, it } from "vitest";
 import type { AbilitySpec } from "../pipeline/calculateAbility";
 import { buildCandidatePool } from "./candidatePool";
-import { canAdd, createEligibilityMemo, exclusiveKey, validateBarEligibility } from "./eligibility";
+import {
+  canAdd,
+  createEligibilityMemo,
+  exclusiveKey,
+  isCandidateBarLegal,
+  validateBarEligibility,
+} from "./eligibility";
 import { activeEquipmentEffects } from "../shared/equipment";
 import { MAGIC_ABILITIES } from "../styles/magic/abilities";
 
@@ -134,6 +140,24 @@ describe("exclusiveKey / canAdd", () => {
     expect(canAdd(["fury"], "a", pool.byId)).toBe(true);
     expect(canAdd(["a"], "a", pool.byId)).toBe(false);
     expect(canAdd(["fury"], "missing", pool.byId)).toBe(false);
+  });
+
+  it("matches sequential canAdd validation without prefix allocations", () => {
+    const pool = buildCandidatePool(catalogue, "melee", { includePartial: true });
+    const bars: readonly (readonly string[])[] = [
+      [],
+      ["a"],
+      ["a", "b"],
+      ["a", "a"],
+      ["fury", "greater_fury"],
+      ["missing"],
+      ["a", "missing"],
+    ];
+
+    for (const bar of bars) {
+      const sequential = bar.every((id, index) => canAdd(bar.slice(0, index), id, pool.byId));
+      expect(isCandidateBarLegal(bar, pool.byId)).toBe(sequential);
+    }
   });
 });
 

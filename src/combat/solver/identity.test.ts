@@ -262,11 +262,7 @@ describe("fingerprint changes one field at a time", () => {
     await expectDiff("ChromaticChoir", (r) =>
       withSim(r, (s) => ({
         ...s,
-        equipmentIds: [
-          "item:eldritch-crossbow",
-          "item:sirenic-hauberk",
-          "item:sirenic-chaps",
-        ],
+        equipmentIds: ["item:eldritch-crossbow", "item:sirenic-hauberk", "item:sirenic-chaps"],
         equipmentEffects: activeEquipmentEffects({
           style: "ranged",
           equipmentSlots: {
@@ -525,6 +521,19 @@ describe("fingerprint changes one field at a time", () => {
       ...r,
       disabledAbilityIds: ["slaughter"],
     }));
+  });
+
+  it("locked abilities change solve identity but not evaluation context", async () => {
+    const base = sampleRequest();
+    const locked = {
+      ...base,
+      lockedAbilityIds: ["berserk"],
+    };
+
+    expect(await fingerprintSolveContext(base)).not.toBe(await fingerprintSolveContext(locked));
+    expect(stableStringify(canonicalEvaluationContext(base))).toBe(
+      stableStringify(canonicalEvaluationContext(locked)),
+    );
   });
 
   it("seed", async () => {

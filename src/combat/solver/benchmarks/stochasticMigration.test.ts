@@ -11,9 +11,9 @@ const enabled = process.env.SOLVER_STOCHASTIC_BENCH === "1";
 const scenarioId = process.env.SOLVER_BENCH_SCENARIO ?? "short-score";
 const caseId = process.env.SOLVER_BENCH_CASE ?? "league-poison-melee";
 
-// Post F3: BF no longer buffs true DoTs (poison included). Measured 2026-08-09.
+// Post two-handed AD and true-DoT gates. Measured 2026-09-03.
 const retiredExactOracle = {
-  totalExpected: 38_863.23158600931,
+  totalExpected: 32_369.118533467987,
   playerPoisonHostExpectedDamage: 4_371.5,
 };
 

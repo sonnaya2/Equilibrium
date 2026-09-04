@@ -257,7 +257,7 @@ describe("overlayAnalysisStatLine", () => {
     expect(overlaid.crit.damageBonus).toBe(model.crit.damageBonus);
   });
 
-  it("caps a 100% Critual line-B chance and replaces prior converted excess", () => {
+  it("caps a 100% Critual line-B chance and recomputes converted excess", () => {
     const model = toResolvedCombatModel(withLoadout({ critChance: 40 }), {
       now: NOW,
       blessingPicks: ["Chaos", "Chaos", "Chaos", "Chaos", "Chaos", "Chaos"],
@@ -273,7 +273,7 @@ describe("overlayAnalysisStatLine", () => {
     const summary = oneCastSummary(modelB, ability.id);
     const infernos = summary.events.filter((event) => event.blessingId === "unholy-critual");
 
-    expect(model.crit.critualConvertedDamageBonus).toBeCloseTo(0.05, 10);
+    expect(model.crit.critualConvertedDamageBonus).toBeCloseTo(0, 10);
     expect(modelB.crit.chance).toBeCloseTo(0.5, 10);
     expect(modelB.crit.damageBonus).toBeCloseTo(0.5, 10);
     expect(modelB.crit.critualConvertedDamageBonus).toBeCloseTo(0.5, 10);

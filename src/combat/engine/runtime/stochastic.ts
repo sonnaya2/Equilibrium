@@ -146,8 +146,7 @@ export function needsStochasticLanes(
   if ((input.adrenaline?.impatientRank ?? 0) > 0) return true;
   if ((input.adrenaline?.relentlessRank ?? 0) > 0) return true;
   if (hasBlessing(input.league, "avernic-rampage")) return true;
-  // Critual stays single-lane: oracle hash-samples real bernoulli when laneCount=1,
-  // and land materializes parent critOutcome for one Inferno per parent crit.
+  if (hasBlessing(input.league, "unholy-critual")) return true;
   // Cinders 5% needs the ensemble - rare single-lane samples starve analysis.
   if (hasBlessing(input.league, "abyssal-cinders")) return true;
   if (

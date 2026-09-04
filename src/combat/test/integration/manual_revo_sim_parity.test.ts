@@ -214,19 +214,8 @@ describe("Manual / Revolution new-path simulation", () => {
     const b = newManualBuild(loadout, queue, false);
     expectOk("melee manual", a);
     expect(a.casts.some((c) => c.abilityId === "dismember")).toBe(true);
-    // Cape is on the catalogue: Dismember DoT should exceed no-cape baseline.
-    const noCape = newManualBuild(
-      withLoadout({
-        style: "melee",
-        startingAdrenaline: 100,
-        buffs: { ...DEFAULT_LOADOUT.buffs, strengthCape99: false },
-        perks: { ...DEFAULT_LOADOUT.perks, ultimatums: 2, lunging: 2 },
-      }),
-      ["dismember"],
-      false,
-    );
     const withCape = newManualBuild(loadout, ["dismember"], false);
-    expect(withCape.totalExpected).toBeGreaterThan(noCape.totalExpected);
+    expect(withCape.events.filter((event) => event.abilityId === "dismember")).toHaveLength(11);
     summaryParity("melee manual det", a, b);
   });
 

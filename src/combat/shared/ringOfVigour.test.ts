@@ -228,6 +228,7 @@ describe("modelled weapon special catalogue", () => {
 
   const expectedCosts = {
     balance_by_force: 30,
+    descent_of_darkness: 65,
     claws_of_guthix: 25,
     death_grasp: 25,
     igneous_showdown: 50,

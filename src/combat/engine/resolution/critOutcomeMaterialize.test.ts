@@ -27,7 +27,7 @@ describe("crit outcome materialization", () => {
     }
   });
 
-  it("single-lane land materializes concrete Crit/No crit and pins band expected", () => {
+  it("single-lane damage-only crit stays expected-value", () => {
     for (const chance of [0.1, 0.5, 0.55, 0.8] as const) {
       const rt = createRuntime(
         {
@@ -47,24 +47,16 @@ describe("crit outcome materialization", () => {
       expect(hit, `chance ${chance}`).toBeDefined();
       expect(hit!.damage.critical?.chance).toBeCloseTo(chance, 10);
       expect(hit!.damage.critical?.mode).toBe("expected");
-      expect(
-        hit!.damage.critical?.outcome === true || hit!.damage.critical?.outcome === false,
-        `chance ${chance}`,
-      ).toBe(true);
+      expect(hit!.damage.critical?.outcome).toBeUndefined();
 
       const detail = rt.hitDetails.get(hit!.seq);
       expect(detail, `chance ${chance}`).toBeDefined();
-      expect(detail!.critOutcome).toBe(hit!.damage.critical?.outcome);
+      expect(detail!.critOutcome).toBeUndefined();
       const critExpected = hit!.damage.critExpected ?? detail!.critExpected;
       const nonCritExpected = detail!.nonCritExpected;
       expect(critExpected, `chance ${chance}`).toBeDefined();
-      if (hit!.damage.critical?.outcome === true) {
-        expect(hit!.damage.expected).toBeCloseTo(critExpected!, 10);
-      } else {
-        expect(hit!.damage.expected).toBeCloseTo(nonCritExpected, 10);
-      }
       const blended = (1 - chance) * nonCritExpected + chance * critExpected!;
-      expect(hit!.damage.expected).not.toBeCloseTo(blended, 8);
+      expect(hit!.damage.expected).toBeCloseTo(blended, 8);
     }
   });
 
@@ -90,8 +82,8 @@ describe("crit outcome materialization", () => {
     );
   });
 
-  it("default 10% magic auto samples mixed concrete outcomes near rate p", () => {
-    const outcomes: boolean[] = [];
+  it("default 10% magic auto keeps the same EV across single-lane seeds", () => {
+    const totals: number[] = [];
     for (let seed = 0; seed < 40; seed++) {
       const summary = simulate(
         {
@@ -110,20 +102,14 @@ describe("crit outcome materialization", () => {
         if (!event.damage.critical || event.damage.critical.mode === "none") continue;
         expect(event.damage.critical.chance).toBeCloseTo(0.1, 10);
         expect(event.damage.critical.mode).toBe("expected");
-        expect(
-          event.damage.critical.outcome === true || event.damage.critical.outcome === false,
-        ).toBe(true);
-        outcomes.push(event.damage.critical.outcome!);
+        expect(event.damage.critical.outcome).toBeUndefined();
       }
+      totals.push(summary.totalExpected);
     }
-    expect(outcomes.length).toBeGreaterThan(40);
-    const rate = outcomes.filter(Boolean).length / outcomes.length;
-    expect(outcomes.some((o) => o === true)).toBe(true);
-    expect(outcomes.some((o) => o === false)).toBe(true);
-    expect(Math.abs(rate - 0.1)).toBeLessThan(0.08);
+    expect(new Set(totals.map((total) => total.toFixed(8))).size).toBe(1);
   });
 
-  it("single-lane simulate at 80% crit mixes outcomes (not all-Crit trap)", () => {
+  it("single-lane simulate at 80% crit retains expected outcomes", () => {
     const summary = simulate(
       {
         base: 2456,
@@ -152,13 +138,6 @@ describe("crit outcome materialization", () => {
     expect(critEvents.length).toBeGreaterThan(0);
     expect(critEvents.every((event) => event.damage.critical?.chance === 0.8)).toBe(true);
     expect(critEvents.every((event) => event.damage.critical?.mode === "expected")).toBe(true);
-    expect(
-      critEvents.every(
-        (event) =>
-          event.damage.critical?.outcome === true || event.damage.critical?.outcome === false,
-      ),
-    ).toBe(true);
-    expect(critEvents.some((event) => event.damage.critical?.outcome === true)).toBe(true);
-    expect(critEvents.some((event) => event.damage.critical?.outcome === false)).toBe(true);
+    expect(critEvents.every((event) => event.damage.critical?.outcome === undefined)).toBe(true);
   });
 });

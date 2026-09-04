@@ -39,6 +39,7 @@ export type RingOfVigourSource = "equipped" | "permanent";
  */
 export const MODELLED_WEAPON_SPECIAL_IDS = [
   "balance_by_force",
+  "descent_of_darkness",
   "icy_tempest",
   "instability",
   "claws_of_guthix",

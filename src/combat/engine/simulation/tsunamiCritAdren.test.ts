@@ -232,6 +232,8 @@ describe("Claws of Guthix support honesty", () => {
     const s = simulate({
       ...magicBase,
       startingAdrenaline: 100,
+      equipmentIds: ["item:essence-of-finality"],
+      eofStoredSpecialId: "claws_of_guthix",
       rotation: rotationOf("claws_of_guthix"),
     });
     expect(s.ok).toBe(true);

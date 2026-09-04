@@ -19,7 +19,6 @@ const regions = [
   "kandarin",
   "morytania",
   "forinthry",
-  "anachronia",
 ] as readonly RegionId[];
 
 function statsFor(loadout: ReturnType<typeof normalizeLoadout>) {

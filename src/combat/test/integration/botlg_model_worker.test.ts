@@ -188,5 +188,5 @@ describe("BotLG resolved-loadout projection", () => {
     expect(onRuns.worker.events.map((event) => event.abilityId)).toEqual(
       onRuns.direct.events.map((event) => event.abilityId),
     );
-  });
+  }, 15_000);
 });

@@ -154,14 +154,14 @@ describe("counter-based stochastic oracle", () => {
     ).toBe(128);
   });
 
-  it("keeps Critual single-lane while Cinders still forces the ensemble", () => {
+  it("uses the ensemble for Critual and Cinders state-changing procs", () => {
     const league = (ids: string[]) =>
       ({
         ruleset: "equilibrium" as const,
         blessingIds: new Set(ids),
         blessings: ids.map((id) => ({ id })),
       }) as never;
-    expect(stochasticLaneCount({ league: league(["unholy-critual"]) }, ["attack"])).toBe(1);
+    expect(stochasticLaneCount({ league: league(["unholy-critual"]) }, ["attack"])).toBe(128);
     expect(stochasticLaneCount({ league: league(["abyssal-cinders"]) }, ["attack"])).toBe(128);
     expect(
       stochasticLaneCount({ league: league(["unholy-critual", "abyssal-cinders"]) }, ["attack"]),

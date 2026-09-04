@@ -18,7 +18,6 @@ const regions = [
   "kandarin",
   "morytania",
   "forinthry",
-  "anachronia",
 ] as readonly RegionId[];
 
 function statsFor(selected: string[]) {

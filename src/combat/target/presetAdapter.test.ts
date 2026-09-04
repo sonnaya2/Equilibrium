@@ -73,7 +73,7 @@ describe("presetAdapter", () => {
     );
     expect(fields?.incomingHitIntervalSeconds).toBe(2.4);
     expect(fields?.attackRateTicks).toBe(4);
-    // Interval is scenario seed only; Modified compares defence/aff/race, not cadence.
+    // Matching cadence keeps the preset unmodified.
     expect(
       targetDiffersFromPreset(
         {
@@ -81,6 +81,7 @@ describe("presetAdapter", () => {
           armour: 500,
           affinity: 70,
           size: 3,
+          incomingHitIntervalSeconds: 2.4,
         },
         fields!,
       ),

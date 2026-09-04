@@ -55,10 +55,20 @@ function materializeCriticalOutcome(
   const existingOutcome = resolution.damage.critical?.outcome;
   const critical = resolution.damage.critical;
   if (!critical || critical.mode === "none") return resolution;
-  // Always sample (or inherit) a concrete Crit/No-crit outcome, then pin damage
-  // to that band mean. Single-lane oracle hash-samples real uniforms so bernoulli(p)
-  // is ~p (not the old stratified mid-bin trap of uniform always 0.5).
-  // Forced chain outcomes (Inferno terminals) arrive as existingOutcome.
+  const changesFutureState =
+    rt.input.league?.blessingIds.has("unholy-critual") === true ||
+    event.lightningSurge === true ||
+    event.tick < rt.state.magic.tsunamiCritAdrenUntilTick;
+  if (
+    existingOutcome === undefined &&
+    inheritedOutcome === undefined &&
+    critical.mode === "expected" &&
+    rt.stochastic.laneCount === 1 &&
+    !changesFutureState
+  ) {
+    return resolution;
+  }
+  // Concrete lanes pin crit damage and every inherited rider to one outcome.
   const outcome =
     existingOutcome ??
     inheritedOutcome ??

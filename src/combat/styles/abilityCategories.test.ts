@@ -83,6 +83,7 @@ describe("current ability categories", () => {
       "magma_tempest",
       "instability",
       "claws_of_guthix",
+      "soulfire",
     ]);
     expect(idsWithCategory(MAGIC_ABILITIES, "threshold")).toEqual([]);
   });

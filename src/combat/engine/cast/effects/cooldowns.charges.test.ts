@@ -31,7 +31,7 @@ describe("stun-basic charges (Backhand / Binding Shot / Impact)", () => {
   it("unlocks each second charge at its sourced level", () => {
     for (const [id, list, secondChargeLevel] of [
       ["backhand", MELEE_ABILITIES, 54],
-      ["binding_shot", RANGED_ABILITIES, 70],
+      ["binding_shot", RANGED_ABILITIES, 54],
       ["impact", MAGIC_ABILITIES, 54],
     ] as const) {
       const ability = list.find((a) => a.id === id)!;
